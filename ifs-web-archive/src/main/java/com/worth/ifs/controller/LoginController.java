@@ -1,6 +1,5 @@
 package com.worth.ifs.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.worth.ifs.filter.CsrfHeaderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -39,16 +38,19 @@ public class LoginController extends WebMvcConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/login", "/", "/favicon.ico").permitAll()
-                    .anyRequest().fullyAuthenticated()
+
+            http
+                    .authorizeRequests()
+                    .antMatchers("/css/**", "/images/**", "/js/**")
+                        .permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .formLogin()
-                    .loginPage("/login")
-                    .failureUrl("/login?error")
-                    .defaultSuccessUrl("/my-applications")
+                        .loginPage("/login")
+                        .permitAll()
                     .and()
                     .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .permitAll()
                     .and()
                     .exceptionHandling()
                     .accessDeniedPage("/access?error")

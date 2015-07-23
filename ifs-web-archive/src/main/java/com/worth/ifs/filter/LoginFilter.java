@@ -20,6 +20,8 @@ import java.util.Optional;
 @Component("LoginFilter")
 public class LoginFilter extends OncePerRequestFilter {
     protected static String IFS_AUTH_COOKIE_NAME = "IFS_authToken";
+
+
     /**
      * Redirect the request to the login page when the user is has no auth token.
      */
@@ -29,21 +31,7 @@ public class LoginFilter extends OncePerRequestFilter {
             HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        System.out.println("Current request url : " + request.getRequestURI());
-        if (!request.getRequestURI().contains("/login")) {
-            Cookie[] cookies = request.getCookies();
-            Optional<Cookie> authCookie = Arrays.stream(cookies)
-                    .filter(c -> c.getName().equals(IFS_AUTH_COOKIE_NAME))
-                    .findFirst();
 
-            if (authCookie.isPresent()) {
-                System.out.println("Got an out cookie " + authCookie.get().getValue());
-
-            } else {
-                response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/login"));
-                return;
-            }
-        }
 
         chain.doFilter(request, response);
     }
