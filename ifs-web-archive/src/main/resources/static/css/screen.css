@@ -2646,3 +2646,141 @@ ol {
     background-size: 100%;
   }
 }
+
+/* line 3, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+.page-header {
+  margin: 1em 1em 3em 1em;
+  padding: 0 0 2em 0;
+  border-bottom: 5px solid #df3034;
+}
+@media (min-width: 769px) {
+  /* line 3, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+  .page-header {
+    margin: 1em 2em 3em 2em;
+  }
+}
+/* line 12, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+.page-header .hgroup {
+  padding: 0;
+}
+/* line 15, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+.page-header .hgroup h1 {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 48px;
+  line-height: 1.04167;
+  font-weight: 700;
+  text-transform: none;
+  color: #0b0c0c;
+  padding-top: 0.7rem;
+  padding-bottom: 1.3rem;
+}
+@media (max-width: 640px) {
+  /* line 15, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+  .page-header .hgroup h1 {
+    font-size: 32px;
+    line-height: 1.09375;
+  }
+}
+/* line 22, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+.page-header .hgroup h2.subtitle {
+  margin: 0;
+  color: #6f777b;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none;
+}
+@media (max-width: 640px) {
+  /* line 22, ../sass/vendor/govuk_elements/service-design-manual/helpers/_page-header.scss */
+  .page-header .hgroup h2.subtitle {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+}
+
+/* line 3, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+.breadcrumb {
+  list-style-type: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+  background: white;
+  padding: 1em 2em 0 2em;
+}
+/* line 11, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+.breadcrumb li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 18, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb {
+  padding: 0.75em 0;
+  margin: 0 1em;
+  z-index: 50;
+  background-color: #fff;
+  border-bottom: 1px solid #bfc1c3;
+}
+@media (min-width: 769px) {
+  /* line 18, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+  #global-breadcrumb {
+    margin: 0 2em;
+  }
+}
+/* line 30, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+}
+/* line 37, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav ol {
+  margin: 0;
+  padding-left: 0;
+}
+/* line 41, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav ol li {
+  font-family: "nta",Arial,sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  font-weight: 300;
+  text-transform: none;
+  background-image: url(https://assets.digital.cabinet-office.gov.uk/static/separator-73822610794bc3a64871f144d93d6526.png);
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  float: left;
+  list-style: none;
+  margin-left: 0;
+  margin-right: 0.5em;
+  padding-right: 1em;
+}
+@media (max-width: 640px) {
+  /* line 41, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+  #global-breadcrumb nav ol li {
+    font-size: 1.4rem;
+    line-height: 1.14286;
+  }
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  /* line 41, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+  #global-breadcrumb nav ol li {
+    background-image: url(https://assets.digital.cabinet-office.gov.uk/static/separator-2x-2ff66846b80b66edba8ce56d29daa935.png);
+    background-size: 6px 11px;
+  }
+}
+/* line 66, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav ol li a {
+  color: #0b0c0c;
+}
+/* line 70, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav ol li strong {
+  font-weight: normal;
+}
+/* line 74, ../sass/vendor/govuk_elements/service-design-manual/helpers/_breadcrumbs.scss */
+#global-breadcrumb nav ol li:last-child {
+  background-image: none;
+  margin-right: 0;
+}
