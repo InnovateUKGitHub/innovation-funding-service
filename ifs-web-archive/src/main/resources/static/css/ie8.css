@@ -2527,3 +2527,9 @@ ol {
   background-image: none;
   margin-right: 0;
 }
+
+/* line 3, ../sass/_worth.scss */
+.page-header {
+  margin-left: 0;
+  margin-right: 0;
+}
