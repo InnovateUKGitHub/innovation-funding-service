@@ -5,15 +5,24 @@
 </head>
 <body>
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+    <div th:include="fragments/layout :: body-start" th:remove="tag"></div>	
+    <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content" th:remove="tag"></div>
-</main>
+	<main id="content">
+   		 <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+			<form>
+            <div class="form-group">
+              <label class="form-label" for="full-name-f2">Full name</label>
+              <input class="form-control" id="full-name-f2" type="text" />
+            </div>
+          </form>
+          <button class="button">Save and continue</button>
 
+		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+	</main>
 
+    <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+	<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
 </body>
 </html>

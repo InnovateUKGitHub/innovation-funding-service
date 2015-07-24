@@ -1,0 +1,6 @@
+[submodule "ifs-web-archive/src/main/resources/govuk_frontend_toolkit"]
+	path = ifs-web-archive/src/main/resources/govuk_frontend_toolkit
+	url = https://github.com/alphagov/govuk_frontend_toolkit.git
+[submodule "ifs-web-archive/src/main/resources/static/sass/vendor/govuk_frontend_toolkit"]
+	path = ifs-web-archive/src/main/resources/static/sass/vendor/govuk_frontend_toolkit
+	url = https://github.com/alphagov/govuk_frontend_toolkit.git
