@@ -1,0 +1,85 @@
+group 'worth'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        springBootVersion = '1.2.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+
+war {
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+configurations {
+    providedRuntime
+    clientCompile
+}
+
+sourceSets {
+    client {
+        java {
+            srcDir 'src/main/java'
+            include 'com/worth/ifs/domain'
+        }
+    }
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    //compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
+    //compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("mysql:mysql-connector-java")
+
+    compile("javax.servlet:javax.servlet-api:3.1.0")
+    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    compile fileTree(dir: "libs", include: "*.jar")
+}
+
+task client(type: Jar) {
+    baseName += '-api'
+    from sourceSets.client.output
+}
+task clientCopy(type: Copy){
+    into "../ifs-web-service/libs"
+    from "build/libs/"
+    include("ifs-data-service-api*")
+}
+
+artifacts {
+    archives client
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}

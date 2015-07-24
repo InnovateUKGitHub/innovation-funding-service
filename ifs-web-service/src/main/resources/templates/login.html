@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+</head>
+<body>
+
+    <div th:include="fragments/layout :: body-start" th:remove="tag"></div>	
+    <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+	<main id="content">
+   		 <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+		<header class="page-header group">
+    <div class="hgroup">
+      <h1>Innovate UK alpha</h1>
+      <h2 class="subtitle">A real working thing.</h2>
+    </div>
+  </header>
+
+			<form>
+            <div class="form-group">
+              <label class="form-label" for="unique1">Full name</label>
+               <select class="form-control"  id="unique1">
+  <option value="option1">option1</option>
+  <option value="option2">option2</option>
+  <option value="option3">option3</option>
+  <option value="option4" selected="selected">option4</option>
+</select> 
+            </div>
+          </form>
+          <button class="button">Save and continue</button>
+
+		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+	</main>
+
+    <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+	<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
