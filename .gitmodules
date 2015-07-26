@@ -1,3 +1,0 @@
-[submodule "ifs-web-service/src/main/resources/static/sass/vendor/govuk_frontend_toolkit"]
-	path = ifs-web-service/src/main/resources/static/sass/vendor/govuk_frontend_toolkit
-	url = https://github.com/alphagov/govuk_frontend_toolkit.git
