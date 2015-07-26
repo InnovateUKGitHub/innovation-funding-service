@@ -154,13 +154,13 @@ a:active {
 
 /* line 291, ../sass/vendor/govuk_frontend_toolkit/stylesheets/_typography.scss */
 a[rel="external"]:after {
-  background-image: url('/images/external-links/external-link.png?1437729611');
+  background-image: url('/images/external-links/external-link.png?1437900739');
   background-repeat: no-repeat;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   /* line 291, ../sass/vendor/govuk_frontend_toolkit/stylesheets/_typography.scss */
   a[rel="external"]:after {
-    background-image: url('/images/external-links/external-link-24x24.png?1437729611');
+    background-image: url('/images/external-links/external-link-24x24.png?1437900739');
     background-size: 12px 400px;
   }
 }
@@ -185,13 +185,13 @@ a[rel="external"]:hover:after {
 }
 /* line 303, ../sass/vendor/govuk_frontend_toolkit/stylesheets/_typography.scss */
 .external-link:after {
-  background-image: url('/images/external-links/external-link-black-12x12.png?1437729611');
+  background-image: url('/images/external-links/external-link-black-12x12.png?1437900739');
   background-repeat: no-repeat;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   /* line 303, ../sass/vendor/govuk_frontend_toolkit/stylesheets/_typography.scss */
   .external-link:after {
-    background-image: url('/images/external-links/external-link-black-24x24.png?1437729611');
+    background-image: url('/images/external-links/external-link-black-24x24.png?1437900739');
     background-size: 12px 400px;
   }
 }
@@ -806,12 +806,12 @@ button:focus,
   height: 17px;
   overflow: hidden;
   text-indent: -999em;
-  background: url('/images/open-government-licence.png?1437361206') 0 0 no-repeat;
+  background: url('/images/open-government-licence.png?1437900739') 0 0 no-repeat;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   /* line 104, ../sass/vendor/govuk_template/_footer.scss */
   #footer .footer-meta .footer-meta-inner .open-government-licence .logo a {
-    background-image: url('/images/open-government-licence_2x.png?1437361206');
+    background-image: url('/images/open-government-licence_2x.png?1437900739');
     background-size: 41px 17px;
   }
 }
@@ -861,7 +861,7 @@ button:focus,
 /* line 147, ../sass/vendor/govuk_template/_footer.scss */
 #footer .footer-meta .copyright a {
   display: block;
-  background-image: url('/images/govuk-crest.png?1437361206');
+  background-image: url('/images/govuk-crest.png?1437900739');
   background-repeat: no-repeat;
   background-position: 50% 0%;
   background-position: 100% 0%;
@@ -873,7 +873,7 @@ button:focus,
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   /* line 147, ../sass/vendor/govuk_template/_footer.scss */
   #footer .footer-meta .copyright a {
-    background-image: url('/images/govuk-crest-2x.png?1437361206');
+    background-image: url('/images/govuk-crest-2x.png?1437900739');
     background-size: 125px 102px;
   }
 }
