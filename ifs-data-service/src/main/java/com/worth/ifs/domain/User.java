@@ -1,11 +1,14 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
  */
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 

@@ -1,6 +1,8 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.domain.User;
 import com.worth.ifs.filter.CsrfHeaderFilter;
+import com.worth.ifs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +25,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvcSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class LoginController extends WebMvcConfigurerAdapter {
+    @Autowired
+    UserService userService;
+
     @RequestMapping("/login")
-    public String login(@RequestParam(value="name", required=false, defaultValue="World..") String name, Model model) {
-        System.out.println("Login request handler");
+     public String login(@RequestParam(value="user", required=false, defaultValue="none") String userId, Model model) {
+
+        //User user = userService.retrieveUserById(1);
+        //System.out.println("Login request for +" + user.getName());
 
         // get all users for login dropdown.
         // Code for calling the rest services.

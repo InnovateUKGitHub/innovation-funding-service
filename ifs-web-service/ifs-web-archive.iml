@@ -59,16 +59,16 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.1.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.security:spring-security-config:3.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.security:spring-security-web:3.2.7.RELEASE" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: ifs-data-archive-client-1.0-SNAPSHOT">
+      <library name="Gradle: ifs-data-service-api-1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/ifs-data-archive-client-1.0-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/ifs-data-service-api-1.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
   </component>
 </module>

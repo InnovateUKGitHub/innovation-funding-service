@@ -32,6 +32,7 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/libs-snapshot" }
+
 }
 configurations {
     providedRuntime
@@ -45,7 +46,7 @@ dependencies {
     compile("javax.servlet:javax.servlet-api:3.1.0")
 
     // Use this for including the api lib from the data-service.
-    compile files('libs/ifs-data-archive-client-1.0-SNAPSHOT.jar')
+    compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

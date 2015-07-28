@@ -49,26 +49,25 @@ sourceSets {
 
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    //compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
-    //compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("mysql:mysql-connector-java")
 
-    compile("javax.servlet:javax.servlet-api:3.1.0")
-    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
-    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+    compile("org.springframework:spring-web")
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("org.projectlombok:lombok:1.16.2")
 
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile("org.springframework.boot:spring-boot-starter-test")
     compile fileTree(dir: "libs", include: "*.jar")
 }
 
 task client(type: Jar) {
     baseName += '-api'
-    from sourceSets.client.output
+    from(sourceSets.main.output) {
+        // filter to only include certain class files (Ant glob pattern)
+        include "com/worth/ifs/service/**"
+        include "com/worth/ifs/domain/**"
+    }
 }
 task clientCopy(type: Copy){
     into "../ifs-web-service/libs"
