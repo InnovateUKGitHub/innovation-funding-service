@@ -26,13 +26,13 @@ public class UserController {
     }
 
     @RequestMapping("/id/{id}")
-    public User getUserById(@PathVariable("id") final Integer id) {
+    public User getUserById(@PathVariable("id") final Long id) {
         User user = repository.findById(id).get(0);
         return user;
     }
 
     @RequestMapping("/name/{name}")
-    public List<User> getUserById(@PathVariable("name") final String name) {
+    public List<User> getUserByName(@PathVariable("name") final String name) {
         List<User> users = repository.findByName(name);
         return users;
     }

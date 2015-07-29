@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.List;
+
 @Controller
 @Configuration
 @EnableWebMvcSecurity
@@ -31,9 +33,12 @@ public class LoginController extends WebMvcConfigurerAdapter {
     @RequestMapping("/login")
      public String login(@RequestParam(value="user", required=false, defaultValue="none") String userId, Model model) {
 
-        //User user = userService.retrieveUserById(1);
-        //System.out.println("Login request for +" + user.getName());
+        User user = userService.retrieveUserById(2);
+        //List<User> users = userService.getAll();
 
+        System.out.println("Login request for +" + user.getName());
+
+        //System.out.println("all user count +" + users.size());
         // get all users for login dropdown.
         // Code for calling the rest services.
         //RestTemplate restTemplate = new RestTemplate();
