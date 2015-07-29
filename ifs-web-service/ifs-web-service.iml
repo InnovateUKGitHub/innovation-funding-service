@@ -80,7 +80,14 @@
     <orderEntry type="library" name="Gradle: org.springframework.security:spring-security-core:3.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.security:spring-security-config:3.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.security:spring-security-web:3.2.7.RELEASE" level="project" />
-    <orderEntry type="library" name="ifs-data-archive-client-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/ifs-data-service-api-1.0-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
