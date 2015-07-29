@@ -16,6 +16,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
         List<User> findByName(@Param("name") String name);
         List<User> findById(@Param("id") Long id);
         List<User> findByToken(@Param("token") String token);
+        List<User> findAll();
 
 
 }

@@ -1,11 +1,9 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by wouter on 28/07/15.
@@ -24,11 +22,11 @@ public class UserService {
         return user;
     }
 
-    public List<User> getAll() {
+    public User[] findAll() {
         RestTemplate restTemplate = new RestTemplate();
-        //User user = restTemplate.getForObject("http://localhost:8090/user/", User.class);
-        User[] forNow = restTemplate.getForObject("http://localhost:8090/user/", User[].class);
-        List<User> users = Arrays.asList(forNow);
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity("http://localhost:8090/user/findAll/", User[].class);
+        User[] users =responseEntity.getBody();
+
         return users;
     }
 }

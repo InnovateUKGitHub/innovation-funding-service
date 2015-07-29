@@ -36,4 +36,9 @@ public class UserController {
         List<User> users = repository.findByName(name);
         return users;
     }
+    @RequestMapping("/findAll/")
+    public List<User> findAll() {
+        List<User> users = repository.findAll();
+        return users;
+    }
 }
