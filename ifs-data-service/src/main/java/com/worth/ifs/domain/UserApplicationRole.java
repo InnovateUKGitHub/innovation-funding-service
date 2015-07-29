@@ -14,4 +14,20 @@ public class UserApplicationRole {
     private long applicationId;
     private long roleId;
 
+    public long getId() {
+        return id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public long getRoleId() {
+        return roleId;
+    }
+
 }

@@ -18,6 +18,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+
+
     @OneToMany
     @JoinColumn(name="userId", referencedColumnName="id")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
@@ -28,6 +30,9 @@ public class User {
     @Column(unique=true)
     private String token;
 
+    public long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -39,5 +44,9 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public List<UserApplicationRole> getUserApplicationRoles() {
+        return userApplicationRoles;
     }
 }

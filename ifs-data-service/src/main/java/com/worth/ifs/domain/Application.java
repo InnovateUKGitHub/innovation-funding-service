@@ -27,4 +27,20 @@ public class Application {
     @ManyToOne
     @JoinColumn(name="processStatusId", referencedColumnName="id")
     private ProcessStatus processStatus;
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<UserApplicationRole> getUserApplicationRoles() {
+        return userApplicationRoles;
+    }
+
+    public ProcessStatus getProcessStatus() {
+        return processStatus;
+    }
 }
