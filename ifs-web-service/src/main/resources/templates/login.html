@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:remove="tag"></div>
 </head>
@@ -17,18 +17,21 @@
 			</div>
 		</header>
 
-        <form action="/login" method="POST">
+        <form action="/login" th:object="${loginForm}" method="POST">
             <p>Please select a user from the list provided and click the login button to log in as that user.</p>
             
             <div class="form-group">
                 <label class="form-label-bold" for="id_user">User</label>
                 <p class="form-hint">Login is simulated for testing purposes</p>
-                <select name="user" class="form-control" id="id_user">
-     				<option value="1">Steve Smith (Lead Applicant)</option>
-     				<option value="2">Jessica Doe (Collaborator)</option>
-     				<option value="3">Professor Plum (Assessor)</option>
-     				<option value="4">Comp Exec (Competitions)</option>
-     				<option value="6">Project Finance Analyst (Finance)</option>
+                <select th:field="*{token}" class="form-control" id="id_user">
+					<option data-th-each="user : ${users}" data-th-value="${user.token}" data-th-text="${user.name}">
+
+					</option>
+     				<!--<option value="1">Steve Smith (Lead Applicant)</option>-->
+     				<!--<option value="2">Jessica Doe (Collaborator)</option>-->
+     				<!--<option value="3">Professor Plum (Assessor)</option>-->
+     				<!--<option value="4">Comp Exec (Competitions)</option>-->
+     				<!--<option value="6">Project Finance Analyst (Finance)</option>-->
 				</select>
             </div><!-- .form-group -->
 

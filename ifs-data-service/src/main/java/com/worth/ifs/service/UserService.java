@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by wouter on 28/07/15.
  */
@@ -22,11 +25,12 @@ public class UserService {
         return user;
     }
 
-    public User[] findAll() {
+    public List<User> findAll() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<User[]> responseEntity = restTemplate.getForEntity("http://localhost:8090/user/findAll/", User[].class);
         User[] users =responseEntity.getBody();
+        return Arrays.asList(users);
 
-        return users;
     }
+
 }

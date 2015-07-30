@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+</head>
+<body>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <header class="page-header group">
+        <div class="hgroup">
+            <h1>Innovation Funding Service</h1>
+        </div>
+    </header>
+
+    <h1>DASHBOARD</h1>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

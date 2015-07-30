@@ -41,9 +41,10 @@ configurations {
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
-    compile("org.springframework.boot:spring-boot-starter-security")
+    //compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
+    //compile("org.springframework.boot:spring-boot-starter-security")
     compile("javax.servlet:javax.servlet-api:3.1.0")
+    compile("org.projectlombok:lombok:1.16.2")
 
     // Use this for including the api lib from the data-service.
     compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')

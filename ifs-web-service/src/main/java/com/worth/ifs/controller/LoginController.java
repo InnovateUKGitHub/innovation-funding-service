@@ -1,78 +1,78 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.User;
-import com.worth.ifs.filter.CsrfHeaderFilter;
+import com.worth.ifs.filter.LoginFilter;
+import com.worth.ifs.form.LoginForm;
 import com.worth.ifs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @Configuration
-@EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class LoginController extends WebMvcConfigurerAdapter {
+//@EnableWebMvcSecurity
+//@EnableGlobalMethodSecurity
+public class LoginController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/login")
-     public String login(@RequestParam(value="user", required=false, defaultValue="none") String userId, Model model) {
-        User[] users =userService.findAll();
+    @RequestMapping(value="/login", method= RequestMethod.GET)
+     public String login( Model model, HttpServletResponse response) {
+        String token = "";
+        if(token != null && token != ""){
+            User user = userService.retrieveUserByToken(token);
+            if(user != null){
+                System.out.println("already logged in, redirect to dashboard");
+                return "redirect:/applicant/dashboard";
+            }
+        }
 
-        System.out.println("Users in frontend " + users.length);
+        List<User> users =userService.findAll();
+
+        System.out.println("Users in frontend " + users.size());
+
+        model.addAttribute("users", users);
+        model.addAttribute("loginForm", new LoginForm());
 
 
         return "login";
     }
 
-    @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
-        @Autowired
-        private SecurityProperties security;
+    @RequestMapping(value="/logout", method= RequestMethod.GET)
+    public String logout(Model model, HttpServletResponse response) {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-
-            http
-                    .authorizeRequests()
-                    .antMatchers("/css/**", "/images/**", "/js/**")
-                        .permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin()
-                        .loginPage("/login")
-                        .permitAll()
-                    .and()
-                    .logout()
-                        .permitAll()
-                    .and()
-                    .exceptionHandling()
-                    .accessDeniedPage("/access?error")
-                    .and()
-                    .csrf().csrfTokenRepository(csrfTokenRepository())
-                    .and()
-                    .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
-        }
-
-        private CsrfTokenRepository csrfTokenRepository() {
-            HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-            repository.setHeaderName("X-XSRF-TOKEN");
-            return repository;
-        }
+        Cookie cookie = new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        System.out.println("removed cookie, redirect to login");
+        return "redirect:/login";
     }
 
+
+    @RequestMapping(value="/login", method= RequestMethod.POST)
+    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
+        User user = userService.retrieveUserByToken(loginForm.getToken());
+        if(user != null){
+            response.addCookie(new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, user.getToken()));
+
+            // redirect to my applications
+            System.out.println(" login success, redirect to dashboard");
+            return "redirect:/applicant/dashboard";
+        }
+        System.out.println("login failed, show login page again");
+        return "login";
+    }
+
+
+
+
+
+
 }
+
