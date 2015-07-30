@@ -20,8 +20,7 @@ public class Application {
     private long id;
     private String name;
 
-    @OneToMany
-    @JoinColumn(name="applicationId", referencedColumnName="id")
+    @OneToMany(mappedBy="application")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
 
     @ManyToOne

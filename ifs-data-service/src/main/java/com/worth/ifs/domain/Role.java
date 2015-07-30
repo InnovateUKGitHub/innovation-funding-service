@@ -14,8 +14,7 @@ public class Role {
     private long id;
     private String name;
 
-    @OneToMany
-    @JoinColumn(name="roleId", referencedColumnName="id")
+    @OneToMany(mappedBy="role")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
 
     public List<UserApplicationRole> getUserApplicationRoles() {
