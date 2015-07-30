@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -31,14 +33,26 @@ public class ApplicantController {
 
         User user = userService.retrieveUserByToken(token);
         List<Application> applications = applicationService.getApplicationsByUserId(user.getId());
+        System.out.println("Total applications: "+ applications.size());
+
+        for (Application application : applications) {
+            System.out.println("State: " +application.getProcessStatus().getName());
+        }
+
+        ArrayList<Application> inprogress = applications.stream()
+                .filter(a -> (a.getProcessStatus().getName().equals("created") || a.getProcessStatus().getName().equals("submitted")))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Application> finished = applications.stream()
+                .filter(a -> (a.getProcessStatus().getName().equals("approved") || a.getProcessStatus().getName().equals("rejected")))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        System.out.println("inprogress size " + inprogress.size());
+        System.out.println("finished size " + finished.size());
 
 
-//        applications = new ArrayList<>();
-//        Application app = new Application();
-//        app.setName("Rovel Additive Manufacturing Process123");
-//        applications.add(app);
-
-        model.addAttribute("applicationsInProcess", applications);
+        model.addAttribute("applicationsInProcess", inprogress);
+        model.addAttribute("applicationsFinished", finished);
 
         return "applicant-dashboard";
     }
