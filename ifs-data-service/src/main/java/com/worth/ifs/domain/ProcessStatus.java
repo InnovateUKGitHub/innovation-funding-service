@@ -8,6 +8,7 @@ import javax.persistence.Id;
 /**
  * Created by wouter on 29/07/15.
  */
+
 @Entity
 public class ProcessStatus {
     @Id
@@ -20,7 +21,7 @@ public class ProcessStatus {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(long id) {
+        this.id = id;
     }
 }

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -62,10 +64,9 @@ public class LoginController {
             response.addCookie(new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, user.getToken()));
 
             // redirect to my applications
-            System.out.println(" login success, redirect to dashboard");
             return "redirect:/applicant/dashboard";
         }
-        System.out.println("login failed, show login page again");
+
         return "login";
     }
 

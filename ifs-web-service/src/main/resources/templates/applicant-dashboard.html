@@ -11,13 +11,40 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-    <header class="page-header group">
-        <div class="hgroup">
-            <h1>Innovation Funding Service</h1>
-        </div>
-    </header>
 
-    <h1>DASHBOARD</h1>
+    <div class="my-applications">
+
+        <div class="in-progress">
+            <div class="application" th:each="application : ${applicationsInProcess}">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h4 class="heading-medium"><a href="/applicant/competitions/2/applications/1" data-th-text="${application.name}">placeholder</a></h4>
+                        <img alt="" src="/images/progress.png"/>
+                    </div>
+                    <div class="column-third">
+                        <img alt="" src="/images/due-date.png" style="float: right;"/>
+                    </div>
+                    <img alt="" class="actions" src="/images/field-assigned-right.png"/>
+                </div>
+            </div>
+
+            <!--<div class="application">-->
+                <!--<div class="grid-row">-->
+                    <!--<div class="column-two-thirds">-->
+                        <!--<h4 class="heading-medium"><a href="/applicant/competitions/4/applications/2/track">Providing sustainable childcare</a></h4>-->
+                        <!--<p class="form-hint">Application progress:</p>-->
+                        <!--<p style="color: #00823b;"><span style="font-weight: 700">Application submitted:</span> 17/04/2015</p>-->
+                    <!--</div>-->
+                    <!--<div class="column-third">-->
+                        <!--<img alt="" src="/images/decision-date.png" style="float: right;"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="previous-applications">
+
+        </div>
+    </div>
 
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
