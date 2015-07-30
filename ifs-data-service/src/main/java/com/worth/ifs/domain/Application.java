@@ -1,5 +1,9 @@
 package com.worth.ifs.domain;
 
+/**
+ * Created by wouter on 29/07/15.
+ */
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -10,25 +14,19 @@ import java.util.List;
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
  */
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-
-
+public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-
+    private String name;
 
     @OneToMany
-    @JoinColumn(name="userId", referencedColumnName="id")
+    @JoinColumn(name="applicationId", referencedColumnName="id")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
 
-    private String name;
-    private String imageUrl;
-
-    @Column(unique=true)
-    private String token;
+    @ManyToOne
+    @JoinColumn(name="processStatusId", referencedColumnName="id")
+    private ProcessStatus processStatus;
 
     public long getId() {
         return id;
@@ -38,15 +36,11 @@ public class User {
         return name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
     public List<UserApplicationRole> getUserApplicationRoles() {
         return userApplicationRoles;
+    }
+
+    public ProcessStatus getProcessStatus() {
+        return processStatus;
     }
 }

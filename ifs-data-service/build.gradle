@@ -24,6 +24,7 @@ apply plugin: 'war'
 
 
 war {
+    baseName = 'ifs-data-service'
     version = '0.0.1-SNAPSHOT'
 }
 
@@ -52,10 +53,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("mysql:mysql-connector-java")
-
     compile("org.springframework:spring-web")
     compile("com.fasterxml.jackson.core:jackson-databind")
     compile("org.projectlombok:lombok:1.16.2")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
