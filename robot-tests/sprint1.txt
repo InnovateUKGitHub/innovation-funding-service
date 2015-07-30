@@ -1,0 +1,78 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Test Cases ***
+Verify That all the users present in the drop-down
+    Given the url is open
+    When the user clicks the login drop-down
+    Then all the users should be visible
+
+Invalid Login
+    Given the url is open
+    When the user clicks the login drop-down
+    And the user clicks the invalid applicant
+    Then the user should get a warning thet the login details are not correct
+
+Login as applicant
+    Given the url is open
+    When the user clicks the login drop-down
+    And the user clicks the applicant
+    And the user clicks the log-in button
+    Then the user should be logged-in and redirected to the My applications page
+
+Select one of the applications
+    Given the user is logged in
+    When the user clicks the My applycation button
+    and the user clicks the "Rovel Additive Manufacturing Process" application
+    Then the user should see the overview of the selected application
+
+List with sections for the application overview
+    Given the user is in the application overview page
+    Then the user should see the sections
+    and the user should see the status of each section
+
+List of sub-section in the Myapplication overview page
+    Given user is in the my application overview page
+    When user clicks the "Applicant details" section
+    Then the "Applicant detail" sub-sections should be visible
+
+Scope sub-sections
+    Given user is in the my application overview page
+    When user clicks the "Scope" section
+    Then the "Scope" sub-section should be visible
+
+Business proposition sub-sections
+    Given user is in the my application overview page
+    When user clicks the "Business proposition" section
+    Then the "Business proposition" sub-sections should be visible
+
+project approach sub-sections
+    Given user is in the my application overview page
+    When user clicks the "Project approach" section
+    Then the "Project approach" sub-sections should be visible
+
+Funding sub-sections
+    Given user is in the my application overview page
+    When user clicks the "Funding" section
+    Then the "Funding" sub-sections should be visible
+
+Finances sub-sections
+    Given user is in the my application overview page
+    When user clicks the "Finances" section
+    Then the "Finances" sub-sections should be visible
+
+*** Keywords ***
+the url is open
+    Open Browser    https://innovate:yorkshire-tea-box@inn-001.nomensa.com
+
+the user clicks the login drop-down
+    Click Element    css=select.form-control
+
+the user clicks the applicant
+    Select From List    css=option.Steve Smith (Lead Applicant)
+
+the user clicks the log-in button
+    Click Button    css=input.button
+
+the user should be logged-in and redirected to the My applications page
+    Element Should Be Visible    link=Logout
