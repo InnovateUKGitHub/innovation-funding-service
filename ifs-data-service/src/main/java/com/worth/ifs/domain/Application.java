@@ -59,4 +59,12 @@ public class Application {
     public void setUserApplicationRoles(List<UserApplicationRole> userApplicationRoles) {
         this.userApplicationRoles = userApplicationRoles;
     }
+
+    public ProcessStatus getProcessStatus() {
+        return processStatus;
+    }
+
+    public void setProcessStatus(ProcessStatus processStatus) {
+        this.processStatus = processStatus;
+    }
 }

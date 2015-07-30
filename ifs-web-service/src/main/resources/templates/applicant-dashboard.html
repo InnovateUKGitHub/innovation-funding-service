@@ -13,36 +13,36 @@
 
 
     <div class="my-applications">
-
         <div class="in-progress">
+            <h3 class="heading-large">In Progress</h3>
             <div class="application" th:each="application : ${applicationsInProcess}">
                 <div class="grid-row">
                     <div class="column-two-thirds">
-                        <h4 class="heading-medium"><a href="/applicant/competitions/2/applications/1" data-th-text="${application.name}">placeholder</a></h4>
-                        <img alt="" src="/images/progress.png"/>
+                        <h4 class="heading-medium">
+                            <a th:href="@{/application/{id}(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
+                        </h4>
+
+                        <div data-th-text="${application.getProcessStatus().getName()}"></div>
                     </div>
-                    <div class="column-third">
-                        <img alt="" src="/images/due-date.png" style="float: right;"/>
-                    </div>
-                    <img alt="" class="actions" src="/images/field-assigned-right.png"/>
+
                 </div>
             </div>
-
-            <!--<div class="application">-->
-                <!--<div class="grid-row">-->
-                    <!--<div class="column-two-thirds">-->
-                        <!--<h4 class="heading-medium"><a href="/applicant/competitions/4/applications/2/track">Providing sustainable childcare</a></h4>-->
-                        <!--<p class="form-hint">Application progress:</p>-->
-                        <!--<p style="color: #00823b;"><span style="font-weight: 700">Application submitted:</span> 17/04/2015</p>-->
-                    <!--</div>-->
-                    <!--<div class="column-third">-->
-                        <!--<img alt="" src="/images/decision-date.png" style="float: right;"/>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
         </div>
         <div class="previous-applications">
+            <h3 class="heading-large">Previous Applications</h3>
+            <div class="application" th:each="application : ${applicationsFinished}">
 
+
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h4 class="heading-medium" data-th-text="${application.name}"></h4>
+
+                        <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
 
