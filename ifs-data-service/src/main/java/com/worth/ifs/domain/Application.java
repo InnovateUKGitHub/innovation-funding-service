@@ -29,6 +29,10 @@ public class Application {
     @JoinColumn(name="processStatusId", referencedColumnName="id")
     private ProcessStatus processStatus;
 
+    @ManyToOne
+    @JoinColumn(name="competition", referencedColumnName="id")
+    private Competition competition;
+
     public Application() {
     }
 
