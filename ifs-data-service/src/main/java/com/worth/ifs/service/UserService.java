@@ -19,7 +19,7 @@ public class UserService {
         return user;
     }
 
-    public User retrieveUserById(Integer id) {
+    public User retrieveUserById(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         User user = restTemplate.getForObject("http://localhost:8090/user/id/"+id, User.class);
         return user;
@@ -30,7 +30,6 @@ public class UserService {
         ResponseEntity<User[]> responseEntity = restTemplate.getForEntity("http://localhost:8090/user/findAll/", User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
-
     }
 
 }
