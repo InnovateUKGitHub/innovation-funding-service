@@ -16,13 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `section`
+-- Dumping data for table `user_impl`
 --
 
-LOCK TABLES `section` WRITE;
-/*!40000 ALTER TABLE `section` DISABLE KEYS */;
-INSERT INTO `section` VALUES (1,'Application details',1),(2,'Scope (Gateway question)',1),(3,'Business proposition (Q1 - Q4)',1),(4,'Project approach (Q5 - Q8)',1),(5,'Funding (Q9 - Q10)',1),(6,'Finances',1);
-/*!40000 ALTER TABLE `section` ENABLE KEYS */;
+LOCK TABLES `user_impl` WRITE;
+/*!40000 ALTER TABLE `user_impl` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_impl` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -34,4 +33,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-31  9:06:02
+-- Dump completed on 2015-07-31 11:06:50

@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `application`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'image.jpg','Steve Smith (Lead Applicant)','123abc'),(2,'image2.jpg','Jessica Doe (Collaborator)','456def'),(3,'image3.jpg','Professor Plum (Assessor)','789ghi'),(6,'image4.jpg','Comp Exec (Competitions)','123def'),(7,'image5.jpg','Project Finance Analyst (Finance)','123ghi');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `application` WRITE;
+/*!40000 ALTER TABLE `application` DISABLE KEYS */;
+INSERT INTO `application` VALUES (1,'Rovel Additive Manufacturing Process',1,1),(2,'Providing sustainable childcare',2,1),(3,'Mobile Phone Data for Logistics Analytics',3,1),(4,'Using natural gas to heat homes',4,1);
+/*!40000 ALTER TABLE `application` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-31  9:06:03
+-- Dump completed on 2015-07-31 11:06:50
