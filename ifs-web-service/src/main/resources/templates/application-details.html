@@ -31,7 +31,7 @@
             <div class="section-details">
                 <div th:if="${section.getId()} == ${currentSection}">
                     <div class="section" th:each="question : ${section.getQuestions()}">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}\#{questionId}(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
                            data-th-text="${question.getName()}"></a>
                     </div>
                 </div>
