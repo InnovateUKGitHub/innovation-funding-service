@@ -16,6 +16,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * This controller handles user login, logout and authentication / authorization.
+ * It will also redirect the user after the login/logout is successful.
+ */
 @Controller
 @Configuration
 //@EnableWebMvcSecurity
@@ -48,7 +52,7 @@ public class LoginController {
 
     @RequestMapping(value="/logout", method= RequestMethod.GET)
     public String logout(Model model, HttpServletResponse response) {
-
+        // Removing the cookie is not possible, just expire it as soon as possible.
         Cookie cookie = new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

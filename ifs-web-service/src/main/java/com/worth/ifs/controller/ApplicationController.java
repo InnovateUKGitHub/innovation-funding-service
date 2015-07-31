@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+/**
+ * This controller will handle all requests that are related to the application overview.
+ * Application overview is the page that contains the most basic information about the current application and
+ * the basic information about the competition the application is related to.
+ */
 @Controller
 @RequestMapping("/application")
 public class ApplicationController {
@@ -23,26 +28,24 @@ public class ApplicationController {
     @Autowired
     UserService userService;
 
-    protected void addApplicationDetails(Long applicationId, Model model){
+    /**
+     * Get the details of the current application, add this to the model so we can use it in the templates.
+     */
+    private void addApplicationDetails(Long applicationId, Model model){
         Application application = applicationService.getApplicationById(applicationId);
         model.addAttribute("currentApplication", application);
+
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
         List<Section> sections = competition.getSections();
-
-
         model.addAttribute("sections", sections);
-        return ;
-    }
-    protected void addSectionsDetails(Long applicationId, Long sectionId, Model model){
-
         return ;
     }
 
 
     @RequestMapping("/{applicationId}")
-    public String applicationDetails(Model model,@PathVariable("applicationId") final Long applicationId){
+    public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
         System.out.println("Application with id " + applicationId);
 
         this.addApplicationDetails(applicationId, model);
@@ -51,12 +54,12 @@ public class ApplicationController {
     }
 
     @RequestMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetails(Model model,
+    public String applicationDetailsOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId){
         this.addApplicationDetails(applicationId, model);
         //this.addSectionsDetails(applicationId, sectionId, model);
-        model.addAttribute("currentSection", sectionId);
+        model.addAttribute("currentSectionId", sectionId);
 
         return "application-details";
     }

@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * This controller will handle requests related to the current applicant. So pages that are relative to that user,
+ * are implemented here. For example the my-applications page.
+ */
 @Controller
 @RequestMapping("/applicant")
 public class ApplicantController {
