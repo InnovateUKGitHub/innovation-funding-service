@@ -11,13 +11,40 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-    <header class="page-header group">
-        <div class="hgroup">
-            <h1>Innovation Funding Service</h1>
-        </div>
-    </header>
 
-    <h1>DASHBOARD</h1>
+    <div class="my-applications">
+        <div class="in-progress">
+            <h3 class="heading-large">In Progress</h3>
+            <div class="application" th:each="application : ${applicationsInProcess}">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h4 class="heading-medium">
+                            <a th:href="@{/application/{id}(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
+                        </h4>
+
+                        <div data-th-text="${application.getProcessStatus().getName()}"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="previous-applications">
+            <h3 class="heading-large">Previous Applications</h3>
+            <div class="application" th:each="application : ${applicationsFinished}">
+
+
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h4 class="heading-medium" data-th-text="${application.name}"></h4>
+
+                        <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

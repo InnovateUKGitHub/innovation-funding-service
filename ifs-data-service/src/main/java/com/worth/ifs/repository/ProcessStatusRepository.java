@@ -7,9 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-/**
- * Created by wouter on 29/07/15.
- */
 @RepositoryRestResource(collectionResourceRel = "processstatus", path = "processtatus")
 public interface ProcessStatusRepository extends PagingAndSortingRepository<ProcessStatus, Long> {
     List<ProcessStatus> findByName(@Param("name") String name);

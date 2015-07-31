@@ -34,38 +34,31 @@ public class LoginFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         Cookie authCookie = null;
         for (Cookie cookie : cookies) {
-            if(cookie.getName().equals(IFS_AUTH_COOKIE_NAME)){
+            if (cookie.getName().equals(IFS_AUTH_COOKIE_NAME)) {
                 authCookie = cookie;
             }
         }
 
-        if(!request.getRequestURI().equals("/login") &&
-                !request.getRequestURI().equals("/logout") &&
+        // when the current request should only be accessable by a authenticated user,
+        // get the authCookie and check if the user exists.
+
+        if (!request.getRequestURI().startsWith("/login") &&
+                !request.getRequestURI().startsWith("/logout") &&
                 !request.getRequestURI().startsWith("/css") &&
                 !request.getRequestURI().startsWith("/js") &&
                 !request.getRequestURI().startsWith("/images") &&
                 !request.getRequestURI().startsWith("/assets")
-                ){
-            if(authCookie != null){
-                if(authCookie.getValue() != null && authCookie.getValue() != ""){
-                    User user = userService.retrieveUserByToken(authCookie.getValue());
-                    if(user == null){
-                        System.out.println("Redirect to login");
-                        response.sendRedirect("/login");
-                    }else{
-                        System.out.println("No redirect to login, user is authenticated");
-                    }
-                }else{
-                    System.out.println("Redirect to login1");
+                ) {
+            if (authCookie != null && authCookie.getValue() != null && authCookie.getValue() != "") {
+                User user = userService.retrieveUserByToken(authCookie.getValue());
+                if (user == null) {
                     response.sendRedirect("/login");
                 }
             } else {
-                System.out.println("Redirect to login2");
                 response.sendRedirect("/login");
                 return;
             }
         }
-
 
 
         chain.doFilter(request, response);

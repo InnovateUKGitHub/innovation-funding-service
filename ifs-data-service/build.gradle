@@ -50,19 +50,20 @@ sourceSets {
 
 
 dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("mysql:mysql-connector-java")
     compile("org.springframework:spring-web")
     compile("com.fasterxml.jackson.core:jackson-databind")
     compile("org.projectlombok:lombok:1.16.2")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     // for the api lib:
-    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
-    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+    /*compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'*/
     compile fileTree(dir: "libs", include: "*.jar")
 }
 
@@ -86,4 +87,10 @@ artifacts {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
+}
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "../../apache-tomcat-data/webapps"
+    rename ('(.*).war', 'ROOT.war')
 }

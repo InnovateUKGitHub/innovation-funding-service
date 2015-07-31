@@ -58,7 +58,8 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
-//task deployToTomcat(type: Copy) {
-//    from war
-//    into "../../apache-tomcat/webapps"
-//}
+task deployToTomcat(type: Copy) {
+    from war
+    into "../../apache-tomcat-web/webapps"
+    rename ('(.*).war', 'ROOT.war')
+}
