@@ -3,26 +3,25 @@ Library           Selenium2Library
 
 *** Test Cases ***
 Verify That all the users present in the drop-down
-    Given the url is open
-    When the user clicks the login drop-down
-    Then all the users should be visible
+    #Given the url is open
+    #When the user clicks the login drop-down
+    #Then all the users should be visible
 
 Invalid Login
-    Given the url is open
-    When the user clicks the login drop-down
-    And the user clicks the invalid applicant
-    Then the user should get a warning thet the login details are not correct
+    #Given the url is open
+    #When the user clicks the login drop-down
+    #And the user clicks the invalid applicant
+    #Then the user should get a warning that the login details are not correct
 
 Login as applicant
     Given the url is open
     When the user clicks the login drop-down
-    And the user clicks the applicant
     And the user clicks the log-in button
     Then the user should be logged-in and redirected to the My applications page
 
 Select one of the applications
     Given the user is logged in
-    When the user clicks the My applycation button
+    When the user clicks the My application button
     and the user clicks the "Rovel Additive Manufacturing Process" application
     Then the user should see the overview of the selected application
 
@@ -44,17 +43,17 @@ Scope sub-sections
 Business proposition sub-sections
     Given user is in the my application overview page
     When user clicks the "Business proposition" section
-    Then the "Business proposition" sub-sections should be visible
+    Then the "Business proposition" questions should be visible
 
 project approach sub-sections
     Given user is in the my application overview page
     When user clicks the "Project approach" section
-    Then the "Project approach" sub-sections should be visible
+    Then the "Project approach" questions should be visible
 
 Funding sub-sections
     Given user is in the my application overview page
     When user clicks the "Funding" section
-    Then the "Funding" sub-sections should be visible
+    Then the "Funding" questions should be visible
 
 Finances sub-sections
     Given user is in the my application overview page
@@ -62,17 +61,93 @@ Finances sub-sections
     Then the "Finances" sub-sections should be visible
 
 *** Keywords ***
+all the users should be visible
+    Page Should Contain Element    css=select#id_user option:contains("Jessica Doe (Collaborator)")
+
 the url is open
     Open Browser    https://innovate:yorkshire-tea-box@inn-001.nomensa.com
 
 the user clicks the login drop-down
     Click Element    css=select.form-control
 
-the user clicks the applicant
-    Select From List    css=option.Steve Smith (Lead Applicant)
-
 the user clicks the log-in button
     Click Button    css=input.button
 
 the user should be logged-in and redirected to the My applications page
     Element Should Be Visible    link=Logout
+
+the user is logged in
+    Location Should Be    https://inn-001.nomensa.com/applicant/dashboard
+
+the user clicks the My application button
+    Click Button    id=js-tabs_control-item--00
+
+the user clicks the "Rovel Additive Manufacturing Process" application
+    Click Link    link=Rovel Additive Manufacturing Process
+
+the user should see the overview of the selected application
+    Location Should Be    https://inn-001.nomensa.com/applicant/competitions/2/applications/1
+
+the user is in the application overview page
+    Location Should Be    https://inn-001.nomensa.com/applicant/competitions/2/applications/1
+
+the user should see the sections
+    Page Should Contain Element    id=js-accordion_control--00
+    Page Should Contain Element    id=js-accordion_control--01
+    Page Should Contain Element    id=js-accordion_control--02
+    Page Should Contain Element    id=js-accordion_control--03
+    Page Should Contain Element    id=js-accordion_control--04
+    Page Should Contain Element    id=js-accordion_control--05
+
+the user should see the status of each section
+    Page Should Contain Element    css=span.section-status
+
+user is in the my application overview page
+    Location Should Be    https://inn-001.nomensa.com/applicant/competitions/2/applications/1
+
+user clicks the "Applicant details" section
+    Click Element    id=js-accordion_control--00
+
+the "Applicant detail" sub-sections should be visible
+    Page Should Contain Link    link=Application details
+    Page Should Contain Link    link=Project summary
+    Page Should Contain Link    link=Public description
+
+user clicks the "Scope" section
+    Click Element    id=js-accordion_control--01
+
+the "Scope" sub-section should be visible
+    Page Should Contain Link    Link=Scope
+
+user clicks the "Business proposition" section
+    Click Element    id=js-accordion_control--02
+
+the "Business proposition" questions should be visible
+    Page Should Contain Link    link=1. What is the business opportunity that this project addresses?
+    Page Should Contain Link    link=2. What is the size of the market opportunity that this project might open up?
+    Page Should Contain Link    link=3. How will the results of the project be exploited and disseminated?
+    Page Should Contain Link    link=4. What economic, social and environmental benefits is the project expected to deliver?
+
+user clicks the "Project approach" section
+    Click Element    id=js-accordion_control--03
+
+the "Project approach" questions should be visible
+    Page Should Contain Link    link=5. What technical approach will be adopted and how will the project be managed?
+    Page Should Contain Link    link=6. What is innovative about this project?
+    Page Should Contain Link    link=7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?
+    Page Should Contain Link    link=8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?
+
+user clicks the "Funding" section
+    Click Element    id=js-accordion_control--04
+
+the "Funding" questions should be visible
+    Page Should Contain Link    link=9. What is the financial commitment required for the project?
+    Page Should Contain Link    link=10. How does financial support from Innovate UK and its funding collaborators add value?
+
+user clicks the "Finances" section
+    Click Element    id=js-accordion_control--05
+
+the "Finances" sub-sections should be visible
+    Page Should Contain Link    link=Finances
+    Page Should Contain Link    link=Your finances
+    Page Should Contain Link    link=Project financial summary
