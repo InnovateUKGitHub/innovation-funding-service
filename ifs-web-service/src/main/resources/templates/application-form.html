@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+</head>
+<body>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div class="header-new-sub-wrapper">
+        <p data-th-text="${currentApplication.getName()}"></p>
+    </div>
+    <h1 class="heading-xlarge">Application Form</h1>
+
+    <div class="sections">
+        <div class="section" th:each="section : ${sections}">
+            <div>
+                <a th:href="@{/application/{id}/section/{sectionId}(id=${currentApplication.getId()},sectionId=${section.getId()})}"
+                   data-th-text="${section.getName()}"></a>
+            </div>
+
+            <div class="section-details">
+                <div th:if="${section.getId()} == ${currentSection}">
+                    <div class="section" th:each="question : ${section.getQuestions()}">
+                        <a th:href="@{/application-form/{id}/section/{sectionId}(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+                           data-th-text="${question.getName()}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form">
+        <div class="section" th:each="question : ${currentSection.getQuestions()}">
+            <div data-th-text="${question.getName()}"></div>
+        </div>
+
+    </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

@@ -3,9 +3,6 @@ package com.worth.ifs.domain;
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Created by wouter on 30/07/15.
- */
 
 @Entity
 public class Section {
@@ -28,5 +25,9 @@ public class Section {
 
     public List<Question> getQuestions() {
         return questions;
+    }
+
+    public long getId() {
+        return id;
     }
 }

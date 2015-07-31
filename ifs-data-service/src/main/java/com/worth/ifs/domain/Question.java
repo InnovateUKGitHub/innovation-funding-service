@@ -20,4 +20,12 @@ public class Question {
     private Section section;
 
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public long getId() {
+        return id;
+    }
 }
