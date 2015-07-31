@@ -21,4 +21,12 @@ public class Section {
     private List<Question> questions;
 
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
 }

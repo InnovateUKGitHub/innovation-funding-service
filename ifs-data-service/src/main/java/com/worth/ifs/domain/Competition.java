@@ -23,6 +23,17 @@ public class Competition {
     private List<Section> sections;
 
     private String name;
+
+    @Lob
+    @Column( length = 5000 )
     private String description;
     private Date deadline;
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

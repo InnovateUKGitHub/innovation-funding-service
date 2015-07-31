@@ -67,4 +67,8 @@ public class Application {
     public void setProcessStatus(ProcessStatus processStatus) {
         this.processStatus = processStatus;
     }
+
+    public Competition getCompetition() {
+        return competition;
+    }
 }
