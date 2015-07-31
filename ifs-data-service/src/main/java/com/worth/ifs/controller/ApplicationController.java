@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by wouter on 30/07/15.
- */
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {

@@ -2,9 +2,6 @@ package com.worth.ifs.domain;
 
 import javax.persistence.*;
 
-/**
- * Created by wouter on 30/07/15.
- */
 @Entity
 public class Question {
     @Id

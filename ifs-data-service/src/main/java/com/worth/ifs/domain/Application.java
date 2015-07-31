@@ -1,9 +1,5 @@
 package com.worth.ifs.domain;
 
-/**
- * Created by wouter on 29/07/15.
- */
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

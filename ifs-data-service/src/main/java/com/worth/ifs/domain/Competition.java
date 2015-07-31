@@ -4,9 +4,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by wouter on 30/07/15.
- */
 @Entity
 public class Competition {
     @Id

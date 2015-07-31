@@ -8,9 +8,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-/**
- * Created by wouter on 29/07/15.
- */
 @RepositoryRestResource(collectionResourceRel = "userApplicationRole", path = "userapplicationrole")
 public interface UserApplicationRoleRepository extends PagingAndSortingRepository<UserApplicationRole, Long> {
     List<UserApplicationRole> findById(@Param("id") Long id);

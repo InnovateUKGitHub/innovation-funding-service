@@ -8,9 +8,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by wouter on 28/07/15.
- */
 @Service
 public class UserService extends BaseServiceProvider {
 

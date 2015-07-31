@@ -5,9 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * Created by wouter on 29/07/15.
- */
 
 @Entity
 public class ProcessStatus {

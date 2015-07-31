@@ -9,9 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by wouter on 30/07/15.
- */
 @Service
 public class ApplicationService extends BaseServiceProvider {
     @Value("${ifs.data.service.rest.application}")
