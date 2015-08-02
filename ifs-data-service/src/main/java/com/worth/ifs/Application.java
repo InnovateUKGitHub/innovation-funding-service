@@ -11,9 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
-@EnableAutoConfiguration
-@Configuration
-@ComponentScan
 public class Application extends SpringBootServletInitializer {
     @Autowired
     UserRepository repository;
