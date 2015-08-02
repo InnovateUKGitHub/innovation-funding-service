@@ -5,6 +5,8 @@ import com.worth.ifs.domain.Competition;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,15 +23,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/application")
 public class ApplicationController {
-
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ApplicationService applicationService;
+
     @Autowired
     UserService userService;
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
+     *
+     * @param applicationId represents the application
+     * @param model model that contains the details for the application detail page
      */
     private void addApplicationDetails(Long applicationId, Model model){
         Application application = applicationService.getApplicationById(applicationId);
@@ -46,10 +52,8 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
-        System.out.println("Application with id " + applicationId);
-
+        log.debug("Application with id " + applicationId);
         this.addApplicationDetails(applicationId, model);
-
         return "application-details";
     }
 

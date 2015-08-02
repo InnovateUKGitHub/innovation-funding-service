@@ -12,13 +12,9 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-
 
     @OneToMany(mappedBy="user")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();

@@ -22,11 +22,17 @@ public class UserApplicationRole {
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
 
-    public Long getRoleId() { return role.getId();}
+    public Long getRoleId() {
+        return role.getId();
+    }
 
-    public Long getUserId() { return user.getId();}
+    public Long getUserId() {
+        return user.getId();
+    }
 
-    public Long getApplicationId() { return application.getId();}
+    public Long getApplicationId() {
+        return application.getId();
+    }
 
     @JsonIgnore
     public Role getRole() {

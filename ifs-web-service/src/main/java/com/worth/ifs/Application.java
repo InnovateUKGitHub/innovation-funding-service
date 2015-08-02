@@ -1,33 +1,28 @@
 package com.worth.ifs;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 
 /**
  * Created by nbijl on 23/07/15.
  */
 @SpringBootApplication
-@EnableAutoConfiguration
-@Configuration
-@ComponentScan
 public class Application extends SpringBootServletInitializer {
+    private static Log log = LogFactory.getLog(Application.class);
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        System.out.println("Spring Application builder configure method");
+        log.info("IFS Application builder configure method");
         return application.sources(Application.class);
     }
 
-
-
     public static void main(String[] args) throws Exception {
-        System.out.println("Spring boot Application main method");
+        log.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
 }

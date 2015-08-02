@@ -1,9 +1,11 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.User;
-import com.worth.ifs.filter.LoginFilter;
 import com.worth.ifs.form.LoginForm;
+import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -22,26 +24,28 @@ import java.util.List;
  */
 @Controller
 @Configuration
-//@EnableWebMvcSecurity
-//@EnableGlobalMethodSecurity
 public class LoginController {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     UserService userService;
 
+    @Autowired
+    TokenAuthenticationService tokenAuthenticationService;
+
     @RequestMapping(value="/login", method= RequestMethod.GET)
-     public String login( Model model, HttpServletResponse response) {
+     public String login( Model model, HttpServletRequest request) {
         String token = "";
         if(token != null && token != ""){
-            User user = userService.retrieveUserByToken(token);
+            User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
             if(user != null){
-                System.out.println("already logged in, redirect to dashboard");
                 return "redirect:/applicant/dashboard";
             }
         }
 
         List<User> users =userService.findAll();
 
-        System.out.println("Users in frontend " + users.size());
+        log.debug("Users in frontend " + users.size());
 
         model.addAttribute("users", users);
         model.addAttribute("loginForm", new LoginForm());
@@ -53,10 +57,7 @@ public class LoginController {
     @RequestMapping(value="/logout", method= RequestMethod.GET)
     public String logout(Model model, HttpServletResponse response) {
         // Removing the cookie is not possible, just expire it as soon as possible.
-        Cookie cookie = new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        System.out.println("removed cookie, redirect to login");
+        tokenAuthenticationService.removeAuthentication(response);
         return "redirect:/login";
     }
 
@@ -65,19 +66,12 @@ public class LoginController {
     public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
         User user = userService.retrieveUserByToken(loginForm.getToken());
         if(user != null){
-            response.addCookie(new Cookie(LoginFilter.IFS_AUTH_COOKIE_NAME, user.getToken()));
-
+            tokenAuthenticationService.addAuthentication(response, loginForm.getToken());
             // redirect to my applications
             return "redirect:/applicant/dashboard";
         }
 
         return "login";
     }
-
-
-
-
-
-
 }
 

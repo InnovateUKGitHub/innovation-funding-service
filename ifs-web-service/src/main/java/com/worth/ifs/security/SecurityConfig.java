@@ -1,0 +1,68 @@
+package com.worth.ifs.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+/**
+ * Every request is stateless and is checked if the user has access to requested resource.
+ *
+ */
+@Configuration
+@EnableWebMvcSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(1)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private StatelessAuthenticationFilter statelessAuthenticationFilter;
+
+    public SecurityConfig() {
+        super(true);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+                .anonymous()
+            .and()
+                .authorizeRequests()
+                // allow anonymous resource requests
+                .antMatchers("/images/**").permitAll()
+                .antMatchers("/login", "/").permitAll()
+                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+                .anyRequest().authenticated()
+            .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            .and()
+                .exceptionHandling()
+                .accessDeniedPage("/access?error")
+            .and()
+                .headers().cacheControl()
+            .and()
+                // Custom Token based authentication based on the header previously given to the client
+                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-XSRF-TOKEN");
+        return repository;
+    }
+
+}
