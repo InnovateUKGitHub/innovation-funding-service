@@ -33,7 +33,7 @@ public class LoginController {
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
 
-    @RequestMapping(value="/login", method= RequestMethod.GET)
+    @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
         String token = "";
         if(token != null && token != ""){
@@ -53,8 +53,7 @@ public class LoginController {
 
         return "login";
     }
-
-    @RequestMapping(value="/logout", method= RequestMethod.GET)
+    @RequestMapping(value="/login", params={"logout"})
     public String logout(Model model, HttpServletResponse response) {
         // Removing the cookie is not possible, just expire it as soon as possible.
         tokenAuthenticationService.removeAuthentication(response);
@@ -62,7 +61,7 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value="/login", method= RequestMethod.POST)
+    @RequestMapping(value="/login", method=RequestMethod.POST)
     public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
         User user = userService.retrieveUserByToken(loginForm.getToken());
         if(user != null){

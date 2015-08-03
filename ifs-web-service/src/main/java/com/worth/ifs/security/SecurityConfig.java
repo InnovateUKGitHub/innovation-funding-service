@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -40,13 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 // allow anonymous resource requests
-                .antMatchers("/images/**").permitAll()
-                .antMatchers("/login", "/").permitAll()
-                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
+                .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
+                .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
             .and()
-                .logout()
+                .logout().deleteCookies(TokenAuthenticationService.getAuthenticationCookieName())
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()

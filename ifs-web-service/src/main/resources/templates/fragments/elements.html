@@ -25,3 +25,15 @@
         </a>
     </div>
 </div>
+
+<!-- ===========================Element: Header links =========================== -->
+<div th:fragment="header-links">
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="header-links">
+        <ul>
+            <li>
+                <a href="/applicant/dashboard">My dashboard</a>
+            </li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</div>
