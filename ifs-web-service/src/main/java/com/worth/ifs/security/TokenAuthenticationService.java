@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class TokenAuthenticationService {
     private final Log log = LogFactory.getLog(getClass());
     private static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
-    private static int ONE_DAY = 60 * 60 * 24;
+    private static final int ONE_DAY = 60 * 60 * 24;
 
     @Autowired
     UserService userService;

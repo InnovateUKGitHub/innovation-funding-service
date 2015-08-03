@@ -13,7 +13,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
  */
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    private static Log log = LogFactory.getLog(Application.class);
+    private static final Log log = LogFactory.getLog(Application.class);
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

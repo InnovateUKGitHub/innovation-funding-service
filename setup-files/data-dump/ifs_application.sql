@@ -21,7 +21,7 @@
 
 LOCK TABLES `application` WRITE;
 /*!40000 ALTER TABLE `application` DISABLE KEYS */;
-INSERT INTO `application` VALUES (1,'Rovel Additive Manufacturing Process',1,1),(2,'Providing sustainable childcare',2,1),(3,'Mobile Phone Data for Logistics Analytics',3,1),(4,'Using natural gas to heat homes',4,1);
+INSERT INTO `application` VALUES (1,'Rovel Additive Manufacturing Process',1,1),(2,'Providing sustainable childcare',1,2),(3,'Mobile Phone Data for Logistics Analytics',1,3),(4,'Using natural gas to heat homes',1,4);
 /*!40000 ALTER TABLE `application` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

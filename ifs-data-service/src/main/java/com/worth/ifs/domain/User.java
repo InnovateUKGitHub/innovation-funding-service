@@ -35,7 +35,6 @@ public class User {
         this.token = token;
         this.userApplicationRoles = userApplicationRoles;
     }
-    }
 
     public long getId() {
         return id;

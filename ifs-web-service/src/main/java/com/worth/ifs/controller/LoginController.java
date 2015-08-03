@@ -54,7 +54,7 @@ public class LoginController {
         return "login";
     }
     @RequestMapping(value="/login", params={"logout"})
-    public String logout(Model model, HttpServletResponse response) {
+    public String logout(HttpServletResponse response) {
         // Removing the cookie is not possible, just expire it as soon as possible.
         tokenAuthenticationService.removeAuthentication(response);
         return "redirect:/login";

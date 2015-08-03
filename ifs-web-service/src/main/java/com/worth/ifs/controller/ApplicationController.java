@@ -46,7 +46,6 @@ public class ApplicationController {
 
         List<Section> sections = competition.getSections();
         model.addAttribute("sections", sections);
-        return ;
     }
 
 
