@@ -59,7 +59,11 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.2")
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'org.mockito:mockito-core'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
     // for the api lib:
     /*compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
