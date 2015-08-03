@@ -25,6 +25,16 @@ public class User {
     @Column(unique=true)
     private String token;
 
+    public User(){
+
+    }
+    public User(long id, String name, String imageUrl, String token) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.token = token;
+    }
+
     public long getId() {
         return id;
     }

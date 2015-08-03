@@ -51,7 +51,14 @@ dependencies {
     // Use this for including the api lib from the data-service.
     compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'org.mockito:mockito-core'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+
+
 }
 
 
