@@ -137,20 +137,17 @@ public class LoginControllerTest {
      */
     @Test
     public void testSubmitInvalidLogin() throws Exception {
-        String loginToken = "token1";
         String incorrectLoginToken = "invalidToken";
-        User user1 = new User(1L, "Nico Bijl", "", loginToken);
-        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
-        //when(tokenAuthenticationService.addAuthentication()
+        when(userServiceMock.retrieveUserByToken(incorrectLoginToken)).thenReturn(null);
 
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("token", incorrectLoginToken)
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/login"));
+                .andExpect(view().name("login"));
 
-        verify(userServiceMock, times(1)).retrieveUserByToken(loginToken);
+        verify(userServiceMock, times(1)).retrieveUserByToken(incorrectLoginToken);
         verifyNoMoreInteractions(userServiceMock);
     }
 
