@@ -28,11 +28,13 @@ public class User {
     public User(){
 
     }
-    public User(long id, String name, String imageUrl, String token) {
+    public User(long id, String name, String imageUrl, String token, List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.token = token;
+        this.userApplicationRoles = userApplicationRoles;
+    }
     }
 
     public long getId() {
