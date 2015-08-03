@@ -10,17 +10,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,8 +43,6 @@ public class LoginControllerTest {
 
     @Before
     public void setUp(){
-        System.out.println("get MockMvc now.");
-
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
@@ -57,9 +58,8 @@ public class LoginControllerTest {
         return viewResolver;
     }
 
-
     @Test
-    public void testLoginWithoutUsers() throws Exception {
+    public void testLoginViewWithoutUsers() throws Exception {
         when(userServiceMock.findAll()).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/login"))
@@ -71,8 +71,11 @@ public class LoginControllerTest {
         verifyNoMoreInteractions(userServiceMock);
     }
 
+    /**
+     * Test if the login view shows the user accounts to login with.
+     */
     @Test
-    public void testLoginWithUsers() throws Exception {
+    public void testLoginViewWithUsers() throws Exception {
         User user1 = new User(1L, "Nico Bijl", "", "token1");
         User user2 = new User(2L, "Rogier de Regt", "", "token2");
         User user3 = new User(3L, "Wouter de Meijer", "", "token3");
@@ -107,6 +110,50 @@ public class LoginControllerTest {
         verify(userServiceMock, times(1)).findAll();
         verifyNoMoreInteractions(userServiceMock);
     }
+
+    /**
+     * Test if the login works, when we enter a valid login token.
+     */
+    @Test
+    public void testSubmitValidLogin() throws Exception {
+        String loginToken = "token1";
+        User user1 = new User(1L, "Nico Bijl", "", loginToken);
+        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
+        //when(tokenAuthenticationService.addAuthentication()
+
+                mockMvc.perform(post("/login")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("token", loginToken)
+                )
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(view().name("redirect:/applicant/dashboard"));
+
+        verify(userServiceMock, times(1)).retrieveUserByToken(loginToken);
+        verifyNoMoreInteractions(userServiceMock);
+    }
+
+    /**
+     * Test if, when the users submits the form with a invalid token, the user is shown the login page again.
+     */
+    @Test
+    public void testSubmitInvalidLogin() throws Exception {
+        String loginToken = "token1";
+        String incorrectLoginToken = "invalidToken";
+        User user1 = new User(1L, "Nico Bijl", "", loginToken);
+        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
+        //when(tokenAuthenticationService.addAuthentication()
+
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", incorrectLoginToken)
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("/login"));
+
+        verify(userServiceMock, times(1)).retrieveUserByToken(loginToken);
+        verifyNoMoreInteractions(userServiceMock);
+    }
+
 
     @Test
     public void testLogout() throws Exception {
