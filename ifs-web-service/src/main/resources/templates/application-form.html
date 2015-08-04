@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div class="header-new-sub-wrapper">
-        <p data-th-text="${currentApplication.getName()}"></p>
+        <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
     </div>
     <h1 class="heading-xlarge">Application Form</h1>
 

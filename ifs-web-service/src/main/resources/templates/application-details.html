@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div class="header-new-sub-wrapper">
-        <p data-th-text="${currentApplication.getName()}"></p>
+        <div data-th-text="${currentApplication.getName()}" th:remove="tag"  />
     </div>
     <h1 class="heading-xlarge">Application overview</h1>
 
@@ -23,7 +23,7 @@
 
     <div class="collapsible">
         <div th:remove="tag" th:each="section : ${sections}">
-            <h2 data-th-text="${section.getName()}"  />
+            <h2 data-th-text="${section.getName()}" th:class="(${section.getId()} == ${currentSectionId}) ? 'open':''" />
             <div>
                 <div class="section" th:each="question : ${section.getQuestions()}">
                     <a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
