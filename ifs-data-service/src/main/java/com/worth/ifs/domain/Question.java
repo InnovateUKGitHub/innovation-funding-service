@@ -4,6 +4,18 @@ import javax.persistence.*;
 
 @Entity
 public class Question {
+    public Question(long id, Competition competition, Section section, String name) {
+        this.id = id;
+        this.competition = competition;
+        this.section = section;
+        this.name = name;
+    }
+
+    public Question() {
+
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -24,5 +36,13 @@ public class Question {
 
     public long getId() {
         return id;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public Section getSection() {
+        return section;
     }
 }

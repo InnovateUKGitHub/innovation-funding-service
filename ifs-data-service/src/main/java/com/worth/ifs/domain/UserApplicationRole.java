@@ -6,6 +6,17 @@ import javax.persistence.*;
 
 @Entity
 public class UserApplicationRole {
+    public UserApplicationRole(long id, User user, Application application, Role role) {
+        this.id = id;
+        this.user = user;
+        this.application = application;
+        this.role = role;
+    }
+
+    public UserApplicationRole(){
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
