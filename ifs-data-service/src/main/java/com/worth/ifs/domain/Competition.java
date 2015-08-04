@@ -21,6 +21,13 @@ public class Competition {
 
     private String name;
 
+    public Competition(long id, String name, String description, Date deadline) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.deadline = deadline;
+    }
+
     @Lob
     @Column( length = 5000 )
     private String description;

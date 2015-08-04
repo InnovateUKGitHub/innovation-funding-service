@@ -67,4 +67,15 @@ public class Application {
     public Competition getCompetition() {
         return competition;
     }
+
+    public Application(long id, String name, ProcessStatus processStatus) {
+        this.id = id;
+        this.name = name;
+        this.processStatus = processStatus;
+    }
+
+    public void addUserApplicationRole(UserApplicationRole userApplicationRole){
+        this.userApplicationRoles.add(userApplicationRole);
+
+    }
 }
