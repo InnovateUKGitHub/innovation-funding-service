@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:remove="tag"></div>
 </head>
@@ -24,10 +24,8 @@
                                 <a th:href="@{/application/{id}(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
-
-                            <div th:class="${application.getProcessStatus().getName() == 'submitted'}? 'greentext' : ''" data-th-text="${application.getProcessStatus().getName()}"></div>
+                            <strong th:if="${application.getProcessStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
                         </div>
-
                     </div>
                 </li>
             </ul>
@@ -39,7 +37,6 @@
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <h4 class="heading-medium" data-th-text="${application.name}"></h4>
-
                             <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
                         </div>
                     </div>
