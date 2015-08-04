@@ -12,7 +12,8 @@
 }
 /* line 46, ../sass/vendor/govuk_frontend_toolkit/stylesheets/_shims.scss */
 .grid-row:after, #global-header .header-wrapper:after, #global-header .header-wrapper .header-global:after, #global-header .header-wrapper .header-global .header-logo:after, #global-header .header-proposition #proposition-link:after,
-#global-header .header-proposition #proposition-links:after, #footer .footer-wrapper:after, #footer .footer-meta:after, #content:after, fieldset:after, .form-group:after, .form-block:after, .panel-indent:after, .navigation-list.navigation-right:after {
+#global-header .header-proposition #proposition-links:after, #footer .footer-wrapper:after, #footer .footer-meta:after, #content:after, fieldset:after, .form-group:after, .form-block:after, .panel-indent:after, ul.navigation-list.navigation-right:after,
+ol.navigation-list.navigation-right:after {
   content: "";
   display: block;
   clear: both;
@@ -2575,26 +2576,56 @@ ol {
   color: #fff;
 }
 
-/* line 19, ../sass/_worth.scss */
-.navigation-list {
+/* line 21, ../sass/_worth.scss */
+ul.navigation-list,
+ol.navigation-list {
+  list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 22, ../sass/_worth.scss */
-.navigation-list li {
+/* line 26, ../sass/_worth.scss */
+ul.navigation-list li,
+ol.navigation-list li {
   display: inline-block;
   margin: 0 10px 0 0;
 }
-/* line 26, ../sass/_worth.scss */
-.navigation-list li a {
+/* line 30, ../sass/_worth.scss */
+ul.navigation-list li a,
+ol.navigation-list li a {
   display: inline-block;
   padding: 5px;
 }
-/* line 31, ../sass/_worth.scss */
-.navigation-list.navigation-right {
+/* line 35, ../sass/_worth.scss */
+ul.navigation-list.navigation-right,
+ol.navigation-list.navigation-right {
   float: right;
 }
-/* line 34, ../sass/_worth.scss */
-.navigation-list.navigation-right li {
+/* line 38, ../sass/_worth.scss */
+ul.navigation-list.navigation-right li,
+ol.navigation-list.navigation-right li {
   margin: 0 0 0 10px;
+}
+
+/* line 42, ../sass/_worth.scss */
+ul.boxed-list,
+ol.boxed-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 47, ../sass/_worth.scss */
+ul.boxed-list h1, ul.boxed-list h2, ul.boxed-list h3, ul.boxed-list h4,
+ol.boxed-list h1,
+ol.boxed-list h2,
+ol.boxed-list h3,
+ol.boxed-list h4 {
+  margin-top: 0;
+}
+/* line 51, ../sass/_worth.scss */
+ul.boxed-list li,
+ol.boxed-list li {
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+  border: 1px solid #D2D4D5;
 }

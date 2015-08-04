@@ -15,34 +15,36 @@
     <div class="my-applications">
         <div class="in-progress">
             <h3 class="heading-large">In Progress</h3>
-            <div class="application" th:each="application : ${applicationsInProcess}">
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <h4 class="heading-medium">
-                            <a th:href="@{/application/{id}(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
-                        </h4>
 
-                        <div data-th-text="${application.getProcessStatus().getName()}"></div>
+            <ul class="boxed-list">
+                <li th:each="application : ${applicationsInProcess}">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h4 class="heading-medium">
+                                <a th:href="@{/application/{id}(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
+                            </h4>
+                            <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+
+                            <div data-th-text="${application.getProcessStatus().getName()}"></div>
+                        </div>
+
                     </div>
-
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
         <div class="previous-applications">
             <h3 class="heading-large">Previous Applications</h3>
-            <div class="application" th:each="application : ${applicationsFinished}">
+            <ul class="boxed-list">
+                <li th:each="application : ${applicationsFinished}">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h4 class="heading-medium" data-th-text="${application.name}"></h4>
 
-
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <h4 class="heading-medium" data-th-text="${application.name}"></h4>
-
-                        <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                            <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                        </div>
                     </div>
-                </div>
-
-
-            </div>
+                </li>
+            </ul>
         </div>
     </div>
 

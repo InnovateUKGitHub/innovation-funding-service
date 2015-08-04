@@ -15,8 +15,12 @@
 
 }
 
+$ifs-gray: #D2D4D5;
+
 //element
-.navigation-list {
+ul.navigation-list,
+ol.navigation-list {
+	list-style:none;
 	margin:0;
 	padding:0;
 	li {
@@ -35,3 +39,19 @@
 	}
 }
 
+ul.boxed-list,
+ol.boxed-list {
+	list-style:none;
+	margin:0;
+	padding:0;
+	h1,h2,h3,h4 {
+		margin-top:0;
+	}
+
+	li {
+		position: relative;
+		padding:20px;
+		margin-top: 10px;
+		border:1px solid $ifs-gray;
+	}
+}
