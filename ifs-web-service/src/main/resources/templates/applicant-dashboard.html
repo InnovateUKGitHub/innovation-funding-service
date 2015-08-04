@@ -25,7 +25,7 @@
                             </h4>
                             <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
 
-                            <div data-th-text="${application.getProcessStatus().getName()}"></div>
+                            <div th:class="${application.getProcessStatus().getName() == 'submitted'}? 'greentext' : ''" data-th-text="${application.getProcessStatus().getName()}"></div>
                         </div>
 
                     </div>

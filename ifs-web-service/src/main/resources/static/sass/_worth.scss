@@ -1,6 +1,10 @@
 //temp file for all the worth styles 
 //will be cut up in smaller pieces later 
 
+//variables 
+$ifs-gray: #D2D4D5;
+$ifs-green : #00823b;
+
 
 //no margins for the page headers
 .page-header {
@@ -15,9 +19,9 @@
 
 }
 
-$ifs-gray: #D2D4D5;
-
-//element
+//#elements
+//##navigation list
+//by default left aligned can be right by adding the class `.navigation-right`
 ul.navigation-list,
 ol.navigation-list {
 	list-style:none;
@@ -39,6 +43,8 @@ ol.navigation-list {
 	}
 }
 
+//##boxed-list 
+//The boxed list is a list with each list element as a block and bordered.
 ul.boxed-list,
 ol.boxed-list {
 	list-style:none;
@@ -49,9 +55,15 @@ ol.boxed-list {
 	}
 
 	li {
+		display: block;
 		position: relative;
 		padding:20px;
 		margin-top: 10px;
 		border:1px solid $ifs-gray;
 	}
+}
+//#small elements
+//##textcolors
+.greentext {
+	color:$ifs-green;
 }
