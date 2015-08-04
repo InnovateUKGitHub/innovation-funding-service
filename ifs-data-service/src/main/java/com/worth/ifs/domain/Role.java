@@ -7,6 +7,11 @@ import java.util.List;
 
 @Entity
 public class Role {
+    public Role(long id, String name, List<UserApplicationRole> userApplicationRoles) {
+        this.id = id;
+        this.name = name;
+        this.userApplicationRoles = userApplicationRoles;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

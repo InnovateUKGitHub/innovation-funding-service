@@ -9,6 +9,14 @@ import java.util.List;
  */
 @Entity
 public class Application {
+    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ProcessStatus processStatus, long id) {
+        this.competition = competition;
+        this.name = name;
+        this.userApplicationRoles = userApplicationRoles;
+        this.processStatus = processStatus;
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

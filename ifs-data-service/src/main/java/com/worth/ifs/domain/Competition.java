@@ -6,6 +6,20 @@ import java.util.List;
 
 @Entity
 public class Competition {
+    public Competition(long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
+        this.id = id;
+        this.applications = applications;
+        this.questions = questions;
+        this.sections = sections;
+        this.name = name;
+        this.description = description;
+        this.deadline = deadline;
+    }
+
+    public Competition() {
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -32,5 +46,29 @@ public class Competition {
 
     public String getDescription() {
         return description;
+    }
+
+    public void addApplication(Application app) {
+        applications.add(app);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getDeadline() {
+        return deadline;
     }
 }
