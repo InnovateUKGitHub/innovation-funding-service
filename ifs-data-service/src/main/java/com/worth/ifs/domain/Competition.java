@@ -33,4 +33,8 @@ public class Competition {
     public String getDescription() {
         return description;
     }
+
+    public void addApplication(Application app){
+        applications.add(app);
+    }
 }

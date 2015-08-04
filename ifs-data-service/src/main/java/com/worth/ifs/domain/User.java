@@ -55,4 +55,8 @@ public class User {
     public List<UserApplicationRole> getUserApplicationRoles() {
         return userApplicationRoles;
     }
+
+    public void addUserApplicationRole(UserApplicationRole r){
+        this.userApplicationRoles.add(r);
+    }
 }
