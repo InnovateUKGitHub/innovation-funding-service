@@ -41,8 +41,4 @@ public class Section {
     public long getId() {
         return id;
     }
-
-    public Competition getCompetition() {
-        return competition;
-    }
 }

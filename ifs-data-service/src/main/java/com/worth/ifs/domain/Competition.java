@@ -56,7 +56,6 @@ public class Competition {
     }
 
 
-
     public void addApplication(Application app){
         if(applications == null){
             applications = new ArrayList<>();
@@ -68,13 +67,6 @@ public class Competition {
         return id;
     }
 
-    public List<Application> getApplications() {
-        return applications;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
 
     public String getName() {
         return name;

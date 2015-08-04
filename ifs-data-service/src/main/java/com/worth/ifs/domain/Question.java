@@ -37,12 +37,4 @@ public class Question {
     public long getId() {
         return id;
     }
-
-    public Competition getCompetition() {
-        return competition;
-    }
-
-    public Section getSection() {
-        return section;
-    }
 }
