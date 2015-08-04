@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * ProcessStatus defines database relations and a model to use client side and server side.
+ */
 
 @Entity
 public class ProcessStatus {

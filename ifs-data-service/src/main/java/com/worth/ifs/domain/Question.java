@@ -2,6 +2,10 @@ package com.worth.ifs.domain;
 
 import javax.persistence.*;
 
+/**
+ * Question defines database relations and a model to use client side and server side.
+ */
+
 @Entity
 public class Question {
     public Question(long id, Competition competition, Section section, String name) {

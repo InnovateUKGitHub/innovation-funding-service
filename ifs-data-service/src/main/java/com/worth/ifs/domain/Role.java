@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Role defines database relations and a model to use client side and server side.
+ */
 
 @Entity
 public class Role {

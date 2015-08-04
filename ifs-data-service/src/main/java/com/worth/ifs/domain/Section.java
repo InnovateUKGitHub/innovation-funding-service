@@ -3,6 +3,9 @@ package com.worth.ifs.domain;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Section defines database relations and a model to use client side and server side.
+ */
 
 @Entity
 public class Section {

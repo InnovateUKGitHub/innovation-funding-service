@@ -8,6 +8,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * UserService is a utility to use client-side to retrieve User data from the data-service controllers.
+ */
+
 @Service
 public class UserService extends BaseServiceProvider {
 

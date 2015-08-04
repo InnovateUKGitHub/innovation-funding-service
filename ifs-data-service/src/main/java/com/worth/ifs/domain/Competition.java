@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Competition defines database relations and a model to use client side and server side.
+ */
+
 @Entity
 public class Competition {
     public Competition() {

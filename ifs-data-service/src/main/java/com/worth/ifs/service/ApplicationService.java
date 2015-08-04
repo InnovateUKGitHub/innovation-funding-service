@@ -9,6 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * ApplicationService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ */
+
 @Service
 public class ApplicationService extends BaseServiceProvider {
     @Value("${ifs.data.service.rest.application}")
