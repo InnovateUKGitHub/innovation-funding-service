@@ -68,6 +68,10 @@ public class Application {
         return competition;
     }
 
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
     public Application(long id, String name, ProcessStatus processStatus) {
         this.id = id;
         this.name = name;
@@ -75,6 +79,9 @@ public class Application {
     }
 
     public void addUserApplicationRole(UserApplicationRole userApplicationRole){
+        if(userApplicationRoles == null){
+            userApplicationRoles = new ArrayList<>();
+        }
         this.userApplicationRoles.add(userApplicationRole);
 
     }
