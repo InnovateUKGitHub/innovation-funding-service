@@ -17,8 +17,12 @@ public class UserController {
 
     @RequestMapping("/token/{token}")
     public User getUserByToken(@PathVariable("token") final String token) {
-        User user = repository.findByToken(token).get(0);
-        return user;
+        List<User> users = repository.findByToken(token);
+        if (users.size() > 0){
+            return users.get(0);
+        }else{
+            return null;
+        }
     }
 
     @RequestMapping("/id/{id}")

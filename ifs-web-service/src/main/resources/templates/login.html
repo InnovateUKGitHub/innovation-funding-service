@@ -26,6 +26,7 @@
                 <select th:field="*{token}" class="form-control" id="id_user">
 					<option data-th-each="user : ${users}" data-th-value="${user.token}" data-th-text="${user.name}">
 					</option>
+					<option value="NotExistingToken">Non Existing User</option>
 
 				</select>
             </div><!-- .form-group -->

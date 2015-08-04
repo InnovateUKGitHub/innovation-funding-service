@@ -68,9 +68,9 @@ public class LoginController {
             tokenAuthenticationService.addAuthentication(response, loginForm.getToken());
             // redirect to my applications
             return "redirect:/applicant/dashboard";
+        }else{
+            return "redirect:/login?invalid";
         }
-
-        return "login";
     }
 }
 

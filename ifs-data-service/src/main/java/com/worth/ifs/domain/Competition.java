@@ -2,6 +2,7 @@ package com.worth.ifs.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -56,25 +57,17 @@ public class Competition {
     }
 
 
-
-    public void addApplication(Application app){
+    public void addApplication(Application... apps){
         if(applications == null){
             applications = new ArrayList<>();
         }
-        applications.add(app);
+        this.applications.addAll(Arrays.asList(apps));
     }
 
     public long getId() {
         return id;
     }
 
-    public List<Application> getApplications() {
-        return applications;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
 
     public String getName() {
         return name;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,7 +58,10 @@ public class User {
         return userApplicationRoles;
     }
 
-    public void addUserApplicationRole(UserApplicationRole r){
-        this.userApplicationRoles.add(r);
+    public void addUserApplicationRole(UserApplicationRole... r){
+        if(this.userApplicationRoles == null){
+            this.userApplicationRoles = new ArrayList<>();
+        }
+        this.userApplicationRoles.addAll(Arrays.asList(r));
     }
 }
