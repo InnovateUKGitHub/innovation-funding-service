@@ -1,6 +1,37 @@
 //temp file for all the worth styles 
 //will be cut up in smaller pieces later 
+
+
+//no margins for the page headers
 .page-header {
 	margin-left:0;
 	margin-right:0;
 }
+
+//layout
+.header-global .navigation-list  {
+	margin: 0 15px;
+	a{ color:#fff;}
+
+}
+
+//element
+.navigation-list {
+	margin:0;
+	padding:0;
+	li {
+		display: inline-block;
+		margin: 0 10px 0 0;
+	}
+	li a {
+		display: inline-block;
+		padding:5px;
+	}
+	//right aligned
+	&.navigation-right {
+	 	@extend %contain-floats;
+		float: right;
+		li { margin: 0 0 0 10px;}
+	}
+}
+

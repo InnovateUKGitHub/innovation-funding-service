@@ -20,8 +20,8 @@
 
 <div th:fragment="header-logo"> 
     <div class="header-logo">
-        <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-          <img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="" /> GOV.UK
+        <a href="/" title="Go to the Innovation Funding Service homepage" id="logo" class="content">
+          <img src="/images/innovateuk_logo.png" width="165" height="23" alt="Innovate UK logo" />
         </a>
     </div>
 </div>
@@ -29,11 +29,13 @@
 <!-- ===========================Element: Header links =========================== -->
 <div th:fragment="header-links">
     <div th:if="${#authorization.expression('isAuthenticated()')}" class="header-links">
-        <ul>
+        <ul class="navigation-list navigation-right">
             <li>
                 <a href="/applicant/dashboard">My dashboard</a>
             </li>
-            <li><a href="/logout">Logout</a></li>
+            <li>
+                <a href="/logout">Logout</a>
+            </li>
         </ul>
     </div>
 </div>
