@@ -2801,44 +2801,55 @@ ol {
   color: #fff;
 }
 
-/* line 25, ../sass/_worth.scss */
+/* line 21, ../sass/_worth.scss */
+.header-new-sub-wrapper {
+  background: #F8F8F8;
+  border-top: 10px solid #79298A;
+  clear: both;
+  font-weight: 700;
+  padding: 20px 4%;
+  margin: 0 -4%;
+  position: relative;
+}
+
+/* line 34, ../sass/_worth.scss */
 ul.navigation-list,
 ol.navigation-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 30, ../sass/_worth.scss */
+/* line 39, ../sass/_worth.scss */
 ul.navigation-list li,
 ol.navigation-list li {
   display: inline-block;
   margin: 0 10px 0 0;
 }
-/* line 34, ../sass/_worth.scss */
+/* line 43, ../sass/_worth.scss */
 ul.navigation-list li a,
 ol.navigation-list li a {
   display: inline-block;
   padding: 5px;
 }
-/* line 39, ../sass/_worth.scss */
+/* line 48, ../sass/_worth.scss */
 ul.navigation-list.navigation-right,
 ol.navigation-list.navigation-right {
   float: right;
 }
-/* line 42, ../sass/_worth.scss */
+/* line 51, ../sass/_worth.scss */
 ul.navigation-list.navigation-right li,
 ol.navigation-list.navigation-right li {
   margin: 0 0 0 10px;
 }
 
-/* line 48, ../sass/_worth.scss */
+/* line 57, ../sass/_worth.scss */
 ul.boxed-list,
 ol.boxed-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 53, ../sass/_worth.scss */
+/* line 62, ../sass/_worth.scss */
 ul.boxed-list h1, ul.boxed-list h2, ul.boxed-list h3, ul.boxed-list h4,
 ol.boxed-list h1,
 ol.boxed-list h2,
@@ -2846,7 +2857,7 @@ ol.boxed-list h3,
 ol.boxed-list h4 {
   margin-top: 0;
 }
-/* line 57, ../sass/_worth.scss */
+/* line 66, ../sass/_worth.scss */
 ul.boxed-list li,
 ol.boxed-list li {
   display: block;
@@ -2856,7 +2867,7 @@ ol.boxed-list li {
   border: 1px solid #D2D4D5;
 }
 
-/* line 67, ../sass/_worth.scss */
+/* line 76, ../sass/_worth.scss */
 .collapsible button, .no-js .collapsible > h2 {
   background-color: #DEE0E2;
   font-size: 19px;
@@ -2866,72 +2877,72 @@ ol.boxed-list li {
   margin: 0 0 5px;
 }
 
-/* line 77, ../sass/_worth.scss */
+/* line 86, ../sass/_worth.scss */
 .collapsible button {
   border: 0;
   cursor: pointer;
 }
-/* line 82, ../sass/_worth.scss */
+/* line 91, ../sass/_worth.scss */
 .collapsible button::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
-/* line 86, ../sass/_worth.scss */
+/* line 95, ../sass/_worth.scss */
 .collapsible button[aria-expanded="true"] {
   margin-bottom: 0;
 }
-/* line 91, ../sass/_worth.scss */
+/* line 100, ../sass/_worth.scss */
 .collapsible button[aria-expanded] {
   display: block;
   width: 100%;
 }
-/* line 94, ../sass/_worth.scss */
+/* line 103, ../sass/_worth.scss */
 .collapsible button[aria-expanded]:after {
   content: '\25b2\0020';
   float: right;
 }
-/* line 99, ../sass/_worth.scss */
+/* line 108, ../sass/_worth.scss */
 .collapsible button[aria-expanded="true"] {
   margin-bottom: 0;
 }
-/* line 101, ../sass/_worth.scss */
+/* line 110, ../sass/_worth.scss */
 .collapsible button[aria-expanded="true"]:after {
   content: '\25bc\0020';
 }
-/* line 105, ../sass/_worth.scss */
+/* line 114, ../sass/_worth.scss */
 .collapsible h2 + [aria-hidden] {
   display: none;
 }
-/* line 109, ../sass/_worth.scss */
+/* line 118, ../sass/_worth.scss */
 .collapsible h2 + [aria-hidden="false"] {
   display: block;
 }
-/* line 112, ../sass/_worth.scss */
+/* line 121, ../sass/_worth.scss */
 .collapsible .section {
   margin-left: 10px;
 }
-/* line 116, ../sass/_worth.scss */
+/* line 125, ../sass/_worth.scss */
 .collapsible .section a {
   border-top: 1px solid #CFD0D2;
   padding: 20px 20px 20px 0px;
   display: block;
 }
-/* line 121, ../sass/_worth.scss */
+/* line 130, ../sass/_worth.scss */
 .collapsible .section:first-child a {
   border-top: none;
 }
 
-/* line 125, ../sass/_worth.scss */
+/* line 134, ../sass/_worth.scss */
 .no-js .collapsible > h2 {
   cursor: default;
 }
 
-/* line 132, ../sass/_worth.scss */
+/* line 143, ../sass/_worth.scss */
 .greentext {
   color: #00823b;
 }
 
-/* line 136, ../sass/_worth.scss */
+/* line 147, ../sass/_worth.scss */
 #content strong {
   font-weight: 700;
 }
