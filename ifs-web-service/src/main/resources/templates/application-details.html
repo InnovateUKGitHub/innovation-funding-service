@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:remove="tag"></div>
 </head>
@@ -21,19 +21,13 @@
         <p data-th-text="${currentCompetition.getDescription()}"></p>
     </div>
 
-    <div class="sections">
-        <div class="section" th:each="section : ${sections}">
+    <div class="collapsible">
+        <div th:remove="tag" th:each="section : ${sections}">
+            <h2 data-th-text="${section.getName()}"  />
             <div>
-                <a th:href="@{/application/{id}/section/{sectionId}(id=${currentApplication.getId()},sectionId=${section.getId()})}"
-                   data-th-text="${section.getName()}"></a>
-            </div>
-
-            <div class="section-details">
-                <div th:if="${section.getId()} == ${currentSectionId}">
-                    <div class="section" th:each="question : ${section.getQuestions()}">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
-                           data-th-text="${question.getName()}"></a>
-                    </div>
+                <div class="section" th:each="question : ${section.getQuestions()}">
+                    <a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+                       data-th-text="${question.getName()}"></a>
                 </div>
             </div>
         </div>

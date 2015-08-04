@@ -62,8 +62,77 @@ ol.boxed-list {
 		border:1px solid $ifs-gray;
 	}
 }
+
+
+%toggle-button {
+	background-color: #DEE0E2;
+	font-size: 19px;
+	font-weight: 700;
+	text-align:left;
+	padding: 15px 20px;
+	margin: 0 0 5px;
+}
+//#toggle-list 
+.collapsible {
+	button {
+		border:0;
+		cursor: pointer;
+		@extend %toggle-button;
+
+		&::-moz-focus-inner{  
+			padding: 0;
+			border: 0;
+		}
+		&[aria-expanded="true"]{
+			margin-bottom:0;
+		}
+	}
+	
+	button[aria-expanded] {
+		display: block;
+		width: 100%;
+		&:after {
+			content: '\25b2\0020';
+			float:right;
+		}
+	}
+	button[aria-expanded="true"]{
+		margin-bottom: 0;
+		&:after {
+			content: '\25bc\0020';
+		}
+	}
+	h2 + [aria-hidden] {
+		display: none;
+	}
+
+	h2 + [aria-hidden="false"] {
+		display: block;
+	}
+	.section {
+		margin-left: 10px;
+	}
+
+	.section a {
+		border-top: 1px solid #CFD0D2;
+		padding: 20px 20px 20px 0px;
+		display: block;
+	}
+	.section:first-child a {
+		border-top:none;
+	}
+}
+.no-js .collapsible > h2 {
+	@extend %toggle-button;
+	cursor: default;
+}
+
 //#small elements
 //##textcolors
 .greentext {
 	color:$ifs-green;
+}
+
+#content strong {
+	font-weight:700;
 }
