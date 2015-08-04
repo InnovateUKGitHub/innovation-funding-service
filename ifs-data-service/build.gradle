@@ -57,6 +57,7 @@ dependencies {
     compile("org.springframework:spring-web")
     compile("com.fasterxml.jackson.core:jackson-databind")
     compile("org.projectlombok:lombok:1.16.2")
+    compile("com.jayway.jsonpath:json-path-assert:2.0.0")
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile group: 'org.hamcrest', name: 'hamcrest-core'
