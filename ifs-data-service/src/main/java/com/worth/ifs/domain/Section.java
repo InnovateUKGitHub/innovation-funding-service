@@ -6,6 +6,17 @@ import java.util.List;
 
 @Entity
 public class Section {
+    public Section(long id, Competition competition, List<Question> questions, String name) {
+        this.id = id;
+        this.competition = competition;
+        this.questions = questions;
+        this.name = name;
+    }
+
+    public Section () {
+        
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -29,5 +40,9 @@ public class Section {
 
     public long getId() {
         return id;
+    }
+
+    public Competition getCompetition() {
+        return competition;
     }
 }
