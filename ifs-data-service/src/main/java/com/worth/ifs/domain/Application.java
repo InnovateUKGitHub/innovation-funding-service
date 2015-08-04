@@ -2,6 +2,7 @@ package com.worth.ifs.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -86,11 +87,12 @@ public class Application {
         this.processStatus = processStatus;
     }
 
-    public void addUserApplicationRole(UserApplicationRole userApplicationRole){
-        if(userApplicationRoles == null){
-            userApplicationRoles = new ArrayList<>();
+    public void addUserApplicationRole(UserApplicationRole... userApplicationRoles){
+        if(this.userApplicationRoles == null){
+            this.userApplicationRoles = new ArrayList<>();
         }
-        this.userApplicationRoles.add(userApplicationRole);
+        this.userApplicationRoles.addAll(Arrays.asList(userApplicationRoles));
+
 
     }
 }
