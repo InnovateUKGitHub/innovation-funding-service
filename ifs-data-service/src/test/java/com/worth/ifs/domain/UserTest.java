@@ -11,44 +11,35 @@ import java.util.List;
 
 public class UserTest {
     User user;
+
+    List<UserApplicationRole> userApplicationRoles;
+    long id;
+    String name;
+    String imageUrl;
+    String token;
+
+
     @Before
     public void setUp() throws Exception {
-        List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+        id = 0L;
+        name = "testname";
+        imageUrl = "/image/url/test";
+        token = "testtoken123abc";
+
+        userApplicationRoles = new ArrayList<UserApplicationRole>();
         userApplicationRoles.add(new UserApplicationRole());
         userApplicationRoles.add(new UserApplicationRole());
         userApplicationRoles.add(new UserApplicationRole());
 
-        user = new User(0, "testname", "/image/url/test", "testtoken123abc", userApplicationRoles);
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
+        user = new User(id, name, imageUrl, token, userApplicationRoles);
     }
 
     @Test
-    public void userShouldHaveCorrectUserApplicationRoleListSize() throws Exception {
-        Assert.assertEquals(user.getUserApplicationRoles().size(), 3);
-    }
-
-    @Test
-    public void userShouldHaveName() throws Exception {
-        Assert.assertEquals(user.getName(), "testname");
-    }
-
-    @Test
-    public void userShouldHaveId() throws Exception {
-        Assert.assertEquals(user.getId(), 0);
-    }
-
-    @Test
-    public void userShouldHaveImageUrl() throws Exception {
-        Assert.assertEquals(user.getImageUrl(),"/image/url/test");
-    }
-
-    @Test
-    public void userShouldHaveToken() throws Exception {
-        Assert.assertEquals(user.getToken(),"testtoken123abc");
+    public void userShouldReturnCorrectAttributeValues() throws Exception {
+        Assert.assertEquals(user.getUserApplicationRoles(), userApplicationRoles);
+        Assert.assertEquals(user.getName(), name);
+        Assert.assertEquals(user.getId(), id);
+        Assert.assertEquals(user.getImageUrl(),imageUrl);
+        Assert.assertEquals(user.getToken(), token);
     }
 }
