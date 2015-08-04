@@ -1,11 +1,14 @@
 package com.worth.ifs.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Competition {
+    public Competition() {
+    }
     public Competition(long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
         this.id = id;
         this.applications = applications;
@@ -15,9 +18,11 @@ public class Competition {
         this.description = description;
         this.deadline = deadline;
     }
-
-    public Competition() {
-
+    public Competition(long id, String name, String description, Date deadline) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.deadline = deadline;
     }
 
     @Id
@@ -35,6 +40,8 @@ public class Competition {
 
     private String name;
 
+
+
     @Lob
     @Column( length = 5000 )
     private String description;
@@ -48,7 +55,12 @@ public class Competition {
         return description;
     }
 
-    public void addApplication(Application app) {
+
+
+    public void addApplication(Application app){
+        if(applications == null){
+            applications = new ArrayList<>();
+        }
         applications.add(app);
     }
 
