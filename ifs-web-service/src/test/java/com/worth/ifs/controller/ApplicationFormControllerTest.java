@@ -1,8 +1,5 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +11,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -25,24 +20,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationControllerTest extends BaseUnitTest {
+@TestPropertySource(locations="classpath:application.properties")
+public class ApplicationFormControllerTest  extends BaseUnitTest{
+
     @InjectMocks
-    private ApplicationController applicationController;
+    private ApplicationFormController applicationFormController;
 
     @Mock
     UserService userServiceMock;
-    @Mock
-    ApplicationService applicationService;
-
 
     @Before
     public void setUp(){
         super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
+        mockMvc = MockMvcBuilders.standaloneSetup(applicationFormController)
                 .setViewResolvers(viewResolver())
                 .build();
 
@@ -52,22 +46,13 @@ public class ApplicationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationDetails() throws Exception {
-        Application app = applications.get(0);
+    public void testApplicationForm() throws Exception {
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
 
-        System.out.println("Show dashboard for application: "+ app.getId());
-        mockMvc.perform(get("/application/" + app.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
     }
 
     @Test
-    public void testApplicationDetailsOpenSection() throws Exception {
+    public void testApplicationFormWithOpenSection() throws Exception {
 
     }
 }
