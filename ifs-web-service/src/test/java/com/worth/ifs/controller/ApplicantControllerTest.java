@@ -34,17 +34,15 @@ public class ApplicantControllerTest extends BaseUnitTest {
     @InjectMocks
     private ApplicantController applicantController;
 
-    @Mock
-    UserService userServiceMock;
 
     @Mock
     ApplicationService applicationService;
 
 
-    private List<Application> applications;
 
     @Before
     public void setUp() {
+        super.setup();
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(applicantController)
@@ -52,33 +50,8 @@ public class ApplicantControllerTest extends BaseUnitTest {
                 .build();
 
 
-
-        Competition comp = new Competition(1L, "Competition x", "Description afds", new Date());
-        Application app1 = new Application(1L, "Rovel Additive Manufacturing Process", new ProcessStatus(1L, "created"));
-        Application app2 = new Application(2L, "Providing sustainable childcare", new ProcessStatus(2L, "submitted"));
-        Application app3 = new Application(3L, "Mobile Phone Data for Logistics Analytics", new ProcessStatus(3L, "approved"));
-        Application app4 = new Application(4L, "Using natural gas to heat homes", new ProcessStatus(4L, "rejected"));
-        Role role = new Role(1L, "leadapplicant", null);
-
-        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role);
-        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role);
-        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role);
-        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role);
-
-        comp.addApplication(app1, app2, app3, app4);
-
-        app1.setCompetition(comp);
-        app1.setUserApplicationRoles(Arrays.asList(userAppRole1));
-        app2.setCompetition(comp);
-        app2.setUserApplicationRoles(Arrays.asList(userAppRole2));
-        app3.setCompetition(comp);
-        app3.setUserApplicationRoles(Arrays.asList(userAppRole3));
-        app4.setCompetition(comp);
-        app4.setUserApplicationRoles(Arrays.asList(userAppRole4));
-
-        loggedInUser.addUserApplicationRole(userAppRole1, userAppRole2, userAppRole3, userAppRole3);
-        applications = Arrays.asList(app1, app2, app3, app4);
-
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
         this.loginDefaultUser();
     }
 
@@ -90,7 +63,6 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
     @Test
     public void testDashboard() throws Exception {
-
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
 
         mockMvc.perform(get("/applicant/dashboard"))
