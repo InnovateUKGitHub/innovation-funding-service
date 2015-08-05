@@ -54,10 +54,10 @@
 
 <div th:fragment="body-start"> 
     <!--/* Changes body class from no-js to js when js is enabled */-->
-    <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
+    <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
     
     <div th:include="fragments/elements :: skiplink-container" th:remove="tag"></div>
-    <!-- <div th:include="fragments/elements :: global-cookie-message" th:remove="tag"></div> -->
+    <div th:include="fragments/elements :: global-cookie-message" th:remove="tag"></div> 
 
 </div>
 

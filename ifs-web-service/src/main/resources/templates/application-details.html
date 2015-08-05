@@ -21,7 +21,7 @@
         <p data-th-text="${currentCompetition.getDescription()}"></p>
     </div>
 
-    <div class="collapsible">
+    <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 data-th-text="${section.getName()}" th:class="(${section.getId()} == ${currentSectionId}) ? 'open':''" />
             <ul>
