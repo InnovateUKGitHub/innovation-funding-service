@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+/**
+ * UserApplicationRole defines database relations and a model to use client side and server side.
+ */
+
 @Entity
 public class UserApplicationRole {
     public UserApplicationRole(long id, User user, Application application, Role role) {

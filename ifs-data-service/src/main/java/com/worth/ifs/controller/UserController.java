@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * UserController exposes User data through a REST API.
+ */
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
