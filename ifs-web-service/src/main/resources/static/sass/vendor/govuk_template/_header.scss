@@ -231,7 +231,7 @@
   }
 }
 
-/* Global header bar */
+// Global header bar */
 
 #global-header-bar {
   @extend %site-width-container;
@@ -242,10 +242,10 @@
   }
 }
 
-/* Global cookie message */
+// Global cookie message */
 
 .js-enabled #global-cookie-message {
-  display: none; /* shown with JS, always on for non-JS */
+  display: none; // shown with JS, always on for non-JS 
 }
 
 #global-cookie-message {
