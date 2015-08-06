@@ -35,14 +35,6 @@ public class LoginController {
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
-        String token = "";
-        if(token != null && token != ""){
-            User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-            if(user != null){
-                return "redirect:/applicant/dashboard";
-            }
-        }
-
         List<User> users =userService.findAll();
 
         log.debug("Users in frontend " + users.size());

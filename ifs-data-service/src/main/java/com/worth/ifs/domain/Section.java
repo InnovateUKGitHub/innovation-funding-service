@@ -44,4 +44,11 @@ public class Section {
     public long getId() {
         return id;
     }
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
 }
