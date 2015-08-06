@@ -1,11 +1,11 @@
-/* 3. Progressive collapsibles written by Heydon 
+/* 3. Progressive collapsibles written by @Heydonworks altered by Worth Systems
 -----------------------------------------------------------------------------------------
 */
 $(document).ready(function(){
   $('.collapsible h2').each(function() {
     var inst = $(this);
     var id = 'collapsible-' + inst.index();   // create unique id for a11y relationship
-     var loadstate = inst.hasClass('open');
+    var loadstate = inst.hasClass('open');
 
     // wrap the content and make it focusable
     inst.nextUntil('h2').wrapAll('<div id="'+ id +'" aria-hidden="'+!loadstate+'">');
