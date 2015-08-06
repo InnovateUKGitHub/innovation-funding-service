@@ -75,13 +75,13 @@
 ###Headings
 
 ```
-  <h1 class="heading-xlarge">A <em class="highlight">48px Bold</em> heading</h1>
+  <h1 class="heading-xlarge">A 48px Bold heading</h1>
 
-  <h2 class="heading-large">A <em class="highlight">36px Bold</em> heading</h2>
+  <h2 class="heading-large">A 36px Bold heading</h2>
 
-  <h3 class="heading-medium">A <em class="highlight">24px Bold</em> heading</h3>
+  <h3 class="heading-medium">A 24px Bold heading</h3>
 
-  <h4 class="heading-small">A <em class="highlight">19px Bold</em> heading</h4>
+  <h4 class="heading-small">A 19px Bold heading</h4>
 ```
 
 ###Lists
@@ -340,6 +340,126 @@
   </fieldset>
 
 ```
+
+##8. Errors and validation
+
+```
+<div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+
+    <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+      Message to alert the user to a problem goes here
+    </h1>
+
+    <p>
+      Optional description of the error(s) and how to correct them
+    </p>
+
+    <ul class="error-summary-list">
+      <li><a href="#example-personal-details">Descriptive link to the question with an error</a></li>
+    </ul>
+
+  </div>
+
+  <h1 class="heading-large">
+    Check your personal details
+  </h1>
+
+  <p>
+    Look at your name, signature and other details.
+  </p>
+
+  <form>
+    <div class="form-group error">
+      <fieldset>
+
+        <legend id="example-personal-details">
+
+          <span class="form-label-bold">
+            Are your personal details correct and up-to-date?
+          </span>
+          <span class="error-message">
+            Error message about personal details goes here
+          </span>
+
+        </legend>
+
+        <label class="block-label" for="personal_details_yes">
+          <input id="personal_details_yes" type="radio" name="personal_details" value="Yes">
+          <span></span> Yes, my personal details are correct
+        </label>
+
+        <label class="block-label" for="personal_details_no">
+          <input id="personal_details_no" type="radio" name="personal_details" value="No">
+          <span></span> No, some details are wrong or have changed
+        </label>
+
+      </fieldset>
+    </div>
+
+    <input class="button" type="submit" value="Continue">
+
+  </form>
+```
+
+```
+
+  <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-2" tabindex="-1">
+
+    <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-2">
+      Message to alert the user to a problem goes here
+    </h1>
+
+    <p>
+      Optional description of the error(s) and how to correct them
+    </p>
+
+    <ul class="error-summary-list">
+      <li><a href="#example-full-name">Descriptive link to the question with an error</a></li>
+      <li><a href="#example-ni-number">Descriptive link to the question with an error</a></li>
+    </ul>
+
+  </div>
+
+  <h1 class="heading-large">
+    Your personal details
+  </h1>
+
+  <div class="form-group error">
+
+    <label for="example-full-name" id="error-full-name">
+
+      <span class="form-label-bold">Full name</span>
+      <span class="form-hint">As shown on your birth certificate or passport</span>
+      <span class="error-message" id="error-message-full-name">Error message about full name goes here</span>
+
+    </label>
+
+    <input class="form-control" id="example-full-name" type="text" name="fullName" value="" aria-describedby="error-message-full-name">
+  </div>
+
+  <div class="form-group error">
+
+    <label for="example-ni-number" id="error-ni-number">
+
+      <span class="form-label-bold">National Insurance number</span>
+      <span class="form-hint">
+        It's on your National Insurance card, benefit letter, payslip or P60.
+        <br>
+        For example, 'VO 12 34 56 D'.
+      </span>
+      <span class="error-message" id="error-message-ni-number">
+        Error message about National Insurance number goes here
+      </span>
+
+    </label>
+
+    <input class="form-control" id="example-ni-number" type="text" name="niNo" value="" aria-describedby="error-message-ni-number">
+
+  </div>
+
+  <input class="button" type="submit" value="Continue">
+```
+
 */
 
 
