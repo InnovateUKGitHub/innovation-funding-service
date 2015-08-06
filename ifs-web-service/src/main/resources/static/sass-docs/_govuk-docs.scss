@@ -1,0 +1,345 @@
+//This file is created to have the docs from gov.uk (http://govuk-elements.herokuapp.com/snippets/) in our own project docs.
+
+/* 
+#GOV.UK Elements
+
+##1. Layout 
+
+###Grid unit proportions
+
+**Halves**
+
+```
+ <div class="grid-row">
+    <div class="column-half">
+      <p>Content</p>
+    </div>
+    <div class="column-half">
+      <p>Content</p>
+    </div>
+  </div>
+
+</div>
+```
+
+**Thirds**
+
+```
+<div class="grid-row">
+    <div class="column-third">
+      <p>Content</p>
+    </div>
+    <div class="column-third">
+      <p>Content</p>
+    </div>
+    <div class="column-third">
+      <p>Content</p>
+    </div>
+  </div>
+```
+
+
+```
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <p>Content</p>
+    </div>
+    <div class="column-third">
+      <p>Content</p>
+    </div>
+  </div>
+  ```
+
+**Quarters**
+
+```
+  <div class="grid-row">
+    <div class="column-quarter">
+      <p>Content</p>
+    </div>
+    <div class="column-quarter">
+      <p>Content</p>
+    </div>
+    <div class="column-quarter">
+      <p>Content</p>
+    </div>
+    <div class="column-quarter">
+      <p>Content</p>
+    </div>
+  </div>
+```
+
+
+##2. Typography
+
+###Headings
+
+```
+  <h1 class="heading-xlarge">A <em class="highlight">48px Bold</em> heading</h1>
+
+  <h2 class="heading-large">A <em class="highlight">36px Bold</em> heading</h2>
+
+  <h3 class="heading-medium">A <em class="highlight">24px Bold</em> heading</h3>
+
+  <h4 class="heading-small">A <em class="highlight">19px Bold</em> heading</h4>
+```
+
+###Lists
+```
+ <ul class="list-bullet">
+    <li>here is a bulleted list</li>
+    <li>vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor</li>
+    <li>vestibulum id ligula porta felis euismod semper</li>
+    <li>integer posuere erat a ante venenatis dapibus posuere velit aliquet</li>
+  </ul>
+
+  <ol class="list-number">
+    <li>here is a numbered list</li>
+    <li>vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor</li>
+    <li>vestibulum id ligula porta felis euismod semper</li>
+    <li>integer posuere erat a ante venenatis dapibus posuere velit aliquet</li>
+  </ol>
+  ```
+
+###Inset text
+
+```
+ <div class="panel-indent">
+    <p>
+      It can take up to 8 weeks to register a lasting power of attorney if there are no mistakes in the application.
+    </p>
+  </div>
+```
+
+###Hidden text (progressive disclosure)
+
+```
+  <details>
+    <summary><span class="summary">Help with nationality</span></summary>
+    <div class="panel-indent">
+      <p>
+        If you’re not sure about your nationality, try to find out from an official document like a passport or national ID card.
+      </p>
+      <p>
+        We need to know your nationality so we can work out which elections you’re entitled to vote in. If you can’t provide your nationality, you’ll have to send copies of identity documents through the post.
+      </p>
+    </div>
+  </details>
+
+```
+
+##5. Data 
+
+###Data in a table
+
+```
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th class="numeric" scope="col">Paper form</th>
+        <th class="numeric" scope="col">Digital</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>25 November to 1 December 2013</td>
+        <td class="numeric">2,763</td>
+        <td class="numeric">1,792</td>
+      </tr>
+      <tr>
+        <td>2 to 8 December 2013</td>
+        <td class="numeric">2,850</td>
+        <td class="numeric">1,740</td>
+      </tr>
+      <tr>
+       <td>9 to 15 December 2013</td>
+        <td class="numeric">2,388</td>
+        <td class="numeric">1,683</td>
+      </tr>
+    </tbody>
+  </table>
+```
+
+```
+  <table>
+    <thead>
+      <tr>
+        <th colspan="2">Dates and amounts</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>First 6 weeks</td>
+        <td>£109.80 per week</td>
+      </tr>
+      <tr>
+        <td>Next 33 weeks</td>
+        <td>£109.80 per week</td>
+      </tr>
+      <tr>
+       <td>Total estimated pay</td>
+        <td>£4,282.20</td>
+      </tr>
+      <tr>
+        <td>Tell the mother’s employer</td>
+        <td>28 days before they want to start maternity pay</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+```
+
+##6.Forms
+
+###Form labels
+
+```
+  <label class="form-label" for="full-name-f1">Full name</label>
+  <input class="form-control" id="full-name-f1" type="text">
+```
+
+###Form spacing
+
+```
+  <!-- Use .form-group to create spacing when wrapping label and input pairs -->
+  <div class="form-group">
+    <label class="form-label" for="first-name-2">First name</label>
+    <input class="form-control" id="first-name-2" type="text">
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="last-name-2">Last name</label>
+    <input class="form-control" id="last-name-2" type="text">
+  </div>
+```
+
+###Hint text
+
+```
+  <label class="form-label" for="ni-number">
+    National Insurance number
+    <span class="form-hint">It'll be on your last payslip. For example, JH 21 90 0A.</span>
+  </label>
+  <input class="form-control" id="ni-number" type="text">
+```
+
+###Radio buttons
+
+```
+ <fieldset class="inline">
+    <label class="block-label" for="radio-inline-1">
+      <input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio">
+      Yes
+    </label>
+    <label class="block-label" for="radio-inline-2">
+      <input id="radio-inline-2" name="radio-inline-group" value="No" type="radio">
+      No
+    </label>
+  </fieldset>
+```
+
+```
+  <label class="block-label" for="radio-1">
+    <input id="radio-1" name="radio-group" value="Northern Ireland" type="radio">
+    Northern Ireland
+  </label>
+  <label class="block-label" for="radio-2">
+    <input id="radio-2" name="radio-group" value="Isle of Man or the Channel Islands" type="radio">
+    Isle of Man or the Channel Islands
+  </label>
+  <p class="form-block">or</p>
+  <label class="block-label" for="radio-3">
+    <input id="radio-3" name="radio-group" value="I am a British citizen living abroad" type="radio">
+    I am a British citizen living abroad
+  </label>
+```
+
+```
+<fieldset>
+    <legend class="form-label-bold">Which types of waste do you transport regularly?</legend>
+    <p>Select all that apply</p>
+    <label class="block-label" for="checkbox-1">
+      <input id="checkbox-1" value="waste-animal" type="checkbox">
+      Waste from animal carcasses
+    </label>
+    <label class="block-label" for="checkbox-2">
+      <input id="checkbox-2" value="waste-mines" type="checkbox">
+      Waste from mines or quarries
+    </label>
+    <label class="block-label" for="checkbox-3">
+      <input id="checkbox-3" value="farm-agricultural" type="checkbox">
+      Farm or agricultural waste
+    </label>
+  </fieldset>
+  ```
+
+```
+  <label class="form-label" for="telephone-number">Enter your telephone number</label>
+  <input class="form-control" id="telephone-number" type="text">
+  <label class="form-checkbox" for="checkbox-telephone-number">
+    <input id="checkbox-telephone-number" value="checkbox-telephone-number" type="checkbox">
+    I need to be contacted using a text phone
+  </label>
+  ```
+
+###Inset form elements
+
+```
+  <fieldset class="inline">
+    <legend>
+      <span class="form-label">
+        Do you know their National Insurance number?
+      </span>
+    </legend>
+    <div class="form-group form-group-compound">
+      <label class="block-label" data-target="example-ni-no" for="radio-indent-1">
+        <input id="radio-indent-1" name="radio-indent-group" value="Yes" type="radio">
+        Yes
+      </label>
+      <label class="block-label" for="radio-indent-2">
+        <input id="radio-indent-2" name="radio-indent-group" value="No" type="radio">
+        No
+      </label>
+    </div>
+    <div class="panel-indent js-hidden" id="example-ni-no">
+      <label class="form-label" for="national-insurance">National Insurance number</label>
+      <input class="form-control" id="national-insurance" type="text">
+    </div>
+  </fieldset>
+```
+
+```
+  <fieldset>
+    <legend>
+      <span class="form-label-bold">
+        What is your nationality?
+      </span>
+    </legend>
+    <p>
+      Select all options that are relevant to you.
+    </p>
+    <div class="form-group form-group-compound">
+      <label class="block-label" for="nationality-british">
+        <input id="nationality-british" value="British" type="checkbox">
+        British (including English, Scottish, Welsh and Northern Irish)
+      </label>
+      <label class="block-label" for="nationality-irish">
+        <input id="nationality-irish" value="Irish" type="checkbox">
+        Irish
+      </label>
+      <label class="block-label" for="nationality-other" data-target="example-different-country">
+        <input id="nationality-other" value="Citizen of a different country" type="checkbox">
+        Citizen of a different country
+      </label>
+    </div>
+    <div class="panel-indent js-hidden" id="example-different-country">
+      <label class="form-label" for="nationality-other-country">Country name</label>
+      <input class="form-control" id="nationality-other-country" type="text">
+    </div>
+  </fieldset>
+
+```
+*/
+
+

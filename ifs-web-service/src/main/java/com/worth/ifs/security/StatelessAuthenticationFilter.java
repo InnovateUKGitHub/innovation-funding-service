@@ -51,6 +51,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         antPathRequestMatchers.add(new AntPathRequestMatcher("/assets/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/images/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/favicon.ico"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/docs/**"));
         return new OrRequestMatcher(antPathRequestMatchers);
     }
 
