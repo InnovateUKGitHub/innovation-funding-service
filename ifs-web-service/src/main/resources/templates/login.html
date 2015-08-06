@@ -17,15 +17,29 @@
 			</div>
 		</header>
 
+
+<div th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+	<h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+	  Your username/password combination doesn't seem to work
+	</h1>
+	<p>
+	  Please try again 
+	</p>
+</div>
+
+
+
+
+
         <form action="/login" th:object="${loginForm}" method="POST">
 			<p>Please enter your account details and click the login button to log in.</p>
 
-			<div class="form-group">
+			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
 				<label class="form-label-bold" for="id_email">E-mail address</label>
 				<input class="form-control" type="text" th:field="*{email}" id="id_email" />
 			</div><!-- .form-group -->
 
-			<div class="form-group">
+			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
 				<label class="form-label-bold" for="id_password">Password</label>
 				<input class="form-control" type="password" th:field="*{password}" id="id_password" />
 			</div><!-- .form-group -->
