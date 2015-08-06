@@ -39,7 +39,7 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "", "tokenABC", new ArrayList());
+        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "password", "tokenABC", "image", new ArrayList());
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
 
         applications = new ArrayList<>();

@@ -35,14 +35,7 @@ public class LoginController {
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
-        List<User> users =userService.findAll();
-
-        log.debug("Users in frontend " + users.size());
-
-        model.addAttribute("users", users);
         model.addAttribute("loginForm", new LoginForm());
-
-
         return "login";
     }
     @RequestMapping(value="/login", params={"logout"})

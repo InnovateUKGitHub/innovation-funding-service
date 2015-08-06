@@ -17,12 +17,16 @@ public class UserTest {
     String name;
     String imageUrl;
     String token;
+    String password;
+    String email;
 
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
         name = "testname";
+        email = "test@innovateuk.org";
+        password = "test123";
         imageUrl = "/image/url/test";
         token = "testtoken123abc";
 
@@ -31,7 +35,7 @@ public class UserTest {
         userApplicationRoles.add(new UserApplicationRole());
         userApplicationRoles.add(new UserApplicationRole());
 
-        user = new User(id, name, imageUrl, token, userApplicationRoles);
+        user = new User(id, name, email, password, token, imageUrl, userApplicationRoles);
     }
 
     @Test
@@ -40,6 +44,7 @@ public class UserTest {
         Assert.assertEquals(user.getName(), name);
         Assert.assertEquals(user.getId(), id);
         Assert.assertEquals(user.getImageUrl(),imageUrl);
+        Assert.assertEquals(user.getToken(), token);
         Assert.assertEquals(user.getToken(), token);
     }
 }

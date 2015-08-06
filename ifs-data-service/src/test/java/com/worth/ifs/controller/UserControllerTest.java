@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -43,9 +44,9 @@ public class UserControllerTest {
 
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "test/image/url/1", "testToken123abc", null);
-        User testUser2 = new User(2L, "testUser2", "test/image/url/2", "testToken456def", null);
-        User testUser3 = new User(3L, "testUser3", "test/image/url/3", "testToken789ghi", null);
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
+        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", "test/image/url/2", null);
+        User testUser3 = new User(3L, "testUser3", "email3@email.nl", "password", "testToken789ghi", "test/image/url/3", null);
 
         List<User> users = new ArrayList<User>();
         users.add(testUser1);
@@ -71,7 +72,7 @@ public class UserControllerTest {
 
     @Test
     public void userControllerShouldReturnUserById() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "test/image/url/1", "testToken123abc", null);
+        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
         List<User> userList = new ArrayList<User>();
         userList.add(testUser1);
@@ -87,12 +88,12 @@ public class UserControllerTest {
 
     @Test
     public void userControllerShouldReturnUserByToken() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "test/image/url/1", "testToken123abc", null);
+        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
-        List<User> userList = new ArrayList<User>();
-        userList.add(testUser1);
+        List<User> userList = Arrays.asList(testUser1);
 
         when(userRepositoryMock.findByToken(testUser1.getToken())).thenReturn(userList);
+
         mockMvc.perform(get("/user/token/"+testUser1.getToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id",        is((int)testUser1.getId())))

@@ -51,51 +51,20 @@ public class LoginControllerTest extends BaseUnitTest{
                 .build();
     }
 
-    @Test
-    public void testLoginViewWithoutUsers() throws Exception {
-        when(userServiceMock.findAll()).thenReturn(new ArrayList<>());
-
-        mockMvc.perform(get("/login"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("users", hasSize(0)));
-    }
 
     /**
      * Test if the login view shows the user accounts to login with.
      */
     @Test
     public void testLoginViewWithUsers() throws Exception {
-        User user1 = new User(1L, "Nico Bijl", "", "token1", null);
-        User user2 = new User(2L, "Rogier de Regt", "", "token2", null);
-        User user3 = new User(3L, "Wouter de Meijer", "", "token3", null);
+        User user1 = new User(1L, "Nico Bijl", "email","password", "token1", "image", null);
+        User user2 = new User(2L, "Rogier de Regt", "email2@email.nl","password", "token2", "image", null);
+        User user3 = new User(3L, "Wouter de Meijer", "email3@email.nl","password", "token3", "image", null);
         when(userServiceMock.findAll()).thenReturn(Arrays.asList(user1, user2, user3));
 
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("users", hasSize(3)))
-                .andExpect(model().attribute("users", hasItem(
-                        allOf(
-                                hasProperty("id", is(1L)),
-                                hasProperty("name", is("Nico Bijl")),
-                                hasProperty("token", is("token1"))
-                        )
-                )))
-                .andExpect(model().attribute("users", hasItem(
-                        allOf(
-                                hasProperty("id", is(2L)),
-                                hasProperty("name", is("Rogier de Regt")),
-                                hasProperty("token", is("token2"))
-                        )
-                )))
-                .andExpect(model().attribute("users", hasItem(
-                        allOf(
-                                hasProperty("id", is(3L)),
-                                hasProperty("name", is("Wouter de Meijer")),
-                                hasProperty("token", is("token3"))
-                        )
-                )));
+                .andExpect(view().name("login"));
     }
 
     /**
@@ -112,12 +81,13 @@ public class LoginControllerTest extends BaseUnitTest{
     }
 
     private ResultActions performLogin(String loginToken) throws Exception {
-        User user1 = new User(1L, "Nico Bijl", "", loginToken, null);
-        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
+        User user1 = new User(1L, "Nico Bijl", "email@email.nl", "pass123", loginToken, "image", null);
+        when(userServiceMock.retrieveUserByEmailAndPassword(user1.getEmail(), user1.getPassword())).thenReturn(user1);
 
         return mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("token", loginToken)
+                        .param("email", user1.getEmail())
+                        .param("password", user1.getPassword())
         );
 
     }
@@ -127,12 +97,12 @@ public class LoginControllerTest extends BaseUnitTest{
      */
     @Test
     public void testSubmitInvalidLogin() throws Exception {
-        String incorrectLoginToken = "invalidToken";
-        when(userServiceMock.retrieveUserByToken(incorrectLoginToken)).thenReturn(null);
+        when(userServiceMock.retrieveUserByEmailAndPassword("info@test.nl", "testFOUT")).thenReturn(null);
 
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("token", incorrectLoginToken)
+                        .param("email", "info@test.nl")
+                        .param("password", "testFOUT")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/login?invalid"));

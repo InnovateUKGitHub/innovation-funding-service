@@ -1,5 +1,6 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -14,11 +15,13 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    public User(long id, String name, String imageUrl, String token, List<UserApplicationRole> userApplicationRoles) {
+    public User(long id, String name, String email, String password, String token, String imageUrl, List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.email = email;
+        this.password = password;
         this.token = token;
+        this.imageUrl = imageUrl;
         this.userApplicationRoles = userApplicationRoles;
     }
 
@@ -41,7 +44,7 @@ public class User {
 
     @Column(unique=true)
     private String email;
-    
+
     private String password;
 
     public User(){
@@ -73,5 +76,14 @@ public class User {
             this.userApplicationRoles = new ArrayList<>();
         }
         this.userApplicationRoles.addAll(Arrays.asList(r));
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
