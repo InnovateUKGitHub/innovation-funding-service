@@ -55,9 +55,9 @@ public class LoginController {
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
     public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
-        User user = userService.retrieveUserByToken(loginForm.getToken());
+        User user = userService.retrieveUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
         if(user != null){
-            tokenAuthenticationService.addAuthentication(response, loginForm.getToken());
+            tokenAuthenticationService.addAuthentication(response, user.getToken());
             // redirect to my applications
             return "redirect:/applicant/dashboard";
         }else{

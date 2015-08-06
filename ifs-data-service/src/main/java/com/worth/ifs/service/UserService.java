@@ -21,6 +21,12 @@ public class UserService extends BaseServiceProvider {
         return user;
     }
 
+    public User retrieveUserByEmailAndPassword(String email, String password) {
+        RestTemplate restTemplate = new RestTemplate();
+        User user = restTemplate.getForObject(dataRestServiceURL + "/user/email/"+email+"/password/"+password, User.class);
+        return user;
+    }
+
     public User retrieveUserById(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         User user = restTemplate.getForObject(dataRestServiceURL + "/user/id/"+id, User.class);

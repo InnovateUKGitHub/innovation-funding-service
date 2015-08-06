@@ -20,8 +20,18 @@ public class UserController {
     UserRepository repository;
 
     @RequestMapping("/token/{token}")
-    public User getUserByToken(@PathVariable("token") final String token) {
+     public User getUserByToken(@PathVariable("token") final String token) {
         List<User> users = repository.findByToken(token);
+        if (users.size() > 0){
+            return users.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    @RequestMapping("/email/{email}/password/{password}")
+    public User getUserByToken(@PathVariable("email") final String email, @PathVariable("password") final String password) {
+        List<User> users = repository.findByEmailAndPassword(email, password);
         if (users.size() > 0){
             return users.get(0);
         }else{

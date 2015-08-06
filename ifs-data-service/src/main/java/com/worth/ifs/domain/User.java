@@ -35,6 +35,15 @@ public class User {
     @Column(unique=true)
     private String token;
 
+    public String getEmail() {
+        return email;
+    }
+
+    @Column(unique=true)
+    private String email;
+    
+    private String password;
+
     public User(){
 
     }
