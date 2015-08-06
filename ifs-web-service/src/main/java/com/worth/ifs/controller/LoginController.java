@@ -35,14 +35,6 @@ public class LoginController {
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
-        String token = "";
-        if(token != null && token != ""){
-            User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-            if(user != null){
-                return "redirect:/applicant/dashboard";
-            }
-        }
-
         List<User> users =userService.findAll();
 
         log.debug("Users in frontend " + users.size());
@@ -63,9 +55,9 @@ public class LoginController {
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
     public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
-        User user = userService.retrieveUserByToken(loginForm.getToken());
+        User user = userService.retrieveUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
         if(user != null){
-            tokenAuthenticationService.addAuthentication(response, loginForm.getToken());
+            tokenAuthenticationService.addAuthentication(response, user.getToken());
             // redirect to my applications
             return "redirect:/applicant/dashboard";
         }else{

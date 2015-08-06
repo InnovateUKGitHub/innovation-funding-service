@@ -11,10 +11,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.Assert;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -99,17 +104,22 @@ public class LoginControllerTest extends BaseUnitTest{
     @Test
     public void testSubmitValidLogin() throws Exception {
         String loginToken = "token1";
-        User user1 = new User(1L, "Nico Bijl", "", loginToken, null);
-        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
-
-        MvcResult result = mockMvc.perform(post("/login")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("token", loginToken)
-        )
+        this.performLogin(loginToken)
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/applicant/dashboard"))
                 // .andExpect(cookie().exists("IFS_AUTH_TOKEN"))
                 .andReturn();
+    }
+
+    private ResultActions performLogin(String loginToken) throws Exception {
+        User user1 = new User(1L, "Nico Bijl", "", loginToken, null);
+        when(userServiceMock.retrieveUserByToken(loginToken)).thenReturn(user1);
+
+        return mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", loginToken)
+        );
+
     }
 
     /**
@@ -129,12 +139,26 @@ public class LoginControllerTest extends BaseUnitTest{
     }
 
 
+
+
 //    @Test
 //    public void testLogout() throws Exception {
-//        mockMvc.perform(get("/login?logout"))
+//        //this.loginDefaultUser();
+//
+//
+//        mockMvc.perform(get("/logout"))
 //                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/login"))
-//                .andExpect(cookie().doesNotExist("IFS_AUTH_TOKEN"));
+//                .andExpect(view().name("redirect:/login?logout"));
+//
+//        mockMvc.perform(get("/login").param("logout", "true"))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(view().name("redirect:/login"));
+//
+//        mockMvc.perform(get("/applicant/dashboard"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("applicant-dashboard"));
+//
+//        System.out.println("Testing Logout...");
 //    }
 
 }

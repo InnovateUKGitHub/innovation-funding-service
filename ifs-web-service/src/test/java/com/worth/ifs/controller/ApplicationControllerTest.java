@@ -1,6 +1,7 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Section;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
@@ -68,6 +69,21 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationDetailsOpenSection() throws Exception {
+        Application app = applications.get(0);
+        Section section = sections.get(2);
+
+
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+
+        System.out.println("Show dashboard for application: " + app.getId());
+        mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("sections", sections))
+                .andExpect(model().attribute("currentSectionId", section.getId()));
 
     }
 }

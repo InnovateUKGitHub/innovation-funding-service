@@ -18,20 +18,21 @@
 		</header>
 
         <form action="/login" th:object="${loginForm}" method="POST">
-			<p>Please select a user from the list provided and click the login button to log in as that user.</p>
-            
-            <div class="form-group">
-                <label class="form-label-bold" for="id_user">User</label>
-                <p class="form-hint">Login is simulated for testing purposes</p>
-                <select th:field="*{token}" class="form-control" id="id_user">
-					<option data-th-each="user : ${users}" data-th-value="${user.token}" data-th-text="${user.name}">
-					</option>
-					<option value="NotExistingToken">Non Existing User</option>
+			<p>Please enter your account details and click the login button to log in.</p>
 
-				</select>
-            </div><!-- .form-group -->
+			<div class="form-group">
+				<label class="form-label-bold" for="id_email">E-mail address</label>
+				<input class="form-control" type="text" th:field="*{email}" id="id_email" />
+			</div><!-- .form-group -->
 
-            <input class="button" value="Login as user" type="submit" />
+			<div class="form-group">
+				<label class="form-label-bold" for="id_password">Password</label>
+				<input class="form-control" type="password" th:field="*{password}" id="id_password" />
+			</div><!-- .form-group -->
+
+
+
+			<input class="button" value="Login as user" type="submit" />
 			<button th:if="${#authorization.expression('isAuthenticated()')}" name="logout" type="submit" class="button">Logout</button>
 
         </form>

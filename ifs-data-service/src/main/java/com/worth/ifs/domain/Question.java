@@ -38,7 +38,16 @@ public class Question {
         return name;
     }
 
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
     public long getId() {
         return id;
+
     }
 }

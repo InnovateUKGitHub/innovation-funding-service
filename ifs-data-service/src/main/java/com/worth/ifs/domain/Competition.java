@@ -80,4 +80,16 @@ public class Competition {
     public Date getDeadline() {
         return deadline;
     }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
 }
