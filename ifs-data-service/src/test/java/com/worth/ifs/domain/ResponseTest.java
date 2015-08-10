@@ -34,7 +34,7 @@ public class ResponseTest {
         Assert.assertEquals(response.getDate(), date);
         Assert.assertEquals(response.getValue(), value);
         Assert.assertEquals(response.isMarkedAsComplete(), markedAsComplete);
-        Assert.assertEquals(response.getUserApplicationRoles(), userApplicationRole);
+        Assert.assertEquals(response.getUserApplicationRole(), userApplicationRole);
         Assert.assertEquals(response.getQuestion(), question);
     }
 }
