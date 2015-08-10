@@ -24,7 +24,7 @@
                                 <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
-                            <strong th:if="${application.getProcessStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
+                            <strong th:if="${application.getApplicationStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
                         </div>
                     </div>
                 </li>

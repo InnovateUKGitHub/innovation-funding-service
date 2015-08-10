@@ -88,10 +88,10 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationWithRoles(){
-        Application app1 = new Application(1L, "Rovel Additive Manufacturing Process", new ProcessStatus(1L, "created"));
-        Application app2 = new Application(2L, "Providing sustainable childcare", new ProcessStatus(2L, "submitted"));
-        Application app3 = new Application(3L, "Mobile Phone Data for Logistics Analytics", new ProcessStatus(3L, "approved"));
-        Application app4 = new Application(4L, "Using natural gas to heat homes", new ProcessStatus(4L, "rejected"));
+        Application app1 = new Application(1L, "Rovel Additive Manufacturing Process", new ApplicationStatus(1L, "created"));
+        Application app2 = new Application(2L, "Providing sustainable childcare", new ApplicationStatus(2L, "submitted"));
+        Application app3 = new Application(3L, "Mobile Phone Data for Logistics Analytics", new ApplicationStatus(3L, "approved"));
+        Application app4 = new Application(4L, "Using natural gas to heat homes", new ApplicationStatus(4L, "rejected"));
         Role role = new Role(1L, "leadapplicant", null);
 
         UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role);
