@@ -9,8 +9,8 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String values, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String helpTitle, String helpText, String questionGuidanceText, String answerGuidanceText, long characterCount) {
-        this.values = values;
+    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String helpTitle, String helpText, String questionGuidanceText, String answerGuidanceText, long characterCount) {
+        this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
         this.section = section;
@@ -23,6 +23,13 @@ public class Question {
         this.questionGuidanceText = questionGuidanceText;
         this.answerGuidanceText = answerGuidanceText;
         this.characterCount = characterCount;
+    }
+
+    public Question(long id, Competition competition, Section section, String name) {
+        this.id = id;
+        this.competition = competition;
+        this.section = section;
+        this.name = name;
     }
 
     public Question() {
@@ -55,7 +62,7 @@ public class Question {
     private String questionGuidanceText;
     private String answerGuidanceText;
     private long characterCount;
-    private String values;
+    private String optionValues;
 
     public String getName() {
         return name;
