@@ -16,6 +16,10 @@ public class Response {
         this.question = question;
     }
 
+    public Response () {
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -48,7 +52,7 @@ public class Response {
     }
 
     @JsonIgnore
-    public UserApplicationRole getUserApplicationRoles() {
+    public UserApplicationRole getUserApplicationRole() {
         return userApplicationRole;
     }
 
