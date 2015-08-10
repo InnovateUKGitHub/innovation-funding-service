@@ -74,13 +74,14 @@ public class LoginControllerTest extends BaseUnitTest{
     }
 
     private ResultActions performLogin(String loginToken) throws Exception {
-        User user1 = new User(1L, "Nico Bijl", "email@email.nl", "pass123", loginToken, "image", null);
-        when(userServiceMock.retrieveUserByEmailAndPassword(user1.getEmail(), user1.getPassword())).thenReturn(user1);
+        String userPass = "pass123";
+        User user1 = new User(1L, "Nico Bijl", "email@email.nl", userPass, loginToken, "image", null);
+        when(userServiceMock.retrieveUserByEmailAndPassword(user1.getEmail(), userPass)).thenReturn(user1);
 
         return mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", user1.getEmail())
-                        .param("password", user1.getPassword())
+                        .param("password", userPass)
         );
 
     }

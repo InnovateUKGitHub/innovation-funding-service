@@ -22,6 +22,7 @@ public class UserController {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String handleException(Exception e) {
+        e.printStackTrace();
         return "return error object instead";
     }
 
@@ -37,10 +38,17 @@ public class UserController {
 
     @RequestMapping("/email/{email}/password/{password}")
     public User getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        List<User> users = repository.findByEmailAndPassword(email, password);
-        if (users.size() > 0){
-            return users.get(0);
+        List<User> users = repository.findByEmail(email);
+
+        if (users.size() > 0 ){
+            User user = users.get(0);
+            if(user.passwordEquals(password)){
+                return user;
+            }else{
+                return null;
+            }
         }else{
+            System.out.println("Return null");
             return null;
         }
     }

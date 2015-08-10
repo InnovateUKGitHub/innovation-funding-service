@@ -1,7 +1,7 @@
 package com.worth.ifs.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +15,8 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
+    private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
+
     public User(long id, String name, String email, String password, String token, String imageUrl, List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
@@ -78,12 +80,14 @@ public class User {
         this.userApplicationRoles.addAll(Arrays.asList(r));
     }
 
-    @JsonIgnore
-    public String getPassword() {
-        return password;
+    public boolean passwordEquals(String passwordInput){
+        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
+        return encoder.matches(passwordInput, this.password);
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String setPassword) {
+        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
+        setPassword = encoder.encode(setPassword);
+        this.password = setPassword;
     }
 }
