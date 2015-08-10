@@ -6,18 +6,11 @@ $ifs-gray: #D2D4D5;
 $ifs-green : #00823b;
 $ifs-purple : #79298A;
 $ifs-lightgray : #F8F8F8;
-//no margins for the page headers
-.page-header {
-	margin-left:0;
-	margin-right:0;
-}
 
-//layout
-.header-global .navigation-list  {
-	margin: 0 15px;
-	a{ color:#fff;}
 
-}
+
+
+
 .header-new-sub-wrapper {
 	background: $ifs-lightgray;
 	border-top: 10px solid $ifs-purple;
@@ -28,201 +21,18 @@ $ifs-lightgray : #F8F8F8;
 	position: relative;
 }
 
+@import "layout/layout";
+
 /* 
 #Nomensa/Worth Elements
 
 ##1. List elements
-
-###boxed-list 
-The boxed list is a list with each list element as a block and bordered.
-
-```
-<ul class="boxed-list">
-    <li>
-        <h4 class="heading-medium">Rovel Additive Manufacturing Process</h4>                
-    </li>
-    <li>
-     	<h4 class="heading-medium">Providing sustainable childcare</h4>   
-    </li>
-</ul>
- ```
- */
-
-ul.boxed-list,
-ol.boxed-list {
-	list-style:none;
-	margin:0;
-	padding:0;
-	h1,h2,h3,h4 {
-		margin-top:0;
-	}
-
-	li {
-		display: block;
-		position: relative;
-		padding:20px;
-		margin-top: 10px;
-		border:1px solid $ifs-gray;
-	}
-}
-
-/*
-###Collapsible 
-Uses javascript to make it expand, when there is no javascript it will just show an header with a list (doesn't work in styleguide).
-
-```
-<div class="collapsible">
-    <h2 class="open">Application details</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Application details</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Project Summary</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Public Description</a>
-            </li>
-        </ul>
-    </div>
-    <h2>Another Section 2</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-        </ul>
-    </div>
-    <h2>Another Section 3</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-        </ul>
-    </div>
-</div>
-```
 */
 
-%toggle-button {
-	background-color: #DEE0E2;
-	font-size: 19px;
-	font-weight: 700;
-	text-align:left;
-	padding: 15px 20px;
-	margin: 0 0 5px;
-}
-.collapsible {
-	button {
-		border:0;
-		cursor: pointer;
-		@extend %toggle-button;
-
-		&::-moz-focus-inner{  
-			padding: 0;
-			border: 0;
-		}
-		&[aria-expanded="true"]{
-			margin-bottom:0;
-		}
-	}
-	
-	button[aria-expanded] {
-		display: block;
-		width: 100%;
-		&:after {
-			content: '\25b2\0020';
-			float:right;
-		}
-	}
-	button[aria-expanded="true"]{
-		margin-bottom: 0;
-		&:after {
-			content: '\25bc\0020';
-		}
-	}
-	h2 + [aria-hidden] {
-		display: none;
-	}
-
-	h2 + [aria-hidden="false"] {
-		display: block;
-	}
-	.section {
-		margin-left: 10px;
-	}
-
-	.section a {
-		border-top: 1px solid #CFD0D2;
-		padding: 20px 20px 20px 0px;
-		display: block;
-	}
-	.section:first-child a {
-		border-top:none;
-	}
-}
-.no-js .collapsible > h2 {
-	@extend %toggle-button;
-}
-
-
-/*
-
-###Navigation List
-By default left aligned can be right by adding the class `.navigation-right`
-
-```
-<ul class="navigation-list">
-    <li>
-        <a href="/applicant/dashboard">My dashboard</a>
-    </li>
-    <li>
-        <a href="/logout">Logout</a>
-    </li>
-</ul>
- ```
-
- ```
- <ul class="navigation-list navigation-right">
-            <li>
-                <a href="/applicant/dashboard">My dashboard</a>
-            </li>
-            <li>
-                <a href="/logout">Logout</a>
-            </li>
-        </ul>
- ```
-*/
-
-
-ul.navigation-list,
-ol.navigation-list {
-	list-style:none;
-	margin:0;
-	padding:0;
-	li {
-		display: inline-block;
-		margin: 0 10px 0 0;
-	}
-	li a {
-		display: inline-block;
-		padding:5px;
-	}
-	//right aligned
-	&.navigation-right {
-	 	@extend %contain-floats;
-		float: right;
-		li { margin: 0 0 0 10px;}
-	}
-}
+@import "components/app-sidebar";
+@import "components/boxed-list";
+@import "components/navigation-list";
+@import "components/collapsible-sections";
 
 /*
 ##2. small elements
@@ -241,4 +51,12 @@ ol.navigation-list {
 
 strong {
 	font-weight:700;
+}
+
+img {
+	max-width: 100%;
+}
+
+.icon {
+	@include inline-block;
 }
