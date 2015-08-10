@@ -7,13 +7,12 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(long id, Date date, String value, boolean markedAsComplete, User user, Application application, Question question) {
+    public Response(long id, Date date, String value, boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.markedAsComplete = markedAsComplete;
-        this.user = user;
-        this.application = application;
+        this.userApplicationRole = userApplicationRole;
         this.question = question;
     }
 
@@ -25,12 +24,8 @@ public class Response {
     private boolean markedAsComplete;
 
     @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName="id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name="applicationId", referencedColumnName="id")
-    private Application application;
+    @JoinColumn(name="userApplicationRoleId", referencedColumnName="id")
+    private UserApplicationRole userApplicationRole;
 
     @ManyToOne
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -53,13 +48,8 @@ public class Response {
     }
 
     @JsonIgnore
-    public User getUser() {
-        return user;
-    }
-
-    @JsonIgnore
-    public Application getApplication() {
-        return application;
+    public UserApplicationRole getUserApplicationRoles() {
+        return userApplicationRole;
     }
 
     @JsonIgnore
