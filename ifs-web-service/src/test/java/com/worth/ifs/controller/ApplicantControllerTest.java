@@ -1,10 +1,6 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.*;
-import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.security.UserAuthentication;
 import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +10,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

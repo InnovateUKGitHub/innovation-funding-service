@@ -1,7 +1,6 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.User;
-import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,23 +10,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.Assert;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations="classpath:application.properties")

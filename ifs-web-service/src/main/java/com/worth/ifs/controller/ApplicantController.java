@@ -7,7 +7,6 @@ import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,15 +40,15 @@ public class ApplicantController {
         log.debug("Total applications: " + applications.size());
 
         for (Application application : applications) {
-            log.debug("State: " + application.getProcessStatus().getName());
+            log.debug("State: " + application.getApplicationStatus().getName());
         }
 
         ArrayList<Application> inprogress = applications.stream()
-                .filter(a -> (a.getProcessStatus().getName().equals("created") || a.getProcessStatus().getName().equals("submitted")))
+                .filter(a -> (a.getApplicationStatus().getName().equals("created") || a.getApplicationStatus().getName().equals("submitted")))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<Application> finished = applications.stream()
-                .filter(a -> (a.getProcessStatus().getName().equals("approved") || a.getProcessStatus().getName().equals("rejected")))
+                .filter(a -> (a.getApplicationStatus().getName().equals("approved") || a.getApplicationStatus().getName().equals("rejected")))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         log.debug("inprogress size " + inprogress.size());

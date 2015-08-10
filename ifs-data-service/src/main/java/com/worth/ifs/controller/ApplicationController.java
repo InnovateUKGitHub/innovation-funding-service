@@ -7,9 +7,8 @@ import com.worth.ifs.repository.ApplicationRepository;
 import com.worth.ifs.repository.UserApplicationRoleRepository;
 import com.worth.ifs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +26,23 @@ public class ApplicationController {
     @Autowired
     UserRepository userRepository;
 
+//    @ExceptionHandler(Exception.class)
+//    @ResponseBody
+//    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+//    public String handleException(Exception e) {
+//        return e.getMessage();
+//    }
+
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
-        Application application = repository.findById(id).get(0);
-        return application;
+        List<Application> apps = repository.findById(id);
+        if(apps.size() == 0){
+            return null;
+        }else{
+            return apps.get(0);
+        }
+
+
     }
 
     @RequestMapping("/findAll")

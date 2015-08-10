@@ -8,9 +8,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 
 
-/**
- * Created by nbijl on 23/07/15.
- */
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     private static final Log log = LogFactory.getLog(Application.class);
@@ -25,4 +22,7 @@ public class Application extends SpringBootServletInitializer {
         log.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
+
+
+
 }

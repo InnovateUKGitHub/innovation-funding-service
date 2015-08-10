@@ -10,11 +10,11 @@ import java.util.List;
  */
 @Entity
 public class Application {
-    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ProcessStatus processStatus, long id) {
+    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ApplicationStatus applicationStatus, long id) {
         this.competition = competition;
         this.name = name;
         this.userApplicationRoles = userApplicationRoles;
-        this.processStatus = processStatus;
+        this.applicationStatus = applicationStatus;
         this.id = id;
     }
 
@@ -31,8 +31,8 @@ public class Application {
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
 
     @ManyToOne
-    @JoinColumn(name="processStatusId", referencedColumnName="id")
-    private ProcessStatus processStatus;
+    @JoinColumn(name="applicationStatusId", referencedColumnName="id")
+    private ApplicationStatus applicationStatus;
 
     @ManyToOne
     @JoinColumn(name="competition", referencedColumnName="id")
@@ -65,12 +65,12 @@ public class Application {
         this.userApplicationRoles = userApplicationRoles;
     }
 
-    public ProcessStatus getProcessStatus() {
-        return processStatus;
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
     }
 
-    public void setProcessStatus(ProcessStatus processStatus) {
-        this.processStatus = processStatus;
+    public void setApplicationStatus(ApplicationStatus applicationStatus) {
+        this.applicationStatus = applicationStatus;
     }
 
     public Competition getCompetition() {
@@ -81,10 +81,10 @@ public class Application {
         this.competition = competition;
     }
 
-    public Application(long id, String name, ProcessStatus processStatus) {
+    public Application(long id, String name, ApplicationStatus applicationStatus) {
         this.id = id;
         this.name = name;
-        this.processStatus = processStatus;
+        this.applicationStatus = applicationStatus;
     }
 
     public void addUserApplicationRole(UserApplicationRole... userApplicationRoles){

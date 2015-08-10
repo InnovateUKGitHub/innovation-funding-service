@@ -6,16 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * ProcessStatus defines database relations and a model to use client side and server side.
+ * ApplicationStatus defines database relations and a model to use client side and server side.
  */
 
 @Entity
-public class ProcessStatus {
-    public ProcessStatus() {
+public class ApplicationStatus {
+    public ApplicationStatus() {
 
     }
 
-    public ProcessStatus(long id, String name) {
+    public ApplicationStatus(long id, String name) {
         this.id = id;
         this.name = name;
     }

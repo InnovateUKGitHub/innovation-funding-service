@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProcessStatusTest {
-    ProcessStatus processStatus;
+public class ApplicationStatusTest {
+    ApplicationStatus applicationStatus;
 
     long id;
     String name;
@@ -15,12 +15,12 @@ public class ProcessStatusTest {
         id = 0L;
         name="testProcessStatusName";
 
-        processStatus = new ProcessStatus(id, name);
+        applicationStatus = new ApplicationStatus(id, name);
     }
 
     @Test
     public void processStatusShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(processStatus.getId(), id);
-        Assert.assertEquals(processStatus.getName(), name);
+        Assert.assertEquals(applicationStatus.getId(), id);
+        Assert.assertEquals(applicationStatus.getName(), name);
     }
 }

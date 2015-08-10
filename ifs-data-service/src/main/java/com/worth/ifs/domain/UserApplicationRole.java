@@ -3,6 +3,7 @@ package com.worth.ifs.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * UserApplicationRole defines database relations and a model to use client side and server side.
@@ -36,6 +37,9 @@ public class UserApplicationRole {
     @ManyToOne
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
+
+    @OneToMany(mappedBy="userApplicationRole")
+    private List<Response> responses;
 
     public Long getRoleId() {
         return role.getId();

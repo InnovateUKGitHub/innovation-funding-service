@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class QuestionTest {
@@ -13,6 +15,15 @@ public class QuestionTest {
     Competition competition;
     Section section;
     String name;
+    String description;
+    String helpTitle;
+    String helpText;
+    String questionGuidanceText;
+    String answerGuidanceText;
+    long characterCount;
+    String values;
+    List<Response> responses;
+    QuestionType questionType;
 
     @Before
     public void setUp() throws Exception {
@@ -21,7 +32,7 @@ public class QuestionTest {
         section = new Section();
         name = "testQuestionName";
 
-        question = new Question(id, competition, section, name);
+        question = new Question(values, id, competition, section, questionType, responses, name, description, helpTitle, helpText, questionGuidanceText, answerGuidanceText, characterCount);
     }
 
     @Test
