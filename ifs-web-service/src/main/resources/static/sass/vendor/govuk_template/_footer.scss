@@ -1,8 +1,8 @@
 // Global footer 
 
 #footer {
-  background-color: $grey-8;
-  border-top: 1px solid $grey-6;
+  background-color: $grey-3;
+  border-top: 1px solid $grey-1;
 
   .footer-wrapper {
     @include outer-block;
@@ -10,7 +10,7 @@
     @include media(tablet) {
       padding-top: 60px;
     }
-    background-color: $grey-8;
+    background-color: $grey-3;
     margin: 0 auto;
   }
 
