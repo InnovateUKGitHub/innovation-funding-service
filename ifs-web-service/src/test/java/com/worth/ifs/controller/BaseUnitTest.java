@@ -4,12 +4,10 @@ import com.worth.ifs.domain.*;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.security.UserAuthentication;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
