@@ -1,5 +1,7 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String helpTitle, String helpText, String questionGuidanceText, String answerGuidanceText, long characterCount) {
+    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -18,10 +20,10 @@ public class Question {
         this.responses = responses;
         this.name = name;
         this.description = description;
-        this.helpTitle = helpTitle;
-        this.helpText = helpText;
-        this.questionGuidanceText = questionGuidanceText;
-        this.answerGuidanceText = answerGuidanceText;
+        this.guidanceTitle = guidanceTitle;
+        this.guidanceQuestion = guidanceQuestion;
+        this.guidanceQuestionText = guidanceQuestionText;
+        this.guidanceAnswerText = guidanceAnswerText;
         this.characterCount = characterCount;
     }
 
@@ -57,10 +59,10 @@ public class Question {
 
     private String name;
     private String description;
-    private String helpTitle;
-    private String helpText;
-    private String questionGuidanceText;
-    private String answerGuidanceText;
+    private String guidanceTitle;
+    private String guidanceQuestion;
+    private String guidanceQuestionText;
+    private String guidanceAnswerText;
     private long characterCount;
     private String optionValues;
 
@@ -80,27 +82,51 @@ public class Question {
         return id;
     }
 
-    public QuestionType getQuestionType() {
-        return questionType;
+
+    public String getOptionValues() {
+        return optionValues;
     }
 
-    public String getQuestionGuidanceText() {
-        return questionGuidanceText;
+    public long getCharacterCount() {
+        return characterCount;
     }
 
-    public String getAnswerGuidanceText() {
-        return answerGuidanceText;
+    public String getGuidanceAnswerText() {
+        return guidanceAnswerText;
     }
 
-    public String getHelpText() {
-        return helpText;
+    public String getGuidanceQuestionText() {
+        return guidanceQuestionText;
     }
 
-    public String getHelpTitle() {
-        return helpTitle;
+    public String getGuidanceQuestion() {
+        return guidanceQuestion;
+    }
+
+    public String getGuidanceTitle() {
+        return guidanceTitle;
     }
 
     public String getDescription() {
         return description;
+    }
+
+
+    public List<Response> getResponses() {
+        return responses;
+    }
+
+    @JsonIgnore
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    @JsonIgnore
+    public Section getSection() {
+        return section;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
     }
 }

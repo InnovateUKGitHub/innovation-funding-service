@@ -10,17 +10,33 @@ public class QuestionType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @JsonIgnore
     @OneToMany(mappedBy="questionType")
     private List<Question> questions;
 
     private String title;
 
-    public String getTitle() {
-        return title;
+
+    public QuestionType(long id,String title, List<Question> questions) {
+        this.id = id;
+        this.title = title;
+        this.questions = questions;
+    }
+
+    public QuestionType() {
+
     }
 
     public long getId() {
         return id;
+    }
+
+
+    @JsonIgnore
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
