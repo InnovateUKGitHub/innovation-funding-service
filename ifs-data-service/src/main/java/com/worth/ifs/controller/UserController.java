@@ -3,9 +3,8 @@ package com.worth.ifs.controller;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +17,13 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository repository;
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String handleException(Exception e) {
+        return "return error object instead";
+    }
 
     @RequestMapping("/token/{token}")
      public User getUserByToken(@PathVariable("token") final String token) {

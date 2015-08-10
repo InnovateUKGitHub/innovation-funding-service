@@ -3,6 +3,7 @@ package com.worth.ifs.controller;
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.Competition;
 import com.worth.ifs.domain.Section;
+import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
@@ -37,8 +38,13 @@ public class ApplicationController {
      * @param applicationId represents the application
      * @param model model that contains the details for the application detail page
      */
-    private void addApplicationDetails(Long applicationId, Model model){
+    private void addApplicationDetails(Long applicationId, Model model) {
         Application application = applicationService.getApplicationById(applicationId);
+
+        if(application == null){
+            throw new ObjectNotFoundException();
+        }
+
         model.addAttribute("currentApplication", application);
 
         Competition competition = application.getCompetition();
@@ -61,9 +67,7 @@ public class ApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId){
         this.addApplicationDetails(applicationId, model);
-        //this.addSectionsDetails(applicationId, sectionId, model);
         model.addAttribute("currentSectionId", sectionId);
-
         return "application-details";
     }
 }

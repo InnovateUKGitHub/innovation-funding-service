@@ -53,15 +53,30 @@ public class ApplicationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationDetails() throws Exception {
+     public void testApplicationDetails() throws Exception {
+        Application app = applications.get(0);
+
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+
+        System.out.println("Show dashboard for application: " + app.getId());
+        mockMvc.perform(get("/application/" + app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+    }
+
+    @Test
+    public void testNotExistingApplicationDetails() throws Exception {
         Application app = applications.get(0);
 
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getApplicationById(app.getId())).thenReturn(app);
 
         System.out.println("Show dashboard for application: "+ app.getId());
-        mockMvc.perform(get("/application/" + app.getId()))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/application/1234"))
+                .andExpect(status().isNotFound())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()));
