@@ -34,7 +34,10 @@
 
          <form class="application">
             <div class="section" th:each="question : ${currentSection.getQuestions()}">
-                <div data-th-text="${question.getName()}"></div>
+                <div class="question">
+                    <div data-th-text="${question.getName()}"></div>
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question})"></div>
+                </div>
             </div>
          </form>
 

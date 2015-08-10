@@ -79,4 +79,28 @@ public class Question {
     public long getId() {
         return id;
     }
+
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+
+    public String getQuestionGuidanceText() {
+        return questionGuidanceText;
+    }
+
+    public String getAnswerGuidanceText() {
+        return answerGuidanceText;
+    }
+
+    public String getHelpText() {
+        return helpText;
+    }
+
+    public String getHelpTitle() {
+        return helpTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

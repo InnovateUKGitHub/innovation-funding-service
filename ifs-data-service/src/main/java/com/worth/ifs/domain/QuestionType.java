@@ -14,5 +14,13 @@ public class QuestionType {
     @OneToMany(mappedBy="questionType")
     private List<Question> questions;
 
-    String title;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public long getId() {
+        return id;
+    }
 }
