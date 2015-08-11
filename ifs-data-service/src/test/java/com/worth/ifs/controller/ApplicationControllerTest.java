@@ -1,9 +1,6 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Role;
-import com.worth.ifs.domain.User;
-import com.worth.ifs.domain.UserApplicationRole;
+import com.worth.ifs.domain.*;
 import com.worth.ifs.repository.ApplicationRepository;
 import com.worth.ifs.repository.UserApplicationRoleRepository;
 import com.worth.ifs.repository.UserRepository;
@@ -77,10 +74,13 @@ public class ApplicationControllerTest {
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
         Application testApplication3 = new Application(null, "testApplication3Name", null, null, 3L);
 
-        UserApplicationRole testUserApplicationRole1 = new UserApplicationRole(0L, testUser1, testApplication1, new Role());
-        UserApplicationRole testUserApplicationRole2 = new UserApplicationRole(1L, testUser1, testApplication2, new Role());
-        UserApplicationRole testUserApplicationRole3 = new UserApplicationRole(2L, testUser2, testApplication2, new Role());
-        UserApplicationRole testUserApplicationRole4 = new UserApplicationRole(3L, testUser2, testApplication3, new Role());
+        Organisation organisation1 = new Organisation(1L, "test organisation 1");
+        Organisation organisation2 = new Organisation(2L, "test organisation 2");
+
+        UserApplicationRole testUserApplicationRole1 = new UserApplicationRole(0L, testUser1, testApplication1, new Role(), organisation1);
+        UserApplicationRole testUserApplicationRole2 = new UserApplicationRole(1L, testUser1, testApplication2, new Role(), organisation1);
+        UserApplicationRole testUserApplicationRole3 = new UserApplicationRole(2L, testUser2, testApplication2, new Role(), organisation2);
+        UserApplicationRole testUserApplicationRole4 = new UserApplicationRole(3L, testUser2, testApplication3, new Role(), organisation2);
 
         when(userRepositoryMock.findById(1L)).thenReturn(new ArrayList<User>() {{
             add(testUser1);

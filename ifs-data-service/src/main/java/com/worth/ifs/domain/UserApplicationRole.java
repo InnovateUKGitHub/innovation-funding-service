@@ -11,17 +11,6 @@ import java.util.List;
 
 @Entity
 public class UserApplicationRole {
-    public UserApplicationRole(long id, User user, Application application, Role role) {
-        this.id = id;
-        this.user = user;
-        this.application = application;
-        this.role = role;
-    }
-
-    public UserApplicationRole(){
-
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -38,8 +27,24 @@ public class UserApplicationRole {
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name="organisationId", referencedColumnName="id")
+    private Organisation organisation;
+
     @OneToMany(mappedBy="userApplicationRole")
     private List<Response> responses;
+
+    public UserApplicationRole(long id, User user, Application application, Role role, Organisation organisation) {
+        this.id = id;
+        this.user = user;
+        this.application = application;
+        this.role = role;
+        this.organisation = organisation;
+    }
+
+    public UserApplicationRole(){
+
+    }
 
     public Long getRoleId() {
         return role.getId();
@@ -51,6 +56,10 @@ public class UserApplicationRole {
 
     public Long getApplicationId() {
         return application.getId();
+    }
+
+    public Long getOrganisationId() {
+        return organisation.getId();
     }
 
     @JsonIgnore
@@ -65,6 +74,10 @@ public class UserApplicationRole {
     @JsonIgnore
     public Application getApplication() {
         return application;
+    }
+    @JsonIgnore
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
     public long getId() {

@@ -38,6 +38,5 @@ public class ApplicationTest {
         Assert.assertEquals(application.getApplicationStatus(), applicationStatus);
         Assert.assertEquals(application.getUserApplicationRoles(), userApplicationRoles);
         Assert.assertEquals(application.getCompetition(), competition);
-
     }
 }

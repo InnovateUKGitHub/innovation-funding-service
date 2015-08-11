@@ -13,6 +13,7 @@ public class UserApplicationRoleTest {
     User user;
     Application application;
     Role role;
+    Organisation organisation;
 
     @Before
     public void setUp() throws Exception {
@@ -20,8 +21,9 @@ public class UserApplicationRoleTest {
         user = new User();
         application = new Application();
         role = new Role();
+        organisation = new Organisation();
 
-        userApplicationRoleTest = new UserApplicationRole(id, user, application, role);
+        userApplicationRoleTest = new UserApplicationRole(id, user, application, role, organisation);
     }
 
     @Test
@@ -30,6 +32,7 @@ public class UserApplicationRoleTest {
         Assert.assertEquals(userApplicationRoleTest.getId(), id);
         Assert.assertEquals(userApplicationRoleTest.getApplication(), application);
         Assert.assertEquals(userApplicationRoleTest.getRole(), role);
+        Assert.assertEquals(userApplicationRoleTest.getOrganisation(), organisation);
 
     }
 }

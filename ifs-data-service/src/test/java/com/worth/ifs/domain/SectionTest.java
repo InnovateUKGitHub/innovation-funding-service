@@ -14,6 +14,7 @@ public class SectionTest {
     Competition competition;
     List<Question> questions;
     String name;
+    Section parentSection;
 
     @Before
     public void setUp() throws Exception {
@@ -23,10 +24,10 @@ public class SectionTest {
         questions.add(new Question());
         questions.add(new Question());
         questions.add(new Question());
-
+        parentSection = new Section();
         name = "testSectionName";
 
-        section = new Section(id, competition, questions, name);
+        section = new Section(id, competition, questions, name, parentSection);
     }
 
     @Test
@@ -34,5 +35,6 @@ public class SectionTest {
         Assert.assertEquals(section.getQuestions(), questions);
         Assert.assertEquals(section.getId(), id);
         Assert.assertEquals(section.getName(), name);
+        Assert.assertEquals(section.getParentSection(), parentSection);
     }
 }
