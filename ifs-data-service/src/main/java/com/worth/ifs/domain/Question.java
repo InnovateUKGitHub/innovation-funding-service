@@ -59,12 +59,19 @@ public class Question {
     private List<Response> responses;
 
     private String name;
+    @Column(length=5000)
     private String description;
+    @Column(length=5000)
     private String guidanceTitle;
+    @Column(length=5000)
     private String guidanceQuestion;
+    @Column(length=5000)
     private String guidanceQuestionText;
+    @Column(length=5000)
     private String guidanceAnswerText;
+    @Column(length=5000)
     private long characterCount;
+    @Column(length=5000)
     private String optionValues;
 
     public String getName() {
