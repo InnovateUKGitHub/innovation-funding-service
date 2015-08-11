@@ -20,8 +20,10 @@ cp -r ./sass-docs/images ./docs
 cp -r ./sass-docs/js ./docs
 
 #OSX open the styleguide with chrome 
-FILEPATH=`pwd`
-open -a "Google Chrome"  "$FILEPATH/docs/index.html"
+#FILEPATH=`pwd`
+#open -a "Google Chrome"  "$FILEPATH/docs/index.html"
+#
+open -a "Google Chrome"  "http://localhost:8085/docs/index.html"
 
 #remove css-docs folder
 if [ -d "./css-docs" ]; then
