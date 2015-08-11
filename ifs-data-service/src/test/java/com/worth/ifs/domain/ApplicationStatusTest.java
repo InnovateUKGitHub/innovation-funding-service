@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ApplicationStatusTest {
     ApplicationStatus applicationStatus;
 
-    long id;
+    Long id;
     String name;
 
     @Before

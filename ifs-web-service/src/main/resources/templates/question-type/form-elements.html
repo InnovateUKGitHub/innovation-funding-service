@@ -1,0 +1,51 @@
+<!-- ===========================Form label =========================== -->
+<div th:fragment="form-label">
+        <label  class="form-label form-label-bold" 
+                th:if="${question.getName()}"
+                th:for="'question-'+${question.getId()}"  
+                th:text="${question.getName()}"  
+        />      
+</div>
+<!-- ===========================Form hint =========================== -->
+<div th:fragment="form-hint">
+	<span   class="form-hint" 
+	        th:if="${question.getDescription()}" 
+	        th:text="${question.getDescription()}" 
+	/>
+</div>
+<!-- ========================= Form Guidance =========================== -->
+
+<div th:fragment="form-guidance">
+	<details th:if="${question.getGuidanceQuestion()}">
+	    <summary>
+	        <span class="summary" th:text="${question.getGuidanceQuestion()}" />
+	    </summary>
+	    <div class="panel-indent">
+	        <p th:text="${question.getGuidanceQuestionText()}" />
+	    </div>
+	</details>
+</div>
+<!-- ========================= input field =========================== -->
+
+<div th:fragment="form-textinput">
+	<input  class="form-control" 
+	        type="text" 
+	        th:id="'question-'+${question.getId()}"  
+	        th:name="'response-'+${question.getId()}"
+	        th:value="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"
+	/>
+</div>
+<!-- ========================= textarea =========================== -->
+
+<div th:fragment="form-textarea">
+     <textarea  th:attr="data-question_id=${question.getId()}"
+            cols="30" rows="10"
+            th:name="'response-'+${question.getId()}"
+            data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
+      </textarea>
+</div>
+
+
+
+
+

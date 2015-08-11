@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 public class UserApplicationRole {
-    public UserApplicationRole(long id, User user, Application application, Role role) {
+    public UserApplicationRole(Long id, User user, Application application, Role role) {
         this.id = id;
         this.user = user;
         this.application = application;
@@ -24,7 +24,7 @@ public class UserApplicationRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="userId", referencedColumnName="id")
@@ -67,7 +67,7 @@ public class UserApplicationRole {
         return application;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

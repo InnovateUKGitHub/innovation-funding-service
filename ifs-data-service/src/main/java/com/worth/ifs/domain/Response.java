@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(long id, Date date, String value, boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question) {
+    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question) {
         this.id = id;
         this.date = date;
         this.value = value;
@@ -22,11 +22,11 @@ public class Response {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private Date date;
     @Column(length=5000)
     private String value;
-    private boolean markedAsComplete;
+    private Boolean markedAsComplete;
 
     @ManyToOne
     @JoinColumn(name="userApplicationRoleId", referencedColumnName="id")
@@ -44,7 +44,8 @@ public class Response {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 
@@ -56,7 +57,7 @@ public class Response {
         return value;
     }
 
-    public boolean isMarkedAsComplete() {
+    public Boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
 

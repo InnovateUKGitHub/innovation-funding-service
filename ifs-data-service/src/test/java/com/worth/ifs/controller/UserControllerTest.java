@@ -56,15 +56,15 @@ public class UserControllerTest {
         when(userRepositoryMock.findAll()).thenReturn(users);
         mockMvc.perform(get("/user/findAll/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]id",        is((int)testUser1.getId())))
+                .andExpect(jsonPath("[0]id",        is((Number)testUser1.getId().intValue())))
                 .andExpect(jsonPath("[0]name",      is(testUser1.getName())))
                 .andExpect(jsonPath("[0]imageUrl",  is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("[0]token",     is(testUser1.getToken())))
-                .andExpect(jsonPath("[1]id",        is((int)testUser2.getId())))
+                .andExpect(jsonPath("[1]id",        is((Number)testUser2.getId().intValue())))
                 .andExpect(jsonPath("[1]name",      is(testUser2.getName())))
                 .andExpect(jsonPath("[1]imageUrl",  is(testUser2.getImageUrl())))
                 .andExpect(jsonPath("[1]token",     is(testUser2.getToken())))
-                .andExpect(jsonPath("[2]id",        is((int)testUser3.getId())))
+                .andExpect(jsonPath("[2]id",        is((Number)testUser3.getId().intValue())))
                 .andExpect(jsonPath("[2]name",      is(testUser3.getName())))
                 .andExpect(jsonPath("[2]imageUrl",  is(testUser3.getImageUrl())))
                 .andExpect(jsonPath("[2]token",     is(testUser3.getToken())));
@@ -80,10 +80,10 @@ public class UserControllerTest {
         when(userRepositoryMock.findById(testUser1.getId())).thenReturn(userList);
         mockMvc.perform(get("/user/id/"+testUser1.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id",        is((int)testUser1.getId())))
-                .andExpect(jsonPath("name",      is(testUser1.getName())))
-                .andExpect(jsonPath("imageUrl",  is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("token",     is(testUser1.getToken())));
+                .andExpect(jsonPath("id",        is((Number)testUser1.getId().intValue())))
+                .andExpect(jsonPath("name", is(testUser1.getName())))
+                .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
+                .andExpect(jsonPath("token", is(testUser1.getToken())));
     }
 
     @Test
@@ -96,10 +96,10 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/user/token/"+testUser1.getToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id",        is((int)testUser1.getId())))
-                .andExpect(jsonPath("name",      is(testUser1.getName())))
-                .andExpect(jsonPath("imageUrl",  is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("token",    is(testUser1.getToken())));
+                .andExpect(jsonPath("id",        is((Number)testUser1.getId().intValue())))
+                .andExpect(jsonPath("name", is(testUser1.getName())))
+                .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
+                .andExpect(jsonPath("token", is(testUser1.getToken())));
 
     }
 }
