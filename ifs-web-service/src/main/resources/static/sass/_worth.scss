@@ -9,17 +9,7 @@ $ifs-lightgray : #F8F8F8;
 
 
 
-
-
-.header-new-sub-wrapper {
-	background: $ifs-lightgray;
-	border-top: 10px solid $ifs-purple;
-	clear: both;
-	font-weight: 700;
-	padding: 20px 15px;
-	margin: 0 -15px;
-	position: relative;
-}
+//layout
 
 @import "layout/layout";
 
@@ -35,7 +25,15 @@ $ifs-lightgray : #F8F8F8;
 @import "components/collapsible-sections";
 
 /*
-##2. small elements
+
+/*
+##2. Pie charts 
+*/
+@import "components/pie-charts";
+
+
+/*
+##3. small elements
 ###Text
 
 ```
