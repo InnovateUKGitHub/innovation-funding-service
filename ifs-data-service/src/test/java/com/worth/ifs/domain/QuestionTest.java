@@ -3,15 +3,13 @@ package com.worth.ifs.domain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.xml.ws.soap.AddressingFeature;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionTest {
     Question question;
 
-    long id;
+    Long id;
     Competition competition;
     Section section;
     String name;
@@ -20,7 +18,7 @@ public class QuestionTest {
     String guidanceQuestion;
     String guidanceQuestionText;
     String guidanceAnswerText;
-    long characterCount;
+    Long characterCount;
     String optionValues;
     List<Response> responses;
     QuestionType questionType;

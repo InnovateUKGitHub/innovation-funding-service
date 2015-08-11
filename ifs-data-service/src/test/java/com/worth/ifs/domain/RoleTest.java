@@ -11,7 +11,7 @@ public class RoleTest {
     Role role;
 
     List<UserApplicationRole> userApplicationRoles;
-    long id;
+    Long id;
     String name;
 
     @Before

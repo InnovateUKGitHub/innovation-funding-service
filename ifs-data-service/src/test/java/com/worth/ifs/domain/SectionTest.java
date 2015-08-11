@@ -10,7 +10,7 @@ import java.util.List;
 public class SectionTest {
     Section section;
 
-    long id;
+    Long id;
     Competition competition;
     List<Question> questions;
     String name;

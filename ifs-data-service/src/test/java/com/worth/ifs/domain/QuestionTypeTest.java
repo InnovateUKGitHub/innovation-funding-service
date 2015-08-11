@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class QuestionTypeTest {
     QuestionType questionType;
 
-    long id;
+    Long id;
     String title;
     List<Question> questions;
 

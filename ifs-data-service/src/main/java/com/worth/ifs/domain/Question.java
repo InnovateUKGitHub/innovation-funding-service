@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, long characterCount) {
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, Long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -28,7 +28,7 @@ public class Question {
         this.characterCount = characterCount;
     }
 
-    public Question(long id, Competition competition, Section section, String name) {
+    public Question(Long id, Competition competition, Section section, String name) {
         this.id = id;
         this.competition = competition;
         this.section = section;
@@ -41,7 +41,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -70,7 +70,7 @@ public class Question {
     @Column(length=5000)
     private String guidanceAnswerText;
     @Column(length=5000)
-    private long characterCount;
+    private Long characterCount;
     @Column(length=5000)
     private String optionValues;
 
@@ -86,7 +86,7 @@ public class Question {
         this.competition = competition;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,7 +95,7 @@ public class Question {
         return optionValues;
     }
 
-    public long getCharacterCount() {
+    public Long getCharacterCount() {
         return characterCount;
     }
 

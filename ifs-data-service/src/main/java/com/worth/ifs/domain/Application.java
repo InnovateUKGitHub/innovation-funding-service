@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 public class Application {
-    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ApplicationStatus applicationStatus, long id) {
+    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ApplicationStatus applicationStatus, Long id) {
         this.competition = competition;
         this.name = name;
         this.userApplicationRoles = userApplicationRoles;
@@ -22,12 +22,10 @@ public class Application {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String name;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
     @OneToMany(mappedBy="application")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
@@ -47,7 +45,7 @@ public class Application {
         return other instanceof Application;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -83,7 +81,7 @@ public class Application {
         this.competition = competition;
     }
 
-    public Application(long id, String name, ApplicationStatus applicationStatus) {
+    public Application(Long id, String name, ApplicationStatus applicationStatus) {
         this.id = id;
         this.name = name;
         this.applicationStatus = applicationStatus;

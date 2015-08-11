@@ -9,10 +9,10 @@ import java.util.Date;
 public class ResponseTest {
     Response response;
 
-    long id;
+    Long id;
     Question question;
     UserApplicationRole userApplicationRole;
-    boolean markedAsComplete;
+    Boolean markedAsComplete;
     String value;
     Date date;
 

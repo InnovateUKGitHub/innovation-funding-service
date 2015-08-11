@@ -14,7 +14,7 @@ import java.util.List;
 public class Competition {
     public Competition() {
     }
-    public Competition(long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -23,7 +23,7 @@ public class Competition {
         this.description = description;
         this.deadline = deadline;
     }
-    public Competition(long id, String name, String description, Date deadline) {
+    public Competition(Long id, String name, String description, Date deadline) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,7 +32,7 @@ public class Competition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @OneToMany(mappedBy="competition")
     private List<Application> applications;
@@ -68,7 +68,7 @@ public class Competition {
         this.applications.addAll(Arrays.asList(apps));
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

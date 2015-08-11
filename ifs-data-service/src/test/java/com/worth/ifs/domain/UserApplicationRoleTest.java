@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class UserApplicationRoleTest {
     UserApplicationRole userApplicationRoleTest;
 
-    long id;
+    Long id;
     User user;
     Application application;
     Role role;
