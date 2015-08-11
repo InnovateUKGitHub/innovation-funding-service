@@ -3,47 +3,56 @@ Progress indicator
 
 ```
 <div class="progress-container">
-	<div class="start">0%</div>
-	<div class="progress-indicator" style="width:0%">
-		<div>
-			0%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:0%">
+			<div>
+				0%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
-	<div class="end">100%</div>
 </div>
 
 <div class="progress-container">
-	<div class="start">0%</div>
-	<div class="progress-indicator" style="width:51%">
-		<div>
-			51%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:51%">
+			<div>
+				51%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
-	<div class="end">100%</div>
 </div>
 
 <div class="progress-container">
-	<div class="start">0%</div>
-	<div class="progress-indicator" style="width:100%">
-		<div>
-			100%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:100%">
+			<div>
+				100%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
-	<div class="end">100%</div>
 </div>
-
 ```
 */
 @import "compass/css3/transform";
-
 .progress-container {
+	margin: 10px 37px 65px 37px;
+	//side margin for 0% and 100% overflow of the indicator
+}
+
+.progress-indicator {
 	display: inline-block;
 	position: relative;
 	width:100%;
 	background: $grey-2;
 	@include border-radius(15px);
 	height:30px;
-	margin-bottom: 65px;
+
 	.start,
 	.end{
 		position: absolute;
@@ -58,7 +67,7 @@ Progress indicator
 	}
 }
 
-.progress-indicator {
+.progress {
 	background-color: $turquoise;
 	height: 100%;
 	position: absolute;
@@ -66,19 +75,14 @@ Progress indicator
 	@include border-radius(15px 0 0 15px);
 	text-indent:-9999px;
 
-	&[style*="width:0%"] div{
-		left: 0;
-	}
-
 	&[style*="width:100%"] {
 		@include border-radius(15px);
-		div {right:0;}
 	}
 }
-.progress-indicator div {
+.progress div {
 	position: absolute;
-	right:-42px;
-	width:80px;
+	right:-37px;
+	width:70px;
 	padding: 2px;
 	line-height: 1.5;
 	text-align: center;
@@ -103,7 +107,7 @@ Progress indicator
 }
 
 @include ie-lte(8) {
-	.progress-indicator div:before {
+	.progress div:before {
 		display: none;
 	}
 }
