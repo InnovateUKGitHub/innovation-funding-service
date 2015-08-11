@@ -3,7 +3,7 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput">
-        <input type="text" class="form-control" th:name="'response-'+${question.getId()}"
+        <input type="text" th:attr="data-question_id=${question.getId()}" class="form-control" th:name="'question-'+${question.getId()}"
                th:value="${responses.get(question.getId()).getValue()}"/>
     </div>
 
@@ -11,7 +11,7 @@
 
     <div th:fragment="textarea">
 
-        <textarea id="" cols="30" rows="10" th:name="'response-'+${question.getId()}"
+        <textarea th:attr="data-question_id=${question.getId()}" cols="30" rows="10" th:name="'response-'+${question.getId()}"
                   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"></textarea>
 
     </div>
