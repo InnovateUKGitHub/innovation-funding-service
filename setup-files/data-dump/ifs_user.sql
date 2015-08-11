@@ -21,7 +21,7 @@
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `image_url`, `name`, `token`, `email`, `password`) VALUES (1,'image.jpg','Steve Smith (Lead Applicant)','123abc','applicant@innovateuk.org','test123'),(2,'image2.jpg','Jessica Doe (Collaborator)','456def','collaborator@innovateuk.org','test123'),(3,'image3.jpg','Professor Plum (Assessor)','789ghi','assessor@innovateuk.org','test123'),(6,'image4.jpg','Comp Exec (Competitions)','123def','competitions@innovateuk.org','test123'),(7,'image5.jpg','Project Finance Analyst (Finance)','123ghi','finance@innovateuk.org','test123');
+REPLACE  IGNORE INTO `user` (`id`, `image_url`, `name`, `token`, `email`, `password`) VALUES (1,'image.jpg','Steve Smith (Lead Applicant)','123abc','applicant@innovateuk.org','b8ef180ea1440b394b71ed375a8c71365e295041fe9b6890abb2976dfd7fa0d1819c72a54a473d98'),(2,'image2.jpg','Jessica Doe (Collaborator)','456def','collaborator@innovateuk.org','b8ef180ea1440b394b71ed375a8c71365e295041fe9b6890abb2976dfd7fa0d1819c72a54a473d98'),(3,'image3.jpg','Professor Plum (Assessor)','789ghi','assessor@innovateuk.org','b8ef180ea1440b394b71ed375a8c71365e295041fe9b6890abb2976dfd7fa0d1819c72a54a473d98'),(6,'image4.jpg','Comp Exec (Competitions)','123def','competitions@innovateuk.org','b8ef180ea1440b394b71ed375a8c71365e295041fe9b6890abb2976dfd7fa0d1819c72a54a473d98'),(7,'image5.jpg','Project Finance Analyst (Finance)','123ghi','finance@innovateuk.org','b8ef180ea1440b394b71ed375a8c71365e295041fe9b6890abb2976dfd7fa0d1819c72a54a473d98');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-06 10:51:41
+-- Dump completed on 2015-08-10 16:07:05
