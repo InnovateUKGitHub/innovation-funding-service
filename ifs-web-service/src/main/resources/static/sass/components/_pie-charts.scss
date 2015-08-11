@@ -120,12 +120,25 @@ You can add `.small` to `.pie` for a smaller version of both
 	}
 
 }
-
-
+.no-js {
+	.pie {
+		width:auto;
+		height: auto;
+		display: none;
+	}
+	.pie-overlay {
+		border: 2px solid $grey-3;
+	}
+}
+//same as no-js but @extends don't work within ie-lte :(
 @include ie-lte(8) {
 	.pie {
 		width:auto;
 		height: auto;
 		display: none;
 	}
+	.pie-overlay {
+		border: 2px solid $grey-3;
+	}
 }
+
