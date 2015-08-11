@@ -3,7 +3,6 @@ package com.worth.ifs.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, Long characterCount) {
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -21,10 +20,8 @@ public class Question {
         this.responses = responses;
         this.name = name;
         this.description = description;
-        this.guidanceTitle = guidanceTitle;
         this.guidanceQuestion = guidanceQuestion;
-        this.guidanceQuestionText = guidanceQuestionText;
-        this.guidanceAnswerText = guidanceAnswerText;
+        this.guidanceAnswer = guidanceAnswer;
         this.characterCount = characterCount;
     }
 
@@ -62,13 +59,9 @@ public class Question {
     @Column(length=5000)
     private String description;
     @Column(length=5000)
-    private String guidanceTitle;
-    @Column(length=5000)
     private String guidanceQuestion;
     @Column(length=5000)
-    private String guidanceQuestionText;
-    @Column(length=5000)
-    private String guidanceAnswerText;
+    private String guidanceAnswer;
     @Column(length=5000)
     private Long characterCount;
     @Column(length=5000)
@@ -99,20 +92,12 @@ public class Question {
         return characterCount;
     }
 
-    public String getGuidanceAnswerText() {
-        return guidanceAnswerText;
-    }
-
-    public String getGuidanceQuestionText() {
-        return guidanceQuestionText;
+    public String getGuidanceAnswer() {
+        return guidanceAnswer;
     }
 
     public String getGuidanceQuestion() {
         return guidanceQuestion;
-    }
-
-    public String getGuidanceTitle() {
-        return guidanceTitle;
     }
 
     public String getDescription() {
