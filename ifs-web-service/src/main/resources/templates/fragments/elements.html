@@ -20,7 +20,7 @@
 
 <div th:fragment="header-logo"> 
     <div class="header-logo">
-        <a href="/" title="Go to the Innovation Funding Service homepage" id="logo" class="content">
+        <a th:href="${#authorization.expression('isAuthenticated()')} ? '/applicant/dashboard' : '/'" title="Go to the Innovation Funding Service homepage" id="logo" class="content">
           <img src="/images/innovateuk_logo.png" width="165" height="23" alt="Innovate UK logo" />
         </a>
     </div>
