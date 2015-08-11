@@ -31,7 +31,7 @@ public class UserApplicationRole {
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy="userApplicationRole")
+    @OneToMany(mappedBy="userApplicationRole",fetch = FetchType.LAZY)
     private List<Response> responses;
 
     public UserApplicationRole(long id, User user, Application application, Role role, Organisation organisation) {
@@ -82,5 +82,10 @@ public class UserApplicationRole {
 
     public long getId() {
         return id;
+    }
+
+    //@JsonIgnore
+    public List<Response> getResponses() {
+        return responses;
     }
 }

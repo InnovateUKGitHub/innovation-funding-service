@@ -1,0 +1,34 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <!-- ===========================Form: Textinput =========================== -->
+
+    <div th:fragment="textinput">
+        <input type="text" class="form-control" th:name="'response-'+${question.getId()}"
+               th:value="${responses.get(question.getId()).getValue()}"/>
+    </div>
+
+    <!-- ===========================Form: Text Area =========================== -->
+
+    <div th:fragment="textarea">
+
+        <textarea id="" cols="30" rows="10" th:name="'response-'+${question.getId()}"
+                  data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"></textarea>
+
+    </div>
+
+    <!-- ===========================Form: Date input =========================== -->
+
+    <div th:fragment="date">
+
+        <input type="date"/>
+
+    </div>
+
+    <!-- ===========================Form: Fileupload =========================== -->
+    <div th:fragment="fileupload">
+
+        <input type="file"/>
+
+    </div>
+
+</div>

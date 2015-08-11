@@ -1,14 +1,17 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.domain.UserApplicationRole;
 import com.worth.ifs.repository.ApplicationRepository;
+import com.worth.ifs.repository.ResponseRepository;
 import com.worth.ifs.repository.UserApplicationRoleRepository;
 import com.worth.ifs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ public class ApplicationController {
     UserApplicationRoleRepository userAppRoleRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ResponseRepository responseRepository;
 
 //    @ExceptionHandler(Exception.class)
 //    @ResponseBody
@@ -41,8 +46,23 @@ public class ApplicationController {
         }else{
             return apps.get(0);
         }
+    }
 
+    @RequestMapping("/findResponsesByApplication/{applicationId}")
+     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+        Application app = repository.findOne(applicationId);
+        List<UserApplicationRole> userAppRoles = app.getUserApplicationRoles();
 
+        List<Response> responses = new ArrayList<Response>();
+        for (UserApplicationRole userAppRole : userAppRoles) {
+            responses.addAll(userAppRole.getResponses());
+        }
+        return responses;
+    }
+
+    @RequestMapping("/findResponsesByApplication/{applicationId}/section/{sectionId}")
+    public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId, @PathVariable("sectionId") final Long sectionId){
+        throw new NotImplementedException();
     }
 
     @RequestMapping("/findAll")

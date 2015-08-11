@@ -1,5 +1,6 @@
 package com.worth.ifs.repository;
 
+import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.domain.UserApplicationRole;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,4 +13,5 @@ import java.util.List;
 public interface UserApplicationRoleRepository extends PagingAndSortingRepository<UserApplicationRole, Long> {
     List<UserApplicationRole> findById(@Param("id") Long id);
     List<UserApplicationRole> findByUser(@Param("user") User user);
+    List<UserApplicationRole> findByApplication(@Param("application") Application application);
 }

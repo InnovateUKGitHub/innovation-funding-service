@@ -16,10 +16,15 @@ public class Response {
         this.question = question;
     }
 
+    public Response () {
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private Date date;
+    @Column(length=5000)
     private String value;
     private boolean markedAsComplete;
 
@@ -48,11 +53,11 @@ public class Response {
     }
 
     @JsonIgnore
-    public UserApplicationRole getUserApplicationRoles() {
+    public UserApplicationRole getUserApplicationRole() {
         return userApplicationRole;
     }
 
-    @JsonIgnore
+
     public Question getQuestion() {
         return question;
     }

@@ -8,7 +8,8 @@ bundle exec compass compile -c config-docs.rb
 
 #generate styleguide and make the docs.html the index.html
 ./node_modules/.bin/styledocco -n "Innovation Funding Service styleguide" css-docs/docs.css \
-	--include ./js/worth.js \
+	--include ./js/vendor/modernizr/modernizr.js \
+	--include ./js/ifs.js \
 	--include ./js/vendor/govuk/selection-buttons.js \
 	--include ./js/vendor/govuk/application.js \
 	--verbose &&
@@ -20,8 +21,10 @@ cp -r ./sass-docs/images ./docs
 cp -r ./sass-docs/js ./docs
 
 #OSX open the styleguide with chrome 
-FILEPATH=`pwd`
-open -a "Google Chrome"  "$FILEPATH/docs/index.html"
+#FILEPATH=`pwd`
+#open -a "Google Chrome"  "$FILEPATH/docs/index.html"
+#
+open -a "Google Chrome"  "http://localhost:8085/docs/index.html"
 
 #remove css-docs folder
 if [ -d "./css-docs" ]; then

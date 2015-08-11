@@ -1,6 +1,9 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +12,7 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String helpTitle, String helpText, String questionGuidanceText, String answerGuidanceText, long characterCount) {
+    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -18,10 +21,10 @@ public class Question {
         this.responses = responses;
         this.name = name;
         this.description = description;
-        this.helpTitle = helpTitle;
-        this.helpText = helpText;
-        this.questionGuidanceText = questionGuidanceText;
-        this.answerGuidanceText = answerGuidanceText;
+        this.guidanceTitle = guidanceTitle;
+        this.guidanceQuestion = guidanceQuestion;
+        this.guidanceQuestionText = guidanceQuestionText;
+        this.guidanceAnswerText = guidanceAnswerText;
         this.characterCount = characterCount;
     }
 
@@ -52,16 +55,23 @@ public class Question {
     @JoinColumn(name="questionTypeId", referencedColumnName="id")
     private QuestionType questionType;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
     private List<Response> responses;
 
     private String name;
+    @Column(length=5000)
     private String description;
-    private String helpTitle;
-    private String helpText;
-    private String questionGuidanceText;
-    private String answerGuidanceText;
+    @Column(length=5000)
+    private String guidanceTitle;
+    @Column(length=5000)
+    private String guidanceQuestion;
+    @Column(length=5000)
+    private String guidanceQuestionText;
+    @Column(length=5000)
+    private String guidanceAnswerText;
+    @Column(length=5000)
     private long characterCount;
+    @Column(length=5000)
     private String optionValues;
 
     public String getName() {
@@ -78,5 +88,53 @@ public class Question {
 
     public long getId() {
         return id;
+    }
+
+
+    public String getOptionValues() {
+        return optionValues;
+    }
+
+    public long getCharacterCount() {
+        return characterCount;
+    }
+
+    public String getGuidanceAnswerText() {
+        return guidanceAnswerText;
+    }
+
+    public String getGuidanceQuestionText() {
+        return guidanceQuestionText;
+    }
+
+    public String getGuidanceQuestion() {
+        return guidanceQuestion;
+    }
+
+    public String getGuidanceTitle() {
+        return guidanceTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @JsonIgnore
+    public List<Response> getResponses() {
+        return responses;
+    }
+
+    @JsonIgnore
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    @JsonIgnore
+    public Section getSection() {
+        return section;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
     }
 }
