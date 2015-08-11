@@ -111,16 +111,13 @@ public class ApplicationController {
         // get existing response to update.
         Response response = responseRepository.findByApplicationAndQuestion(app, question);
         if(response == null && userAppRoles != null && userAppRoles.size() > 0){
-            response = new Response();
-            response.setQuestion(question);
-            response.setUserApplicationRole(userAppRoles.get(0));
-            response.setApplication(app);
+            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, app, user);
+        }else{
+            response.setUser(user);
+            response.setValue(value);
+            response.setDate(new Date());
         }
-
-        response.setUser(user);
-        response.setValue(value);
-        response.setDate(new Date());
-
+        
         responseRepository.save(response);
 
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);

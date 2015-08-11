@@ -7,13 +7,15 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question) {
+    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app, User user) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.markedAsComplete = markedAsComplete;
         this.userApplicationRole = userApplicationRole;
         this.question = question;
+        this.application = app;
+        this.user = user;
     }
 
     public Response () {
