@@ -70,6 +70,24 @@
 ```
 
 
+###Hides
+
+Hide for both screenreaders and browsers 
+
+```
+<div class="hidden">hidden from screenreaders and browsers</div> 
+
+```
+Hide only visually, but have it available for screenreaders 
+```
+<div class="visuallyhidden">available for screenreaders</div>
+```
+
+Hide visually and from screenreaders, but maintain layout 
+```
+<div class="invisible">Invisible but does have a layout</div> 
+```
+
 ##2. Typography
 
 ###Headings
@@ -82,6 +100,15 @@
   <h3 class="heading-medium">A 24px Bold heading</h3>
 
   <h4 class="heading-small">A 19px Bold heading</h4>
+```
+###Full width
+```
+<header class="page-header group">
+  <div class="hgroup">
+    <h1>Innovation Funding Service</h1>
+    <h2 class="subtitle">Layout, typography, colour, images, icons, forms, buttons and data</h2>
+  </div>
+</header>
 ```
 
 ###Links 
