@@ -24,6 +24,7 @@ public class Response {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private Date date;
+    @Column(length=5000)
     private String value;
     private boolean markedAsComplete;
 

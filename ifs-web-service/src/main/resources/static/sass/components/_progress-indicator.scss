@@ -3,44 +3,71 @@ Progress indicator
 
 ```
 <div class="progress-container">
-	<div class="progress-indicator" style="width:0%">
-		<div>
-			0%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:0%">
+			<div>
+				0%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
 </div>
 
 <div class="progress-container">
-	<div class="progress-indicator" style="width:51%">
-		<div>
-			51%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:51%">
+			<div>
+				51%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
 </div>
 
 <div class="progress-container">
-	<div class="progress-indicator" style="width:100%">
-		<div>
-			100%
+	<div class="progress-indicator">
+		<div class="start">0%</div>
+		<div class="progress" style="width:100%">
+			<div>
+				100%
+			</div>
 		</div>
+		<div class="end">100%</div>
 	</div>
 </div>
-
 ```
 */
 @import "compass/css3/transform";
-
 .progress-container {
-	display: inline-block;
-	position: relative;
-	width:300px;
-	background: $grey-2;
-	@include border-radius(15px);
-	height:30px;
-	margin-bottom: 35px;
+	margin: 10px 37px 65px 37px;
+	//side margin for 0% and 100% overflow of the indicator
 }
 
 .progress-indicator {
+	display: inline-block;
+	position: relative;
+	width:100%;
+	background: $grey-2;
+	@include border-radius(15px);
+	height:30px;
+
+	.start,
+	.end{
+		position: absolute;
+		left:0;
+		bottom:-40px;
+		color:$grey-1;
+		font-size:15px;
+	}
+	.end {
+		right:0;
+		left:auto;	
+	}
+}
+
+.progress {
 	background-color: $turquoise;
 	height: 100%;
 	position: absolute;
@@ -48,35 +75,31 @@ Progress indicator
 	@include border-radius(15px 0 0 15px);
 	text-indent:-9999px;
 
-	&[style*="width:0%"] div{
-		left: 0;
-	}
-
 	&[style*="width:100%"] {
 		@include border-radius(15px);
-		div {right:0;}
 	}
 }
-.progress-indicator div {
+.progress div {
 	position: absolute;
-	right:-29px;
-	width:54px;
+	right:-37px;
+	width:70px;
+	padding: 2px;
+	line-height: 1.5;
 	text-align: center;
 	background:#000;
 	text-indent: 0;
-	top:35px;
+	top:47px;
 	color:#fff;
 	font-size:18px;
-	padding: 2px;
 	z-index:1;
 	&:before {
 		position: absolute;
 		display: block;
 		width:100%;
 		text-align: center;
-		top:-22px;
+		top:-28px;
 		color:#000;
-		font-size: 33px;
+		font-size: 40px;
 		content: "\25A0";
 		@include rotate(45deg);
 		z-index: -1;
@@ -84,7 +107,7 @@ Progress indicator
 }
 
 @include ie-lte(8) {
-	.progress-indicator div:before {
+	.progress div:before {
 		display: none;
 	}
 }
