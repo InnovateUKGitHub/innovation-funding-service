@@ -11,11 +11,7 @@
 	<main id="content">
    		 <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-		<header class="page-header group">
-			<div class="hgroup">
-				<h1>Innovation Funding Service</h1>
-			</div>
-		</header>
+
 
 
 <div th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
@@ -29,27 +25,43 @@
 
 
 
-
-
+<div class="grid-row">
+	<div class="column-half">
         <form action="/login" th:object="${loginForm}" method="POST">
-			<p>Please enter your account details and click the login button to log in.</p>
+			<h2 class="heading-large">Sign in</h2>
 
 			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-				<label class="form-label-bold" for="id_email">E-mail address</label>
-				<input class="form-control" type="text" th:field="*{email}" id="id_email" />
+				<label class="form-label" for="id_email">E-mail address</label>
+				<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
 			</div><!-- .form-group -->
 
 			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-				<label class="form-label-bold" for="id_password">Password</label>
-				<input class="form-control" type="password" th:field="*{password}" id="id_password" />
+				<label class="form-label" for="id_password">Password</label>
+				<input class="form-control form-control-3-4" type="password" th:field="*{password}" id="id_password" />
 			</div><!-- .form-group -->
 
-
-
-			<input class="button" value="Login as user" type="submit" />
-			<button th:if="${#authorization.expression('isAuthenticated()')}" name="logout" type="submit" class="button">Logout</button>
-
+			<input class="button" value="Sign in" type="submit" />
         </form>
+
+	</div>
+	<div class="column-half">
+	    <h2 class="heading-large">New to this service?</h2>
+	    <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+
+	    <p>Creating an account allows you to:</p>
+	    <ul class="list-bullet">
+	        <li>Apply for a competition</li>
+	        <li>Track your competition applications</li>
+	        <li>View application feedback</li>
+	        <li>Setup successful project</li>
+	    </ul>
+	</div>
+
+</div>
+
+
+
+
 		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 	</main>
 
