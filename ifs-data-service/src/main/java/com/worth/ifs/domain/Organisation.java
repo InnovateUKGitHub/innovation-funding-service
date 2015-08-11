@@ -12,8 +12,11 @@ public class Organisation {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy="organisation")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+
+    @OneToMany(mappedBy="organisation")
+    private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
 
     public Organisation() {
 

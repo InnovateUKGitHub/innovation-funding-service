@@ -14,20 +14,22 @@ import java.util.List;
 public class Competition {
     public Competition() {
     }
-    public Competition(long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
+    public Competition(long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date startDate, Date endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
         this.description = description;
-        this.deadline = deadline;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
-    public Competition(long id, String name, String description, Date deadline) {
+    public Competition(long id, String name, String description, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.deadline = deadline;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     @Id
@@ -50,7 +52,8 @@ public class Competition {
     @Lob
     @Column( length = 5000 )
     private String description;
-    private Date deadline;
+    private Date startDate;
+    private Date endDate;
 
     public List<Section> getSections() {
         return sections;
@@ -77,8 +80,12 @@ public class Competition {
         return name;
     }
 
-    public Date getDeadline() {
-        return deadline;
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
     }
 
     public void setSections(List<Section> sections) {

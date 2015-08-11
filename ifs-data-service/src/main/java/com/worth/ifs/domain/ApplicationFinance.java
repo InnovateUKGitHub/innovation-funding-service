@@ -22,7 +22,15 @@ public class ApplicationFinance {
     @OneToMany(mappedBy = "applicationFinance")
     private List<CapitalUsage> capitalUsages;
     @OneToMany(mappedBy = "applicationFinance")
-    private List<SubContractor> subContractors;
+    private List<Subcontractor> subContractors;
+
+    @ManyToOne
+    @JoinColumn(name="organisationId", referencedColumnName="id")
+    private Organisation organisation;
+
+    @ManyToOne
+    @JoinColumn(name="applicationId", referencedColumnName="id")
+    private Application application;
 
     public ApplicationFinance(long id, int workingDaysPerYear, String overheadAcceptRate, int overheadRate, String otherFunding) {
         this.id = id;

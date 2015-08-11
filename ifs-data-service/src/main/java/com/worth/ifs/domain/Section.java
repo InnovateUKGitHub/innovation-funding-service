@@ -22,12 +22,12 @@ public class Section {
     @OneToMany(mappedBy="section")
     private List<Question> questions;
 
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name="parent_section_id")
+    @ManyToOne()
+    @JoinColumn(name="parentSectionId", referencedColumnName="id")
     private Section parentSection;
 
-    @OneToMany(mappedBy="section")
-    private Set<Section> childSections = new HashSet<Section>();
+    @OneToMany(mappedBy="parentSection")
+    private Set<Section> childSections;
 
     private String name;
 

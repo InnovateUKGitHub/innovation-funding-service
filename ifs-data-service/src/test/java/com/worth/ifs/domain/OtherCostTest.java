@@ -25,8 +25,8 @@ public class OtherCostTest {
     @Test
     public void otherCostShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(otherCost.getId(), id);
-        Assert.assertEquals(otherCost.getDescription(), id);
-        Assert.assertEquals(otherCost.getCost(), id);
+        Assert.assertEquals(otherCost.getDescription(), description);
+        Assert.assertEquals(otherCost.getCost(), cost);
     }
 
 }

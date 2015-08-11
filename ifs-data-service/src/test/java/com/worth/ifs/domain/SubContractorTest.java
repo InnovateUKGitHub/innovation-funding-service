@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SubContractorTest {
-    SubContractor subContractor;
+    Subcontractor subcontractor;
     Long id;
 
     String name;
@@ -24,15 +24,15 @@ public class SubContractorTest {
         role = "Subcontractor role";
         cost = 100000d;
 
-        subContractor = new SubContractor(id, name, country, role, cost);
+        subcontractor = new Subcontractor(id, name, country, role, cost);
     }
 
     @Test
     public void sectionShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(subContractor.getId(), id);
-        Assert.assertEquals(subContractor.getName(), name);
-        Assert.assertEquals(subContractor.getCountry(), country);
-        Assert.assertEquals(subContractor.getRole(), role);
-        Assert.assertEquals(subContractor.getCost(), cost);
+        Assert.assertEquals(subcontractor.getId(), id);
+        Assert.assertEquals(subcontractor.getName(), name);
+        Assert.assertEquals(subcontractor.getCountry(), country);
+        Assert.assertEquals(subcontractor.getRole(), role);
+        Assert.assertEquals(subcontractor.getCost(), cost);
     }
 }

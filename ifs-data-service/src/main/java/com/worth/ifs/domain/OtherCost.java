@@ -7,7 +7,7 @@ public class OtherCost {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @Column(length=5000)
     private String description;
     private Double cost;
 

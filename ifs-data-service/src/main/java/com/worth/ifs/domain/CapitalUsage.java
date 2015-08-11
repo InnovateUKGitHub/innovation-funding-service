@@ -8,7 +8,7 @@ public class CapitalUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
-
+    @Column(length=5000)
     private String description;
     private String newOrExisting;
     private Integer deprecation;

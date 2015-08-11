@@ -32,6 +32,9 @@ public class Application {
     @OneToMany(mappedBy="application")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
 
+    @OneToMany(mappedBy="application")
+    private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
+
     @ManyToOne
     @JoinColumn(name="applicationStatusId", referencedColumnName="id")
     private ApplicationStatus applicationStatus;

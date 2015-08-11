@@ -50,13 +50,13 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
-        competition = new Competition(1L, "Competition x", "Description afds", new Date());
-        sections.add(new Section(1L, competition, null, "Application details"));
-        sections.add(new Section(2L, competition, null, "Scope (Gateway question)"));
-        sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)"));
-        sections.add(new Section(4L, competition, null, "Project approach (Q5 - Q8)"));
-        sections.add(new Section(5L, competition, null, "Funding (Q9 - Q10)"));
-        sections.add(new Section(6L, competition, null, "Finances"));
+        competition = new Competition(1L, "Competition x", "Description afds", new Date(), new Date());
+        sections.add(new Section(1L, competition, null, "Application details", null));
+        sections.add(new Section(2L, competition, null, "Scope (Gateway question)", null));
+        sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)", null));
+        sections.add(new Section(4L, competition, null, "Project approach (Q5 - Q8)", null));
+        sections.add(new Section(5L, competition, null, "Funding (Q9 - Q10)", null));
+        sections.add(new Section(6L, competition, null, "Finances", null));
 
         Question q01 = new Question(1L, competition, sections.get(0), "Application details");
         sections.get(0).setQuestions(Arrays.asList(q01));
@@ -94,10 +94,12 @@ public class BaseUnitTest {
         Application app4 = new Application(4L, "Using natural gas to heat homes", new ApplicationStatus(4L, "rejected"));
         Role role = new Role(1L, "leadapplicant", null);
 
-        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role);
-        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role);
-        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role);
-        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role);
+        Organisation organisation1 = new Organisation(1L, "Organisation name");
+
+        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role, organisation1);
+        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role, organisation1);
+        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role, organisation1);
+        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role, organisation1);
 
         competition.addApplication(app1, app2, app3, app4);
 

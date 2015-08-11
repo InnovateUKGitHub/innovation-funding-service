@@ -19,7 +19,8 @@ public class CompetitionTest {
     List<Section> sections;
     String name;
     String description;
-    Date deadline;
+    Date startDate;
+    Date endDate;
 
     @Before
     public void setUp() throws Exception {
@@ -27,15 +28,16 @@ public class CompetitionTest {
 
         name = "testCompetitionName";
         description = "testCompetitionDescription";
-        deadline = new Date();
-        deadline.setTime(1234567890);
+        startDate = new Date();
+        startDate.setTime(1234567890);
+        endDate = new Date();
 
         sections = new ArrayList<Section>();
         sections.add(new Section());
         sections.add(new Section());
         sections.add(new Section());
 
-        competition = new Competition(id, applications, questions, sections, name, description, deadline);
+        competition = new Competition(id, applications, questions, sections, name, description, startDate, endDate);
     }
 
     @Test
@@ -43,7 +45,8 @@ public class CompetitionTest {
         Assert.assertEquals(competition.getId(), id);
         Assert.assertEquals(competition.getName(), name);
         Assert.assertEquals(competition.getDescription(), description);
-        Assert.assertEquals(competition.getDeadline(), deadline);
+        Assert.assertEquals(competition.getStartDate(), startDate);
+        Assert.assertEquals(competition.getEndDate(), endDate);
         Assert.assertEquals(competition.getSections(), sections);
     }
 }
