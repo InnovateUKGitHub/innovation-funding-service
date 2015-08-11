@@ -17,7 +17,7 @@ import java.util.List;
 public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
 
-    public User(long id, String name, String email, String password, String token, String imageUrl, List<UserApplicationRole> userApplicationRoles) {
+    public User(Long id, String name, String email, String password, String token, String imageUrl, List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -29,7 +29,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @OneToMany(mappedBy="user")
     private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
@@ -53,7 +53,7 @@ public class User {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -80,7 +80,7 @@ public class User {
         this.userApplicationRoles.addAll(Arrays.asList(r));
     }
 
-    public boolean passwordEquals(String passwordInput){
+    public Boolean passwordEquals(String passwordInput){
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
         return encoder.matches(passwordInput, this.password);
     }

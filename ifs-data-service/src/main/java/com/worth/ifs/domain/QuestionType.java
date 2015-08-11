@@ -8,7 +8,7 @@ import java.util.List;
 public class QuestionType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @OneToMany(mappedBy="questionType")
     private List<Question> questions;
@@ -16,7 +16,7 @@ public class QuestionType {
     private String title;
 
 
-    public QuestionType(long id,String title, List<Question> questions) {
+    public QuestionType(Long id,String title, List<Question> questions) {
         this.id = id;
         this.title = title;
         this.questions = questions;
@@ -26,7 +26,7 @@ public class QuestionType {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

@@ -13,7 +13,7 @@ public class UserTest {
     User user;
 
     List<UserApplicationRole> userApplicationRoles;
-    long id;
+    Long id;
     String name;
     String imageUrl;
     String token;
