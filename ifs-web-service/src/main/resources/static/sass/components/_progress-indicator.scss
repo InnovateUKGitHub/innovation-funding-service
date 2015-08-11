@@ -3,27 +3,33 @@ Progress indicator
 
 ```
 <div class="progress-container">
+	<div class="start">0%</div>
 	<div class="progress-indicator" style="width:0%">
 		<div>
 			0%
 		</div>
 	</div>
+	<div class="end">100%</div>
 </div>
 
 <div class="progress-container">
+	<div class="start">0%</div>
 	<div class="progress-indicator" style="width:51%">
 		<div>
 			51%
 		</div>
 	</div>
+	<div class="end">100%</div>
 </div>
 
 <div class="progress-container">
+	<div class="start">0%</div>
 	<div class="progress-indicator" style="width:100%">
 		<div>
 			100%
 		</div>
 	</div>
+	<div class="end">100%</div>
 </div>
 
 ```
@@ -33,11 +39,23 @@ Progress indicator
 .progress-container {
 	display: inline-block;
 	position: relative;
-	width:300px;
+	width:100%;
 	background: $grey-2;
 	@include border-radius(15px);
 	height:30px;
-	margin-bottom: 35px;
+	margin-bottom: 65px;
+	.start,
+	.end{
+		position: absolute;
+		left:0;
+		bottom:-40px;
+		color:$grey-1;
+		font-size:15px;
+	}
+	.end {
+		right:0;
+		left:auto;	
+	}
 }
 
 .progress-indicator {
@@ -59,24 +77,25 @@ Progress indicator
 }
 .progress-indicator div {
 	position: absolute;
-	right:-29px;
-	width:54px;
+	right:-42px;
+	width:80px;
+	padding: 2px;
+	line-height: 1.5;
 	text-align: center;
 	background:#000;
 	text-indent: 0;
-	top:35px;
+	top:47px;
 	color:#fff;
 	font-size:18px;
-	padding: 2px;
 	z-index:1;
 	&:before {
 		position: absolute;
 		display: block;
 		width:100%;
 		text-align: center;
-		top:-22px;
+		top:-28px;
 		color:#000;
-		font-size: 33px;
+		font-size: 40px;
 		content: "\25A0";
 		@include rotate(45deg);
 		z-index: -1;
