@@ -8,9 +8,6 @@ $ifs-purple : #79298A;
 $ifs-lightgray : #F8F8F8;
 
 
-
-//layout
-
 @import "layout/layout";
 
 /* 
@@ -34,27 +31,12 @@ $ifs-lightgray : #F8F8F8;
 
 /*
 ##3. small elements
-###Text
 
-```
-<p>I am <strong>such a strong character</strong></p>
-
-<p>Be mean or be <span class="greentext">Green</span></p>
-
-```
 */
-.greentext {
-	color:$ifs-green;
-}
+@import "layout/small";
 
-strong {
-	font-weight:700;
-}
+/*
+##4. Progress-indicator 
+*/
 
-img {
-	max-width: 100%;
-}
-
-.icon {
-	@include inline-block;
-}
+@import "components/progress-indicator";

@@ -1,0 +1,25 @@
+/*
+###Text
+
+```
+<p>I am <strong>such a strong character</strong></p>
+
+<p>Be mean or be <span class="greentext">Green</span></p>
+
+```
+*/
+.greentext {
+	color:$ifs-green;
+}
+
+strong {
+	font-weight:700;
+}
+
+img {
+	max-width: 100%;
+}
+
+.icon {
+	@include inline-block;
+}
