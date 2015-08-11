@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app, User user) {
+    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
         this.id = id;
         this.date = date;
         this.value = value;
@@ -15,7 +15,6 @@ public class Response {
         this.userApplicationRole = userApplicationRole;
         this.question = question;
         this.application = app;
-        this.user = user;
     }
 
     public Response () {
@@ -37,10 +36,6 @@ public class Response {
     @ManyToOne
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
-
-    @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName="id")
-    private User user;
 
     @ManyToOne
     @JoinColumn(name="applicationId", referencedColumnName="id")
@@ -92,10 +87,6 @@ public class Response {
 
     public void setQuestion(Question question) {
         this.question = question;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void setUserApplicationRole(UserApplicationRole userApplicationRole) {

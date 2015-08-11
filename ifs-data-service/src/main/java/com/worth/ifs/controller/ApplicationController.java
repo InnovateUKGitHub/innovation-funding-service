@@ -32,13 +32,6 @@ public class ApplicationController {
     @Autowired
     QuestionRepository questionRepository;
 
-//    @ExceptionHandler(Exception.class)
-//    @ResponseBody
-//    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-//    public String handleException(Exception e) {
-//        return e.getMessage();
-//    }
-
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
         List<Application> apps = repository.findById(id);
@@ -98,10 +91,10 @@ public class ApplicationController {
         System.out.println("Save response: "+applicationId+"/"+questionId+"/"+userId);
 
         User user = userRepository.findOne(userId);
-        Application app = repository.findOne(applicationId);
+        Application application = repository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
 
-        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, app);
+        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         if(userAppRoles == null || userAppRoles.size()== 0){
             // user has no role on this application, so should not be able to write..
@@ -109,11 +102,10 @@ public class ApplicationController {
         }
 
         // get existing response to update.
-        Response response = responseRepository.findByApplicationAndQuestion(app, question);
+        Response response = responseRepository.findByApplicationAndQuestion(application, question);
         if(response == null && userAppRoles != null && userAppRoles.size() > 0){
-            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, app, user);
+            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, application);
         }else{
-            response.setUser(user);
             response.setValue(value);
             response.setDate(new Date());
         }

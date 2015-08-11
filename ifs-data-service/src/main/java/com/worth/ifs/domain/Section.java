@@ -11,17 +11,6 @@ import java.util.Set;
 
 @Entity
 public class Section {
-    public Section(Long id, Competition competition, List<Question> questions, String name) {
-        this.id = id;
-        this.competition = competition;
-        this.questions = questions;
-        this.name = name;
-    }
-
-    public Section () {
-        
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

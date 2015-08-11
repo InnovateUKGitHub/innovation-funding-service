@@ -24,8 +24,9 @@ public class ResponseTest {
         markedAsComplete = false;
         value  = "testResponseValue";
         date = new Date();
+        Application application = new Application();
 
-        response = new Response(id, date, value, markedAsComplete, userApplicationRole, question);
+        response = new Response(id, date, value, markedAsComplete, userApplicationRole, question, application);
     }
 
     @Test

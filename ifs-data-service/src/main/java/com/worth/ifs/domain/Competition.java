@@ -12,26 +12,6 @@ import java.util.List;
 
 @Entity
 public class Competition {
-    public Competition() {
-    }
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date deadline) {
-        this.id = id;
-        this.applications = applications;
-        this.questions = questions;
-        this.sections = sections;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-    public Competition(long id, String name, String description, Date deadline) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -47,13 +27,32 @@ public class Competition {
 
     private String name;
 
-
-
     @Lob
     @Column( length = 5000 )
     private String description;
     private Date startDate;
     private Date endDate;
+
+    public Competition() {
+    }
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date startDate, Date endDate) {
+        this.id = id;
+        this.applications = applications;
+        this.questions = questions;
+        this.sections = sections;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    public Competition(long id, String name, String description, Date startDate, Date endDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
 
     public List<Section> getSections() {
         return sections;

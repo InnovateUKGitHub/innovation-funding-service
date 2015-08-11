@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS question_type;
 DROP TABLE IF EXISTS response;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS section;
-DROP TABLE IF EXISTS sub_contractor;
+DROP TABLE IF EXISTS subcontractor;
 DROP TABLE IF EXISTS travel_cost;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_application_role;
