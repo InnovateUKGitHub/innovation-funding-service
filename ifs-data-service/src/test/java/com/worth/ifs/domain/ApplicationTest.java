@@ -14,7 +14,7 @@ public class ApplicationTest {
     String name;
     List<UserApplicationRole> userApplicationRoles;
     ApplicationStatus applicationStatus;
-    long id;
+    Long id;
 
     @Before
     public void setUp() throws Exception {

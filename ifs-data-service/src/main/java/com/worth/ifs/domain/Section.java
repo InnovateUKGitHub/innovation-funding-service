@@ -11,9 +11,20 @@ import java.util.Set;
 
 @Entity
 public class Section {
+    public Section(Long id, Competition competition, List<Question> questions, String name) {
+        this.id = id;
+        this.competition = competition;
+        this.questions = questions;
+        this.name = name;
+    }
+
+    public Section () {
+        
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -51,7 +62,7 @@ public class Section {
         return questions;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

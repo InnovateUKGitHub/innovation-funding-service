@@ -1,19 +1,17 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Response;
-import com.worth.ifs.domain.User;
-import com.worth.ifs.domain.UserApplicationRole;
-import com.worth.ifs.repository.ApplicationRepository;
-import com.worth.ifs.repository.ResponseRepository;
-import com.worth.ifs.repository.UserApplicationRoleRepository;
-import com.worth.ifs.repository.UserRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.domain.*;
+import com.worth.ifs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +28,9 @@ public class ApplicationController {
     UserRepository userRepository;
     @Autowired
     ResponseRepository responseRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
 
 //    @ExceptionHandler(Exception.class)
 //    @ResponseBody
@@ -55,7 +56,7 @@ public class ApplicationController {
 
         List<Response> responses = new ArrayList<Response>();
         for (UserApplicationRole userAppRole : userAppRoles) {
-            responses.addAll(userAppRole.getResponses());
+            responses.addAll(responseRepository.findByUserApplicationRole(userAppRole));
         }
         return responses;
     }
@@ -80,5 +81,45 @@ public class ApplicationController {
             apps.add(role.getApplication());
         }
         return apps;
+    }
+
+    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
+    public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+
+
+        Long userId = jsonObj.get("userId").asLong();
+        Long applicationId = jsonObj.get("applicationId").asLong();
+        Long questionId = jsonObj.get("questionId").asLong();
+        String value = jsonObj.get("value").asText("");
+
+        System.out.println("Save response: "+applicationId+"/"+questionId+"/"+userId);
+
+        User user = userRepository.findOne(userId);
+        Application app = repository.findOne(applicationId);
+        Question question = questionRepository.findOne(questionId);
+
+        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, app);
+
+        if(userAppRoles == null || userAppRoles.size()== 0){
+            // user has no role on this application, so should not be able to write..
+            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+        }
+
+        // get existing response to update.
+        Response response = responseRepository.findByApplicationAndQuestion(app, question);
+        if(response == null && userAppRoles != null && userAppRoles.size() > 0){
+            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, app, user);
+        }else{
+            response.setUser(user);
+            response.setValue(value);
+            response.setDate(new Date());
+        }
+        
+        responseRepository.save(response);
+
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }
 }

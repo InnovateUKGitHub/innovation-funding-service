@@ -7,13 +7,15 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(long id, Date date, String value, boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question) {
+    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app, User user) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.markedAsComplete = markedAsComplete;
         this.userApplicationRole = userApplicationRole;
         this.question = question;
+        this.application = app;
+        this.user = user;
     }
 
     public Response () {
@@ -22,11 +24,11 @@ public class Response {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private Date date;
     @Column(length=5000)
     private String value;
-    private boolean markedAsComplete;
+    private Boolean markedAsComplete;
 
     @ManyToOne
     @JoinColumn(name="userApplicationRoleId", referencedColumnName="id")
@@ -36,7 +38,16 @@ public class Response {
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
-    public long getId() {
+    @ManyToOne
+    @JoinColumn(name="userId", referencedColumnName="id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name="applicationId", referencedColumnName="id")
+    private Application application;
+
+
+    public Long getId() {
         return id;
     }
 
@@ -48,7 +59,7 @@ public class Response {
         return value;
     }
 
-    public boolean isMarkedAsComplete() {
+    public Boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
 
@@ -60,5 +71,34 @@ public class Response {
 
     public Question getQuestion() {
         return question;
+    }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUserApplicationRole(UserApplicationRole userApplicationRole) {
+        this.userApplicationRole = userApplicationRole;
     }
 }

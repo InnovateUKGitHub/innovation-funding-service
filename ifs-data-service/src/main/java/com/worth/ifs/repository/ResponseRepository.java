@@ -1,6 +1,7 @@
 package com.worth.ifs.repository;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Question;
 import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.UserApplicationRole;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,6 +13,6 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "response", path = "response")
 public interface ResponseRepository extends PagingAndSortingRepository<Response, Long> {
     List<Response> findByUserApplicationRole(@Param("userApplicationRole") UserApplicationRole userApplicationRole);
-
+    Response findByApplicationAndQuestion(@Param("application") Application application, @Param("question") Question question);
     List<Response> findAll();
 }

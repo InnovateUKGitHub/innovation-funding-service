@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class CompetitionTest {
     Competition competition;
 
-    long id;
+    Long id;
     List<Application> applications;
     List<Question> questions;
     List<Section> sections;

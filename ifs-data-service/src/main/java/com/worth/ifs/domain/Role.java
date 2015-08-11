@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 public class Role {
-    public Role(long id, String name, List<UserApplicationRole> userApplicationRoles) {
+    public Role(Long id, String name, List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
         this.userApplicationRoles = userApplicationRoles;
@@ -18,7 +18,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String name;
 
     @OneToMany(mappedBy = "role")
@@ -27,7 +27,7 @@ public class Role {
     public Role() {
     }
 
-    protected boolean canEqual(Object other) {
+    protected Boolean canEqual(Object other) {
         return other instanceof Role;
     }
 
@@ -40,7 +40,7 @@ public class Role {
         this.userApplicationRoles = userApplicationRoles;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

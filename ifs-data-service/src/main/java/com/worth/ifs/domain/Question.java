@@ -3,7 +3,6 @@ package com.worth.ifs.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Entity
 public class Question {
-    public Question(String optionValues, long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceTitle, String guidanceQuestion, String guidanceQuestionText, String guidanceAnswerText, long characterCount) {
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -21,14 +20,12 @@ public class Question {
         this.responses = responses;
         this.name = name;
         this.description = description;
-        this.guidanceTitle = guidanceTitle;
         this.guidanceQuestion = guidanceQuestion;
-        this.guidanceQuestionText = guidanceQuestionText;
-        this.guidanceAnswerText = guidanceAnswerText;
+        this.guidanceAnswer = guidanceAnswer;
         this.characterCount = characterCount;
     }
 
-    public Question(long id, Competition competition, Section section, String name) {
+    public Question(Long id, Competition competition, Section section, String name) {
         this.id = id;
         this.competition = competition;
         this.section = section;
@@ -41,7 +38,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -62,15 +59,11 @@ public class Question {
     @Column(length=5000)
     private String description;
     @Column(length=5000)
-    private String guidanceTitle;
-    @Column(length=5000)
     private String guidanceQuestion;
     @Column(length=5000)
-    private String guidanceQuestionText;
+    private String guidanceAnswer;
     @Column(length=5000)
-    private String guidanceAnswerText;
-    @Column(length=5000)
-    private long characterCount;
+    private Long characterCount;
     @Column(length=5000)
     private String optionValues;
 
@@ -86,7 +79,7 @@ public class Question {
         this.competition = competition;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,24 +88,16 @@ public class Question {
         return optionValues;
     }
 
-    public long getCharacterCount() {
+    public Long getCharacterCount() {
         return characterCount;
     }
 
-    public String getGuidanceAnswerText() {
-        return guidanceAnswerText;
-    }
-
-    public String getGuidanceQuestionText() {
-        return guidanceQuestionText;
+    public String getGuidanceAnswer() {
+        return guidanceAnswer;
     }
 
     public String getGuidanceQuestion() {
         return guidanceQuestion;
-    }
-
-    public String getGuidanceTitle() {
-        return guidanceTitle;
     }
 
     public String getDescription() {

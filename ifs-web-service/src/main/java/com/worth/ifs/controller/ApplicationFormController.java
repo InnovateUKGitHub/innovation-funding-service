@@ -1,9 +1,7 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Competition;
-import com.worth.ifs.domain.Response;
-import com.worth.ifs.domain.Section;
+import com.worth.ifs.domain.*;
+import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
@@ -36,6 +34,9 @@ public class ApplicationFormController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TokenAuthenticationService tokenAuthenticationService;
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
@@ -84,15 +85,22 @@ public class ApplicationFormController {
     }
 
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public ResponseEntity<String> saveFormElement(final HttpServletRequest request, @RequestParam("questionId") String questionId, @RequestParam("value") String value) {
-        final String referer = request.getHeader("referer");
+    public ResponseEntity<String> saveFormElement(@RequestParam("questionId") Long questionId,
+                                                  @RequestParam("value") String value,
+                                                  @RequestParam("applicationId") Long applicationId,
+                                                  HttpServletRequest request) {
 
-        System.out.println("Save Form element: referer "+ referer);
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+
+        System.out.println("Save Form element: applicationId "+ applicationId);
         System.out.println("Save Form element: questionId "+ questionId);
         System.out.println("Save Form element: value "+ value);
 
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
+
+        applicationService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
 
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 

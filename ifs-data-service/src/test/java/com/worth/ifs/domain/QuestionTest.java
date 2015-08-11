@@ -3,24 +3,20 @@ package com.worth.ifs.domain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.xml.ws.soap.AddressingFeature;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionTest {
     Question question;
 
-    long id;
+    Long id;
     Competition competition;
     Section section;
     String name;
     String description;
-    String guidanceTitle;
     String guidanceQuestion;
-    String guidanceQuestionText;
-    String guidanceAnswerText;
-    long characterCount;
+    String guidanceAnswer;
+    Long characterCount;
     String optionValues;
     List<Response> responses;
     QuestionType questionType;
@@ -32,10 +28,8 @@ public class QuestionTest {
         section = new Section();
         name = "testQuestionName";
         description = "testQuestionDescription";
-        guidanceTitle = "testGuidanceTitle";
         guidanceQuestion = "testGuidanceQuestion";
-        guidanceQuestionText = "testGuidanceQuestionText";
-        guidanceAnswerText = "testGuidanceAnswerText";
+        guidanceAnswer = "testGuidanceAnswer";
         characterCount = 100L;
         optionValues = "testOptionValues";
         responses = new ArrayList<Response>();
@@ -45,7 +39,7 @@ public class QuestionTest {
         questionType = new QuestionType();
 
 
-        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceTitle, guidanceQuestion, guidanceQuestionText, guidanceAnswerText, characterCount);
+        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, characterCount);
     }
 
     @Test
@@ -55,10 +49,8 @@ public class QuestionTest {
         Assert.assertEquals(question.getCompetition(), competition);
         Assert.assertEquals(question.getSection(), section);
         Assert.assertEquals(question.getDescription(), description);
-        Assert.assertEquals(question.getGuidanceTitle(), guidanceTitle);
         Assert.assertEquals(question.getGuidanceQuestion(), guidanceQuestion);
-        Assert.assertEquals(question.getGuidanceQuestionText(), guidanceQuestionText);
-        Assert.assertEquals(question.getGuidanceAnswerText(), guidanceAnswerText);
+        Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
         Assert.assertEquals(question.getCharacterCount(), characterCount);
         Assert.assertEquals(question.getOptionValues(), optionValues);
         Assert.assertEquals(question.getResponses(), responses);
