@@ -29,12 +29,15 @@
     <div class="column-two-thirds">
 
         <form action="#" class="application" method="post">
+
             <div class="section" th:each="question : ${currentSection.getQuestions()}">
                 <fieldset>
                     <legend class="form-label-bold" data-th-text="${question.getName()}"></legend>
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses})"></div>
                 </fieldset>
             </div>
+
+            <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
         </form>
 
     </div>

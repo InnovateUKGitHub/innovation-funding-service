@@ -71,7 +71,7 @@ public class UserApplicationRole {
         return id;
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     public List<Response> getResponses() {
         return responses;
     }

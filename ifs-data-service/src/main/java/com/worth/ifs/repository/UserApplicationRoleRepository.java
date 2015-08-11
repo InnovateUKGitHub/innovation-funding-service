@@ -13,5 +13,6 @@ import java.util.List;
 public interface UserApplicationRoleRepository extends PagingAndSortingRepository<UserApplicationRole, Long> {
     List<UserApplicationRole> findById(@Param("id") Long id);
     List<UserApplicationRole> findByUser(@Param("user") User user);
+    List<UserApplicationRole> findByUserAndApplication(@Param("user") User user, @Param("application") Application application);
     List<UserApplicationRole> findByApplication(@Param("application") Application application);
 }

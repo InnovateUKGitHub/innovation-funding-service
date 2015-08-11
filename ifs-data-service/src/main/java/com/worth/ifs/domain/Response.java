@@ -36,6 +36,14 @@ public class Response {
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
+    @ManyToOne
+    @JoinColumn(name="userId", referencedColumnName="id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name="applicationId", referencedColumnName="id")
+    private Application application;
+
     public long getId() {
         return id;
     }
@@ -60,5 +68,34 @@ public class Response {
 
     public Question getQuestion() {
         return question;
+    }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUserApplicationRole(UserApplicationRole userApplicationRole) {
+        this.userApplicationRole = userApplicationRole;
     }
 }

@@ -65,14 +65,18 @@ var worthIFS = {
         }
     },
     initAutosaveElement : function(){
-        jQuery("input, textarea").change(function(e) {
-             var jsonfile = {value:e.target.value, questionId: jQuery(e.target).data("question_id")};
-             console.log("input ", e, jsonfile);
+        jQuery(".application input, .application textarea").change(function(e) {
+             var jsonObj = {
+                    value:e.target.value,
+                    questionId: jQuery(e.target).data("question_id"),
+                    applicationId: jQuery(".application #application_id").val()
+             };
+             console.log("input ", e, jsonObj);
 
              $.ajax({
                  type: 'POST',
                  url: "/application-form/saveFormElement",
-                 data: jsonfile,
+                 data: jsonObj,
                  dataType: "json"
              });
         });
