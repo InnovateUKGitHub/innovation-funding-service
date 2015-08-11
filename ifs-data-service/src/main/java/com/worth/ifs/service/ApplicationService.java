@@ -1,6 +1,7 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,12 @@ public class ApplicationService extends BaseServiceProvider {
         ResponseEntity<Application[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + applicationRestURL  + "/findByUser/"+userId, Application[].class);
         Application[] applications =responseEntity.getBody();
         return Arrays.asList(applications);
+    }
+
+    public List<Response> getResponsesByApplicationId(Long applicationId){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + applicationRestURL  + "/findResponsesByApplication/"+applicationId, Response[].class);
+        Response[] responses =responseEntity.getBody();
+        return Arrays.asList(responses);
     }
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.Competition;
+import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,11 +43,18 @@ public class ApplicationFormController {
 
         List<Section> sections = competition.getSections();
         model.addAttribute("sections", sections);
+
+
+        List<Response> responses = applicationService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
     }
 
     @RequestMapping("/{applicationId}")
     public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId){
-        log.debug("Application with id " + applicationId);
         this.addApplicationDetails(applicationId, model);
         return "application-form";
     }
