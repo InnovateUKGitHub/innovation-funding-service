@@ -30,37 +30,12 @@
 
         <form action="#" class="application" method="post">
             <div class="section" th:each="question : ${currentSection.getQuestions()}">
-                <fieldset>
-                    <legend class="form-label-bold" data-th-text="${question.getName()}"></legend>
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses})"></div>
-                </fieldset>
+                <div th:remove="tag" th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses})"></div>
             </div>
         </form>
 
     </div>
   </div>
-
-
-
-<!--     <div class="sections">
-        <div class="section" th:each="section : ${sections}">
-            <div>
-                <a th:href="@{/application/{id}/section/{sectionId}(id=${currentApplication.getId()},sectionId=${section.getId()})}"
-                   data-th-text="${section.getName()}"></a>
-            </div>
-
-            <div class="section-details">
-                <div th:if="${section.getId()} == ${currentSection}">
-                    <div class="section" th:each="question : ${section.getQuestions()}">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
-                           data-th-text="${question.getName()}"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-
 
 
 
