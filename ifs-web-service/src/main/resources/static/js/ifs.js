@@ -5,6 +5,7 @@ var worthIFS = {
     domReady : function(){
         worthIFS.collapsible();
         worthIFS.pieChart();
+        worthIFS.initAutosaveElement();
     },
     collapsible : function(){
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
@@ -62,6 +63,19 @@ var worthIFS = {
             pie.appendChild(svg);
           });
         }
+    },
+    initAutosaveElement : function(){
+        jQuery("input, textarea").change(function(e) {
+             var jsonfile = {value:e.target.value, questionId: jQuery(e.target).data("question_id")};
+             console.log("input ", e, jsonfile);
+
+             $.ajax({
+                 type: 'POST',
+                 url: "/application-form/saveFormElement",
+                 data: jsonfile,
+                 dataType: "json"
+             });
+        });
     }
 } 
 

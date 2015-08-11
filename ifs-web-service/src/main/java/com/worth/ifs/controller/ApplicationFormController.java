@@ -9,11 +9,17 @@ import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,5 +81,20 @@ public class ApplicationFormController {
         model.addAttribute("currentSection", section);
 
         return "application-form";
+    }
+
+    @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
+    public ResponseEntity<String> saveFormElement(final HttpServletRequest request, @RequestParam("questionId") String questionId, @RequestParam("value") String value) {
+        final String referer = request.getHeader("referer");
+
+        System.out.println("Save Form element: referer "+ referer);
+        System.out.println("Save Form element: questionId "+ questionId);
+        System.out.println("Save Form element: value "+ value);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+
     }
 }
