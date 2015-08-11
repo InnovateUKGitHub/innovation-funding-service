@@ -3,6 +3,7 @@ package com.worth.ifs.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +55,7 @@ public class Question {
     @JoinColumn(name="questionTypeId", referencedColumnName="id")
     private QuestionType questionType;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
     private List<Response> responses;
 
     private String name;
@@ -111,7 +112,7 @@ public class Question {
         return description;
     }
 
-
+    @JsonIgnore
     public List<Response> getResponses() {
         return responses;
     }

@@ -32,7 +32,7 @@
             <div class="section" th:each="question : ${currentSection.getQuestions()}">
                 <fieldset>
                     <legend class="form-label-bold" data-th-text="${question.getName()}"></legend>
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question})"></div>
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses})"></div>
                 </fieldset>
             </div>
         </form>

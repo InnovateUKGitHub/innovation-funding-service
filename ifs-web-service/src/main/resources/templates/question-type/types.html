@@ -3,14 +3,16 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput">
-        <input type="text" class="form-control" th:name="'response-'+${question.getId()}"/>
+        <input type="text" class="form-control" th:name="'response-'+${question.getId()}"
+               th:value="${responses.get(question.getId()).getValue()}"/>
     </div>
 
     <!-- ===========================Form: Text Area =========================== -->
 
     <div th:fragment="textarea">
 
-        <textarea id="" cols="30" rows="10" th:name="'response-'+${question.getId()}"></textarea>
+        <textarea id="" cols="30" rows="10" th:name="'response-'+${question.getId()}"
+                  data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"></textarea>
 
     </div>
 

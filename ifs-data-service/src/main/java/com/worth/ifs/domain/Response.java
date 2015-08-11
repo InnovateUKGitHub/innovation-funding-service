@@ -56,7 +56,7 @@ public class Response {
         return userApplicationRole;
     }
 
-    @JsonIgnore
+
     public Question getQuestion() {
         return question;
     }
