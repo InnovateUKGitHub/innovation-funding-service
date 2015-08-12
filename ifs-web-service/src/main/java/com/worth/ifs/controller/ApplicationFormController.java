@@ -69,7 +69,7 @@ public class ApplicationFormController {
         return "application-form";
     }
 
-    @RequestMapping("/{applicationId}/section/{sectionId}")
+    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId){
@@ -84,6 +84,39 @@ public class ApplicationFormController {
         model.addAttribute("currentSectionId", sectionId);
         model.addAttribute("currentSection", section);
 
+        return "application-form";
+    }
+    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    public String applicationFormSubmit(Model model,
+                                                 @PathVariable("applicationId") final Long applicationId,
+                                                 @PathVariable("sectionId") final Long sectionId,
+                                                 HttpServletRequest request){
+
+        log.warn("Got form submit;");
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+
+
+        Application app = applicationService.getApplicationById(applicationId);
+        Competition comp = app.getCompetition();
+        List<Section> sections = comp.getSections();
+
+        // get the section that we want to show, so we can use this on to show the correct questions.
+        Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
+
+        List<Question> questions = section.getQuestions();
+        for (Question question : questions) {
+            if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){
+                String value = request.getParameter("question[" + question.getId() + "]");
+                log.warn("Question/response in post: " + question.getId() + ": " + value);
+                responseService.saveQuestionResponse(user.getId(), applicationId, question.getId(), value);
+            }
+        }
+
+
+        this.addApplicationDetails(applicationId, model);
+        model.addAttribute("currentSectionId", sectionId);
+        model.addAttribute("currentSection", section);
+        model.addAttribute("applicationSaved", true);
         return "application-form";
     }
 

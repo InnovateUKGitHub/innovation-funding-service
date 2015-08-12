@@ -25,7 +25,7 @@
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 data-th-text="${section.getName()}" th:class="(${section.getId()} == ${currentSectionId}) ? 'open':''" />
             <ul>
-                <li class="section" th:each="question : ${section.getQuestions()}">
+                <li class="section" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }">
                     <h4 class="heading-medium"><a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
                        data-th-text="${question.getName()}"></a></h4>
                 </li>

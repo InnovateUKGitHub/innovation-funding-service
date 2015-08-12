@@ -31,7 +31,7 @@
 	<input  class="form-control" 
 	        type="text" 
 	        th:id="'question-'+${question.getId()}"  
-	        th:name="'response-'+${question.getId()}"
+	        th:name="'question['+${question.getId()}+']'"
 	        th:value="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"
 	/>
 </div>
@@ -40,7 +40,7 @@
 <div th:fragment="form-textarea">
      <textarea  th:attr="data-question_id=${question.getId()}"
             cols="30" rows="10"
-            th:name="'response-'+${question.getId()}"
+			th:name="'question['+${question.getId()}+']'"
             data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
       </textarea>
 </div>
