@@ -1,0 +1,78 @@
+/*
+
+
+```
+<div class="form-control-wrap">
+    <div class="form-group_header">
+        test
+    </div>
+     <textarea  name="question-1" id="question-1" cols="30" rows="10">
+                Contents of the textarea
+      </textarea>
+</div>
+```
+
+*/
+.form-control-wrap {
+    background-color: #fff;
+    border: 1px solid $border-colour;
+    position: relative;
+
+
+    .form-group_header {
+        padding:10px;
+        text-align:right;
+        font-size:14px;
+        background: {
+            color: #f8f8f8;
+            position: 0 0;
+            repeat: no-repeat;
+        }
+    } 
+   .form-group_header-status {
+        color: #666;
+        font-size: 16px;
+        margin: 0;
+
+        &--assigned {
+            background: url(../images/flag-icon.png) no-repeat 0 0.15em;
+            margin-top: 10px;
+            padding-left: 25px;
+        }
+    }
+
+
+    &--locked {
+        .form-group_header {
+            background: {
+                image: url(/images/field/field-locked.png);
+            }
+        }
+    }
+    &--done {
+        background-color: $grey-4;
+        border: 2px solid #00823b;
+        .form-group_header {
+            background: {
+                image: url(/images/field/field-done.png);
+            }
+        }
+    }
+    &--assigned {
+        .form-group_header {
+            background: {
+                image: url(/images/field/field-assigned.png);
+            }
+        }
+    }
+    textarea {
+        background: transparent;
+        border: none;
+        margin: 0;
+        padding: 5px 10px;
+        resize: vertical;
+        vertical-align: top;
+        width:100%;
+        @include box-sizing(border-box);
+    }
+}

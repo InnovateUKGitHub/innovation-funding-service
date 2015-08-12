@@ -14,11 +14,18 @@
     <!-- ===========================Form: Text Area =========================== -->
 
     <div th:fragment="textarea">
+
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
+           
+            <div class="form-control-wrap">
+                <div class="form-group_header">
+                    Last edited by Roger Righteous
+                </div>
+                 <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
+            </div>
         </div>
     </div>
 

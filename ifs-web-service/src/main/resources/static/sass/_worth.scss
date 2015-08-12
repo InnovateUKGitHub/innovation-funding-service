@@ -9,7 +9,7 @@ $ifs-lightgray : #F8F8F8;
 
 
 @import "layout/layout";
-
+@import "pages/application-form";
 /* 
 #Nomensa/Worth Elements
 
@@ -38,3 +38,10 @@ $ifs-lightgray : #F8F8F8;
 ##4. Progress-indicator 
 */
 @import "components/progress-indicator";
+
+
+//##5. Extra form elements 
+
+@import "components/forms";
+
+
