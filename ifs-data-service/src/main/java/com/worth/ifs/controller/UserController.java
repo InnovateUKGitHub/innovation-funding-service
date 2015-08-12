@@ -2,6 +2,8 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.User;
 import com.worth.ifs.repository.UserRepository;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository repository;
+
+    private final Log log = LogFactory.getLog(getClass());
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -48,7 +52,7 @@ public class UserController {
                 return null;
             }
         }else{
-            System.out.println("Return null");
+            log.warn("Return null");
             return null;
         }
     }

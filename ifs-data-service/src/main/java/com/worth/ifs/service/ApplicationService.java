@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.Response;
 import net.minidev.json.JSONObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import java.util.List;
 public class ApplicationService extends BaseServiceProvider {
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
+
+    private final Log log = LogFactory.getLog(getClass());
 
     public Application getApplicationById(Long applicationId) {
         RestTemplate restTemplate = new RestTemplate();
@@ -61,10 +65,10 @@ public class ApplicationService extends BaseServiceProvider {
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("response json: "+ response.getBody());
+            log.info("response json: "+ response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             // nono... bad credentials
-            System.out.println("Unauthorized.....");
+            log.info("Unauthorized.....");
         }
 
         return ;

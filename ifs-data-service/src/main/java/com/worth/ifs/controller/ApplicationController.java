@@ -3,6 +3,8 @@ package com.worth.ifs.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.repository.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,9 +30,10 @@ public class ApplicationController {
     UserRepository userRepository;
     @Autowired
     ResponseRepository responseRepository;
-
     @Autowired
     QuestionRepository questionRepository;
+
+    private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
@@ -81,14 +84,12 @@ public class ApplicationController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
-
-
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long questionId = jsonObj.get("questionId").asLong();
         String value = jsonObj.get("value").asText("");
 
-        System.out.println("Save response: "+applicationId+"/"+questionId+"/"+userId);
+        log.info("Save response: "+applicationId+"/"+questionId+"/"+userId);
 
         User user = userRepository.findOne(userId);
         Application application = repository.findOne(applicationId);

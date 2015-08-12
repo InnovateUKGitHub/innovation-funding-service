@@ -92,9 +92,9 @@ public class ApplicationFormController {
 
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
 
-        System.out.println("Save Form element: applicationId "+ applicationId);
-        System.out.println("Save Form element: questionId "+ questionId);
-        System.out.println("Save Form element: value "+ value);
+        log.info("Save Form element: applicationId "+ applicationId);
+        log.info("Save Form element: questionId "+ questionId);
+        log.info("Save Form element: value "+ value);
 
 
         HttpHeaders headers = new HttpHeaders();
