@@ -45,23 +45,6 @@ public class ApplicationController {
         }
     }
 
-    @RequestMapping("/findResponsesByApplication/{applicationId}")
-     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        Application app = repository.findOne(applicationId);
-        List<UserApplicationRole> userAppRoles = app.getUserApplicationRoles();
-
-        List<Response> responses = new ArrayList<Response>();
-        for (UserApplicationRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUserApplicationRole(userAppRole));
-        }
-        return responses;
-    }
-
-    @RequestMapping("/findResponsesByApplication/{applicationId}/section/{sectionId}")
-    public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId, @PathVariable("sectionId") final Long sectionId){
-        throw new NotImplementedException();
-    }
-
     @RequestMapping("/findAll")
      public List<Application> findAll() {
         List<Application> applications = repository.findAll();
@@ -79,40 +62,4 @@ public class ApplicationController {
         return apps;
     }
 
-    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
-    public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
-        Long userId = jsonObj.get("userId").asLong();
-        Long applicationId = jsonObj.get("applicationId").asLong();
-        Long questionId = jsonObj.get("questionId").asLong();
-        String value = jsonObj.get("value").asText("");
-
-        log.info("Save response: "+applicationId+"/"+questionId+"/"+userId);
-
-        User user = userRepository.findOne(userId);
-        Application application = repository.findOne(applicationId);
-        Question question = questionRepository.findOne(questionId);
-
-        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
-
-        if(userAppRoles == null || userAppRoles.size()== 0){
-            // user has no role on this application, so should not be able to write..
-            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
-        }
-
-        // get existing response to update.
-        Response response = responseRepository.findByApplicationAndQuestion(application, question);
-        if(response == null && userAppRoles != null && userAppRoles.size() > 0){
-            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, application);
-        }else{
-            response.setValue(value);
-            response.setDate(new Date());
-        }
-        
-        responseRepository.save(response);
-
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
-    }
 }

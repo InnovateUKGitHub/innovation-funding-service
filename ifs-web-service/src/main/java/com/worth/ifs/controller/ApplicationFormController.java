@@ -3,6 +3,7 @@ package com.worth.ifs.controller;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
+import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +32,8 @@ public class ApplicationFormController {
 
     @Autowired
     ApplicationService applicationService;
+    @Autowired
+    ResponseService responseService;
 
     @Autowired
     UserService userService;
@@ -52,7 +55,7 @@ public class ApplicationFormController {
         model.addAttribute("sections", sections);
 
 
-        List<Response> responses = applicationService.getResponsesByApplicationId(applicationId);
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
             responseMap.put(response.getQuestion().getId(), response);
@@ -92,15 +95,15 @@ public class ApplicationFormController {
 
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
 
-        log.info("Save Form element: applicationId "+ applicationId);
-        log.info("Save Form element: questionId "+ questionId);
-        log.info("Save Form element: value "+ value);
+        log.info("Save Form element: applicationId " + applicationId);
+        log.info("Save Form element: questionId " + questionId);
+        log.info("Save Form element: value " + value);
 
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
-        applicationService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
+        responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
 
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 
