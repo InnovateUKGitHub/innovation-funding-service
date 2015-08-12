@@ -1,5 +1,8 @@
 package com.worth.ifs.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
@@ -13,10 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -120,8 +120,9 @@ public class ApplicationFormController {
         return "application-form";
     }
 
+
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public ResponseEntity<String> saveFormElement(@RequestParam("questionId") Long questionId,
+    public @ResponseBody JsonNode saveFormElement(@RequestParam("questionId") Long questionId,
                                                   @RequestParam("value") String value,
                                                   @RequestParam("applicationId") Long applicationId,
                                                   HttpServletRequest request) {
@@ -132,13 +133,12 @@ public class ApplicationFormController {
         log.info("Save Form element: questionId " + questionId);
         log.info("Save Form element: value " + value);
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
         responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
 
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("success", "true");
+        return node;
 
     }
 }
