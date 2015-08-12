@@ -5,8 +5,11 @@ var worthIFS = {
     domReady : function(){
         worthIFS.collapsible();
         worthIFS.pieChart();
-        worthIFS.initAutosaveElement();
-        worthIFS.initUnsavedChangesWarning();
+
+        if(jQuery('form.application').size()==1){
+            worthIFS.initAutosaveElement();
+            worthIFS.initUnsavedChangesWarning();
+        }
     },
     collapsible : function(){
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
@@ -110,13 +113,14 @@ var worthIFS = {
             formSubmit = true;
         });
 
-        $(window).bind('beforeunload', function(e){
-            if(formSubmit == false && jQuery('form.application').serialize()!=$('form.application').data('serializedFormState')){
-                return "Are you sure you want to leave this page? There are some unsaved changes...";
-            }else{
-             e=null;
-            }
+         $(window).bind('beforeunload', function(e){
+                if(formSubmit == false && jQuery('form.application').serialize()!=$('form.application').data('serializedFormState')){
+                    return "Are you sure you want to leave this page? There are some unsaved changes...";
+                }else{
+                 e=null;
+                }
         });
+
     }
 } 
 
