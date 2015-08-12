@@ -14,7 +14,7 @@
         <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
     </div>
 
-    <div th:if="${applicationSaved}">
+    <div class="success-msg application-saved"  th:classappend="${applicationSaved}? '' : hidden">
         Application saved
     </div>
 
