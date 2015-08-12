@@ -14,6 +14,10 @@
         <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
     </div>
 
+    <div class="success-msg application-saved"  th:classappend="${applicationSaved}? '' : hidden">
+        Application saved
+    </div>
+
  <div class="grid-row">
     <div class="column-third">
             <nav role="navigation" class="app-sidebar">
@@ -35,6 +39,8 @@
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+
+            <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
         </form>
 
     </div>

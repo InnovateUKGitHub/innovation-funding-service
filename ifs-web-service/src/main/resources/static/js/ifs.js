@@ -6,6 +6,7 @@ var worthIFS = {
         worthIFS.collapsible();
         worthIFS.pieChart();
         worthIFS.initAutosaveElement();
+        worthIFS.initUnsavedChangesWarning();
     },
     collapsible : function(){
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
@@ -65,20 +66,56 @@ var worthIFS = {
         }
     },
     initAutosaveElement : function(){
+        var options = {
+            callback: function (value) { fieldChanged(this);  },
+            wait: 2500,
+            highlight: false,
+            captureLength: 1
+        }
+
+        jQuery(".application input, .application textarea").typeWatch( options );
         jQuery(".application input, .application textarea").change(function(e) {
-             var jsonObj = {
-                    value:e.target.value,
-                    questionId: jQuery(e.target).data("question_id"),
+            fieldChanged(e.target);
+        });
+
+        function fieldChanged(element){
+            console.log('fieldChanged callback: ', element);
+            var jsonObj = {
+                    value:element.value,
+                    questionId: jQuery(element).data("question_id"),
                     applicationId: jQuery(".application #application_id").val()
              };
-             console.log("input ", e, jsonObj);
 
-             $.ajax({
+             var formState = $('form.application').serialize();
+             jQuery.ajax({
                  type: 'POST',
                  url: "/application-form/saveFormElement",
                  data: jsonObj,
                  dataType: "json"
+             }).done(function(){
+                // set the form-saved-state
+                $('form.application').data('serializedFormState',formState);
+             }).fail(function(){
+                // ajax save failed.
              });
+        }
+    },
+    initUnsavedChangesWarning : function(){
+        // save the current form state, so we can warn the user if he leaves the page without saving.
+        jQuery('form.application').data('serializedFormState',$('form.application').serialize());
+
+        // don't show the warning when the user is submitting the form.
+        formSubmit = false;
+        jQuery('form.application').on('submit', function(e){
+            formSubmit = true;
+        });
+
+        $(window).bind('beforeunload', function(e){
+            if(formSubmit == false && jQuery('form.application').serialize()!=$('form.application').data('serializedFormState')){
+                return "Are you sure you want to leave this page? There are some unsaved changes...";
+            }else{
+             e=null;
+            }
         });
     }
 } 
