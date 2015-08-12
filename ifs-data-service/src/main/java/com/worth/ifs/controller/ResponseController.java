@@ -77,11 +77,12 @@ public class ResponseController {
 
         // get existing response to update.
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
-        if(response == null && userAppRoles != null && userAppRoles.size() > 0){
+        if(response == null){
             response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, application);
         }else{
             response.setValue(value);
             response.setDate(new Date());
+            response.setUserApplicationRole(userAppRoles.get(0));
         }
         
         responseRepository.save(response);
