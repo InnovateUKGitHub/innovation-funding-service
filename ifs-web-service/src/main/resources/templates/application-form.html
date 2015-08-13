@@ -45,8 +45,8 @@
 
     </div>
   </div>
-    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
-        <input class="button" value="Review &amp; submit" type="button" />
+    <a role="button" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
+        Review &amp; submit
     </a>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
