@@ -22,6 +22,9 @@
     <div class="column-third">
             <nav role="navigation" class="app-sidebar">
                 <ul>
+                    <li>
+                        <a th:href="@{/application/{id}(id=${currentApplication.getId()})}">Overview</a>
+                    </li>
                     <li th:each="section : ${sections}"  th:class="(${section.getId()} == ${currentSectionId}) ? 'active':''" >
                         <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${section.getId()})}"
                            data-th-text="${section.getName()}"></a>
