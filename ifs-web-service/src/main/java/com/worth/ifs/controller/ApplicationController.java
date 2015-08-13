@@ -70,4 +70,12 @@ public class ApplicationController {
         model.addAttribute("currentSectionId", sectionId);
         return "application-details";
     }
+
+    @RequestMapping("/{applicationId}/summary")
+    public String applicationDetailsOpenSection(Model model,
+                                                @PathVariable("applicationId") final Long applicationId){
+        this.addApplicationDetails(applicationId, model);
+        return "application-summary";
+    }
+
 }
