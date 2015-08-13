@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+    <div th:include="fragments/layout :: head" th:remove="tag" />
 </head>
 <body>
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div class="header-new-sub-wrapper">
-        <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
-    </div>
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
-    <div class="success-msg application-saved"  th:classappend="${applicationSaved}? '' : hidden">
-        Application saved
-    </div>
 
  <div class="grid-row">
     <div class="column-third">
@@ -48,10 +43,10 @@
 
 
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"></div>
-<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
 </body>
 </html>

@@ -129,3 +129,12 @@
       </div>
     </footer>
 </div>
+
+<!-- =========================== Element : subheader =========================== -->
+
+<div th:fragment="header-sub">
+    <div class="header-new-sub-wrapper">
+        <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
+        <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${'10%'},daysLeft=${'5'}" th:remove="tag" />
+    </div>
+</div>
