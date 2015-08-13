@@ -31,9 +31,12 @@ img {
 </div>
 ```
 */
+
+
 .alignright-button {
 	overflow: hidden;
-	
+	clear: both;
+
 	.button,
 	button,
 	[role="button"] {
@@ -43,3 +46,11 @@ img {
 		float:right;
 	}
 }
+  @include media-down(mobile) {
+	.button {
+		margin-right:0;
+		margin-left:0;
+		float:none;
+		text-align: center;
+	}
+  }

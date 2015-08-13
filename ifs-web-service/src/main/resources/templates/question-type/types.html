@@ -1,21 +1,18 @@
-<div xmlns:th="http://www.w3.org/1999/xhtml">
+
 
     <!-- ===========================Form: Textinput =========================== -->
     
-    <div th:fragment="textinput">
-        <div class="form-group">
+    <div th:fragment="textinput" class="form-group">
             <div th:include="question-type/form-elements :: form-label" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput" th:remove="tag" />
-        </div>
     </div>
 
     <!-- ===========================Form: Text Area =========================== -->
 
-    <div th:fragment="textarea">
+    <div th:fragment="textarea" class="form-group">
 
-        <div class="form-group">
             <div th:include="question-type/form-elements :: form-label" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
@@ -26,7 +23,6 @@
                 </div>
                  <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
             </div>
-        </div>
     </div>
 
     <!-- ===========================Form: Date input =========================== -->
@@ -42,4 +38,4 @@
 
     </div>
 
-</div>
+
