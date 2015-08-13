@@ -24,10 +24,12 @@ img {
 	@include inline-block;
 }
 /*
+
+###Right aligned buttons
 ```
 <div class="alignright-button">
-	<button>Button 1</button>
-	<button>Button 2</button>
+	<button class="button">Button 1</button>
+	<button class="button">Button 2</button>
 </div>
 ```
 */
@@ -55,8 +57,9 @@ img {
 	}
   }
 /*
+
+###subtitle for header
 ```
-<h1>Title</h1>
 <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.</p>
 ```
 */
