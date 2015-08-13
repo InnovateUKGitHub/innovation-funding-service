@@ -60,6 +60,20 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()));
     }
 
+    @Test
+    public void testApplicationSummary() throws Exception {
+        Application app = applications.get(0);
+
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+
+        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-summary"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+    }
+
 //    @Test
 //    public void testNotExistingApplicationDetails() throws Exception {
 //        Application app = applications.get(0);
