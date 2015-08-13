@@ -2,9 +2,11 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.Competition;
+import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.service.ApplicationService;
+import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +28,8 @@ import java.util.List;
 @RequestMapping("/application")
 public class ApplicationController {
     private final Log log = LogFactory.getLog(getClass());
+    @Autowired
+    ResponseService responseService;
 
     @Autowired
     ApplicationService applicationService;
@@ -72,8 +77,14 @@ public class ApplicationController {
     }
 
     @RequestMapping("/{applicationId}/summary")
-    public String applicationDetailsOpenSection(Model model,
-                                                @PathVariable("applicationId") final Long applicationId){
+    public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
+
         this.addApplicationDetails(applicationId, model);
         return "application-summary";
     }

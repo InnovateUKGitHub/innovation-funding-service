@@ -19,6 +19,17 @@
         Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
     </div>
 
+    <div class="collapsible section-overview">
+        <div th:remove="tag" th:each="section : ${sections}">
+            <h2 data-th-text="${section.getName()}" th:class="(${section.getId()} == ${currentSectionId}) ? 'open':''" />
+            <ul>
+                <li class="section" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }">
+                    <div th:remove="tag" th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question})"/>
+                 </li>
+            </ul>
+        </div>
+    </div>
+
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
 
