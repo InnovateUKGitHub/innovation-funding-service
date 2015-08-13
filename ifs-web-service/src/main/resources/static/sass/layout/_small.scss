@@ -54,3 +54,15 @@ img {
 		text-align: center;
 	}
   }
+/*
+```
+<h1>Title</h1>
+<p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.</p>
+```
+*/
+.subtitle {
+	color: $grey-1;
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 1.25;
+}
