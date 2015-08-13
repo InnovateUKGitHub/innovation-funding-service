@@ -2,14 +2,8 @@
 //will be cut up in smaller pieces later 
 
 //variables 
-$ifs-gray: #D2D4D5;
-$ifs-green : #00823b;
-$ifs-purple : #79298A;
-$ifs-lightgray : #F8F8F8;
-
 
 @import "layout/layout";
-@import "pages/application-form";
 /* 
 #Nomensa/Worth Elements
 
@@ -29,19 +23,27 @@ $ifs-lightgray : #F8F8F8;
 
 /*
 
-##3. small elements
-*/
-@import "layout/small";
-
-/*
-
-##4. Progress-indicator 
+##3. Progress-indicator 
 */
 @import "components/progress-indicator";
+/*
 
+##4. Event alert 
+*/
+@import "components/event-alert";
 
-//##5. Extra form elements 
+/* 
+##5. Extra form elements 
+*/
 
 @import "components/forms";
 
+/*
+##6. small elements
+*/
+@import "layout/small";
 
+
+//pages
+@import "pages/application-details";
+@import "pages/application-form";

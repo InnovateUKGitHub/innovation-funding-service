@@ -1,8 +1,8 @@
-<div xmlns:th="http://www.w3.org/1999/xhtml">
+
 
     <!-- ===========================Form: Textinput =========================== -->
-    
-    <div th:fragment="textinput">
+
+    <div th:fragment="textinput" class="form-group">
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
@@ -13,8 +13,7 @@
 
     <!-- ===========================Form: Text Area =========================== -->
 
-    <div th:fragment="textarea">
-
+    <div th:fragment="textarea" class="form-group">
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
@@ -22,21 +21,20 @@
            
             <div class="form-control-wrap">
                 <div class="form-group_header">
-                    Last edited by Roger Righteous
+                    Information goes here
                 </div>
                  <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
             </div>
-        </div>
     </div>
 
     <!-- ===========================Form: Date input =========================== -->
 
-    <div th:fragment="date">
+    <div th:fragment="date" class="form-group">
         <input type="date" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
-    <div th:fragment="fileupload">
+    <div th:fragment="fileupload" class="form-group">
 
         <input type="file"/>
 

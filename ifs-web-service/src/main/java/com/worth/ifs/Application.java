@@ -22,7 +22,4 @@ public class Application extends SpringBootServletInitializer {
         log.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
-
-
-
 }

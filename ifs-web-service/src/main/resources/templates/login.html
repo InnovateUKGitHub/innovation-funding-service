@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Sign In'"  th:remove="tag"></div>
 </head>
-<body>
+<body class="sign-in">
 
     <div th:include="fragments/layout :: body-start" th:remove="tag"></div>	
     <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
@@ -58,8 +58,6 @@
 	</div>
 
 </div>
-
-
 
 
 		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

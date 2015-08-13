@@ -9,7 +9,7 @@
 ```
 */
 .greentext {
-	color:$ifs-green;
+	color:$green;
 }
 
 strong {
@@ -22,4 +22,50 @@ img {
 
 .icon {
 	@include inline-block;
+}
+/*
+
+###Right aligned buttons
+```
+<div class="alignright-button">
+	<button class="button">Button 1</button>
+	<button class="button">Button 2</button>
+</div>
+```
+*/
+
+
+.alignright-button {
+	overflow: hidden;
+	clear: both;
+
+	.button,
+	button,
+	[role="button"] {
+		&:first-child {
+			margin-right:0;
+		}
+		float:right;
+	}
+}
+  @include media-down(mobile) {
+	.button {
+		margin-right:0;
+		margin-left:0;
+		float:none;
+		text-align: center;
+	}
+  }
+/*
+
+###subtitle for header
+```
+<p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.</p>
+```
+*/
+.subtitle {
+	color: $grey-1;
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 1.25;
 }

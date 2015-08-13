@@ -37,5 +37,15 @@
                 <a href="/logout">Logout</a>
             </li>
         </ul>
+    </div> 
+</div>
+<!-- =========================== Element =========================== -->
+<div th:fragment="pie-small">
+    <div class="pie-container">
+        <div class="pie small" th:text="${daysPercentage}">10%</div>
+        <div class="pie-overlay">
+            <div th:text="${daysLeft}">18</div>
+            <span>Days left</span>
+        </div>
     </div>
 </div>

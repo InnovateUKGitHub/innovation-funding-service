@@ -1,8 +1,10 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.service.ApplicationService;
+import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +15,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +33,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
     UserService userServiceMock;
     @Mock
     ApplicationService applicationService;
+    @Mock
+    ResponseService responseService;
 
 
     @Before
@@ -56,6 +63,24 @@ public class ApplicationControllerTest extends BaseUnitTest {
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+    }
+
+    @Test
+    public void testApplicationSummary() throws Exception {
+        Application app = applications.get(0);
+
+        List<Response> reponses = new ArrayList<Response>();
+
+        when(responseService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(reponses);
+
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+
+        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()));
     }

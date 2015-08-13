@@ -128,6 +128,7 @@ You can add `.small` to `.pie` for a smaller version of both
 	}
 	.pie-overlay {
 		border: 2px solid $grey-3;
+		position: static;
 	}
 }
 //same as no-js but @extends don't work within ie-lte :(
@@ -139,6 +140,7 @@ You can add `.small` to `.pie` for a smaller version of both
 	}
 	.pie-overlay {
 		border: 2px solid $grey-3;
+		position: static;
 	}
 }
 

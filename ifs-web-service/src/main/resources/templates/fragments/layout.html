@@ -3,7 +3,7 @@
 <div th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title>Innovation Funding Service - Alpha</title>
+    <title th:text="'Innovation Funding Service - '+${pageTitle}"></title>
 
     <script type="text/javascript">
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
@@ -28,13 +28,17 @@
     </script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
-      <link href="/css/fonts.css" media="all" rel="stylesheet" type="text/css" />
+        <script type="text/javascript">
+        <!--//--><![CDATA[//><!--
+            !function(){"use strict";function e(e,t,c){e.addEventListener?e.addEventListener(t,c,!1):e.attachEvent&&e.attachEvent("on"+t,c)}function t(e){return window.localStorage&&localStorage.font_css_cache&&localStorage.font_css_cache_file===e}function c(){if(window.localStorage&&window.XMLHttpRequest)if(t(o))n(localStorage.font_css_cache);else{var e=new XMLHttpRequest;e.open("GET",o,!0),e.onreadystatechange=function(){4===e.readyState&&(n(e.responseText),localStorage.font_css_cache=e.responseText,localStorage.font_css_cache_file=o)},e.send()}else{var c=document.createElement("link");c.href=o,c.rel="stylesheet",c.type="text/css",document.getElementsByTagName("head")[0].appendChild(c),document.cookie="font_css_cache"}}function n(e){var t=document.createElement("style");t.setAttribute("type","text/css"),t.styleSheet?t.styleSheet.cssText=e:t.innerHTML=e,document.getElementsByTagName("head")[0].appendChild(t)}var o="/css/fonts.css";window.localStorage&&localStorage.font_css_cache||document.cookie.indexOf("font_css_cache")>-1?c():e(window,"load",c)}();
+        //--><!]]>
+        </script>
     <!--<![endif]-->
 
     <!--[if lt IE 9]>
       <script src="/js/ie.js" type="text/javascript"></script>
     <![endif]-->
-
+  
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 
     <!-- Size for iPad and iPad mini (high resolution) -->
@@ -111,11 +115,9 @@
 
       <div class="footer-wrapper">
         
-
         <div class="footer-meta">
           <div class="footer-meta-inner">
-            
-
+          
             <div class="open-government-licence">
               <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
                 <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
@@ -128,4 +130,13 @@
         </div>
       </div>
     </footer>
+</div>
+
+<!-- =========================== Element : subheader =========================== -->
+
+<div th:fragment="header-sub">
+    <div class="header-new-sub-wrapper">
+        <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${'10%'},daysLeft=${'5'}" th:remove="tag" />
+        <strong th:text="${currentApplication.getName()}" />
+    </div>
 </div>
