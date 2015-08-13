@@ -6,9 +6,10 @@ var worthIFS = {
         worthIFS.collapsible();
         worthIFS.pieChart();
 
-        if(jQuery('form.application').size()==1){
+        if(jQuery('body.app-form').size()==1){
             worthIFS.initAutosaveElement();
             worthIFS.initUnsavedChangesWarning();
+            worthIFS.closeAlertHide();
         }
     },
     collapsible : function(){
@@ -121,6 +122,11 @@ var worthIFS = {
                 }
         });
 
+    },
+    closeAlertHide : function(){
+        setTimeout(function(){
+            jQuery('.is-open').removeClass('is-open');
+        },5000);
     }
 } 
 
