@@ -32,7 +32,9 @@
             </ul>
         </div>
     </div>
-
+    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
+        <input class="button" value="Review &amp; submit" type="button" />
+    </a>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
