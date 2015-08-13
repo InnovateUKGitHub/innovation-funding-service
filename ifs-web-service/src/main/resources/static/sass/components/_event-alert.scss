@@ -2,8 +2,25 @@
 
 ###Event alert
 
+
+You can use `.is-open` for animation 
+
 ```
-<div class="event-alert event-alert-warning"><p><span>Steve Smith (Lead Applicant) is editing a field</span></p></div>
+<div class="event-alert event-alert-warning is-open">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
+```
+
+##Information alert
+
+```
+<div class="event-alert is-open">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
 ```
 */
 .no-js .event-alert {
@@ -39,7 +56,7 @@
 
         span {
             background: {
-                image: url(../images/icon-information.png);
+                image: url(/images/icons/icon-information.png);
                 repeat: no-repeat;
                 position: 0 50%;
             }
@@ -54,7 +71,7 @@
             border-top: 10px solid $beta-colour;
 
             span {
-                background-image: url(../images/icon-important.png);
+                background-image: url(/images/icons/icon-important.png);
                 padding: 15px 0 15px 45px;
             }
         }
@@ -66,7 +83,7 @@
             border-top: 10px solid $error-colour;
 
             span {
-                background-image: url(../images/icon-important.png);
+                background-image: url(/images/icons/icon-important.png);
                 padding: 15px 0 15px 45px;
             }
         }
