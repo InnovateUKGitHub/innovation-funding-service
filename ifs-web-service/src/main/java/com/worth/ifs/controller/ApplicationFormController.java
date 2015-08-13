@@ -7,20 +7,18 @@ import com.worth.ifs.domain.*;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
-import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -34,9 +32,6 @@ public class ApplicationFormController {
     ApplicationService applicationService;
     @Autowired
     ResponseService responseService;
-
-    @Autowired
-    UserService userService;
 
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
@@ -92,9 +87,7 @@ public class ApplicationFormController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request){
 
-        log.warn("Got form submit;");
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-
 
         Application app = applicationService.getApplicationById(applicationId);
         Competition comp = app.getCompetition();
@@ -103,14 +96,18 @@ public class ApplicationFormController {
         // get the section that we want to show, so we can use this on to show the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
 
+        // saving questions from section
         List<Question> questions = section.getQuestions();
         for (Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){
                 String value = request.getParameter("question[" + question.getId() + "]");
-                log.warn("Question/response in post: " + question.getId() + ": " + value);
                 responseService.saveQuestionResponse(user.getId(), applicationId, question.getId(), value);
             }
         }
+
+        // save application details if they are in the request
+        Map<String, String[]> params = request.getParameterMap();
+        this.saveApplicationDetails(app, params);
 
 
         this.addApplicationDetails(applicationId, model);
@@ -118,6 +115,33 @@ public class ApplicationFormController {
         model.addAttribute("currentSection", section);
         model.addAttribute("applicationSaved", true);
         return "application-form";
+    }
+
+    private void saveApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
+        if(applicationDetailParams.containsKey("question[application_details-title]")){
+            String title = applicationDetailParams.get("question[application_details-title]")[0];
+            application.setName(title);
+        }
+//        if(applicationDetailParams.containsKey("question[application_details-startdate][year]")){
+//            int year = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][year]")[0]) ;
+//            int month = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][month]")[0]) ;
+//            int day = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][day]")[0]) ;
+//
+//            log.error("Start date: "+ year);
+//            log.error("Start date: "+ month);
+//            log.error("Start date: "+ day);
+//            LocalDate date = LocalDate.of(year, month, day);
+//            log.error("Date obj "+ date.toString());
+//            application.setStartDate(date);
+//        }
+        if(applicationDetailParams.containsKey("question[application_details-duration]")){
+            Long duration = Long.valueOf(applicationDetailParams.get("question[application_details-duration]")[0]);
+            log.error("set duration: "+ duration);
+            application.setDurationInMonths(duration);
+        }
+
+        applicationService.saveApplication(application);
+
     }
 
 
@@ -128,10 +152,6 @@ public class ApplicationFormController {
                                                   HttpServletRequest request) {
 
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-
-        log.info("Save Form element: applicationId " + applicationId);
-        log.info("Save Form element: questionId " + questionId);
-        log.info("Save Form element: value " + value);
 
         responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
 

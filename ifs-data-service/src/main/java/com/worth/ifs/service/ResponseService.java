@@ -11,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,9 +34,9 @@ public class ResponseService extends BaseServiceProvider {
         return Arrays.asList(responses);
     }
 
-    public void saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
+    public boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL  + "/saveQuestionResponse/";
+        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -46,17 +47,18 @@ public class ResponseService extends BaseServiceProvider {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(node.toString(), headers);
 
-
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("response json: "+ response.getBody());
+        if (response.getStatusCode() == HttpStatus.ACCEPTED) {
+            return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             // nono... bad credentials
             log.info("Unauthorized.....");
+            return false;
         }
 
-        return ;
+        return false;
     }
 }

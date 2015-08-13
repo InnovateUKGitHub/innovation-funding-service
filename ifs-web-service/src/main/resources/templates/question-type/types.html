@@ -4,10 +4,10 @@
     
     <div th:fragment="textinput">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}), response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
         </div>
     </div>
 
@@ -16,8 +16,8 @@
     <div th:fragment="textarea">
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
             <div class="form-control-wrap">
@@ -40,6 +40,42 @@
 
         <input type="file"/>
 
+    </div>
+
+    <!-- ===========================Form: application_details =========================== -->
+    <div th:fragment="application_details">
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of the project')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response='ProjectTitle')" th:remove="tag" />
+        </div>
+
+        <div class="form-group">
+
+            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
+
+            Project start date
+            <br/>
+
+            <div th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day='25', month='11', year='2015')" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months='11')" th:remove="tag" />
+        </div>
+
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            Nomensa
+        </div>
+
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <ul class="list-bullet">
+                <li>BAE Systems Plc</li>
+                <li>Google Inc.</li>
+            </ul>
+        </div>
     </div>
 
 </div>

@@ -1,8 +1,9 @@
 package com.worth.ifs.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,8 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private LocalDate startDate;
+    private Long durationInMonths; // in months
 
     public void setId(Long id) { this.id = id; }
 
@@ -97,5 +100,21 @@ public class Application {
         this.userApplicationRoles.addAll(Arrays.asList(userApplicationRoles));
 
 
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public Long getDurationInMonths() {
+        return durationInMonths;
+    }
+
+    public void setDurationInMonths(Long durationInMonths) {
+        this.durationInMonths = durationInMonths;
     }
 }

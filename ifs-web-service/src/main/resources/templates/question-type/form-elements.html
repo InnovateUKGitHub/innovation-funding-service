@@ -1,16 +1,16 @@
 <!-- ===========================Form label =========================== -->
-<div th:fragment="form-label">
+<div th:fragment="form-label (name,id)">
         <label  class="form-label form-label-bold" 
-                th:if="${question.getName()}"
-                th:for="'question-'+${question.getId()}"  
-                th:text="${question.getName()}"  
+                th:if="${name}"
+                th:for="'question-'+${id}"
+                th:text="${name}"
         />      
 </div>
 <!-- ===========================Form hint =========================== -->
-<div th:fragment="form-hint">
+<div th:fragment="form-hint (hint)">
 	<span   class="form-hint" 
-	        th:if="${question.getDescription()}" 
-	        th:text="${question.getDescription()}" 
+	        th:if="${hint}"
+	        th:text="${hint}"
 	/>
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -27,14 +27,45 @@
 </div>
 <!-- ========================= input field =========================== -->
 
-<div th:fragment="form-textinput">
+<div th:fragment="form-textinput (id, response)">
 	<input  class="form-control" 
 	        type="text" 
-	        th:id="'question-'+${question.getId()}"  
-	        th:name="'question['+${question.getId()}+']'"
-	        th:value="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )"
+	        th:id="'question-'+${id}"
+	        th:name="'question['+${id}+']'"
+	        th:value="${response}"
 	/>
 </div>
+<!-- ========================= date field =========================== -->
+
+<div th:fragment="form-dateinput (id, day, month, year)">
+	<input  class="form-control"
+			type="text"
+			th:id="'question-'+${id}"
+			th:name="'question['+${id}+'][day]'"
+			th:value="${day}"
+			/>
+	<input  class="form-control"
+			type="text"
+			th:id="'question-'+${id}"
+			th:name="'question['+${id}+'][month]'"
+			th:value="${month}"/>
+	<input  class="form-control"
+			type="text"
+			th:id="'question-'+${id}"
+			th:name="'question['+${id}+'][year]'"
+			th:value="${year}" />
+</div>
+
+<div th:fragment="form-textduration (id, months)">
+	Duration <br/>
+	<input  class="form-control"
+			type="text"
+			th:id="'question-'+${id}"
+			th:name="'question['+${id}+']'"
+			th:value="${months}"
+			/> months
+</div>
+
 <!-- ========================= textarea =========================== -->
 
 <div th:fragment="form-textarea">

@@ -60,8 +60,6 @@ public class UserController {
     @RequestMapping("/id/{id}")
     public User getUserById(@PathVariable("id") final Long id) {
         User user = repository.findById(id).get(0);
-        user.setPassword("test");
-        repository.save(user);
         return user;
     }
 

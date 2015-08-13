@@ -46,22 +46,6 @@ public class UserApplicationRole {
 
     }
 
-    public Long getRoleId() {
-        return role.getId();
-    }
-
-    public Long getUserId() {
-        return user.getId();
-    }
-
-    public Long getApplicationId() {
-        return application.getId();
-    }
-
-    public Long getOrganisationId() {
-        return organisation.getId();
-    }
-
     @JsonIgnore
     public Role getRole() {
         return role;

@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -55,7 +56,7 @@ public class ResponseController {
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
     public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
@@ -72,6 +73,7 @@ public class ResponseController {
 
         if(userAppRoles == null || userAppRoles.size()== 0){
             // user has no role on this application, so should not be able to write..
+            log.error("FORBIDDEN TO SAVE");
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
         }
 
@@ -86,6 +88,8 @@ public class ResponseController {
         }
         
         responseRepository.save(response);
+
+        log.warn("Single question saved!");
 
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }
