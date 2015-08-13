@@ -558,7 +558,7 @@ If images are needed they should be landscape, 3:2 aspect ratio.
 
 ```
 
-##6.Forms
+##6. Forms
 
 ###Form labels
 
@@ -710,6 +710,22 @@ Avoid using drop-down lists (the HTML select element) - use radio buttons or che
     </div>
   </fieldset>
 
+```
+
+##7. Buttons
+
+```
+  <button class="button">Save and continue</button>
+```
+
+###Disabled
+
+```
+  <button class="button" disabled="disabled">Save and continue</button>
+```
+
+```
+  <a href="#" class="button button-get-started" role="button">Start now</a>
 ```
 
 ##8. Errors and validation
