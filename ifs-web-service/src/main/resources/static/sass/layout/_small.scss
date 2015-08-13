@@ -23,3 +23,23 @@ img {
 .icon {
 	@include inline-block;
 }
+/*
+```
+<div class="alignright-button">
+	<button>Button 1</button>
+	<button>Button 2</button>
+</div>
+```
+*/
+.alignright-button {
+	overflow: hidden;
+	
+	.button,
+	button,
+	[role="button"] {
+		&:first-child {
+			margin-right:0;
+		}
+		float:right;
+	}
+}
