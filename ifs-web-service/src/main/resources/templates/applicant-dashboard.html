@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
 </head>
-<body>
+<body class="app-dashboard">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -20,9 +20,9 @@
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <h4 class="heading-medium">
-                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" data-th-text="${application.name}">placeholder</a>
+                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
                             </h4>
-                            <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                            <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <strong th:if="${application.getApplicationStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
                         </div>
                     </div>
@@ -36,8 +36,8 @@
                 <li th:each="application : ${applicationsFinished}">
                     <div class="grid-row">
                         <div class="column-two-thirds">
-                            <h4 class="heading-medium" data-th-text="${application.name}"></h4>
-                            <p class="form-hint">Application number: <span data-th-text="${application.id}"></span></p>
+                            <h4 class="heading-medium" th:text="${application.name}"></h4>
+                            <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                         </div>
                     </div>
                 </li>
