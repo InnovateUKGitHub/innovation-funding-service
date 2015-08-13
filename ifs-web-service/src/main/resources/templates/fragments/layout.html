@@ -134,7 +134,7 @@
 
 <div th:fragment="header-sub">
     <div class="header-new-sub-wrapper">
-        <strong th:text="${currentApplication.getName()}" />
         <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${'10%'},daysLeft=${'5'}" th:remove="tag" />
+        <strong th:text="${currentApplication.getName()}" />
     </div>
 </div>
