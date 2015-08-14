@@ -6,7 +6,7 @@
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />\
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
         </div>
     </div>
