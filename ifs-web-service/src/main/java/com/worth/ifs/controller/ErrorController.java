@@ -17,6 +17,7 @@ class ErrorController {
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 
         log.info("ErrorController  defaultErrorHandler");
+        e.printStackTrace();
 
         // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();
@@ -29,6 +30,7 @@ class ErrorController {
     @ExceptionHandler(value = ObjectNotFoundException.class)
     public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
         log.info("ErrorController  objectNotFoundHandler");
+        e.printStackTrace();
 
 
         // Otherwise setup and send the user to a default error-view.
