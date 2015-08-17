@@ -1,7 +1,5 @@
 package com.worth.ifs.domain;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +31,6 @@ public class ApplicationController {
     UserApplicationRoleRepository userAppRoleRepository;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    ResponseRepository responseRepository;
-    @Autowired
-    QuestionRepository questionRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -71,7 +68,7 @@ public class ApplicationController {
     @RequestMapping("/saveApplicationDetails/{id}")
     public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
                                                          @RequestBody Application application) {
-        log.warn("Saving application now");
+
         Application applicationDb = repository.findOne(id);
         HttpStatus status;
 
@@ -79,18 +76,18 @@ public class ApplicationController {
             applicationDb.setName(application.getName());
             applicationDb.setDurationInMonths(application.getDurationInMonths());
             applicationDb.setStartDate(application.getStartDate());
-
             repository.save(applicationDb);
 
-            log.warn("Saving application now");
             status = HttpStatus.OK;
 
         }else{
+            log.error("NOT_FOUND "+ id);
             status = HttpStatus.NOT_FOUND;
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
         return new ResponseEntity<String>(headers, status);
     }
 

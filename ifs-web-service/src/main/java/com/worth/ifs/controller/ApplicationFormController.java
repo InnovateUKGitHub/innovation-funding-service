@@ -124,38 +124,59 @@ public class ApplicationFormController {
             String title = applicationDetailParams.get("question[application_details-title]")[0];
             application.setName(title);
         }
-//        if(applicationDetailParams.containsKey("question[application_details-startdate][year]")){
-//            int year = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][year]")[0]) ;
-//            int month = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][month]")[0]) ;
-//            int day = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][day]")[0]) ;
-//
-//            log.error("Start date: "+ year);
-//            log.error("Start date: "+ month);
-//            log.error("Start date: "+ day);
-//            LocalDate date = LocalDate.of(year, month, day);
-//            log.error("Date obj "+ date.toString());
-//            application.setStartDate(date);
-//        }
+        if(applicationDetailParams.containsKey("question[application_details-startdate][year]")){
+            int year = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][year]")[0]);
+            int month = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][month]")[0]);
+            int day = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][day]")[0]);
+            LocalDate date = LocalDate.of(year, month, day);
+            application.setStartDate(date);
+        }
         if(applicationDetailParams.containsKey("question[application_details-duration]")){
             Long duration = Long.valueOf(applicationDetailParams.get("question[application_details-duration]")[0]);
-            log.error("set duration: "+ duration);
             application.setDurationInMonths(duration);
         }
 
         applicationService.saveApplication(application);
-
     }
 
 
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public @ResponseBody JsonNode saveFormElement(@RequestParam("questionId") Long questionId,
+    public @ResponseBody JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
                                                   @RequestParam("value") String value,
                                                   @RequestParam("applicationId") Long applicationId,
                                                   HttpServletRequest request) {
 
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
 
-        responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
+
+        if(inputIdentifier.equals("application_details-title")){
+            Application application = applicationService.getApplicationById(applicationId);
+            application.setName(value);
+            applicationService.saveApplication(application);
+        }else if(inputIdentifier.equals("application_details-duration")){
+            Application application = applicationService.getApplicationById(applicationId);
+            application.setDurationInMonths(Long.valueOf(value));
+            applicationService.saveApplication(application);
+        }else if(inputIdentifier.startsWith("application_details-startdate")){
+            Application application = applicationService.getApplicationById(applicationId);
+            LocalDate startDate = application.getStartDate();
+
+            if(startDate == null){
+                startDate = LocalDate.now();
+            }
+            if (inputIdentifier.endsWith("_day")) {
+                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+            }else if (inputIdentifier.endsWith("_month")) {
+                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+            }else if (inputIdentifier.endsWith("_year")) {
+                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+            }
+            application.setStartDate(startDate);
+            applicationService.saveApplication(application);
+        }else{
+            Long questionId = Long.valueOf(inputIdentifier);
+            responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();

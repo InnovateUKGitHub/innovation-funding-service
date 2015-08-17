@@ -29,7 +29,8 @@
 
 <div th:fragment="form-textinput (id, response)">
 	<input  class="form-control" 
-	        type="text" 
+	        type="text"
+			th:attr="data-question_id=${id}"
 	        th:id="'question-'+${id}"
 	        th:name="'question['+${id}+']'"
 	        th:value="${response}"
@@ -38,28 +39,57 @@
 <!-- ========================= date field =========================== -->
 
 <div th:fragment="form-dateinput (id, day, month, year)">
-	<input  class="form-control"
-			type="text"
-			th:id="'question-'+${id}"
-			th:name="'question['+${id}+'][day]'"
-			th:value="${day}"
-			/>
-	<input  class="form-control"
-			type="text"
-			th:id="'question-'+${id}"
-			th:name="'question['+${id}+'][month]'"
-			th:value="${month}"/>
-	<input  class="form-control"
-			type="text"
-			th:id="'question-'+${id}"
-			th:name="'question['+${id}+'][year]'"
-			th:value="${year}" />
+	<div class="date-group">
+		<div class="grid-row">
+			<div class="column-third">
+				Day
+			</div>
+			<div class="column-third">
+				Month
+			</div>
+			<div class="column-third">
+				Year
+			</div>
+		</div>
+		<div class="grid-row">
+			<div class="column-third">
+				<input  class="form-control"
+					type="text"
+					th:attr="data-question_id=${id}+'_day'"
+					th:id="'question-'+${id}"
+					th:name="'question['+${id}+'][day]'"
+					th:value="${day}"
+					placeholder="DD"
+					/>
+			</div>
+			<div class="column-third">
+				<input  class="form-control"
+					type="text"
+					th:attr="data-question_id=${id}+'_month'"
+					th:id="'question-'+${id}"
+					th:name="'question['+${id}+'][month]'"
+					th:value="${month}"
+					placeholder="MM"
+					/>
+			</div>
+			<div class="column-third">
+				<input  class="form-control"
+					type="text"
+					th:attr="data-question_id=${id}+'_year'"
+					th:id="'question-'+${id}"
+					th:name="'question['+${id}+'][year]'"
+					th:value="${year}"
+					placeholder="YYYY"/>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div th:fragment="form-textduration (id, months)">
 	Duration <br/>
 	<input  class="form-control"
 			type="text"
+			th:attr="data-question_id=${id}"
 			th:id="'question-'+${id}"
 			th:name="'question['+${id}+']'"
 			th:value="${months}"
@@ -69,7 +99,8 @@
 <!-- ========================= textarea =========================== -->
 
 <div th:fragment="form-textarea">
-     <textarea  th:attr="data-question_id=${question.getId()}"
+     <textarea
+			th:attr="data-question_id=${question.getId()}"
             cols="30" rows="10"
 			th:name="'question['+${question.getId()}+']'"
             data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">

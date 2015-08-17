@@ -41,30 +41,33 @@ public class ApplicationService extends BaseServiceProvider {
     }
 
     public void saveApplication(Application application){
-        log.warn("ApplicationService.saveApplication");
+        log.info("ApplicationService.saveApplication "+ application.getId());
 
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/saveApplicationDetails/" +application.getId();
 
+
         //set your headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-
-        log.warn("ApplicationService.saveApplication add application to httpEntity");
 
         //set your entity to send
-        HttpEntity entity = new HttpEntity(application,headers);
+        HttpEntity<Application> entity = new HttpEntity<>(application, headers);
 
-        log.warn("ApplicationService.saveApplication send it!");
+
+        log.info("ApplicationService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
                 , String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("ApplicationService, save == ok : "+ response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            // nono... bad credentials
-            log.info("Unauthorized.....");
+            //  bad credentials?
+            log.info("Unauthorized request.");
+        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+            log.info("Status code not_found .....");
         }
 
     }

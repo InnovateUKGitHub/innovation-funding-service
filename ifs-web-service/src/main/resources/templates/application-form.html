@@ -47,7 +47,7 @@
             </div>
 
             <div th:remove="tag" th:each="question : ${currentSection.getQuestions()}">
-                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses})" />
+                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication})" />
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
