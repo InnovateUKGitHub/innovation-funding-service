@@ -77,8 +77,8 @@ var worthIFS = {
             captureLength: 1
         }
 
-        jQuery(".application input, .application textarea").typeWatch( options );
-        jQuery(".application input, .application textarea").change(function(e) {
+        jQuery(".form-serialize-js input, .form-serialize-js textarea").typeWatch( options );
+        jQuery(".form-serialize-js input, .form-serialize-js textarea").change(function(e) {
             fieldChanged(e.target);
         });
 
@@ -90,7 +90,9 @@ var worthIFS = {
                     applicationId: jQuery(".form-serialize-js #application_id").val()
              };
 
+
              var formState = $('.form-serialize-js').serialize();
+             console.log("Ajax save now:", formState);
              jQuery.ajax({
                  type: 'POST',
                  url: "/application-form/saveFormElement",
@@ -111,7 +113,7 @@ var worthIFS = {
         // don't show the warning when the user is submitting the form.
         formSubmit = false;
         jQuery('.form-serialize-js').on('submit', function(e){
-            formSubmit = true; 
+            formSubmit = true;
         });
 
          $(window).bind('beforeunload', function(e){
