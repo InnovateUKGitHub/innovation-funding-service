@@ -87,10 +87,10 @@ var worthIFS = {
             var jsonObj = {
                     value:element.value,
                     questionId: jQuery(element).data("question_id"),
-                    applicationId: jQuery(".application #application_id").val()
+                    applicationId: jQuery(".form-serialize-js #application_id").val()
              };
 
-             var formState = $('form.application').serialize();
+             var formState = $('.form-serialize-js').serialize();
              jQuery.ajax({
                  type: 'POST',
                  url: "/application-form/saveFormElement",
@@ -98,7 +98,7 @@ var worthIFS = {
                  dataType: "json"
              }).done(function(){
                 // set the form-saved-state
-                $('form.application').data('serializedFormState',formState);
+                $('.form-serialize-js').data('serializedFormState',formState);
              }).fail(function(){
                 // ajax save failed.
              });
@@ -106,16 +106,16 @@ var worthIFS = {
     },
     initUnsavedChangesWarning : function(){
         // save the current form state, so we can warn the user if he leaves the page without saving.
-        jQuery('form.application').data('serializedFormState',$('form.application').serialize());
+        jQuery('.form-serialize-js').data('serializedFormState',$('.form-serialize-js').serialize());
 
         // don't show the warning when the user is submitting the form.
         formSubmit = false;
-        jQuery('form.application').on('submit', function(e){
-            formSubmit = true;
+        jQuery('.form-serialize-js').on('submit', function(e){
+            formSubmit = true; 
         });
 
          $(window).bind('beforeunload', function(e){
-                if(formSubmit == false && jQuery('form.application').serialize()!=$('form.application').data('serializedFormState')){
+                if(formSubmit == false && jQuery('.form-serialize-js').serialize()!=$('.form-serialize-js').data('serializedFormState')){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";
                 }else{
                  e=null;

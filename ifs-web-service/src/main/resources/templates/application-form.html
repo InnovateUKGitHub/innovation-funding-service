@@ -37,7 +37,7 @@
 
     <div class="column-two-thirds">
         
-        <form action="#"  method="post">
+        <form action="#"  method="post" class="form-serialize-js">
 
             <div th:each="section : ${sections}"  th:remove="tag">
                  <div th:if="(${section.getId()} == ${currentSectionId})" th:remove="tag">
