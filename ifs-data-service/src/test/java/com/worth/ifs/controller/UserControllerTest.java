@@ -1,10 +1,7 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.repository.UserRepository;
-import org.hamcrest.Matcher;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
