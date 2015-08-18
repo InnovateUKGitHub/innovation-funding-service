@@ -27,6 +27,15 @@
             </div>
         </div>
     </div>
+    <div th:fragment="readonly_textarea" class="form-group">
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div class="form-control-wrap">
+                <div th:include="question-type/form-elements :: form-textarea" th:with="disabled=(true)" th:remove="tag" />
+            </div>
+            <div th:include="question-type/form-elements :: question-edit-link" th:remove="tag" />
+        </div>
+    </div>
 
     <!-- ===========================Form: Date input =========================== -->
 
@@ -36,9 +45,7 @@
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
-
         <input type="file"/>
-
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
@@ -61,6 +68,34 @@
             <div th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
             <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
+        </div>
+
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            Nomensa
+        </div>
+
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <ul class="list-bullet">
+                <li>BAE Systems Plc</li>
+                <li>Google Inc.</li>
+            </ul>
+        </div>
+    </div>
+    <div th:fragment="readonly_application_details">
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:with="disabled=(true)"  th:remove="tag" />
+        </div>
+
+        <div class="form-group">
+            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
+            Project start date
+            <br/>
+
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})"  th:with="disabled=(true)" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="disabled=(true)" th:remove="tag" />
         </div>
 
         <div class="form-group">

@@ -24,10 +24,19 @@
             <h2 data-th-text="${section.getName()}" th:class="(${section.getId()} == ${currentSectionId}) ? 'open':''" />
             <ul>
                 <li class="section" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }">
-                    <div th:remove="tag" th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question})"/>
+                    <div th:remove="tag" th:replace="question-type/types :: 'readonly_'+${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $currentApplication=(${currentApplication}), $section=(${section})"/>
                  </li>
             </ul>
         </div>
+    </div>
+    <hr/>
+    <div>
+        <span class="icon icon-information"></span>
+        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
+    </div>
+
+    <div class="alignright-button">
+        <button class="button">Submit application</button>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

@@ -28,7 +28,9 @@
 <!-- ========================= input field =========================== -->
 
 <div th:fragment="form-textinput (id, response)">
-	<input  class="form-control" 
+	<input  class="form-control"
+			th:disabled="${disabled}"
+			th:readonly="${disabled}"
 	        type="text"
 			th:attr="data-question_id=${id}"
 	        th:id="'question-'+${id}"
@@ -54,6 +56,8 @@
 		<div class="grid-row">
 			<div class="column-third">
 				<input  class="form-control"
+					th:disabled="${disabled}"
+					th:readonly="${disabled}"
 					type="text"
 					th:attr="data-question_id=${id}+'_day'"
 					th:id="'question-'+${id}"
@@ -64,6 +68,8 @@
 			</div>
 			<div class="column-third">
 				<input  class="form-control"
+					th:disabled="${disabled}"
+					th:readonly="${disabled}"
 					type="text"
 					th:attr="data-question_id=${id}+'_month'"
 					th:id="'question-'+${id}"
@@ -74,6 +80,8 @@
 			</div>
 			<div class="column-third">
 				<input  class="form-control"
+					th:disabled="${disabled}"
+					th:readonly="${disabled}"
 					type="text"
 					th:attr="data-question_id=${id}+'_year'"
 					th:id="'question-'+${id}"
@@ -88,6 +96,8 @@
 <div th:fragment="form-textduration (id, months)">
 	Duration <br/>
 	<input  class="form-control"
+			th:disabled="${disabled}"
+			th:readonly="${disabled}"
 			type="text"
 			th:attr="data-question_id=${id}"
 			th:id="'question-'+${id}"
@@ -100,11 +110,18 @@
 
 <div th:fragment="form-textarea">
      <textarea
-			th:attr="data-question_id=${question.getId()}"
-            cols="30" rows="10"
-			th:name="'question['+${question.getId()}+']'"
-            data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
-      </textarea>
+		   th:disabled="${disabled}"
+		   th:readonly="${disabled}"
+		   th:attr="data-question_id=${question.getId()}"
+		   cols="30" rows="10"
+		   th:name="'question['+${question.getId()}+']'"
+		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
+	 </textarea>
+</div>
+
+<div th:fragment="question-edit-link">
+	<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+	   data-th-text="Edit"></a>
 </div>
 
 
