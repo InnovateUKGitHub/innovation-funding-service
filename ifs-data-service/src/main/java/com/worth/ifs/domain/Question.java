@@ -11,6 +11,44 @@ import java.util.List;
 
 @Entity
 public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
+
+    @Column(length=5000)
+    private String description;
+
+    @Column(length=5000)
+    private String guidanceQuestion;
+
+    @Column(length=5000)
+    private String guidanceAnswer;
+
+    @Column(length=5000)
+    private Long characterCount;
+
+    @Column(length=5000)
+    private String optionValues;
+
+    @ManyToOne
+    @JoinColumn(name="competitionId", referencedColumnName="id")
+    private Competition competition;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="sectionId", referencedColumnName="id")
+    private Section section;
+
+    @ManyToOne
+    @JoinColumn(name="questionTypeId", referencedColumnName="id")
+    private QuestionType questionType;
+
+    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
+    private List<Response> responses;
+
+    @OneToOne(mappedBy="question", fetch = FetchType.LAZY)
+    private CostCategory costCategory;
+
     public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Long characterCount) {
         this.optionValues = optionValues;
         this.id = id;
@@ -35,37 +73,6 @@ public class Question {
     public Question() {
 
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name="competitionId", referencedColumnName="id")
-    private Competition competition;
-
-    @ManyToOne
-    @JoinColumn(name="sectionId", referencedColumnName="id")
-    private Section section;
-
-    @ManyToOne
-    @JoinColumn(name="questionTypeId", referencedColumnName="id")
-    private QuestionType questionType;
-
-    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
-    private List<Response> responses;
-
-    private String name;
-    @Column(length=5000)
-    private String description;
-    @Column(length=5000)
-    private String guidanceQuestion;
-    @Column(length=5000)
-    private String guidanceAnswer;
-    @Column(length=5000)
-    private Long characterCount;
-    @Column(length=5000)
-    private String optionValues;
 
     public String getName() {
         return name;
@@ -121,5 +128,9 @@ public class Question {
 
     public QuestionType getQuestionType() {
         return questionType;
+    }
+
+    public CostCategory getCostCategory() {
+        return costCategory;
     }
 }

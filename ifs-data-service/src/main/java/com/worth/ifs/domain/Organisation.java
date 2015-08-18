@@ -39,4 +39,7 @@ public class Organisation {
         return userApplicationRoles;
     }
 
+    public List<ApplicationFinance> getApplicationFinances() {
+        return applicationFinances;
+    }
 }

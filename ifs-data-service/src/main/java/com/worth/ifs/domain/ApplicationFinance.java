@@ -14,14 +14,7 @@ public class ApplicationFinance {
     private Integer overheadRate;
     private String otherFunding;
 
-    @OneToMany(mappedBy = "applicationFinance")
-    private List<Labour> labour;
-    @OneToMany(mappedBy = "applicationFinance")
-    private List<Materials> materials;
-    @OneToMany(mappedBy = "applicationFinance")
-    private List<CapitalUsage> capitalUsages;
-    @OneToMany(mappedBy = "applicationFinance")
-    private List<Subcontractor> subContractors;
+
 
     @ManyToOne
     @JoinColumn(name="organisationId", referencedColumnName="id")
