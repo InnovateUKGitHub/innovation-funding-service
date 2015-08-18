@@ -110,6 +110,7 @@
 
 <div th:fragment="form-textarea">
 	<div th:class="${question.getCharacterCount() == 0} ? '' : 'character-count'">
+
 		<textarea
 		   th:disabled="${disabled}"
 		   th:readonly="${disabled}"
@@ -118,7 +119,8 @@
 		   th:name="'question['+${question.getId()}+']'"
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
 		</textarea>
-		<div class="grid-row" th:unless="${question.getCharacterCount() == 0}">
+
+		<div class="grid-row" th:unless="${question.getCharacterCount() == 0 || disabled}">
 			<div class="column-half column-half--first">&nbsp;</div>
 			<div class="column-half column-half--second">
 				<span class="count-label" >
