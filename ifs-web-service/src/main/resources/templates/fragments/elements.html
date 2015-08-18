@@ -44,7 +44,16 @@
     <div class="pie-container">
         <div class="pie small" th:text="${daysPercentage}">10%</div>
         <div class="pie-overlay">
-            <div th:text="${daysLeft}">18</div>
+            <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
+            <span>Days left</span>
+        </div>
+    </div>
+</div>
+<div th:fragment="pie">
+    <div class="pie-container">
+        <div class="pie" th:text="${daysPercentage}">10%</div>
+        <div class="pie-overlay">
+            <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
             <span>Days left</span>
         </div>
     </div>

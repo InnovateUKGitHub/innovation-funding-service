@@ -25,6 +25,10 @@
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <strong th:if="${application.getApplicationStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
                         </div>
+                        <div class="column-one-third">
+                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
+
+                        </div>
                     </div>
                 </li>
             </ul>

@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
-        competition = new Competition(1L, "Competition x", "Description afds", new Date(), new Date());
+        competition = new Competition(1L, "Competition x", "Description afds", LocalDate.now().minusDays(2), LocalDate.now().plusDays(5));
         sections.add(new Section(1L, competition, null, "Application details", null));
         sections.add(new Section(2L, competition, null, "Scope (Gateway question)", null));
         sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)", null));

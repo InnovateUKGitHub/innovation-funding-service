@@ -4,11 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class CompetitionTest {
     Competition competition;
@@ -19,8 +17,8 @@ public class CompetitionTest {
     List<Section> sections;
     String name;
     String description;
-    Date startDate;
-    Date endDate;
+    LocalDate startDate;
+    LocalDate endDate;
 
     @Before
     public void setUp() throws Exception {
@@ -28,9 +26,8 @@ public class CompetitionTest {
 
         name = "testCompetitionName";
         description = "testCompetitionDescription";
-        startDate = new Date();
-        startDate.setTime(1234567890);
-        endDate = new Date();
+        startDate = LocalDate.now();
+        endDate = LocalDate.now().plusDays(5);
 
         sections = new ArrayList<Section>();
         sections.add(new Section());

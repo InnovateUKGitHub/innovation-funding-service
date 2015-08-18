@@ -1,9 +1,12 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,12 +33,12 @@ public class Competition {
     @Lob
     @Column( length = 5000 )
     private String description;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Competition() {
     }
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, Date startDate, Date endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -45,7 +48,7 @@ public class Competition {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public Competition(long id, String name, String description, Date startDate, Date endDate) {
+    public Competition(long id, String name, String description, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -79,11 +82,11 @@ public class Competition {
         return name;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -97,5 +100,25 @@ public class Competition {
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;
+    }
+
+    @JsonIgnore
+    public long getDaysLeft(){
+        long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), this.endDate);
+        return daysLeft;
+    }
+    @JsonIgnore
+    public long getTotalDays(){
+        long daysTotal = ChronoUnit.DAYS.between(startDate, endDate);
+        return daysTotal;
+    }
+    @JsonIgnore
+    public double getStartDateToEndDatePercentage(){
+        if(getDaysLeft() < 0){
+            return 100;
+        }
+        double deadlineProgress = (getDaysLeft() * 100) / getTotalDays();
+        deadlineProgress = 100 - deadlineProgress;
+        return deadlineProgress;
     }
 }
