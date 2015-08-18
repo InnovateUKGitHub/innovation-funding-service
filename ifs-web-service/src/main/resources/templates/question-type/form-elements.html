@@ -106,17 +106,28 @@
 			/> months
 </div>
 
-<!-- ========================= textarea =========================== -->
+<!-- ========================= textarea with character count =========================== -->
 
 <div th:fragment="form-textarea">
-     <textarea
+	<div th:class="${question.getCharacterCount() == 0} ? '' : 'character-count'">
+		<textarea
 		   th:disabled="${disabled}"
 		   th:readonly="${disabled}"
-		   th:attr="data-question_id=${question.getId()}"
+		   th:attr="data-question_id=${question.getId()},data-max_characters=${question.getCharacterCount()}"
 		   cols="30" rows="10"
 		   th:name="'question['+${question.getId()}+']'"
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
-	 </textarea>
+		</textarea>
+		<div class="grid-row" th:unless="${question.getCharacterCount() == 0}">
+			<div class="column-half column-half--first">&nbsp;</div>
+			<div class="column-half column-half--second">
+				<span class="count-label" >
+					<span class="count-message">Characters remaining:</span>
+					<strong class="count-down" aria-live="polite">0</strong>
+				</span>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div th:fragment="question-edit-link">

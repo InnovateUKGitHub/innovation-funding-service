@@ -10,6 +10,7 @@ var worthIFS = {
             worthIFS.initAutosaveElement();
             worthIFS.initUnsavedChangesWarning();
             worthIFS.closeAlertHide();
+            worthIFS.initCharacterCount();
         }
     },
     collapsible : function(){
@@ -83,7 +84,6 @@ var worthIFS = {
         });
 
         function fieldChanged(element){
-            console.log('fieldChanged callback: ', element);
             var jsonObj = {
                     value:element.value,
                     questionId: jQuery(element).data("question_id"),
@@ -92,7 +92,6 @@ var worthIFS = {
 
 
              var formState = $('.form-serialize-js').serialize();
-             console.log("Ajax save now:", formState);
              jQuery.ajax({
                  type: 'POST',
                  url: "/application-form/saveFormElement",
@@ -123,6 +122,31 @@ var worthIFS = {
                  e=null;
                 }
         });
+
+    },
+    initCharacterCount : function(){
+        var options = {
+            callback: function (value) { updateCharacterCount(this);  },
+            wait: 500,
+            highlight: false,
+            captureLength: 1
+        }
+        jQuery(".character-count textarea").typeWatch( options );
+        jQuery(".character-count textarea").each(function(){
+            updateCharacterCount(this);
+        });
+
+        function updateCharacterCount(element){
+            delta = element.dataset.max_characters - element.value.length
+
+            count = element.value.length;
+            jQuery(element).parent(".character-count").find(".count-down").html(delta);
+            if(delta < 0 ){
+                jQuery(element).parent(".character-count").addClass("character-count-reached");
+            }else{
+                jQuery(element).parent(".character-count").removeClass("character-count-reached");
+            }
+        }
 
     },
     closeAlertHide : function(){
