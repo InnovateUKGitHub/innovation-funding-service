@@ -5,6 +5,7 @@ import com.worth.ifs.domain.Competition;
 import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.exception.ObjectNotFoundException;
+import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.service.UserService;
@@ -16,8 +17,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -45,6 +49,7 @@ public class ApplicationController {
      */
     private void addApplicationDetails(Long applicationId, Model model) {
         Application application = applicationService.getApplicationById(applicationId);
+        SectionHelper sectionHelper = new SectionHelper();
 
         if(application == null){
             throw new ObjectNotFoundException();
@@ -55,7 +60,7 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        List<Section> sections = competition.getSections();
+        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
     }
 

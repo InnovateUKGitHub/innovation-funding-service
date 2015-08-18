@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
+import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
@@ -16,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -41,14 +41,14 @@ public class ApplicationFormController {
      */
     private void addApplicationDetails(Long applicationId, Model model){
         Application application = applicationService.getApplicationById(applicationId);
+        SectionHelper sectionHelper = new SectionHelper();
         model.addAttribute("currentApplication", application);
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        List<Section> sections = competition.getSections();
+        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
-
 
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();

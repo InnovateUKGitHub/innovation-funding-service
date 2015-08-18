@@ -1,6 +1,11 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,10 +15,15 @@ import java.util.Set;
  */
 
 @Entity
-public class Section {
+public class Section implements Comparable<Section> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private String name;
+
+    @Column( length = 5000 )
+    private String description;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -22,14 +32,15 @@ public class Section {
     @OneToMany(mappedBy="section")
     private List<Question> questions;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="parentSectionId", referencedColumnName="id")
+    @JsonBackReference
     private Section parentSection;
 
-    @OneToMany(mappedBy="parentSection")
-    private Set<Section> childSections;
-
-    private String name;
+    @OneToMany(mappedBy="parentSection",fetch=FetchType.LAZY)
+    @JsonManagedReference
+    @OrderBy("id ASC")
+    private List<Section> childSections;
 
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
         this.id = id;
@@ -55,12 +66,11 @@ public class Section {
         return id;
     }
 
-
     public Section getParentSection() {
         return parentSection;
     }
 
-    public Set<Section> getChildSections() {
+    public List<Section> getChildSections() {
         return childSections;
     }
 
@@ -72,11 +82,20 @@ public class Section {
         this.competition = competition;
     }
 
-    public void setChildSections(Set<Section> childSections) {
+    public void setChildSections(List<Section> childSections) {
         this.childSections = childSections;
     }
 
     public void setParentSection(Section parentSection) {
         this.parentSection = parentSection;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public int compareTo(Section o) {
+        return this.getId().compareTo(o.getId());
     }
 }
