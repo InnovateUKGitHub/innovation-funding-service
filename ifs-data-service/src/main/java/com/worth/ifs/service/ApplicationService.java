@@ -71,4 +71,30 @@ public class ApplicationService extends BaseServiceProvider {
         }
 
     }
+
+    public void updateApplicationStatus(Long applicationId, Long statusId){
+        ///updateApplicationStatus/{id}/status/{statusId}
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+        log.info("ApplicationService.updateApplicationStatus send it!");
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, statusId);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("ApplicationService, save == ok : "+ response.getBody());
+        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            //  bad credentials?
+            log.info("Unauthorized request.");
+        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+            log.info("Status code not_found .....");
+        }
+
+
+    }
 }

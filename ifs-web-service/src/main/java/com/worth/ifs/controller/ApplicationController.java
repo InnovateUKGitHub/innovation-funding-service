@@ -1,9 +1,7 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Competition;
-import com.worth.ifs.domain.Response;
-import com.worth.ifs.domain.Section;
+import com.worth.ifs.constant.ApplicationStatusConstants;
+import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.service.ApplicationService;
@@ -82,7 +80,7 @@ public class ApplicationController {
     }
 
     @RequestMapping("/{applicationId}/summary")
-    public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
+      public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
@@ -92,6 +90,21 @@ public class ApplicationController {
 
         this.addApplicationDetails(applicationId, model);
         return "application-summary";
+    }
+    @RequestMapping("/{applicationId}/confirm-submit")
+    public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
+        this.addApplicationDetails(applicationId, model);
+        return "application-confirm-submit";
+    }
+
+    @RequestMapping("/{applicationId}/submit")
+    public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
+        this.addApplicationDetails(applicationId, model);
+
+
+        applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
+
+        return "application-submitted";
     }
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 
 @Entity
 public class ApplicationStatus {
+
     public ApplicationStatus() {
 
     }
