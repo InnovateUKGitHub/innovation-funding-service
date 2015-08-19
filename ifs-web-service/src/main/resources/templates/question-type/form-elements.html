@@ -125,7 +125,7 @@
 			<div class="column-half column-half--second">
 				<span class="count-label" >
 					<span class="count-message">Words remaining:</span>
-					<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId()).getWordCountLeft()}">0</strong>
+					<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
 				</span>
 			</div>
 		</div>
