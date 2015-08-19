@@ -19,7 +19,7 @@ public class Cost {
     private List<CostValue> costValues = new ArrayList<CostValue>();
 
     @ManyToOne
-    @JoinColumn(name="costGroupId", referencedColumnName="id")
+    @JoinColumn(name="costCategoryId", referencedColumnName="id")
     private CostCategory costCategory;
 
     public Cost(Long id, String item, String description, Integer quantity, Double cost) {
