@@ -27,7 +27,7 @@ var worthIFS = {
         var panel = inst.next();
 
         // Add the button inside the <h2> so both the heading and button semanics are read  
-        inst.wrapInner('<button aria-expanded="'+loadstate+'" aria-controls="'+ id +'">');
+        inst.wrapInner('<button aria-expanded="'+loadstate+'" aria-controls="'+ id +'" type="button">');
         var button = inst.children('button');
 
         // Toggle the state properties  

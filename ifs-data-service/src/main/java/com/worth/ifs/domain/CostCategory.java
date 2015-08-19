@@ -1,5 +1,7 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class CostCategory {
         return id;
     }
 
+    @JsonIgnore
     public ApplicationFinance getApplicationFinance() {
         return applicationFinance;
     }
@@ -35,6 +38,7 @@ public class CostCategory {
         return costs;
     }
 
+    @JsonIgnore
     public Question getQuestion() {
         return question;
     }
