@@ -1,6 +1,7 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.ApplicationStatus;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.domain.UserApplicationRole;
 import com.worth.ifs.repository.*;
@@ -11,10 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,8 @@ public class ApplicationController {
     ApplicationRepository repository;
     @Autowired
     UserApplicationRoleRepository userAppRoleRepository;
+    @Autowired
+    ApplicationStatusRepository applicationStatusRepository;
     @Autowired
     UserRepository userRepository;
 
@@ -88,7 +88,25 @@ public class ApplicationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return new ResponseEntity<String>(headers, status);
+        return new ResponseEntity<>(headers, status);
+    }
+
+    @RequestMapping(value="/updateApplicationStatus", method=RequestMethod.GET)
+    public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
+                                                          @RequestParam("statusId") final Long statusId){
+
+        Application application = repository.findOne(id);
+        ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
+        application.setApplicationStatus(applicationStatus);
+        repository.save(application);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpStatus status = HttpStatus.OK;
+        return new ResponseEntity<>(headers, status);
+
     }
 
 }

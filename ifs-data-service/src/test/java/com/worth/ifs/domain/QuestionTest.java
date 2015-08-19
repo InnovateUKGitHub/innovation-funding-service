@@ -17,7 +17,7 @@ public class QuestionTest {
     String description;
     String guidanceQuestion;
     String guidanceAnswer;
-    Long characterCount;
+    Integer wordCount;
     String optionValues;
     List<Response> responses;
     QuestionType questionType;
@@ -31,7 +31,7 @@ public class QuestionTest {
         description = "testQuestionDescription";
         guidanceQuestion = "testGuidanceQuestion";
         guidanceAnswer = "testGuidanceAnswer";
-        characterCount = 100L;
+        wordCount = 100;
         optionValues = "testOptionValues";
         responses = new ArrayList<Response>();
         responses.add(new Response());
@@ -40,7 +40,7 @@ public class QuestionTest {
         questionType = new QuestionType();
 
 
-        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, characterCount);
+        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, wordCount);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class QuestionTest {
         Assert.assertEquals(question.getDescription(), description);
         Assert.assertEquals(question.getGuidanceQuestion(), guidanceQuestion);
         Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
-        Assert.assertEquals(question.getCharacterCount(), characterCount);
+        Assert.assertEquals(question.getWordCount(), wordCount);
         Assert.assertEquals(question.getOptionValues(), optionValues);
         Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getQuestionType(), questionType);

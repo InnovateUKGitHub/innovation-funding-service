@@ -10,7 +10,7 @@ var worthIFS = {
             worthIFS.initAutosaveElement();
             worthIFS.initUnsavedChangesWarning();
             worthIFS.closeAlertHide();
-            worthIFS.initCharacterCount();
+            worthIFS.initWordCount();
         }
     },
     collapsible : function(){
@@ -124,27 +124,27 @@ var worthIFS = {
         });
 
     },
-    initCharacterCount : function(){
+    initWordCount : function(){
         var options = {
-            callback: function (value) { updateCharacterCount(this);  },
+            callback: function (value) { updateWordCount(this);  },
             wait: 500,
             highlight: false,
             captureLength: 1
         }
-        jQuery(".character-count textarea").typeWatch( options );
-        jQuery(".character-count textarea").each(function(){
-            updateCharacterCount(this);
+        jQuery(".word-count textarea").typeWatch( options );
+        jQuery(".word-count textarea").each(function(){
+            updateWordCount(this);
         });
 
-        function updateCharacterCount(element){
-            delta = element.dataset.max_characters - element.value.length
+        function updateWordCount(element){
+            delta = element.dataset.max_words - element.value.split(" ").length
 
             count = element.value.length;
-            jQuery(element).parent(".character-count").find(".count-down").html(delta);
+            jQuery(element).parent(".word-count").find(".count-down").html(delta);
             if(delta < 0 ){
-                jQuery(element).parent(".character-count").addClass("character-count-reached");
+                jQuery(element).parent(".word-count").addClass("word-count-reached");
             }else{
-                jQuery(element).parent(".character-count").removeClass("character-count-reached");
+                jQuery(element).parent(".word-count").removeClass("word-count-reached");
             }
         }
 

@@ -26,7 +26,7 @@ public class Question {
     private String guidanceAnswer;
 
     @Column(length=5000)
-    private Long characterCount;
+    private Integer wordCount;
 
     @Column(length=5000)
     private String optionValues;
@@ -49,7 +49,7 @@ public class Question {
     @OneToOne(mappedBy="question", fetch = FetchType.LAZY)
     private CostCategory costCategory;
 
-    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Long characterCount) {
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -60,7 +60,7 @@ public class Question {
         this.description = description;
         this.guidanceQuestion = guidanceQuestion;
         this.guidanceAnswer = guidanceAnswer;
-        this.characterCount = characterCount;
+        this.wordCount = wordCount;
     }
 
     public Question(Long id, Competition competition, Section section, String name) {
@@ -95,8 +95,8 @@ public class Question {
         return optionValues;
     }
 
-    public Long getCharacterCount() {
-        return characterCount;
+    public Integer getWordCount() {
+        return (wordCount != null ? wordCount : Integer.valueOf(0)) ;
     }
 
     public String getGuidanceAnswer() {

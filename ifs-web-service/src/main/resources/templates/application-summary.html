@@ -36,7 +36,7 @@
     </div>
 
     <div class="alignright-button">
-        <button class="button">Submit application</button>
+        <a role="button" class="button" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}">Submit application</a>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
