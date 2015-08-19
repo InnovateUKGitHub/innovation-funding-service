@@ -27,9 +27,15 @@
                     <li>
                         <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
                     </li>
-                    <li th:each="section : ${sections}"  th:class="(${section.getId()} == ${currentSectionId}) ? 'active':''" >
+                    <li th:each="section : ${sections}"  th:class="(${section.getId()} == ${currentSectionId}) ? 'active':''">
                         <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${section.getId()})}"
-                            th:text="${section.getName()}"></a>
+                            th:text="${section.getName()}" th:if="${section.parentSection}==null"></a>
+                        <ul th:if="${section.getChildSections()}!=null">
+                            <li th:each="subSection : ${section.getChildSections()}" th:class="(${subSection.getId()} == ${currentSectionId}) ? 'active':''">
+                                <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
+                                    th:text="${subSection.getName()}"></a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>
@@ -42,12 +48,18 @@
             <div th:each="section : ${sections}"  th:remove="tag">
                  <div th:if="(${section.getId()} == ${currentSectionId})" th:remove="tag">
                       <h1 class="heading-xlarge" th:text="${section.getName()}"></h1>
-                      <p class="subtitle">TO BE FILLED IN FROM DB</p>
+                      <p class="subtitle" th:text="${section.getDescription()}"></p>
+                </div>
+                <div th:each="subSection : ${section.getChildSections()}" th:if="${section.getChildSections()}!=null and ${section.getId()} != ${currentSectionId}"  th:remove="tag">
+                    <div th:if="(${subSection.getId()} == ${currentSectionId})" th:remove="tag">
+                        <h1 class="heading-xlarge" th:text="${subSection.getName()}"></h1>
+                        <p class="subtitle" th:text="${subSection.getDescription()}"></p>
+                    </div>
                 </div>
             </div>
 
             <div th:remove="tag" th:each="question : ${currentSection.getQuestions()}">
-                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication})" />
+                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
