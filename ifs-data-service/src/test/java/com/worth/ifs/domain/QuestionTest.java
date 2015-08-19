@@ -17,7 +17,7 @@ public class QuestionTest {
     String description;
     String guidanceQuestion;
     String guidanceAnswer;
-    Long wordCount;
+    Integer wordCount;
     String optionValues;
     List<Response> responses;
     QuestionType questionType;
@@ -31,7 +31,7 @@ public class QuestionTest {
         description = "testQuestionDescription";
         guidanceQuestion = "testGuidanceQuestion";
         guidanceAnswer = "testGuidanceAnswer";
-        wordCount = 100L;
+        wordCount = 100;
         optionValues = "testOptionValues";
         responses = new ArrayList<Response>();
         responses.add(new Response());

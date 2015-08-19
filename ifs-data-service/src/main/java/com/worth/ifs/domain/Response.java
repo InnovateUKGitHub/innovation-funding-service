@@ -54,6 +54,17 @@ public class Response {
         return value;
     }
 
+    @JsonIgnore
+    public Integer getWordCount(){
+        return Integer.valueOf(this.value.split("\\s+").length);
+    }
+
+    @JsonIgnore
+    public Integer getWordCountLeft(){
+        return Integer.valueOf(question.getWordCount() - this.getWordCount());
+    }
+
+
     public Boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
