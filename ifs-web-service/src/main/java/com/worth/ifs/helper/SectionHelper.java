@@ -13,7 +13,7 @@ public class SectionHelper {
         List<Section> childSections = new ArrayList<Section>();
         getChildSections(sections, childSections);
         sections = sections.stream().filter(s -> !childSections.stream().anyMatch(c -> c.getId().equals(s.getId()))).sorted().collect(Collectors.toList());
-        sections.stream().forEach(s -> Collections.sort(s.getChildSections()));
+        sections.stream().filter(s -> s.getChildSections()!=null).forEach(s -> Collections.sort(s.getChildSections()));
         return sections;
     }
 
