@@ -55,10 +55,10 @@
 		</div>
 		<div class="grid-row">
 			<div class="column-third">
-				<input  class="form-control"
+				<input  class="form-control integer-validation-js"
 					th:disabled="${disabled}"
 					th:readonly="${disabled}"
-					type="text"
+					type="number"
 					th:attr="data-question_id=${id}+'_day'"
 					th:id="'question-'+${id}"
 					th:name="'question['+${id}+'][day]'"
@@ -67,10 +67,10 @@
 					/>
 			</div>
 			<div class="column-third">
-				<input  class="form-control"
+				<input  class="form-control integer-validation-js"
 					th:disabled="${disabled}"
 					th:readonly="${disabled}"
-					type="text"
+					type="number"
 					th:attr="data-question_id=${id}+'_month'"
 					th:id="'question-'+${id}"
 					th:name="'question['+${id}+'][month]'"
@@ -79,10 +79,10 @@
 					/>
 			</div>
 			<div class="column-third">
-				<input  class="form-control"
+				<input  class="form-control integer-validation-js"
 					th:disabled="${disabled}"
 					th:readonly="${disabled}"
-					type="text"
+					type="number"
 					th:attr="data-question_id=${id}+'_year'"
 					th:id="'question-'+${id}"
 					th:name="'question['+${id}+'][year]'"
@@ -95,10 +95,10 @@
 
 <div th:fragment="form-textduration (id, months)">
 	Duration <br/>
-	<input  class="form-control"
+	<input  class="form-control integer-validation-js"
 			th:disabled="${disabled}"
 			th:readonly="${disabled}"
-			type="text"
+			type="number"
 			th:attr="data-question_id=${id}"
 			th:id="'question-'+${id}"
 			th:name="'question['+${id}+']'"
@@ -110,6 +110,7 @@
 
 <div th:fragment="form-textarea">
 	<div th:class="${question.getCharacterCount() == 0} ? '' : 'character-count'">
+
 		<textarea
 		   th:disabled="${disabled}"
 		   th:readonly="${disabled}"
@@ -118,7 +119,8 @@
 		   th:name="'question['+${question.getId()}+']'"
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
 		</textarea>
-		<div class="grid-row" th:unless="${question.getCharacterCount() == 0}">
+
+		<div class="grid-row" th:unless="${question.getCharacterCount() == 0} or ${disabled}">
 			<div class="column-half column-half--first">&nbsp;</div>
 			<div class="column-half column-half--second">
 				<span class="count-label" >
