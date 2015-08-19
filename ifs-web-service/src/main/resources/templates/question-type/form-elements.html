@@ -106,25 +106,25 @@
 			/> months
 </div>
 
-<!-- ========================= textarea with character count =========================== -->
+<!-- ========================= textarea with word count =========================== -->
 
 <div th:fragment="form-textarea">
-	<div th:class="${question.getCharacterCount() == 0} ? '' : 'character-count'">
+	<div th:class="${question.getWordCount() == 0} ? '' : 'word-count'">
 
 		<textarea
 		   th:disabled="${disabled}"
 		   th:readonly="${disabled}"
-		   th:attr="data-question_id=${question.getId()},data-max_characters=${question.getCharacterCount()}"
+		   th:attr="data-question_id=${question.getId()},data-max_words=${question.getWordCount()}"
 		   cols="30" rows="10"
 		   th:name="'question['+${question.getId()}+']'"
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId()).getValue()} )">
 		</textarea>
 
-		<div class="grid-row" th:unless="${question.getCharacterCount() == 0} or ${disabled}">
+		<div class="grid-row" th:unless="${question.getWordCount() == 0} or ${disabled}">
 			<div class="column-half column-half--first">&nbsp;</div>
 			<div class="column-half column-half--second">
 				<span class="count-label" >
-					<span class="count-message">Characters remaining:</span>
+					<span class="count-message">Words remaining:</span>
 					<strong class="count-down" aria-live="polite">0</strong>
 				</span>
 			</div>
