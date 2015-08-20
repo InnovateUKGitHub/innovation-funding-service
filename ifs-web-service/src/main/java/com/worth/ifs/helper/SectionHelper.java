@@ -12,8 +12,14 @@ public class SectionHelper {
     public List<Section> getParentSections(List<Section> sections) {
         List<Section> childSections = new ArrayList<Section>();
         getChildSections(sections, childSections);
-        sections = sections.stream().filter(s -> !childSections.stream().anyMatch(c -> c.getId().equals(s.getId()))).sorted().collect(Collectors.toList());
-        sections.stream().filter(s -> s.getChildSections()!=null).forEach(s -> Collections.sort(s.getChildSections()));
+        sections = sections.stream()
+                .filter(s -> !childSections.stream()
+                        .anyMatch(c -> c.getId().equals(s.getId())))
+                .sorted()
+                .collect(Collectors.toList());
+        sections.stream()
+                .filter(s -> s.getChildSections()!=null)
+                .forEach(s -> Collections.sort(s.getChildSections()));
         return sections;
     }
 

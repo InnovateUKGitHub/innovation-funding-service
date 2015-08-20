@@ -8,6 +8,7 @@ import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
+import com.worth.ifs.service.SectionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class ApplicationFormController {
     ApplicationService applicationService;
     @Autowired
     ResponseService responseService;
+    @Autowired
+    SectionService sectionService;
 
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
@@ -49,6 +52,9 @@ public class ApplicationFormController {
 
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
+
+        List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
+        model.addAttribute("completedSections", completedSections);
 
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
@@ -83,12 +89,16 @@ public class ApplicationFormController {
 
         return "application-form";
     }
+
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button.
+     */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
     public String applicationFormSubmit(Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request){
-
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
 
         Application app = applicationService.getApplicationById(applicationId);
@@ -103,7 +113,10 @@ public class ApplicationFormController {
         for (Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){
                 String value = request.getParameter("question[" + question.getId() + "]");
-                responseService.saveQuestionResponse(user.getId(), applicationId, question.getId(), value);
+                Boolean saved = responseService.saveQuestionResponse(user.getId(), applicationId, question.getId(), value);
+                if(!saved){
+                    log.error("save failed. " + question.getId());
+                }
             }
         }
 
@@ -111,6 +124,13 @@ public class ApplicationFormController {
         Map<String, String[]> params = request.getParameterMap();
         this.saveApplicationDetails(app, params);
 
+        if(params.containsKey("mark_as_complete")){
+            Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
+            responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), true);
+        }else if(params.containsKey("mark_as_incomplete")){
+            Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
+            responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), false);
+        }
 
         this.addApplicationDetails(applicationId, model);
         model.addAttribute("currentSectionId", sectionId);
@@ -139,7 +159,9 @@ public class ApplicationFormController {
         applicationService.saveApplication(application);
     }
 
-
+    /**
+     * This method is for supporting ajax saving from the application form.
+     */
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
     public @ResponseBody JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
                                                   @RequestParam("value") String value,
