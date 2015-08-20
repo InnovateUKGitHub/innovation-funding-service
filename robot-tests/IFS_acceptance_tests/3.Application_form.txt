@@ -1,0 +1,114 @@
+*** Settings ***
+Library           Selenium2Library
+Library           string
+
+*** Test Cases ***
+Select one of the applications
+    Given the user is in the Dashboard page
+    When the Applicant clicks the "Rovel Additive Manufacturing Process" application
+    Then the Applicant should see the overview of the selected application
+
+Verify the Autosave for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant enters some text
+    and the Applicant refreshes the page
+    Then the text should be visible
+
+Verify the Questions guidance for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant clicks the "What should I include in project summary?" question
+    Then the guidance should be visible
+
+Verify the navigation for the "Rovel additive..." form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant clicks the sections
+    #Then the Applicant will navigate to the corect section
+
+Verify that the applicant can upload a file in the "Rovel additive..." \ form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant uploads a file
+    Then the file should be uploaded
+
+Verify the character count for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
+
+Verify the "review and submit" button
+    Given the Applicant opens the "Rovel additive" application form
+    When the Applicant clicks the "Review and submit" button
+    Then the applicant will navigate to the summary page
+
+*** Keywords ***
+the user is in the Dashboard page
+    go to    http://ifs.test.worth.systems/applicant/dashboard
+
+the Applicant clicks the "Rovel Additive Manufacturing Process" application
+    Click Link    link=Rovel Additive Manufacturing Process
+
+the Applicant should see the overview of the selected application
+    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
+
+the applicant clicks the "What should I include in project summary?" question
+    Click Element    css=.grid-row , .form-group:nth-child(4) summary
+
+the guidance should be visible
+    Page Should Contain Element    css=.grid-row , .form-group:nth-child(4) summary[aria-expanded="false"]
+    Page Should Contain    This is an opportunity to provide a short summary of the key objectives and focus areas of the project. It is important that this summary is presented in reference to the main outline of the project, with sufficient information to provide a clear understanding of the overall vision of the project and its innovative nature.
+
+the Applicant opens the "Rovel additive" application form
+    Go To    http://ifs.test.worth.systems/applicant/dashboard
+    Click Element    link=Rovel Additive Manufacturing Process
+    Click Element    link=Application details
+
+the applicant enters some text
+    Clear Element Text    name=question[11]
+    Input Text    name=question[11]    Save test #123
+    Clear Element Text    name=question[12]
+    Input Text    name=question[12]    I am a robot
+    Sleep    Sleep    10 seconds
+    Click Element    link= Scope (Gateway question)
+    Clear Element Text    name=question[13]
+    Input Text    name=question[13]    test text 2
+    Sleep    Sleep 10 seconds
+    Click Element    Click Element    link=Business proposition (Q1 - Q4)
+    Clear Element Text    Clear Element Text    name=question[1]
+    Input Text    name=question[1]    test text 3
+    Sleep    10 seconds
+    Click Element    link=Funding (Q9 - Q10)
+
+the Applicant refreshes the page
+    Reload Page
+
+the text should be visible
+    Click Element    link=Application details
+    Textfield Should Contain    name=question[12]    I am a robot
+    Click Element    link=Scope (Gateway question)
+    Textarea Should Contain    name=question[13]    test text 2
+    Click Element    link=Business proposition (Q1 - Q4)
+    Textarea Should Contain    name=question[1]    test text 3
+    Click Element    link=Funding (Q9 - Q10)
+    Textarea Should Contain    name=question[15]    text test 5
+
+the applicant clicks the sections
+    Click Element    link= Scope (Gateway question)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/2/?question=1
+    Click Element    link= Business proposition (Q1 - Q4)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/3/?question=1
+    Click Element    link= Project approach (Q5 - Q8)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/4/?question=1
+    Click Element    link=Funding (Q9 - Q10)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/5/?question=1
+    Click Element    link=Finances
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/6/?question=1
+
+the applicant uploads a file
+    Choose File    css=div.grid-row > div.column-two-thirds > form > div:nth-child(5) > div:nth-child(3) > input[type="file"]    /home/mtsiropoulos/Pictures/images (2).jpg
+
+the file should be uploaded
+    Element Should Be Visible    //*[@id="content"]/div[2]/div[2]/form/div[3]/div[3]/input
+
+the Applicant clicks the "Review and submit" button
+    Page Should Contain element    link=Review & submit
+    Click Element    link=Review & submit
+
+the applicant will navigate to the summary page
+    Location Should Be    http://ifs.test.worth.systems/application/1/summary
