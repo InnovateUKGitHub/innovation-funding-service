@@ -94,7 +94,19 @@ public class ApplicationService extends BaseServiceProvider {
         } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
             log.info("Status code not_found .....");
         }
+    }
+    public Double getCompleteQuestionsPercentage(Long applicationId){
+        //getProgressPercentageByApplicationId/{applicationId}
+        if(applicationId == null){
+            log.error("No application ID!! application id is null");
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + applicationRestURL + "/getProgressPercentageByApplicationId/{applicationId}";
+
+        ObjectNode jsonResponse = restTemplate.getForObject(url, ObjectNode.class, applicationId);
 
 
+        return jsonResponse.get("completedPercentage").asDouble();
     }
 }

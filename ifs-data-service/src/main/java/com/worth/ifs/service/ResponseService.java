@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class ResponseService extends BaseServiceProvider {
         return Arrays.asList(responses);
     }
 
-    public boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
+    public Boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
 
@@ -43,7 +44,8 @@ public class ResponseService extends BaseServiceProvider {
         node.put("userId", userId);
         node.put("applicationId", applicationId);
         node.put("questionId", questionId);
-        node.put("value", value);
+        node.put("value", HtmlUtils.htmlEscape(value));
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,6 +61,31 @@ public class ResponseService extends BaseServiceProvider {
             return false;
         }
 
+        return false;
+    }
+    public Boolean markQuestionAsComplete(Long applicationId, Long questionId, Long userId, Boolean isComplete){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + responseRestURL + "/markResponseAsComplete" +
+                "?applicationId={applicationId}" +
+                "&questionId={questionId}" +
+                "&userId={userId}" +
+                "&isComplete={isComplete}";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+        log.info("ApplicationService.markQuestionAsComplete send it!");
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, isComplete);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("ApplicationService, marked as complete == ok : "+ response.getBody());
+            return true;
+        } else {
+            log.warn("Call failed.....");
+            log.error("failed with url "+ url);
+        }
         return false;
     }
 }

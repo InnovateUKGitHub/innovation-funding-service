@@ -58,3 +58,17 @@
         </div>
     </div>
 </div>
+
+<div th:fragment="progress-indicator">
+    <div class="progress-container">
+        <div class="progress-indicator">
+            <div class="start">0%</div>
+            <div class="progress" th:style="'width:'+${percentage}+'%'">
+                <div th:text="${percentage}+'%'">
+                    0%
+                </div>
+            </div>
+            <div class="end">100%</div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,7 @@
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
-            <div class="form-control-wrap">
+            <div th:class="'form-control-wrap '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                 <div class="form-group_header">
                     Information goes here
                 </div>
