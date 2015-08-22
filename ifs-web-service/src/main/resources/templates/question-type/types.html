@@ -18,7 +18,7 @@
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-           
+
             <div class="form-control-wrap">
                 <div class="form-group_header">
                     Information goes here
@@ -153,7 +153,14 @@
                 <tbody>
                 <tr>
                     <th>Working Days per Year</th>
-                    <td><input class="form-control form-control-1-3" disabled="" type="text" value="232" id="labour-costs-days-per-year-field" /> days</td>
+                    <td>
+                        <input  class="form-control form-control-1-3"
+                                disabled=""
+                                type="text"
+                                attr="working_days"
+                                id="working_days"
+                                name="working_days"
+                                value="63" /></td>
                     <td><a href="#">change working days</a></td>
                 </tr>
                 </tbody>

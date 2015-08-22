@@ -22,11 +22,23 @@ public class CostCategory {
     @OneToMany(mappedBy="costCategory")
     private List<Cost> costs = new ArrayList<Cost>();
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
+    @JsonIgnore
     public Long getId() {
         return id;
+    }
+
+    public CostCategory() {
+
+    }
+
+    public CostCategory(Long id, ApplicationFinance applicationFinance, Question question) {
+        this.id = id;
+        this.applicationFinance = applicationFinance;
+        this.question = question;
     }
 
     @JsonIgnore
@@ -38,7 +50,6 @@ public class CostCategory {
         return costs;
     }
 
-    @JsonIgnore
     public Question getQuestion() {
         return question;
     }

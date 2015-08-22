@@ -15,4 +15,5 @@ public interface UserApplicationRoleRepository extends PagingAndSortingRepositor
     List<UserApplicationRole> findByUser(@Param("user") User user);
     List<UserApplicationRole> findByUserAndApplication(@Param("user") User user, @Param("application") Application application);
     List<UserApplicationRole> findByApplication(@Param("application") Application application);
+    UserApplicationRole findByUserIdAndApplicationId(@Param("userId") Long userId, @Param("applicationId") Long applicationId);
 }

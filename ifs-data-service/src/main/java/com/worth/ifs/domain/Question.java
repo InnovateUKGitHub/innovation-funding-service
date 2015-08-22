@@ -46,8 +46,8 @@ public class Question {
     @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
     private List<Response> responses;
 
-    @OneToOne(mappedBy="question", fetch = FetchType.LAZY)
-    private CostCategory costCategory;
+    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
+    private List<CostCategory> costCategories;
 
     public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount) {
         this.optionValues = optionValues;
@@ -90,7 +90,6 @@ public class Question {
         return id;
     }
 
-
     public String getOptionValues() {
         return optionValues;
     }
@@ -130,7 +129,8 @@ public class Question {
         return questionType;
     }
 
-    public CostCategory getCostCategory() {
-        return costCategory;
+    @JsonIgnore
+    public List<CostCategory> getCostCategory() {
+        return costCategories;
     }
 }

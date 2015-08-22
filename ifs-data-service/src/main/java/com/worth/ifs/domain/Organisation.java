@@ -1,5 +1,7 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,12 @@ public class Organisation {
         return name;
     }
 
+    @JsonIgnore
     public List<UserApplicationRole> getUserApplicationRoles() {
         return userApplicationRoles;
     }
 
+    @JsonIgnore
     public List<ApplicationFinance> getApplicationFinances() {
         return applicationFinances;
     }

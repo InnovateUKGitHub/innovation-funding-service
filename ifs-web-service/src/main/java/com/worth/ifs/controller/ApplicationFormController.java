@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.ResponseService;
+import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +31,19 @@ public class ApplicationFormController {
     ApplicationService applicationService;
     @Autowired
     ResponseService responseService;
-
+    @Autowired
+    ApplicationFinanceService applicationFinanceService;
+    @Autowired
+    UserService userService;
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
+    @Autowired
+    CostCategoryService costCategoryService;
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    private void addApplicationDetails(Long applicationId, Model model){
+    private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
         Application application = applicationService.getApplicationById(applicationId);
         SectionHelper sectionHelper = new SectionHelper();
         model.addAttribute("currentApplication", application);
@@ -47,8 +51,13 @@ public class ApplicationFormController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
+
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
+
+        log.debug("USER ID: " + userId + " application ID: " + applicationId);
+        List<CostCategory> costCategories = getApplicationFinanceDetails(userId, applicationId);
+        model.addAttribute("costs", costCategories);
 
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
@@ -58,17 +67,29 @@ public class ApplicationFormController {
         model.addAttribute("responses", responseMap);
     }
 
+    private List<CostCategory> getApplicationFinanceDetails(Long applicationId, Long userId) {
+        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
+
+        log.debug("find organisation id: " + userApplicationRole.getOrganisation());
+        ApplicationFinance applicationFinance = applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
+        return costCategoryService.getCostCategoriesByApplicationFinance(applicationFinance.getId());
+    }
+
     @RequestMapping("/{applicationId}")
-    public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
+    public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
+                                  HttpServletRequest request){
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        this.addApplicationDetails(applicationId, user.getId(), 0L, model);
         return "application-form";
     }
 
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId){
+                                     @PathVariable("sectionId") final Long sectionId,
+                                     HttpServletRequest request){
         Application app = applicationService.getApplicationById(applicationId);
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
         Competition comp = app.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -77,7 +98,7 @@ public class ApplicationFormController {
                 filter(x -> x.getId().equals(sectionId)).
                 findFirst().get();
 
-        this.addApplicationDetails(applicationId, model);
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         model.addAttribute("currentSectionId", sectionId);
         model.addAttribute("currentSection", section);
 
@@ -112,7 +133,7 @@ public class ApplicationFormController {
         this.saveApplicationDetails(app, params);
 
 
-        this.addApplicationDetails(applicationId, model);
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         model.addAttribute("currentSectionId", sectionId);
         model.addAttribute("currentSection", section);
         model.addAttribute("applicationSaved", true);
