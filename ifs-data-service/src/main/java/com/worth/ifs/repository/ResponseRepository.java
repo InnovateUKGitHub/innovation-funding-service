@@ -14,5 +14,6 @@ import java.util.List;
 public interface ResponseRepository extends PagingAndSortingRepository<Response, Long> {
     List<Response> findByUserApplicationRole(@Param("userApplicationRole") UserApplicationRole userApplicationRole);
     Response findByApplicationAndQuestion(@Param("application") Application application, @Param("question") Question question);
+    Response findByApplicationIdAndQuestionId(@Param("applicationId") Long applicationId, @Param("questionId") Long questionId);
     List<Response> findAll();
 }

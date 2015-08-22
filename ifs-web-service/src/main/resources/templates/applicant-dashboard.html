@@ -17,17 +17,30 @@
             <h3 class="heading-large">In Progress</h3>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsInProcess}">
-                    <div class="grid-row">
+                    <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-two-thirds">
                             <h4 class="heading-medium">
                                 <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
-                            <strong th:if="${application.getApplicationStatus().getName() == 'submitted'}" class="greentext">Application submitted</strong>
+
+                            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
                         </div>
                         <div class="column-one-third">
                             <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
 
+                        </div>
+                    </div>
+                    <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >
+                        <div class="column-two-thirds">
+                            <h4 class="heading-medium">
+                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                            </h4>
+                            <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
+                            <strong class="greentext">Application submitted</strong>
+                        </div>
+                        <div class="column-one-third">
+                            Awaiting assessment
                         </div>
                     </div>
                 </li>

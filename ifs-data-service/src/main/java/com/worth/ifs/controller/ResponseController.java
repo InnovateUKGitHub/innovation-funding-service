@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
@@ -53,6 +54,28 @@ public class ResponseController {
         throw new NotImplementedException();
     }
 
+    @RequestMapping(value="/markResponseAsComplete")
+    public ResponseEntity<String> markResponseAsComplete(@RequestParam("applicationId") final Long applicationId,
+                                                         @RequestParam("questionId") final Long questionId,
+                                                         @RequestParam("userId") final Long userId,
+                                                         @RequestParam(value = "isComplete", required = false) Boolean markedAsComplete){
+        if(markedAsComplete == null){
+            markedAsComplete = true;
+        }
+
+        Application application = applicationRepository.findOne(applicationId);
+        Question question = questionRepository.findOne(questionId);
+
+        Response response = responseRepository.findByApplicationAndQuestion(application, question);
+        response.setMarkedAsComplete(markedAsComplete);
+        responseRepository.save(response);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(headers, HttpStatus.OK);
+
+    }
+
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
     public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
         HttpHeaders headers = new HttpHeaders();
@@ -62,6 +85,7 @@ public class ResponseController {
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long questionId = jsonObj.get("questionId").asLong();
         String value = jsonObj.get("value").asText("");
+        value = HtmlUtils.htmlUnescape(value);
 
         log.info("Save response: "+applicationId+"/"+questionId+"/"+userId);
 

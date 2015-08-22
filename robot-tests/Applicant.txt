@@ -1,77 +1,129 @@
 *** Settings ***
 Library           Selenium2Library
+Library           string
 
 *** Test Cases ***
-Verify That all the users present in the drop-down
-    Given the url is open
-    When the guest user clicks the login drop-down
-    Then all the users should be visible
+Open browser(Firefox)
+    The user opens the browser
+
+Invalid Login
+    Given the user is not logged-in
+    When the guest user inserts correct username
+    And the guest user inserts wrong password
+    And the guest user clicks the log-in button
+    Then the guest user should get an error message
 
 Login as Applicant
-    Given the url is open
-    When the guest user clicks the login drop-down
+    Given the user is not logged-in
+    When the guest user inserts applicant user name
+    And the user inserts password
     And the guest user clicks the log-in button
     Then the guest user should be logged-in as Applicant and redirected to the My applications page
 
 Select one of the applications
     Given the user is logged in as applicant
-    #When the user clicks the My application button
     When the Applicant clicks the "Rovel Additive Manufacturing Process" application
     Then the Applicant should see the overview of the selected application
 
 List with sections for the application overview
     Given the Applicant is in the application overview page
-    Then the Applicant should see the sections
-    #and the Applicant should see the status of each section
+    Then the applicant should see six sections
 
-List of sub-section in the Myapplication overview page
-    Given Applicant is in the my application overview page
-    When user clicks the "Applicant details" section
-    Then the "Applicant detail" sub-sections should be visible
+Verify that when Applicant clicks the "Scope" this section is expanded
+    Given the Applicant is in the application overview page
+    Then the Applicant clicks the "Scope" section
+    Then the First section should not be expanded
+    And the first section should be hidden
+    And the second button should be expanded
+    And the second section should be visible
+    And the "Scope" sub-section should be visible
 
-Scope sub-sections
-    Given Applicant is in the my application overview page
-    When Applicant clicks the "Scope" section
-    Then the "Scope" sub-section should be visible
+Verify the Autosave for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant enters some text
+    and the Applicant refreshes the page
+    Then the text should be visible
 
-Business proposition sub-sections
-    Given Applicant is in the my application overview page
-    When Applicant clicks the "Business proposition" section
-    Then the "Business proposition" questions should be visible
+Verify the Questions guidance for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant clicks the "What should I include in project summary?" question
+    Then the guidance should be visible
 
-project approach sub-sections
-    Given Applicant is in the my application overview page
-    When Applicant clicks the "Project approach" section
-    Then the "Project approach" questions should be visible
+Verify the navigation for the "Rovel additive..." form
+    Given the Applicant opens the "Rovel additive" application form
+    When the appicant clicks the sections
+    #Then the Applicant will navigate to the corect section
 
-Funding sub-sections
-    Given Applicant is in the my application overview page
-    When Applicant clicks the "Funding" section
-    Then the "Funding" questions should be visible
+Verify that the applicant can upload a file in the "Rovel additive..." \ form
+    Given the Applicant opens the "Rovel additive" application form
+    When the applicant uploads a file
+    Then the file should be uploaded
 
-Finances sub-sections
-    Given Applicant is in the my application overview page
-    When Applicant clicks the "Finances" section
-    Then the "Finances" sub-sections should be visible
+Verify the character count for the "Rovel additive..." Application form
+    Given the Applicant opens the "Rovel additive" application form
 
-The Applicant logs-out
+Verify the "review and submit" button
+    Given the Applicant opens the "Rovel additive" application form
+    When the Applicant clicks the "Review and" submit button
+    Then the applicant will navigate to the summary page
+
+Verify the "Review and submit" button (overview page)
+    Given the applicant is in the "Overview page"
+    When the applicant can see the "Review and submit button" (overview page)
+    and the applicant clicks the Review and submit button (overview page)
+    Then the applicant will navigate to the summary page
+
+Log-out
     Given the Applicant goes to Dashboard page
     When The Applicant clicks the log-out button
     Then the applicant should be logged-out
 
-*** Keywords ***
-all the users should be visible
-    Page Should Contain Element    css=#id_user [value="123abc"]
-    Page Should Contain Element    css=#id_user [value="456def"]
-    Page Should Contain Element    css=#id_user [value="789ghi"]
-    Page Should Contain Element    css=#id_user [value="123def"]
-    Page Should Contain Element    css=#id_user [value="123ghi"]
+Verify the "Submit button" is dissabled when the state of the application is not valid
+    Given the appication is not valid
+    When when the Applicant is in the summary page
+    Then the submit button should be disabled
 
-the url is open
+Verify that the user gets a warning message when clicks the submit button
+    Given the application is valid
+    When the applicant submits the application
+    Then the applicant should get a warning message
+
+Verify the submit flow
+    Given the user is in the summary page
+    and the "Submit" button is visible
+    When the user clicks the "Submit" \ button
+    and the applicant navigates to the confirm-submit page
+    and the applicant clicks the "Yes, I want to submit my application"
+    Then the applicant will navigate to the submit page
+    and the "Return to dashboard page" button will be visible
+
+Verify the succceslul submit page
+    Given that the applicant has a valid application
+    When the applicant submits the application
+    Then the Applicant should navigate to the
+
+*** Keywords ***
+The user opens the browser
     Open Browser    http://ifs.test.worth.systems/login
 
-the guest user clicks the login drop-down
-    Click Element    css=select.form-control
+the user is not logged-in
+    Element Should Not Be Visible    link=My dashboard
+    Element Should Not Be Visible    link=Logout
+
+the guest user inserts correct username
+    Input Text    id=id_email    applicant@applicant.org
+
+the guest user inserts wrong password
+    Input Password    id=id_password    testtest
+
+the guest user should get an error message
+    Element Should Be Visible    id=error-summary-heading-example-1
+
+the guest user inserts applicant user name
+    Input Text    id=id_email    applicant@innovate.org
+
+the user inserts password
+    Input Password    id=id_password    test
 
 the guest user clicks the log-in button
     Click Button    css=input.button
@@ -89,78 +141,150 @@ the Applicant clicks the "Rovel Additive Manufacturing Process" application
     Click Link    link=Rovel Additive Manufacturing Process
 
 the Applicant should see the overview of the selected application
-    Location Should Be    http://ifs.test.worth.systems/application/1
+    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
 
 the Applicant is in the application overview page
-    Location Should Be    http://ifs.test.worth.systems/application/1
+    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
 
-the applicant should see the sections
-    Page Should Contain Element    link=Application details
-    Page Should Contain Element    link=Scope (Gateway question)
-    Page Should Contain Element    link=Business proposition (Q1 - Q4)
-    Page Should Contain Element    link=Project approach (Q5 - Q8)
-    Page Should Contain Element    link=Funding (Q9 - Q10)
-    Page Should Contain Element    link=Finances
+the applicant should see six sections
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(1)
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(2)
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(3)
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(4)
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(5)
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(6)
 
-the Applicant should see the status of each section
-    Page Should Contain Element    css=span.section-status
+the Applicant clicks the "Scope" section
+    [Documentation]    1. click second section
+    Click Element    css=.section-overview > h2:nth-of-type(2) button
 
-Applicant is in the my application overview page
-    Go To    http://ifs.test.worth.systems/application/1
+The First section should not be expanded
+    [Documentation]    Assumption: page is loaded with first section option because of /section/1
+    ...
+    ...
+    ...    2. check if the first button is now not expanded anymore (aria-expanded=false)
+    ...
+    ...    4. check if the second button is now expanded (aria-expanded=true)
+    ...
+    ...    5. check if the second section is now visible \ (aria-hidden=false)
+    Page Should Contain Element    css=.section-overview > h2:nth-of-type(1) button[aria-expanded="false"]
 
-user clicks the "Applicant details" section
-    Click Element    link=Application details
+the first section should be hidden
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(1)[aria-hidden="true"]
 
-the "Applicant detail" sub-sections should be visible
-    Page Should Contain Link    link=Application details
-    Page Should Contain Link    link=Project Summary
-    Page Should Contain Link    link=Public Description
+the second button should be expanded
+    Page Should Contain Element    css=.section-overview > h2:nth-of-type(2) button[aria-expanded="true"]
 
-Applicant clicks the "Scope" section
-    Click Element    link=Scope (Gateway question)
+the second section should be visible
+    Page Should Contain Element    css=.section-overview > div:nth-of-type(2)[aria-hidden="false"]
 
 the "Scope" sub-section should be visible
-    Page Should Contain Link    Link=Scope
+    Element Should Be Visible    link=How does your application align with the specific competition scope?
 
-Applicantclicks the "Business proposition" section
-    Click Element    link=Business proposition (Q1 - Q4)
-
-the "Business proposition" questions should be visible
-    Page Should Contain Link    link=1. What is the business opportunity that this project addresses?
-    Page Should Contain Link    link=2. What is the size of the market opportunity that this project might open up?
-    Page Should Contain Link    link=3. How will the results of the project be exploited and disseminated?
-    Page Should Contain Link    link=4. What economic, social and environmental benefits is the project expected to deliver?
-
-Applicant clicks the "Project approach" section
-    Click Element    link=Project approach (Q5 - Q8)
-
-the "Project approach" questions should be visible
-    Page Should Contain Link    link=5. What technical approach will be adopted and how will the project be managed?
-    Page Should Contain Link    link=6. What is innovative about this project?
-    Page Should Contain Link    link=7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?
-    Page Should Contain Link    link=8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?
-
-Applicant clicks the "Funding" section
-    Click Element    link=Funding (Q9 - Q10)
-
-the "Funding" questions should be visible
-    Page Should Contain Link    link=9. What is the financial commitment required for the project?
-    Page Should Contain Link    link=10. How does financial support from Innovate UK and its funding collaborators add value?
-
-Applicant clicks the "Finances" section
-    Click Element    link=Finances
-
-the "Finances" sub-sections should be visible
-    Page Should Contain Link    link=Finances
-    Page Should Contain Link    link=Your finances
-    Page Should Contain Link    link=Project financial summary
+The Applicant clicks the log-out button
+    Click Element    link=Logout
+    Set Selenium Speed    .2
 
 the Applicant goes to Dashboard page
     Go To    http://ifs.test.worth.systems/applicant/dashboard
 
-The Applicant clicks the log-out button
-    Click Element    link=Logout
+the Applicant opens the "Rovel additive" application form
+    Go To    http://ifs.test.worth.systems/applicant/dashboard
+    Click Element    link=Rovel Additive Manufacturing Process
+    Click Element    link=Project summary
+
+the applicant enters some text
+    Clear Element Text    name=question[11]
+    Input Text    name=question[11]    Save test #123
+    Clear Element Text    name=question[12]
+    Input Text    name=question[12]    I am a robot
+    Sleep    10 seconds
+    Click Element    link= Scope (Gateway question)
+    Clear Element Text    name=question[13]
+    Input Text    name=question[13]    test text 2
+    Sleep    10 seconds
+    Click Element    link=Business proposition (Q1 - Q4)
+    Clear Element Text    name=question[1]
+    Input Text    name=question[1]    test text 3
+    Sleep    10 seconds
+    Click Element    link=Funding (Q9 - Q10)
+
+the Applicant refreshes the page
+    Reload Page
+
+the text should be visible
+    Click Element    link=Application details
+    Textarea Should Contain    name=question[12]    I am a robot
+    Click Element    link=Scope (Gateway question)
+    Textarea Should Contain    name=question[13]    test text 2
+    Click Element    link=Business proposition (Q1 - Q4)
+    Textfield Should Contain    name=question[1]    test text 3
+    Click Element    link=Funding (Q9 - Q10)
+    Textarea Should Contain    name=question[15]    text test 5
+
+the applicant clicks the "What should I include in project summary?" question
+    Click Element    css=.grid-row > .column-two-thirds > form > div:nth-child(5) > div:nth-child(1)> details > summary
+
+the guidance should be visible
+    Page Should Contain Element    css=.grid-row > .column-two-thirds > form > div:nth-child(5) > div:nth-child(1)> details > summary[aria-expanded="true"]
+    Page Should Contain    This is an opportunity to provide a short summary of the key objectives and focus areas of the project. It is important that this summary is presented in reference to the main outline of the project, with sufficient information to provide a clear understanding of the overall vision of the project and its innovative nature.
 
 the applicant should be logged-out
     Location Should Be    http://ifs.test.worth.systems/login
     Page Should Not Contain Element    link=Logout
+
+the appicant clicks the sections
+    Click Element    link= Scope (Gateway question)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/2/?question=1
+    Click Element    link= Business proposition (Q1 - Q4)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/3/?question=1
+    Click Element    link= Project approach (Q5 - Q8)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/4/?question=1
+    Click Element    link=Funding (Q9 - Q10)
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/5/?question=1
+    Click Element    link=Finances
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/6/?question=1
+
+the applicant uploads a file
+    Choose File    css=div.grid-row > div.column-two-thirds > form > div:nth-child(5) > div:nth-child(3) > input[type="file"]    /home/mtsiropoulos/Pictures/images (2).jpg
+
+the file should be uploaded
+    Element Should Be Visible    //*[@id="content"]/div[2]/div[2]/form/div[3]/div[3]/input
+
+the Applicant clicks the "Review and" submit button
+    Page Should Contain Link    link=Review & submit
+    Click Element    link=Review & submit
+
+the applicant will navigate to the summary page
+    Location Should Be    http://ifs.test.worth.systems/application/1/summary
+
+the applicant is in the "Overview page"
+    Go To    http://ifs.test.worth.systems/applicant/dashboard
+    Click Element    link=Rovel Additive Manufacturing Process
+
+the applicant clicks the Review and submit button (overview page)
+    click element    link=Review & submit
+
+the applicant can see the "Review and submit button" (overview page)
+    Page Should Contain Element    link=Review & submit
+
+the user is in the summary page
+    Go To    http://ifs.test.worth.systems/application/1/summary
+
+the "Submit" button is visible
+    Page Should Contain Element    link= Submit application
+
+the user clicks the "Submit" \ button
+    Click Element    link=Submit application
+
+the applicant navigates to the confirm-submit page
+    Location Should Be    http://ifs.test.worth.systems/application/1/confirm-submit
+
+the applicant clicks the "Yes, I want to submit my application"
+    Click Element    link=Yes, I want to submit my application
+
+the applicant will navigate to the submit page
+    Location Should Be    http://ifs.test.worth.systems/application/1/submit
+
+the "Return to dashboard page" button will be visible
+    Page Should Contain Element    link=Return to dashboard

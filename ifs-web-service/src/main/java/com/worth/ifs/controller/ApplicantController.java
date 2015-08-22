@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,10 +39,17 @@ public class ApplicantController {
     public String dashboard(Model model, HttpServletRequest request) {
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
         List<Application> applications = applicationService.getApplicationsByUserId(user.getId());
-        log.debug("Total applications: " + applications.size());
+        log.info("Total applications: " + applications.size());
 
+        Map<Long, Integer> applicationProgress = new HashMap<>();
         for (Application application : applications) {
-            log.debug("State: " + application.getApplicationStatus().getName());
+            log.info("State: " + application.getApplicationStatus().getName());
+
+            if(application.getApplicationStatus().getName().equals("created")){
+                Double progress = applicationService.getCompleteQuestionsPercentage(application.getId());
+                log.info("Application progress : " + progress.intValue());
+                applicationProgress.put(application.getId(), progress.intValue());
+            }
         }
 
         ArrayList<Application> inprogress = applications.stream()
@@ -54,6 +63,7 @@ public class ApplicantController {
         log.debug("inprogress size " + inprogress.size());
         log.debug("finished size " + finished.size());
 
+        model.addAttribute("applicationProgress", applicationProgress);
         model.addAttribute("applicationsInProcess", inprogress);
         model.addAttribute("applicationsFinished", finished);
 

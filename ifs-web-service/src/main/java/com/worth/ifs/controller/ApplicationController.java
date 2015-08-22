@@ -6,6 +6,7 @@ import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
+import com.worth.ifs.service.SectionService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,9 @@ public class ApplicationController {
     ApplicationService applicationService;
 
     @Autowired
+    SectionService sectionService;
+
+    @Autowired
     UserService userService;
 
     /**
@@ -57,6 +61,15 @@ public class ApplicationController {
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
+
+        List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
+        model.addAttribute("completedSections", completedSections);
+        List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
+        model.addAttribute("incompletedSections", incompletedSections);
+
+        Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
+        model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
+
 
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);

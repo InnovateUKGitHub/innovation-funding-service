@@ -1,9 +1,8 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.ApplicationStatus;
-import com.worth.ifs.domain.User;
-import com.worth.ifs.domain.UserApplicationRole;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.domain.*;
 import com.worth.ifs.repository.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ApplicationController exposes Application data through a REST API.
@@ -31,6 +31,8 @@ public class ApplicationController {
     ApplicationStatusRepository applicationStatusRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ResponseRepository responseRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -89,6 +91,42 @@ public class ApplicationController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return new ResponseEntity<>(headers, status);
+    }
+
+    @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
+    public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+        Application application = repository.findOne(applicationId);
+        List<Section> sections = application.getCompetition().getSections();
+        List<Question> questions = sections.stream()
+                .flatMap((s) -> s.getQuestions().stream())
+                .collect(Collectors.toList());
+
+
+        Application app = repository.findOne(applicationId);
+        List<UserApplicationRole> userAppRoles = app.getUserApplicationRoles();
+
+        List<Response> responses = new ArrayList<Response>();
+        for (UserApplicationRole userAppRole : userAppRoles) {
+            responses.addAll(responseRepository.findByUserApplicationRole(userAppRole));
+        }
+
+        int countCompleted = 0;
+        for (Response response : responses) {
+            if(response.isMarkedAsComplete()){
+                countCompleted++;
+            }
+        }
+
+        log.info("Total questions" + questions.size());
+        log.info("Total completed questions" + countCompleted);
+
+        double percentageCompleted = (100 / questions.size()) * countCompleted;
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("completedPercentage", percentageCompleted);
+        return node;
     }
 
     @RequestMapping(value="/updateApplicationStatus", method=RequestMethod.GET)
