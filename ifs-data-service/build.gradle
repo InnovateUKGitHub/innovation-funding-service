@@ -60,6 +60,9 @@ dependencies {
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     compile("org.projectlombok:lombok:1.16.2")
     compile("com.jayway.jsonpath:json-path-assert:2.0.0")
+    compile("org.springframework.hateoas:spring-hateoas")
+    compile("com.jayway.jsonpath:json-path")
+
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile group: 'org.hamcrest', name: 'hamcrest-core'
@@ -81,6 +84,7 @@ task client(type: Jar) {
         include "com/worth/ifs/service/**"
         include "com/worth/ifs/domain/**"
         include "com/worth/ifs/constant/**"
+        include "com/worth/ifs/resource/**"
     }
 }
 task clientCopy(type: Copy){
@@ -99,6 +103,6 @@ task wrapper(type: Wrapper) {
 
 task deployToTomcat(type: Copy) {
     from war
-    into "../../apache-tomcat-data/webapps"
+    into "/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
     rename ('(.*).war', 'ROOT.war')
 }

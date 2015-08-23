@@ -19,7 +19,6 @@ public class CostService extends BaseServiceProvider {
     String costRestURL;
 
     public void addAnother(Long costCategoryId) {
-        System.out.println("CATOSGDG " + costCategoryId);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(dataRestServiceURL + costRestURL + "/addAnother/"+costCategoryId, costCategoryId);
     }

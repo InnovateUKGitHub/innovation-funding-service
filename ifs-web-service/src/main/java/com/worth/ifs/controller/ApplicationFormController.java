@@ -84,8 +84,6 @@ public class ApplicationFormController {
 
     private ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
         UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
-
-        log.debug("find organisation id: " + userApplicationRole.getOrganisation());
         return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
@@ -127,7 +125,6 @@ public class ApplicationFormController {
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
-        log.debug("------- SETION ID: " + sectionId);
         // get the section that we want to show, so we can use this on to show the correct questions.
         Section section = sections.stream().
                 filter(x -> x.getId().equals(sectionId)).
