@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.helper.SectionHelper;
+import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/application-form")
 public class ApplicationFormController {
     private final Log log = LogFactory.getLog(getClass());
+    public final String LABOUR = "Labour";
+    public final String WORKING_DAYS_PER_YEAR = "Working days per year";
 
     @Autowired
     ApplicationService applicationService;
@@ -37,6 +40,8 @@ public class ApplicationFormController {
     UserService userService;
     @Autowired
     SectionService sectionService;
+    @Autowired
+    CostService costService;
     
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
@@ -61,23 +66,27 @@ public class ApplicationFormController {
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
 
-        List<CostCategory> costCategories = getApplicationFinanceDetails(userId, applicationId);
-        model.addAttribute("costs", costCategories);
-
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
             responseMap.put(response.getQuestion().getId(), response);
         }
         model.addAttribute("responses", responseMap);
+
+        ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceDetails(userId, applicationId);
+        HashMap<Long, CostCategory> costCategoriesMap = new HashMap<>();
+        model.addAttribute("applicationFinanceResource", applicationFinanceResource);
+
+        Section currentSection = getSection(application, currentSectionId);
+        model.addAttribute("currentSectionId", currentSectionId);
+        model.addAttribute("currentSection", currentSection);
     }
 
-    private List<CostCategory> getApplicationFinanceDetails(Long applicationId, Long userId) {
+    private ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
         UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
 
         log.debug("find organisation id: " + userApplicationRole.getOrganisation());
-        ApplicationFinance applicationFinance = applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
-        return costCategoryService.getCostCategoriesByApplicationFinance(applicationFinance.getId());
+        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     @RequestMapping("/{applicationId}")
@@ -88,6 +97,19 @@ public class ApplicationFormController {
         return "application-form";
     }
 
+
+    @RequestMapping(value = "/addanother/{applicationId}/{sectionId}/{costCategoryId}")
+    public String addAnother(Model model,
+                             @PathVariable("applicationId") final Long applicationId,
+                             @PathVariable("sectionId") final Long sectionId,
+                             @PathVariable("costCategoryId") final Long costCategoryId, HttpServletRequest request) {
+        log.debug("---------- ADD ANOTHER -------- : " + costCategoryId);
+        costService.addAnother(costCategoryId);
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+    }
+
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
@@ -95,19 +117,23 @@ public class ApplicationFormController {
                                      HttpServletRequest request){
         Application app = applicationService.getApplicationById(applicationId);
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-        Competition comp = app.getCompetition();
+
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+
+        return "application-form";
+    }
+
+    private Section getSection(Application application, Long sectionId) {
+        Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
+        log.debug("------- SETION ID: " + sectionId);
         // get the section that we want to show, so we can use this on to show the correct questions.
         Section section = sections.stream().
                 filter(x -> x.getId().equals(sectionId)).
                 findFirst().get();
 
-        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
-        model.addAttribute("currentSectionId", sectionId);
-        model.addAttribute("currentSection", section);
-
-        return "application-form";
+        return section;
     }
 
     /**
@@ -149,12 +175,11 @@ public class ApplicationFormController {
             responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), true);
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
-            responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), false);
+            responseService.markQuestionAsComplete(applicationId, questionId, user.getId(), false);
         }
 
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
-        model.addAttribute("currentSectionId", sectionId);
-        model.addAttribute("currentSection", section);
+
         model.addAttribute("applicationSaved", true);
         return "application-form";
     }
@@ -224,6 +249,6 @@ public class ApplicationFormController {
         ObjectNode node = mapper.createObjectNode();
         node.put("success", "true");
         return node;
-
     }
+
 }

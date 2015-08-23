@@ -148,22 +148,163 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div class="form-group">
-            <table>
-                <tbody>
-                <tr>
-                    <th>Working Days per Year</th>
-                    <td>
-                        <input  class="form-control form-control-1-3"
-                                disabled=""
-                                type="text"
-                                attr="working_days"
-                                id="working_days"
-                                name="working_days"
-                                value="63" /></td>
-                    <td><a href="#">change working days</a></td>
-                </tr>
-                </tbody>
-            </table>
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+            <div class="form-group">
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Working Days per Year</th>
+                        <td>
+                            <input  class="form-control form-control-1-3"
+                                    disabled=""
+                                    type="text"
+                                    attr="working_days"
+                                    id="working_days"
+                                    name="working_days"
+                                    th:value="${costCategoryResource.getWorkingDaysPerYear()}" /></td>
+                        <td><a href="#">change working days</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <table id="labour-costs-table">
+                        <thead>
+                        <tr>
+                            <th>Role within project</th>
+                            <th>Gross Annual Salary</th>
+                            <th>Rate (£/day)</th>
+                            <th>Days to be spent by all staff at this grade</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="labourCost : ${costCategoryResource.getLabourCosts()}" >
+                            <tr>
+                                <td>
+                                    <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
+                                </td>
+                                <td>
+                                    <input type="number" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
+                                </td>
+                                <td>
+                                    <input type="number" name="labour-0-labourRate"  disabled="" id="id_labour-0-labourRate" th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
+                                </td>
+                                <td>
+                                    <input type="number" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="text-align: right;">
+                                    Total costs £
+                                    <input type="number" name="labour-0-labourTotalCost"  disabled="" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
+                                </td>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+
+                    <p style="text-align: right;">
+                        <div th:text="${costCategoryResource.getId()}"></div>
+                        <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                    </p>
+                </div>
+                <div class="form-group form-group--align-right">
+                    <label>
+                        Total labour costs £
+                        <input class="form-control form-control-1-4" disabled="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: overheads =========================== -->
+    <div th:fragment="overheads">
+        <p th:text="${question.getDescription()}"></p>
+        <div class="grid-row">
+            <div class="column-half" style="font-weight: bold">
+                20% of labour costs
+            </div>
+            <div class="column-half" style="font-weight: bold">
+                Calculated rate: £<span id="calculated-rate">..</span>
+            </div>
+        </div>
+        <br/>
+        <fieldset>
+            <legend>Do you chose to accept this rate?</legend>
+            <ul id="id_overheads-acceptRate">
+                <li>
+                    <label for="id_overheads-acceptRate_0">
+                        <input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes"/>
+                        <span> </span><span>20% of Labour Costs</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="id_overheads-acceptRate_1">
+                        <input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no"/>
+                        <span> </span>
+                        <span >Bespoke rate (I confirm that I will need to justify this rate if this project is granted funding by Innovate UK)</span>
+                    </label>
+                </li>
+            </ul>
+        </fieldset>
+        <br/>
+        <div id="custom-rate" style="display: block;">
+            <div class="form-group">
+                <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
+                <input type="number" name="overheads-customRate" class="form-control form-control-1-8" id="id_overheads-customRate" /> %
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
+                <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate" />
+            </div>
+        </div>
+        <div class="form-group form-group--align-right">
+            <label>
+                Total overhead costs £
+                <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts" />
+            </label>
+        </div>
+    </div>
+
+    <!-- ===========================Form: materials =========================== -->
+    <div th:fragment="materials">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+
+            <div class="form-group">
+                <table id="material-costs-table">
+                    <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Cost Per Item</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="materialCost : ${costCategoryResource.getMaterials()}" >
+                        <tr>
+                            <td>
+                                <input type="text" name="materials-0-materialsItem" />
+                            </td>
+                            <td>
+                                <input type="number" name="materials-0-materialsQuantity" />
+                            </td>
+                            <td>
+                                <input type="number" name="materials-0-materialsCostPerItem" />
+                            </td>
+                            <td>
+                                <input type="number" name="materials-0-materialsTotal" disabled="" />
+                            </td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p style="text-align: right;">
+                    <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
+                </p>
+            </div>
         </div>
     </div>

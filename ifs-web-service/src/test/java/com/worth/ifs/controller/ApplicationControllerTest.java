@@ -5,6 +5,7 @@ import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
+import com.worth.ifs.service.SectionService;
 import com.worth.ifs.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -35,7 +37,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
     ApplicationService applicationService;
     @Mock
     ResponseService responseService;
-
+    @Mock
+    SectionService sectionService;
 
     @Before
     public void setUp(){
@@ -58,6 +61,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        when(sectionService.getCompletedSectionIds(app.getId())).thenReturn(Arrays.asList(1L, 2L));
+        when(sectionService.getIncompletedSectionIds(app.getId())).thenReturn(Arrays.asList(3L, 4L));
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
