@@ -45,7 +45,13 @@
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
-        <input type="file"/>
+        <div class="form-group">
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <input type="file"/>
+    </div>
+
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
