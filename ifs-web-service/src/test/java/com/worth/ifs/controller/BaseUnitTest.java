@@ -17,6 +17,7 @@ import org.thymeleaf.expression.Lists;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
-        competition = new Competition(1L, "Competition x", "Description afds", LocalDate.now().minusDays(2), LocalDate.now().plusDays(5));
+        competition = new Competition(1L, "Competition x", "Description afds", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(5));
         sections.add(new Section(1L, competition, null, "Application details", null));
         sections.add(new Section(2L, competition, null, "Scope (Gateway question)", null));
         sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)", null));

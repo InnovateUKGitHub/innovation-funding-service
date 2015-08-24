@@ -37,9 +37,17 @@
                 <a href="/logout">Logout</a>
             </li>
         </ul>
-    </div> 
+    </div>
 </div>
-<!-- =========================== Element =========================== -->
+<!-- =========================== Element: Competition Deadline =========================== -->
+<div th:fragment="competition-deadline">
+    <div th:text="${endDate.getDayOfMonth()}"></div>
+    <div th:text="${endDate.getMonth()}"></div>
+    <div th:text="${endDate.getHour()}"></div>
+    <div th:text="${endDate.getMinute()}"></div>
+</div>
+
+<!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
     <div class="pie-container">
         <div class="pie small" th:text="${daysPercentage}">10%</div>
@@ -59,6 +67,7 @@
     </div>
 </div>
 
+<!-- =========================== Element: Progress indicator =========================== -->
 <div th:fragment="progress-indicator">
     <div class="progress-container">
         <div class="progress-indicator">

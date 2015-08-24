@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class CompetitionTest {
     List<Section> sections;
     String name;
     String description;
-    LocalDate startDate;
-    LocalDate endDate;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
 
     @Before
     public void setUp() throws Exception {
@@ -26,8 +27,8 @@ public class CompetitionTest {
 
         name = "testCompetitionName";
         description = "testCompetitionDescription";
-        startDate = LocalDate.now();
-        endDate = LocalDate.now().plusDays(5);
+        startDate = LocalDateTime.now();
+        endDate = LocalDateTime.now().plusDays(5);
 
         sections = new ArrayList<Section>();
         sections.add(new Section());

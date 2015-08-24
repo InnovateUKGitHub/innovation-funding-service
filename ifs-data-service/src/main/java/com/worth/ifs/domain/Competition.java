@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,12 +34,12 @@ public class Competition {
     @Lob
     @Column( length = 5000 )
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public Competition() {
     }
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDate startDate, LocalDate endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -48,7 +49,7 @@ public class Competition {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public Competition(long id, String name, String description, LocalDate startDate, LocalDate endDate) {
+    public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -82,11 +83,11 @@ public class Competition {
         return name;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
