@@ -131,11 +131,11 @@ public class ApplicationFormController {
         List<Section> sections = comp.getSections();
 
         // get the section that we want to show, so we can use this on to show the correct questions.
-        Section section = sections.stream().
-                filter(x -> x.getId().equals(sectionId)).
-                findFirst().get();
+        Optional<Section> section = sections.stream().
+                filter(x -> x.getId().equals(sectionId))
+                .findFirst();
 
-        return section;
+        return section.isPresent() ? section.get() : null;
     }
 
     /**

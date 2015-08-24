@@ -24,8 +24,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
     @InjectMocks
     private ApplicationFormController applicationFormController;
 
-    @Mock
-    UserService userServiceMock;
 
     @Before
     public void setUp(){
@@ -51,16 +49,39 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
             when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
             when(applicationService.getApplicationById(app.getId())).thenReturn(app);
 
-            mockMvc.perform(get("/application-form/1/section/1"))
+            mockMvc.perform(get("/application-form/1"))
                     .andExpect(view().name("application-form"))
-                    .andExpect(model().attribute("currentApplication", app));
-
-
+                    .andExpect(model().attribute("currentApplication", app))
+                    .andExpect(model().attribute("currentSectionId", 0L));
 
     }
 
     @Test
     public void testApplicationFormWithOpenSection() throws Exception {
+        Application app = applications.get(0);
+
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+
+        mockMvc.perform(get("/application-form/1/section/1"))
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentSectionId", 1L));
+
+    }
+
+    @Test
+    public void testAddAnother() throws Exception {
+
+    }
+
+    @Test
+    public void testApplicationFormSubmit() throws Exception {
+
+    }
+
+    @Test
+    public void testSaveFormElement() throws Exception {
 
     }
 }
