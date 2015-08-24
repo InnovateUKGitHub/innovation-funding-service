@@ -48,11 +48,14 @@ public class LoginController {
     @RequestMapping(value="/login", method=RequestMethod.POST)
     public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
         User user = userService.retrieveUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
+        log.error("Find user with: "+ loginForm.getEmail() + " + " + loginForm.getPassword());
         if(user != null){
             tokenAuthenticationService.addAuthentication(response, user.getToken());
             // redirect to my applications
             return "redirect:/applicant/dashboard";
         }else{
+            System.out.println("No user found");
+            log.error("no user found");
             return "redirect:/login?invalid";
         }
     }

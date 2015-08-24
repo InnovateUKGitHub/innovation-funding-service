@@ -133,4 +133,8 @@ public class Question {
     public List<CostCategory> getCostCategory() {
         return costCategories;
     }
+
+    public void setResponses(List<Response> responses) {
+        this.responses = responses;
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,10 +105,10 @@ public class ResponseController {
         // get existing response to update.
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
         if(response == null){
-            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, application);
+            response = new Response(null, LocalDate.now(), value, false, userAppRoles.get(0), question, application);
         }else{
             response.setValue(value);
-            response.setDate(new Date());
+            response.setDate(LocalDate.now());
             response.setUserApplicationRole(userAppRoles.get(0));
         }
         

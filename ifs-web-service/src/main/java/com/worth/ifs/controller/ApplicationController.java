@@ -54,7 +54,7 @@ public class ApplicationController {
         SectionHelper sectionHelper = new SectionHelper();
 
         if(application == null){
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Application not found.");
         }
 
         model.addAttribute("currentApplication", application);
@@ -78,7 +78,7 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
-        log.debug("Application with id " + applicationId);
+        log.info("Application with id " + applicationId);
         this.addApplicationDetails(applicationId, model);
         return "application-details";
     }
@@ -112,11 +112,8 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}/submit")
     public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
-
-
         applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-
+        this.addApplicationDetails(applicationId, model);
         return "application-submitted";
     }
 
