@@ -1,7 +1,9 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.domain.User;
+import com.worth.ifs.domain.UserApplicationRole;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,13 +19,18 @@ import java.util.List;
 
 @Service
 public class UserService extends BaseServiceProvider {
+    @Value("${ifs.data.service.rest.user}")
+    String userRestURL;
+
+    @Value("${ifs.data.service.rest.userapplicationrole}")
+    String userApplicationRoleRestURL;
 
     public User retrieveUserByToken(String token) {
         if(StringUtils.isEmpty(token))
             return null;
 
         RestTemplate restTemplate = new RestTemplate();
-        User user = restTemplate.getForObject(dataRestServiceURL + "/user/token/"+token, User.class);
+        User user = restTemplate.getForObject(dataRestServiceURL + userRestURL +"/token/"+token, User.class);
         return user;
     }
 
@@ -32,7 +39,7 @@ public class UserService extends BaseServiceProvider {
             return null;
 
         RestTemplate restTemplate = new RestTemplate();
-        User user = restTemplate.getForObject(dataRestServiceURL + "/user/email/"+email+"/password/"+password, User.class);
+        User user = restTemplate.getForObject(dataRestServiceURL + userRestURL + "/email/"+email+"/password/"+password, User.class);
         return user;
     }
 
@@ -41,15 +48,20 @@ public class UserService extends BaseServiceProvider {
             return null;
 
         RestTemplate restTemplate = new RestTemplate();
-        User user = restTemplate.getForObject(dataRestServiceURL + "/user/id/"+id, User.class);
+        User user = restTemplate.getForObject(dataRestServiceURL + userRestURL + "/id/" + id, User.class);
         return user;
     }
 
     public List<User> findAll() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + "/user/findAll/", User[].class);
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userRestURL + "/findAll/", User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
+    public UserApplicationRole findUserApplicationRole(Long userId, Long applicationId) {
+        RestTemplate restTemplate = new RestTemplate();
+        UserApplicationRole userApplicationRole = restTemplate.getForObject(dataRestServiceURL + userApplicationRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId , UserApplicationRole.class);
+        return userApplicationRole;
+    }
 }

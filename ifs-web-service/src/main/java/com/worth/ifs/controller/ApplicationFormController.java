@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.helper.SectionHelper;
+import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.ResponseService;
-import com.worth.ifs.service.SectionService;
+import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +27,38 @@ import java.util.stream.Collectors;
 @RequestMapping("/application-form")
 public class ApplicationFormController {
     private final Log log = LogFactory.getLog(getClass());
+    public final String LABOUR = "Labour";
+    public final String WORKING_DAYS_PER_YEAR = "Working days per year";
 
     @Autowired
     ApplicationService applicationService;
     @Autowired
     ResponseService responseService;
     @Autowired
+    ApplicationFinanceService applicationFinanceService;
+    @Autowired
+    UserService userService;
+    @Autowired
     SectionService sectionService;
-
+    @Autowired
+    CostService costService;
+    
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
+    @Autowired
+    CostCategoryService costCategoryService;
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    private void addApplicationDetails(Long applicationId, Model model){
+    private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
         Application application = applicationService.getApplicationById(applicationId);
         SectionHelper sectionHelper = new SectionHelper();
         model.addAttribute("currentApplication", application);
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
+
 
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
@@ -62,20 +72,57 @@ public class ApplicationFormController {
             responseMap.put(response.getQuestion().getId(), response);
         }
         model.addAttribute("responses", responseMap);
+
+        ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceDetails(userId, applicationId);
+        HashMap<Long, CostCategory> costCategoriesMap = new HashMap<>();
+        model.addAttribute("applicationFinanceResource", applicationFinanceResource);
+
+        Section currentSection = getSection(application, currentSectionId);
+        model.addAttribute("currentSectionId", currentSectionId);
+        model.addAttribute("currentSection", currentSection);
+    }
+
+    private ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
+        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
+        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     @RequestMapping("/{applicationId}")
-    public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
+    public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
+                                  HttpServletRequest request){
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        this.addApplicationDetails(applicationId, user.getId(), 0L, model);
         return "application-form";
+    }
+
+
+    @RequestMapping(value = "/addanother/{applicationId}/{sectionId}/{costCategoryId}")
+    public String addAnother(Model model,
+                             @PathVariable("applicationId") final Long applicationId,
+                             @PathVariable("sectionId") final Long sectionId,
+                             @PathVariable("costCategoryId") final Long costCategoryId, HttpServletRequest request) {
+        log.debug("---------- ADD ANOTHER -------- : " + costCategoryId);
+        costService.addAnother(costCategoryId);
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId){
+                                     @PathVariable("sectionId") final Long sectionId,
+                                     HttpServletRequest request){
         Application app = applicationService.getApplicationById(applicationId);
-        Competition comp = app.getCompetition();
+        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+
+        return "application-form";
+    }
+
+    private Section getSection(Application application, Long sectionId) {
+        Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
         // get the section that we want to show, so we can use this on to show the correct questions.
@@ -83,11 +130,7 @@ public class ApplicationFormController {
                 filter(x -> x.getId().equals(sectionId)).
                 findFirst().get();
 
-        this.addApplicationDetails(applicationId, model);
-        model.addAttribute("currentSectionId", sectionId);
-        model.addAttribute("currentSection", section);
-
-        return "application-form";
+        return section;
     }
 
     /**
@@ -129,12 +172,11 @@ public class ApplicationFormController {
             responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), true);
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
-            responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), false);
+            responseService.markQuestionAsComplete(applicationId, questionId, user.getId(), false);
         }
 
-        this.addApplicationDetails(applicationId, model);
-        model.addAttribute("currentSectionId", sectionId);
-        model.addAttribute("currentSection", section);
+        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+
         model.addAttribute("applicationSaved", true);
         return "application-form";
     }
@@ -204,6 +246,6 @@ public class ApplicationFormController {
         ObjectNode node = mapper.createObjectNode();
         node.put("success", "true");
         return node;
-
     }
+
 }

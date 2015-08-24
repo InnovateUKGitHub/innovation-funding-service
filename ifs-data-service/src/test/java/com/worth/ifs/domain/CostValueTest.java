@@ -12,7 +12,8 @@ public class CostValueTest {
 
     @Before
     public void setUp() throws Exception {
-        cost = new Cost(1L, "cost item", "cost description", 10, 1000d);
+        CostCategory costCategory = new CostCategory();
+        cost = new Cost(1L, "cost item", "cost description", 10, 1000d, costCategory);
         costField = new CostField(1L, "NVP", "String");
         value = "19000";
         costValue = new CostValue(cost, costField, value);

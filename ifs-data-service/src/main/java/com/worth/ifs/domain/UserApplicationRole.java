@@ -59,7 +59,7 @@ public class UserApplicationRole {
     public Application getApplication() {
         return application;
     }
-    @JsonIgnore
+
     public Organisation getOrganisation() {
         return organisation;
     }
