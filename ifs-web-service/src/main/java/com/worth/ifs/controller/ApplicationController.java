@@ -67,6 +67,14 @@ public class ApplicationController {
         List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
         model.addAttribute("incompletedSections", incompletedSections);
 
+
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
+
         Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
 
