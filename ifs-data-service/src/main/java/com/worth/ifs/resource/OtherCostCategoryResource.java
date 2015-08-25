@@ -13,11 +13,9 @@ public class OtherCostCategoryResource  extends CostCategoryResource {
     }
 
     public OtherCostCategoryResource(Long sectionId, Long questionId, Long categoryId, List<OtherCost> otherCosts) {
-        this.sectionId = sectionId;
-        this.questionId = questionId;
-        this.categoryId = categoryId;
+        super(sectionId,questionId, categoryId);
         this.otherCosts = otherCosts;
-
+        this.total = 0.0;
         calculateTotal();
     }
 

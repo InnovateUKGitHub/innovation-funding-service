@@ -31,6 +31,8 @@ public class Question {
     @Column(length=5000)
     private String optionValues;
 
+    private Boolean markAsCompletedEnabled = false;
+
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
@@ -136,5 +138,9 @@ public class Question {
 
     public void setResponses(List<Response> responses) {
         this.responses = responses;
+    }
+
+    public Boolean isMarkAsCompletedEnabled() {
+        return markAsCompletedEnabled;
     }
 }

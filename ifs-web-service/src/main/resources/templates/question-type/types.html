@@ -19,7 +19,7 @@
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
-            <div th:class="'form-control-wrap '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+            <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                 <div class="form-group_header">
                     Information goes here
                 </div>
@@ -144,7 +144,7 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${ responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -188,19 +188,32 @@
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-salary" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
+                                    <input type="number"
+                                           data-calculation-input="labour-salary"
+                                           name="labour-0-labourGrossSalary"
+                                           id="id_labour-0-labourGrossSalary"
+                                           th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" name="labour-0-labourRate"  disabled="" id="id_labour-0-labourRate" th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
+                                    <input type="number" name="labour-0-labourRate"
+                                           data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
+                                           data-calculation-operations="/"
+                                           disabled=""
+                                           id="id_labour-0-labourRate"
+                                           th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-days" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
+                                    <input type="number"
+                                           data-calculation-input="labour-days"
+                                           name="labour-0-labourDays"
+                                           id="id_labour-0-labourDays"
+                                           th:value="${labourCost.getLabourDays()}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align: right;">
                                     Total costs £
-                                    <input type="number" class="calculation-result-js calculation-input-total-labour-row-js calculation-input-js"
+                                    <input type="number"
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js,[data-calculation-input=labour-days]"
                                            data-calculation-operations="/,*"
                                            data-calculation-input="total-labour-row"
@@ -236,62 +249,65 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
-        <div class="grid-row">
-            <div class="column-half" style="font-weight: bold">
-                20% of labour costs
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+            <div class="grid-row">
+                <div class="column-half" style="font-weight: bold">
+                    20% of labour costs
+                </div>
+                <div class="column-half" style="font-weight: bold">
+                    Calculated rate: £<span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
+                                            data-calculation-operations=""></span>
+                </div>
             </div>
-            <div class="column-half" style="font-weight: bold">
-                Calculated rate: £<span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
-                                        data-calculation-operations=""></span>
-            </div>
-        </div>
-        <br/>
-        <fieldset>
-            <legend>Do you chose to accept this rate?</legend>
-            <ul id="id_overheads-acceptRate">
-                <li>
-                    <label for="id_overheads-acceptRate_0">
-                        <input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes"/>
-                        <span> </span><span>20% of Labour Costs</span>
-                    </label>
-                </li>
-                <li>
-                    <label for="id_overheads-acceptRate_1">
-                        <input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no"/>
-                        <span> </span>
-                        <span >Bespoke rate (I confirm that I will need to justify this rate if this project is granted funding by Innovate UK)</span>
-                    </label>
-                </li>
-            </ul>
-        </fieldset>
-        <br/>
-        <div id="custom-rate" style="display: block;">
-            <div class="form-group">
-                <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
-                <input type="number"
-                       name="overheads-customRate"
-                       data-calculation-input="overhead-rate"
-                       class="form-control form-control-1-8"
-                       id="id_overheads-customRate"
-                       value="20" /> %
-            </div>
+            <br/>
+            <fieldset>
+                <legend>Do you chose to accept this rate?</legend>
+                <ul id="id_overheads-acceptRate">
+                    <li>
+                        <label for="id_overheads-acceptRate_0">
+                            <input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes"/>
+                            <span> </span><span>20% of Labour Costs</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label for="id_overheads-acceptRate_1">
+                            <input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no"/>
+                            <span> </span>
+                            <span >Bespoke rate (I confirm that I will need to justify this rate if this project is granted funding by Innovate UK)</span>
+                        </label>
+                    </li>
+                </ul>
+            </fieldset>
+            <br/>
+            <div id="custom-rate" style="display: block;"  th:if="${costCategoryResource.getOverhead()!=null}">
+                <div class="form-group">
+                    <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
+                    <input type="number"
+                           name="overheads-customRate"
+                           data-calculation-input="overhead-rate"
+                           class="form-control form-control-1-8"
+                           id="id_overheads-customRate"
+                           th:value="${#numbers.formatDecimal(costCategoryResource.getOverhead().getCustomRate(),0,0)}" /> %
+                </div>
 
-            <div class="form-group">
-                <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
-                <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate"
-                       data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
-                       data-calculation-operations="/,*"
-                       data-calculation-input="overhead-calculated"/>
+                <div class="form-group">
+                    <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
+                    <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate"
+                           data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
+                           data-calculation-operations="/,*"
+                           data-calculation-input="overhead-calculated"
+                            th:value="${#numbers.formatDecimal(costCategoryResource.getOverhead().getTotal(),0,0)}"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group form-group--align-right">
-            <label>
-                Total overhead costs £
-                <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts"
-                       data-calculation-field="[data-calculation-input=overhead-calculated]"
-                       data-calculation-operations=""
-                        />
-            </label>
+            <div class="form-group form-group--align-right">
+                <label>
+                    Total overhead costs £
+                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts"
+                           data-calculation-field="[data-calculation-input=overhead-calculated]"
+                           data-calculation-operations=""
+                           />
+                </label>
+            </div>
         </div>
     </div>
 
@@ -362,7 +378,7 @@
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
                         <textarea id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item"
-                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3" data-th-text="${capitalUsage.getDescription()"></textarea>
+                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">

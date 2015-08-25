@@ -112,8 +112,8 @@
 	<div th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
 
 		<textarea
-		   th:disabled="${disabled} or ${responses.get(question.getId())?.isMarkedAsComplete()}"
-		   th:readonly="${disabled} or ${responses.get(question.getId())?.isMarkedAsComplete()}"
+		   th:disabled="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
+		   th:readonly="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
 		   th:attr="data-question_id=${question.getId()},data-max_words=${question.getWordCount()}"
 		   cols="30" rows="10"
 		   th:name="'question['+${question.getId()}+']'"
@@ -122,8 +122,8 @@
 
 		<div class="grid-row">
 			<div class="column-half column-half--first" th:unless="${disabled}">
-				<button th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-				<button th:if="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+				<button th:if="${question.isMarkAsCompletedEnabled() and not responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+				<button th:if="${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
 			</div>
 			<div class="column-half column-half--first" th:if="${disabled}">
 				<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"

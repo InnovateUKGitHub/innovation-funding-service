@@ -14,6 +14,7 @@ public class TravelCostCategoryResource  extends CostCategoryResource {
 
     public TravelCostCategoryResource(Long sectionId, Long questionId, Long categoryId, List<TravelCost> travelCosts) {
         super(sectionId, questionId, categoryId);
+        this.total = 0.0;
         this.travelCosts = travelCosts;
 
         calculateTotal();

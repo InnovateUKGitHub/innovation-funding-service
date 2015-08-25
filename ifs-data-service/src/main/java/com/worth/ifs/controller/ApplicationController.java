@@ -99,6 +99,7 @@ public class ApplicationController {
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
                 .flatMap((s) -> s.getQuestions().stream())
+                .filter((q -> q.isMarkAsCompletedEnabled()))
                 .collect(Collectors.toList());
 
 
@@ -112,13 +113,13 @@ public class ApplicationController {
 
         int countCompleted = 0;
         for (Response response : responses) {
-            if(response.isMarkedAsComplete()){
+            if(response.getQuestion().isMarkAsCompletedEnabled() && response.isMarkedAsComplete()){
                 countCompleted++;
             }
         }
 
-        log.info("Total questions" + questions.size());
-        log.info("Total completed questions" + countCompleted);
+        log.error("Total questions" + questions.size());
+        log.error("Total completed questions" + countCompleted);
 
         double percentageCompleted = (100 / questions.size()) * countCompleted;
 

@@ -27,7 +27,7 @@ public class ApplicationFinanceResource extends ResourceSupport {
     }
 
     public Double getTotal() {
-        return costCategoryResources.stream().mapToDouble(c -> c.getTotal()).sum();
+        return costCategoryResources.stream().mapToDouble(c -> c!=null ? c.getTotal() : 0D).sum();
     }
 
     public void setApplicationId(Long applicationId) {
