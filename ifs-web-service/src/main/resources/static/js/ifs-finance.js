@@ -7,7 +7,14 @@ var worthIFSFinance = {
         }
     },
     initFinanceCalculations : function(){
+        console.log("initFinanceCalculations");
         function getFieldValue(selector, currentInputElement){
+            if(!_.isNaN(parseInt(selector))){
+                selector = parseInt(selector);
+                console.log("selector is number ", selector);
+                return selector;
+            }
+
             // check if the parent tr element has a element that matches the selector, if not, search the whole document.
 
             if(currentInputElement != null && currentInputElement.parents("tr").find(selector).length == 1){
@@ -43,7 +50,13 @@ var worthIFSFinance = {
 
             // search the element that uses this value for there calculation.
             fieldIdentifier= changedInputElement.data('calculation-input')
-            resultElement = changedInputElement.parents("tr").next().find(".calculation-result-js[data-calculation-field*="+fieldIdentifier+"]");
+            resultElement = changedInputElement.parents("tr").find("[data-calculation-field*="+fieldIdentifier+"]");
+            if(resultElement.length == 0){
+                resultElement = changedInputElement.parents(".form-row").find("[data-calculation-field*="+fieldIdentifier+"]");
+            }
+            if(resultElement.length == 0){
+                resultElement = changedInputElement.parents("tr").next().find("[data-calculation-field*="+fieldIdentifier+"]");
+            }
             // if in the current scope there is no calculation result found, use the full document to search.
             if(resultElement.length == 0){
                 findByData = $("[data-calculation-field*="+fieldIdentifier+"]");
@@ -51,14 +64,40 @@ var worthIFSFinance = {
                 resultElement = findByData;
             }
 
-            fields = resultElement.data("calculation-field").split(',');
+            console.log("resultElement", resultElement.length);
+            fields = resultElement.data("calculation-field");
+            match = [];
+            i= 0;
+            resultElement.each(function(index){
+                element = $(this);
+                fields = element.data("calculation-field").split(',');
+                _.each(fields, function(field){
+                    console.log("check field: ", field, fieldIdentifier);
+                    if(field.indexOf("="+fieldIdentifier+"]") !== -1){
+                        match[i] = element;
+                        i++;
+                    }else{
+    //                   console.log("no match");
+                    }
+                });
+            });
+
+            console.log("double check...", match.length, match);
+            if(match.length == 0){
+//                console.log("no match, return now.");
+                return;
+            }
+
+            resultElement = match[0];
             operations = resultElement.data("calculation-operations").split(',');
-            console.log("fields", fields);
-            console.log("operations", operations);
             result = 0.0;
 
             //TODO: make this fully dynamic so we can use it with unlimited number of fields.
-            if(fields.length == 1 && operations.length == 1){
+            console.log("fields and operations", fields, operations);
+            if(fields.length == 1 && operations.length == 1 && operations[0] == ""){
+                value1 = getFieldValue(fields[0], null);
+                result = value1;
+            }else if(fields.length == 1 && operations.length == 1){
                 // ignore current scope, search whole document.
                 value1 = getFieldValue(fields[0], null);
                 result = MathOperation[operations[0]](value1);

@@ -11,7 +11,6 @@ var worthIFS = {
             worthIFS.initUnsavedChangesWarning();
             worthIFS.closeAlertHide();
             worthIFS.initWordCount();
-            worthIFS.initFinanceCalculations();
         }
     },
     collapsible : function(){
