@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +61,11 @@ public class ApplicationFormController {
         model.addAttribute("currentCompetition", competition);
 
 
-        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
+        List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
+        // List to map convertion
+        Map<Long, Section> sections =
+                sectionsList.stream().collect(Collectors.toMap(Section::getId,
+                        Function.identity()));
         model.addAttribute("sections", sections);
 
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
@@ -126,11 +131,11 @@ public class ApplicationFormController {
         List<Section> sections = comp.getSections();
 
         // get the section that we want to show, so we can use this on to show the correct questions.
-        Section section = sections.stream().
-                filter(x -> x.getId().equals(sectionId)).
-                findFirst().get();
+        Optional<Section> section = sections.stream().
+                filter(x -> x.getId().equals(sectionId))
+                .findFirst();
 
-        return section;
+        return section.isPresent() ? section.get() : null;
     }
 
     /**

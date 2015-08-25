@@ -120,12 +120,16 @@
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId())?.getValue()} )">
 		</textarea>
 
-		<div class="grid-row" th:unless="${question.getWordCount() == 0} or ${disabled}">
-			<div class="column-half column-half--first">
+		<div class="grid-row">
+			<div class="column-half column-half--first" th:unless="${disabled}">
 				<button th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
 				<button th:if="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
 			</div>
-			<div class="column-half column-half--second">
+			<div class="column-half column-half--first" th:if="${disabled}">
+				<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+				   data-th-text="Edit"></a>
+			</div>
+			<div class="column-half column-half--second" th:unless="${question.getWordCount() == 0}">
 				<span class="count-label" >
 					<span class="count-message">Words remaining:</span>
 					<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
@@ -133,11 +137,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<div th:fragment="question-edit-link">
-	<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
-	   data-th-text="Edit"></a>
 </div>
 
 

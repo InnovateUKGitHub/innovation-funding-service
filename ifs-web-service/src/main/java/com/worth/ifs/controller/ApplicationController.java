@@ -54,7 +54,7 @@ public class ApplicationController {
         SectionHelper sectionHelper = new SectionHelper();
 
         if(application == null){
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Application not found.");
         }
 
         model.addAttribute("currentApplication", application);
@@ -67,6 +67,14 @@ public class ApplicationController {
         List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
         model.addAttribute("incompletedSections", incompletedSections);
 
+
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
+
         Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
 
@@ -78,7 +86,7 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
-        log.debug("Application with id " + applicationId);
+        log.info("Application with id " + applicationId);
         this.addApplicationDetails(applicationId, model);
         return "application-details";
     }
@@ -112,11 +120,8 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}/submit")
     public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
-
-
         applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-
+        this.addApplicationDetails(applicationId, model);
         return "application-submitted";
     }
 

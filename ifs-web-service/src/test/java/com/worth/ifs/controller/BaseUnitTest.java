@@ -1,18 +1,26 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.*;
+import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.security.UserAuthentication;
+import com.worth.ifs.service.*;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.thymeleaf.expression.Lists;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -24,10 +32,21 @@ public class BaseUnitTest {
 
     @Mock
     TokenAuthenticationService tokenAuthenticationService;
+    @Mock
+    public ResponseService responseService;
+    @Mock
+    public ApplicationService applicationService;
+    @Mock
+    public ApplicationFinanceService applicationFinanceService;
+    @Mock
+    public UserService userService;
+
+    @Mock
+    public SectionService sectionService;
 
     public List<Application> applications;
     public List<Section> sections;
-    public List<Question> questions;
+    public Map<Long, Question> questions;
     public Competition competition;
 
     public InternalResourceViewResolver viewResolver() {
@@ -38,12 +57,12 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "password", "tokenABC", "image", new ArrayList());
+        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
 
         applications = new ArrayList<>();
         sections = new ArrayList<>();
-        questions = new ArrayList<>();
+        questions = new HashMap<>();
     }
 
     public void loginDefaultUser(){
@@ -51,7 +70,7 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
-        competition = new Competition(1L, "Competition x", "Description afds", LocalDate.now().minusDays(2), LocalDate.now().plusDays(5));
+        competition = new Competition(1L, "Competition x", "Description afds", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(5));
         sections.add(new Section(1L, competition, null, "Application details", null));
         sections.add(new Section(2L, competition, null, "Scope (Gateway question)", null));
         sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)", null));
@@ -75,16 +94,20 @@ public class BaseUnitTest {
         sections.get(3).setQuestions(Arrays.asList(q30, q31, q32, q33));
 
 
-
+        ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {
             List<Question> sectionQuestions = section.getQuestions();
             if(sectionQuestions != null){
-                questions.addAll(sectionQuestions);
+                Map<Long, Question> questionsMap =
+                        sectionQuestions.stream().collect(Collectors.toMap(Question::getId,
+                                Function.identity()));
+                questionList.addAll(sectionQuestions);
+                questions.putAll(questionsMap);
             }
         }
 
         competition.setSections(sections);
-        competition.setQuestions(questions);
+        competition.setQuestions(questionList);
 
     }
 
@@ -116,5 +139,49 @@ public class BaseUnitTest {
         loggedInUser.addUserApplicationRole(userAppRole1, userAppRole2, userAppRole3, userAppRole3);
         applications = Arrays.asList(app1, app2, app3, app4);
 
+        when(sectionService.getCompletedSectionIds(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
+        when(sectionService.getIncompletedSectionIds(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
+        when(userService.findUserApplicationRole(app1.getId(), loggedInUser.getId())).thenReturn(userAppRole1);
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app1.getId())).thenReturn(app1);
+        when(applicationService.getApplicationById(app2.getId())).thenReturn(app2);
+        when(applicationService.getApplicationById(app3.getId())).thenReturn(app3);
+        when(applicationService.getApplicationById(app4.getId())).thenReturn(app4);
+
+    }
+
+    public void setupApplicationResponses(){
+        Application application = applications.get(0);
+
+        Boolean markAsComplete = false;
+        UserApplicationRole userApplicationRole = loggedInUser.getUserApplicationRoles().get(0);
+
+        Response response = new Response(1L, LocalDate.now(), "value 1", markAsComplete, userApplicationRole, questions.get(20L), application);
+        Response response2 = new Response(2L, LocalDate.now(), "value 1", markAsComplete, userApplicationRole, questions.get(21L), application);
+
+        List<Response> responses = Arrays.asList(response, response2);
+        userApplicationRole.setResponses(responses);
+
+        questions.get(20L).setResponses(Arrays.asList(response));
+        questions.get(21L).setResponses(Arrays.asList(response2));
+
+        when(responseService.getResponsesByApplicationId(application.getId())).thenReturn(responses);
+
+        //TODO: create representative application finance resource object.
+        ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
+        long organisationId = userApplicationRole.getOrganisation().getId();
+        Long applicationId = application.getId();
+        when(applicationFinanceService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinanceResource);
+    }
+
+    public ExceptionHandlerExceptionResolver createExceptionResolver() {
+        ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
+            protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
+                Method method = new ExceptionHandlerMethodResolver(ErrorController.class).resolveMethod(exception);
+                return new ServletInvocableHandlerMethod(new ErrorController(), method);
+            }
+        };
+        exceptionResolver.afterPropertiesSet();
+        return exceptionResolver;
     }
 }

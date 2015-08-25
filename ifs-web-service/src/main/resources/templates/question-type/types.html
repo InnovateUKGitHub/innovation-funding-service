@@ -33,7 +33,6 @@
             <div class="form-control-wrap">
                 <div th:include="question-type/form-elements :: form-textarea" th:with="disabled=(true)" th:remove="tag" />
             </div>
-            <div th:include="question-type/form-elements :: question-edit-link" th:remove="tag" />
         </div>
     </div>
 
@@ -45,7 +44,13 @@
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
-        <input type="file"/>
+        <div class="form-group">
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <input type="file"/>
+    </div>
+
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
@@ -155,7 +160,7 @@
                     <tr>
                         <th>Working Days per Year</th>
                         <td>
-                            <input  class="form-control form-control-1-3"
+                            <input  class="form-control form-control-1-3 calculation-working-days-js"
                                     disabled=""
                                     type="text"
                                     attr="working_days"
@@ -183,19 +188,23 @@
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
-                                    <input type="number" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
+                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-1" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
                                 </td>
                                 <td>
                                     <input type="number" name="labour-0-labourRate"  disabled="" id="id_labour-0-labourRate" th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
+                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-2" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align: right;">
                                     Total costs £
-                                    <input type="number" name="labour-0-labourTotalCost"  disabled="" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
+                                    <input type="number" class="calculation-result-js calculation-input-total-labour-js calculation-input-js"
+                                           data-calculation-field="[data-calculation-input=labour-1],.calculation-working-days-js,[data-calculation-input=labour-2]"
+                                           data-calculation-operations="/,*"
+                                           data-calculation-input="total-labour"
+                                           name="labour-0-labourTotalCost"  disabled="" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
                                 </td>
                             </tr>
                         </div>
@@ -210,7 +219,10 @@
                 <div class="form-group form-group--align-right">
                     <label>
                         Total labour costs £
-                        <input class="form-control form-control-1-4" disabled="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                        <input class="form-control form-control-1-4 calculation-total-labour-js calculation-result-js"
+                               data-calculation-field="[data-calculation-input=total-labour]"
+                               data-calculation-operations="+"
+                               disabled="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                     </label>
                 </div>
             </div>

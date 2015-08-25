@@ -39,7 +39,7 @@
             <ul>
                 <li class="section" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }">
                     <h4 class="heading-medium"><a tabindex="0" th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
-                       data-th-text="${question.getName()}" ></a></h4>
+                       data-th-text="${question.getName()}" th:class="''+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')" ></a></h4>
                 </li>
             </ul>
         </div>

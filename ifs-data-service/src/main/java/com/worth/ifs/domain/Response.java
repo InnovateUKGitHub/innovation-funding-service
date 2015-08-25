@@ -3,11 +3,12 @@ package com.worth.ifs.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(Long id, Date date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
+    public Response(Long id, LocalDate date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
         this.id = id;
         this.date = date;
         this.value = value;
@@ -24,7 +25,7 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date date;
+    private LocalDate date;
     @Column(length=5000)
     private String value;
     private Boolean markedAsComplete;
@@ -46,7 +47,7 @@ public class Response {
         return id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -87,7 +88,7 @@ public class Response {
         this.value = value;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
