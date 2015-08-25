@@ -5,11 +5,7 @@ import org.springframework.hateoas.ResourceSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialsCategoryResource  extends ResourceSupport implements CostCategoryResource {
-    Long sectionId;
-    Long questionId;
-    Long categoryId;
-
+public class MaterialsCategoryResource  extends CostCategoryResource {
     List<Materials> materials = new ArrayList<>();
     Double total;
 
@@ -17,10 +13,8 @@ public class MaterialsCategoryResource  extends ResourceSupport implements CostC
     }
 
     public MaterialsCategoryResource(Long categoryId, List<Materials> materials, Long questionId, Long sectionId) {
-        this.categoryId = categoryId;
+        super(sectionId, questionId, categoryId);
         this.total = 0.0;
-        this.questionId = questionId;
-        this.sectionId = sectionId;
         this.materials = materials;
 
         calculateTotal();
@@ -34,19 +28,7 @@ public class MaterialsCategoryResource  extends ResourceSupport implements CostC
         return total;
     }
 
-    public Long getSectionId() {
-        return sectionId;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
     public List<Materials> getMaterials() {
         return materials;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
     }
 }

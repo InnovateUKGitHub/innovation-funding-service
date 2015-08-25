@@ -314,21 +314,21 @@
                     <div th:each="materialCost : ${costCategoryResource.getMaterials()}" >
                         <tr>
                             <td>
-                                <input type="text" name="materials-0-materialsItem" />
+                                <input type="text" name="materials-0-materialsItem" th:value="${materialCost.getItem()}"/>
                             </td>
                             <td>
                                 <input type="number" name="materials-0-materialsQuantity"
-                                       data-calculation-input="materials-item-quantity" />
+                                       data-calculation-input="materials-item-quantity" th:value="${materialCost.getQuantity()}"/>
                             </td>
                             <td>
                                 <input type="number" name="materials-0-materialsCostPerItem"
-                                       data-calculation-input="materials-item-cost" />
+                                       data-calculation-input="materials-item-cost" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
                             </td>
                             <td>
                                 <input type="number" name="materials-0-materialsTotal"
                                        data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
                                        data-calculation-operations="*"
-                                       disabled="" />
+                                       disabled="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
                             </td>
                         </tr>
                     </div>
@@ -339,6 +339,17 @@
                     <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
+            <div class="form-group form-group--align-right">
+                <label>
+                    Total materials costs £
+                    <input class="form-control form-control-1-4 calculation-total-materials-row-js calculation-result-js"
+                           disabled="" type="text" id="material-costs-total-field"
+                           data-calculation-field="[data-calculation-input=total-materials-row]"
+                           data-calculation-operations="+"
+                           data-calculation-input="total-materials"
+                           th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                </label>
+            </div>
         </div>
     </div>
 
@@ -347,43 +358,51 @@
         <p th:text="${question.getDescription()}"></p>
         <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
             <div class="form-row">
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageItem" class="form-label">Item description</label>
-                    <textarea id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item" name="capitalusage-0-capitalUsageItem" cols="40" rows="3"></textarea>
-                </div>
+                <div th:each="capitalUsage : ${costCategoryResource.getCapitalUsages()}" >
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
+                        <textarea id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item"
+                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3" data-th-text="${capitalUsage.getDescription()"></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageNewOrExisting" class="form-label">New or existing item</label>
-                    <select id="id_capitalusage-0-capitalUsageNewOrExisting" class="form-control form-finances-capital-usage-existing" name="capitalusage-0-capitalUsageNewOrExisting">
-                        <option selected="" value=""></option>
-                        <option value="New">New</option>
-                        <option value="Existing">Existing</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageNewOrExisting" class="form-label">New or existing item</label>
+                        <select id="id_capitalusage-0-capitalUsageNewOrExisting" class="form-control form-finances-capital-usage-existing" name="capitalusage-0-capitalUsageNewOrExisting">
+                            <option selected="${capitalUsage.getExisting() == ''}" value=""></option>
+                            <option value="New" selected="${capitalUsage.getExisting() == 'New'}">New</option>
+                            <option value="Existing" selected="${capitalUsage.getExisting() == 'Existing'}">Existing</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-label">Deprecation period (months)</label>
-                    <input type="number" id="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-control form-finances-capital-usage-depreciation" name="capitalusage-0-capitalUsageDeprecationPeriod" />
-                </div>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-label">Deprecation period (months)</label>
+                        <input type="number" id="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-control form-finances-capital-usage-depreciation" name="capitalusage-0-capitalUsageDeprecationPeriod"
+                                th:value="${capitalUsage.getDeprecation()}"/>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">NPV at project start or purchase price (£)</label>
-                    <input type="number" value="10000" id="id_capitalusage-0-capitalUsageNPV" class="form-control form-finances-capital-usage-npv" name="capitalusage-0-capitalUsageNPV" />
-                </div>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">NPV at project start or purchase price (£)</label>
+                        <input type="number" value="10000" id="id_capitalusage-0-capitalUsageNPV" class="form-control form-finances-capital-usage-npv" name="capitalusage-0-capitalUsageNPV"
+                               th:value="${capitalUsage.getNpv()}"/>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageResidualValue" class="form-label">Residual value at end of project (£)</label>
-                    <input type="number" value="200" id="id_capitalusage-0-capitalUsageResidualValue" class="form-control form-finances-capital-usage-residual-value" name="capitalusage-0-capitalUsageResidualValue" />
-                </div>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageResidualValue" class="form-label">Residual value at end of project (£)</label>
+                        <input type="number" value="200" id="id_capitalusage-0-capitalUsageResidualValue" class="form-control form-finances-capital-usage-residual-value" name="capitalusage-0-capitalUsageResidualValue"
+                               th:value="${capitalUsage.getResidualValue()}"/>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageUtilisation" class="form-label">Utilisation (%)</label>
-                    <input type="number" value="20" id="id_capitalusage-0-capitalUsageUtilisation" class="form-control form-finances-capital-usage-utilisation" name="capitalusage-0-capitalUsageUtilisation"/>
-                </div>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageUtilisation" class="form-label">Utilisation (%)</label>
+                        <input type="number" value="20" id="id_capitalusage-0-capitalUsageUtilisation" class="form-control form-finances-capital-usage-utilisation" name="capitalusage-0-capitalUsageUtilisation"
+                               th:value="${capitalUsage.getUtilisation()}"/>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_capitalusage-0-capitalUsageNetCost" class="form-label">Net Cost (£)</label>
-                    <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" disabled="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"/>
+                    <div class="form-group">
+                        <label for="id_capitalusage-0-capitalUsageNetCost" class="form-label">Net Cost (£)</label>
+                        <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" disabled="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"
+                               th:value="${capitalUsage.getNextCost()}"/>
+                    </div>
                 </div>
             </div>
         </div>
