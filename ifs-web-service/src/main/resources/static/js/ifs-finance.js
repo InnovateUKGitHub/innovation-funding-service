@@ -37,7 +37,11 @@ var worthIFSFinance = {
         // calculations made easy: MathOperation['*'](4, 5)
         var MathOperation = {
             '+': function (x, y) { return x + y },
-            '+': function (x) { if(_.isArray(x)) return _.reduce(x, function(memo, num){ return memo + num; }, 0); },
+            '+': function (x) {
+                // got an array of numbers, just add all the numbers.
+                if(_.isArray(x))
+                    return _.reduce(x, function(memo, num){ return memo + num; }, 0);
+            },
             '-': function (x, y) { return x - y },
             '*': function (x, y) { return x * y },
             '/': function (x, y) { return x / y },
@@ -119,7 +123,11 @@ var worthIFSFinance = {
             console.log("result: ", result);
 
             // this will ignore all numbers after the comma. (not rounding down)
-            resultElement.val(parseInt(result));
+            if(resultElement.is(":input")){
+                resultElement.val(parseInt(result));
+            }else{
+                resultElement.html(parseInt(result));
+            }
             resultElement.trigger('change');
         });
     },

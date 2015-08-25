@@ -144,7 +144,7 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -227,6 +227,9 @@
                     </label>
                 </div>
             </div>
+            <div class="alignright-button">
+                <button class="button" th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+            </div>
         </div>
     </div>
 
@@ -238,7 +241,8 @@
                 20% of labour costs
             </div>
             <div class="column-half" style="font-weight: bold">
-                Calculated rate: £<span id="calculated-rate">..</span>
+                Calculated rate: £<span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
+                                        data-calculation-operations=""></span>
             </div>
         </div>
         <br/>

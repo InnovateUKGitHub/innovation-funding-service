@@ -31,7 +31,6 @@ public class Competition {
 
     private String name;
 
-    @Lob
     @Column( length = 5000 )
     private String description;
     private LocalDateTime startDate;
