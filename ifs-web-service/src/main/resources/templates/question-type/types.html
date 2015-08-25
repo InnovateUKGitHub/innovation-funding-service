@@ -188,13 +188,27 @@
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-salary" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
+                                    <input type="number" class="calculation-input-js"
+                                           data-calculation-input="labour-salary"
+                                           name="labour-0-labourGrossSalary"
+                                           id="id_labour-0-labourGrossSalary"
+                                           th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" name="labour-0-labourRate"  disabled="" id="id_labour-0-labourRate" th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
+                                    <input type="number" name="labour-0-labourRate"
+                                           data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
+                                           data-calculation-operations="/"
+                                           disabled=""
+                                           id="id_labour-0-labourRate"
+                                           th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-days" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
+                                    <input type="number"
+                                           class="calculation-input-js"
+                                           data-calculation-input="labour-days"
+                                           name="labour-0-labourDays"
+                                           id="id_labour-0-labourDays"
+                                           th:value="${labourCost.getLabourDays()}" />
                                 </td>
                             </tr>
                             <tr>
