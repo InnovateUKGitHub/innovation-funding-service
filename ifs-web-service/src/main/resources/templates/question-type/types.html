@@ -19,7 +19,7 @@
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
-            <div th:class="'form-control-wrap '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+            <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                 <div class="form-group_header">
                     Information goes here
                 </div>
@@ -144,7 +144,7 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -188,7 +188,7 @@
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js"
+                                    <input type="number"
                                            data-calculation-input="labour-salary"
                                            name="labour-0-labourGrossSalary"
                                            id="id_labour-0-labourGrossSalary"
@@ -204,7 +204,6 @@
                                 </td>
                                 <td>
                                     <input type="number"
-                                           class="calculation-input-js"
                                            data-calculation-input="labour-days"
                                            name="labour-0-labourDays"
                                            id="id_labour-0-labourDays"
@@ -214,7 +213,7 @@
                             <tr>
                                 <td colspan="4" style="text-align: right;">
                                     Total costs £
-                                    <input type="number" class="calculation-result-js calculation-input-total-labour-row-js calculation-input-js"
+                                    <input type="number"
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js,[data-calculation-input=labour-days]"
                                            data-calculation-operations="/,*"
                                            data-calculation-input="total-labour-row"

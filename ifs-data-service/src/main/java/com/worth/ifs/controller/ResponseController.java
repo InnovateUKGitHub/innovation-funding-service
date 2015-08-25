@@ -63,6 +63,8 @@ public class ResponseController {
         if(markedAsComplete == null){
             markedAsComplete = true;
         }
+        log.info("Mark:::"+ markedAsComplete);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -81,9 +83,9 @@ public class ResponseController {
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
 
         if(response == null){
-            response = new Response(null, LocalDate.now(), "", true, userAppRoles.get(0), question, application);
+            response = new Response(null, LocalDate.now(), "", markedAsComplete, userAppRoles.get(0), question, application);
         }else{
-            response.setMarkedAsComplete(true);
+            response.setMarkedAsComplete(markedAsComplete);
             response.setDate(LocalDate.now());
             response.setUserApplicationRole(userAppRoles.get(0));
         }
