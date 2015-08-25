@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -36,27 +38,21 @@ public class SectionController {
 
 
     @RequestMapping("/getCompletedSections/{applicationId}")
-    public List<Long> getCompletedSectionsJson(@PathVariable("applicationId") final Long applicationId) {
+    public Set<Long> getCompletedSectionsJson(@PathVariable("applicationId") final Long applicationId) {
         return this.getCompletedSections(applicationId);
     }
-    private List<Long> getCompletedSections(Long applicationId){
-        List<Long> completedSections = new ArrayList<>();
+    private Set<Long> getCompletedSections(Long applicationId){
+        Set<Long> completedSections = new LinkedHashSet<>();
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         for (Section section : sections) {
-            boolean sectionComplete = false;
-
-            List<Question> questions = section.getQuestions();
-            for (Question question : questions) {
-                Response response = responseRepository.findByApplicationIdAndQuestionId(applicationId, question.getId());
-                if(response != null && response.isMarkedAsComplete()){
-                    sectionComplete = true;
-                }else{
-                    sectionComplete = false;
-                    break;
+            List<Section> childSections = section.getChildSections();
+            for (Section childSection : childSections) {
+                if(this.sectionIsComplete(childSection, applicationId)){
+                    completedSections.add(childSection.getId());
                 }
             }
-            if(sectionComplete){
+            if(this.sectionIsComplete(section, applicationId)){
                 completedSections.add(section.getId());
             }
         }
@@ -64,7 +60,7 @@ public class SectionController {
 
         completedSections=completedSections.stream()
                 .filter(c -> !incomplete.contains(c))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return completedSections;
     }
@@ -107,6 +103,20 @@ public class SectionController {
         }
 
         return incompleteSections;
+    }
+    private boolean sectionIsComplete(Section section, Long applicationId){
+        List<Question> questions = section.getQuestions();
+        boolean sectionComplete = false;
+        for (Question question : questions) {
+            Response response = responseRepository.findByApplicationIdAndQuestionId(applicationId, question.getId());
+            if(response != null && response.isMarkedAsComplete()){
+                sectionComplete = true;
+            }else{
+                sectionComplete = false;
+                break;
+            }
+        }
+        return sectionComplete;
     }
 
 

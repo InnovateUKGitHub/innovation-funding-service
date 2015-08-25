@@ -144,7 +144,7 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -188,22 +188,22 @@
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-1" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
+                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-salary" name="labour-0-labourGrossSalary" id="id_labour-0-labourGrossSalary" th:value="${#numbers.formatDecimal(labourCost.getGrossAnnualSalary(),0,0)}" />
                                 </td>
                                 <td>
                                     <input type="number" name="labour-0-labourRate"  disabled="" id="id_labour-0-labourRate" th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-2" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
+                                    <input type="number" class="calculation-input-js" data-calculation-input="labour-days" name="labour-0-labourDays"  id="id_labour-0-labourDays" th:value="${labourCost.getLabourDays()}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align: right;">
                                     Total costs £
-                                    <input type="number" class="calculation-result-js calculation-input-total-labour-js calculation-input-js"
-                                           data-calculation-field="[data-calculation-input=labour-1],.calculation-working-days-js,[data-calculation-input=labour-2]"
+                                    <input type="number" class="calculation-result-js calculation-input-total-labour-row-js calculation-input-js"
+                                           data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js,[data-calculation-input=labour-days]"
                                            data-calculation-operations="/,*"
-                                           data-calculation-input="total-labour"
+                                           data-calculation-input="total-labour-row"
                                            name="labour-0-labourTotalCost"  disabled="" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
                                 </td>
                             </tr>
@@ -219,12 +219,16 @@
                 <div class="form-group form-group--align-right">
                     <label>
                         Total labour costs £
-                        <input class="form-control form-control-1-4 calculation-total-labour-js calculation-result-js"
-                               data-calculation-field="[data-calculation-input=total-labour]"
+                        <input class="form-control form-control-1-4 calculation-total-labour-row-js calculation-result-js"
+                               data-calculation-field="[data-calculation-input=total-labour-row]"
                                data-calculation-operations="+"
+                               data-calculation-input="total-labour"
                                disabled="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                     </label>
                 </div>
+            </div>
+            <div class="alignright-button">
+                <button class="button" th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
             </div>
         </div>
     </div>
@@ -237,7 +241,8 @@
                 20% of labour costs
             </div>
             <div class="column-half" style="font-weight: bold">
-                Calculated rate: £<span id="calculated-rate">..</span>
+                Calculated rate: £<span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
+                                        data-calculation-operations=""></span>
             </div>
         </div>
         <br/>
@@ -263,18 +268,29 @@
         <div id="custom-rate" style="display: block;">
             <div class="form-group">
                 <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
-                <input type="number" name="overheads-customRate" class="form-control form-control-1-8" id="id_overheads-customRate" /> %
+                <input type="number"
+                       name="overheads-customRate"
+                       data-calculation-input="overhead-rate"
+                       class="form-control form-control-1-8"
+                       id="id_overheads-customRate"
+                       value="20" /> %
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
-                <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate" />
+                <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate"
+                       data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
+                       data-calculation-operations="/,*"
+                       data-calculation-input="overhead-calculated"/>
             </div>
         </div>
         <div class="form-group form-group--align-right">
             <label>
                 Total overhead costs £
-                <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts" />
+                <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts"
+                       data-calculation-field="[data-calculation-input=overhead-calculated]"
+                       data-calculation-operations=""
+                        />
             </label>
         </div>
     </div>
@@ -301,13 +317,18 @@
                                 <input type="text" name="materials-0-materialsItem" />
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsQuantity" />
+                                <input type="number" name="materials-0-materialsQuantity"
+                                       data-calculation-input="materials-item-quantity" />
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsCostPerItem" />
+                                <input type="number" name="materials-0-materialsCostPerItem"
+                                       data-calculation-input="materials-item-cost" />
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsTotal" disabled="" />
+                                <input type="number" name="materials-0-materialsTotal"
+                                       data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
+                                       data-calculation-operations="*"
+                                       disabled="" />
                             </td>
                         </tr>
                     </div>

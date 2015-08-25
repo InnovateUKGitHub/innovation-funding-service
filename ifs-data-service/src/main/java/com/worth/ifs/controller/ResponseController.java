@@ -63,16 +63,33 @@ public class ResponseController {
         if(markedAsComplete == null){
             markedAsComplete = true;
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        User user = userRepository.findOne(userId);
 
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
+        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+
+        if(userAppRoles == null || userAppRoles.size()== 0){
+            // user has no role on this application, so should not be able to write..
+            log.error("FORBIDDEN TO SAVE");
+            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+        }
 
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
-        response.setMarkedAsComplete(markedAsComplete);
+
+        if(response == null){
+            response = new Response(null, LocalDate.now(), "", true, userAppRoles.get(0), question, application);
+        }else{
+            response.setMarkedAsComplete(true);
+            response.setDate(LocalDate.now());
+            response.setUserApplicationRole(userAppRoles.get(0));
+        }
         responseRepository.save(response);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
         return new ResponseEntity<String>(headers, HttpStatus.OK);
 
     }

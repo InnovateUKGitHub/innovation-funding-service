@@ -7,10 +7,12 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        jcenter()
+        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
+        classpath "com.github.robfletcher:compass-gradle-plugin:2.0.5"
     }
 }
 
@@ -20,7 +22,18 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
+apply plugin: "com.github.robfletcher.compass"
 
+
+compass {
+    cssDir = file("src/main/resources/static/css")
+    sassDir = file("src/main/resources/static/sass")
+    imagesDir = file("src/main/resources/static/images")
+    javascriptsDir = file("src/main/resources/static/js")
+    outputStyle = "compressed"
+    time = true
+    quiet = true
+}
 war {
     baseName = 'ifs-web-service'
     version = '0.0.1-SNAPSHOT'
