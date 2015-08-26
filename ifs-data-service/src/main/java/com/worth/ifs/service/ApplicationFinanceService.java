@@ -12,6 +12,9 @@ public class ApplicationFinanceService extends BaseServiceProvider {
     String applicationFinanceRestURL;
 
     public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long organisationId) {
+        if(applicationId == null || organisationId == null){
+            return null;
+        }
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(dataRestServiceURL + applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
     }

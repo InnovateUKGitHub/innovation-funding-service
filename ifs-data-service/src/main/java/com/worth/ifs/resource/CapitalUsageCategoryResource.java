@@ -16,8 +16,6 @@ public class CapitalUsageCategoryResource  extends CostCategoryResource {
         super(sectionId, questionId, categoryId);
         this.total = 0.0;
         this.capitalUsages = capitalUsages;
-
-        calculateTotal();
     }
 
     public void calculateTotal() {
@@ -25,6 +23,7 @@ public class CapitalUsageCategoryResource  extends CostCategoryResource {
     }
 
     public Double getTotal() {
+        calculateTotal();
         return total;
     }
 

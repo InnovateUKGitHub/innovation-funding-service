@@ -27,6 +27,9 @@ public class CostValue implements Serializable {
     @PrimaryKeyJoinColumn(name="costFieldId", referencedColumnName="id")
     private CostField costField;
 
+    public CostValue() {
+    }
+
     public CostValue(String value) {
         this.value = value;
     }
