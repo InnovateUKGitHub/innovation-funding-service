@@ -121,7 +121,12 @@ public class ApplicationController {
         log.error("Total questions" + questions.size());
         log.error("Total completed questions" + countCompleted);
 
-        double percentageCompleted = (100 / questions.size()) * countCompleted;
+        double percentageCompleted;
+        if(questions.size() == 0){
+            percentageCompleted = 0;
+        }else{
+            percentageCompleted = (100 / questions.size()) * countCompleted;
+        }
 
 
         ObjectMapper mapper = new ObjectMapper();
