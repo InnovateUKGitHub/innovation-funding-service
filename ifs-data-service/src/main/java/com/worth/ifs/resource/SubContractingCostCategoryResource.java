@@ -30,6 +30,6 @@ public class SubContractingCostCategoryResource  extends CostCategoryResource {
     }
 
     private void calculateTotal() {
-        total = subContractingCosts.stream().mapToDouble(m -> m.getCost()).sum();
+        total = subContractingCosts.stream().mapToDouble(s -> s.getCost()).sum();
     }
 }

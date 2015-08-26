@@ -381,8 +381,9 @@
                 <div th:each="capitalUsage : ${costCategoryResource.getCapitalUsages()}" >
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
-                        <textarea id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item"
-                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3"></textarea>
+                        <input type="textarea" id="" class="form-control form-finances-capital-usage-item"
+                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3" th:value="${capitalUsage.getDescription()}" />
+
                     </div>
 
                     <div class="form-group">
@@ -403,13 +404,13 @@
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">NPV at project start or purchase price (£)</label>
                         <input type="number" value="10000" id="id_capitalusage-0-capitalUsageNPV" class="form-control form-finances-capital-usage-npv" name="capitalusage-0-capitalUsageNPV"
-                               th:value="${capitalUsage.getNpv()}"/>
+                               th:value="${#numbers.formatDecimal(capitalUsage.getNpv(),0,0)}"/>
                     </div>
 
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageResidualValue" class="form-label">Residual value at end of project (£)</label>
                         <input type="number" value="200" id="id_capitalusage-0-capitalUsageResidualValue" class="form-control form-finances-capital-usage-residual-value" name="capitalusage-0-capitalUsageResidualValue"
-                               th:value="${capitalUsage.getResidualValue()}"/>
+                               th:value="${#numbers.formatDecimal(capitalUsage.getResidualValue(),0,0)}"/>
                     </div>
 
                     <div class="form-group">
@@ -421,9 +422,154 @@
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageNetCost" class="form-label">Net Cost (£)</label>
                         <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" disabled="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"
-                               th:value="${capitalUsage.getNextCost()}"/>
+                               th:value="${#numbers.formatDecimal(capitalUsage.getNetCost(),0,0)}"/>
                     </div>
                 </div>
+                <p style="text-align: right;">
+                    <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
+                </p>
+                <div class="form-group form-group--align-right">
+                    <label>
+                        Total capital usage costs £
+                        <input class="form-control form-control-1-4" disabled="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: subcontracting cost =========================== -->
+    <div th:fragment="subcontracting_costs">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+            <div th:each="subContractingCost : ${costCategoryResource.getSubContractingCosts()}" >
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="id_subcontracting-0-subcontractingCompanyName">Subcontractor name</label>
+                        <input type="text" name="subcontracting-0-subcontractingCompanyName" class="form-control form-finances-subcontracting-company" id="id_subcontracting-0-subcontractingCompanyName" th:value="${subContractingCost.getName()}" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_subcontracting-0-subcontractingCountry">Country where work will be carried out</label>
+                        <input type="text" name="subcontracting-0-subcontractingCountry" class="form-control form-finances-subcontracting-country" id="id_subcontracting-0-subcontractingCountry" th:value="${subContractingCost.getCountry()}" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_subcontracting-0-subcontractingRole">Role in the project and description of work being carried out</label>
+                        <textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="id_subcontracting-0-subcontractingRole" th:inline="text">[[${subContractingCost.getRole()}]]</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_subcontracting-0-subcontractingCost">Cost</label>
+                        <input type="number" name="subcontracting-0-subcontractingCost" class="form-control form-finances-subcontracting-cost" id="id_subcontracting-0-subcontractingCost" th:value="${#numbers.formatDecimal(subContractingCost.getCost(),0,0)}" />
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: right;">
+                <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
+            </p>
+            <div class="form-group form-group--align-right">
+                <label>
+                    Total subcontracting costs £
+                    <input class="form-control form-control-1-4" disabled="" type="text" id="subcontracting-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                </label>
+            </div>
+            <div class="form-group form-group--align-right">
+                <p class="saving saved"></p>
+                <a class="js-finances-complete button" href="#">Complete</a>
+            </div>
+        </div>
+    </div>
+    <!-- ===========================Form: travel cost =========================== -->
+    <div th:fragment="travel">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+            <div class="form-group">
+                <table id="travel-costs-table">
+                    <thead>
+                    <tr>
+                        <th>Purpose of journey or description of subsistence cost</th>
+                        <th>Number of times</th>
+                        <th>Cost each (£)</th>
+                        <th>Total (£)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="travelCost : ${costCategoryResource.getTravelCosts()}" >
+                        <tr>
+                            <td>
+                                <input type="text" name="travel-0-travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
+                            </td>
+                            <td>
+                                <input type="number" name="travel-0-travelNumTimes" class="form-control form-control-1-1 form-finances-travel-number" id="id_travel-0-travelNumTimes" th:value="${travelCost.getQuantity()}" />
+                            </td>
+                            <td>
+                                <input type="number" name="travel-0-travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
+                            </td>
+                            <td>
+                                <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" disabled="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
+                            </td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p style="text-align: right;">
+                    <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
+                </p>
+            </div>
+            <div class="form-group form-group--align-right">
+                <label>
+                    Total travel &amp; subsistence costs £
+                    <input class="form-control form-control-1-4" disabled="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                </label>
+            </div>
+            <div class="form-group form-group--align-right">
+                <p class="saving saved"></p>
+                <a class="js-finances-complete button" href="#">Complete</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: other cost =========================== -->
+    <div th:fragment="other_costs">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:each="costCategoryResource : ${applicationFinanceResource.getCostCategoryResources()}" th:if="${costCategoryResource.getQuestionId()} == ${question.getId()}">
+            <div class="form-group">
+                <table id="other-costs-table">
+                    <thead>
+                    <tr>
+                        <th>Description and justification of the cost</th>
+                        <th>Estimated cost (£)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="otherCost : ${costCategoryResource.getOtherCosts()}" >
+                        <tr>
+                            <td>
+                                <textarea rows="3" cols="40" name="other-0-otherDescription" class="form-control form-control-1-1 form-finances-other-description" id="id_other-0-otherDescription" th:inline="text">[[${otherCost.getDescription()}]]</textarea>
+                            </td>
+                            <td>
+                                <input type="number" name="other-0-otherCost" class="form-control form-control-1-1 form-finances-other-cost" id="id_other-0-otherCost" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
+                            </td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p style="text-align: right;">
+                    <a th:href="@{/application-form/addanother/{applicationId}/{sectionId}/{id}(id=${costCategoryResource.getCategoryId()},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
+                </p>
+            </div>
+            <div class="form-group form-group--align-right">
+                <label>
+                    Total other costs £
+                    <input class="form-control form-control-1-4" disabled="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}"/>
+                </label>
+            </div>
+            <div class="form-group form-group--align-right">
+                <p class="saving saved"></p>
+                <a class="js-finances-complete button" href="#">Complete</a>
             </div>
         </div>
     </div>

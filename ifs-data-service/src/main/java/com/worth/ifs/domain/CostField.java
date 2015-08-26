@@ -19,6 +19,9 @@ public class CostField {
     @OneToMany(mappedBy="costField")
     private List<CostValue> costValues = new ArrayList<CostValue>();
 
+    public CostField() {
+    }
+
     public CostField(Long id, String title, String type) {
         this.id = id;
         this.title = title;
