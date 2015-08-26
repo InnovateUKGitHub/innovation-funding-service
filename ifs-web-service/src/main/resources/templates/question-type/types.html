@@ -456,7 +456,12 @@
 
                     <div class="form-group">
                         <label class="form-label" for="id_subcontracting-0-subcontractingCost">Cost</label>
-                        <input type="number" name="subcontracting-0-subcontractingCost" class="form-control form-finances-subcontracting-cost" id="id_subcontracting-0-subcontractingCost" th:value="${#numbers.formatDecimal(subContractingCost.getCost(),0,0)}" />
+                        <input type="number"
+                               name="subcontracting-0-subcontractingCost"
+                               class="form-control form-finances-subcontracting-cost"
+                               id="id_subcontracting-0-subcontractingCost"
+                               data-calculation-input="subcontracting-cost-row"
+                               th:value="${#numbers.formatDecimal(subContractingCost.getCost(),0,0)}" />
                     </div>
                 </div>
             </div>
@@ -466,7 +471,13 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total subcontracting costs £
-                    <input class="form-control form-control-1-4" disabled="" type="text" id="subcontracting-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                    <input class="form-control form-control-1-4"
+                           disabled=""
+                           type="text"
+                           id="subcontracting-costs-total-field"
+                           data-calculation-field="[data-calculation-input=subcontracting-cost-row]"
+                           data-calculation-operations="+"
+                           th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">

@@ -3,14 +3,9 @@ Library           Selenium2Library
 Library           string
 
 *** Test Cases ***
-Select one of the applications
-    Given the user is in the Dashboard page
-    When the Applicant clicks the "Rovel Additive Manufacturing Process" application
-    Then the Applicant should see the overview of the selected application
-
 Verify the Autosave for the "Rovel additive..." Application form
     Given the Applicant opens the "Rovel additive" application form
-    When the applicant enters some text
+    When the Applicant enters some text
     and the Applicant refreshes the page
     Then the text should be visible
 
@@ -21,59 +16,50 @@ Verify the Questions guidance for the "Rovel additive..." Application form
 
 Verify the navigation for the "Rovel additive..." form
     Given the Applicant opens the "Rovel additive" application form
-    When the applicant clicks the sections
-    #Then the Applicant will navigate to the corect section
+    When the Applicant clicks the sections then the Applicant navigates to the correct sections
 
-Verify that the applicant can upload a file in the "Rovel additive..." \ form
+Verify that the word count is available
     Given the Applicant opens the "Rovel additive" application form
-    When the applicant uploads a file
-    Then the file should be uploaded
+    When the Applicant clicks the Funding section
+    Then the word count should be available in the text areas
 
-Verify the character count for the "Rovel additive..." Application form
+Verify that the word count works
     Given the Applicant opens the "Rovel additive" application form
+    When the Applicant edits project summary
+    Then the word count should be correct for the project summary
+    And when the Applicant edits the Project scope Question
+    Then the word count for the scope question should be correct
 
 Verify the "review and submit" button
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant clicks the "Review and submit" button
     Then the applicant will navigate to the summary page
 
+Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
+    Given the Applicant opens the "Rovel additive" application form
+    When the Applicant edits project summary
+    Then the text box should turn to green
+    and the button state should change to \ 'Edit'
+
 *** Keywords ***
-the user is in the Dashboard page
-    go to    http://ifs.test.worth.systems/applicant/dashboard
-
-the Applicant clicks the "Rovel Additive Manufacturing Process" application
-    Click Link    link=Rovel Additive Manufacturing Process
-
-the Applicant should see the overview of the selected application
-    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
-
-the applicant clicks the "What should I include in project summary?" question
-    Click Element    css=.grid-row , .form-group:nth-child(4) summary
-
-the guidance should be visible
-    Page Should Contain Element    css=.grid-row , .form-group:nth-child(4) summary[aria-expanded="false"]
-    Page Should Contain    This is an opportunity to provide a short summary of the key objectives and focus areas of the project. It is important that this summary is presented in reference to the main outline of the project, with sufficient information to provide a clear understanding of the overall vision of the project and its innovative nature.
-
 the Applicant opens the "Rovel additive" application form
     Go To    http://ifs.test.worth.systems/applicant/dashboard
     Click Element    link=Rovel Additive Manufacturing Process
     Click Element    link=Application details
 
-the applicant enters some text
+the Applicant enters some text
+    Click Element    css=#question-11 button
     Clear Element Text    name=question[11]
     Input Text    name=question[11]    Save test #123
+    Click Element    css=#question-12 button
     Clear Element Text    name=question[12]
     Input Text    name=question[12]    I am a robot
-    Sleep    Sleep    10 seconds
-    Click Element    link= Scope (Gateway question)
-    Clear Element Text    name=question[13]
-    Input Text    name=question[13]    test text 2
-    Sleep    Sleep 10 seconds
-    Click Element    Click Element    link=Business proposition (Q1 - Q4)
-    Clear Element Text    Clear Element Text    name=question[1]
+    Sleep    6 seconds
+    Click Element    link=Business proposition (Q1 - Q4)
+    Click Element    css=#question-1 button
+    Clear Element Text    name=question[1]
     Input Text    name=question[1]    test text 3
-    Sleep    10 seconds
-    Click Element    link=Funding (Q9 - Q10)
+    Sleep    6 seconds
 
 the Applicant refreshes the page
     Reload Page
@@ -88,10 +74,18 @@ the text should be visible
     Click Element    link=Funding (Q9 - Q10)
     Textarea Should Contain    name=question[15]    text test 5
 
-the applicant clicks the sections
-    Click Element    link= Scope (Gateway question)
+the applicant clicks the "What should I include in project summary?" question
+    Click Element    css=#question-11 summary
+
+the guidance should be visible
+    Page Should Contain Element    css=#question-11 summary[aria-expanded="true"]
+    Element Should Be Visible    css=#details-content-0 p
+    Capture Page Screenshot
+
+When the Applicant clicks the sections then the Applicant navigates to the correct sections
+    Click Element    link= Scope
     Location Should Be    http://ifs.test.worth.systems/application-form/1/section/2/?question=1
-    Click Element    link= Business proposition (Q1 - Q4)
+    Click Element    link=Your business proposition (Q1 - Q4)
     Location Should Be    http://ifs.test.worth.systems/application-form/1/section/3/?question=1
     Click Element    link= Project approach (Q5 - Q8)
     Location Should Be    http://ifs.test.worth.systems/application-form/1/section/4/?question=1
@@ -99,12 +93,34 @@ the applicant clicks the sections
     Location Should Be    http://ifs.test.worth.systems/application-form/1/section/5/?question=1
     Click Element    link=Finances
     Location Should Be    http://ifs.test.worth.systems/application-form/1/section/6/?question=1
+    Click Element    link=Your finances
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/7/?question=1
+    Click Element    link=Project financial summary
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/8/?question=1
 
-the applicant uploads a file
-    Choose File    css=div.grid-row > div.column-two-thirds > form > div:nth-child(5) > div:nth-child(3) > input[type="file"]    /home/mtsiropoulos/Pictures/images (2).jpg
+When the Applicant clicks the Funding section
+    Click Element    link=Funding (Q9 - Q10)
 
-the file should be uploaded
-    Element Should Be Visible    //*[@id="content"]/div[2]/div[2]/form/div[3]/div[3]/input
+the word count should be available in the text areas
+    Page Should Contain Element    css=#question-15 .column-half--second
+    Page Should Contain Element    css=#question-16 .column-half--second
+
+When the Applicant edits project summary
+    Click Element    css=#question-11 button
+    Clear Element Text    name=question[11]
+    Wait Until Page Contains Element    css=#question-11 .column-half--second    999
+    Input Text    name=question[11]    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo test @.
+    Click Button    css=#question-11 button
+
+the word count should be correct for the project summary
+    Element Should Contain    css=#question-11 .column-half--second    963
+
+And when the Applicant edits the Project scope Question
+    Click Element    link=Scope
+    Click Button    css=#question-13 button
+    Clear Element Text    name=question[13]
+    Input Text    name=question[13]    Lorem ipsum dolor sit amet, consectetur adip isci ng elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpaExcepteur sint occaecat cupidatat non @
+    Click Button    css=#question-13 button
 
 the Applicant clicks the "Review and submit" button
     Page Should Contain element    link=Review & submit
@@ -112,3 +128,12 @@ the Applicant clicks the "Review and submit" button
 
 the applicant will navigate to the summary page
     Location Should Be    http://ifs.test.worth.systems/application/1/summary
+
+the text box should turn to green
+    Page Should Contain Element    css=#question-11 .marked-as-complete
+
+the button state should change to \ 'Edit'
+    Page Should Contain Element    css=#question-11 button    Edit
+
+the word count for the scope question should be correct
+    Element Should Contain    css=#question-13 .column-half--second    0
