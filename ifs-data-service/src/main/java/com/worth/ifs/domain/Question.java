@@ -141,6 +141,6 @@ public class Question {
     }
 
     public Boolean isMarkAsCompletedEnabled() {
-        return markAsCompletedEnabled;
+        return (markAsCompletedEnabled == null ? false : markAsCompletedEnabled);
     }
 }
