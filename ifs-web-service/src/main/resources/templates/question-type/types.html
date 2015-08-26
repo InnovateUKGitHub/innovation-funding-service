@@ -208,13 +208,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4" style="text-align: right;">
+                                <td colspan="3" style="text-align: right;">
                                     Total costs £
+                                </td>
+                                <td>
                                     <input type="number"
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js,[data-calculation-input=labour-days]"
                                            data-calculation-operations="/,*"
                                            data-calculation-input="total-labour-row"
-                                           name="labour-0-labourTotalCost"  disabled="" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
+                                           name="labour-0-labourTotalCost"  readonly="readonly" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
                                 </td>
                             </tr>
                         </div>
