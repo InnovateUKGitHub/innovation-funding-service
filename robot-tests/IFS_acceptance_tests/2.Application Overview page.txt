@@ -3,12 +3,12 @@ Library           Selenium2Library
 Library           string
 
 *** Test Cases ***
-Select one of the applications
+Verify that the Applicant can access the Overview page
     Given the user is logged in as applicant
     When the Applicant clicks the "Rovel Additive Manufacturing Process" application
     Then the Applicant should see the overview of the selected application
 
-List with sections for the application overview
+Verify that the Applicant can see the List with the sections
     Given the Applicant is in the application overview page
     Then the applicant should see six sections
 
@@ -30,6 +30,7 @@ the Applicant clicks the "Rovel Additive Manufacturing Process" application
 
 the Applicant should see the overview of the selected application
     Location Should Be    http://ifs.test.worth.systems/application/1/section/1
+    Capture Page Screenshot
 
 the Applicant is in the application overview page
     Location Should Be    http://ifs.test.worth.systems/application/1/section/1
@@ -41,6 +42,7 @@ the applicant should see six sections
     Page Should Contain Element    css=.section-overview > div:nth-of-type(4)
     Page Should Contain Element    css=.section-overview > div:nth-of-type(5)
     Page Should Contain Element    css=.section-overview > div:nth-of-type(6)
+    Capture Page Screenshot
 
 the Applicant clicks the "Scope" section
     [Documentation]    1. click second section
@@ -67,4 +69,5 @@ the second section should be visible
     Page Should Contain Element    css=.section-overview > div:nth-of-type(2)[aria-hidden="false"]
 
 the "Scope" sub-section should be visible
-    Element Should Be Visible    link=How does your application align with the specific competition scope?
+    Element Should Be Visible    link=How does your project align with the scope of this competition?
+    Capture Page Screenshot
