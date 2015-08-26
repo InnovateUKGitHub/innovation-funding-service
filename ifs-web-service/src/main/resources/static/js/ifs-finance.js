@@ -27,7 +27,9 @@ var worthIFSFinance = {
                 }else{
                     values = [];
                     $(selector).each(function(index){
-                        values[index] = parseInt($(this).val());
+                        if(!_.isNaN(parseInt($(this).val()))){
+                            values[index] = parseInt($(this).val());
+                        }
                     });
                     return values;
                 }
