@@ -12,33 +12,29 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
-
     <h1 class="heading-xlarge">Application overview</h1>
+    <div class="grid-row">
 
 
+        <div class="column-half column-half--first competition-details">
+            <h2 class="bold-medium">Competition details</h2>
+            <p data-th-text="${currentCompetition.getDescription()}"></p>
+            <h3 class="heading-small">Application progress:</h3>
+            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage}" th:remove="tag" />
 
-        <div class="grid-row">
-            <div class="column-half column-half--first competition-details">
-
-                <h2 class="bold-medium">Competition details</h2>
-
-                <p data-th-text="${currentCompetition.getDescription()}"></p>
-
-                <h3 class="heading-small">Application progress:</h3>
-                <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage}" th:remove="tag" />
-            </div>
-            <div class="column-half column-half--second">
-                <h2 class="bold-medium">Application Team</h2>
-                <ul class="list-bullet">
-                    <li th:each="organisation : ${applicationOrganisations}">
-                        <span th:text="${organisation.getName()}"></span>
-                        <small th:if="${organisation.equals(leadOrganisation)}" style="display: inline; font-size: 16px;" class="form-hint">(Lead partner)</small>
-                    </li>
-                </ul>
-            </div>
         </div>
 
-
+        <div class="column-half column-half--second">
+            <h2 class="bold-medium">Application Team</h2>
+            <ul class="list-bullet">
+                <li th:each="organisation : ${applicationOrganisations}">
+                    <span th:text="${organisation.getName()}"></span>
+                    <small th:if="${organisation.equals(leadOrganisation)}">(Lead partner)</small>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
     <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 data-th-text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')" />

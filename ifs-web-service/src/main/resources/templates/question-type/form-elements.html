@@ -108,11 +108,10 @@
 
 <!-- ========================= textarea with word count =========================== -->
 
-<div th:fragment="form-textarea">
-	<div th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
+<div th:fragment="form-textarea" th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
+	<div >
 
 		<textarea
-		   th:disabled="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
 		   th:readonly="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
 		   th:attr="data-question_id=${question.getId()},data-max_words=${question.getWordCount()}"
 		   cols="30" rows="10"

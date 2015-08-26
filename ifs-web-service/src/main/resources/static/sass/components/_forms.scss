@@ -13,6 +13,14 @@
 ```
 
 */
+textarea[readonly],
+textarea[disabled],
+input[readonly],
+input[disabled]{
+    color:$secondary-text-colour;
+}
+
+
 .form-control-wrap {
     background-color: #fff;
     border: 1px solid $border-colour;
