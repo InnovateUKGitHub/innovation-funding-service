@@ -2,6 +2,11 @@
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Form'"  th:remove="tag" />
+    <style>
+        .form-group+#id_capitalusage-0-capitalUsageItem {
+        display: none;
+        }
+    </style>
 </head>
 <body class="app-form">
 
