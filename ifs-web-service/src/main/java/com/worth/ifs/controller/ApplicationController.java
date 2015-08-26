@@ -4,10 +4,7 @@ import com.worth.ifs.constant.ApplicationStatusConstants;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.helper.SectionHelper;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.ResponseService;
-import com.worth.ifs.service.SectionService;
-import com.worth.ifs.service.UserService;
+import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sun.security.x509.OIDMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +31,9 @@ public class ApplicationController {
 
     @Autowired
     ApplicationService applicationService;
+
+    @Autowired
+    OrganisationService organisationService;
 
     @Autowired
     SectionService sectionService;
@@ -62,11 +60,12 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
+        this.addApplicationTeam(application, model);
+
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
         List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
         model.addAttribute("incompletedSections", incompletedSections);
-
 
         List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
         HashMap<Long, Response> responseMap = new HashMap<>();
@@ -83,6 +82,24 @@ public class ApplicationController {
         model.addAttribute("sections", sections);
     }
 
+    private void addApplicationTeam(Application application, Model model){
+        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        Set<Organisation> organisations = userApplicationRoles.stream()
+                .map(uar -> uar.getOrganisation())
+                .collect(Collectors.toSet());
+
+        Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
+                .filter(uar -> uar.getRole().getName().equals("leadapplicant"))
+                .map(uar -> uar.getOrganisation())
+                .findFirst();
+
+        if(leadOrganisation.isPresent()){
+            model.addAttribute("leadOrganisation", leadOrganisation.get());
+        }else{
+            log.error("NO lead organisation.");
+        }
+        model.addAttribute("applicationOrganisations", organisations);
+    }
 
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){

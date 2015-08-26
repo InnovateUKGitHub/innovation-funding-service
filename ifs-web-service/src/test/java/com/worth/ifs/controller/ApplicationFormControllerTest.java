@@ -52,7 +52,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
             mockMvc.perform(get("/application-form/1"))
                     .andExpect(view().name("application-form"))
                     .andExpect(model().attribute("currentApplication", app))
-                    .andExpect(model().attribute("currentSectionId", 0L));
+                    .andExpect(model().attribute("currentSectionId", 0L))
+                    .andExpect(model().attribute("applicationOrganisations", organisations));
 
     }
 
@@ -63,10 +64,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getApplicationById(app.getId())).thenReturn(app);
 
+
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentSectionId", 1L));
+                .andExpect(model().attribute("currentSectionId", 1L))
+                .andExpect(model().attribute("applicationOrganisations", organisations));
 
     }
 

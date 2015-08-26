@@ -37,6 +37,8 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
+    public OrganisationService organisationService;
+    @Mock
     public ApplicationFinanceService applicationFinanceService;
     @Mock
     public UserService userService;
@@ -48,6 +50,8 @@ public class BaseUnitTest {
     public List<Section> sections;
     public Map<Long, Question> questions;
     public Competition competition;
+    public List<User> users;
+    public List<Organisation> organisations;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -58,6 +62,9 @@ public class BaseUnitTest {
 
     public void setup(){
         loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
+        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
+        users = Arrays.asList(loggedInUser, user2);
+
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
 
         applications = new ArrayList<>();
@@ -116,19 +123,24 @@ public class BaseUnitTest {
         Application app2 = new Application(2L, "Providing sustainable childcare", new ApplicationStatus(2L, "submitted"));
         Application app3 = new Application(3L, "Mobile Phone Data for Logistics Analytics", new ApplicationStatus(3L, "approved"));
         Application app4 = new Application(4L, "Using natural gas to heat homes", new ApplicationStatus(4L, "rejected"));
-        Role role = new Role(1L, "leadapplicant", null);
+        Role role1 = new Role(1L, "leadapplicant", null);
+        Role role2 = new Role(2L, "collaborator", null);
 
-        Organisation organisation1 = new Organisation(1L, "Organisation name");
+        Organisation organisation1 = new Organisation(1L, "Empire Ltd");
+        Organisation organisation2 = new Organisation(2L, "Ludlow");
+        organisations = Arrays.asList(organisation1, organisation2);
 
-        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role, organisation1);
-        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role, organisation1);
-        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role, organisation1);
-        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role, organisation1);
+        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role1, organisation1);
+        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role1, organisation1);
+        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role1, organisation1);
+        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role1, organisation1);
+
+        UserApplicationRole userAppRole5 = new UserApplicationRole(5L, users.get(1), app1, role2, organisation1);
 
         competition.addApplication(app1, app2, app3, app4);
 
         app1.setCompetition(competition);
-        app1.setUserApplicationRoles(Arrays.asList(userAppRole1));
+        app1.setUserApplicationRoles(Arrays.asList(userAppRole1, userAppRole5));
         app2.setCompetition(competition);
         app2.setUserApplicationRoles(Arrays.asList(userAppRole2));
         app3.setCompetition(competition);
@@ -136,7 +148,8 @@ public class BaseUnitTest {
         app4.setCompetition(competition);
         app4.setUserApplicationRoles(Arrays.asList(userAppRole4));
 
-        loggedInUser.addUserApplicationRole(userAppRole1, userAppRole2, userAppRole3, userAppRole3);
+        loggedInUser.addUserApplicationRole(userAppRole1, userAppRole2, userAppRole3, userAppRole4);
+        users.get(1).addUserApplicationRole(userAppRole5);
         applications = Arrays.asList(app1, app2, app3, app4);
 
         when(sectionService.getCompletedSectionIds(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
@@ -147,6 +160,9 @@ public class BaseUnitTest {
         when(applicationService.getApplicationById(app2.getId())).thenReturn(app2);
         when(applicationService.getApplicationById(app3.getId())).thenReturn(app3);
         when(applicationService.getApplicationById(app4.getId())).thenReturn(app4);
+
+
+        when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 
     }
 

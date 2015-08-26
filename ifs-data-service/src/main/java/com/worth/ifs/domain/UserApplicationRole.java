@@ -46,7 +46,6 @@ public class UserApplicationRole {
 
     }
 
-    @JsonIgnore
     public Role getRole() {
         return role;
     }

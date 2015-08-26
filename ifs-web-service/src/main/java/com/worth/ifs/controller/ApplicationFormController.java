@@ -38,6 +38,8 @@ public class ApplicationFormController {
     @Autowired
     ApplicationFinanceService applicationFinanceService;
     @Autowired
+    OrganisationService organisationService;
+    @Autowired
     UserService userService;
     @Autowired
     SectionService sectionService;
@@ -59,6 +61,7 @@ public class ApplicationFormController {
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
+
 
 
         List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());

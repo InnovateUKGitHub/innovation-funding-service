@@ -30,20 +30,9 @@
             <div class="column-half column-half--second">
                 <h2 class="bold-medium">Application Team</h2>
                 <ul class="list-bullet">
-                    <li>
-                        Empire Ltd <small style="display: inline; font-size: 16px;" class="form-hint">(Lead partner)</small>
-                    </li>
-                    <li>
-                        Ludlow
-                    </li>
-                    <li>
-                        Manchester University
-                    </li>
-                    <li>
-                        EGGS
-                    </li>
-                    <li>
-                        AA Ltd
+                    <li th:each="organisation : ${applicationOrganisations}">
+                        <span th:text="${organisation.getName()}"></span>
+                        <small th:if="${organisation.equals(leadOrganisation)}" style="display: inline; font-size: 16px;" class="form-hint">(Lead partner)</small>
                     </li>
                 </ul>
             </div>
