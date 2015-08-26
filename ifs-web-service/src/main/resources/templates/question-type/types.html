@@ -57,14 +57,14 @@
     <div th:fragment="application_details">
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of the project')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
         </div>
 
         <div class="form-group">
 
-            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 
             Project start date
@@ -77,14 +77,16 @@
 
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
-            Nomensa
+            Empire Ltd
         </div>
 
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
             <ul class="list-bullet">
-                <li>BAE Systems Plc</li>
-                <li>Google Inc.</li>
+                <li>Ludlow</li>
+                <li>Manchester University</li>
+                <li>EGGS</li>
+                <li>AA Ltd</li>
             </ul>
         </div>
     </div>
@@ -95,7 +97,7 @@
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
             Project start date
             <br/>
 
@@ -105,14 +107,16 @@
 
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
-            Nomensa
+            Empire Ltd
         </div>
 
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
             <ul class="list-bullet">
-                <li>BAE Systems Plc</li>
-                <li>Google Inc.</li>
+                <li>Ludlow</li>
+                <li>Manchester University</li>
+                <li>EGGS</li>
+                <li>AA Ltd</li>
             </ul>
         </div>
     </div>
@@ -144,8 +148,8 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${ responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+                    <div th:include="question-type/types :: ${question.getQuestionType().getTitle()}"/>
                 </div>
             </div>
         </div>
