@@ -109,16 +109,16 @@ public class Competition {
     }
     @JsonIgnore
     public long getTotalDays(){
-        long daysTotal = ChronoUnit.DAYS.between(startDate, endDate);
+        long daysTotal = ChronoUnit.DAYS.between(this.startDate, this.endDate);
         return daysTotal;
     }
     @JsonIgnore
-    public double getStartDateToEndDatePercentage(){
-        if(getDaysLeft() < 0){
+    public long getStartDateToEndDatePercentage(){
+        if(getDaysLeft() <= 0){
             return 100;
         }
-        double deadlineProgress = (getDaysLeft() * 100) / getTotalDays();
-        deadlineProgress = 100 - deadlineProgress;
-        return deadlineProgress;
+        double deadlineProgress = 100-( ( (double)getDaysLeft()/(double)getTotalDays() )* 100);
+        long startDateToEndDatePercentage = (long) deadlineProgress;
+        return startDateToEndDatePercentage;
     }
 }
