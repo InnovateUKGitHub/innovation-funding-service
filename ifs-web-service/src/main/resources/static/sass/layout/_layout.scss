@@ -1,0 +1,29 @@
+//layout
+.header-global .navigation-list  {
+	margin: 0 15px;
+	a{ color:#fff;}
+}
+//no margins for the page headers
+.page-header {
+	margin-left:0;
+	margin-right:0;
+}
+.header-new-sub-wrapper {
+	background: $grey-4;
+	border-top: 10px solid $fuschia;
+	clear: both;
+	font-weight: 700;
+	padding: 10px 15px;
+	margin: 0 -15px;
+	position: relative;
+	line-height:40px;
+
+
+	.pie-container {
+		float:right;
+	}
+	.pie-overlay {
+		background: $grey-4;
+		
+	}
+}

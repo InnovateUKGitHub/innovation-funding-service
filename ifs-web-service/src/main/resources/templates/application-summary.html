@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'"  th:remove="tag"></div>
+</head>
+<body class="app-summary">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div class="header-new-sub-wrapper">
+        <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
+    </div>
+
+    <h1 class="heading-xlarge">Application Summary</h1>
+    <div class="competition-details">
+        Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
+    </div>
+
+    <div class="collapsible section-overview">
+        <div th:remove="tag" th:each="section : ${sections}">
+            <h2 data-th-text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')+' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
+            <ul>
+                <li class="section" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }">
+                    <div th:remove="tag" th:replace="question-type/types :: 'readonly_'+${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $currentApplication=(${currentApplication}), $section=(${section})"/>
+                 </li>
+            </ul>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        <span class="icon icon-information"></span>
+        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
+    </div>
+
+    <div class="alignright-button">
+        <a role="button" class="button" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${incompletedSections.size() == 0}">Submit application</a>
+        <button disabled="disabled" role="button" class="button" th:unless="${incompletedSections.size() == 0}">Submit application</button>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

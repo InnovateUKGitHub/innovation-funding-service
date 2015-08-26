@@ -1,0 +1,108 @@
+group 'worth'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        springBootVersion = '1.2.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+
+war {
+    baseName = 'ifs-data-service'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+configurations {
+    providedRuntime
+    clientCompile
+}
+
+sourceSets {
+    client {
+        java {
+            srcDir 'src/main/java'
+            include 'com/worth/ifs/domain'
+        }
+    }
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.security:spring-security-crypto")
+    compile("mysql:mysql-connector-java")
+    compile("org.springframework:spring-web")
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    compile("org.projectlombok:lombok:1.16.2")
+    compile("com.jayway.jsonpath:json-path-assert:2.0.0")
+    compile("org.springframework.hateoas:spring-hateoas")
+    compile("com.jayway.jsonpath:json-path")
+
+    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'org.mockito:mockito-core'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+
+    // for the api lib:
+    /*compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'*/
+    compile fileTree(dir: "libs", include: "*.jar")
+}
+
+task client(type: Jar) {
+    baseName += '-api'
+    from(sourceSets.main.output) {
+        // filter to only include certain class files (Ant glob pattern)
+        include "com/worth/ifs/service/**"
+        include "com/worth/ifs/domain/**"
+        include "com/worth/ifs/constant/**"
+        include "com/worth/ifs/resource/**"
+    }
+}
+task clientCopy(type: Copy){
+    into "../ifs-web-service/libs"
+    from "build/libs/"
+    include("ifs-data-service-api*")
+}
+
+artifacts {
+    archives client
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
+    rename ('(.*).war', 'ROOT.war')
+}

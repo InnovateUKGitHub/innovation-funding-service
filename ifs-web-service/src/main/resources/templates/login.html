@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Sign In'"  th:remove="tag"></div>
+</head>
+<body class="sign-in">
+
+    <div th:include="fragments/layout :: body-start" th:remove="tag"></div>	
+    <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+	<main id="content">
+   		 <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+
+
+
+<div th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+	<h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+	  Your username/password combination doesn't seem to work
+	</h1>
+	<p>
+	  Please try again 
+	</p>
+</div>
+
+
+
+<div class="grid-row">
+	<div class="column-half">
+        <form action="/login" th:object="${loginForm}" method="POST">
+			<h2 class="heading-large">Sign in</h2>
+
+			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
+				<label class="form-label" for="id_email">E-mail address</label>
+				<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
+			</div><!-- .form-group -->
+
+			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
+				<label class="form-label" for="id_password">Password</label>
+				<input class="form-control form-control-3-4" type="password" th:field="*{password}" id="id_password" />
+			</div><!-- .form-group -->
+
+			<input class="button" value="Sign in" type="submit" />
+        </form>
+
+	</div>
+	<div class="column-half">
+	    <h2 class="heading-large">New to this service?</h2>
+	    <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+
+	    <p>Creating an account allows you to:</p>
+	    <ul class="list-bullet">
+	        <li>Apply for a competition</li>
+	        <li>Track your competition applications</li>
+	        <li>View application feedback</li>
+	        <li>Setup successful project</li>
+	    </ul>
+	</div>
+
+</div>
+
+
+		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+	</main>
+
+    <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+	<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

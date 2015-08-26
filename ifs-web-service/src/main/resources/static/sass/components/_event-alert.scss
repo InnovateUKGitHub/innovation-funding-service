@@ -1,0 +1,91 @@
+/*
+
+###Event alert
+
+
+You can use `.is-open` for animation 
+
+```
+<div class="event-alert event-alert-warning is-open">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
+```
+
+##Information alert
+
+```
+<div class="event-alert is-open">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
+```
+*/
+.no-js .event-alert {
+    position: relative;
+}
+
+.event-alert {
+    background-color: #dee0e2;
+    display: block;
+    font-size: 19px;
+    left: 0;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+
+    // Animate slide
+    max-height: 0;
+    overflow-y: hidden;
+    transition-property: all;
+    transition-duration: .66s;
+    transition-timing-function: ease-in-out;
+
+    &.is-open {
+        max-height: 120px;
+    }
+
+    p {
+        border-top: 10px solid #005ea5;
+        margin: 0;
+        padding: 0 10px;
+
+        span {
+            background: {
+                image: url(/images/icons/icon-information.png);
+                repeat: no-repeat;
+                position: 0 50%;
+            }
+            display: inline-block;
+            padding: 15px 0 15px 35px;
+        }
+    }
+
+    &-warning {
+
+        p {
+            border-top: 10px solid $beta-colour;
+
+            span {
+                background-image: url(/images/icons/icon-important.png);
+                padding: 15px 0 15px 45px;
+            }
+        }
+    }
+
+    &-error {
+
+        p {
+            border-top: 10px solid $error-colour;
+
+            span {
+                background-image: url(/images/icons/icon-important.png);
+                padding: 15px 0 15px 45px;
+            }
+        }
+    }
+}

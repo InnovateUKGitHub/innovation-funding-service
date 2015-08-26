@@ -18,7 +18,6 @@
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-           
             <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                 <div class="form-group_header">
                     Information goes here
@@ -33,6 +32,7 @@
             <div class="form-control-wrap">
                 <div th:include="question-type/form-elements :: form-textarea" th:with="disabled=(true)" th:remove="tag" />
             </div>
+            <div th:include="question-type/form-elements :: question-edit-link" th:remove="tag" />
         </div>
     </div>
 
@@ -45,12 +45,11 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
         <div class="form-group">
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <input type="file"/>
-    </div>
-
+        </div>
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
@@ -63,7 +62,6 @@
         </div>
 
         <div class="form-group">
-
             <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 

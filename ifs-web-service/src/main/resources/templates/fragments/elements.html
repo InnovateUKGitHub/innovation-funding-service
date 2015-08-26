@@ -1,0 +1,74 @@
+<!-- ===========================Element: Skip-content=========================== --> 
+
+<div th:fragment="skiplink-container"> 
+    <div id="skiplink-container">
+      <div>
+        <a href="#content" class="skiplink">Skip to main content</a>
+      </div>
+    </div>
+</div>
+
+<!-- ===========================Element: cookie message=========================== --> 
+
+<div th:fragment="global-cookie-message"> 
+    <div id="global-cookie-message">
+        <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
+    </div>
+</div>
+
+<!-- ===========================Element: Header logo =========================== --> 
+
+<div th:fragment="header-logo"> 
+    <div class="header-logo">
+        <a th:href="${#authorization.expression('isAuthenticated()')} ? '/applicant/dashboard' : '/'" title="Go to the Innovation Funding Service homepage" id="logo" class="content">
+          <img src="/images/innovateuk_logo.png" width="165" height="23" alt="Innovate UK logo" />
+        </a>
+    </div>
+</div>
+
+<!-- ===========================Element: Header links =========================== -->
+<div th:fragment="header-links">
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="header-links">
+        <ul class="navigation-list navigation-right">
+            <li>
+                <a href="/applicant/dashboard">My dashboard</a>
+            </li>
+            <li>
+                <a href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div> 
+</div>
+<!-- =========================== Element =========================== -->
+<div th:fragment="pie-small">
+    <div class="pie-container">
+        <div class="pie small" th:text="${daysPercentage}">10%</div>
+        <div class="pie-overlay">
+            <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
+            <span>Days left</span>
+        </div>
+    </div>
+</div>
+<div th:fragment="pie">
+    <div class="pie-container">
+        <div class="pie" th:text="${daysPercentage}">10%</div>
+        <div class="pie-overlay">
+            <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
+            <span>Days left</span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="progress-indicator">
+    <div class="progress-container">
+        <div class="progress-indicator">
+            <div class="start">0%</div>
+            <div class="progress" th:style="'width:'+${percentage}+'%'">
+                <div th:text="${percentage}+'%'">
+                    0%
+                </div>
+            </div>
+            <div class="end">100%</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+/*
+
+SVG based pie charts, won't show without javascript or svg
+ 
+###Basic pie-chart 
+
+```
+<div class="pie">92%</div>
+<div class="pie">42%</div>
+<div class="pie">22%</div>
+
+```
+
+###Pie-chart counting down the days
+
+ ```
+<div class="pie-container">
+	<div class="pie">90%</div>
+	<div class="pie-overlay">
+		<div>2</div>
+		<span>Days left</span>
+	</div>
+</div>
+
+
+<div class="pie-container">
+	<div class="pie">50%</div>
+	<div class="pie-overlay">
+		<div>10</div>
+		<span>Days left</span>
+	</div>
+</div>
+
+
+<div class="pie-container">
+	<div class="pie">10%</div>
+	<div class="pie-overlay">
+		<div>18</div>
+		<span>Days left</span>
+	</div>
+</div>
+
+```
+You can add `.small` to `.pie` for a smaller version of both
+
+```
+<div class="pie-container">
+	<div class="pie small">10%</div>
+	<div class="pie-overlay">
+		<div>18</div>
+		<span>Days left</span>
+	</div>
+</div>
+
+<div class="pie small">10%</div>
+
+```
+
+*/
+
+.pie.small {
+	width: 40px;
+	height:40px;
+	+ .pie-overlay {
+		width:36px;
+		height: 36px;
+		top:2px;
+		left:2px;
+	}
+	+ .pie-overlay span{
+		@extend .visuallyhidden;
+	}
+	+ .pie-overlay > div {
+		margin-top:0;
+		line-height: 40px;
+		font-size: 13px;
+	}
+}
+
+.pie {
+	width: 100px;
+	height: 100px;
+	transform: rotate(-90deg);
+	display: inline-block;
+	color:transparent;
+	 svg {
+		background:$grey-3;
+		border-radius: 50%;
+	}
+
+	circle {
+		fill:$mellow-red;
+		stroke: $grey-3;
+		stroke-width: 32;
+	}
+	&-container {
+		position: relative;
+		display: inline-block;
+
+	}
+	&-overlay {
+		@include border-radius(50%);
+		width:88px;
+		height: 88px;
+		top:6px;
+		left:6px;
+		position: absolute;
+		background:#fff;
+		z-index:9;
+		color: $mellow-red;
+		text-align: center;
+		line-height: 1;
+		font-size:15px;
+		> div {
+			margin-top:10px;
+			font-weight: bold;
+			margin-top:24px;
+			font-size: 31px;
+		}
+	}
+
+}
+.no-js {
+	.pie {
+		width:auto;
+		height: auto;
+		display: none;
+	}
+	.pie-overlay {
+		border: 2px solid $grey-3;
+		position: static;
+	}
+}
+//same as no-js but @extends don't work within ie-lte :(
+@include ie-lte(8) {
+	.pie {
+		width:auto;
+		height: auto;
+		display: none;
+	}
+	.pie-overlay {
+		border: 2px solid $grey-3;
+		position: static;
+	}
+}
+
