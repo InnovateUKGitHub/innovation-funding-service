@@ -19,18 +19,6 @@ public class OtherCostCategoryResource  extends CostCategoryResource {
         calculateTotal();
     }
 
-    public Long getSectionId() {
-        return sectionId;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
     public List<OtherCost> getOtherCosts() {
         return otherCosts;
     }

@@ -6,7 +6,7 @@ public class CapitalUsage {
     String description;
     String existing;
     Double npv;
-    Double residual_value;
+    Double residualValue;
     Integer utilisation;
 
     public CapitalUsage() {
@@ -14,13 +14,13 @@ public class CapitalUsage {
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
-        Double npv, Double residual_value, Integer utilisation ) {
+        Double npv, Double residualValue, Integer utilisation ) {
         this.id = id;
         this.deprecation = deprecation;
         this.description = description;
         this.existing = existing;
         this.npv = npv;
-        this.residual_value = residual_value;
+        this.residualValue = residualValue;
         this.utilisation = utilisation;
     }
 
@@ -44,8 +44,8 @@ public class CapitalUsage {
         return npv;
     }
 
-    public Double getResidual_value() {
-        return residual_value;
+    public Double getResidualValue() {
+        return residualValue;
     }
 
     public Integer getUtilisation() {
@@ -53,6 +53,6 @@ public class CapitalUsage {
     }
 
     public Double getNetCost() {
-        return npv - (residual_value * utilisation);
+        return npv - (residualValue * utilisation);
     }
 }

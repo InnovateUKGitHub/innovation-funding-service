@@ -12,8 +12,8 @@ public class OtherCostMapper implements ResourceMapper<OtherCost> {
     public OtherCostCategoryResource getCostResource(CostCategory costCategory) {
         List<OtherCost> otherCosts = mapCosts(costCategory.getCosts());
         return new OtherCostCategoryResource(
-                costCategory.getId(), costCategory.getQuestion().getId(),
-                costCategory.getQuestion().getSection().getId(), otherCosts);
+                costCategory.getQuestion().getSection().getId(), costCategory.getQuestion().getId(),
+                costCategory.getId(), otherCosts);
     }
 
     public List<OtherCost> mapCosts(List<Cost> costs) {
