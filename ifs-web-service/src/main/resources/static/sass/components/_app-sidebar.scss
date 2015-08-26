@@ -24,113 +24,77 @@ Navigation used to access the different sections of the application
 
 */
 
-
+//sidebar container
 .app-sidebar {
     border-bottom: 1px solid $border-colour;
     margin-top: 1em;
-
     @include media(tablet) {
-        border: {
-            bottom: none;
-            right: 1px solid $border-colour;
-        }
+        border-bottom:none;
+        border-right: 1px solid $border-colour;
     }
-
     @include media(desktop) {
         margin-right: 40px;
     }
+}
+//list
+.app-sidebar ul {
+    margin: 0;
+    list-style: none;
+}
+//links
+.app-sidebar a  {
+    background-color: $grey-4;
+    border-top: 1px solid #e4e6e7;
+    position: relative;
+    color: $link-colour;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.25;
+    padding: 12px 30px 8px 15px;
+    text-decoration: none;
+    text-transform: none;
 
-    h3 {
-        font: {
-            weight: 700;
-            size: 16px;
-        }
-        margin: 1.5em 0 0.5em;
+    &:hover {
+        background-color: $grey-3;
     }
-
-    ul {
-        margin: 0;
+    &:focus {
+        background-color: $yellow;
+        outline: 3px solid $yellow;
     }
+}
+.app-sidebar  > ul li:first-child a {
+    border-top: none;
+}
+//nested list
 
+.app-sidebar ul ul {
     li {
-        background: {
-            color: #f8f8f8;
-        }
-        border-top: 1px solid #e4e6e7;
-        list-style: none;
-        position: relative;
-
-        &:first-of-type {
-            border-top: none;
-        }
+        border: none;
     }
+    a {
+        background-color: $grey-3;
+        padding-left: 30px;
+    }
+    a:hover {
+        background-color: $grey-4;
+    }
+    .active a {
+        background-color: #005ea5;
+    }
+}
 
+//highlights
+.app-sidebar {
     .active > a {
-        background: {
-            color: #005ea5;
-        }
+        background-color:  #005ea5;
         color: #fff;
     }
-
     // .icon-flag a {
-    //     background: {
-    //         image: url(../images/sidebar-flag.png);
-    //     }
+    //     background-image: url(../images/sidebar-flag.png);    
     // }
 
     // .icon-tick a {
-    //     background: {
-    //         image: url(../images/sidebar-tick.png);
-    //     }
-    // }
-
-    a {
-        background: {
-            position: 100% 50%;
-            repeat: no-repeat;
-        }
-        color: $link-colour;
-        display: block;
-        font: {
-            size: 16px;
-            weight: 400;
-        }
-        line-height: 1.25;
-        padding: 12px 30px 8px 15px;
-        text-decoration: none;
-        text-transform: none;
-
-        &[href]:hover {
-            background-color: $grey-3;
-        }
-
-        &:focus {
-            background-color: $yellow;
-            outline: 3px solid $yellow;
-        }
-    }
-
-    .app-sidebar-level-two {
-        margin: 0;
-
-        li {
-            border: none;
-        }
-
-        a {
-            background-color: #dee0e2;
-            padding-left: 30px;
-
-            &:hover {
-                background-color: $grey-4;
-            }
-        }
-
-        .active {
-
-            a {
-                background-color: #005ea5;
-            }
-        }
-    }
+    //      background-image: url(../images/sidebar-tick.png);
+    //  }
 }

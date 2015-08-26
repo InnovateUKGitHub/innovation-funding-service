@@ -30,7 +30,7 @@
                         </div>
                         <div class="column-quarter">
                             <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
-
+                            <div th:text="${application.getCompetition().getTotalDays()}" />
                         </div>
                     </div>
                     <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >

@@ -69,3 +69,10 @@ img {
 	font-weight: 400;
 	line-height: 1.25;
 }
+
+
+small {
+	@extend .form-hint;
+	display: inline; 
+	font-size: 16px;
+}
