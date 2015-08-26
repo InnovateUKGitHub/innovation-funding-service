@@ -8,6 +8,7 @@ import com.worth.ifs.service.ApplicationService;
 import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.service.SectionService;
 import com.worth.ifs.service.UserService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -120,8 +121,11 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()))
                 .andExpect(model().attribute("sections", sections))
-                .andExpect(model().attribute("currentSectionId", section.getId()));
-
+                .andExpect(model().attribute("currentSectionId", section.getId()))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
+//        Matchers.hasItems()
     }
 
     @Test

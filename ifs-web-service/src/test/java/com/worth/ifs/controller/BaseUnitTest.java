@@ -135,7 +135,10 @@ public class BaseUnitTest {
         UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role1, organisation1);
         UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role1, organisation1);
 
-        UserApplicationRole userAppRole5 = new UserApplicationRole(5L, users.get(1), app1, role2, organisation1);
+        UserApplicationRole userAppRole5 = new UserApplicationRole(5L, users.get(1), app1, role2, organisation2);
+
+        organisation1.setUserApplicationRoles(Arrays.asList(userAppRole1, userAppRole2, userAppRole3, userAppRole4));
+        organisation2.setUserApplicationRoles(Arrays.asList(userAppRole5));
 
         competition.addApplication(app1, app2, app3, app4);
 
@@ -160,8 +163,6 @@ public class BaseUnitTest {
         when(applicationService.getApplicationById(app2.getId())).thenReturn(app2);
         when(applicationService.getApplicationById(app3.getId())).thenReturn(app3);
         when(applicationService.getApplicationById(app4.getId())).thenReturn(app4);
-
-
         when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 
     }

@@ -46,4 +46,8 @@ public class Organisation {
     public List<ApplicationFinance> getApplicationFinances() {
         return applicationFinances;
     }
+
+    public void setUserApplicationRoles(List<UserApplicationRole> userApplicationRoles) {
+        this.userApplicationRoles = userApplicationRoles;
+    }
 }
