@@ -3,6 +3,7 @@ package com.worth.ifs.controller;
 import com.worth.ifs.constant.ApplicationStatusConstants;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
+import com.worth.ifs.helper.ApplicationHelper;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
@@ -60,7 +61,8 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        this.addApplicationTeam(application, model);
+        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
 
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
@@ -80,25 +82,6 @@ public class ApplicationController {
 
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
-    }
-
-    private void addApplicationTeam(Application application, Model model){
-        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
-        Set<Organisation> organisations = userApplicationRoles.stream()
-                .map(uar -> uar.getOrganisation())
-                .collect(Collectors.toSet());
-
-        Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals("leadapplicant"))
-                .map(uar -> uar.getOrganisation())
-                .findFirst();
-
-        if(leadOrganisation.isPresent()){
-            model.addAttribute("leadOrganisation", leadOrganisation.get());
-        }else{
-            log.error("NO lead organisation.");
-        }
-        model.addAttribute("applicationOrganisations", organisations);
     }
 
     @RequestMapping("/{applicationId}")

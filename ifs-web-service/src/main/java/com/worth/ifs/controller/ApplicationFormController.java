@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
+import com.worth.ifs.helper.ApplicationHelper;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
@@ -62,7 +63,8 @@ public class ApplicationFormController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-
+        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
 
         List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
         // List to map convertion
