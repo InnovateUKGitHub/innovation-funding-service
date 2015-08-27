@@ -194,6 +194,7 @@
                                     <input type="number" name="labour-0-labourRate"
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
                                            data-calculation-operations="/"
+                                           data-calculation-input="labour-dayrate"
                                            disabled=""
                                            id="id_labour-0-labourRate"
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
@@ -212,8 +213,8 @@
                                 </td>
                                 <td>
                                     <input type="number"
-                                           data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js,[data-calculation-input=labour-days]"
-                                           data-calculation-operations="/,*"
+                                           data-calculation-field="[data-calculation-input=labour-dayrate],[data-calculation-input=labour-days]"
+                                           data-calculation-operations="*"
                                            data-calculation-input="total-labour-row"
                                            name="labour-0-labourTotalCost"  readonly="readonly" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(),0,0)}"/>
                                 </td>
@@ -450,7 +451,8 @@
 
                     <div class="form-group">
                         <label class="form-label" for="id_subcontracting-0-subcontractingRole">Role in the project and description of work being carried out</label>
-                        <textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="id_subcontracting-0-subcontractingRole" th:inline="text">[[${subContractingCost.getRole()}]]</textarea>
+                        <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="id_subcontracting-0-subcontractingRole" th:inline="text">[[${subContractingCost.getRole()}]]</textarea>-->
+                        <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
                     </div>
 
                     <div class="form-group">
@@ -552,7 +554,8 @@
                     <div th:each="otherCost : ${costCategoryResource.getOtherCosts()}" >
                         <tr>
                             <td>
-                                <textarea rows="3" cols="40" name="other-0-otherDescription" class="form-control form-control-1-1 form-finances-other-description" id="id_other-0-otherDescription" th:inline="text">[[${otherCost.getDescription()}]]</textarea>
+                                <!--<textarea rows="3" cols="40" name="other-0-otherDescription" class="form-control form-control-1-1 form-finances-other-description" id="id_other-0-otherDescription" th:inline="text">[[${otherCost.getDescription()}]]</textarea>-->
+                                <div th:include="question-type/form-elements :: form-textarea-simple(id='other-cost-'+${otherCost.getId()}, name='other-0-otherDescription['+${otherCost.getId()}+']', value=${otherCost.getDescription()})" th:remove="tag" />
                             </td>
                             <td>
                                 <input type="number" name="other-0-otherCost" class="form-control form-control-1-1 form-finances-other-cost" id="id_other-0-otherCost" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>

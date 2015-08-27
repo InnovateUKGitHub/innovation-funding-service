@@ -108,6 +108,13 @@
 
 <!-- ========================= textarea with word count =========================== -->
 
+<div th:fragment="form-textarea-simple (id, name, value)">
+		<textarea
+				th:id="${id}"
+				th:name="${name}"
+				th:utext="${value}">
+		</textarea>
+</div>
 <div th:fragment="form-textarea" th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
 	<div >
 
