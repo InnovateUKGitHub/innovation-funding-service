@@ -91,7 +91,11 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
     }
 
     public void testNotExistingApplicationDetails() throws Exception {
@@ -122,6 +126,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()))
                 .andExpect(model().attribute("sections", sections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));

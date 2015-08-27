@@ -2,6 +2,7 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.service.UserService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +53,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
             mockMvc.perform(get("/application-form/1"))
                     .andExpect(view().name("application-form"))
                     .andExpect(model().attribute("currentApplication", app))
-                    .andExpect(model().attribute("currentSectionId", 0L));
+                    .andExpect(model().attribute("currentSectionId", 0L))
+                    .andExpect(model().attribute("leadOrganisation", null))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(0)));
 
     }
 
@@ -67,6 +70,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("currentSectionId", 1L));
 
     }
