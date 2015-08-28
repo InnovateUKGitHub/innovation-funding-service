@@ -55,7 +55,7 @@ the Applicant enters some text
     Clear Element Text    name=question[12]
     Input Text    name=question[12]    I am a robot
     Sleep    6 seconds
-    Click Element    link=Business proposition (Q1 - Q4)
+    Click Element    link=Your business proposition (Q1 - Q4)
     Click Element    css=#question-1 button
     Clear Element Text    name=question[1]
     Input Text    name=question[1]    test text 3
