@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ResponseTest {
@@ -15,7 +16,7 @@ public class ResponseTest {
     UserApplicationRole userApplicationRole;
     Boolean markedAsComplete;
     String value;
-    LocalDate date;
+    LocalDateTime date;
 
     @Before
     public void setUp() throws Exception {
@@ -24,7 +25,7 @@ public class ResponseTest {
         userApplicationRole = new UserApplicationRole();
         markedAsComplete = false;
         value  = "testResponseValue";
-        date = LocalDate.now();
+        date = LocalDateTime.now();
         Application application = new Application();
 
         response = new Response(id, date, value, markedAsComplete, userApplicationRole, question, application);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.Application;
 import com.worth.ifs.domain.Response;
+import com.worth.ifs.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,6 +82,31 @@ public class ResponseService extends BaseServiceProvider {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("ApplicationService, marked as complete == ok : "+ response.getBody());
+            return true;
+        } else {
+            log.warn("Call failed.....");
+            log.error("failed with url "+ url);
+        }
+        return false;
+    }
+    public Boolean assignQuestion(Long applicationId, Long questionId, Long userId, Long assigneeId){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + responseRestURL + "/assignQuestion" +
+                "?applicationId={applicationId}" +
+                "&questionId={questionId}" +
+                "&userId={userId}" +
+                "&assigneeId={assigneeId}";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+        log.info("ApplicationService.assignQuestion send it!");
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, assigneeId);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("ApplicationService, assigned == ok : "+ response.getBody());
             return true;
         } else {
             log.warn("Call failed.....");

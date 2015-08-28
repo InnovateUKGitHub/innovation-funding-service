@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(Long id, LocalDate date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
+    public Response(Long id, LocalDateTime date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
         this.id = id;
         this.date = date;
         this.value = value;
@@ -25,7 +26,7 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private LocalDate date;
+    private LocalDateTime date;
     @Column(length=5000)
     private String value;
     private Boolean markedAsComplete;
@@ -42,12 +43,17 @@ public class Response {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @ManyToOne
+    @JoinColumn(name="assigneeId", referencedColumnName="id")
+    private User assignee;
+    private LocalDateTime assignedDate;
+
 
     public Long getId() {
         return id;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -67,10 +73,9 @@ public class Response {
 
 
     public Boolean isMarkedAsComplete() {
-        return markedAsComplete;
+        return (markedAsComplete == true);
     }
 
-    @JsonIgnore
     public UserApplicationRole getUserApplicationRole() {
         return userApplicationRole;
     }
@@ -88,7 +93,7 @@ public class Response {
         this.value = value;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -103,5 +108,22 @@ public class Response {
 
     public void setUserApplicationRole(UserApplicationRole userApplicationRole) {
         this.userApplicationRole = userApplicationRole;
+    }
+
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public LocalDateTime getAssignedDate() {
+        return assignedDate;
+    }
+
+    public void setAssignedDate(LocalDateTime assignedDate) {
+        this.assignedDate = assignedDate;
     }
 }

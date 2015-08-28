@@ -15,6 +15,7 @@ import org.springframework.web.util.HtmlUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +56,53 @@ public class ResponseController {
         throw new NotImplementedException();
     }
 
+    @RequestMapping(value="/assignQuestion")
+    public ResponseEntity<String> assignQuestion(@RequestParam("applicationId") final Long applicationId,
+                                                         @RequestParam("questionId") final Long questionId,
+                                                         @RequestParam("userId") final Long userId,
+                                                         @RequestParam("assigneeId") final Long assigneeId){
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        User assignee = userRepository.findOne(assigneeId);
+
+        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
+        if(response == null){
+            log.error("FORBIDDEN TO SAVE");
+            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+        }
+
+        response.setDate(LocalDateTime.now());
+        response.setAssignee(assignee);
+        response.setAssignedDate(LocalDateTime.now());
+
+        responseRepository.save(response);
+
+        return new ResponseEntity<String>(headers, HttpStatus.OK);
+
+    }
+    private Response getOrCreateResponse(Long applicationId, Long userId,  Long questionId){
+        Application application = applicationRepository.findOne(applicationId);
+        Question question = questionRepository.findOne(questionId);
+        User user = userRepository.findOne(userId);
+
+
+        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        if(userAppRoles == null || userAppRoles.size()== 0){
+            // user has no role on this application, so should not be able to write..
+            log.error("FORBIDDEN TO SAVE");
+            return null;
+        }
+
+        Response response = responseRepository.findByApplicationAndQuestion(application, question);
+        if(response == null){
+            response = new Response(null, LocalDateTime.now(), "", false, userAppRoles.get(0), question, application);
+        }
+
+        return response;
+    }
+
     @RequestMapping(value="/markResponseAsComplete")
     public ResponseEntity<String> markResponseAsComplete(@RequestParam("applicationId") final Long applicationId,
                                                          @RequestParam("questionId") final Long questionId,
@@ -63,7 +111,7 @@ public class ResponseController {
         if(markedAsComplete == null){
             markedAsComplete = true;
         }
-        log.info("Mark:::"+ markedAsComplete);
+        log.info("Mark:::" + markedAsComplete);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -71,26 +119,19 @@ public class ResponseController {
         User user = userRepository.findOne(userId);
 
         Application application = applicationRepository.findOne(applicationId);
-        Question question = questionRepository.findOne(questionId);
         List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
-        if(userAppRoles == null || userAppRoles.size()== 0){
-            // user has no role on this application, so should not be able to write..
+        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
+        if(response == null){
             log.error("FORBIDDEN TO SAVE");
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
         }
 
-        Response response = responseRepository.findByApplicationAndQuestion(application, question);
 
-        if(response == null){
-            response = new Response(null, LocalDate.now(), "", markedAsComplete, userAppRoles.get(0), question, application);
-        }else{
-            response.setMarkedAsComplete(markedAsComplete);
-            response.setDate(LocalDate.now());
-            response.setUserApplicationRole(userAppRoles.get(0));
-        }
+        response.setMarkedAsComplete(markedAsComplete);
+        response.setDate(LocalDateTime.now());
+        response.setUserApplicationRole(userAppRoles.get(0));
         responseRepository.save(response);
-
 
         return new ResponseEntity<String>(headers, HttpStatus.OK);
 
@@ -115,21 +156,17 @@ public class ResponseController {
 
         List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
-        if(userAppRoles == null || userAppRoles.size()== 0){
-            // user has no role on this application, so should not be able to write..
+        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
+        if(response == null){
             log.error("FORBIDDEN TO SAVE");
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
         }
 
-        // get existing response to update.
-        Response response = responseRepository.findByApplicationAndQuestion(application, question);
-        if(response == null){
-            response = new Response(null, LocalDate.now(), value, false, userAppRoles.get(0), question, application);
-        }else{
-            response.setValue(value);
-            response.setDate(LocalDate.now());
-            response.setUserApplicationRole(userAppRoles.get(0));
-        }
+
+        response.setValue(value);
+        response.setDate(LocalDateTime.now());
+        response.setUserApplicationRole(userAppRoles.get(0));
+
         
         responseRepository.save(response);
 

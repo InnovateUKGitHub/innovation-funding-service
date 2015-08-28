@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/userapplicationrole")
 public class UserApplicationRoleController {
@@ -21,6 +23,11 @@ public class UserApplicationRoleController {
     public UserApplicationRole findByUserApplication(@PathVariable("userId") final Long userId,
                                                      @PathVariable("applicationId") final Long applicationId) {
         return userApplicationRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
+    }
+
+    @RequestMapping("/findByApplicationId/{applicationId}")
+    public List<UserApplicationRole> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
+        return userApplicationRoleRepository.findByApplicationId(applicationId);
     }
 
 }

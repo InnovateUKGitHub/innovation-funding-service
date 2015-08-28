@@ -6,19 +6,24 @@
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${response.getValue()})" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: Text Area =========================== -->
 
-    <div th:fragment="textarea" class="form-group">
+    <div th:fragment="textarea" class="form-group" th:class="(${question.getWordCount() == 0} ? '' : 'word-count') + ' ' + (${#authentication.getDetails().getId() == response?.getAssignee()?.getId()} ? 'assigned-to-me' : '')">
             <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
-            <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+            <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and response != null and response.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                 <div class="form-group_header">
-                    Information goes here
+                    <!--<span class="last_updated_by" >-->
+                        <!--Last updated by <div th:text="${response?.getUserApplicationRole()?.getUser()?.getName()}"></div>-->
+                    <!--</span>-->
+                    <span class="assignee" th:if="${response?.getAssignee() != null}">
+                        You have assigned this question to <div th:text="${response?.getAssignee()?.getName()}"></div>
+                    </span>
                 </div>
                  <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
             </div>
@@ -140,7 +145,7 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
+                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
                     <div th:include="question-type/types :: ${question.getQuestionType().getTitle()}"/>
                 </div>
             </div>
@@ -240,7 +245,7 @@
                 </div>
             </div>
             <div class="alignright-button">
-                <button class="button" th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+                <button class="button" th:unless="${response?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
             </div>
         </div>
     </div>

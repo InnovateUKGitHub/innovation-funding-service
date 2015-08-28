@@ -64,7 +64,10 @@ public class ApplicationFormController {
         model.addAttribute("currentCompetition", competition);
 
         model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
+        model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
+       // List<UserApplicationRole> relatedUsers = userService.findUserApplicationRole(application.getId());
+        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
+
 
         List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
         // List to map convertion
@@ -80,6 +83,7 @@ public class ApplicationFormController {
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
             responseMap.put(response.getQuestion().getId(), response);
+            log.info("User of response: " + response.getUserApplicationRole().getId());
         }
         model.addAttribute("responses", responseMap);
 
@@ -175,6 +179,8 @@ public class ApplicationFormController {
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
+        params.forEach((key, value) -> log.info("key "+ key));
+
         this.saveApplicationDetails(app, params);
 
         if(params.containsKey("mark_as_complete")){
@@ -183,6 +189,17 @@ public class ApplicationFormController {
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             responseService.markQuestionAsComplete(applicationId, questionId, user.getId(), false);
+        }
+        if(params.containsKey("assign_question")){
+            log.info("assign question now.");
+            String assign = request.getParameter("assign_question");
+            Long questionId = Long.valueOf(assign.split("_")[0]);
+            Long assigneeId = Long.valueOf(assign.split("_")[1]);
+
+            log.info("assign q: "+ questionId);
+            log.info("assign a: "+ assigneeId);
+
+            responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
         }
 
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
