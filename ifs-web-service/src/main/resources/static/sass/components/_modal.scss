@@ -31,6 +31,9 @@
 	}
 }
 .modal-overlay {
+	&.js-close {
+		cursor:pointer;
+	}
 	&.hidden {
 		background-color:transparent;
 		height: 0;

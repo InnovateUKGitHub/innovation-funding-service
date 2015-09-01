@@ -23,6 +23,8 @@ img {
 
 .icon {
 	@include inline-block;
+	vertical-align: middle;
+	margin-right:2px;
 }
 
 small {

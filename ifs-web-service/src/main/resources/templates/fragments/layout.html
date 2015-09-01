@@ -64,7 +64,7 @@
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
     
     <div th:include="fragments/elements :: skiplink-container" th:remove="tag"></div>
-    <div th:include="fragments/elements :: global-cookie-message" th:remove="tag"></div> 
+    <!-- <div th:include="fragments/elements :: global-cookie-message" th:remove="tag"></div>  -->
 
 </div>
 
@@ -137,8 +137,10 @@
 <!-- =========================== Element : subheader =========================== -->
 
 <div th:fragment="header-sub">
-    <div class="header-new-sub-wrapper">
-        <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentApplication.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${currentApplication.getCompetition().getDaysLeft()}" th:remove="tag" />
+    <div class="sub-header">
+        <div class="deadline">Days left to submit&nbsp;&nbsp;
+           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentApplication.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${currentApplication.getCompetition().getDaysLeft()}" th:remove="tag" />
+        </div>
         <strong th:text="${currentApplication.getName()}" />
     </div>
 </div>

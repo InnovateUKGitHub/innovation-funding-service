@@ -51,13 +51,13 @@ Progress indicator
 	width:100%;
 	background: $grey-2;
 	@include border-radius(15px);
-	height:30px;
+	height:25px;
 
 	.start,
 	.end{
 		position: absolute;
 		left:0;
-		bottom:-40px;
+		bottom:-30px;
 		color:$grey-1;
 		font-size:15px;
 	}
@@ -88,7 +88,7 @@ Progress indicator
 	text-align: center;
 	background:#000;
 	text-indent: 0;
-	top:47px;
+	top:37px;
 	color:#fff;
 	font-size:18px;
 	z-index:1;

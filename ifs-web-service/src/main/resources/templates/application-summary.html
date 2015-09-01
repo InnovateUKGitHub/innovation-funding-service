@@ -13,9 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div class="header-new-sub-wrapper">
-        <div data-th-text="${currentApplication.getName()}" th:remove="tag" />
-    </div>
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
     <h1 class="heading-xlarge">Application Summary</h1>
     <div class="competition-details">
