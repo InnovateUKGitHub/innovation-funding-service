@@ -17,7 +17,7 @@
     <h3 class="heading-medium" th:text="'Application: '+${currentApplication.getName()}+''"></h3>
 
     <div class="alignright-button">
-        <a role="button" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
+        <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
     </div>
 
 

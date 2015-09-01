@@ -5,13 +5,20 @@ var worthIFS = {
     domReady : function(){
         worthIFS.collapsible();
         worthIFS.pieChart();
+        worthIFS.modalLink();
 
-        if(jQuery('body.app-form').size()==1){
+        if(worthIFS.isApplicationForm()){
             worthIFS.initAutosaveElement();
             worthIFS.initUnsavedChangesWarning();
             worthIFS.closeAlertHide();
             worthIFS.initWordCount();
         }
+    },
+    isApplicationForm : function(){
+        if(jQuery('body.app-form').size()==1){
+            return true;
+        }
+        return false;
     },
     collapsible : function(){
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
@@ -153,6 +160,35 @@ var worthIFS = {
         setTimeout(function(){
             jQuery('.is-open').removeClass('is-open');
         },5000);
+    },
+    modalLink : function(){
+        var modalLinks = jQuery('[data-js-modal]');
+        if(modalLinks.length) {
+            modalLinks.each(function() {
+                var link = jQuery(this);
+                link.on('click',function(e){
+                  var modal = jQuery('.'+link.attr('data-js-modal'));
+                   if(modal.length){
+                        e.preventDefault();
+                        jQuery('.modal-overlay').removeClass('hidden');
+                        modal.attr('aria-hidden','false');
+                       
+                        //vertical center,old browser support so no fancy css stuff :(
+                        setTimeout(function(){
+                            var height = modal.outerHeight();
+                            modal.css({'margin-top':'-'+(height/2)+'px'});
+                        },50);
+                   }
+                })
+            });
+            worthIFS.modalCloseLink();
+        }
+    },
+    modalCloseLink : function(){
+        jQuery('body').on('click','.js-close',function(){
+            jQuery('.modal-overlay').addClass('hidden');
+            jQuery('[role="dialog"]').attr('aria-hidden','true');
+        });
     }
 } 
 

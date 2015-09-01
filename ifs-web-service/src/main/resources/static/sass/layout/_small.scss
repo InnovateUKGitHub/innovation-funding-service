@@ -6,6 +6,7 @@
 
 <p>Be mean or be <span class="greentext">Green</span></p>
 
+Hello world <small>(just testing smalltext)</small>
 ```
 */
 .greentext {
@@ -22,6 +23,12 @@ img {
 
 .icon {
 	@include inline-block;
+}
+
+small {
+	@extend .form-hint;
+	display: inline; 
+	font-size: 16px;
 }
 /*
 
@@ -71,8 +78,3 @@ img {
 }
 
 
-small {
-	@extend .form-hint;
-	display: inline; 
-	font-size: 16px;
-}
