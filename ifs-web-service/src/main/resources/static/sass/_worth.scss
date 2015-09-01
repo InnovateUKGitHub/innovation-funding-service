@@ -41,14 +41,17 @@
 
 @import "components/forms";
 
-@import "components/modal";
 
 /*
 ##6. small elements
 */
 @import "layout/small";
-@import "layout/a11y";
 
+//still to be documented 
+@import "components/modal";
+@import "layout/a11y";
+@import "layout/inputs";
 //pages
 @import "pages/application-details";
 @import "pages/application-form";
+@import "pages/application-summary";

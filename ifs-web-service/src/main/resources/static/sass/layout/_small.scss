@@ -65,6 +65,25 @@ small {
 		text-align: center;
 	}
   }
+
+  /*
+  ###Large button
+
+  ```
+  <button class="large">Bigger is always better</button>
+  <a href="#" tabindex="0" role="button" class="button large">In Texas</a>
+  ```
+  */
+button,
+.button,
+input[type="button"] {
+		&.large {
+	    box-shadow: 0px 4px 0px darken($button-colour,15%);
+	    padding: 15px 45px;
+	}
+}
+
+
 /*
 
 ###subtitle for header
