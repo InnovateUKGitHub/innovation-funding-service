@@ -87,8 +87,8 @@
 				th:utext="${value}">
 		</textarea>
 </div>
-<div th:fragment="form-textarea" th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
-	<div >
+<div th:fragment="form-textarea">
+	<div th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
 
 		<textarea
 		   th:readonly="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
