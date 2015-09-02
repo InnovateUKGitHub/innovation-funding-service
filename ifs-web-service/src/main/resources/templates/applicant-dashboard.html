@@ -23,14 +23,13 @@
                                 <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
+                            <p class="form-hint">Current progress: </p>
+
                             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
                         </div>
-                        <div class="column-quarter">
+                        <div class="column-half">
                             <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${application.competition.endDate}" th:remove="tag" />
-                        </div>
-                        <div class="column-quarter">
                             <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
-                            <div th:text="${application.getCompetition().getTotalDays()}" />
                         </div>
                     </div>
                     <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >
