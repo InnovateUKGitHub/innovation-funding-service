@@ -33,3 +33,9 @@
 		
 	}
 }
+
+@include ie(8){
+	.header-logo a {
+		width: image-width('../images/innovateuk_logo.png');
+	}
+}

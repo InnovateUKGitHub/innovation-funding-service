@@ -189,6 +189,12 @@ var worthIFS = {
             jQuery('.modal-overlay').addClass('hidden');
             jQuery('[role="dialog"]').attr('aria-hidden','true');
         });
+    },
+    log : function(message){
+       if (window.console) {
+            return window.console.log(message);
+       }
+       return false;
     }
 } 
 
