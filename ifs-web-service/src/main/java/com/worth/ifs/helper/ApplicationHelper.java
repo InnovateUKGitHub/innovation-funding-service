@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ApplicationHelper {
-    private static final Log log = LogFactory.getLog(ApplicationHelper.class);
+    private final Log log = LogFactory.getLog(ApplicationHelper.class);
 
-    public static Set<Organisation> getApplicationOrganisations(Application application){
+    public Set<Organisation> getApplicationOrganisations(Application application){
         List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
         Set<Organisation> organisations = userApplicationRoles.stream()
                 .map(uar -> uar.getOrganisation())
@@ -23,7 +23,7 @@ public class ApplicationHelper {
 
         return organisations;
     }
-    public static Optional<Organisation> getApplicationLeadOrganisation(Application application){
+    public Optional<Organisation> getApplicationLeadOrganisation(Application application){
         List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
 
         Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
@@ -33,13 +33,21 @@ public class ApplicationHelper {
 
         return leadOrganisation;
     }
-    public static Set<User> getAssignableUsers(Application application){
+    public Set<User> getAssignableUsers(Application application){
         List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
         Set<User> users = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals("leadapplicant") || uar.getRole().getName().equals("collaborator"))
                 .map(uar -> uar.getUser())
                 .collect(Collectors.toSet());
         log.info("Assignable users: "+ users.size());
+        return users;
+    }
+    public Set<User> getApplicationUsers(Application application){
+        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        Set<User> users = userApplicationRoles.stream()
+                .map(uar -> uar.getUser())
+                .collect(Collectors.toSet());
+        log.info("Application users: "+ users.size());
         return users;
     }
 }

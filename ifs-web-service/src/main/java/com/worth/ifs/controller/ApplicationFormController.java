@@ -56,6 +56,7 @@ public class ApplicationFormController {
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
     private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
+        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getApplicationById(applicationId);
         SectionHelper sectionHelper = new SectionHelper();
         model.addAttribute("currentApplication", application);
@@ -63,10 +64,10 @@ public class ApplicationFormController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
         model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
        // List<UserApplicationRole> relatedUsers = userService.findUserApplicationRole(application.getId());
-        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
+        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
 
 
         List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
