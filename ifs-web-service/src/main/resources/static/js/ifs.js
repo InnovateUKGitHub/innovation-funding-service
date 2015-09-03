@@ -93,7 +93,7 @@ var worthIFS = {
         function fieldChanged(element){
             var jsonObj = {
                     value:element.value,
-                    questionId: jQuery(element).data("question_id"),
+                    questionId: jQuery(element).attr('id'),
                     applicationId: jQuery(".form-serialize-js #application_id").val()
              };
 
@@ -189,6 +189,12 @@ var worthIFS = {
             jQuery('.modal-overlay').addClass('hidden');
             jQuery('[role="dialog"]').attr('aria-hidden','true');
         });
+    },
+    log : function(message){
+       if (window.console) {
+            return window.console.log(message);
+       }
+       return false;
     }
 } 
 

@@ -7,6 +7,9 @@
 	}
 	.progress-container {
 		margin-left: 0;
-		margin-right:50px;
+		margin-right:140px;
+	}
+	.collapsible h2 + [aria-hidden="false"] {
+		padding:0;
 	}
 }

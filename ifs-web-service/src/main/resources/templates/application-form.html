@@ -64,7 +64,7 @@
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
 
-            <ul class="group">
+            <ul class="pagination">
                 <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
                     <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
@@ -78,7 +78,7 @@
                     </a>
                 </li>
             </ul>
-            
+
             <div class="alignright-button">
                 <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
                     Review &amp; submit

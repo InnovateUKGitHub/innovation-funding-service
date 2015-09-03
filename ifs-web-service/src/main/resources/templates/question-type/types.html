@@ -3,7 +3,7 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
@@ -12,7 +12,7 @@
     <!-- ===========================Form: Text Area =========================== -->
 
     <div th:fragment="textarea" class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
            
@@ -26,7 +26,7 @@
 
     <!-- readonly -->
     <div th:fragment="readonly_textarea" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
         <div class="form-control-wrap">
             <div th:include="question-type/form-elements :: form-textarea" th:with="disabled=(true)" th:remove="tag" />
         </div>
@@ -42,14 +42,14 @@
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
             <input type="file"/>
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
@@ -57,7 +57,7 @@
 
         <div class="form-group">
 
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 
             Project start date
@@ -65,16 +65,16 @@
 
             <div th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            <strong>Lead organisation</strong>
             <div th:text="${leadOrganisation.getName()}"></div>
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <strong>Partners</strong>
             <ul class="list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
@@ -82,28 +82,29 @@
             </ul>
         </div>
     </div>
+
     <div th:fragment="readonly_application_details">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:with="disabled=(true)"  th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
             Project start date
             <br/>
 
             <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})"  th:with="disabled=(true)" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="disabled=(true)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="disabled=(true)" th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='',bold=true)" th:remove="tag" />
             Empire Ltd
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Partners', id='',bold=true)" th:remove="tag" />
             <ul class="list-bullet">
                 <li>Ludlow</li>
                 <li>Manchester University</li>
