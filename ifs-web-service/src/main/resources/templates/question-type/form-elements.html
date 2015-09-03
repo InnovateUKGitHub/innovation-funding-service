@@ -94,29 +94,24 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">
-     <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')" th:with="currentUser=${#authentication.getDetails()}">
-		<div th:unless="${readonly}" class="textarea-header">
-			<div th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
-		</div>
+	<div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')">
+		<div th:unless="${readonly}" class="textarea-header">Information goes here</div>
 		<div th:include="question-type/form-elements :: form-textarea (
 		 					id=${question.getId()},
-		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
+		 					value=((${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId())?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} or ${currentUser.getId() != response?.getAssignee()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag" />
 
-		 <div class="textarea-footer">
-
-			 	<div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
-
-				<!-- if not readonly we show mark as complete buttons -->
-				<div th:unless="${readonly}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"  th:remove="tag"  />
-				<!-- if  readonly we show the edit form button-->
-				<div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"  th:remove="tag"  />
-				<div th:include="question-type/form-elements :: form-word-count" th:remove="tag" />
-		 </div>
-    </div>
+		<div class="textarea-footer">
+			<!-- if not readonly we show mark as complete buttons -->
+			<div th:unless="${readonly}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"  th:remove="tag"  />
+			<!-- if  readonly we show the edit form button-->
+			<div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"  th:remove="tag"  />
+			<div th:include="question-type/form-elements :: form-word-count" th:remove="tag" />
+		</div>
+	</div>
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
