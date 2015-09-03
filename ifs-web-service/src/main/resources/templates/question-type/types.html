@@ -82,7 +82,7 @@
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
             Project start date
             <br/>
 
@@ -135,8 +135,8 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
-                    <div th:include="question-type/types :: ${question.getQuestionType().getTitle()}"/>
+                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
         </div>
