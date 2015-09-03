@@ -1,6 +1,8 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.User;
+import com.worth.ifs.domain.UserApplicationRole;
+import com.worth.ifs.repository.UserApplicationRoleRepository;
 import com.worth.ifs.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * UserController exposes User data through a REST API.
@@ -19,6 +23,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository repository;
+    @Autowired
+    UserApplicationRoleRepository userApplicationRoleRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -71,6 +77,25 @@ public class UserController {
     @RequestMapping("/findAll/")
     public List<User> findAll() {
         List<User> users = repository.findAll();
+        return users;
+    }
+
+    @RequestMapping("/findAssignableUsers/{applicationId}")
+    public Set<User> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
+        List<UserApplicationRole> roles = userApplicationRoleRepository.findByApplicationId(applicationId);
+        Set<User> users = roles.stream()
+                .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
+                .map(r -> r.getUser())
+                .collect(Collectors.toSet());
+        return users;
+    }
+
+    @RequestMapping("/findRelatedUsers/{applicationId}")
+    public Set<User> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
+        List<UserApplicationRole> roles = userApplicationRoleRepository.findByApplicationId(applicationId);
+        Set<User> users = roles.stream()
+                .map(r -> r.getUser())
+                .collect(Collectors.toSet());
         return users;
     }
 }

@@ -173,8 +173,8 @@ public class BaseUnitTest {
         Boolean markAsComplete = false;
         UserApplicationRole userApplicationRole = loggedInUser.getUserApplicationRoles().get(0);
 
-        Response response = new Response(1L, LocalDate.now(), "value 1", markAsComplete, userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDate.now(), "value 1", markAsComplete, userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(20L), application);
+        Response response2 = new Response(2L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(21L), application);
 
         List<Response> responses = Arrays.asList(response, response2);
         userApplicationRole.setResponses(responses);
