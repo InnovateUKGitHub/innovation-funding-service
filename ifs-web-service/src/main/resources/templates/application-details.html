@@ -42,6 +42,7 @@
                     </h4>
                     <div class="assignee" th:if="${response?.getAssignee() != null}">
                         Assigned to <div th:text="${response?.getAssignee()?.getName()}"></div>
+                        <div th:text="${response?.getAssignedDate()}"></div>
                     </div>
                 </li>
             </ul>
