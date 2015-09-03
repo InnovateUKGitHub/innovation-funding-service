@@ -2,11 +2,6 @@
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Form'"  th:remove="tag" />
-    <style>
-        .form-group+#id_capitalusage-0-capitalUsageItem {
-        display: none;
-        }
-    </style>
 </head>
 <body class="app-form">
 
@@ -63,8 +58,8 @@
                 </div>
             </div>
 
-            <div class="question" th:each="question : ${currentSection.getQuestions()}" th:id="'question-'+${question.getId()}">
-               <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
+            <div class="question" th:each="question : ${currentSection.getQuestions()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())})">
+                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>

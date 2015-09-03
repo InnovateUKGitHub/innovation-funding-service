@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * UserService is a utility to use client-side to retrieve User data from the data-service controllers.
@@ -61,7 +63,25 @@ public class UserService extends BaseServiceProvider {
 
     public UserApplicationRole findUserApplicationRole(Long userId, Long applicationId) {
         RestTemplate restTemplate = new RestTemplate();
-        UserApplicationRole userApplicationRole = restTemplate.getForObject(dataRestServiceURL + userApplicationRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId , UserApplicationRole.class);
+        UserApplicationRole userApplicationRole = restTemplate.getForObject(dataRestServiceURL + userApplicationRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, UserApplicationRole.class);
         return userApplicationRole;
+    }
+    public List<UserApplicationRole> findUserApplicationRole(Long applicationId) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserApplicationRole[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userApplicationRoleRestURL + "/findByUserApplication/"+ applicationId, UserApplicationRole[].class);
+        UserApplicationRole[] userApplicationRole = responseEntity.getBody();
+        return Arrays.asList(userApplicationRole);
+    }
+    public List<User> findAssignableUsers(Long applicationId){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userRestURL + "/findAssignableUsers/"+applicationId, User[].class);
+        User[] users =responseEntity.getBody();
+        return Arrays.asList(users);
+    }
+    public List<User> findRelatedUsers(Long applicationId){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
+        User[] users =responseEntity.getBody();
+        return Arrays.asList(users);
     }
 }

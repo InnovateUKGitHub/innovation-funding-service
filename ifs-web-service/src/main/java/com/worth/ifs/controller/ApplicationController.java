@@ -49,6 +49,7 @@ public class ApplicationController {
      * @param model model that contains the details for the application detail page
      */
     private void addApplicationDetails(Long applicationId, Model model) {
+        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getApplicationById(applicationId);
         SectionHelper sectionHelper = new SectionHelper();
 
@@ -61,8 +62,8 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
+        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
 
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
