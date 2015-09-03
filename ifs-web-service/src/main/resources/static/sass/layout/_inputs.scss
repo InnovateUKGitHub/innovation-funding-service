@@ -1,0 +1,14 @@
+input[readonly],
+textarea[readonly]{
+	border:none;
+	padding:0;
+}
+
+.date-group {
+	overflow: hidden;
+	max-width:300px;
+	> div {
+		width:33%;
+		float:left;
+	}
+}

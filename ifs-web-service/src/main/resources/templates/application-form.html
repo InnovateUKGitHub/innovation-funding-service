@@ -2,6 +2,11 @@
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Form'"  th:remove="tag" />
+    <style>
+        .form-group+#id_capitalusage-0-capitalUsageItem {
+        display: none;
+        }
+    </style>
 </head>
 <body class="app-form">
 
@@ -66,7 +71,7 @@
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
 
-            <ul class="group">
+            <ul class="pagination">
                 <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
                     <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
@@ -80,9 +85,9 @@
                     </a>
                 </li>
             </ul>
-            
+
             <div class="alignright-button">
-                <a role="button" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
+                <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
                     Review &amp; submit
                 </a>
 

@@ -45,6 +45,19 @@ Progress indicator
 	//side margin for 0% and 100% overflow of the indicator
 }
 
+.progress-container.medium {
+	.progress-indicator {
+	    height:25px;
+	}
+    .start,
+    .end {
+        bottom:-30px;
+    }
+    .progress div {
+	    top:37px;
+    }
+}
+
 .progress-indicator {
 	display: inline-block;
 	position: relative;

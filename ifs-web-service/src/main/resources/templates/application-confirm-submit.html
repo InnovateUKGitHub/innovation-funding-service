@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'"  th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm application submit'"  th:remove="tag" />
 </head>
-<body class="app-details">
+<body class="app-confirm-submit">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -17,7 +17,7 @@
     <h3 class="heading-medium" th:text="'Application: '+${currentApplication.getName()}+''"></h3>
 
     <div class="alignright-button">
-        <a role="button" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
+        <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
     </div>
 
 

@@ -3,58 +3,45 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${response.getValue()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
     </div>
 
-    <!-- ===========================Form: Text Area =========================== -->
+    <!-- =========================== Form: Textarea =========================== -->
+    <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea" class="form-group" th:class="(${question.getWordCount() == 0} ? '' : 'word-count') + ' ' + (${#authentication.getDetails().getId() == response?.getAssignee()?.getId()} ? 'assigned-to-me' : '')">
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-           
-            <div th:class="'form-control-wrap '+ (${question.isMarkAsCompletedEnabled() and response != null and response.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
-                <div class="form-group_header">
-                    <!--<span class="last_updated_by" >-->
-                        <!--Last updated by <div th:text="${response?.getUserApplicationRole()?.getUser()?.getName()}"></div>-->
-                    <!--</span>-->
-                    <span class="assignee" th:if="${response?.getAssignee() != null}">
-                        You have assigned this question to <div th:text="${response?.getAssignee()?.getName()}"></div>
-                    </span>
-                </div>
-                 <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
-            </div>
+    <div th:fragment="textarea">
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
-    <!-- readonly -->
-    <div th:fragment="readonly_textarea" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
-        <div class="form-control-wrap">
-            <div th:include="question-type/form-elements :: form-textarea" th:with="disabled=(true)" th:remove="tag" />
-        </div>
-    </div>
 
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date" class="form-group">
-        <input type="date" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-dateinput (id=${question.getId()}, day='', month='', year='')" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
             <input type="file"/>
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
+
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
@@ -62,7 +49,7 @@
 
         <div class="form-group">
 
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 
             Project start date
@@ -70,16 +57,16 @@
 
             <div th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            <strong>Lead organisation</strong>
             <div th:text="${leadOrganisation.getName()}"></div>
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <strong>Partners</strong>
             <ul class="list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
@@ -87,28 +74,29 @@
             </ul>
         </div>
     </div>
+
     <div th:fragment="readonly_application_details">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title') " th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:with="disabled=(true)"  th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:with="readonly=(true)"  th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
             Project start date
             <br/>
 
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})"  th:with="disabled=(true)" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-textduration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="disabled=(true)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})"  th:with="readonly=(true)" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="readonly=(true)" th:remove="tag" />
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='',bold=true)" th:remove="tag" />
             Empire Ltd
         </div>
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Partners', id='')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-label (name='Partners', id='',bold=true)" th:remove="tag" />
             <ul class="list-bullet">
                 <li>Ludlow</li>
                 <li>Manchester University</li>
@@ -124,6 +112,8 @@
     </div>
 
     <!-- ===========================Form: finance =========================== -->
+
+
     <div th:fragment="finance">
         <div th:replace="question-type/types :: empty" th:with="$question=(${question})" th:remove="tag" />
         <div class="grid-row">
@@ -145,8 +135,8 @@
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag">
                 <h2 data-th-text="${subSection.getName()}" ></h2>
-                <div th:each="question : ${subSection.getQuestions()}" th:class="' '+ (${response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')">
-                    <div th:include="question-type/types :: ${question.getQuestionType().getTitle()}"/>
+                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
         </div>
@@ -162,7 +152,7 @@
                         <th>Working Days per Year</th>
                         <td>
                             <input  class="form-control form-control-1-3 calculation-working-days-js"
-                                    disabled=""
+                                    readonly=""
                                     type="text"
                                     attr="working_days"
                                     id="working_days"
@@ -200,7 +190,7 @@
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
                                            data-calculation-operations="/"
                                            data-calculation-input="labour-dayrate"
-                                           disabled=""
+                                           readonly=""
                                            id="id_labour-0-labourRate"
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(),0,0)}" />
                                 </td>
@@ -240,12 +230,12 @@
                                data-calculation-field="[data-calculation-input=total-labour-row]"
                                data-calculation-operations="+"
                                data-calculation-input="total-labour"
-                               disabled="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                               readonly="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                     </label>
                 </div>
             </div>
             <div class="alignright-button">
-                <button class="button" th:unless="${response?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+                <button class="button" th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
             </div>
         </div>
     </div>
@@ -296,7 +286,7 @@
 
                 <div class="form-group">
                     <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
-                    <input type="number" name="overheads-calculatedRate" class="form-control" disabled="" id="id_overheads-calculatedRate"
+                    <input type="number" name="overheads-calculatedRate" class="form-control" readonly="" id="id_overheads-calculatedRate"
                            data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
                            data-calculation-operations="/,*"
                            data-calculation-input="overhead-calculated"
@@ -306,7 +296,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total overhead costs £
-                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" disabled="" id="id_overheads-totalCosts"
+                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" readonly="" id="id_overheads-totalCosts"
                            data-calculation-field="[data-calculation-input=overhead-calculated]"
                            data-calculation-operations=""
                            />
@@ -348,7 +338,7 @@
                                 <input type="number" name="materials-0-materialsTotal"
                                        data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
                                        data-calculation-operations="*"
-                                       disabled="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
+                                       readonly="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
                             </td>
                         </tr>
                     </div>
@@ -363,7 +353,7 @@
                 <label>
                     Total materials costs £
                     <input class="form-control form-control-1-4 calculation-total-materials-row-js calculation-result-js"
-                           disabled="" type="text" id="material-costs-total-field"
+                           readonly="" type="text" id="material-costs-total-field"
                            data-calculation-field="[data-calculation-input=total-materials-row]"
                            data-calculation-operations="+"
                            data-calculation-input="total-materials"
@@ -421,7 +411,7 @@
 
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageNetCost" class="form-label">Net Cost (£)</label>
-                        <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" disabled="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"
+                        <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" readonly="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"
                                th:value="${#numbers.formatDecimal(capitalUsage.getNetCost(),0,0)}"/>
                     </div>
                 </div>
@@ -431,7 +421,7 @@
                 <div class="form-group form-group--align-right">
                     <label>
                         Total capital usage costs £
-                        <input class="form-control form-control-1-4" disabled="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                        <input class="form-control form-control-1-4" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                     </label>
                 </div>
             </div>
@@ -457,7 +447,7 @@
                     <div class="form-group">
                         <label class="form-label" for="id_subcontracting-0-subcontractingRole">Role in the project and description of work being carried out</label>
                         <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="id_subcontracting-0-subcontractingRole" th:inline="text">[[${subContractingCost.getRole()}]]</textarea>-->
-                        <div th:include="question-type/form-elements :: form-textarea" th:remove="tag" />
+                        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
                     </div>
 
                     <div class="form-group">
@@ -478,7 +468,7 @@
                 <label>
                     Total subcontracting costs £
                     <input class="form-control form-control-1-4"
-                           disabled=""
+                           readonly=""
                            type="text"
                            id="subcontracting-costs-total-field"
                            data-calculation-field="[data-calculation-input=subcontracting-cost-row]"
@@ -519,7 +509,7 @@
                                 <input type="number" name="travel-0-travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
                             </td>
                             <td>
-                                <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" disabled="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
+                                <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
                             </td>
                         </tr>
                     </div>
@@ -533,7 +523,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total travel &amp; subsistence costs £
-                    <input class="form-control form-control-1-4" disabled="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
+                    <input class="form-control form-control-1-4" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -577,7 +567,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total other costs £
-                    <input class="form-control form-control-1-4" disabled="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}"/>
+                    <input class="form-control form-control-1-4" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}"/>
                 </label>
             </div>
             <div class="form-group form-group--align-right">

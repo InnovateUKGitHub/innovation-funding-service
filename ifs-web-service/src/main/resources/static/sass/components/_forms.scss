@@ -28,61 +28,25 @@ table td[colspan] input {
     width:auto;
 }
 
-.form-control-wrap {
-    background-color: #fff;
-    border: 1px solid $border-colour;
+.textarea-wrapped {
     position: relative;
 
-
-    .form-group_header {
+    .textarea-header {
         padding:10px;
         text-align:right;
         font-size:14px;
-        background: {
-            color: #f8f8f8;
-            position: 0 0;
-            repeat: no-repeat;
-        }
+        border-top:  1px solid $border-colour;
+        border-left:  1px solid $border-colour;
+        border-right:  1px solid $border-colour;
+        background: $grey-4 0 0 no-repeat;
     } 
-   .form-group_header-status {
-        color: #666;
-        font-size: 16px;
-        margin: 0;
 
-        &--assigned {
-            background: url(../images/flag-icon.png) no-repeat 0 0.15em;
-            margin-top: 10px;
-            padding-left: 25px;
-        }
-    }
-
-
-    &--locked {
-        .form-group_header {
-            background: {
-                image: url(/images/field/field-locked.png);
-            }
-        }
-    }
-    &--done {
-        background-color: $grey-4;
-        border: 2px solid #00823b;
-        .form-group_header {
-            background: {
-                image: url(/images/field/field-done.png);
-            }
-        }
-    }
-    &--assigned {
-        .form-group_header {
-            background: {
-                image: url(/images/field/field-assigned.png);
-            }
-        }
-    }
     textarea {
-        background: transparent;
-        border: none;
+        border-top:none;
+        border-bottom:  1px solid $border-colour;
+        border-left:  1px solid $border-colour;
+        border-right:  1px solid $border-colour;
+        min-height: 500px;
         margin: 0;
         padding: 5px 10px;
         resize: vertical;
@@ -91,3 +55,39 @@ table td[colspan] input {
         @include box-sizing(border-box);
     }
 }
+
+.marked-as-complete {
+    .textarea-header,
+    textarea {
+        border-color: $green;
+    }
+} 
+    //    .form-group_header-status {
+    //     color: #666;
+    //     font-size: 16px;
+    //     margin: 0;
+
+    //     &--assigned {
+    //         background: url(../images/flag-icon.png) no-repeat 0 0.15em;
+    //         margin-top: 10px;
+    //         padding-left: 25px;
+    //     }
+    // }
+
+
+    // &--locked {
+    //     .form-group_header {
+    //         background: {
+    //             image: url(/images/field/field-locked.png);
+    //         }
+    //     }
+    // }
+
+    // &--assigned {
+    //     .form-group_header {
+    //         background: {
+    //             image: url(/images/field/field-assigned.png);
+    //         }
+    //     }
+    // }
+// }

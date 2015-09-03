@@ -80,14 +80,14 @@ Navigation used to access the different sections of the application
         background-color: $grey-4;
     }
     .active a {
-        background-color: #005ea5;
+        background-color: $govuk-blue;
     }
 }
 
 //highlights
 .app-sidebar {
     .active > a {
-        background-color:  #005ea5;
+        background-color:  $govuk-blue;
         color: #fff;
     }
     // .icon-flag a {

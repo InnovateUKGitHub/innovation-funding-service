@@ -1,0 +1,31 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Test Cases ***
+Verify all sections present in the summary page
+    Given the \ Applicant is in the Summary page
+    Then all the sections should be visible
+
+Verify that clicking the edit link in the summary redirects the applicant to the application
+    Given the \ Applicant is in the Summary page
+    When the user clicks the edit link in the summary page
+    Then the applicant should redirect to the Application form
+
+*** Keywords ***
+the \ Applicant is in the Summary page
+    Go To    http://ifs.test.worth.systems/application/1/summary
+
+all the sections should be visible
+    Page Should Contain Element    css=h2:nth-child(1) button
+    Page Should Contain Element    css=#collapsible-0+ .section-completed button
+    Page Should Contain Element    css=#collapsible-2+ h2 button
+    Page Should Contain Element    css=#collapsible-4+ h2 button
+    Page Should Contain Element    css=#collapsible-6+ .section-completed button
+    Page Should Contain Element    css=#collapsible-8+ h2 button
+
+the user clicks the edit link in the summary page
+    Click Element    css=h2:nth-child(1) button
+    Click Element    link=Edit
+
+the applicant should redirect to the Application form
+    Location Should Be    http://ifs.test.worth.systems/application-form/1/section/1/?questionId=11

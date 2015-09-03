@@ -22,18 +22,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
-//apply plugin: "com.github.robfletcher.compass"
 
-
-//compass {
-//    cssDir = file("src/main/resources/static/css")
-//    sassDir = file("src/main/resources/static/sass")
-//    imagesDir = file("src/main/resources/static/images")
-//    javascriptsDir = file("src/main/resources/static/js")
-//    outputStyle = "compressed"
-//    time = true
-//    quiet = true
-//}
 war {
     baseName = 'ifs-web-service'
     version = '0.0.1-SNAPSHOT'
