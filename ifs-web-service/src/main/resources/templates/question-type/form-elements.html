@@ -102,7 +102,7 @@
 		 					id=${question.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} or ${currentUser.getId() != response?.getAssignee()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()} or ${response.getAssignee() != null and currentUser.getId() != response?.getAssignee()?.getId()},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag" />
 
@@ -139,8 +139,8 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-		<button th:if="${question.isMarkAsCompletedEnabled() and not responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-		<button th:if="${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
 </div>
 <!-- ========================= edit link =========================== -->
 
