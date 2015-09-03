@@ -3,6 +3,9 @@
 
 //variables 
 
+
+@import "compass/css3/transition";
+
 @import "layout/layout";
 /* 
 #Nomensa/Worth Elements
@@ -38,12 +41,23 @@
 
 @import "components/forms";
 
+
 /*
 ##6. small elements
 */
 @import "layout/small";
 
+@import "components/pagination";
 
+
+//still to be documented 
+@import "components/modal";
+@import "layout/a11y";
+@import "layout/inputs";
+@import "components/competition-deadline";
 //pages
 @import "pages/application-details";
 @import "pages/application-form";
+@import "pages/application-summary";
+@import "pages/application-dashboard";
+

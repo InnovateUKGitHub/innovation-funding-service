@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'"  th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'"  th:remove="tag" />
 </head>
-<body class="app-details">
+<body class="app-submitted">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -12,13 +12,9 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
-    <div class="heading-group heading-group--margin">
         <h1 class="heading-xlarge"  >Application submitted</h1>
         <h2 class="heading-large" th:text="${currentApplication.getName()}"></h2>
 
-    </div><!-- .heading-group -->
-
-    <div class="content-indent">
         <p>Thank you for entering the "<span th:text="${currentCompetition.getName()}"></span>" competition. We have received your application and this will now enter into the next stage of the competitions process.</p>
         <p>You and each partner in this application will receive email confirmation of this submission with a copy of the application for your records.</p>
 
@@ -44,8 +40,7 @@
             <li>You will receive feedback from our assessors by 30th May 2015</li>
         </ul>
 
-        <p><a class="button" href="/applicant/dashboard">Return to dashboard</a></p>
-    </div>
+        <p><a class="button" tabindex="0" role="button" href="/applicant/dashboard">Return to dashboard</a></p>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

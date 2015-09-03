@@ -1,0 +1,28 @@
+
+        // <div class="day" th:text="${endDate.getDayOfMonth()}" />
+        // <div class="month" th:text="${endDate.getMonth()}" />
+        // <div class="time">
+        //     <span th:text="${endDate.getHour()}" />:<span th:text="${endDate.getMinute()}" />
+        // </div>
+
+.competition-deadline {
+	@include inline-block;
+	margin:0 10px;
+	text-align: left;
+
+	.day {
+		font-size: 75px;
+		line-height: 1;
+		font-weight: 700;
+	}
+	.day span {
+		vertical-align:top;
+		font-size:22px;
+	}
+	.month,.time {
+		font-size:12px;
+	}
+	.time {
+		color:$grey-2;
+	}
+}

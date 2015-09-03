@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,16 +63,35 @@ public class ResponseController {
         if(markedAsComplete == null){
             markedAsComplete = true;
         }
-
-        Application application = applicationRepository.findOne(applicationId);
-        Question question = questionRepository.findOne(questionId);
-
-        Response response = responseRepository.findByApplicationAndQuestion(application, question);
-        response.setMarkedAsComplete(markedAsComplete);
-        responseRepository.save(response);
+        log.info("Mark:::"+ markedAsComplete);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
+        User user = userRepository.findOne(userId);
+
+        Application application = applicationRepository.findOne(applicationId);
+        Question question = questionRepository.findOne(questionId);
+        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+
+        if(userAppRoles == null || userAppRoles.size()== 0){
+            // user has no role on this application, so should not be able to write..
+            log.error("FORBIDDEN TO SAVE");
+            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+        }
+
+        Response response = responseRepository.findByApplicationAndQuestion(application, question);
+
+        if(response == null){
+            response = new Response(null, LocalDate.now(), "", markedAsComplete, userAppRoles.get(0), question, application);
+        }else{
+            response.setMarkedAsComplete(markedAsComplete);
+            response.setDate(LocalDate.now());
+            response.setUserApplicationRole(userAppRoles.get(0));
+        }
+        responseRepository.save(response);
+
+
         return new ResponseEntity<String>(headers, HttpStatus.OK);
 
     }
@@ -104,10 +124,10 @@ public class ResponseController {
         // get existing response to update.
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
         if(response == null){
-            response = new Response(null, new Date(), value, false, userAppRoles.get(0), question, application);
+            response = new Response(null, LocalDate.now(), value, false, userAppRoles.get(0), question, application);
         }else{
             response.setValue(value);
-            response.setDate(new Date());
+            response.setDate(LocalDate.now());
             response.setUserApplicationRole(userAppRoles.get(0));
         }
         

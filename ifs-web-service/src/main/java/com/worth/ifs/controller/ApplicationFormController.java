@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.domain.*;
+import com.worth.ifs.helper.ApplicationHelper;
 import com.worth.ifs.helper.SectionHelper;
 import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +38,8 @@ public class ApplicationFormController {
     ResponseService responseService;
     @Autowired
     ApplicationFinanceService applicationFinanceService;
+    @Autowired
+    OrganisationService organisationService;
     @Autowired
     UserService userService;
     @Autowired
@@ -59,8 +63,14 @@ public class ApplicationFormController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
+        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
 
-        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
+        List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
+        // List to map convertion
+        Map<Long, Section> sections =
+                sectionsList.stream().collect(Collectors.toMap(Section::getId,
+                        Function.identity()));
         model.addAttribute("sections", sections);
 
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
@@ -126,11 +136,11 @@ public class ApplicationFormController {
         List<Section> sections = comp.getSections();
 
         // get the section that we want to show, so we can use this on to show the correct questions.
-        Section section = sections.stream().
-                filter(x -> x.getId().equals(sectionId)).
-                findFirst().get();
+        Optional<Section> section = sections.stream().
+                filter(x -> x.getId().equals(sectionId))
+                .findFirst();
 
-        return section;
+        return section.isPresent() ? section.get() : null;
     }
 
     /**

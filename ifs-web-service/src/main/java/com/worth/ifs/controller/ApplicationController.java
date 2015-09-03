@@ -3,11 +3,9 @@ package com.worth.ifs.controller;
 import com.worth.ifs.constant.ApplicationStatusConstants;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
+import com.worth.ifs.helper.ApplicationHelper;
 import com.worth.ifs.helper.SectionHelper;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.ResponseService;
-import com.worth.ifs.service.SectionService;
-import com.worth.ifs.service.UserService;
+import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sun.security.x509.OIDMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +34,9 @@ public class ApplicationController {
     ApplicationService applicationService;
 
     @Autowired
+    OrganisationService organisationService;
+
+    @Autowired
     SectionService sectionService;
 
     @Autowired
@@ -54,7 +53,7 @@ public class ApplicationController {
         SectionHelper sectionHelper = new SectionHelper();
 
         if(application == null){
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Application not found.");
         }
 
         model.addAttribute("currentApplication", application);
@@ -62,10 +61,20 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
+        model.addAttribute("applicationOrganisations", ApplicationHelper.getApplicationOrganisations(application));
+        model.addAttribute("leadOrganisation", ApplicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
+
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
         List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
         model.addAttribute("incompletedSections", incompletedSections);
+
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
 
         Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
@@ -75,10 +84,9 @@ public class ApplicationController {
         model.addAttribute("sections", sections);
     }
 
-
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
-        log.debug("Application with id " + applicationId);
+        log.info("Application with id " + applicationId);
         this.addApplicationDetails(applicationId, model);
         return "application-details";
     }
@@ -112,11 +120,8 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}/submit")
     public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
-
-
         applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-
+        this.addApplicationDetails(applicationId, model);
         return "application-submitted";
     }
 

@@ -61,4 +61,8 @@ public class Cost {
     public void setCostCategory(CostCategory costCategory) {
         this.costCategory = costCategory;
     }
+
+    public List<CostValue> getCostValues() {
+        return costValues;
+    }
 }

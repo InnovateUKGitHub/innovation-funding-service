@@ -21,12 +21,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@ContextConfiguration
 public class ApplicantControllerTest extends BaseUnitTest {
 
+
     @InjectMocks
     private ApplicantController applicantController;
-
-
-    @Mock
-    ApplicationService applicationService;
 
 
 
@@ -42,6 +39,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
     }
 
@@ -53,7 +51,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
     @Test
     public void testDashboard() throws Exception {
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())

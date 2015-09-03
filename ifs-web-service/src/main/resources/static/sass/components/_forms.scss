@@ -13,6 +13,21 @@
 ```
 
 */
+textarea[readonly],
+textarea[disabled],
+input[readonly],
+input[disabled]{
+    color:$secondary-text-colour;
+}
+
+table td input{
+    width:100%; 
+    @include box-sizing(border-box);
+}
+table td[colspan] input {
+    width:auto;
+}
+
 .form-control-wrap {
     background-color: #fff;
     border: 1px solid $border-colour;

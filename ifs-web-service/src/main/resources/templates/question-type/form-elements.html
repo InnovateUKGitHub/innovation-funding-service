@@ -1,6 +1,6 @@
 <!-- ===========================Form label =========================== -->
-<div th:fragment="form-label (name,id)">
-        <label  class="form-label form-label-bold" 
+<div th:fragment="form-label (name,id,bold)">
+        <label  th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
                 th:if="${name}"
                 th:for="'question-'+${id}"
                 th:text="${name}"
@@ -25,107 +25,90 @@
 	    </div>
 	</details>
 </div>
-<!-- ========================= input field =========================== -->
+<!-- ========================= input field type text =========================== -->
 
 <div th:fragment="form-textinput (id, response)">
 	<input  class="form-control"
-			th:disabled="${disabled}"
 			th:readonly="${disabled}"
 	        type="text"
-			th:attr="data-question_id=${id}"
-	        th:id="'question-'+${id}"
+	        th:id="${id}"
 	        th:name="'question['+${id}+']'"
 	        th:value="${response}"
+	        th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
 	/>
 </div>
+<!-- ========================= input field type number =========================== -->
+
+<div th:fragment="form-number (id, response)">
+	<input  class="form-control"
+			th:readonly="${disabled}"
+	        type="number"
+	        th:id="${id}"
+	        th:name="'question['+${id}+']'"
+	        th:value="${response}"
+	        th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+	/>
+</div>
+
 <!-- ========================= date field =========================== -->
 
 <div th:fragment="form-dateinput (id, day, month, year)">
 	<div class="date-group">
-		<div class="grid-row">
-			<div class="column-third">
-				Day
-			</div>
-			<div class="column-third">
-				Month
-			</div>
-			<div class="column-third">
-				Year
-			</div>
+		<div class="day">
+	          <div th:include="question-type/form-elements :: form-label (name='day',id=${id}+'_day',bold=false)" th:remove="tag" />
+	          <div th:include="question-type/form-elements :: form-number (id=${id}+'_day', response=${day},placeholder='DD')" th:remove="tag" />
 		</div>
-		<div class="grid-row">
-			<div class="column-third">
-				<input  class="form-control integer-validation-js"
-					th:disabled="${disabled}"
-					th:readonly="${disabled}"
-					type="number"
-					th:attr="data-question_id=${id}+'_day'"
-					th:id="'question-'+${id}"
-					th:name="'question['+${id}+'][day]'"
-					th:value="${day}"
-					placeholder="DD"
-					/>
-			</div>
-			<div class="column-third">
-				<input  class="form-control integer-validation-js"
-					th:disabled="${disabled}"
-					th:readonly="${disabled}"
-					type="number"
-					th:attr="data-question_id=${id}+'_month'"
-					th:id="'question-'+${id}"
-					th:name="'question['+${id}+'][month]'"
-					th:value="${month}"
-					placeholder="MM"
-					/>
-			</div>
-			<div class="column-third">
-				<input  class="form-control integer-validation-js"
-					th:disabled="${disabled}"
-					th:readonly="${disabled}"
-					type="number"
-					th:attr="data-question_id=${id}+'_year'"
-					th:id="'question-'+${id}"
-					th:name="'question['+${id}+'][year]'"
-					th:value="${year}"
-					placeholder="YYYY"/>
-			</div>
+		<div class="month">
+	          <div th:include="question-type/form-elements :: form-label (name='month',id=${id}+'_month',bold=false)" th:remove="tag" />
+	          <div th:include="question-type/form-elements :: form-number (id=${id}+'_month', response=${month},placeholder='MM')" th:remove="tag" />
+		</div>
+		<div class="year">
+	          <div th:include="question-type/form-elements :: form-label (name='year',id=${id}+'_year',bold=false)" th:remove="tag" />
+	          <div th:include="question-type/form-elements :: form-number (id=${id}+'_year', response=${year},placeholder='YYYY')" th:remove="tag" />
 		</div>
 	</div>
 </div>
 
-<div th:fragment="form-textduration (id, months)">
-	Duration <br/>
-	<input  class="form-control integer-validation-js"
-			th:disabled="${disabled}"
-			th:readonly="${disabled}"
-			type="number"
-			th:attr="data-question_id=${id}"
-			th:id="'question-'+${id}"
-			th:name="'question['+${id}+']'"
-			th:value="${months}"
-			/> months
+
+<!-- ========================= Duration in months =========================== -->
+
+<div th:fragment="form-duration (id, months)">
+  	<div th:include="question-type/form-elements :: form-label (name='Duration',id=${id},bold=false)" th:remove="tag" />
+	<div th:include="question-type/form-elements :: form-number (id=${id}, response=${months})" th:remove="tag" />
+	months
 </div>
 
 <!-- ========================= textarea with word count =========================== -->
 
+<div th:fragment="form-textarea-simple (id, name, value)">
+		<textarea
+				th:id="${id}"
+				th:name="${name}"
+				th:utext="${value}">
+		</textarea>
+</div>
 <div th:fragment="form-textarea">
 	<div th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
 
 		<textarea
-		   th:disabled="${disabled} or ${responses.get(question.getId())?.isMarkedAsComplete()}"
-		   th:readonly="${disabled} or ${responses.get(question.getId())?.isMarkedAsComplete()}"
-		   th:attr="data-question_id=${question.getId()},data-max_words=${question.getWordCount()}"
+		   th:readonly="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
+		   th:attr="data-max_words=${question.getWordCount()}"
+		   th:id="${question.getId()}"
 		   cols="30" rows="10"
 		   th:name="'question['+${question.getId()}+']'"
 		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId())?.getValue()} )">
 		</textarea>
 
-		<div class="grid-row" th:unless="${question.getWordCount() == 0} or ${disabled}">
-			<div class="column-half column-half--first">
-				<button th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-				<button th:if="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+		<div class="grid-row">
+			<div class="column-half column-half--first" th:unless="${disabled}">
+				<button th:if="${question.isMarkAsCompletedEnabled() and not responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+				<button th:if="${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
 			</div>
-			<div class="column-half column-half--second">
+			<div class="column-half column-half--first" th:if="${disabled}">
+				<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
+				   data-th-text="Edit"></a>
+			</div>
+			<div class="column-half column-half--second" th:unless="${question.getWordCount() == 0}">
 				<span class="count-label" >
 					<span class="count-message">Words remaining:</span>
 					<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
@@ -133,11 +116,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<div th:fragment="question-edit-link">
-	<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
-	   data-th-text="Edit"></a>
 </div>
 
 

@@ -19,9 +19,16 @@ Verify the "review and submit" button
     When the Applicant clicks the "Review and submit" button
     Then the applicant will navigate to the summary page
 
+Verify the successful submit page
+    When the applicant submits the application
+    Then the Applicant should navigate to the "submit confirmation" page
+    and the page should have a confirmation text
+    and the "Return to dashboard" button is visible
+    and the "Return to dashboard" button navigates to the dashboard page
+
 Verify the "Submit button" is disabled when the state of the application is not valid
     Given the application is not valid
-    When when the Applicant is in the summary page
+    When the Applicant is in the summary page
     Then the submit button should be disabled
 
 Verify that the user gets a warning message when clicks the submit button
@@ -38,34 +45,11 @@ Verify the submit flow
     Then the applicant will navigate to the submit page
     and the "Return to dashboard page" button will be visible
 
-Verify the successful submit page
-    When the applicant submits the application
-    Then the Applicant should navigate to the "submit confirmation" page
-    and the page should have a confirmation text
-    and the "Return to dashboard" button is visible
-    and the "Return to dashboard" button navigates to the dashboard page
-
 Verify the Warning message when the applicant clicks the submit button in the summary page
     When the applicant submits the application in the summary page
     Then the applicant should get a warning message
 
 *** Keywords ***
-the user is in the Dashboard page
-    go to    http://ifs.test.worth.systems/applicant/dashboard
-
-the Applicant clicks the "Rovel Additive Manufacturing Process" application
-    Click Link    link=Rovel Additive Manufacturing Process
-
-the Applicant should see the overview of the selected application
-    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
-
-the applicant clicks the "What should I include in project summary?" question
-    Click Element    css=.grid-row > .column-two-thirds > form > div:nth-child(5) > div:nth-child(1)> details > summary
-
-the Applicant opens the "Rovel additive" application form
-    Go To    http://ifs.test.worth.systems/applicant/dashboard
-    Click Element    link=Rovel Additive Manufacturing Process
-
 the applicant is in the "Overview page"
     Go To    http://ifs.test.worth.systems/applicant/dashboard
     Click Element    link=Rovel Additive Manufacturing Process
@@ -78,6 +62,22 @@ the applicant clicks the Review and submit button (overview page)
 
 the applicant will navigate to the summary page
     Location Should Be    http://ifs.test.worth.systems/application/1/summary
+
+the user is in the Dashboard page
+    go to    http://ifs.test.worth.systems/applicant/dashboard
+
+the Applicant should see the overview of the selected application
+    Location Should Be    http://ifs.test.worth.systems/application/1/section/1
+
+the Applicant opens the "Rovel additive" application form
+    Go To    http://ifs.test.worth.systems/applicant/dashboard
+    Click Element    link=Rovel Additive Manufacturing Process
+
+the Applicant clicks the "Rovel Additive Manufacturing Process" application
+    Click Link    link=Rovel Additive Manufacturing Process
+
+the applicant clicks the "What should I include in project summary?" question
+    Click Element    css=.grid-row > .column-two-thirds > form > div:nth-child(5) > div:nth-child(1)> details > summary
 
 the Applicant clicks the "Review and submit" button
     click element    link=Review & submit
@@ -112,3 +112,18 @@ the applicant submits the application in the summary page
 
 the applicant should get a warning message
     Page Should Contain    This is your final chance to make changes to the application. You will not be able to access the application after this point. Are you sure you want to submit?
+
+the application is not valid
+    Go To    http://ifs.test.worth.systems/applicant/dashboard
+    Click Element    link=Rovel Additive Manufacturing Process
+    Click Element    link=Application details
+    Click Element    css=#question-12 button
+    Clear Element Text    name=question[12]
+    Input Text    name=question[12]    1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10
+    Click Element    css=#question-12 button
+
+the Applicant is in the summary page
+    Click Element    css=a.button
+
+the submit button should be disabled
+    Element Should Be Disabled    css=.button

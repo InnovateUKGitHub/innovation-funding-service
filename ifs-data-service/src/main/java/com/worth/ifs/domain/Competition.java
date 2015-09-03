@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,15 +31,14 @@ public class Competition {
 
     private String name;
 
-    @Lob
     @Column( length = 5000 )
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public Competition() {
     }
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDate startDate, LocalDate endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -48,7 +48,7 @@ public class Competition {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public Competition(long id, String name, String description, LocalDate startDate, LocalDate endDate) {
+    public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -82,11 +82,11 @@ public class Competition {
         return name;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
@@ -109,16 +109,16 @@ public class Competition {
     }
     @JsonIgnore
     public long getTotalDays(){
-        long daysTotal = ChronoUnit.DAYS.between(startDate, endDate);
+        long daysTotal = ChronoUnit.DAYS.between(this.startDate, this.endDate);
         return daysTotal;
     }
     @JsonIgnore
-    public double getStartDateToEndDatePercentage(){
-        if(getDaysLeft() < 0){
+    public long getStartDateToEndDatePercentage(){
+        if(getDaysLeft() <= 0){
             return 100;
         }
-        double deadlineProgress = (getDaysLeft() * 100) / getTotalDays();
-        deadlineProgress = 100 - deadlineProgress;
-        return deadlineProgress;
+        double deadlineProgress = 100-( ( (double)getDaysLeft()/(double)getTotalDays() )* 100);
+        long startDateToEndDatePercentage = (long) deadlineProgress;
+        return startDateToEndDatePercentage;
     }
 }

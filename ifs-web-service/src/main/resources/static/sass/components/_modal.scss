@@ -1,0 +1,52 @@
+[role="dialog"]{
+	width:80%;
+	margin-left:-40%;
+	left:50%;
+	position: fixed;
+	background-color: #FFF;
+	top:50%;
+	padding: 40px 30px 30px 30px;
+	@include box-sizing(border-box);
+	z-index: 10;
+	@include transition-property(top,margin);
+	@include transition-duration(300ms);
+	
+	
+	.close {
+		background:none;
+		border:1px solid #000;
+		position: absolute;
+		right:15px;
+		top:15px;
+		cursor:pointer;
+		padding:5px;
+		font-size:16px;
+		line-height:1;
+		&:hover {
+			background-color: $grey-4;
+		}
+	}
+	.close.close {
+		border:1px solid #000;
+	}
+}
+.modal-overlay {
+	&.js-close {
+		cursor:pointer;
+	}
+	&.hidden {
+		background-color:transparent;
+		height: 0;
+	}
+	@include transition-property(background);
+	@include transition-duration(300ms);
+	position:fixed;
+	width:100%;
+	height: 100%;
+	left:0;
+	top:0;
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 9 ; 
+}
+
