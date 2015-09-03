@@ -29,7 +29,7 @@
 
 <div th:fragment="form-textinput (id, response)">
 	<input  class="form-control"
-			th:readonly="${disabled}"
+			th:readonly="${readonly}"
 	        type="text"
 	        th:id="${id}"
 	        th:name="'question['+${id}+']'"
@@ -41,7 +41,7 @@
 
 <div th:fragment="form-number (id, response)">
 	<input  class="form-control"
-			th:readonly="${disabled}"
+			th:readonly="${readonly}"
 	        type="number"
 	        th:id="${id}"
 	        th:name="'question['+${id}+']'"
@@ -78,46 +78,62 @@
 	months
 </div>
 
-<!-- ========================= textarea with word count =========================== -->
+<!-- ========================= textarea  =========================== -->
 
-<div th:fragment="form-textarea-simple (id, name, value)">
+<div th:fragment="form-textarea (id, name, value,readonly)">
 		<textarea
 				th:id="${id}"
 				th:name="${name}"
-				th:utext="${value}">
+				th:text="${value}"
+				th:readonly="${readonly}"
+		        th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+				>
 		</textarea>
 </div>
-<div th:fragment="form-textarea">
-	<div th:class="(${question.getWordCount() == 0} ? '' : 'word-count')">
 
-		<textarea
-		   th:readonly="${disabled} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"
-		   th:attr="data-max_words=${question.getWordCount()}"
-		   th:id="${question.getId()}"
-		   cols="30" rows="10"
-		   th:name="'question['+${question.getId()}+']'"
-		   data-th-text="(( ${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId())?.getValue()} )">
-		</textarea>
+<!-- ========================= textarea wrapped within all extra's =========================== -->
 
-		<div class="grid-row">
-			<div class="column-half column-half--first" th:unless="${disabled}">
-				<button th:if="${question.isMarkAsCompletedEnabled() and not responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-				<button th:if="${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
-			</div>
-			<div class="column-half column-half--first" th:if="${disabled}">
-				<a tabindex="0" th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${section.getId()},questionId=${question.getId()})}"
-				   data-th-text="Edit"></a>
-			</div>
-			<div class="column-half column-half--second" th:unless="${question.getWordCount() == 0}">
-				<span class="count-label" >
-					<span class="count-message">Words remaining:</span>
-					<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
-				</span>
-			</div>
-		</div>
+<div th:fragment="form-textarea-wrapped">
+     <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')">
+		<div th:unless="${readonly}" class="textarea-header">Information goes here</div>		         
+		<div th:include="question-type/form-elements :: form-textarea (
+		 					id=${question.getId()}, 
+		 					value=((${responses.get(question.getId())} == null ) ? '' : ${responses.get(question.getId())?.getValue()} ),
+		 					wordCount=${question.getWordCount()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()},
+		 					name='question['+${question.getId()}+']'
+		 					)" th:remove="tag" />
+		 
+		 <div class="textarea-footer">
+				<!-- if not readonly we show mark as complete buttons --> 
+				<div th:unless="${readonly}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"  th:remove="tag"  />
+				<!-- if  readonly we show the edit form button--> 
+				<div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"  th:remove="tag"  />
+				<div th:include="question-type/form-elements :: form-word-count" th:remove="tag" />
+		 </div>
+    </div>
+</div>
+<!-- ========================= Mark as complete buttons =========================== -->
+
+<div th:fragment="form-mark-as-complete-buttons">
+		<button th:if="${question.isMarkAsCompletedEnabled() and not responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+</div>
+<!-- ========================= edit link =========================== -->
+
+<div th:fragment="form-edit-question-button">
+		<a tabindex="0" th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"  th:text="Edit" />
+</div>
+
+<!-- ========================= word count =========================== -->
+
+<div th:fragment="form-word-count">
+	<div th:unless="${question.getWordCount() == 0}" th:remove="tag">
+		<span class="count-label">
+				<span class="count-message">Words remaining:</span>
+				<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
+		</span>
 	</div>
 </div>
-
-
 
 
