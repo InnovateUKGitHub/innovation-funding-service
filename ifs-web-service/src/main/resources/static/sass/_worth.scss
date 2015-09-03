@@ -47,13 +47,17 @@
 */
 @import "layout/small";
 
+@import "components/pagination";
+
+
 //still to be documented 
 @import "components/modal";
 @import "layout/a11y";
 @import "layout/inputs";
-@import "components/pagination";
-
+@import "components/competition-deadline";
 //pages
 @import "pages/application-details";
 @import "pages/application-form";
 @import "pages/application-summary";
+@import "pages/application-dashboard";
+

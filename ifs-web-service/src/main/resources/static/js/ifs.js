@@ -159,7 +159,7 @@ var worthIFS = {
     closeAlertHide : function(){
         setTimeout(function(){
             jQuery('.is-open').removeClass('is-open');
-        },5000);
+        },3000);
     },
     modalLink : function(){
         var modalLinks = jQuery('[data-js-modal]');
