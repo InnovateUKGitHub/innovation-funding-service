@@ -12,7 +12,7 @@
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea">
+    <div th:fragment="textarea"  class="form-group">
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />

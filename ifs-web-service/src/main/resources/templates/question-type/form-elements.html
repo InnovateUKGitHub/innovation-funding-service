@@ -131,7 +131,7 @@
 	<div th:unless="${question.getWordCount() == 0}" th:remove="tag">
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
-				<strong class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</strong>
+				<span class="count-down" aria-live="polite" th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</span>
 		</span>
 	</div>
 </div>
