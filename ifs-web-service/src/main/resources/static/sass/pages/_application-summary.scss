@@ -17,4 +17,15 @@
 		display: block;
 		margin-top:1em;
 	}
+	
+	input[readonly],
+	textarea[readonly], 
+	.textarea-wrapped textarea[readonly] {
+		padding:0;
+		border:none;
+	}
+
+	.question {
+		margin-left:10px;
+	}
 }

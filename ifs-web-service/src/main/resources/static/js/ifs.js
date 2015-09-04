@@ -1,7 +1,8 @@
 //Innovation Funding Services javascript by Worth
 var worthIFS = {
-    collapsibleEl : '.collapsible',
+    collapsibleEl : '.collapsible h2, .assign-container .assign-button',
     pieEl : '.pie',
+    collapsibleAssignEl: '.assign-container',
     domReady : function(){
         worthIFS.collapsible();
         worthIFS.pieChart();
@@ -24,9 +25,9 @@ var worthIFS = {
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
       -----------------------------------------------------------------------------
       */
-      jQuery(worthIFS.collapsibleEl+' h2').each(function() {
+      jQuery(worthIFS.collapsibleEl).each(function(index,value) {
         var inst = jQuery(this);
-        var id = 'collapsible-' + inst.index();   // create unique id for a11y relationship
+        var id = 'collapsible-' + index;   // create unique id for a11y relationship
         var loadstate = inst.hasClass('open');
 
         // wrap the content and make it focusable

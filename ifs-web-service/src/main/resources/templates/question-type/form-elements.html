@@ -126,21 +126,23 @@
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="assign-buttons">
-	<div>Assign question</div>
-	<div class="assign-question_content js-assign-question_content js-assign-question_content--expanded" id="content-0" aria-hidden="false" style="display: block;" >
-		<ul class="list-bullet">
-			<li th:each="assignableUser : ${assignableUsers}">
-				<button type="submit" name="assign_question" th:value="${question.getId()}+'_'+${assignableUser.getId()}" th:unless="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}"></button>
-				<div th:if="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}"></div>
-			</li>
-		</ul>
+	<div class="assign-container">
+		<div class="assign-button">Assign question</div>
+		<div class="assign-team">
+			<ul class="list-bullet">
+				<li th:each="assignableUser : ${assignableUsers}">
+					<button type="submit" name="assign_question" th:value="${question.getId()}+'_'+${assignableUser.getId()}" th:unless="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}" class="buttonlink" />
+					<div th:if="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}"></div>
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" class="buttonlink" >Mark as complete</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink" >Edit</button>
 </div>
 <!-- ========================= edit link =========================== -->
 

@@ -18,6 +18,7 @@ textarea[disabled],
 input[readonly],
 input[disabled]{
     color:$secondary-text-colour;
+    border-color:transparent;
 }
 
 table td input{
@@ -26,6 +27,15 @@ table td input{
 }
 table td[colspan] input {
     width:auto;
+}
+
+.date-group {
+    overflow: hidden;
+    max-width:300px;
+    > div {
+        width:33%;
+        float:left;
+    }
 }
 
 .textarea-wrapped {
@@ -46,7 +56,7 @@ table td[colspan] input {
         border-bottom:  1px solid $border-colour;
         border-left:  1px solid $border-colour;
         border-right:  1px solid $border-colour;
-        min-height: 500px;
+        min-height: 250px;
         margin: 0;
         padding: 5px 10px;
         resize: vertical;
@@ -54,14 +64,74 @@ table td[colspan] input {
         width:100%;
         @include box-sizing(border-box);
     }
+    .textarea-footer {
+        font-size:16px;
+        padding: 10px 0px;
+    }
+
+
+}
+
+
+.textarea-footer {
+        //double class to be more specific
+    .assign-button button,
+    .buttonlink {
+        padding:0;
+        margin: 0 5px 0 0;
+        text-align: left;
+        vertical-align:top;
+    }
 }
 
 .marked-as-complete {
     .textarea-header,
-    textarea {
+    textarea[readonly]{
         border-color: $green;
     }
 } 
+
+
+
+.assign-container {
+    position:relative;
+    @include inline-block;
+    
+    .assign-team {
+        @include border-radius(2px);
+        border: 1px solid $grey-3;
+        padding:10px 15px;
+        position:absolute;
+        z-index: 1;
+        background-color:#fff;
+        width:200px;
+        color:$secondary-text-colour;
+        margin-top:10px;
+    }
+    .assign-button button {
+        @extend .buttonlink;
+    }
+
+    .assign-button button[aria-expanded]:after {
+            content: '\0020\0020\25bc';
+            font-size:12px;
+    }
+    .assign-button button[aria-expanded="true"]:after {
+            content: '\0020\0020\25b2';
+    }
+    ul {
+        margin-bottom:0;
+    }
+
+}
+
+.count-label {
+    padding:2px 0;
+    float:right;
+    color: $grey-1;
+}
+
+
     //    .form-group_header-status {
     //     color: #666;
     //     font-size: 16px;
