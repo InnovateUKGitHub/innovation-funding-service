@@ -42,20 +42,20 @@
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
         </div>
 
         <div class="form-group">
 
             <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 
             Project start date
             <br/>
 
-            <div th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
             <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
         </div>
@@ -75,36 +75,6 @@
         </div>
     </div>
 
-    <div th:fragment="readonly_application_details">
-        <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:with="readonly=(true)"  th:remove="tag" />
-        </div>
-
-        <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Proposed project timescales', id='details-application-timescale')" th:remove="tag" />
-            Project start date
-            <br/>
-
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})"  th:with="readonly=(true)" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})"  th:with="readonly=(true)" th:remove="tag" />
-        </div>
-
-        <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Lead organisation', id='',bold=true)" th:remove="tag" />
-            Empire Ltd
-        </div>
-
-        <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Partners', id='',bold=true)" th:remove="tag" />
-            <ul class="list-bullet">
-                <li>Ludlow</li>
-                <li>Manchester University</li>
-                <li>EGGS</li>
-                <li>AA Ltd</li>
-            </ul>
-        </div>
-    </div>
     <!-- ===========================Form: empty / no question =========================== -->
     <div th:fragment="empty">
         <div th:utext="${question.getDescription()}"></div>
