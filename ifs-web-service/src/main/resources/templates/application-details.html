@@ -41,15 +41,21 @@
                     th:each="question : ${section.getQuestions()}" 
                     th:if="${question?.getName() != '' }" 
                     th:with="response=(${responses.get(question.getId())})">
-                        <h4 class="heading-medium">
-                            <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
-                                th:text="${question.getName()}" />     
-                        </h4>
-                        <div class="assignee" th:if="${response?.getAssignee() != null} " >
-                            Assigned to <div th:text="${response?.getAssignee()?.getName()}"></div>
-                            <div th:text="${response?.getAssignedDate()}"></div>
-                        </div>  
-                </li>
+                         <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <h4 class="heading-medium">
+                                     <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
+                                        th:text="${question.getName()}" />     
+                                </h4>
+                            </div>
+                            <div class="column-third">
+                                <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" th:if="${response?.getAssignee() != null} " >
+                                    <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
+                                    <div th:text="${response?.getAssignedDate()}"></div>
+                                </div>  
+                            </div>
+                        </div>
+                 </li>
             </ul>
         </div>
     </div>
