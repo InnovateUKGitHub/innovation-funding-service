@@ -72,12 +72,27 @@ table td[colspan] input {
 
 }
 
+
+.textarea-footer {
+        //double class to be more specific
+    .assign-button button,
+    .buttonlink {
+        padding:0;
+        margin: 0 5px 0 0;
+        text-align: left;
+        vertical-align:top;
+    }
+}
+
 .marked-as-complete {
     .textarea-header,
     textarea[readonly]{
         border-color: $green;
     }
 } 
+
+
+
 .assign-container {
     position:relative;
     @include inline-block;
@@ -96,14 +111,7 @@ table td[colspan] input {
     .assign-button button {
         @extend .buttonlink;
     }
-    //double class to be more specific
-    &.assign-container .assign-button button,
-    &.assign-container .buttonlink {
-        padding:0;
-        margin: 0;
-        text-align: left;
-        vertical-align:top;
-    }
+
     .assign-button button[aria-expanded]:after {
             content: '\0020\0020\25bc';
             font-size:12px;

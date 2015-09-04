@@ -141,8 +141,8 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
-		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" >Edit</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" class="buttonlink" >Mark as complete</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink" >Edit</button>
 </div>
 <!-- ========================= edit link =========================== -->
 
