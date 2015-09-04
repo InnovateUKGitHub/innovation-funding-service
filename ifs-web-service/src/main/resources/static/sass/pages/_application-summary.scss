@@ -8,6 +8,8 @@
 		width:54px;
 		height:54px;
 		margin-right:10px;
+		background-image: url('images/icons/icon-information-2x.png')
+
 	}
 	div.alignright-button {
 		padding-top:30px;
@@ -16,5 +18,16 @@
 		font-size: 16px;
 		display: block;
 		margin-top:1em;
+	}
+	
+	input[readonly],
+	textarea[readonly], 
+	.textarea-wrapped textarea[readonly] {
+		padding:0;
+		border:none;
+	}
+
+	.question {
+		margin-left:10px;
 	}
 }
