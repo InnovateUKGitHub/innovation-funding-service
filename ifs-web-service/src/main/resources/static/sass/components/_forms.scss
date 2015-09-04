@@ -66,13 +66,10 @@ table td[colspan] input {
     }
     .textarea-footer {
         font-size:16px;
-        padding: 10px 2px;
+        padding: 10px 0px;
     }
 
-    .count-label {
-        float:right;
-        color: $grey-1;
-    }
+
 }
 
 .marked-as-complete {
@@ -81,7 +78,50 @@ table td[colspan] input {
         border-color: $green;
     }
 } 
+.assign-container {
+    position:relative;
+    @include inline-block;
+    
+    .assign-team {
+        @include border-radius(2px);
+        border: 1px solid $grey-3;
+        padding:10px 15px;
+        position:absolute;
+        z-index: 1;
+        background-color:#fff;
+        width:200px;
+        color:$secondary-text-colour;
+        margin-top:10px;
+    }
+    .assign-button button {
+        @extend .buttonlink;
+    }
+    //double class to be more specific
+    &.assign-container .assign-button button,
+    &.assign-container .buttonlink {
+        padding:0;
+        margin: 0;
+        text-align: left;
+        vertical-align:top;
+    }
+    .assign-button button[aria-expanded]:after {
+            content: '\0020\0020\25bc';
+            font-size:12px;
+    }
+    .assign-button button[aria-expanded="true"]:after {
+            content: '\0020\0020\25b2';
+    }
+    ul {
+        margin-bottom:0;
+    }
 
+}
+
+.count-label {
+    padding:2px 0;
+    float:right;
+    color: $grey-1;
+}
 
 
     //    .form-group_header-status {
