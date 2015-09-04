@@ -108,7 +108,8 @@
 
 		 <div class="textarea-footer">
 
-			 	<div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
+
+			 	<div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
 				<!-- if not readonly we show mark as complete buttons -->
 				<div th:unless="${readonly}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"  th:remove="tag"  />

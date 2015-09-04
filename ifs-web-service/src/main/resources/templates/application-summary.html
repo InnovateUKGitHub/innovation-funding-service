@@ -24,7 +24,7 @@
 
     <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections}">
-            <h2 data-th-text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')+' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
+            <h2 th:text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')+' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
                 <div class="question" th:each="question : ${section.getQuestions()}" th:if="${question?.getName() != '' }" th:with="readonly=true, response=(${responses.get(question.getId())})" th:id="'question-'+${question.getId()}" >
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $currentApplication=(${currentApplication}), $response=(${response}), $section=(${section}), $readonly=${readonly}" />
                 </div>
