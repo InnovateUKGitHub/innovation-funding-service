@@ -43,11 +43,11 @@
 <div th:fragment="competition-deadline">
     <div class="competition-deadline">
         <div class="day">
-                <span th:text="${endDate.getDayOfMonth()}" th:remove="tag" /><span>th</span> 
+                <div th:text="${#temporals.day(endDate)}" th:remove="tag" /><span>th</span> 
         </div>
-        <div class="month" th:text="${endDate.getMonth()}+'  deadline'" />
+        <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
         <div class="time">
-            <span th:text="${endDate.getHour()}" />:<span th:text="${endDate.getMinute()}" />
+            <span th:text="${#temporals.format(endDate, 'HH:mm')}" />
         </div>
     </div>
 </div>
