@@ -42,7 +42,8 @@
                     </h4>
                     <div class="assignee" th:if="${response?.getAssignee() != null}">
                         Assigned to <div th:text="${response?.getAssignee()?.getName()}"></div>
-                        <div th:text="${response?.getAssignedDate()}"></div>
+                        <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>
+
                     </div>
                 </li>
             </ul>
