@@ -51,7 +51,7 @@
                             <div class="column-third">
                                 <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" th:if="${response?.getAssignee() != null} " >
                                     <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
-                                    <div th:text="${response?.getAssignedDate()}"></div>
+                                    <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>
                                 </div>  
                             </div>
                         </div>
