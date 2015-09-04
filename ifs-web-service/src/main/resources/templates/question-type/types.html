@@ -338,6 +338,7 @@
                                 <input type="number" name="materials-0-materialsTotal"
                                        data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
                                        data-calculation-operations="*"
+                                       data-calculation-input="total-materials-row"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
                             </td>
                         </tr>
@@ -355,7 +356,7 @@
                     <input class="form-control form-control-1-4 calculation-total-materials-row-js calculation-result-js"
                            readonly="" type="text" id="material-costs-total-field"
                            data-calculation-field="[data-calculation-input=total-materials-row]"
-                           data-calculation-operations="+"
+                           data-calculation-operations=""
                            data-calculation-input="total-materials"
                            th:value="${#numbers.formatDecimal(costCategoryResource.getTotal(),0,0)}" />
                 </label>
