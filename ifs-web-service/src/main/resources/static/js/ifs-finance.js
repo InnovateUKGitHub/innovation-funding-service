@@ -41,8 +41,11 @@ var worthIFSFinance = {
             '+': function (x, y) { return x + y },
             '+': function (x) {
                 // got an array of numbers, just add all the numbers.
-                if(_.isArray(x))
+                if(_.isArray(x)){
                     return _.reduce(x, function(memo, num){ return memo + num; }, 0);
+                }else{
+                    worthIFS.log("its not an array...")
+                }
             },
             '-': function (x, y) { return x - y },
             '*': function (x, y) { return x * y },
@@ -120,9 +123,9 @@ var worthIFSFinance = {
                 result1 = MathOperation[operations[0]](value1, value2);
                 result = MathOperation[operations[1]](result1, value3);
             }else{
-                console.error("unsupported calculation..");
+                worthIFS.log("unsupported calculation..");
             }
-            worthIFS.log("result: ", result);
+            worthIFS.log("result: "+ result);
 
             // this will ignore all numbers after the comma. (not rounding down)
             if(resultElement.is(":input")){

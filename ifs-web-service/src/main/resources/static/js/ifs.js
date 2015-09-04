@@ -192,7 +192,19 @@ var worthIFS = {
     },
     log : function(message){
        if (window.console) {
-            return window.console.log(message);
+           switch(arguments.length){
+               case 1:
+                    window.console.log(arguments[0]);
+                    break;
+               case 2:
+                   window.console.log(arguments[0],arguments[1]);
+                   break;
+               case 3:
+                   window.console.log(arguments[0],arguments[1],arguments[2]);
+                   break;
+               default:
+           }
+            return
        }
        return false;
     }
