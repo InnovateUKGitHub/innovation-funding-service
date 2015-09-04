@@ -84,7 +84,6 @@ public class ApplicationFormController {
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
             responseMap.put(response.getQuestion().getId(), response);
-            log.info("User of response: " + response.getUserApplicationRole().getId());
         }
         model.addAttribute("responses", responseMap);
 
