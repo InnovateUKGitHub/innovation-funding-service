@@ -102,7 +102,7 @@
 		 					id=${question.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()} or ${response.getAssignee() != null and currentUser.getId() != response?.getAssignee()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()} or ${response?.getAssignee() != null and currentUser.getId() != response?.getAssignee()?.getId()},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag" />
 
