@@ -708,14 +708,14 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the word count should be available in the text areas">the word count should be available in the text areas</a></td>
 <td>Page Should Contain Element</td>
-<td>css=#question-15 .column-half--second</td>
+<td>css=#question-15 .count-down</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#question-16 .column-half--second</td>
+<td>css=#question-16 .count-down</td>
 <td></td>
 <td></td>
 </tr>
@@ -729,7 +729,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_When the Applicant edits project summary">When the Applicant edits project summary</a></td>
 <td>Click Element</td>
-<td>css=#question-11 button</td>
+<td>css=#question-11 div.textarea-footer \ button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -743,7 +743,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Wait Until Page Contains Element</td>
-<td>css=#question-11 .column-half--second</td>
+<td>css=#question-11 .count-down</td>
 <td>999</td>
 <td></td>
 </tr>
@@ -757,7 +757,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-11 button</td>
+<td>css=#question-11 div.textarea-footer \ button[name="mark_as_complete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -771,7 +771,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the word count should be correct for the project summary">the word count should be correct for the project summary</a></td>
 <td>Element Should Contain</td>
-<td>css=#question-11 .column-half--second</td>
+<td>css=#question-11 .count-down</td>
 <td>963</td>
 <td></td>
 </tr>
@@ -792,7 +792,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-13 button</td>
+<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
 <td></td>
 <td></td>
 </tr>
@@ -813,7 +813,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-13 button</td>
+<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
 <td></td>
 <td></td>
 </tr>
@@ -876,7 +876,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the button state should change to 'Edit'">the button state should change to 'Edit'</a></td>
 <td>Page Should Contain Element</td>
-<td>css=#question-11 button</td>
+<td>css=#question-11 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
 <td>Edit</td>
 <td></td>
 </tr>
@@ -890,15 +890,8 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the word count for the scope question should be correct">the word count for the scope question should be correct</a></td>
 <td>Element Should Contain</td>
-<td>css=#question-13 .column-half--second</td>
+<td>css=#question-13 &gt; div &gt; div &gt; div.textarea-footer &gt; span &gt; span.count-down</td>
 <td>0</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>${/}</td>
-<td></td>
-<td></td>
 <td></td>
 </tr>
 </table>
