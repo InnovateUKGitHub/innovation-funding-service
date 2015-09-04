@@ -87,6 +87,13 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
+<td class="name">${APPLICATION_URL}</td>
+<td>${SERVER}/application-form/1/section/1/#question-11</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name"></td>
 <td></td>
 <td></td>
@@ -169,42 +176,42 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_all the sections should be visible">all the sections should be visible</a></td>
 <td>Page Should Contain Element</td>
-<td>css=h2:nth-child(1) button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(1) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#collapsible-0+ .section-completed button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(3) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#collapsible-2+ h2 button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(5) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#collapsible-4+ h2 button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(7) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#collapsible-6+ .section-completed button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(9) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>css=#collapsible-8+ h2 button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(11) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
@@ -218,14 +225,14 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the user clicks the edit link in the summary page">the user clicks the edit link in the summary page</a></td>
 <td>Click Element</td>
-<td>css=h2:nth-child(1) button</td>
+<td>css=#content &gt; div.collapsible.section-overview &gt; h2:nth-child(1) &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>link=Edit</td>
+<td>css=#question-11 &gt; div &gt; div &gt; div &gt; a</td>
 <td></td>
 <td></td>
 </tr>
@@ -239,7 +246,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the applicant should redirect to the Application form">the applicant should redirect to the Application form</a></td>
 <td>Location Should Be</td>
-<td><a href="http://ifs.test.worth.systems/application-form/1/section/1/?questionId=11">http://ifs.test.worth.systems/application-form/1/section/1/?questionId=11</a></td>
+<td>${APPLICATION_URL}</td>
 <td></td>
 <td></td>
 </tr>
