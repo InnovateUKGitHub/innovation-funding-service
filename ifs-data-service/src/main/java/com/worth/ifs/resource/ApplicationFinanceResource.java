@@ -41,6 +41,4 @@ public class ApplicationFinanceResource extends ResourceSupport {
     public void setCostCategoryResources(List<CostCategoryResource> costCategoryResources) {
         this.costCategoryResources = costCategoryResources;
     }
-
-
 }

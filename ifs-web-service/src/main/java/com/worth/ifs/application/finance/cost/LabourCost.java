@@ -1,0 +1,97 @@
+package com.worth.ifs.application.finance.cost;
+
+import com.worth.ifs.application.finance.CostType;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class LabourCost implements CostItem {
+
+    private Long id;
+    private String role;
+    private Double grossAnnualSalary;
+    private Integer labourDays;
+    private Double rate = 0D;
+    private String description;
+    private Double total  = 0D;
+
+    public LabourCost() {
+    }
+
+    public LabourCost(Long id, String role, Double grossAnnualSalary, Integer labourDays, String description) {
+        this.id = id;
+        this.role = role;
+        this.grossAnnualSalary = grossAnnualSalary;
+        this.labourDays = labourDays;
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Double getGrossAnnualSalary() {
+        if(grossAnnualSalary!=null) {
+            return grossAnnualSalary;
+        }
+        else {
+            return 0D;
+        }
+    }
+
+    public Double getRate(Integer workingDaysPerYear) {
+        if(grossAnnualSalary!=null && workingDaysPerYear != null) {
+            rate = grossAnnualSalary / workingDaysPerYear.doubleValue();
+            return rate;
+        } else {
+            return 0D;
+        }
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public Integer getLabourDays() {
+        return labourDays;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public Double getTotal(Integer workingDaysPerYear) {
+        getRate(workingDaysPerYear);
+        calculateTotal();
+        return total;
+    }
+
+    private void calculateTotal() {
+        if(rate!=null && labourDays!=null) {
+            total = rate * labourDays;
+        } else {
+            total = 0D;
+        }
+    }
+
+    public void setGrossAnnualSalary(Double grossAnnualSalary) {
+        this.grossAnnualSalary = grossAnnualSalary;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setLabourDays(Integer labourDays) {
+        this.labourDays = labourDays;
+    }
+}

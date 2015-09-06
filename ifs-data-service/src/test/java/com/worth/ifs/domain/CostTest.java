@@ -22,8 +22,9 @@ public class CostTest {
         description = "description of cost item";
         quantity = 10;
         cost = 1000d;
-        CostCategory costCategory = new CostCategory();
-        costItem = new Cost(id, item, description, quantity, cost, costCategory);
+        ApplicationFinance applicationFinance = new ApplicationFinance();
+        Question question = new Question();
+        costItem = new Cost(id, item, description, quantity, cost, applicationFinance, question);
     }
 
     @Test

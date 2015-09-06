@@ -12,8 +12,8 @@ public class SubContractingCostCategoryResource  extends CostCategoryResource {
     public SubContractingCostCategoryResource() {
     }
 
-    public SubContractingCostCategoryResource(Long sectionId, Long questionId, Long categoryId, List<SubContractingCost> subContractingCosts) {
-        super(sectionId, questionId, categoryId);
+    public SubContractingCostCategoryResource(Long sectionId, Long questionId, List<SubContractingCost> subContractingCosts) {
+        super(sectionId, questionId);
         this.total = 0.0;
         this.subContractingCosts = subContractingCosts;
 

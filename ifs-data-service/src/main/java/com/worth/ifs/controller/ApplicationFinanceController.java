@@ -2,7 +2,6 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.assembler.ApplicationFinanceResourceAssembler;
 import com.worth.ifs.domain.ApplicationFinance;
-import com.worth.ifs.domain.CostCategory;
 import com.worth.ifs.repository.ApplicationFinanceRepository;
 import com.worth.ifs.resource.ApplicationFinanceResource;
 import org.apache.commons.logging.Log;
@@ -20,16 +19,10 @@ public class ApplicationFinanceController {
     @Autowired
     ApplicationFinanceRepository applicationFinanceRepository;
 
-    @Autowired
-    ApplicationFinanceResourceAssembler applicationFinanenceResourceAssember;
-
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource findByApplicationOrganisation(
+    public ApplicationFinance findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanenceResourceAssember.toResource(applicationFinance);
-        return applicationFinanceResource;
+        return applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
     }
-
 }

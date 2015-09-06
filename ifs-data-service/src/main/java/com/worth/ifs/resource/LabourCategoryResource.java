@@ -15,7 +15,7 @@ public class LabourCategoryResource extends CostCategoryResource {
     }
 
     public LabourCategoryResource(Long categoryId, Integer workingDaysPerYear, List<LabourCost> labourCosts, Long questionId, Long sectionId) {
-        super(sectionId, questionId, categoryId);
+        super(sectionId, questionId);
         this.workingDaysPerYear = workingDaysPerYear;
         this.labourCosts = labourCosts;
         this.total = 0.0;

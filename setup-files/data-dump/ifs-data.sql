@@ -61,18 +61,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `cost` WRITE;
 /*!40000 ALTER TABLE `cost` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `cost_category_id`) VALUES (1,NULL,'Working days per year',NULL,232,1),(2,2444,'Cost 1','Project cost 1',234,1),(4,2300,'Cost 2','Project cost 2',200,1),(11,0,'','',0,1),(12,0,'','',0,3);
+INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`) VALUES (1,NULL,'Working days per year',NULL,232),(2,2444,'Cost 1','Project cost 1',234),(4,2300,'Cost 2','Project cost 2',200),(11,0,'','',0),(12,0,'','',0);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `cost_category`
---
-
-LOCK TABLES `cost_category` WRITE;
-/*!40000 ALTER TABLE `cost_category` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost_category` (`id`, `application_finance_id`, `question_id`) VALUES (1,1,28),(2,1,29),(3,1,30),(4,1,31),(5,1,32),(6,1,33),(7,1,34);
-/*!40000 ALTER TABLE `cost_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

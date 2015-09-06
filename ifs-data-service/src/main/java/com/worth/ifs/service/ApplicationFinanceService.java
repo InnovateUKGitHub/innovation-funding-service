@@ -11,11 +11,11 @@ public class ApplicationFinanceService extends BaseServiceProvider {
     @Value("${ifs.data.service.rest.applicationfinance}")
     String applicationFinanceRestURL;
 
-    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long organisationId) {
+    public ApplicationFinance getApplicationFinance(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null){
             return null;
         }
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(dataRestServiceURL + applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
+        return restTemplate.getForObject(dataRestServiceURL + applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
     }
 }

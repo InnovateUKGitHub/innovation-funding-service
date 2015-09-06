@@ -12,8 +12,8 @@ public class CapitalUsageCategoryResource  extends CostCategoryResource {
     public CapitalUsageCategoryResource() {
     }
 
-    public CapitalUsageCategoryResource(Long categoryId, List<CapitalUsage> capitalUsages, Long questionId, Long sectionId) {
-        super(sectionId, questionId, categoryId);
+    public CapitalUsageCategoryResource(List<CapitalUsage> capitalUsages, Long questionId, Long sectionId) {
+        super(sectionId, questionId);
         this.total = 0.0;
         this.capitalUsages = capitalUsages;
     }
@@ -39,7 +39,4 @@ public class CapitalUsageCategoryResource  extends CostCategoryResource {
         return capitalUsages;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
 }

@@ -16,17 +16,15 @@ import org.springframework.hateoas.ResourceSupport;
 abstract public class CostCategoryResource extends ResourceSupport {
     Long sectionId = 0L;
     Long questionId = 0L;
-    Long categoryId = 0L;
 
     abstract public Double getTotal();
 
     public CostCategoryResource() {
     }
 
-    public CostCategoryResource(Long sectionId, Long questionId, Long categoryId) {
+    public CostCategoryResource(Long sectionId, Long questionId) {
         this.sectionId = sectionId;
         this.questionId = questionId;
-        this.categoryId = categoryId;
     }
 
     public Long getSectionId() {
@@ -37,7 +35,4 @@ abstract public class CostCategoryResource extends ResourceSupport {
         return questionId;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
 }

@@ -12,8 +12,8 @@ public class MaterialsCategoryResource  extends CostCategoryResource {
     public MaterialsCategoryResource() {
     }
 
-    public MaterialsCategoryResource(Long categoryId, List<Materials> materials, Long questionId, Long sectionId) {
-        super(sectionId, questionId, categoryId);
+    public MaterialsCategoryResource(List<Materials> materials, Long questionId, Long sectionId) {
+        super(sectionId, questionId);
         this.total = 0.0;
         this.materials = materials;
 

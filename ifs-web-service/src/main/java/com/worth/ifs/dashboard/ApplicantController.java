@@ -1,4 +1,4 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.dashboard;
 
 
 import com.worth.ifs.domain.Application;

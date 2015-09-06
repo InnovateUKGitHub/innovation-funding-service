@@ -1,17 +1,20 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.application.ApplicationFormController;
+import com.worth.ifs.application.finance.CostCategory;
+import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.domain.Application;
-import com.worth.ifs.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.EnumMap;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,10 +63,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
     @Test
     public void testApplicationFormWithOpenSection() throws Exception {
         Application app = applications.get(0);
+        EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getApplicationById(app.getId())).thenReturn(app);
-
 
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))

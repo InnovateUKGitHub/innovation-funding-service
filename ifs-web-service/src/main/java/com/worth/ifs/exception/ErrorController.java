@@ -1,4 +1,4 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.exception;
 
 import com.worth.ifs.exception.ObjectNotFoundException;
 import org.apache.commons.logging.Log;
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
-class ErrorController {
+public class ErrorController {
     private final Log log = LogFactory.getLog(getClass());
 
     @ExceptionHandler(value = Exception.class)

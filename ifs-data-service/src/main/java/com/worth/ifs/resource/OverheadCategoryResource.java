@@ -10,8 +10,8 @@ public class OverheadCategoryResource extends CostCategoryResource {
     public OverheadCategoryResource() {
     }
 
-    public OverheadCategoryResource(Long sectionId, Long questionId, Long categoryId, Overhead overhead) {
-        super(sectionId, questionId, categoryId);
+    public OverheadCategoryResource(Long sectionId, Long questionId, Overhead overhead) {
+        super(sectionId, questionId);
         this.total = 0.0;
         this.overhead = overhead;
     }

@@ -1,10 +1,10 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.application;
 
 import com.worth.ifs.constant.ApplicationStatusConstants;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
-import com.worth.ifs.helper.ApplicationHelper;
-import com.worth.ifs.helper.SectionHelper;
+import com.worth.ifs.application.helper.ApplicationHelper;
+import com.worth.ifs.application.helper.SectionHelper;
 import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,10 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import sun.security.x509.OIDMap;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application overview.

@@ -1,6 +1,8 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.application.finance.FinanceService;
 import com.worth.ifs.domain.*;
+import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.security.UserAuthentication;
@@ -12,11 +14,9 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.thymeleaf.expression.Lists;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -42,6 +42,8 @@ public class BaseUnitTest {
     public ApplicationFinanceService applicationFinanceService;
     @Mock
     public UserService userService;
+    @Mock
+    public FinanceService financeService;
 
     @Mock
     public SectionService sectionService;
@@ -185,10 +187,10 @@ public class BaseUnitTest {
         when(responseService.getResponsesByApplicationId(application.getId())).thenReturn(responses);
 
         //TODO: create representative application finance resource object.
-        ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
+        ApplicationFinance applicationFinance = new ApplicationFinance();
         long organisationId = userApplicationRole.getOrganisation().getId();
         Long applicationId = application.getId();
-        when(applicationFinanceService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinanceResource);
+        when(applicationFinanceService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinance);
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

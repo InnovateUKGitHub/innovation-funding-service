@@ -1,4 +1,4 @@
-package com.worth.ifs.helper;
+package com.worth.ifs.application.helper;
 
 import com.worth.ifs.domain.Section;
 

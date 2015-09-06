@@ -1,4 +1,4 @@
-package com.worth.ifs.form;
+package com.worth.ifs.login;
 
 
 public class LoginForm {

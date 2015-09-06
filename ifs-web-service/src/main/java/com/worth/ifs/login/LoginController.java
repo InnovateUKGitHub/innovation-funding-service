@@ -1,7 +1,6 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.login;
 
 import com.worth.ifs.domain.User;
-import com.worth.ifs.form.LoginForm;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.UserService;
 import org.apache.commons.logging.Log;

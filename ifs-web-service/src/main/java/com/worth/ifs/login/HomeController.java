@@ -1,4 +1,4 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.login;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

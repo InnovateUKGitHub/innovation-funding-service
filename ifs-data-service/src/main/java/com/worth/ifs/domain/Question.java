@@ -45,11 +45,11 @@ public class Question {
     @JoinColumn(name="questionTypeId", referencedColumnName="id")
     private QuestionType questionType;
 
-    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="question")
     private List<Response> responses;
 
-    @OneToMany(mappedBy="question", fetch = FetchType.LAZY)
-    private List<CostCategory> costCategories;
+    @OneToMany(mappedBy="question")
+    private List<Cost> costs;
 
     public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount) {
         this.optionValues = optionValues;
@@ -129,11 +129,6 @@ public class Question {
 
     public QuestionType getQuestionType() {
         return questionType;
-    }
-
-    @JsonIgnore
-    public List<CostCategory> getCostCategory() {
-        return costCategories;
     }
 
     public void setResponses(List<Response> responses) {

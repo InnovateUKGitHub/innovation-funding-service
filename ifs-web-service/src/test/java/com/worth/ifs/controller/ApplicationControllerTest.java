@@ -1,34 +1,20 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.application.ApplicationController;
 import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
-import com.worth.ifs.exception.ObjectNotFoundException;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.ResponseService;
-import com.worth.ifs.service.SectionService;
-import com.worth.ifs.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;

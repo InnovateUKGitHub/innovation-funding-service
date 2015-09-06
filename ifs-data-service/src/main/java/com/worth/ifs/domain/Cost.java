@@ -19,22 +19,29 @@ public class Cost {
     private List<CostValue> costValues = new ArrayList<CostValue>();
 
     @ManyToOne
-    @JoinColumn(name="costCategoryId", referencedColumnName="id")
-    private CostCategory costCategory;
+    @JoinColumn(name="applicationFinanceId", referencedColumnName="id")
+    private ApplicationFinance applicationFinance;
+
+    @ManyToOne
+    @JoinColumn(name="questionId", referencedColumnName="id")
+    private Question question;
 
     public Cost() {
     }
 
-    public Cost(String item, String description, Integer quantity, Double cost, CostCategory costCategory) {
+    public Cost(String item, String description, Integer quantity, Double cost,
+                ApplicationFinance applicationFinance, Question question) {
         this.item = item;
         this.description = description;
         this.quantity = quantity;
         this.cost = cost;
-        this.costCategory = costCategory;
+        this.applicationFinance = applicationFinance;
+        this.question = question;
     }
 
-    public Cost(Long id, String item, String description, Integer quantity, Double cost, CostCategory costCategory) {
-        this(item, description, quantity, cost, costCategory);
+    public Cost(Long id, String item, String description, Integer quantity, Double cost,
+                ApplicationFinance applicationFinance, Question question) {
+        this(item, description, quantity, cost, applicationFinance, question);
         this.id = id;
     }
 
@@ -58,11 +65,36 @@ public class Cost {
         return cost;
     }
 
-    public void setCostCategory(CostCategory costCategory) {
-        this.costCategory = costCategory;
+    public void setApplicationFinance(ApplicationFinance applicationFinance) {
+        this.applicationFinance = applicationFinance;
     }
 
     public List<CostValue> getCostValues() {
         return costValues;
     }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
 }
