@@ -8,7 +8,7 @@
 </div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
-	<span   class="form-hint" 
+	<div   class="form-hint" 
 	        th:if="${hint}"
 	        th:text="${hint}"
 	/>
@@ -96,7 +96,7 @@
 <div th:fragment="form-textarea-wrapped">
      <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')" th:with="currentUser=${#authentication.getDetails()}">
 		<div th:unless="${readonly}" class="textarea-header">
-			<div th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
+			<div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
 		</div>
 		<div th:include="question-type/form-elements :: form-textarea (
 		 					id=${question.getId()},
@@ -132,8 +132,8 @@
 		<div class="assign-team">
 			<ul class="list-bullet">
 				<li th:each="assignableUser : ${assignableUsers}">
-					<button type="submit" name="assign_question" th:value="${question.getId()}+'_'+${assignableUser.getId()}" th:unless="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}" class="buttonlink" />
-					<div th:if="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}"></div>
+					<button type="submit" name="assign_question" th:value="${question.getId()}+'_'+${assignableUser.getId()}" th:unless="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}" th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink" />
+					<div th:if="${response?.getAssignee()?.getId() == assignableUser.getId()}" th:text="${assignableUser.getName()}" />
 				</li>
 			</ul>
 		</div>
@@ -142,8 +142,8 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" class="buttonlink" >Mark as complete</button>
-		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink" >Edit</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}" type="submit" name="mark_as_complete" th:value="${question.getId()}" class="buttonlink" th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete</button>
+		<button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}"  type="submit" name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink" th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit</button>
 </div>
 <!-- ========================= edit link =========================== -->
 

@@ -2,6 +2,12 @@
 //everything should be wrapped within this body class. 
 .app-details {
 
+	.assignee {
+		color:$secondary-text-colour;
+		font-size:16px;
+		padding: 25px 35px 20px 60px;	
+	}
+
 	.alignright-button {
 		padding-top:40px;
 	}
@@ -11,5 +17,11 @@
 	}
 	.collapsible h2 + [aria-hidden="false"] {
 		padding:0;
+	}
+}
+
+@include media-down(mobile){
+	.app-details .progress-container  {
+		margin: 0 25px 65px;
 	}
 }

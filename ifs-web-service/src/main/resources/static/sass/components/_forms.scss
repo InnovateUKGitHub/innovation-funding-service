@@ -49,6 +49,8 @@ table td[colspan] input {
         border-left:  1px solid $border-colour;
         border-right:  1px solid $border-colour;
         background: $grey-4 0 0 no-repeat;
+        min-height:40px;
+
     } 
 
     textarea {
@@ -68,69 +70,22 @@ table td[colspan] input {
         font-size:16px;
         padding: 10px 0px;
     }
-
-
-}
-
-
-.textarea-footer {
-        //double class to be more specific
-    .assign-button button,
-    .buttonlink {
-        padding:0;
-        margin: 0 5px 0 0;
-        text-align: left;
+    .textarea-footer button {
         vertical-align:top;
-    }
-}
-
-.marked-as-complete {
-    .textarea-header,
-    textarea[readonly]{
-        border-color: $green;
-    }
-} 
-
-
-
-.assign-container {
-    position:relative;
-    @include inline-block;
-    
-    .assign-team {
-        @include border-radius(2px);
-        border: 1px solid $grey-3;
-        padding:10px 15px;
-        position:absolute;
-        z-index: 1;
-        background-color:#fff;
-        width:200px;
-        color:$secondary-text-colour;
-        margin-top:10px;
-    }
-    .assign-button button {
-        @extend .buttonlink;
-    }
-
-    .assign-button button[aria-expanded]:after {
-            content: '\0020\0020\25bc';
-            font-size:12px;
-    }
-    .assign-button button[aria-expanded="true"]:after {
-            content: '\0020\0020\25b2';
-    }
-    ul {
-        margin-bottom:0;
+        padding: 0 10px 0 0;
     }
 
 }
+
+
+
+
 
 .count-label {
     padding:2px 0;
     float:right;
     color: $grey-1;
 }
-
 
     //    .form-group_header-status {
     //     color: #666;

@@ -1,0 +1,67 @@
+//statusses
+	
+%mark-done-right {
+	background-image:  url('../images/field/field-done-right.png');
+	background-repeat: no-repeat;
+}
+
+%mark-done-left {
+	background-image: url('../images/field/field-done.png');
+	background-repeat: no-repeat;
+
+}
+%mark-assigned-right {
+	background-image: url('../images/field/field-assigned-right.png');
+	background-repeat: no-repeat;
+
+}
+%tick-icon-done {
+    background-image: url('../images/field/tick-icon.png');   
+	background-repeat: no-repeat;
+}
+
+//statusses in the collapsible
+.collapsible {
+	.section.marked-as-complete {
+		@extend %mark-done-right;
+		background-position: right top;
+	}
+
+	.section.assigned-to-me {
+		@extend %mark-assigned-right;
+		background-position: right top;
+	}
+
+	.section-status {
+	    float:right;
+	    font-weight:300;
+	    font-size:16px;
+	    margin:4px 10px 0 0;
+	    color:$grey-1;
+	    padding-right:30px;
+	}
+	.section-status.complete {
+		@extend %tick-icon-done;
+		background-position: right center;
+	}
+
+}
+
+//wrapped-textarea 
+.textarea-wrapped {
+	&.marked-as-complete .textarea-header {
+		@extend %mark-done-left;
+	}
+	&.marked-as-complete textarea[readonly],
+	&.marked-as-complete .textarea-header {
+		border-width:2px;
+        border-color: $button-colour;
+        background-color:$grey-4;
+    }
+} 
+
+.app-sidebar li.section-status.complete a {
+	@extend %tick-icon-done;
+	background-position: 98% center;
+
+}

@@ -34,15 +34,16 @@
     
     <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections}">
-            <h2 th:text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')" />
-
+            <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
+                <span th:remove="tag" th:text="${section.getName()}" />
+                <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
+            </h2>
             <ul th:with="currentUser=${#authentication.getDetails()}">
                 <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete ' : (${currentUser.getId() == response?.getAssignee()?.getId()} ? 'assigned-to-me ' : ''))" 
                     th:each="question : ${section.getQuestions()}" 
                     th:if="${question?.getName() != '' }" 
                     th:with="response=(${responses.get(question.getId())})">
                          <div class="grid-row">
-
                             <div class="column-two-thirds">
                                 <h4 class="heading-medium">
                                      <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"

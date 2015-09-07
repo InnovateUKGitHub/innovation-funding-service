@@ -1,0 +1,6 @@
+*** Variables ***
+${SERVER}         http://ifs.test.worth.systems
+${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/1/section/1
+${SUMMARY_URL}    ${SERVER}/application/1/summary
+${APPLICATION_SUBMITTED_URL}    ${SERVER}/application/1/submit

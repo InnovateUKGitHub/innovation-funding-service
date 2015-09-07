@@ -136,6 +136,13 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
+<td class="name">${APPLICATION_URL}</td>
+<td>${SERVER}/application-form/1/section/1/#question-11</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name"></td>
 <td></td>
 <td></td>
@@ -317,7 +324,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Then the applicant will navigate to the summary page</td>
+<td>Then the Applicant will navigate to the summary page</td>
 <td></td>
 <td></td>
 <td></td>
@@ -372,21 +379,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant opens the &quot;Rovel additive&quot; application form">the Applicant opens the "Rovel additive" application form</a></td>
 <td>Go To</td>
-<td>${DASHBOARD_URL}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Rovel Additive Manufacturing Process</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Application details</td>
+<td>${APPLICATION_URL} </td>
 <td></td>
 <td></td>
 </tr>
@@ -400,78 +393,57 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant enters some text">the Applicant enters some text</a></td>
 <td>Click Element</td>
-<td>css=#question-11 button</td>
+<td>css=#question-11 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Clear Element Text</td>
-<td>name=question[11]</td>
+<td>id=11</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input Text</td>
-<td>name=question[11]</td>
+<td>id=11</td>
 <td>Save test #123</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>css=#question-12 button</td>
+<td>css=#question-11 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Clear Element Text</td>
-<td>name=question[12]</td>
+<td>id=12</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input Text</td>
-<td>name=question[12]</td>
+<td>id=12</td>
 <td>I am a robot</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Sleep</td>
-<td>6 seconds</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Click Element</td>
-<td>link=Your business proposition (Q1 - Q4)</td>
+<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-1 button</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Clear Element Text</td>
-<td>name=question[1]</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Input Text</td>
-<td>name=question[1]</td>
-<td>test text 3</td>
 <td></td>
 </tr>
 <tr>
@@ -504,58 +476,16 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the text should be visible">the text should be visible</a></td>
-<td>Click Element</td>
-<td>link=Application details</td>
-<td></td>
+<td>Textarea Value Should Be</td>
+<td>id=11</td>
+<td>Save test #123</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Textfield Should Contain</td>
-<td>name=question[12]</td>
+<td>Textfield Value Should Be</td>
+<td>id=12</td>
 <td>I am a robot</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Scope (Gateway question)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Textarea Should Contain</td>
-<td>name=question[13]</td>
-<td>test text 2</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Business proposition (Q1 - Q4)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Textarea Should Contain</td>
-<td>name=question[1]</td>
-<td>test text 3</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Funding (Q9 - Q10)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Textarea Should Contain</td>
-<td>name=question[15]</td>
-<td>text test 5</td>
 <td></td>
 </tr>
 <tr>
@@ -567,8 +497,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the applicant clicks the &quot;What should I include in project summary?&quot; question">the applicant clicks the "What should I include in project summary?" question</a></td>
+<td>Wait Until Element Is Visible</td>
+<td>css=#question-11 &gt; div &gt; details &gt; summary</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click Element</td>
-<td>css=#question-11 summary</td>
+<td>css=#question-11 &gt; div &gt; details &gt; summary</td>
 <td></td>
 <td></td>
 </tr>
@@ -582,7 +519,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the guidance should be visible">the guidance should be visible</a></td>
 <td>Page Should Contain Element</td>
-<td>css=#question-11 summary[aria-expanded="true"]</td>
+<td>css=#question-11 &gt; div &gt; details &gt; summary[aria-expanded="true"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -729,7 +666,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_When the Applicant edits project summary">When the Applicant edits project summary</a></td>
 <td>Click Element</td>
-<td>css=#question-11 div.textarea-footer \ button[name="mark_as_incomplete"]</td>
+<td>css=#question-11 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -757,7 +694,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-11 div.textarea-footer \ button[name="mark_as_complete"]</td>
+<td>css=#question-11 div.textarea-footer &gt; button[name="mark_as_complete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -792,7 +729,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
+<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
@@ -813,7 +750,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
+<td>css=#question-13 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
@@ -846,7 +783,7 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="keyword_the applicant will navigate to the summary page">the applicant will navigate to the summary page</a></td>
+<td class="name"><a name="keyword_the Applicant will navigate to the summary page">the Applicant will navigate to the summary page</a></td>
 <td>Location Should Be</td>
 <td>${SUMMARY_URL}</td>
 <td></td>
@@ -876,7 +813,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the button state should change to 'Edit'">the button state should change to 'Edit'</a></td>
 <td>Page Should Contain Element</td>
-<td>css=#question-11 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button </td>
+<td>css=#question-11 \ &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td>Edit</td>
 <td></td>
 </tr>

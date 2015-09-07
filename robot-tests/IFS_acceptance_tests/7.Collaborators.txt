@@ -1,0 +1,9 @@
+*** Settings ***
+Library           Selenium2Library
+Library           string
+
+*** Test Cases ***
+Verify that collaborators are visible in the overview page
+    When the Applicant is in the overview page
+
+*** Keywords ***
