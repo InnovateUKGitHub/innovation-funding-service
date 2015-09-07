@@ -1,2 +1,13 @@
 *** Settings ***
 Library           Selenium2Library
+Resource      test.txt
+Suite setup   Set test setup variable
+Test setup    Test setup keyword
+
+*** Keywords ***
+Set test setup variable
+    Set global variable$    {SERVER}         http://ifs.test.worth.systems
+Set global variable$     ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+Set global variable$     ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/1/section/1
+Set global variable$     ${SUMMARY_URL}    ${SERVER}/application/1/summary
+Set global variable$     ${APPLICATION_SUBMITTED_URL}    ${SERVER}/application/1/submit    Test setup keyword

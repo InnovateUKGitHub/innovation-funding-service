@@ -182,6 +182,83 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Verify the &quot; Labour&quot; calculations">Verify the " Labour" calculations</a></td>
+<td>Given the applicant is in the "Your Finances" sub-section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant fills the Labour costs </td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the calculations of the labour should be correct</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify the &quot;Materials&quot; calculations">Verify the "Materials" calculations</a></td>
+<td>Given the applicant is in the "Your Finances" sub-section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant fills the Materials fields</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the calculations of the Materials should be correct</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify the &quot;Capital Usage&quot; calculations">Verify the "Capital Usage" calculations</a></td>
+<td>Given the applicant is in the "Your Finances" sub-section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the applicant fills the Capital Usage fields</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table border="1" id="keyword">
 <tr>
@@ -353,6 +430,132 @@ td.name, th.name {
 <td>Element Should Be Disabled</td>
 <td>css=#working_days</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the Applicant fills the Labour costs">the Applicant fills the Labour costs</a></td>
+<td>Click Element</td>
+<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(1) &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>css=#id_labour-0-labourGrossSalary</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>css=#id_labour-0-labourGrossSalary</td>
+<td>10000</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>css=#id_labour-0-labourDays</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>css=#id_labour-0-labourDays</td>
+<td>365</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>css=#id_labour-0-labourGrossSalary</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the calculations of the labour should be correct">the calculations of the labour should be correct</a></td>
+<td>Element Should Contain</td>
+<td>css=#id_labour-0-labourRate</td>
+<td>43</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Contain</td>
+<td>css=#id_labour-0-labourTotalCost</td>
+<td>15695</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the Applicant fills the Materials fields">the Applicant fills the Materials fields</a></td>
+<td>Click Element</td>
+<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(5) &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(2) &gt; input</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(2) &gt; input</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(3) &gt; input</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(3) &gt; input</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the calculations of the Materials should be correct">the calculations of the Materials should be correct</a></td>
+<td>Element Should Contain</td>
+<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(4) &gt; input</td>
+<td>100</td>
 <td></td>
 </tr>
 </table>
