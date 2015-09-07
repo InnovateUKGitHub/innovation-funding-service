@@ -51,6 +51,9 @@
                                 </h4>
                             </div>
                             <div class="column-third">
+                                <form action="#"  method="post" class="form-serialize-js">
+                                    <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
+                                </form>
                                 <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" th:if="${response?.getAssignee() != null} " >
                                     <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
                                     <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>

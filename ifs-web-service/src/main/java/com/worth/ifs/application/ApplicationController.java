@@ -5,6 +5,7 @@ import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.application.helper.SectionHelper;
+import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -32,13 +35,15 @@ public class ApplicationController {
     ApplicationService applicationService;
 
     @Autowired
-    OrganisationService organisationService;
-
-    @Autowired
     SectionService sectionService;
 
     @Autowired
     UserService userService;
+
+
+
+    @Autowired
+    TokenAuthenticationService tokenAuthenticationService;
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
@@ -60,8 +65,11 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
+        model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
+
+
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() ->  null ));
+        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null ));
 
         List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
         model.addAttribute("completedSections", completedSections);
@@ -79,8 +87,10 @@ public class ApplicationController {
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
 
 
-        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
-        model.addAttribute("sections", sections);
+        List<Section> sectionsXPTO = sectionHelper.getParentSections(competition.getSections());
+//        sectionsXPTO.get(0).getQuestions().get(0).
+        model.addAttribute("sections", sectionsXPTO);
+
     }
 
     @RequestMapping("/{applicationId}")
@@ -124,4 +134,39 @@ public class ApplicationController {
         return "application-submitted";
     }
 
+
+
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button.
+     */
+    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    public String applicationFormSubmit(Model model,
+                                        @PathVariable("applicationId") final Long applicationId,
+                                        @PathVariable("sectionId") final Long sectionId,
+                                        HttpServletRequest request){
+
+        // save application details if they are in the request
+        Map<String, String[]> params = request.getParameterMap();
+        params.forEach((key, value) -> log.info("key "+ key));
+
+        if(params.containsKey("assign_question")) {
+            log.info("assign question now.");
+            String[] assign = request.getParameter("assign_question").split("_");
+            Long questionId = Long.valueOf(assign[0]);
+            Long assigneeId = Long.valueOf(assign[1]);
+
+            //gets the logged user details
+            User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+            //process chain starts...
+            responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
+        }
+
+        //set all the application details
+        addApplicationDetails(applicationId, model);
+        //sets success feedback
+        model.addAttribute("applicationSaved", true);
+
+        return "application-details";
+    }
 }
