@@ -35,13 +35,14 @@
     <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 th:text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +' '+ ((${completedSections.contains(section.getId())}) ? 'section-completed':'')" />
-            
+
             <ul th:with="currentUser=${#authentication.getDetails()}">
                 <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete ' : (${currentUser.getId() == response?.getAssignee()?.getId()} ? 'assigned-to-me ' : ''))" 
                     th:each="question : ${section.getQuestions()}" 
                     th:if="${question?.getName() != '' }" 
                     th:with="response=(${responses.get(question.getId())})">
                          <div class="grid-row">
+
                             <div class="column-two-thirds">
                                 <h4 class="heading-medium">
                                      <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
@@ -49,6 +50,9 @@
                                 </h4>
                             </div>
                             <div class="column-third">
+                                <form action="#"  method="post" class="form-serialize-js">
+                                    <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
+                                </form>
                                 <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" th:if="${response?.getAssignee() != null} " >
                                     <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
                                     <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>
