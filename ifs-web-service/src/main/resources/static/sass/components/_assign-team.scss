@@ -1,0 +1,69 @@
+/*
+
+###Assign team members 
+
+
+```
+<div class="assign-container">
+    <div class="assign-button">Assign question</div>
+    <div class="assign-team">
+        <ul class="list-bullet">
+            <li>
+                <button  class="buttonlink" name="assign_question" type="submit">Jessica Doe (Collaborator)</button>
+            </li>
+            <li>
+                <button class="buttonlink" name="assign_question" type="submit">Steve Smith (Lead Applicant)</button>
+            </li>
+        </ul>
+    </div>
+</div>
+```
+*/
+
+.assign-container {
+    position:relative;
+    @include inline-block;
+    
+    .assign-team {
+        @include border-radius(2px);
+        border: 1px solid $grey-3;
+        padding:10px 15px;
+        position:absolute;
+        z-index: 1;
+        background-color:#fff;
+        width:200px;
+        color:$secondary-text-colour;
+        margin-top:10px;
+    }
+    .assign-button button {
+        @extend .buttonlink;
+    }
+
+    .assign-button button[aria-expanded]:after {
+            content: '\0020\0020\25bc';
+            font-size:12px;
+    }
+    .assign-button button[aria-expanded="true"]:after {
+            content: '\0020\0020\25b2';
+    }
+    ul {
+        margin-bottom:0;
+    }
+
+}
+//double class to be more specific as the @extend gets processed last by compass
+.assign-container.assign-container .assign-button button,
+.assign-container.assign-container  .buttonlink {
+    padding:0;
+    margin: 0 5px 0 0;
+    text-align: left;
+    vertical-align:top;    
+}
+
+.no-js .assign-container .assign-team {
+    position:relative;
+    border:none;
+    margin: 0;
+    padding-top:0;
+    padding-bottom:2px;
+}
