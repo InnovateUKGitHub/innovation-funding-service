@@ -27,12 +27,12 @@
                     <li>
                         <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
                     </li>
-                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active':'') +' '+ ((${completedSections.contains(sectionEntry.key)}) ? 'section-completed':'')">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
+                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') + ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'')">
+                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                             th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
-                        <ul th:if="${sectionEntry.value.getChildSections()}!=null">
+                        <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
                             <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="(${subSection.getId()} == ${currentSectionId}) ? 'active':''">
-                                <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
+                                <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
                                     th:text="${subSection.getName()}"></a>
                             </li>
                         </ul>
@@ -66,13 +66,13 @@
 
             <ul class="pagination">
                 <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
-                    <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
+                    <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
                         <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
                     </a>
                 </li>
                 <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
-                    <a th:href="@{/application-form/{id}/section/{sectionId}/?question=1(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part">
+                    <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
                         <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
                     </a>
