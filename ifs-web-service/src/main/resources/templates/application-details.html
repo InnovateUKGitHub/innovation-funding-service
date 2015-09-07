@@ -31,8 +31,10 @@
             </ul>
         </div>
     </div>
-    
-    <div class="collapsible section-overview">
+   
+    <form action="#" method="post">
+
+    <div class="collapsible section-overview js-close-others">
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
                 <span th:remove="tag" th:text="${section.getName()}" />
@@ -51,12 +53,12 @@
                                 </h4>
                             </div>
                             <div class="column-third">
-                                <form action="#"  method="post" class="form-serialize-js">
-                                    <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
-                                </form>
-                                <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" th:if="${response?.getAssignee() != null} " >
-                                    <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
-                                    <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>
+                                <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" >
+                                    <div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
+                                    <div  th:if="${response?.getAssignee() != null} " th:remove="tag">
+                                         <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
+                                         <div th:text="${#temporals.format(response?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"></div>
+                                    </div>
                                 </div>  
                             </div>
                         </div>
@@ -64,6 +66,7 @@
             </ul>
         </div>
     </div>
+    </form>
     <div class="alignright-button">
         <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
     </div>

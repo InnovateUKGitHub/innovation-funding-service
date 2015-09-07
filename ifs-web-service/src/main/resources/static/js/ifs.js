@@ -2,7 +2,6 @@
 var worthIFS = {
     collapsibleEl : '.collapsible > h2, .assign-container .assign-button',
     pieEl : '.pie',
-    collapsibleAssignEl: '.assign-container',
     domReady : function(){
         worthIFS.collapsible();
         worthIFS.pieChart();
@@ -29,7 +28,11 @@ var worthIFS = {
         var inst = jQuery(this);
         var id = 'collapsible-' + index;   // create unique id for a11y relationship
         var loadstate = inst.hasClass('open');
-
+        
+        var closeAll = false;
+         if(inst.closest('.collapsible').hasClass('js-close-others')){
+            closeAll = true;       
+         }
         // wrap the content and make it focusable
         inst.nextUntil('h2').wrapAll('<div id="'+ id +'" aria-hidden="'+!loadstate+'">');
         var panel = inst.next();
@@ -42,9 +45,13 @@ var worthIFS = {
         button.on('click', function() {
           var state = jQuery(this).attr('aria-expanded') === 'false' ? true : false;
 
-          //close all others
-          jQuery('.collapsible [aria-expanded]').attr('aria-expanded','false');
-          jQuery('.collapsible [aria-hidden]').attr('aria-hidden','true');
+          //close all other buttons on click, defined by the js-close-others class on the container element
+          if(closeAll){
+              var container =  jQuery(this).closest('.collapsible')
+              container.find('[aria-expanded]').attr('aria-expanded','false');
+              container.find('[aria-hidden]').attr('aria-hidden','true');
+          }
+
 
           //toggle the current
           jQuery(this).attr('aria-expanded', state);
