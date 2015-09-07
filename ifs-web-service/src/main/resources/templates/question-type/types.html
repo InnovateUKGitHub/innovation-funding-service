@@ -115,31 +115,26 @@
             <div class="column-half">
                 <p class="heading-medium">Total project costs</p>
             </div>
-            <div class="column-half" style="text-align: right;">
-                <p id="total-finances-cost" class="heading-medium" style="margin-right: 60px;" th:text="'£ ' + ${#numbers.formatDecimal(financeTotal,0,0)}"></p>
+            <div class="column-half alignright">
+                <p class="heading-medium" th:text="'£ ' + ${#numbers.formatDecimal(financeTotal,0,0)}"></p>
             </div>
         </div>
-        <p style="margin-top: 40px">These costs should be justified in the <a href="#">Funding section</a> of the application form.</p>
-
+        <p>These costs should be justified in the <a href="#">Funding section</a> of the application form.</p>
     </div>
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div th:value="${question.questionType.title}"></div>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
                     <tr>
-                        <th>Working Days per Year</th>
+                        <th>
+                            <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
+                        </th>
                         <td>
-                            <input  class="form-control form-control-1-3 calculation-working-days-js"
-                                    readonly=""
-                                    type="text"
-                                    attr="working_days"
-                                    id="working_days"
-                                    name="working_days"
-                                    th:value="${costCategory.getWorkingDaysPerYear()}" /></td>
+                            <div th:include="question-type/form-elements :: form-textinput (id='working_days', response=${costCategory.getWorkingDaysPerYear()},readonly=true)" th:remove="tag" />                         
+                        </td>
                         <td><a href="#">change working days</a></td>
                     </tr>
                     </tbody>
@@ -154,8 +149,7 @@
                             <th>Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <div th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
+                        <tbody  th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                             <tr>
                                 <td>
                                     <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
@@ -187,7 +181,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align: right;">
+                                <td colspan="3" class="alignright">
                                     Total costs £
                                 </td>
                                 <td>
@@ -198,11 +192,10 @@
                                            name="labour-0-labourTotalCost"  readonly="readonly" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear),0,0)}"/>
                                 </td>
                             </tr>
-                        </div>
                         </tbody>
                     </table>
 
-                    <p style="text-align: right;">
+                    <p class="alignright">
                         <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
@@ -228,13 +221,13 @@
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="grid-row">
-                <div class="column-half" style="font-weight: bold">
+                <strong class="column-half">
                     20% of labour costs
-                </div>
-                <div class="column-half" style="font-weight: bold">
+                </strong>
+                <strong class="column-half">
                     Calculated rate: £<span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
                                             data-calculation-operations=""></span>
-                </div>
+                </strong>
             </div>
             <br/>
             <fieldset>
@@ -256,7 +249,7 @@
                 </ul>
             </fieldset>
             <br/>
-            <div id="custom-rate" style="display: block;"  th:if="${costCategory.costs!=null and costCategory.costs.size() > 0}" th:with="overheadCosts=${costCategory.costs[0]}">
+            <div id="custom-rate" th:if="${costCategory.costs!=null and costCategory.costs.size() > 0}" th:with="overheadCosts=${costCategory.costs[0]}">
                 <div class="form-group">
                     <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
                     <input type="number"
@@ -332,7 +325,7 @@
                     </tbody>
                 </table>
 
-                <p style="text-align: right;">
+                <p class="alignright">
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
@@ -407,7 +400,7 @@
                     </div>
                 </div>
             </div>
-            <p style="text-align: right;">
+            <p class="alignright">
                 <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
             </p>
             <hr/>
@@ -457,7 +450,7 @@
                         </div>
                 </div>
             </div>
-            <p style="text-align: right;">
+            <p class="alignright">
                 <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
             </p>
             <div class="form-group form-group--align-right">
@@ -512,7 +505,7 @@
                     </tbody>
                 </table>
 
-                <p style="text-align: right;">
+                <p class="alignright">
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
                 </p>
             </div>
@@ -545,7 +538,6 @@
                     <div th:each="otherCost : ${costCategory.costs}" >
                         <tr>
                             <td>
-                                <!--<textarea rows="3" cols="40" name="other-0-otherDescription" class="form-control form-control-1-1 form-finances-other-description" id="id_other-0-otherDescription" th:inline="text">[[${otherCost.getDescription()}]]</textarea>-->
                                 <div th:include="question-type/form-elements :: form-textarea-simple(id='other-cost-'+${otherCost.getId()}, name='other-0-otherDescription['+${otherCost.getId()}+']', value=${otherCost.getDescription()})" th:remove="tag" />
                             </td>
                             <td>
@@ -556,7 +548,7 @@
                     </tbody>
                 </table>
 
-                <p style="text-align: right;">
+                <p class="alignright">
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
                 </p>
             </div>

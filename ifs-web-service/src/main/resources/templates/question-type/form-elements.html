@@ -32,7 +32,7 @@
 			th:readonly="${readonly}"
 	        type="text"
 	        th:id="${id}"
-	        th:name="'question['+${id}+']'"
+	        th:name="${name != null} ? ${name} : 'question['+${id}+']'"
 	        th:value="${response}"
 	        th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
 	/>
@@ -44,7 +44,7 @@
 			th:readonly="${readonly}"
 	        type="number"
 	        th:id="${id}"
-	        th:name="'question['+${id}+']'"
+   	        th:name="${name != null} ? ${name} : 'question['+${id}+']'"
 	        th:value="${response}"
 	        th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
 	/>
@@ -83,7 +83,7 @@
 <div th:fragment="form-textarea (id, name, value,readonly)">
 		<textarea
 				th:id="${id}"
-				th:name="${name}"
+	        	th:name="${name != null} ? ${name} : 'question['+${id}+']'"
 				th:text="${value}"
 				th:readonly="${readonly}"
 		        th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
