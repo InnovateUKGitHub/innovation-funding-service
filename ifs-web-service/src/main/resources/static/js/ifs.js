@@ -1,6 +1,6 @@
 //Innovation Funding Services javascript by Worth
 var worthIFS = {
-    collapsibleEl : '.collapsible h2, .assign-container .assign-button',
+    collapsibleEl : '.collapsible > h2, .assign-container .assign-button',
     pieEl : '.pie',
     collapsibleAssignEl: '.assign-container',
     domReady : function(){

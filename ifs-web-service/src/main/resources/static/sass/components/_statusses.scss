@@ -15,7 +15,13 @@
 	background-repeat: no-repeat;
 
 }
-%tick-icon-done {
+
+%icon-assigned {
+    background-image: url('../images/field/flag-assigned.png');   
+	background-repeat: no-repeat;
+}
+
+%icon-tick {
     background-image: url('../images/field/tick-icon.png');   
 	background-repeat: no-repeat;
 }
@@ -41,7 +47,7 @@
 	    padding-right:30px;
 	}
 	.section-status.complete {
-		@extend %tick-icon-done;
+		@extend %icon-tick;
 		background-position: right center;
 	}
 
@@ -60,8 +66,13 @@
     }
 } 
 
-.app-sidebar li.section-status.complete a {
-	@extend %tick-icon-done;
+.app-sidebar .section-status a {
 	background-position: 98% center;
-
 }
+
+.app-sidebar .section-status.complete a {
+	@extend %icon-tick;
+}
+.app-sidebar .section-status.assigned a {
+	@extend %icon-assigned;
+ }
