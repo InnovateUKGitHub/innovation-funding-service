@@ -9,14 +9,14 @@ import java.util.Date;
 
 @Entity
 public class Response {
-    public Response(Long id, LocalDateTime date, String value, Boolean markedAsComplete, UserApplicationRole userApplicationRole, Question question, Application app) {
+    public Response(Long id, LocalDateTime updateDate, String value, Boolean markedAsComplete, UserApplicationRole updatedBy, Question question, Application app) {
         this.id = id;
-        this.date = date;
+        this.updateDate = updateDate;
         this.value = value;
         this.markedAsComplete = markedAsComplete;
-        this.userApplicationRole = userApplicationRole;
         this.question = question;
         this.application = app;
+        this.updatedBy = updatedBy;
     }
 
     public Response () {
@@ -26,14 +26,14 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private LocalDateTime date;
+    private LocalDateTime updateDate;
     @Column(length=5000)
     private String value;
     private Boolean markedAsComplete;
 
     @ManyToOne
-    @JoinColumn(name="userApplicationRoleId", referencedColumnName="id")
-    private UserApplicationRole userApplicationRole;
+    @JoinColumn(name="updatedById", referencedColumnName="id")
+    private UserApplicationRole updatedBy;
 
     @ManyToOne
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -53,8 +53,8 @@ public class Response {
         return id;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
     }
 
     public String getValue() {
@@ -76,11 +76,6 @@ public class Response {
         return (markedAsComplete == true);
     }
 
-    public UserApplicationRole getUserApplicationRole() {
-        return userApplicationRole;
-    }
-
-
     public Question getQuestion() {
         return question;
     }
@@ -93,8 +88,8 @@ public class Response {
         this.value = value;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
 
 
@@ -105,11 +100,6 @@ public class Response {
     public void setQuestion(Question question) {
         this.question = question;
     }
-
-    public void setUserApplicationRole(UserApplicationRole userApplicationRole) {
-        this.userApplicationRole = userApplicationRole;
-    }
-
 
     public User getAssignee() {
         return assignee;
@@ -125,5 +115,13 @@ public class Response {
 
     public void setAssignedDate(LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
+    }
+
+    public UserApplicationRole getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(UserApplicationRole updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

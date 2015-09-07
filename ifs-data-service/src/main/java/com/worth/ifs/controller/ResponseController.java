@@ -46,7 +46,7 @@ public class ResponseController {
 
         List<Response> responses = new ArrayList<Response>();
         for (UserApplicationRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUserApplicationRole(userAppRole));
+            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
         return responses;
     }
@@ -66,6 +66,9 @@ public class ResponseController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         User assignee = userRepository.findOne(assigneeId);
+        User user = userRepository.findOne(userId);
+        Application application = applicationRepository.findOne(applicationId);
+        List<UserApplicationRole> userApplicationRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){
@@ -73,9 +76,10 @@ public class ResponseController {
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
         }
 
-        response.setDate(LocalDateTime.now());
+        response.setUpdateDate(LocalDateTime.now());
         response.setAssignee(assignee);
         response.setAssignedDate(LocalDateTime.now());
+        response.setUpdatedBy(userApplicationRoles.get(0));
 
         responseRepository.save(response);
 
@@ -119,7 +123,7 @@ public class ResponseController {
         User user = userRepository.findOne(userId);
 
         Application application = applicationRepository.findOne(applicationId);
-        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<UserApplicationRole> userApplicationRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){
@@ -129,8 +133,8 @@ public class ResponseController {
 
 
         response.setMarkedAsComplete(markedAsComplete);
-        response.setDate(LocalDateTime.now());
-        response.setUserApplicationRole(userAppRoles.get(0));
+        response.setUpdateDate(LocalDateTime.now());
+        response.setUpdatedBy(userApplicationRoles.get(0));
         responseRepository.save(response);
 
         return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -164,9 +168,8 @@ public class ResponseController {
 
 
         response.setValue(value);
-        response.setDate(LocalDateTime.now());
-        response.setUserApplicationRole(userAppRoles.get(0));
-
+        response.setUpdateDate(LocalDateTime.now());
+        response.setUpdatedBy(userAppRoles.get(0));
         
         responseRepository.save(response);
 

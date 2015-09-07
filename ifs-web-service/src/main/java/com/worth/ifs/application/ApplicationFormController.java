@@ -168,7 +168,7 @@ public class ApplicationFormController {
 
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
-        saveQuestions(request, section.getQuestions(), user.getId(), applicationId);
+        saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
@@ -203,7 +203,7 @@ public class ApplicationFormController {
         return "application-form";
     }
 
-    private void saveQuestions(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
+    private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         // saving questions from section
         for (Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){

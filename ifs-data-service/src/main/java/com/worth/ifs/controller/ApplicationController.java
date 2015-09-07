@@ -108,7 +108,7 @@ public class ApplicationController {
 
         List<Response> responses = new ArrayList<Response>();
         for (UserApplicationRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUserApplicationRole(userAppRole));
+            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
 
         int countCompleted = 0;

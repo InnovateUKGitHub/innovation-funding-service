@@ -1,6 +1,8 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,7 +33,7 @@ public class UserApplicationRole {
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy="userApplicationRole",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="updatedBy",fetch = FetchType.LAZY)
     private List<Response> responses;
 
     public UserApplicationRole(Long id, User user, Application application, Role role, Organisation organisation) {
@@ -50,7 +52,6 @@ public class UserApplicationRole {
         return role;
     }
 
-    @JsonIgnore
     public User getUser() {
         return user;
     }

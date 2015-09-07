@@ -1,5 +1,6 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
@@ -69,6 +70,7 @@ public class User {
         return token;
     }
 
+    @JsonIgnore
     public List<UserApplicationRole> getUserApplicationRoles() {
         return userApplicationRoles;
     }
