@@ -1,10 +1,12 @@
 
 //everything should be wrapped within this body class. 
 .app-details {
-
-	.assignee {
+	.section .grid-row {
 		color:$secondary-text-colour;
 		font-size:16px;
+
+	}
+	.assignee {
 		padding: 25px 35px 20px 60px;	
 	}
 
@@ -19,7 +21,7 @@
 		padding:0;
 	}
 	.assign-container .assign-button > button {
-		margin: 0 0 2px -4px;
+		margin: 0 0 2px -3px;
 	}
 	.assign-team {
 		margin-top:0;
