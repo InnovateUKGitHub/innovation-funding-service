@@ -8,10 +8,10 @@ import com.worth.ifs.domain.CostValue;
  * Creates specific costs for each category
  */
 public class CostItemFactory {
-    public final String COST_FIELD_EXISTING = "existing";
-    public final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
-    public final String COST_FIELD_UTILISATION = "utilisation";
-    public final String COST_FIELD_COUNTRY = "country";
+    public static final String COST_FIELD_EXISTING = "existing";
+    public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
+    public static final String COST_FIELD_UTILISATION = "utilisation";
+    public static final String COST_FIELD_COUNTRY = "country";
 
     public CostItem createCostItem(CostType costType, Cost cost) {
         switch(costType) {

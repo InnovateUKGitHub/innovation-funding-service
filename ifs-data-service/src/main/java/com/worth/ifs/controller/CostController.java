@@ -2,21 +2,20 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.domain.ApplicationFinance;
 import com.worth.ifs.domain.Cost;
+import com.worth.ifs.domain.CostValue;
 import com.worth.ifs.domain.Question;
-import com.worth.ifs.repository.ApplicationFinanceRepository;
-import com.worth.ifs.repository.CostRepository;
-import com.worth.ifs.repository.QuestionRepository;
+import com.worth.ifs.repository.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/cost")
 public class CostController {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ApplicationFinanceRepository applicationFinanceRepository;
@@ -26,6 +25,12 @@ public class CostController {
 
     @Autowired
     CostRepository costRepository;
+
+    @Autowired
+    CostFieldRepository costFieldRepository;
+
+    @Autowired
+    CostValueRepository costValueRepository;
 
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
     public void add(
@@ -39,7 +44,7 @@ public class CostController {
 
     @RequestMapping("/update/{id}")
     public void update(@PathVariable("id") final Long id,
-            @RequestParam final Cost updatedCost) {
+            @RequestBody final Cost updatedCost) {
         if(costRepository.exists(id)) {
             Cost currentCost = costRepository.findOne(id);
             currentCost.setCost(updatedCost.getCost());
@@ -47,11 +52,21 @@ public class CostController {
             currentCost.setItem(updatedCost.getItem());
             currentCost.setQuantity(updatedCost.getQuantity());
             costRepository.save(currentCost);
+            log.info("------ cost value size: " + updatedCost.getCostValues().size());
+            for(CostValue costValue : updatedCost.getCostValues()) {
+                log.info("--- value: " + costValue.getValue());
+            }
+            //costValueRepository.save(updatedCost.getCostValues());
         }
     }
 
     @RequestMapping("/get/{applicationFinanceId}")
     public List<Cost> findByApplicationId(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return costRepository.findByApplicationFinanceId(applicationFinanceId);
+    }
+
+    @RequestMapping("/findById/{id}")
+    public Cost findById(@PathVariable("id") final Long id) {
+        return costRepository.findById(id);
     }
 }

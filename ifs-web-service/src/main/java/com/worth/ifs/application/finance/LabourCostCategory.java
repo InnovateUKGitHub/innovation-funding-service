@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LabourCostCategory implements CostCategory {
-    public final String WORKING_DAYS_PER_YEAR = "Working days per year";
+    public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
     private Integer workingDaysPerYear = 0;
     private final Log log = LogFactory.getLog(getClass());
 
@@ -29,7 +29,6 @@ public class LabourCostCategory implements CostCategory {
         List<String> labourKeys = request.getParameterMap().keySet().stream().
                 filter(k -> k.startsWith(CostType.LABOUR.getType())).collect(Collectors.toList());
     }
-
 
     public void update(HttpServletRequest request, CostItem cost) {
         List<String> labourKeys = request.getParameterMap().keySet().stream().

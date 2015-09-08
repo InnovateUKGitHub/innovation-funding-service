@@ -1,7 +1,6 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.domain.ApplicationFinance;
-import com.worth.ifs.resource.ApplicationFinanceResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

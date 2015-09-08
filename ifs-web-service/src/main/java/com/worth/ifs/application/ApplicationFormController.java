@@ -3,6 +3,7 @@ package com.worth.ifs.application;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.finance.FinanceFormHandler;
 import com.worth.ifs.application.finance.FinanceService;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.application.helper.ApplicationHelper;
@@ -49,6 +50,8 @@ public class ApplicationFormController {
     CostService costService;
     @Autowired
     FinanceService financeService;
+    @Autowired
+    FinanceFormHandler financeFormHandler;
     
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
@@ -195,7 +198,7 @@ public class ApplicationFormController {
             responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
         }
 
-        financeService.save(request, applicationId, user.getId());
+        financeFormHandler.handle(request);
 
         addApplicationDetails(applicationId, user.getId(), sectionId, model);
 
@@ -251,11 +254,11 @@ public class ApplicationFormController {
             Application application = applicationService.getApplicationById(applicationId);
             application.setName(value);
             applicationService.saveApplication(application);
-        }else if(inputIdentifier.equals("application_details-duration")){
+        } else if(inputIdentifier.equals("application_details-duration")){
             Application application = applicationService.getApplicationById(applicationId);
             application.setDurationInMonths(Long.valueOf(value));
             applicationService.saveApplication(application);
-        }else if(inputIdentifier.startsWith("application_details-startdate")){
+        } else if(inputIdentifier.startsWith("application_details-startdate")){
             Application application = applicationService.getApplicationById(applicationId);
             LocalDate startDate = application.getStartDate();
 
@@ -271,7 +274,13 @@ public class ApplicationFormController {
             }
             application.setStartDate(startDate);
             applicationService.saveApplication(application);
-        }else{
+        } else if(inputIdentifier.startsWith("cost-")) {
+            String fieldName = request.getParameter("fieldName");
+            if(fieldName != null && value != null) {
+                // TODO: not thread safe yet
+                //financeFormHandler.handle(fieldName, value);
+            }
+        } else {
             Long questionId = Long.valueOf(inputIdentifier);
             responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
         }
