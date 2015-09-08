@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -138,6 +139,10 @@ public class ApplicationFormController {
         Section currentSection = getSection(application, currentSectionId);
         model.addAttribute("currentSectionId", currentSectionId);
         model.addAttribute("currentSection", currentSection);
+
+        int todayDay =  LocalDateTime.now().getDayOfYear();
+        model.addAttribute("todayDay", todayDay);
+        model.addAttribute("yesterdayDay", todayDay-1);
     }
 
 

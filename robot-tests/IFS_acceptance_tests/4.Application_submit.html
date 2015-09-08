@@ -95,7 +95,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">${SCOPE_SECTION_URL}</td>
-<td>${SERVER}/application-form/1/section/2/?question=1</td>
+<td>${SERVER}/application-form/1/section/2/</td>
 <td></td>
 <td></td>
 <td></td>
@@ -117,6 +117,13 @@ td.name, th.name {
 <tr>
 <td class="name">${APPLICATION_SUBMITTED_URL}</td>
 <td><a href="http://ifs.test.worth.systems/application/1/submit">http://ifs.test.worth.systems/application/1/submit</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">${APPLICATION_DETAILS_URL}</td>
+<td>${SERVER}/application-form/1/section/1/</td>
 <td></td>
 <td></td>
 <td></td>
@@ -330,28 +337,14 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the applicant submits the application">the applicant submits the application</a></td>
 <td>Go To</td>
-<td>${DASHBOARD_URL}</td>
+<td>${APPLICATION_DETAILS_URL}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>link=Rovel Additive Manufacturing Process</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Application details</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Review &amp; submit</td>
+<td>css=#content &gt; div.grid-row &gt; div.column-two-thirds &gt; form &gt; div.alignright-button &gt; a</td>
 <td></td>
 <td></td>
 </tr>
@@ -519,21 +512,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the application is not valid">the application is not valid</a></td>
 <td>Go To</td>
-<td>${DASHBOARD_URL}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Rovel Additive Manufacturing Process</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Application details</td>
+<td>${APPLICATION_DETAILS_URL}</td>
 <td></td>
 <td></td>
 </tr>
@@ -603,28 +582,14 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the application is valid">the application is valid</a></td>
 <td>Go To</td>
-<td>${DASHBOARD_URL}</td>
+<td>${APPLICATION_DETAILS_URL}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>link=Rovel Additive Manufacturing Process</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>link=Application details</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
+<td>css=#question-12 .buttonlink</td>
 <td></td>
 <td></td>
 </tr>

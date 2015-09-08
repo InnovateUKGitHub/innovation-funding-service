@@ -133,7 +133,7 @@
                             <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
                         </th>
                         <td>
-                            <div th:include="question-type/form-elements :: form-textinput (id='working_days', response=${costCategory.getWorkingDaysPerYear()},readonly=true)" th:remove="tag" />                         
+                            <div th:include="question-type/form-elements :: form-textinput (id='working_days', name='working_days',response=${costCategory.getWorkingDaysPerYear()},readonly=true)" th:remove="tag" />                         
                         </td>
                         <td><a href="#">change working days</a></td>
                     </tr>
@@ -149,31 +149,29 @@
                             <th>Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
-                        <tbody  th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
+                        <tbody>
+                        <div th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}" th:remove="tag">
                             <tr>
                                 <td>
                                     <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
                                     <input type="number"
-                                           data-calculation-input="labour-salary"
                                            th:name="${type +'-grossAnnualSalary-' + labourCost.id}"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourGrossSalary'}"
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td>
                                     <input type="number"
-                                           data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'}"
                                            data-calculation-operations="/"
-                                           data-calculation-input="labour-dayrate"
-                                           readonly=""
+                                           readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + labourCost.id}"
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td>
                                     <input type="number"
-                                           data-calculation-input="labour-days"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
@@ -185,12 +183,12 @@
                                 </td>
                                 <td>
                                     <input type="number"
-                                           data-calculation-field="[data-calculation-input=labour-dayrate],[data-calculation-input=labour-days]"
-                                           data-calculation-operations="*"
-                                           data-calculation-input="total-labour-row"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'}"
+                                           data-calculation-operations="/,*"
                                            th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear),0,0)}"/>
                                 </td>
                             </tr>
+                        </div>
                         </tbody>
                     </table>
 
@@ -198,13 +196,13 @@
                         <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
+
                 <div class="form-group form-group--align-right">
                     <label>
                         Total labour costs £
-                        <input class="form-control form-control-1-4 calculation-total-labour-row-js calculation-result-js"
-                               data-calculation-field="[data-calculation-input=total-labour-row]"
+                        <input class="form-control form-control-1-4"
+                               data-calculation-repeating-total="[id*=labourTotalCost]"
                                data-calculation-operations="+"
-                               data-calculation-input="total-labour"
                                readonly="" type="text" id="cost-labour-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(),0,0)}" />
                     </label>
                 </div>
