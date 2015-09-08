@@ -14,7 +14,7 @@ var worthIFSFinance = {
         }
     },
     repeatingTotal : function(){
-        if('[data-calculation-repeating-total]'){
+        if(jQuery('[data-calculation-repeating-total]').length){
             $('[data-calculation-repeating-total]').each(function(index,value){
                 var inst = $(this);
                 var fields = inst.attr("data-calculation-repeating-total");
