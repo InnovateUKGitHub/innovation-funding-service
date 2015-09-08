@@ -1,5 +1,6 @@
 package com.worth.ifs.service;
 
+import com.worth.ifs.domain.Section;
 import com.worth.ifs.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class SectionService extends BaseServiceProvider {
         ResponseEntity<Long[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + sectionRestURL + "/getIncompleteSections/"+applicationId, Long[].class);
         Long[] sections =responseEntity.getBody();
         return Arrays.asList(sections);
+    }
+
+    public Section getSection(String name) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Section> responseEntity = restTemplate.getForEntity(dataRestServiceURL + sectionRestURL + "/findByName/"+name, Section.class);
+        return responseEntity.getBody();
     }
 
 }

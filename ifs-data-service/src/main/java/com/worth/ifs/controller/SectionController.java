@@ -9,6 +9,7 @@ import com.worth.ifs.domain.Response;
 import com.worth.ifs.domain.Section;
 import com.worth.ifs.repository.ApplicationRepository;
 import com.worth.ifs.repository.ResponseRepository;
+import com.worth.ifs.repository.SectionRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class SectionController {
     ApplicationRepository applicationRepository;
     @Autowired
     ResponseRepository responseRepository;
-
+    @Autowired
+    SectionRepository sectionRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -69,6 +71,11 @@ public class SectionController {
     @RequestMapping("/getIncompleteSections/{applicationId}")
     public List<Long> getIncompleteSectionsJson(@PathVariable("applicationId") final Long applicationId) {
         return this.getIncompleteSections(applicationId);
+    }
+
+    @RequestMapping("findByName/{name}")
+    public Section findByName(@PathVariable("name") final String name) {
+        return sectionRepository.findByName(name);
     }
 
     public List<Long> getIncompleteSections(Long applicationId) {

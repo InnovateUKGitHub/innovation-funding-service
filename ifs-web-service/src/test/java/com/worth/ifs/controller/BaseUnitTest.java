@@ -3,7 +3,6 @@ package com.worth.ifs.controller;
 import com.worth.ifs.application.finance.FinanceService;
 import com.worth.ifs.domain.*;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.security.UserAuthentication;
 import com.worth.ifs.service.*;
