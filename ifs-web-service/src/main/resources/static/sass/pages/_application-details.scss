@@ -18,6 +18,13 @@
 	.collapsible h2 + [aria-hidden="false"] {
 		padding:0;
 	}
+	.assign-container .assign-button > button {
+		margin: 0 0 2px -4px;
+	}
+	.assign-team {
+		margin-top:0;
+		right:0;
+	}
 }
 
 @include media-down(mobile){
