@@ -103,6 +103,8 @@
     <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
+            <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
+
             <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
@@ -115,7 +117,6 @@
 		 					)" th:remove="tag"/>
 
         <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
 
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
@@ -158,9 +159,23 @@
 </div>
 
 <div  th:fragment="last-update-info">
-        <p><span>Last update by</span> <strong><span
-        th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/></strong>, <strong><span
-        th:text="${#temporals.format(response?.getUpdateDate(), 'dd/MMM/yyyy HH:mm')}"/></strong></p>
+        <p><small><span>Last updated: </span> 
+
+
+            <span th:if="${response?.getUpdateDate().getDayOfYear() eq todayDay}" th:text="Today"/>
+            <span th:if="${response?.getUpdateDate().getDayOfYear() eq yesterdayDay}" th:text="Yesterday"/>
+            <span th:unless="${response?.getUpdateDate().getDayOfYear() eq todayDay or response?.getUpdateDate().getDayOfYear() eq yesterdayDay}"
+                  th:text="${#temporals.format(response?.getUpdateDate(), 'dd/MMM/yyyy HH:mm')}"/>
+
+            by <span th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
+        </small></p>
+</div>
+
+<div  th:fragment="pretty-date (date)">
+        <span th:if="${date.getDayOfYear() eq todayDay}" th:text="Today"/>
+        <span th:if="${date.getDayOfYear() eq yesterdayDay}" th:text="Yesterday"/>
+        <span th:unless="${date.getDayOfYear() eq todayDay or date.getDayOfYear() eq yesterdayDay}"
+                  th:text="${#temporals.format(date, 'dd/MMM/yyyy HH:mm')}"/>
 </div>
 
 <!-- ========================= Mark as complete buttons =========================== -->

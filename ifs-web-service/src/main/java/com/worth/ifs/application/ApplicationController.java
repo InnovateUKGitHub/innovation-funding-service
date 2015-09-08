@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -86,9 +87,12 @@ public class ApplicationController {
         Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
 
-
         List<Section> sections = sectionHelper.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
+
+        int todayDay =  LocalDateTime.now().getDayOfYear();
+        model.addAttribute("todayDay", todayDay);
+        model.addAttribute("yesterdayDay", todayDay-1);
     }
 
     @RequestMapping("/{applicationId}")
