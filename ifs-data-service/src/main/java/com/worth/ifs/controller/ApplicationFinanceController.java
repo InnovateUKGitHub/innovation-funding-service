@@ -1,9 +1,7 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.assembler.ApplicationFinanceResourceAssembler;
 import com.worth.ifs.domain.ApplicationFinance;
 import com.worth.ifs.repository.ApplicationFinanceRepository;
-import com.worth.ifs.resource.ApplicationFinanceResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

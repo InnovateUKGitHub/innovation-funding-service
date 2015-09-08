@@ -1,5 +1,7 @@
 package com.worth.ifs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,29 +10,25 @@ import java.io.Serializable;
  * The value is stored and the type determines how it is processed.
  */
 @Entity
+@IdClass(CostValueId.class)
 public class CostValue implements Serializable {
     String value;
 
     @Id
-    @Column(name="cost_id")
-    private Long costId;
-
-    @Id
-    @Column(name="cost_field_id")
-    private Long costFieldId;
-
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="costId", referencedColumnName="id")
+    @PrimaryKeyJoinColumn(name="cost_id", referencedColumnName="id")
     private Cost cost;
 
+    @Id
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="costFieldId", referencedColumnName="id")
+    @PrimaryKeyJoinColumn(name="cost_field_id", referencedColumnName="id")
     private CostField costField;
 
     public CostValue() {
     }
 
-    public CostValue(String value) {
+    public CostValue(CostField costField, String value) {
+        this.costField = costField;
         this.value = value;
     }
 
@@ -44,6 +42,7 @@ public class CostValue implements Serializable {
         return value;
     }
 
+    @JsonIgnore
     public Cost getCost() {
         return cost;
     }

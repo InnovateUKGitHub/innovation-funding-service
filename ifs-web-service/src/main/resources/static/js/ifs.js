@@ -95,6 +95,7 @@ var worthIFS = {
             var jsonObj = {
                     value:element.value,
                     questionId: jQuery(element).attr('id'),
+                    fieldName: jQuery(element).attr('name'),
                     applicationId: jQuery(".form-serialize-js #application_id").val()
              };
 

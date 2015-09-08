@@ -152,30 +152,29 @@
                         <tbody  th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                             <tr>
                                 <td>
-                                    <input type="text" name="labour-0-labourRole"  id="id_labour-0-labourRole" th:value="${labourCost.getRole()}"/>
+                                    <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td>
                                     <input type="number"
                                            data-calculation-input="labour-salary"
                                            th:name="${type +'-grossAnnualSalary-' + labourCost.id}"
-                                           id="id_labour-0-labourGrossSalary"
+                                           th:id="${'cost-labour-'+labourCost.id+'-labourGrossSalary'}"
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td>
-                                    <input type="number" name="labour-0-labourRate"
+                                    <input type="number"
                                            data-calculation-field="[data-calculation-input=labour-salary],.calculation-working-days-js"
                                            data-calculation-operations="/"
                                            data-calculation-input="labour-dayrate"
                                            readonly=""
-                                           id="id_labour-0-labourRate"
+                                           th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + labourCost.id}"
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td>
                                     <input type="number"
                                            data-calculation-input="labour-days"
-                                           name="labour-0-labourDays"
-                                           id="id_labour-0-labourDays"
+                                           th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
                                 </td>
@@ -189,14 +188,14 @@
                                            data-calculation-field="[data-calculation-input=labour-dayrate],[data-calculation-input=labour-days]"
                                            data-calculation-operations="*"
                                            data-calculation-input="total-labour-row"
-                                           name="labour-0-labourTotalCost"  readonly="readonly" id="id_labour-0-labourTotalCost" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear),0,0)}"/>
+                                           th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear),0,0)}"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
                     <p class="alignright">
-                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
                 <div class="form-group form-group--align-right">
@@ -206,7 +205,7 @@
                                data-calculation-field="[data-calculation-input=total-labour-row]"
                                data-calculation-operations="+"
                                data-calculation-input="total-labour"
-                               readonly="" type="text" id="labour-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(),0,0)}" />
+                               readonly="" type="text" id="cost-labour-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(),0,0)}" />
                     </label>
                 </div>
             </div>
@@ -300,21 +299,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <div th:each="materialCost : ${costCategory.costs}" >
+                    <div th:each="materialCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <tr>
                             <td>
-                                <input type="text" name="materials-0-materialsItem" th:value="${materialCost.getItem()}"/>
+                                <input type="text" th:name="${type +'-item-' + materialCost.id}" th:value="${materialCost.getItem()}"/>
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsQuantity"
+                                <input type="number" th:name="${type +'-quantity-' + materialCost.id}"
                                        data-calculation-input="materials-item-quantity" th:value="${materialCost.getQuantity()}"/>
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsCostPerItem"
+                                <input type="number" th:name="${type +'-cost-' + materialCost.id}"
                                        data-calculation-input="materials-item-cost" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
                             </td>
                             <td>
-                                <input type="number" name="materials-0-materialsTotal"
+                                <input type="number" th:name="${type +'-total-' + materialCost.id}"
                                        data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
                                        data-calculation-operations="*"
                                        data-calculation-input="total-materials-row"
@@ -326,7 +325,7 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
+                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right">
@@ -401,7 +400,7 @@
                 </div>
             </div>
             <p class="alignright">
-                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
+                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
             </p>
             <hr/>
             <div class="form-group form-group--align-right">
@@ -422,36 +421,42 @@
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
-                <div th:each="subContractingCost : ${costCategory.costs}" >
+                <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <div class="form-group">
-                            <label class="form-label" for="id_subcontracting-0-subcontractingCompanyName">Subcontractor name</label>
-                            <input type="text" name="subcontracting-0-subcontractingCompanyName" class="form-control form-finances-subcontracting-company" id="id_subcontracting-0-subcontractingCompanyName" th:value="${subContractingCost.name}" />
+                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
+                            <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="id_subcontracting-0-subcontractingCountry">Country where work will be carried out</label>
-                            <input type="text" name="subcontracting-0-subcontractingCountry" class="form-control form-finances-subcontracting-country" id="id_subcontracting-0-subcontractingCountry" th:value="${subContractingCost.country}" />
+                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where work will be carried out</label>
+                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country" id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="id_subcontracting-0-subcontractingRole">Role in the project and description of work being carried out</label>
-                            <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="id_subcontracting-0-subcontractingRole" th:inline="text">[[${subContractingCost.getRole()}]]</textarea>-->
-                            <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role in the project and description of work being carried out</label>
+                            <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
+                            <div th:include="question-type/form-elements :: form-textarea (
+		 					id=${'cost-subcontracting-'+subContractingCost.id+'-role'},
+		 					value=${subContractingCost.role},
+		 					readonly=false,
+		 					name=${type + '-role-' + subContractingCost.id}
+		 					)" th:remove="tag" />
+
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="id_subcontracting-0-subcontractingCost">Cost</label>
+                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
                             <input type="number"
-                                   name="subcontracting-0-subcontractingCost"
+                                   th:name="${type +'-cost-' + subContractingCost.id}"
                                    class="form-control form-finances-subcontracting-cost"
-                                   id="id_subcontracting-0-subcontractingCost"
+                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-cost'}"
                                    data-calculation-input="subcontracting-cost-row"
                                    th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
                         </div>
                 </div>
             </div>
             <p class="alignright">
-                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
+                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
             </p>
             <div class="form-group form-group--align-right">
                 <label>
@@ -459,7 +464,7 @@
                     <input class="form-control form-control-1-4"
                            readonly=""
                            type="text"
-                           id="subcontracting-costs-total-field"
+                           id="cost-subcontracting-total"
                            data-calculation-field="[data-calculation-input=subcontracting-cost-row]"
                            data-calculation-operations="+"
                            th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
@@ -506,7 +511,7 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
+                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right">
@@ -549,7 +554,7 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=,sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
+                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right">

@@ -10,9 +10,7 @@ import com.worth.ifs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -36,16 +34,6 @@ public class FinanceService {
 
     public EnumMap<CostType, CostCategory> getCostCategories() {
         return costCategories;
-    }
-
-    public void save(HttpServletRequest request, Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = getApplicationFinance(applicationId, userId);
-        List<Cost> costs = costService.getCosts(applicationFinance.getId());
-        for(Cost cost : costs) {
-            // update cost items with latest values
-            // send them to the remote controller for saving
-            cost.getQuestion().getQuestionType();
-        }
     }
 
     public void setCosts(Long applicationId, Long userId) {

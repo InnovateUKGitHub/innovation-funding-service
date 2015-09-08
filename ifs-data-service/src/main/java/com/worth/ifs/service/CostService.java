@@ -5,10 +5,7 @@ import com.worth.ifs.domain.Cost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +14,7 @@ import java.util.List;
 
 @Service
 public class CostService extends BaseServiceProvider {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Value("${ifs.data.service.rest.cost}")
     String costRestURL;
@@ -34,8 +32,28 @@ public class CostService extends BaseServiceProvider {
     }
 
     public void update(Cost cost) {
+        log.debug("Update cost - " + cost);
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + costRestURL + "/update/" +cost.getId();
-        restTemplate.put(url, cost.getId());
+
+        //set your headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        //set your entity to send
+        HttpEntity<Cost> entity = new HttpEntity<>(cost, headers);
+
+        log.info("ApplicationService.saveApplication send it!");
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
+                , String.class);
+
+        log.debug("done" + cost);
+    }
+
+    public Cost findById(Long id) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Cost> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/findById/"+id, Cost.class);
+        return responseEntity.getBody();
     }
 }
