@@ -135,6 +135,7 @@ public class ApplicationFormController {
         financeService.setCosts(applicationId, userId);
         model.addAttribute("finances", financeService.getCostCategories());
         model.addAttribute("financeTotal", financeService.getTotal());
+        model.addAttribute("financeSection", sectionService.getSection("Your finances"));
 
         Section currentSection = getSection(application, currentSectionId);
         model.addAttribute("currentSectionId", currentSectionId);

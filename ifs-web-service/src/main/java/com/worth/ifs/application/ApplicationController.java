@@ -87,10 +87,8 @@ public class ApplicationController {
         model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
 
 
-        List<Section> sectionsXPTO = sectionHelper.getParentSections(competition.getSections());
-//        sectionsXPTO.get(0).getQuestions().get(0).
-        model.addAttribute("sections", sectionsXPTO);
-
+        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
+        model.addAttribute("sections", sections);
     }
 
     @RequestMapping("/{applicationId}")

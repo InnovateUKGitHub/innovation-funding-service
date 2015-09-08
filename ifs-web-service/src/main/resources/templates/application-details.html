@@ -53,7 +53,9 @@
                                 </h4>
                             </div>
                             <div class="column-third">
-                                <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee" >
+                                <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}" class="assignee"  >
+                                    <!--prints the last update info-->
+                                    <div th:unless="${response == null or response?.getUpdateDate() == null}" th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
                                     <div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
                                     <div  th:if="${response?.getAssignee() != null} " th:remove="tag">
                                          <div> Assigned to <strong th:text="${response?.getAssignee()?.getName()}" /></div>
