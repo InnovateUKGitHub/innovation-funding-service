@@ -132,10 +132,8 @@ public class ApplicationFormController {
             responseMap.put(response.getQuestion().getId(), response);
         }
         model.addAttribute("responses", responseMap);
-        financeService.setCosts(applicationId, userId);
-        model.addAttribute("finances", financeService.getCostCategories());
-        model.addAttribute("financeTotal", financeService.getTotal());
-        model.addAttribute("financeSection", sectionService.getSection("Your finances"));
+
+        addFinanceDetails(model, applicationId, userId);
 
         Section currentSection = getSection(application, currentSectionId);
         model.addAttribute("currentSectionId", currentSectionId);
@@ -153,6 +151,13 @@ public class ApplicationFormController {
                 .findFirst();
 
         return section.isPresent() ? section.get() : null;
+    }
+
+    private void addFinanceDetails(Model model, Long applicationId, Long userId) {
+        ApplicationFinance applicationFinance = getApplicationFinance(applicationId, userId);
+        model.addAttribute("organisationFinance", financeService.getFinances(applicationFinance.getId()));
+        model.addAttribute("financeTotal", financeService.getTotal(applicationFinance.getId()));
+        model.addAttribute("financeSection", sectionService.getSection("Your finances"));
     }
 
     /**
@@ -292,4 +297,8 @@ public class ApplicationFormController {
         return node;
     }
 
+    private ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
+        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
+        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
+    }
 }

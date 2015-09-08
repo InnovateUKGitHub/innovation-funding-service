@@ -124,7 +124,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
@@ -218,7 +218,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="grid-row">
                 <strong class="column-half">
                     20% of labour costs
@@ -287,7 +287,7 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -349,7 +349,7 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row">
                     <div class="form-group">
@@ -419,7 +419,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <div class="form-group">
@@ -479,7 +479,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -530,7 +530,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <div th:with="costCategory=${finances.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -587,19 +587,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr >
-                            <th></th>
-                            <td>£14,000</td>
-                            <td>£4,000</td>
-                        </tr>
-
-                        <tr>
-                            <th>Total</th>
-                            <td style="font-weight: 700;">
-                                £35,000
-                            </td>
-                            <td>£14,000</td>
-                        </tr>
+                            <tr th:each="financeSubSection : ${financeSection.ChildSections}" >
+                                <th th:text="${financeSubSection.name}"></th>
+                                <td>£14,000</td>
+                                <td>£4,000</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td style="font-weight: 700;">
+                                    £35,000
+                                </td>
+                                <td>£14,000</td>
+                            </tr>
                     </tbody>
                 </table>
             </div>
