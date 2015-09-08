@@ -87,39 +87,42 @@ var worthIFS = {
     },
     initAutosaveElement : function(){
         var options = {
-            callback: function (value) { fieldChanged(this);  },
+            callback: function (value) { worthIFS.fieldChanged(this);  },
             wait: 2500,
             highlight: false,
             captureLength: 1
         }
 
-        jQuery(".form-serialize-js input, .form-serialize-js textarea").typeWatch( options );
-        jQuery(".form-serialize-js input, .form-serialize-js textarea").change(function(e) {
-            fieldChanged(e.target);
+        var inputFields = jQuery('.form-serialize-js input').not('[type="button"],[readonly="readonly"]');
+        var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
+        var fields = inputFields.add(textareas);
+      
+       fields.typeWatch(options);
+       fields.change(function(e) {
+            worthIFS.fieldChanged(e.target);
         });
 
-        function fieldChanged(element){
-            var jsonObj = {
-                    value:element.value,
-                    questionId: jQuery(element).attr('id'),
-                    fieldName: jQuery(element).attr('name'),
-                    applicationId: jQuery(".form-serialize-js #application_id").val()
-             };
+    },
+    fieldChanged : function (element){
+        var jsonObj = {
+                value:element.value,
+                questionId: jQuery(element).attr('id'),
+                fieldName: jQuery(element).attr('name'),
+                applicationId: jQuery(".form-serialize-js #application_id").val()
+         };
 
-
-             var formState = $('.form-serialize-js').serialize();
-             jQuery.ajax({
-                 type: 'POST',
-                 url: "/application-form/saveFormElement",
-                 data: jsonObj,
-                 dataType: "json"
-             }).done(function(){
-                // set the form-saved-state
-                $('.form-serialize-js').data('serializedFormState',formState);
-             }).fail(function(){
-                // ajax save failed.
-             });
-        }
+         var formState = $('.form-serialize-js').serialize();
+         jQuery.ajax({
+             type: 'POST',
+             url: "/application-form/saveFormElement",
+             data: jsonObj,
+             dataType: "json"
+         }).done(function(){
+            // set the form-saved-state
+            $('.form-serialize-js').data('serializedFormState',formState);
+         }).fail(function(){
+            // ajax save failed.
+         });
     },
     initUnsavedChangesWarning : function(){
         // save the current form state, so we can warn the user if he leaves the page without saving.
