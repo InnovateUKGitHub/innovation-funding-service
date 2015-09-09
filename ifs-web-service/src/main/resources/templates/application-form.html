@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="question" th:each="question : ${currentSection.getQuestions()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())})">
                 <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
             </div>

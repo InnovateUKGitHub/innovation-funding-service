@@ -95,35 +95,35 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">${SCOPE_SECTION_URL}</td>
-<td>${SERVER}/application-form/1/section/2/?question=1</td>
+<td>${SERVER}/application-form/1/section/2/</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name">${YOUR_BUSINESS_URL}</td>
-<td>${SERVER}/application-form/1/section/3/?question=1</td>
+<td>${SERVER}/application-form/1/section/3/</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name">${PROJECT_URL}</td>
-<td>${SERVER}/application-form/1/section/4/?question=1</td>
+<td>${SERVER}/application-form/1/section/4/</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name">${FUNDING_URL}</td>
-<td>${SERVER}/application-form/1/section/5/?question=1</td>
+<td>${SERVER}/application-form/1/section/5/</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name">${FINANCES}</td>
-<td>${SERVER}/application-form/1/section/6/?question=1</td>
+<td>${SERVER}/application-form/1/section/6/</td>
 <td></td>
 <td></td>
 <td></td>
@@ -137,7 +137,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">${APPLICATION_URL}</td>
-<td>${SERVER}/application-form/1/section/1/#question-11</td>
+<td>${SERVER}/application-form/1/section/1/</td>
 <td></td>
 <td></td>
 <td></td>
@@ -379,7 +379,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant opens the &quot;Rovel additive&quot; application form">the Applicant opens the "Rovel additive" application form</a></td>
 <td>Go To</td>
-<td>${APPLICATION_URL} </td>
+<td>${APPLICATION_URL}</td>
 <td></td>
 <td></td>
 </tr>
@@ -498,14 +498,14 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the applicant clicks the &quot;What should I include in project summary?&quot; question">the applicant clicks the "What should I include in project summary?" question</a></td>
 <td>Wait Until Element Is Visible</td>
-<td>css=#question-11 &gt; div &gt; details &gt; summary</td>
+<td>css=#question-11 .summary</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>css=#question-11 &gt; div &gt; details &gt; summary</td>
+<td>css=#question-11 .summary</td>
 <td></td>
 <td></td>
 </tr>
@@ -518,13 +518,6 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the guidance should be visible">the guidance should be visible</a></td>
-<td>Page Should Contain Element</td>
-<td>css=#question-11 &gt; div &gt; details &gt; summary[aria-expanded="true"]</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Element Should Be Visible</td>
 <td>css=#details-content-0 p</td>
 <td></td>
