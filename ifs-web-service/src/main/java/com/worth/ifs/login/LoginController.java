@@ -43,20 +43,32 @@ public class LoginController {
         return "redirect:/login";
     }
 
+    private String redirectionForUknownUser() {
+        System.out.println("No user found");
+        log.error("no user found");
+        return "redirect:/login?invalid";
+    }
+
+    private String redirectionForUser(User user) {
+        return user.getEmail().equals("assessor@innovateuk.gov.uk") ?
+                "redirect:/assessor/dashboard" : "redirect:/applicant/dashboard";
+    }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response){
+    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response) {
+
+        // 1. gets the user having his login
         User user = userService.retrieveUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
-        log.error("Find user with: "+ loginForm.getEmail() + " + " + loginForm.getPassword());
-        if(user != null){
+
+        // 2. sets the correct destination for this user
+        String destination = user == null ? redirectionForUknownUser() : redirectionForUser(user);
+
+        // 3. saves authentication if valid user
+        if ( user != null )
             tokenAuthenticationService.addAuthentication(response, user.getToken());
-            // redirect to my applications
-            return "redirect:/applicant/dashboard";
-        }else{
-            System.out.println("No user found");
-            log.error("no user found");
-            return "redirect:/login?invalid";
-        }
+
+       // 4. returns the proper redirect destination
+        return destination;
     }
 }
 
