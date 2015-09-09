@@ -304,17 +304,17 @@
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-quantity-' + materialCost.id}"
-                                       data-calculation-input="materials-item-quantity" th:value="${materialCost.getQuantity()}"/>
+                                       th:id="${type +'-quantity-' + materialCost.id}" th:value="${materialCost.getQuantity()}"/>
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-cost-' + materialCost.id}"
-                                       data-calculation-input="materials-item-cost" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
+                                       th:id="${type +'-cost-' + materialCost.id}" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-total-' + materialCost.id}"
-                                       data-calculation-field="[data-calculation-input=materials-item-quantity],[data-calculation-input=materials-item-cost]"
+                                       th:attr="data-calculation-fields='#'+${type +'-quantity-' + materialCost.id}+',#'+${type +'-cost-' + materialCost.id}"
+                                       th:id="${type +'-cost-' + materialCost.id+'-materialTotal'}" 
                                        data-calculation-operations="*"
-                                       data-calculation-input="total-materials-row"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
                             </td>
                         </tr>
@@ -331,9 +331,8 @@
                     Total materials costs £
                     <input class="form-control form-control-1-4 calculation-total-materials-row-js calculation-result-js"
                            readonly="" type="text" id="material-costs-total-field"
-                           data-calculation-field="[data-calculation-input=total-materials-row]"
+                           data-calculation-repeating-total="[id*=materialTotal]"
                            data-calculation-operations="+"
-                           data-calculation-input="total-materials"
                            th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
                 </label>
             </div>
