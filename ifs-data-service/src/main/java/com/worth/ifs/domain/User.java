@@ -32,10 +32,10 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy="user")
-    private List<UserApplicationRole> userApplicationRoles;
+    private List<UserApplicationRole> userApplicationRoles = new ArrayList<>();
 
-    @ManyToMany(mappedBy="user")
-    private Set<Role> roles;
+   // @ManyToMany(mappedBy="user")
+    //private Set<Role> roles = new HashSet<>();
 
     private String name;
     private String imageUrl;
@@ -53,8 +53,7 @@ public class User {
     private String password;
 
     public User(){
-        userApplicationRoles = new ArrayList<>();
-        roles = new HashSet<>();
+
     }
 
     public Long getId() {
@@ -96,12 +95,12 @@ public class User {
         this.password = setPassword;
     }
 
-    public boolean hasRole(Role role) {
-        return roles.contains(role);
-    }
-
-    public Set<Role> getRoles() {
-        return new HashSet<>(roles);
-    }
+//    public boolean hasRole(Role role) {
+//        return roles.contains(role);
+//    }
+//
+//    public Set<Role> getRoles() {
+//        return new HashSet<>(roles);
+//    }
 
 }
