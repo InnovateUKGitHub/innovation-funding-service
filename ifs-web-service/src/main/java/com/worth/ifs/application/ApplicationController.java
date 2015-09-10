@@ -41,10 +41,49 @@ public class ApplicationController {
     @Autowired
     UserService userService;
 
-
-
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
+
+    @RequestMapping("/{applicationId}")
+    public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
+        log.info("Application with id " + applicationId);
+        this.addApplicationDetails(applicationId, model);
+        return "application-details";
+    }
+
+    @RequestMapping("/{applicationId}/section/{sectionId}")
+    public String applicationDetailsOpenSection(Model model,
+                                     @PathVariable("applicationId") final Long applicationId,
+                                     @PathVariable("sectionId") final Long sectionId){
+        addApplicationDetails(applicationId, model);
+        model.addAttribute("currentSectionId", sectionId);
+        return "application-details";
+    }
+
+    @RequestMapping("/{applicationId}/summary")
+      public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
+        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
+        HashMap<Long, Response> responseMap = new HashMap<>();
+        for (Response response : responses) {
+            responseMap.put(response.getQuestion().getId(), response);
+        }
+        model.addAttribute("responses", responseMap);
+
+        addApplicationDetails(applicationId, model);
+        return "application-summary";
+    }
+    @RequestMapping("/{applicationId}/confirm-submit")
+    public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
+        addApplicationDetails(applicationId, model);
+        return "application-confirm-submit";
+    }
+
+    @RequestMapping("/{applicationId}/submit")
+    public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
+        applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
+        addApplicationDetails(applicationId, model);
+        return "application-submitted";
+    }
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
@@ -61,14 +100,10 @@ public class ApplicationController {
             throw new ObjectNotFoundException("Application not found.");
         }
 
-        model.addAttribute("currentApplication", application);
-
         Competition competition = application.getCompetition();
+        model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
-
         model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
-
-
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
         model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null ));
 
@@ -94,49 +129,6 @@ public class ApplicationController {
         model.addAttribute("todayDay", todayDay);
         model.addAttribute("yesterdayDay", todayDay-1);
     }
-
-    @RequestMapping("/{applicationId}")
-    public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
-        log.info("Application with id " + applicationId);
-        this.addApplicationDetails(applicationId, model);
-        return "application-details";
-    }
-
-    @RequestMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(Model model,
-                                     @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId){
-        this.addApplicationDetails(applicationId, model);
-        model.addAttribute("currentSectionId", sectionId);
-        return "application-details";
-    }
-
-    @RequestMapping("/{applicationId}/summary")
-      public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
-        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
-        HashMap<Long, Response> responseMap = new HashMap<>();
-        for (Response response : responses) {
-            responseMap.put(response.getQuestion().getId(), response);
-        }
-        model.addAttribute("responses", responseMap);
-
-        this.addApplicationDetails(applicationId, model);
-        return "application-summary";
-    }
-    @RequestMapping("/{applicationId}/confirm-submit")
-    public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        this.addApplicationDetails(applicationId, model);
-        return "application-confirm-submit";
-    }
-
-    @RequestMapping("/{applicationId}/submit")
-    public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        this.addApplicationDetails(applicationId, model);
-        return "application-submitted";
-    }
-
-
 
     /**
      * This method is for the post request when the users clicks the input[type=submit] button.

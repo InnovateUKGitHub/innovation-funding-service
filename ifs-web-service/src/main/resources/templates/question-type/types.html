@@ -420,17 +420,17 @@
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <div class="form-group">
-                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
-                            <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
+                            <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where work will be carried out</label>
-                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country" id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where work will be carried out</label>
+                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country" th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role in the project and description of work being carried out</label>
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role in the project and description of work being carried out</label>
                             <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
                             <div th:include="question-type/form-elements :: form-textarea (
 		 					id=${'cost-subcontracting-'+subContractingCost.id+'-role'},
@@ -586,6 +586,11 @@
                     <tbody>
                             <tr th:each="financeSubSection : ${financeSection.ChildSections}" >
                                 <th th:text="${financeSubSection.name}"></th>
+                                <td th:each="organisationFinance: ${organisationFinances}"
+                                    th:text="${organisationFinance.}"
+                                        >
+
+                                </td>
                                 <td>£14,000</td>
                                 <td>£4,000</td>
                             </tr>

@@ -25,22 +25,6 @@ public class LabourCostCategory implements CostCategory {
     }
 
     @Override
-    public void saveCosts(HttpServletRequest request, CostType costType) {
-        List<String> labourKeys = request.getParameterMap().keySet().stream().
-                filter(k -> k.startsWith(CostType.LABOUR.getType())).collect(Collectors.toList());
-    }
-
-    public void update(HttpServletRequest request, CostItem cost) {
-        List<String> labourKeys = request.getParameterMap().keySet().stream().
-                filter(k -> k.startsWith(CostType.LABOUR.getType()) && k.endsWith(String.valueOf(cost.getId()))).collect(Collectors.toList());
-        for(String labourKey : labourKeys) {
-            String value = request.getParameter(labourKey);
-            String[] keyParts = labourKey.split("-");
-            String field = keyParts[1];
-        }
-    }
-
-    @Override
     public Double getTotal() {
         total = costs.stream().mapToDouble(c -> ((LabourCost)c).getTotal(workingDaysPerYear)).sum();
         return total;

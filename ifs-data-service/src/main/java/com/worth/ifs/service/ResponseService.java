@@ -47,11 +47,7 @@ public class ResponseService extends BaseServiceProvider {
         node.put("questionId", questionId);
         node.put("value", HtmlUtils.htmlEscape(value));
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(node.toString(), headers);
+        HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
         if (response.getStatusCode() == HttpStatus.ACCEPTED) {
@@ -72,11 +68,7 @@ public class ResponseService extends BaseServiceProvider {
                 "&userId={userId}" +
                 "&isComplete={isComplete}";
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>("", headers);
-
+        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
         log.info("ApplicationService.markQuestionAsComplete send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, isComplete);
 
@@ -98,9 +90,7 @@ public class ResponseService extends BaseServiceProvider {
                 "&assigneeId={assigneeId}";
 
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
 
         log.info("ApplicationService.assignQuestion send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, assigneeId);

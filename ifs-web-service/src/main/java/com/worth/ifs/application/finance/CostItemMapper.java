@@ -52,7 +52,7 @@ public class CostItemMapper {
 
         throw new IllegalArgumentException("Not a valid CostType: " + costType);
     }
-    //Long id, String item, String description, Integer quantity, Double cost, ApplicationFinance applicationFinance, Question question
+
     public Cost mapCapitalUsage(CostItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
         Cost capitalUsageCost = new Cost(capitalUsage.getId(), "",  capitalUsage.getDescription(), capitalUsage.getDeprecation(),

@@ -23,6 +23,11 @@ public class ApplicationFinance {
     public ApplicationFinance() {
     }
 
+    public ApplicationFinance(Application application, Organisation organisation) {
+        this.application = application;
+        this.organisation = organisation;
+    }
+
     public ApplicationFinance(long id, Application application, Organisation organisation) {
         this.id = id;
         this.application = application;

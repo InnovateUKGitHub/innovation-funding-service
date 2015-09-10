@@ -48,8 +48,6 @@ public class ApplicationFormController {
     @Autowired
     SectionService sectionService;
     @Autowired
-    CostService costService;
-    @Autowired
     FinanceService financeService;
     @Autowired
     FinanceFormHandler financeFormHandler;
@@ -87,16 +85,15 @@ public class ApplicationFormController {
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-        ApplicationFinance applicationFinance = getApplicationFinanceDetails(applicationId, user.getId());
-
-        costService.add(applicationFinance.getId(), questionId);
+        ApplicationFinance applicationFinance = getApplicationFinanceDetails(user.getId(), applicationId);
+        financeService.addCost(applicationFinance.getId(), questionId);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
 
-    private ApplicationFinance getApplicationFinanceDetails(Long applicationId, Long userId) {
-        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
+    private ApplicationFinance getApplicationFinanceDetails(Long userId, Long applicationId) {
+        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(userId, applicationId);
         return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
@@ -159,10 +156,15 @@ public class ApplicationFormController {
     }
 
     private void addFinanceDetails(Model model, Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = getApplicationFinance(applicationId, userId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+        if(applicationFinance==null) {
+            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
+        }
+        log.debug("application id: " + applicationId + " userId " + userId + " finance id " + applicationFinance.getId());
         model.addAttribute("organisationFinance", financeService.getFinances(applicationFinance.getId()));
         model.addAttribute("financeTotal", financeService.getTotal(applicationFinance.getId()));
         model.addAttribute("financeSection", sectionService.getSection("Your finances"));
+        model.addAttribute("organisationFinances", financeService.getFinances(applicationFinance.getId()));
     }
 
     /**
@@ -302,8 +304,4 @@ public class ApplicationFormController {
         return node;
     }
 
-    private ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
-        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(applicationId, userId);
-        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
-    }
 }

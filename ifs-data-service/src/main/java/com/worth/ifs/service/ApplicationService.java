@@ -46,17 +46,7 @@ public class ApplicationService extends BaseServiceProvider {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/saveApplicationDetails/" +application.getId();
 
-
-        //set your headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-
-        //set your entity to send
-        HttpEntity<Application> entity = new HttpEntity<>(application, headers);
-
-
+        HttpEntity<Application> entity = new HttpEntity<>(application, getJSONHeaders());
         log.info("ApplicationService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
                 , String.class);
@@ -78,10 +68,7 @@ public class ApplicationService extends BaseServiceProvider {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}";
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
 
         log.info("ApplicationService.updateApplicationStatus send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, statusId);

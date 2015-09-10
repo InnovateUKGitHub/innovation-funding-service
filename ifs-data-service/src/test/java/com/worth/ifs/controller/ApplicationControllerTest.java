@@ -47,14 +47,8 @@ public class ApplicationControllerTest {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
 
-
-        when(applicationRepositoryMock.findById(1L)).thenReturn(new ArrayList<Application>() {{
-            add(testApplication1);
-        }});
-
-        when(applicationRepositoryMock.findById(2L)).thenReturn(new ArrayList<Application>() {{
-            add(testApplication2);
-        }});
+        when(applicationRepositoryMock.findById(1L)).thenReturn(testApplication1);
+        when(applicationRepositoryMock.findById(2L)).thenReturn(testApplication2);
 
         mockMvc.perform(get("/application/id/1"))
                 .andExpect(status().isOk())

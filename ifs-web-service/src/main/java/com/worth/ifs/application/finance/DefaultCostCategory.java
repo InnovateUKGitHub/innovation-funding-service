@@ -17,11 +17,6 @@ public class DefaultCostCategory implements CostCategory {
     }
 
     @Override
-    public void saveCosts(HttpServletRequest request, CostType costType) {
-
-    }
-
-    @Override
     public Double getTotal() {
         total = costs.stream().mapToDouble(c -> c.getTotal()).sum();
         return total;

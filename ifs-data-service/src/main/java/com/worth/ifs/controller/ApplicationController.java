@@ -38,12 +38,7 @@ public class ApplicationController {
 
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
-        List<Application> apps = repository.findById(id);
-        if(apps.size() == 0){
-            return null;
-        }else{
-            return apps.get(0);
-        }
+        return repository.findById(id);
     }
 
     @RequestMapping("/findAll")

@@ -10,6 +10,6 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "application", path = "application")
 public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     List<Application> findByName(@Param("name") String name);
-    List<Application> findById(@Param("id") Long id);
+    Application findById(@Param("id") Long id);
     List<Application> findAll();
 }

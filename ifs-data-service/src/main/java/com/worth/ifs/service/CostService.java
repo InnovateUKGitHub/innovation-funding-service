@@ -36,13 +36,8 @@ public class CostService extends BaseServiceProvider {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + costRestURL + "/update/" +cost.getId();
 
-        //set your headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
         //set your entity to send
-        HttpEntity<Cost> entity = new HttpEntity<>(cost, headers);
+        HttpEntity<Cost> entity = new HttpEntity<>(cost, getJSONHeaders());
 
         log.info("ApplicationService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity

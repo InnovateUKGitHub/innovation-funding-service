@@ -4,6 +4,8 @@ import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.ApplicationFinance;
+import com.worth.ifs.domain.UserApplicationRole;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,15 +50,20 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
 
     @Test
     public void testApplicationForm() throws Exception {
-            Application app = applications.get(0);
+        Application app = applications.get(0);
+        UserApplicationRole userAppRole = new UserApplicationRole();
+        ApplicationFinance applicationFinance = new ApplicationFinance();
+        applicationFinance.setId(1L);
 
-            when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-            when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        when(userService.findUserApplicationRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
+        when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
 
-            mockMvc.perform(get("/application-form/1"))
-                    .andExpect(view().name("application-form"))
-                    .andExpect(model().attribute("currentApplication", app))
-                    .andExpect(model().attribute("currentSectionId", 0L));
+        mockMvc.perform(get("/application-form/1"))
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentSectionId", 0L));
 
     }
 
@@ -64,10 +71,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest{
     public void testApplicationFormWithOpenSection() throws Exception {
         Application app = applications.get(0);
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
+        ApplicationFinance applicationFinance = new ApplicationFinance();
 
         when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getApplicationById(app.getId())).thenReturn(app);
-
+        when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", app))
