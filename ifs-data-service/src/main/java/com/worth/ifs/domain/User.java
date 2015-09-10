@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -18,7 +16,8 @@ import java.util.List;
 public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
 
-    public User(Long id, String name, String email, String password, String token, String imageUrl, List<UserApplicationRole> userApplicationRoles) {
+    public User(Long id, String name, String email, String password, String token, String imageUrl,
+                List<UserApplicationRole> userApplicationRoles) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -33,7 +32,10 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy="user")
-    private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+    private List<UserApplicationRole> userApplicationRoles;
+
+    @ManyToMany(mappedBy="user")
+    private Set<Role> roles;
 
     private String name;
     private String imageUrl;
@@ -51,7 +53,8 @@ public class User {
     private String password;
 
     public User(){
-
+        userApplicationRoles = new ArrayList<>();
+        roles = new HashSet<>();
     }
 
     public Long getId() {
@@ -92,4 +95,13 @@ public class User {
         setPassword = encoder.encode(setPassword);
         this.password = setPassword;
     }
+
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
+    }
+
+    public Set<Role> getRoles() {
+        return new HashSet<>(roles);
+    }
+
 }
