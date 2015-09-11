@@ -1,9 +1,6 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.domain.ApplicationFinance;
-import com.worth.ifs.domain.Cost;
-import com.worth.ifs.domain.CostValue;
-import com.worth.ifs.domain.Question;
+import com.worth.ifs.domain.*;
 import com.worth.ifs.repository.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,12 +48,14 @@ public class CostController {
             currentCost.setDescription(updatedCost.getDescription());
             currentCost.setItem(updatedCost.getItem());
             currentCost.setQuantity(updatedCost.getQuantity());
-            costRepository.save(currentCost);
-            log.info("------ cost value size: " + updatedCost.getCostValues().size());
+            Cost savedCost = costRepository.save(currentCost);
+
             for(CostValue costValue : updatedCost.getCostValues()) {
-                log.info("--- value: " + costValue.getValue());
+                CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
+                costValue.setCost(savedCost);
+                costValue.setCostField(costField);
+                costValueRepository.save(costValue);
             }
-            //costValueRepository.save(updatedCost.getCostValues());
         }
     }
 

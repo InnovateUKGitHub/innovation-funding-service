@@ -3,23 +3,23 @@ package com.worth.ifs.domain;
 import java.io.Serializable;
 
 public class CostValueId implements Serializable {
-    private Cost cost;
-    private CostField costField;
+    private Long cost;
+    private Long costField;
 
     public CostValueId() {
 
     }
 
-    public CostValueId(Cost cost, CostField costField) {
+    public CostValueId(Long cost, Long costField) {
         this.cost = cost;
         this.costField = costField;
     }
 
-    public Cost getCost() {
+    public Long getCost() {
         return cost;
     }
 
-    public CostField getCostField() {
+    public Long getCostField() {
         return costField;
     }
 

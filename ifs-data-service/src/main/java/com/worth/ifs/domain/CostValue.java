@@ -16,12 +16,12 @@ public class CostValue implements Serializable {
 
     @Id
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="cost_id", referencedColumnName="id")
+    @JoinColumn(name="cost_id")
     private Cost cost;
 
     @Id
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="cost_field_id", referencedColumnName="id")
+    @JoinColumn(name="cost_field_id")
     private CostField costField;
 
     public CostValue() {
@@ -49,5 +49,14 @@ public class CostValue implements Serializable {
 
     public CostField getCostField() {
         return costField;
+    }
+
+
+    public void setCost(Cost cost) {
+        this.cost = cost;
+    }
+
+    public void setCostField(CostField costField) {
+        this.costField = costField;
     }
 }
