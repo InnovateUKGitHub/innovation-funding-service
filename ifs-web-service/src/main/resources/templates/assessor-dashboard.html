@@ -14,53 +14,46 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Competitions for Assessments</h3>
+            <h3 class="heading-large">Competitions for Assessments (<span th:text="${competitionsForAssessment.size()}"/>)</h3>
             <ul class="boxed-list">
-                <li th:each="application : ${applicationsInProcess}">
-                    <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
+                <li th:each="competition : ${competitionsForAssessment}">
+                    <div class="grid-row" >
                         <div class="column-half">
                             <h4 class="heading-medium">
-                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
-                            </h4>
-                            <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
-                            <p class="form-hint">Current progress: </p>
 
-                            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
+                                <a th:href="@{/assessor/competitions/{id}/applications(id=${competition.getId()})}" th:text="${competition.name}">link for competition</a>
+                            </h4>
+                            <p class="form-hint">Assessment progress:</p>
+                            <p class="greentext"><strong>x/y Assessed</strong></p>
                         </div>
                         <div class="column-half">
-                            <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${application.competition.endDate}" th:remove="tag" />
-                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${competition.getAssessmentEndDate()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competition.getStartDateToEndDatePercentage()}, daysLeft=${competition.getAssessmentDaysLeft()}" th:remove="tag" />
                         </div>
                     </div>
-                    <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >
-                        <div class="column-two-thirds">
-                            <h4 class="heading-medium">
-                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
-                            </h4>
-                            <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
-                            <strong class="greentext">Application submitted</strong>
-                        </div>
-                        <div class="column-one-third">
-                            Awaiting assessment
-                        </div>
-                    </div>
+
+                    <!--
+                    WIll have to also show up the upcomming competitions
+
+                    <div class="grid-row">-->
+                        <!--<div class="column-two-thirds">-->
+                            <!--<h4 class="heading-medium">-->
+                                <!--<a th:href="@{/competition/{id}/section/1(id=${competition.getId()})}" th:text="${competition.name}">placeholder</a>-->
+                            <!--</h4>-->
+                            <!--<p class="form-hint">Competition number: <span th:text="${competition.id}"></span></p>-->
+                            <!--&lt;!&ndash;<strong class="greentext">Application submitted</strong>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--<div class="column-one-third">-->
+                            <!--Awaiting assessment-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </li>
             </ul>
         </div>
 
-        <!--<div class="previous-applications">-->
-            <!--<h3 class="heading-large">Previous Applications</h3>-->
-            <!--<ul class="boxed-list">-->
-                <!--<li th:each="application : ${applicationsFinished}">-->
-                    <!--<div class="grid-row">-->
-                        <!--<div class="column-two-thirds">-->
-                            <!--<h4 class="heading-medium" th:text="${application.name}"></h4>-->
-                            <!--<p class="form-hint">Application number: <span th:text="${application.id}"></span></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
+        <div class="announce-external-link">
+            <h5 class="heading-medium"><a href="https://www.gov.uk/government/organisations/innovate-uk">Visit Innovate UK main site</a></h5>
+        </div>
 
     </div>
 

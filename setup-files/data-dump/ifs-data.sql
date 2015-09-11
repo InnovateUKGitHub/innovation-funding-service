@@ -52,6 +52,8 @@ UNLOCK TABLES;
 LOCK TABLES `competition` WRITE;
 /*!40000 ALTER TABLE `competition` DISABLE KEYS */;
 INSERT  IGNORE INTO `competition` (`id`, `description`, `end_date`, `name`, `start_date`) VALUES (1,'Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.','2016-01-25 00:00:00','Competition name ...','2015-06-24 00:00:00');
+UPDATE `competition` SET `assessment_end_date`='2015-09-24 12:00:05', `assessment_start_date`='2015-09-09 12:00:05', `end_date`='2016-01-25 18:00:30', `start_date`='2015-06-24 00:00:01' WHERE `id`='1';
+
 /*!40000 ALTER TABLE `competition` ENABLE KEYS */;
 UNLOCK TABLES;
 

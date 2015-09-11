@@ -2,9 +2,11 @@ package com.worth.ifs.dashboard;
 
 
 import com.worth.ifs.domain.Application;
+import com.worth.ifs.domain.Competition;
 import com.worth.ifs.domain.User;
 import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.service.ApplicationService;
+import com.worth.ifs.service.CompetitionsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class AssessorController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    ApplicationService applicationService;
+    CompetitionsService competitionsService;
 
     @Autowired
     TokenAuthenticationService tokenAuthenticationService;
@@ -38,34 +40,23 @@ public class AssessorController {
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
         User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-        List<Application> applications = applicationService.getApplicationsByUserId(user.getId());
-        log.info("Total applications: " + applications.size());
+        List<Competition> competitions = competitionsService.getAll();
 
-        Map<Long, Integer> applicationProgress = new HashMap<>();
-        for (Application application : applications) {
-            log.info("State: " + application.getApplicationStatus().getName());
 
-            if(application.getApplicationStatus().getName().equals("created")){
-                Double progress = applicationService.getCompleteQuestionsPercentage(application.getId());
-                log.info("Application progress : " + progress.intValue());
-                applicationProgress.put(application.getId(), progress.intValue());
-            }
+
+
+        System.out.println("Competition names ");
+        for ( Competition c : competitions) {
+            //c.getAssessmentDaysLeft()
+            System.out.println("Competition with name: " + c.getName() + " assessmentStart: " + c.getAssessmentStartDate() + " assessmentEnd: " + c.getAssessmentEndDate());
         }
 
-        ArrayList<Application> inprogress = applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("created") || a.getApplicationStatus().getName().equals("submitted")))
-                .collect(Collectors.toCollection(ArrayList::new));
+        model.addAttribute("applicationProgress", null);
+        model.addAttribute("applicationsInProcess", null);
+        model.addAttribute("applicationsFinished", null);
 
-        ArrayList<Application> finished = applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("approved") || a.getApplicationStatus().getName().equals("rejected")))
-                .collect(Collectors.toCollection(ArrayList::new));
+        model.addAttribute("competitionsForAssessment", competitions);
 
-        log.debug("inprogress size " + inprogress.size());
-        log.debug("finished size " + finished.size());
-
-        model.addAttribute("applicationProgress", applicationProgress);
-        model.addAttribute("applicationsInProcess", inprogress);
-        model.addAttribute("applicationsFinished", finished);
 
         return "assessor-dashboard";
     }

@@ -1,10 +1,15 @@
 package com.worth.ifs.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.metamodel.Type;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +38,11 @@ public class Competition {
 
     @Column( length = 5000 )
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    @DateTimeFormat
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDate assessmentStartDate;
+    private LocalDate assessmentEndDate;
 
     public Competition() {
     }
@@ -45,15 +53,15 @@ public class Competition {
         this.sections = sections;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.toLocalDate();
+        this.endDate = endDate.toLocalDate();
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.toLocalDate(); //TO DO change back
+        this.endDate = endDate.toLocalDate();
     }
 
 
@@ -82,13 +90,22 @@ public class Competition {
         return name;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
+
+    public LocalDate getAssessmentEndDate() {
+        return assessmentEndDate;
+    }
+
+    public LocalDate getAssessmentStartDate() {
+        return assessmentStartDate;
+    }
+
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
@@ -104,21 +121,52 @@ public class Competition {
 
     @JsonIgnore
     public long getDaysLeft(){
-        long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), this.endDate);
-        return daysLeft;
+        return getDaysBetween(LocalDate.now(), this.endDate);
+    }
+    @JsonIgnore
+    public long getAssessmentDaysLeft(){
+        return getDaysBetween(LocalDate.now(), this.assessmentEndDate);
     }
     @JsonIgnore
     public long getTotalDays(){
-        long daysTotal = ChronoUnit.DAYS.between(this.startDate, this.endDate);
-        return daysTotal;
+        return getDaysBetween(this.startDate, this.endDate);
     }
     @JsonIgnore
-    public long getStartDateToEndDatePercentage(){
-        if(getDaysLeft() <= 0){
+    public long getAssessmentTotalDays() {
+        return getDaysBetween(this.assessmentStartDate, this.assessmentEndDate);
+    }
+    @JsonIgnore
+    public long getStartDateToEndDatePercentage() {
+        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
+    }
+    @JsonIgnore
+    public long getAssessmentDaysLeftPercentage() {
+        return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
+    }
+
+
+
+
+
+    /* Keep it D.R.Y */
+
+    private long getDaysBetween(LocalDate dateA, LocalDate dateB) {
+        return ChronoUnit.DAYS.between(dateA, dateB);
+
+    }
+
+    private long getDaysLeftPercentage(long daysLeft, long totalDays ) {
+        if(daysLeft <= 0){
             return 100;
         }
-        double deadlineProgress = 100-( ( (double)getDaysLeft()/(double)getTotalDays() )* 100);
+        double deadlineProgress = 100-( ( (double)daysLeft/(double)totalDays )* 100);
         long startDateToEndDatePercentage = (long) deadlineProgress;
         return startDateToEndDatePercentage;
     }
+
+
+
+
+
 }
+
