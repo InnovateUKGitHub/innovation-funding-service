@@ -7,8 +7,8 @@ public class CapitalUsage implements CostItem {
     Integer deprecation;
     String description;
     String existing;
-    Double npv = 0D;
-    Double residualValue = 0D;
+    Double npv;
+    Double residualValue;
     Integer utilisation;
 
     public CapitalUsage() {

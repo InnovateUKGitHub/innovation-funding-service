@@ -41,14 +41,10 @@ public class CostController {
 
     @RequestMapping("/update/{id}")
     public void update(@PathVariable("id") final Long id,
-            @RequestBody final Cost updatedCost) {
+            @RequestBody final Cost newCost) {
         if(costRepository.exists(id)) {
-            Cost currentCost = costRepository.findOne(id);
-            currentCost.setCost(updatedCost.getCost());
-            currentCost.setDescription(updatedCost.getDescription());
-            currentCost.setItem(updatedCost.getItem());
-            currentCost.setQuantity(updatedCost.getQuantity());
-            Cost savedCost = costRepository.save(currentCost);
+            Cost updatedCost = mapCost(id, newCost);
+            Cost savedCost = costRepository.save(updatedCost);
 
             for(CostValue costValue : updatedCost.getCostValues()) {
                 CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
@@ -57,6 +53,24 @@ public class CostController {
                 costValueRepository.save(costValue);
             }
         }
+    }
+
+    private Cost mapCost(Long id, Cost newCost) {
+        Cost currentCost = costRepository.findOne(id);
+        if(newCost.getCost()!=null) {
+            currentCost.setCost(newCost.getCost());
+        }
+        if(newCost.getDescription()!=null) {
+            currentCost.setDescription(newCost.getDescription());
+        }
+        if(newCost.getItem()!=null) {
+            currentCost.setItem(newCost.getItem());
+        }
+        if(newCost.getQuantity()!=null) {
+            currentCost.setQuantity(newCost.getQuantity());
+        }
+
+        return currentCost;
     }
 
     @RequestMapping("/get/{applicationFinanceId}")

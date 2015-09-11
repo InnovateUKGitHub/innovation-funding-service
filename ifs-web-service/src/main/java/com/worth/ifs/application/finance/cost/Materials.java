@@ -6,7 +6,7 @@ public class Materials implements CostItem {
 
     private Long id;
     private String item;
-    private Double cost = 0D;
+    private Double cost;
     private Integer quantity;
     private Double total = 0D;
 

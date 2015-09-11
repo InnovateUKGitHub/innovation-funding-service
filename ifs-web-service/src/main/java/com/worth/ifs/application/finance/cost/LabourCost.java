@@ -12,9 +12,9 @@ public class LabourCost implements CostItem {
     private String role;
     private Double grossAnnualSalary;
     private Integer labourDays;
-    private Double rate = 0D;
+    private Double rate;
     private String description;
-    private Double total  = 0D;
+    private Double total;
 
     public LabourCost() {
     }
@@ -36,21 +36,15 @@ public class LabourCost implements CostItem {
     }
 
     public Double getGrossAnnualSalary() {
-        if(grossAnnualSalary!=null) {
-            return grossAnnualSalary;
-        }
-        else {
-            return 0D;
-        }
+        return grossAnnualSalary;
     }
 
     public Double getRate(Integer workingDaysPerYear) {
         if(grossAnnualSalary!=null && workingDaysPerYear != null) {
             rate = grossAnnualSalary / workingDaysPerYear.doubleValue();
             return rate;
-        } else {
-            return 0D;
         }
+        return rate;
     }
 
     public Double getRate() {

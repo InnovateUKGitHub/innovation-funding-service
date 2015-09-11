@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class SubContractingCost implements CostItem {
     private Long id;
-    private Double cost = 0D;
+    private Double cost;
     private String country;
     private String name;
     private String role;

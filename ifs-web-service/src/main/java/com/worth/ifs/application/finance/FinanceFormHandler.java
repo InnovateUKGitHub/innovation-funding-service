@@ -41,8 +41,7 @@ public class FinanceFormHandler {
         CostItem costItem = getCostItem(costType, Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
         CostItemMapper costItemMapper = new CostItemMapper(costFields);
         Cost cost = costItemMapper.costItemToCost(costType, costItem);
-        Cost updatedCost = updateCost(cost);
-        costService.update(updatedCost);
+        costService.update(cost);
     }
 
     private List<Cost> getCostsForType(HttpServletRequest request) {

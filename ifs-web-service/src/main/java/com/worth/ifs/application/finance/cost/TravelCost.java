@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class TravelCost implements CostItem {
     private Long id;
-    private Double costPerItem = 0D;
+    private Double costPerItem;
     private String item;
     private Integer quantity;
 

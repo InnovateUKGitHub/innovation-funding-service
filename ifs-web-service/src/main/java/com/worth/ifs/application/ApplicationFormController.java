@@ -290,8 +290,7 @@ public class ApplicationFormController {
         } else if(inputIdentifier.startsWith("cost-")) {
             String fieldName = request.getParameter("fieldName");
             if(fieldName != null && value != null) {
-                // TODO: not thread safe yet
-                //financeFormHandler.handle(fieldName, value);
+                financeFormHandler.handle(fieldName, value);
             }
         } else {
             Long questionId = Long.valueOf(inputIdentifier);
