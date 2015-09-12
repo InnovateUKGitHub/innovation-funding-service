@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.user.repository.UserApplicationRoleRepository;

@@ -1,4 +1,4 @@
-package com.worth.ifs.core.util.date;
+package com.worth.ifs.commons.util.date;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

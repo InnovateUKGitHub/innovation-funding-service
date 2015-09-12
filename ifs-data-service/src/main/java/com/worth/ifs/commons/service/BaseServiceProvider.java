@@ -1,12 +1,9 @@
-package com.worth.ifs.core.service;
+package com.worth.ifs.commons.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.ResponseErrorHandler;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**

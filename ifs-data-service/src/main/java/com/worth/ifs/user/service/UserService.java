@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.core.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseServiceProvider;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Value;

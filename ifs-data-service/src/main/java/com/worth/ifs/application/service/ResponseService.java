@@ -3,7 +3,7 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.core.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;

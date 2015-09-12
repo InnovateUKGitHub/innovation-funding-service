@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.core.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

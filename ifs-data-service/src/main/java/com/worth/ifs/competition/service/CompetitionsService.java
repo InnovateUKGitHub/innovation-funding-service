@@ -2,7 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.core.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;

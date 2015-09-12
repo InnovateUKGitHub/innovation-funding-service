@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.core.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
