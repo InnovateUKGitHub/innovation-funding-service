@@ -1,12 +1,19 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.constant.ApplicationStatusConstants;
-import com.worth.ifs.domain.*;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.application.helper.SectionHelper;
 import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.*;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

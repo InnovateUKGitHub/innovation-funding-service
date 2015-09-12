@@ -1,6 +1,6 @@
 package com.worth.ifs.application.helper;
 
-import com.worth.ifs.domain.Section;
+import com.worth.ifs.application.domain.Section;
 
 import java.util.ArrayList;
 import java.util.Collections;

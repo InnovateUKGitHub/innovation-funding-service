@@ -1,6 +1,6 @@
 package com.worth.ifs.security;
 
-import com.worth.ifs.domain.User;
+import com.worth.ifs.user.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

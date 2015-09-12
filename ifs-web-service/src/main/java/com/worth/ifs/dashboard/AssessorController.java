@@ -1,12 +1,9 @@
 package com.worth.ifs.dashboard;
 
-
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Competition;
-import com.worth.ifs.domain.User;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.service.CompetitionsService;
 import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.ApplicationService;
-import com.worth.ifs.service.CompetitionsService;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

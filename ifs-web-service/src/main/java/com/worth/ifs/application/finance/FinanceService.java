@@ -1,21 +1,21 @@
 package com.worth.ifs.application.finance;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.ApplicationFinance;
-import com.worth.ifs.domain.Cost;
-import com.worth.ifs.domain.UserApplicationRole;
-import com.worth.ifs.service.ApplicationFinanceService;
-import com.worth.ifs.service.CostService;
-import com.worth.ifs.service.OrganisationService;
-import com.worth.ifs.service.UserService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.service.ApplicationFinanceService;
+import com.worth.ifs.finance.service.CostService;
+import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.service.OrganisationService;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FinanceService {

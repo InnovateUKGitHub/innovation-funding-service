@@ -1,8 +1,8 @@
 package com.worth.ifs.login;
 
-import com.worth.ifs.domain.User;
 import com.worth.ifs.security.TokenAuthenticationService;
-import com.worth.ifs.service.UserService;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

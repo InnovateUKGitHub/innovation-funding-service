@@ -2,7 +2,6 @@ package com.worth.ifs.application.finance;
 
 import com.worth.ifs.application.finance.cost.CostItem;
 import com.worth.ifs.application.finance.cost.LabourCost;
-import com.worth.ifs.domain.Cost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

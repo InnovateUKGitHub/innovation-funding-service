@@ -81,10 +81,10 @@ task client(type: Jar) {
     baseName += '-api'
     from(sourceSets.main.output) {
         // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/service/**"
-        include "com/worth/ifs/domain/**"
-        include "com/worth/ifs/constant/**"
-        include "com/worth/ifs/resource/**"
+        include "com/worth/ifs/*/service/**"
+        include "com/worth/ifs/*/domain/**"
+        include "com/worth/ifs/*/constant/**"
+        include "com/worth/ifs/*/resource/**"
     }
 }
 task clientCopy(type: Copy){

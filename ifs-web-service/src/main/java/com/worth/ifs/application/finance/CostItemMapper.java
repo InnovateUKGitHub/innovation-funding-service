@@ -1,9 +1,10 @@
 package com.worth.ifs.application.finance;
 
 import com.worth.ifs.application.finance.cost.*;
-import com.worth.ifs.domain.Cost;
-import com.worth.ifs.domain.CostField;
-import com.worth.ifs.domain.CostValue;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.CostValue;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,8 +1,7 @@
 package com.worth.ifs.application.finance;
 
 import com.worth.ifs.application.finance.cost.CostItem;
-import com.worth.ifs.domain.Cost;
-import com.worth.ifs.service.CostService;
+import com.worth.ifs.finance.domain.Cost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;

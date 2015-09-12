@@ -1,6 +1,6 @@
 package com.worth.ifs;
 
-import com.worth.ifs.repository.UserRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

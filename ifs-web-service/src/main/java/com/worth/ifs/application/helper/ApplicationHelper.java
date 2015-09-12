@@ -1,9 +1,9 @@
 package com.worth.ifs.application.helper;
 
-import com.worth.ifs.domain.Application;
-import com.worth.ifs.domain.Organisation;
-import com.worth.ifs.domain.User;
-import com.worth.ifs.domain.UserApplicationRole;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserApplicationRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

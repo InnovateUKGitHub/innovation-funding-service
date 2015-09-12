@@ -1,8 +1,8 @@
 package com.worth.ifs.application.finance;
 
 import com.worth.ifs.application.finance.cost.*;
-import com.worth.ifs.domain.Cost;
-import com.worth.ifs.domain.CostValue;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostValue;
 
 /**
  * Creates specific costs for each category
