@@ -1,8 +1,8 @@
 package com.worth.ifs.dashboard;
 
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.service.CompetitionsService;
-import com.worth.ifs.security.TokenAuthenticationService;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,18 +29,15 @@ public class AssessorController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    CompetitionsService competitionsService;
+    CompetitionService competitionService;
 
     @Autowired
-    TokenAuthenticationService tokenAuthenticationService;
+    UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-        List<Competition> competitions = competitionsService.getAll();
-
-
-
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        List<Competition> competitions = competitionService.getAllCompetitions();
 
         System.out.println("Competition names ");
         for ( Competition c : competitions) {

@@ -3,7 +3,7 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ApplicationService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ * ApplicationRestRestService is a utility to use client-side to retrieve Application data from the data-service controllers.
  */
 
 @Service
-public class ResponseService extends BaseServiceProvider {
+public class ResponseRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.response}")
     String responseRestURL;
 
@@ -67,11 +67,11 @@ public class ResponseService extends BaseServiceProvider {
                 "&isComplete={isComplete}";
 
         HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
-        log.info("ApplicationService.markQuestionAsComplete send it!");
+        log.info("ApplicationRestRestService.markQuestionAsComplete send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, isComplete);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationService, marked as complete == ok : "+ response.getBody());
+            log.info("ApplicationRestRestService, marked as complete == ok : "+ response.getBody());
             return true;
         } else {
             log.warn("Call failed.....");
@@ -90,11 +90,11 @@ public class ResponseService extends BaseServiceProvider {
 
         HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
 
-        log.info("ApplicationService.assignQuestion send it!");
+        log.info("ApplicationRestRestService.assignQuestion send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, assigneeId);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationService, assigned == ok : "+ response.getBody());
+            log.info("ApplicationRestRestService, assigned == ok : "+ response.getBody());
             return true;
         } else {
             log.warn("Call failed.....");

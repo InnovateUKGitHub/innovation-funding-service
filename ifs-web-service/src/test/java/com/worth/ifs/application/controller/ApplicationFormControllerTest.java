@@ -56,9 +56,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ApplicationFinance applicationFinance = new ApplicationFinance();
         applicationFinance.setId(1L);
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
-        when(userService.findUserApplicationRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(processRoleService.findUserApplicationRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
         when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/application-form/1"))
@@ -74,8 +74,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
         ApplicationFinance applicationFinance = new ApplicationFinance();
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
         when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))

@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class CostService extends BaseServiceProvider {
+public class CostRestService extends BaseRestServiceProvider {
     private final Log log = LogFactory.getLog(getClass());
 
     @Value("${ifs.data.service.rest.cost}")
@@ -39,7 +39,7 @@ public class CostService extends BaseServiceProvider {
         //set your entity to send
         HttpEntity<Cost> entity = new HttpEntity<>(cost, getJSONHeaders());
 
-        log.info("ApplicationService.saveApplication send it!");
+        log.info("ApplicationRestRestService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
                 , String.class);
 

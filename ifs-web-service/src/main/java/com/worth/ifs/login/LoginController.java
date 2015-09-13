@@ -1,12 +1,12 @@
 package com.worth.ifs.login;
 
-import com.worth.ifs.security.TokenAuthenticationService;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,10 +26,8 @@ public class LoginController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    UserService userService;
+    UserAuthenticationService userAuthenticationService;
 
-    @Autowired
-    TokenAuthenticationService tokenAuthenticationService;
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
@@ -38,15 +36,22 @@ public class LoginController {
     }
     @RequestMapping(value="/login", params={"logout"})
     public String logout(HttpServletResponse response) {
-        // Removing the cookie is not possible, just expire it as soon as possible.
-        tokenAuthenticationService.removeAuthentication(response);
+        userAuthenticationService.removeAuthentication(response);
         return "redirect:/login";
     }
 
-    private String redirectionForUknownUser() {
-        System.out.println("No user found");
-        log.error("no user found");
-        return "redirect:/login?invalid";
+    @RequestMapping(value="/login", method=RequestMethod.POST)
+    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response) {
+        String destination = "";
+        try {
+            User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
+            userAuthenticationService.addAuthentication(response, authenticatedUser);
+            destination = redirectionForUser(authenticatedUser);
+
+        } catch(BadCredentialsException bce) {
+            destination = redirectionForUknownUser();
+        }
+        return destination;
     }
 
     private String redirectionForUser(User user) {
@@ -54,21 +59,9 @@ public class LoginController {
                 "redirect:/assessor/dashboard" : "redirect:/applicant/dashboard";
     }
 
-    @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response) {
-
-        // 1. gets the user having his login
-        User user = userService.retrieveUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
-
-        // 2. sets the correct destination for this user
-        String destination = user == null ? redirectionForUknownUser() : redirectionForUser(user);
-
-        // 3. saves authentication if valid user
-        if ( user != null )
-            tokenAuthenticationService.addAuthentication(response, user.getToken());
-
-       // 4. returns the proper redirect destination
-        return destination;
+    private String redirectionForUknownUser() {
+        log.info("No user found");
+        return "redirect:/login?invalid";
     }
 }
 

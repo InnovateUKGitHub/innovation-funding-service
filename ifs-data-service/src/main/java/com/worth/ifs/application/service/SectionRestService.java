@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * UserService is a utility to use client-side to retrieve User data from the data-service controllers.
+ * UserRestService is a utility to use client-side to retrieve User data from the data-service controllers.
  */
 
 @Service
-public class SectionService extends BaseServiceProvider {
+public class SectionRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.section}")
     String sectionRestURL;
 

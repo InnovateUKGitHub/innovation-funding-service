@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class CostFieldService extends BaseServiceProvider {
+public class CostFieldRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 

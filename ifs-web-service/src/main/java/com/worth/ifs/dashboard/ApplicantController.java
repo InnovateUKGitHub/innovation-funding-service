@@ -4,6 +4,7 @@ package com.worth.ifs.dashboard;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.security.TokenAuthenticationService;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,40 +34,18 @@ public class ApplicantController {
     ApplicationService applicationService;
 
     @Autowired
-    TokenAuthenticationService tokenAuthenticationService;
+    UserAuthenticationService userAuthenticationService;
+
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-        List<Application> applications = applicationService.getApplicationsByUserId(user.getId());
-        log.info("Total applications: " + applications.size());
+        User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        Map<Long, Integer> applicationProgress = new HashMap<>();
-        for (Application application : applications) {
-            log.info("State: " + application.getApplicationStatus().getName());
-
-            if(application.getApplicationStatus().getName().equals("created")){
-                Double progress = applicationService.getCompleteQuestionsPercentage(application.getId());
-                log.info("Application progress : " + progress.intValue());
-                applicationProgress.put(application.getId(), progress.intValue());
-            }
-        }
-
-        ArrayList<Application> inprogress = applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("created") || a.getApplicationStatus().getName().equals("submitted")))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        ArrayList<Application> finished = applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("approved") || a.getApplicationStatus().getName().equals("rejected")))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        log.debug("inprogress size " + inprogress.size());
-        log.debug("finished size " + finished.size());
-
-        model.addAttribute("applicationProgress", applicationProgress);
-        model.addAttribute("applicationsInProcess", inprogress);
-        model.addAttribute("applicationsFinished", finished);
+        model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
+        model.addAttribute("applicationsInProcess", applicationService.getInProgress(user.getId()));
+        model.addAttribute("applicationsFinished", applicationService.getFinished(user.getId()));
 
         return "applicant-dashboard";
     }
+
 }

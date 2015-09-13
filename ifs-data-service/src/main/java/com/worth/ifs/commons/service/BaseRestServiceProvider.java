@@ -7,10 +7,10 @@ import org.springframework.http.MediaType;
 import java.util.Arrays;
 
 /**
- * BaseServiceProvider provides a base for all Service classes.
+ * BaseRestServiceProvider provides a base for all Service classes.
  */
 
-public class BaseServiceProvider {
+public class BaseRestServiceProvider {
 
     @Value("${ifs.data.service.rest.baseURL}")
     protected String dataRestServiceURL;

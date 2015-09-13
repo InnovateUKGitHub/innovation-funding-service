@@ -1,12 +1,15 @@
-package com.worth.ifs.application.finance;
+package com.worth.ifs.application.finance.service;
 
+import com.worth.ifs.application.finance.CostCategory;
+import com.worth.ifs.application.finance.CostType;
+import com.worth.ifs.application.finance.OrganisationFinance;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.service.ApplicationFinanceService;
-import com.worth.ifs.finance.service.CostService;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.UserApplicationRole;
-import com.worth.ifs.user.service.OrganisationService;
-import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.UserRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +21,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FinanceService {
+public class FinanceServiceImpl {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    UserService userService;
+    UserRestService userRestService;
 
     @Autowired
-    CostService costService;
+    CostRestService costRestService;
 
     @Autowired
-    OrganisationService organisationService;
+    OrganisationRestService organisationRestService;
 
     @Autowired
-    ApplicationFinanceService applicationFinanceService;
+    ApplicationFinanceRestService applicationFinanceRestService;
 
     List<OrganisationFinance> organisationFinances = new ArrayList<>();
 
     public EnumMap<CostType, CostCategory> getFinances(Long applicationFinanceId) {
-        List<Cost> costs = costService.getCosts(applicationFinanceId);
+        List<Cost> costs = costRestService.getCosts(applicationFinanceId);
         OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinanceId, costs);
         EnumMap<CostType, CostCategory> organisationFinanceDetails = organisationFinance.getOrganisationFinances();
         organisationFinances.add(organisationFinance);
@@ -54,24 +57,24 @@ public class FinanceService {
     }
 
     public ApplicationFinance addApplicationFinance(Long applicationId, Long userId) {
-        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(userId, applicationId);
+        UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
 
         if(userApplicationRole.getOrganisation()!=null) {
-            return applicationFinanceService.addApplicationFinanceForOrganisation(applicationId, userApplicationRole.getOrganisation().getId());
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, userApplicationRole.getOrganisation().getId());
         }
         return null;
     }
 
     public ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
-        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(userId, applicationId);
-        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
+        UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     public List<ApplicationFinance> getApplicationFinances(Long applicationId) {
-        return applicationFinanceService.getApplicationFinances(applicationId);
+        return applicationFinanceRestService.getApplicationFinances(applicationId);
     }
 
     public void addCost(Long applicationFinanceId , Long questionId) {
-        costService.add(applicationFinanceId, questionId);
+        costRestService.add(applicationFinanceId, questionId);
     }
 }

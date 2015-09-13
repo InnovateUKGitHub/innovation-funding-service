@@ -24,14 +24,14 @@ import java.util.List;
 public class StatelessAuthenticationFilter extends GenericFilterBean {
 
     @Autowired
-    private TokenAuthenticationService authenticationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         if(!ignoreRequest(httpRequest)) {
-            Authentication authentication = authenticationService.getAuthentication(httpRequest);
+            Authentication authentication = userAuthenticationService.getAuthentication(httpRequest);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

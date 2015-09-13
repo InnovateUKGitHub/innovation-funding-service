@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.service;
 
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ApplicationFinanceService extends BaseServiceProvider {
+public class ApplicationFinanceRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.applicationfinance}")
     String applicationFinanceRestURL;
 

@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.commons.service.BaseServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ApplicationService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ * ApplicationRestRestService is a utility to use client-side to retrieve Application data from the data-service controllers.
  */
 
 @Service
-public class CompetitionsService extends BaseServiceProvider {
+public class CompetitionsRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.competition}")
     String competitionsRestURL;
 

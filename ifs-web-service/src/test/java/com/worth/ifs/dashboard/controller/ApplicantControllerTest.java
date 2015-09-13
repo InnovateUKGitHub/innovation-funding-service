@@ -55,8 +55,8 @@ public class ApplicantControllerTest extends BaseUnitTest {
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
-                .andExpect(model().attribute("applicationsInProcess", hasSize(2)))
-                .andExpect(model().attribute("applicationsFinished", hasSize(2)));
+                .andExpect(model().attribute("applicationsInProcess", hasSize(0)))
+                .andExpect(model().attribute("applicationsFinished", hasSize(0)));
 
     }
 }

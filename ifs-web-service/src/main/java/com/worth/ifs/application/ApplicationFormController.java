@@ -8,20 +8,14 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.FinanceFormHandler;
-import com.worth.ifs.application.finance.FinanceService;
+import com.worth.ifs.application.finance.service.FinanceServiceImpl;
 import com.worth.ifs.application.helper.ApplicationHelper;
-import com.worth.ifs.application.helper.SectionHelper;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.service.ApplicationFinanceService;
-import com.worth.ifs.security.TokenAuthenticationService;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
-import com.worth.ifs.user.service.OrganisationService;
-import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,26 +46,24 @@ public class ApplicationFormController {
     @Autowired
     ResponseService responseService;
     @Autowired
-    ApplicationFinanceService applicationFinanceService;
-    @Autowired
-    OrganisationService organisationService;
-    @Autowired
     UserService userService;
+    @Autowired
+    ProcessRoleService processRoleService;
     @Autowired
     SectionService sectionService;
     @Autowired
-    FinanceService financeService;
+    FinanceServiceImpl financeService;
     @Autowired
     FinanceFormHandler financeFormHandler;
     
     @Autowired
-    TokenAuthenticationService tokenAuthenticationService;
+    UserAuthenticationService userAuthenticationService;
 
 
     @RequestMapping("/{applicationId}")
     public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request){
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         this.addApplicationDetails(applicationId, user.getId(), 0L, model);
         return "application-form";
     }
@@ -81,9 +73,8 @@ public class ApplicationFormController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
                                      HttpServletRequest request){
-        Application app = applicationService.getApplicationById(applicationId);
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-
+        Application app = applicationService.getById(applicationId);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
 
         return "application-form";
@@ -96,7 +87,7 @@ public class ApplicationFormController {
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinance applicationFinance = getApplicationFinanceDetails(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
@@ -105,8 +96,8 @@ public class ApplicationFormController {
 
 
     private ApplicationFinance getApplicationFinanceDetails(Long userId, Long applicationId) {
-        UserApplicationRole userApplicationRole = userService.findUserApplicationRole(userId, applicationId);
-        return applicationFinanceService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
+        UserApplicationRole userApplicationRole = processRoleService.findUserApplicationRole(userId, applicationId);
+        return financeService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     /**
@@ -114,34 +105,25 @@ public class ApplicationFormController {
      */
     private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
         ApplicationHelper applicationHelper = new ApplicationHelper();
-        Application application = applicationService.getApplicationById(applicationId);
-        SectionHelper sectionHelper = new SectionHelper();
+        Application application = applicationService.getById(applicationId);
         model.addAttribute("currentApplication", application);
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
-        // List<UserApplicationRole> relatedUsers = userService.findUserApplicationRole(application.getId());
+        model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
         model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
 
-        List<Section> sectionsList = sectionHelper.getParentSections(competition.getSections());
-        // List to map convertion
+        List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
                         Function.identity()));
         model.addAttribute("sections", sections);
+        model.addAttribute("completedSections", sectionService.getCompleted(applicationId));
 
-        List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
-        model.addAttribute("completedSections", completedSections);
-
-        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
-        HashMap<Long, Response> responseMap = new HashMap<>();
-        for (Response response : responses) {
-            responseMap.put(response.getQuestion().getId(), response);
-        }
-        model.addAttribute("responses", responseMap);
+        List<Response> responses = responseService.getByApplication(applicationId);
+        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
 
         addFinanceDetails(model, applicationId, userId);
 
@@ -175,7 +157,7 @@ public class ApplicationFormController {
         log.debug("application id: " + applicationId + " userId " + userId + " finance id " + applicationFinance.getId());
         model.addAttribute("organisationFinance", financeService.getFinances(applicationFinance.getId()));
         model.addAttribute("financeTotal", financeService.getTotal(applicationFinance.getId()));
-        model.addAttribute("financeSection", sectionService.getSection("Your finances"));
+        model.addAttribute("financeSection", sectionService.getByName("Your finances"));
         model.addAttribute("organisationFinances", financeService.getFinances(applicationFinance.getId()));
     }
 
@@ -188,9 +170,8 @@ public class ApplicationFormController {
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request){
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-
-        Application application = applicationService.getApplicationById(applicationId);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -200,35 +181,38 @@ public class ApplicationFormController {
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> log.info("key "+ key));
+        params.forEach((key, value) -> log.info("key " + key));
 
-        saveApplicationDetails(application, params);
+        setApplicationDetails(application, params);
+        markQuestion(request, params, applicationId, user.getId());
+        assignQuestion(request, params, applicationId, user.getId());
 
+        applicationService.save(application);
+        financeFormHandler.handle(request);
+
+        addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        model.addAttribute("applicationSaved", true);
+        return "application-form";
+    }
+
+    private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
         if(params.containsKey("mark_as_complete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
-            responseService.markQuestionAsComplete(applicationId, questionId,user.getId(), true);
+            responseService.markQuestionAsComplete(applicationId, questionId,userId);
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
-            responseService.markQuestionAsComplete(applicationId, questionId, user.getId(), false);
+            responseService.markQuestionAsInComplete(applicationId, questionId, userId);
         }
+    }
+
+    private void assignQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
         if(params.containsKey("assign_question")){
-            log.info("assign question now.");
             String assign = request.getParameter("assign_question");
             Long questionId = Long.valueOf(assign.split("_")[0]);
             Long assigneeId = Long.valueOf(assign.split("_")[1]);
 
-            log.info("assign q: "+ questionId);
-            log.info("assign a: "+ assigneeId);
-
-            responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
+            responseService.assignQuestion(applicationId, questionId, userId, assigneeId);
         }
-
-        financeFormHandler.handle(request);
-
-        addApplicationDetails(applicationId, user.getId(), sectionId, model);
-
-        model.addAttribute("applicationSaved", true);
-        return "application-form";
     }
 
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
@@ -236,7 +220,7 @@ public class ApplicationFormController {
         for (Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){
                 String value = request.getParameter("question[" + question.getId() + "]");
-                Boolean saved = responseService.saveQuestionResponse(userId, applicationId, question.getId(), value);
+                Boolean saved = responseService.save(userId, applicationId, question.getId(), value);
                 if(!saved){
                     log.error("save failed. " + question.getId());
                 }
@@ -244,7 +228,7 @@ public class ApplicationFormController {
         }
     }
 
-    private void saveApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
+    private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
         if(applicationDetailParams.containsKey("question[application_details-title]")){
             String title = applicationDetailParams.get("question[application_details-title]")[0];
             application.setName(title);
@@ -260,8 +244,6 @@ public class ApplicationFormController {
             Long duration = Long.valueOf(applicationDetailParams.get("question[application_details-duration]")[0]);
             application.setDurationInMonths(duration);
         }
-
-        applicationService.saveApplication(application);
     }
 
     /**
@@ -273,18 +255,18 @@ public class ApplicationFormController {
                                                   @RequestParam("applicationId") Long applicationId,
                                                   HttpServletRequest request) {
 
-        User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
+        User user = userAuthenticationService.getAuthenticatedUser(request);
 
         if(inputIdentifier.equals("application_details-title")){
-            Application application = applicationService.getApplicationById(applicationId);
+            Application application = applicationService.getById(applicationId);
             application.setName(value);
-            applicationService.saveApplication(application);
+            applicationService.save(application);
         } else if(inputIdentifier.equals("application_details-duration")){
-            Application application = applicationService.getApplicationById(applicationId);
+            Application application = applicationService.getById(applicationId);
             application.setDurationInMonths(Long.valueOf(value));
-            applicationService.saveApplication(application);
+            applicationService.save(application);
         } else if(inputIdentifier.startsWith("application_details-startdate")){
-            Application application = applicationService.getApplicationById(applicationId);
+            Application application = applicationService.getById(applicationId);
             LocalDate startDate = application.getStartDate();
 
             if(startDate == null){
@@ -298,7 +280,7 @@ public class ApplicationFormController {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
             }
             application.setStartDate(startDate);
-            applicationService.saveApplication(application);
+            applicationService.save(application);
         } else if(inputIdentifier.startsWith("cost-")) {
             String fieldName = request.getParameter("fieldName");
             if(fieldName != null && value != null) {
@@ -306,7 +288,7 @@ public class ApplicationFormController {
             }
         } else {
             Long questionId = Long.valueOf(inputIdentifier);
-            responseService.saveQuestionResponse(user.getId(), applicationId, questionId, value);
+            responseService.save(user.getId(), applicationId, questionId, value);
         }
 
         ObjectMapper mapper = new ObjectMapper();

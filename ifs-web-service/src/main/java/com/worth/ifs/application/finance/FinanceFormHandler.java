@@ -4,10 +4,9 @@ import com.worth.ifs.application.finance.cost.CostItem;
 import com.worth.ifs.application.finance.cost.LabourCost;
 import com.worth.ifs.application.finance.cost.Materials;
 import com.worth.ifs.application.finance.cost.SubContractingCost;
+import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.service.CostFieldService;
-import com.worth.ifs.finance.service.CostService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class FinanceFormHandler {
     private Object costItemsForType;
 
     @Autowired
-    CostFieldService costFieldService;
-
-    @Autowired
     CostService costService;
 
     public void handle(HttpServletRequest request) {
@@ -35,7 +31,7 @@ public class FinanceFormHandler {
     }
 
     public void handle(String fieldName, String value) {
-        List<CostField> costFields = costFieldService.getCostFields();
+        List<CostField> costFields = costService.getCostFields();
         CostFormField costFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(costFormField.getKeyType());
         CostItem costItem = getCostItem(costType, Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
@@ -45,7 +41,7 @@ public class FinanceFormHandler {
     }
 
     private List<Cost> getCostsForType(HttpServletRequest request) {
-        List<CostField> costFields = costFieldService.getCostFields();
+        List<CostField> costFields = costService.getCostFields();
         return mapCostItems(request, costFields);
     }
 
@@ -201,7 +197,7 @@ public class FinanceFormHandler {
     }
 
     private Cost updateCost(Cost cost) {
-        Cost originalCost = costService.findById(cost.getId());
+        Cost originalCost = costService.getById(cost.getId());
         if(cost.getCost()!=null) {
             originalCost.setCost(cost.getCost());
         }

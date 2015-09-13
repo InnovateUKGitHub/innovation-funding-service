@@ -2,7 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ApplicationService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ * ApplicationRestRestService is a utility to use client-side to retrieve Application data from the data-service controllers.
  */
 
 @Service
-public class ApplicationService extends BaseServiceProvider {
+public class ApplicationRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
 
@@ -38,18 +38,18 @@ public class ApplicationService extends BaseServiceProvider {
     }
 
     public void saveApplication(Application application){
-        log.info("ApplicationService.saveApplication "+ application.getId());
+        log.info("ApplicationRestRestService.saveApplication "+ application.getId());
 
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/saveApplicationDetails/" +application.getId();
 
         HttpEntity<Application> entity = new HttpEntity<>(application, getJSONHeaders());
-        log.info("ApplicationService.saveApplication send it!");
+        log.info("ApplicationRestRestService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
                 , String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationService, save == ok : "+ response.getBody());
+            log.info("ApplicationRestRestService, save == ok : "+ response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             //  bad credentials?
             log.info("Unauthorized request.");
@@ -67,11 +67,11 @@ public class ApplicationService extends BaseServiceProvider {
 
         HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
 
-        log.info("ApplicationService.updateApplicationStatus send it!");
+        log.info("ApplicationRestRestService.updateApplicationStatus send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, statusId);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationService, save == ok : "+ response.getBody());
+            log.info("ApplicationRestRestService, save == ok : "+ response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             //  bad credentials?
             log.info("Unauthorized request.");

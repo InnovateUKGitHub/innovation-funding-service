@@ -3,17 +3,15 @@ package com.worth.ifs.application;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.application.helper.ApplicationHelper;
-import com.worth.ifs.application.helper.SectionHelper;
-import com.worth.ifs.security.TokenAuthenticationService;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,7 @@ import java.util.*;
 @RequestMapping("/application")
 public class ApplicationController {
     private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     ResponseService responseService;
 
@@ -49,7 +48,8 @@ public class ApplicationController {
     UserService userService;
 
     @Autowired
-    TokenAuthenticationService tokenAuthenticationService;
+    UserAuthenticationService userAuthenticationService;
+
 
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
@@ -68,17 +68,14 @@ public class ApplicationController {
     }
 
     @RequestMapping("/{applicationId}/summary")
-      public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
-        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
-        HashMap<Long, Response> responseMap = new HashMap<>();
-        for (Response response : responses) {
-            responseMap.put(response.getQuestion().getId(), response);
-        }
-        model.addAttribute("responses", responseMap);
+    public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
+        List<Response> responses = responseService.getByApplication(applicationId);
+        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
 
         addApplicationDetails(applicationId, model);
         return "application-summary";
     }
+
     @RequestMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
         addApplicationDetails(applicationId, model);
@@ -87,7 +84,7 @@ public class ApplicationController {
 
     @RequestMapping("/{applicationId}/submit")
     public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        applicationService.updateApplicationStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
+        applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
         addApplicationDetails(applicationId, model);
         return "application-submitted";
     }
@@ -100,8 +97,7 @@ public class ApplicationController {
      */
     private void addApplicationDetails(Long applicationId, Model model) {
         ApplicationHelper applicationHelper = new ApplicationHelper();
-        Application application = applicationService.getApplicationById(applicationId);
-        SectionHelper sectionHelper = new SectionHelper();
+        Application application = applicationService.getById(applicationId);
 
         if(application == null){
             throw new ObjectNotFoundException("Application not found.");
@@ -110,27 +106,15 @@ public class ApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
-        model.addAttribute("assignableUsers", userService.findAssignableUsers(application.getId()));
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null ));
-
-        List<Long> completedSections = sectionService.getCompletedSectionIds(applicationId);
-        model.addAttribute("completedSections", completedSections);
-        List<Long> incompletedSections = sectionService.getIncompletedSectionIds(applicationId);
-        model.addAttribute("incompletedSections", incompletedSections);
-
-        List<Response> responses = responseService.getResponsesByApplicationId(applicationId);
-        HashMap<Long, Response> responseMap = new HashMap<>();
-        for (Response response : responses) {
-            responseMap.put(response.getQuestion().getId(), response);
-        }
-        model.addAttribute("responses", responseMap);
-
-        Double completedQuestionsPercentage = applicationService.getCompleteQuestionsPercentage(application.getId());
-        model.addAttribute("completedQuestionsPercentage", completedQuestionsPercentage.intValue());
-
-        List<Section> sections = sectionHelper.getParentSections(competition.getSections());
-        model.addAttribute("sections", sections);
+        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
+        model.addAttribute("sections", sectionService.getParentSections(competition.getSections()));
+        model.addAttribute("completedSections", sectionService.getCompleted(applicationId));
+        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        List<Response> responses = responseService.getByApplication(applicationId);
+        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
 
         int todayDay =  LocalDateTime.now().getDayOfYear();
         model.addAttribute("todayDay", todayDay);
@@ -138,36 +122,38 @@ public class ApplicationController {
     }
 
     /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button.
+     * Assign a question to a user
+     *
+     * @param model showing details
+     * @param applicationId the application for which the user is assigned
+     * @param sectionId section id for showing details
+     * @param request request parameters
+     * @return
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String applicationFormSubmit(Model model,
+    public String assignQuestionToUser(Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request){
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> log.info("key "+ key));
-
         if(params.containsKey("assign_question")) {
-            log.info("assign question now.");
-            String[] assign = request.getParameter("assign_question").split("_");
-            Long questionId = Long.valueOf(assign[0]);
-            Long assigneeId = Long.valueOf(assign[1]);
-
-            //gets the logged user details
-            User user = (User)tokenAuthenticationService.getAuthentication(request).getDetails();
-            //process chain starts...
-            responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
+            assignQuestion(request, applicationId);
         }
 
-        //set all the application details
         addApplicationDetails(applicationId, model);
-        //sets success feedback
         model.addAttribute("applicationSaved", true);
 
         return "application-details";
+    }
+
+    private void assignQuestion(HttpServletRequest request, Long applicationId) {
+        String[] assign = request.getParameter("assign_question").split("_");
+        Long questionId = Long.valueOf(assign[0]);
+        Long assigneeId = Long.valueOf(assign[1]);
+
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
     }
 }

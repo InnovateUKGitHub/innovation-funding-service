@@ -2,22 +2,17 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.finance.FinanceService;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.finance.service.FinanceServiceImpl;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.service.ApplicationFinanceService;
-import com.worth.ifs.security.TokenAuthenticationService;
 import com.worth.ifs.security.UserAuthentication;
+import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
-import com.worth.ifs.user.service.OrganisationService;
-import com.worth.ifs.user.service.UserService;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.HandlerMethod;
@@ -42,19 +37,19 @@ public class BaseUnitTest {
     public UserAuthentication loggedInUserAuthentication;
 
     @Mock
-    TokenAuthenticationService tokenAuthenticationService;
+    public UserAuthenticationService userAuthenticationService;
     @Mock
     public ResponseService responseService;
     @Mock
     public ApplicationService applicationService;
     @Mock
-    public OrganisationService organisationService;
-    @Mock
-    public ApplicationFinanceService applicationFinanceService;
+    public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
     @Mock
-    public FinanceService financeService;
+    public FinanceServiceImpl financeService;
+    @Mock
+    public ApplicationRestService applicationRestService;
 
     @Mock
     public SectionService sectionService;
@@ -86,7 +81,8 @@ public class BaseUnitTest {
     }
 
     public void loginDefaultUser(){
-        when(tokenAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
+        when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(loggedInUser);
     }
 
     public void setupCompetition(){
@@ -168,15 +164,16 @@ public class BaseUnitTest {
         users.get(1).addUserApplicationRole(userAppRole5);
         applications = Arrays.asList(app1, app2, app3, app4);
 
-        when(sectionService.getCompletedSectionIds(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
-        when(sectionService.getIncompletedSectionIds(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
-        when(userService.findUserApplicationRole(app1.getId(), loggedInUser.getId())).thenReturn(userAppRole1);
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app1.getId())).thenReturn(app1);
-        when(applicationService.getApplicationById(app2.getId())).thenReturn(app2);
-        when(applicationService.getApplicationById(app3.getId())).thenReturn(app3);
-        when(applicationService.getApplicationById(app4.getId())).thenReturn(app4);
-        when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
+        when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
+        when(sectionService.getCompleted(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
+        when(sectionService.getInCompleted(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
+        when(processRoleService.findUserApplicationRole(app1.getId(), loggedInUser.getId())).thenReturn(userAppRole1);
+        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app1.getId())).thenReturn(app1);
+        when(applicationService.getById(app2.getId())).thenReturn(app2);
+        when(applicationService.getById(app3.getId())).thenReturn(app3);
+        when(applicationService.getById(app4.getId())).thenReturn(app4);
+        //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 
     }
 
@@ -195,13 +192,13 @@ public class BaseUnitTest {
         questions.get(20L).setResponses(Arrays.asList(response));
         questions.get(21L).setResponses(Arrays.asList(response2));
 
-        when(responseService.getResponsesByApplicationId(application.getId())).thenReturn(responses);
+        when(responseService.getByApplication(application.getId())).thenReturn(responses);
 
         //TODO: create representative application finance resource object.
         ApplicationFinance applicationFinance = new ApplicationFinance();
         long organisationId = userApplicationRole.getOrganisation().getId();
         Long applicationId = application.getId();
-        when(applicationFinanceService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinance);
+        //when(processRoleService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinance);
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

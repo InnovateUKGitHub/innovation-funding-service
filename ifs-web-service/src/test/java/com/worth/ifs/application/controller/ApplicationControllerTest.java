@@ -54,8 +54,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
      public void testApplicationDetails() throws Exception {
         Application app = applications.get(0);
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+       // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
 
 
         System.out.println("Show dashboard for application: " + app.getId());
@@ -71,8 +71,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testApplicationSummary() throws Exception {
         Application app = applications.get(0);
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
 
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
@@ -88,8 +88,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testNotExistingApplicationDetails() throws Exception {
         Application app = applications.get(0);
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
@@ -102,8 +102,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
         Section section = sections.get(2);
 
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
@@ -124,8 +124,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testApplicationConfirmSubmit() throws Exception {
             Application app = applications.get(0);
 
-            when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-            when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+            //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+            when(applicationService.getById(app.getId())).thenReturn(app);
 
             mockMvc.perform(get("/application/1/confirm-submit"))
                     .andExpect(view().name("application-confirm-submit"))
@@ -138,8 +138,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
         Application app = applications.get(0);
 
 
-        when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getApplicationById(app.getId())).thenReturn(app);
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationService.getById(app.getId())).thenReturn(app);
 
         MvcResult result = mockMvc.perform(get("/application/1/submit"))
                 .andExpect(view().name("application-submitted"))

@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -71,8 +72,8 @@ public class LoginControllerTest extends BaseUnitTest {
 
     private ResultActions performLogin(String loginToken) throws Exception {
         String userPass = "test";
-        when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
-
+        //when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
+        when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
         return mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", loggedInUser.getEmail())
@@ -86,8 +87,7 @@ public class LoginControllerTest extends BaseUnitTest {
      */
     @Test
     public void testSubmitInvalidLogin() throws Exception {
-        when(userService.retrieveUserByEmailAndPassword("info@test.nl", "testFOUT")).thenReturn(null);
-
+        when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", "info@test.nl")
@@ -103,7 +103,7 @@ public class LoginControllerTest extends BaseUnitTest {
     @Test
     public void testLogout() throws Exception {
         this.loginDefaultUser();
-        when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), "test")).thenReturn(loggedInUser);
+        //when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), "test")).thenReturn(loggedInUser);
 
 
                 mockMvc.perform(get("/login").param("logout", "true"))

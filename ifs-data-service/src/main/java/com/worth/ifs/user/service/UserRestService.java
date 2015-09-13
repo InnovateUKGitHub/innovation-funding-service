@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.service.BaseServiceProvider;
+import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * UserService is a utility to use client-side to retrieve User data from the data-service controllers.
+ * UserRestService is a utility to use client-side to retrieve User data from the data-service controllers.
  */
 
 @Service
-public class UserService extends BaseServiceProvider {
+public class UserRestService extends BaseRestServiceProvider {
     @Value("${ifs.data.service.rest.user}")
     String userRestURL;
 

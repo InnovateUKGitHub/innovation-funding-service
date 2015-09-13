@@ -1,14 +1,30 @@
-package com.worth.ifs.application.helper;
+package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SectionHelper {
+@Service
+public class SectionServiceImpl implements SectionService {
+    @Autowired
+    SectionRestService sectionRestService;
 
+    @Override
+    public List<Long> getInCompleted(Long applicationId) {
+        return sectionRestService.getIncompletedSectionIds(applicationId);
+    }
+
+    @Override
+    public List<Long> getCompleted(Long applicationId) {
+        return sectionRestService.getCompletedSectionIds(applicationId);
+    }
+
+    @Override
     public List<Section> getParentSections(List<Section> sections) {
         List<Section> childSections = new ArrayList<Section>();
         getChildSections(sections, childSections);
@@ -33,4 +49,8 @@ public class SectionHelper {
         return children;
     }
 
+    @Override
+    public Section getByName(String name) {
+        return sectionRestService.getSection(name);
+    }
 }

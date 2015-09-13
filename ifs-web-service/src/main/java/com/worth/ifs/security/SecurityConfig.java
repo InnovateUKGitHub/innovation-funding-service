@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
             .and()
-                .logout().deleteCookies(TokenAuthenticationService.getAuthenticationCookieName())
+                .logout().deleteCookies("IFS_AUTH_TOKEN")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()
@@ -53,9 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .headers().cacheControl()
             .and()
-                // Custom Token based authentication based on the header previously given to the client
+                    // Custom Token based authentication based on the header previously given to the client
                 .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-                //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+        //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
     }
 
     private CsrfTokenRepository csrfTokenRepository() {
