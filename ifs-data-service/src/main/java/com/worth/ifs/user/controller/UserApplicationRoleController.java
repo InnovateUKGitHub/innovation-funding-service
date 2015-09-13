@@ -30,4 +30,9 @@ public class UserApplicationRoleController {
         return userApplicationRoleRepository.findByApplicationId(applicationId);
     }
 
+    @RequestMapping("/findByUserId/{userId}")
+    public List<UserApplicationRole> findByUser(@PathVariable("userId") final Long userId) {
+        return userApplicationRoleRepository.findByUserId(userId);
+    }
+
 }

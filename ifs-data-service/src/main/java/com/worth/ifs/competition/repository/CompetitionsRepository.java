@@ -3,14 +3,12 @@
  */
 package com.worth.ifs.competition.repository;
 
-        import com.worth.ifs.competition.domain.Competition;
-        import org.springframework.data.repository.PagingAndSortingRepository;
-        import org.springframework.data.repository.query.Param;
-        import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import com.worth.ifs.competition.domain.Competition;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
-        import java.util.List;
+import java.util.List;
 
-@RepositoryRestResource(collectionResourceRel = "competitions", path = "competition")
 public interface CompetitionsRepository extends PagingAndSortingRepository<Competition, Long> {
 
     List<Competition> findByName(@Param("name") String name);
