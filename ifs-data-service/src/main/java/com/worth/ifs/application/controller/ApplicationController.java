@@ -8,6 +8,7 @@ import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.UserApplicationRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
@@ -153,5 +154,35 @@ public class ApplicationController {
         return new ResponseEntity<>(headers, status);
 
     }
+
+
+    @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
+    public List<Application> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
+                                                                     @PathVariable("userId") final Long userId,
+                                                                     @PathVariable("role") final UserRoleType role) {
+        User user = userRepository.findById(userId).get(0);
+
+        List<UserApplicationRole> roles =  userAppRoleRepository.findByUser(user);
+        List<Application> allApps= repository.findAll();
+        List<Application> apps = new ArrayList<>();
+        for (Application app : allApps) {
+            if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getUserApplicationRoles(), userId, role)  ) {
+                apps.add(app);
+            }
+        }
+        return apps;
+    }
+
+    private boolean applicationContainsUserRole(List<UserApplicationRole> roles, final Long userId, UserRoleType role) {
+        boolean contains = false;
+        int i = 0;
+        while( !contains && i < roles.size()) {
+            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
+            i++;
+        }
+
+        return contains;
+    }
+
 
 }

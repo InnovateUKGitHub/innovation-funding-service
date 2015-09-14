@@ -133,7 +133,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (1,'leadapplicant'),(2,'collaborator');
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (1,'leadapplicant'),(2,'collaborator'), (3, 'assessor');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,6 +164,8 @@ UNLOCK TABLES;
 LOCK TABLES `user_application_role` WRITE;
 /*!40000 ALTER TABLE `user_application_role` DISABLE KEYS */;
 INSERT  IGNORE INTO `user_application_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2);
+INSERT INTO `user_application_role` (`id`,`application_id`,`organisation_id`,`role_id`,`user_id`) VALUES (7,3,2,3,3);
+INSERT INTO `user_application_role` (`id`,`application_id`,`organisation_id`,`role_id`,`user_id`) VALUES (8,4,3,3,3);
 /*!40000 ALTER TABLE `user_application_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

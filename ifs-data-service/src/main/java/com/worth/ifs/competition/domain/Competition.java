@@ -142,8 +142,10 @@ public class Competition {
     public long getAssessmentDaysLeftPercentage() {
         return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
     }
-
-
+    @JsonIgnore
+    public List<Application> getApplications() {
+        return applications;
+    }
 
 
 
@@ -162,10 +164,6 @@ public class Competition {
         long startDateToEndDatePercentage = (long) deadlineProgress;
         return startDateToEndDatePercentage;
     }
-
-
-
-
 
 }
 

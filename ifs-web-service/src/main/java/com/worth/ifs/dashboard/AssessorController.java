@@ -1,9 +1,13 @@
 package com.worth.ifs.dashboard;
 
-import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -29,29 +29,38 @@ public class AssessorController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    CompetitionService competitionService;
+    CompetitionsRestService competitionService;
+    @Autowired
+    ApplicationRestService applicationService;
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        List<Competition> competitions = competitionService.getAllCompetitions();
 
-        System.out.println("Competition names ");
-        for ( Competition c : competitions) {
-            //c.getAssessmentDaysLeft()
-            System.out.println("Competition with name: " + c.getName() + " assessmentStart: " + c.getAssessmentStartDate() + " assessmentEnd: " + c.getAssessmentEndDate());
-        }
+        //gets logged user to know what to show
+        User user = getLoggedUser(request);
 
-        model.addAttribute("applicationProgress", null);
-        model.addAttribute("applicationsInProcess", null);
-        model.addAttribute("applicationsFinished", null);
+        //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
+        List<Competition> competitions = competitionService.getAll();
 
+        // needed to set the applications for assessment for this user for each competition
+        for ( Competition c : competitions)
+            c.setApplications(applicationsForAssessment(c.getId(), user.getId()));
+
+
+        //pass to view
         model.addAttribute("competitionsForAssessment", competitions);
 
 
         return "assessor-dashboard";
+    }
+
+    private List<Application> applicationsForAssessment(Long competitionId, final Long userId) {
+        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId,userId, UserRoleType.ASSESSOR);
+    }
+    private User getLoggedUser(HttpServletRequest req) {
+        return userAuthenticationService.getAuthenticatedUser(req);
     }
 }
