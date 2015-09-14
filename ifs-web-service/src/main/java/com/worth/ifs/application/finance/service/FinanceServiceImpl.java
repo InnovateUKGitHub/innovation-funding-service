@@ -2,7 +2,7 @@ package com.worth.ifs.application.finance.service;
 
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.OrganisationFinance;
+import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FinanceServiceImpl {
+public class FinanceServiceImpl implements FinanceService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -31,26 +31,6 @@ public class FinanceServiceImpl {
 
     @Autowired
     ApplicationFinanceRestService applicationFinanceRestService;
-
-    List<OrganisationFinance> organisationFinances = new ArrayList<>();
-
-    public EnumMap<CostType, CostCategory> getFinances(Long applicationFinanceId) {
-        List<Cost> costs = costRestService.getCosts(applicationFinanceId);
-        OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinanceId, costs);
-        EnumMap<CostType, CostCategory> organisationFinanceDetails = organisationFinance.getOrganisationFinances();
-        organisationFinances.add(organisationFinance);
-        return organisationFinanceDetails;
-    }
-
-    public Double getTotal(Long applicationFinanceId) {
-        Optional<OrganisationFinance> organisationFinance = organisationFinances.stream().
-                filter(oa -> oa.getApplicationFinanceId().equals(applicationFinanceId)).findFirst();
-        if(organisationFinance.isPresent()) {
-            return organisationFinance.get().getTotal();
-        } else {
-            return 0D;
-        }
-    }
 
     public ApplicationFinance addApplicationFinance(Long userId, Long applicationId) {
         UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
@@ -70,7 +50,11 @@ public class FinanceServiceImpl {
         return applicationFinanceRestService.getApplicationFinances(applicationId);
     }
 
-    public void addCost(Long applicationFinanceId , Long questionId) {
+    public List<Cost> getCosts(Long applicationFinanceId) {
+       return costRestService.getCosts(applicationFinanceId);
+    }
+
+    public void addCost(Long applicationFinanceId, Long questionId) {
         costRestService.add(applicationFinanceId, questionId);
     }
 }

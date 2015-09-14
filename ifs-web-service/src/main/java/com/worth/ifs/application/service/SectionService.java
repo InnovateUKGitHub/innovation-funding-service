@@ -10,4 +10,5 @@ public interface SectionService {
     public List<Long> getInCompleted(Long applicationId);
     public List<Section> getParentSections(List<Section> sections);
     public Section getByName(String name);
+    public void removeSectionsQuestionsWithType(Section section, String name);
 }

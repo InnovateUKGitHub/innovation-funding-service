@@ -15,5 +15,5 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public List<Competition> getAllCompetitions() {
         return competitionsRestService.getAll();
-    }
+   }
 }

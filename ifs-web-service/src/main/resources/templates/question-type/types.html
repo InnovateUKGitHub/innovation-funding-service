@@ -116,7 +116,7 @@
                 <p class="heading-medium">Total project costs</p>
             </div>
             <div class="column-half alignright">
-                <p class="heading-medium" th:text="'£ ' + ${#numbers.formatDecimal(financeTotal,0,0)}"></p>
+                <p class="heading-medium" th:text="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"></p>
             </div>
         </div>
         <p>These costs should be justified in the <a href="#">Funding section</a> of the application form.</p>
@@ -185,7 +185,7 @@
                                     <input type="number"
                                            th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'}"
                                            data-calculation-operations="/,*"
-                                           th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear),0,0)}"/>
+                                           th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
                                 </td>
                             </tr>
                         </div>
@@ -203,7 +203,7 @@
                         <input class="form-control form-control-1-4"
                                data-calculation-repeating-total="[id*=labourTotalCost]"
                                data-calculation-operations="+"
-                               readonly="" type="text" id="cost-labour-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(),0,0)}" />
+                               readonly="" type="text" id="cost-labour-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                     </label>
                 </div>
             </div>
@@ -263,7 +263,7 @@
                            data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
                            data-calculation-operations="/,*"
                            data-calculation-input="overhead-calculated"
-                            th:value="${#numbers.formatDecimal(overheadCosts.total,0,0)}"/>
+                            th:value="${#numbers.formatDecimal(overheadCosts.total, 0, 'COMMA', 0, 'POINT')}"/>
                 </div>
             </div>
             <div class="form-group form-group--align-right">
@@ -312,10 +312,10 @@
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-total-' + materialCost.id}"
-                                       th:attr="data-calculation-fields='#'+${type +'-quantity-' + materialCost.id}+',#'+${type +'-cost-' + materialCost.id}"
+                                       th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'}"
                                        th:id="${'cost-materials-'+materialCost.id+'-total'}"
                                        data-calculation-operations="*"
-                                       readonly="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
+                                       readonly="" th:value="${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
                         </tr>
                     </div>
@@ -333,7 +333,7 @@
                            readonly="" type="text" id="material-costs-total-field"
                            data-calculation-repeating-total="[id*=materialTotal]"
                            data-calculation-operations="+"
-                           th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
+                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -403,7 +403,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total capital usage costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
+                    <input class="form-control form-control-1-4" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -465,7 +465,7 @@
                            id="cost-subcontracting-total"
                            data-calculation-field="[data-calculation-input=subcontracting-cost-row]"
                            data-calculation-operations="+"
-                           th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
+                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -515,7 +515,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total travel &amp; subsistence costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total,0,0)}" />
+                    <input class="form-control form-control-1-4" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -558,7 +558,7 @@
             <div class="form-group form-group--align-right">
                 <label>
                     Total other costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total,0,0)}"/>
+                    <input class="form-control form-control-1-4" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
                 </label>
             </div>
             <div class="form-group form-group--align-right">
@@ -568,6 +568,56 @@
         </div> 
     </div>
 
+    <!-- ===========================Form: Other funding=========================== -->
+    <div th:fragment="other_funding">
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <select class="form-control form-control-1-8">
+            <option></option>
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+        <div class="form-group">
+            <table id="other-funding">
+                <thead>
+                <tr>
+                    <th scope="col">Source of Funding</th>
+                    <th scope="col">Date Applied for</th>
+                    <th scope="col">Amount Sought (£)</th>
+                    <th scope="col">Successful?</th>
+                    <th scope="col">Amount Secured or Still Sought</th>
+                    <th scope="col">Date of Decision</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="text" />
+                    </td>
+                    <td>
+                        <input type="text" />
+                    </td>
+                    <td>
+                        <input type="text" />
+                    </td>
+                    <td>
+                        <input type="text" />
+                    </td>
+                    <td>
+                        <input type="text" />
+                    </td>
+                    <td>
+                        <input type="text" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p style="text-align: right;">
+                <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
+            </p>
+        </div>
+    </div>
     <!-- ===========================Form: financial summary =========================== -->
     <div th:fragment="financial_summary">
         <h2>Project cost breakdown</h2>
@@ -578,30 +628,36 @@
                     <tr>
                         <th scope="col">&nbsp;</th>
                         <th scope="col">Total</th>
-                        <th scope="col">
-                            Nomensa<br/>
-                            <small>Lead organisation</small>
+                        <th scope="col"  th:each="applicationOrganisation : ${applicationOrganisations}">
+                            <div th:text="${applicationOrganisation.name}"></div>
+                            <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
+                            <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                            <tr th:each="financeSubSection : ${financeSection.ChildSections}" >
-                                <th th:text="${financeSubSection.name}"></th>
-                                <td th:each="organisationFinance: ${organisationFinances}"
-                                    th:text="${organisationFinance.}"
-                                        >
-
-                                </td>
-                                <td>£14,000</td>
-                                <td>£4,000</td>
-                            </tr>
-                            <tr>
-                                <th>Total</th>
-                                <td style="font-weight: 700;">
-                                    £35,000
-                                </td>
-                                <td>£14,000</td>
-                            </tr>
+                        <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
+                            <th th:text="${financeSubSection.name}"></th>
+                            <td th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                                th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                            </td>
+                            <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                            <td th:each="organisationFinance : ${organisationFinances}"
+                                th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                                th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                                    th:text="${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                            </td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td style="font-weight: 700;" th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                            </td>
+                            <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                                <td th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                                    th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                            </div>
+                        </tr>
                     </tbody>
                 </table>
             </div>

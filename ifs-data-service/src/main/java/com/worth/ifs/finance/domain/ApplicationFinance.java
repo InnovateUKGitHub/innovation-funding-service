@@ -42,7 +42,6 @@ public class ApplicationFinance {
         this.id = id;
     }
 
-    @JsonIgnore
     public Organisation getOrganisation() {
         return organisation;
     }

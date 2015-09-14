@@ -2,7 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.finance.service.FinanceServiceImpl;
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
@@ -47,7 +47,7 @@ public class BaseUnitTest {
     @Mock
     public UserService userService;
     @Mock
-    public FinanceServiceImpl financeService;
+    public FinanceService financeService;
     @Mock
     public ApplicationRestService applicationRestService;
 
@@ -78,6 +78,7 @@ public class BaseUnitTest {
         applications = new ArrayList<>();
         sections = new ArrayList<>();
         questions = new HashMap<>();
+        organisations = new ArrayList<>();
     }
 
     public void loginDefaultUser(){
@@ -194,11 +195,14 @@ public class BaseUnitTest {
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
 
-        //TODO: create representative application finance resource object.
-        ApplicationFinance applicationFinance = new ApplicationFinance();
-        long organisationId = userApplicationRole.getOrganisation().getId();
-        Long applicationId = application.getId();
-        //when(processRoleService.getApplicationFinance(applicationId, organisationId)).thenReturn(applicationFinance);
+    }
+
+    public void setupFinances() {
+        Application application = applications.get(0);
+        ApplicationFinance applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
+        when(financeService.getApplicationFinances(application.getId())).thenReturn(Arrays.asList(applicationFinance));
+        when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
+
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

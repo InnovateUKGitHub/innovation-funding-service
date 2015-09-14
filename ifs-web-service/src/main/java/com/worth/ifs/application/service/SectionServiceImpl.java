@@ -53,4 +53,11 @@ public class SectionServiceImpl implements SectionService {
     public Section getByName(String name) {
         return sectionRestService.getSection(name);
     }
+
+    public void removeSectionsQuestionsWithType(Section section, String name) {
+        section.getChildSections().stream().
+                forEach(s -> s.setQuestions(s.getQuestions().stream().
+                        filter(q -> q != null && q.getQuestionType() != null && !q.getQuestionType().getTitle().equals(name)).
+                        collect(Collectors.toList())));
+    }
 }

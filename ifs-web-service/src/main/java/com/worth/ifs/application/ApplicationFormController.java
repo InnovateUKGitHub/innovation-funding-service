@@ -8,11 +8,14 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.FinanceFormHandler;
-import com.worth.ifs.application.finance.service.FinanceServiceImpl;
+import com.worth.ifs.application.finance.model.OrganisationFinance;
+import com.worth.ifs.application.finance.model.OrganisationFinanceOverview;
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserApplicationRole;
@@ -52,7 +55,7 @@ public class ApplicationFormController {
     @Autowired
     SectionService sectionService;
     @Autowired
-    FinanceServiceImpl financeService;
+    FinanceService financeService;
     @Autowired
     FinanceFormHandler financeFormHandler;
     
@@ -88,7 +91,7 @@ public class ApplicationFormController {
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
@@ -144,14 +147,29 @@ public class ApplicationFormController {
     }
 
     private void addFinanceDetails(Model model, Long applicationId, Long userId) {
+        OrganisationFinance organisationFinance = getOrganisationFinances(applicationId, userId);
+        model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
+        model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
+
+
+        Section section = sectionService.getByName("Your finances");
+        sectionService.removeSectionsQuestionsWithType(section, "empty");
+        model.addAttribute("financeSection", section);
+
+        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, applicationId);
+        model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
+        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
+        model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+    }
+
+    private OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         if(applicationFinance==null) {
             applicationFinance = financeService.addApplicationFinance(userId, applicationId);
         }
-        model.addAttribute("organisationFinance", financeService.getFinances(applicationFinance.getId()));
-        model.addAttribute("financeTotal", financeService.getTotal(applicationFinance.getId()));
-        model.addAttribute("financeSection", sectionService.getByName("Your finances"));
-        model.addAttribute("organisationFinances", financeService.getFinances(applicationFinance.getId()));
+
+        List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
+        return new OrganisationFinance(applicationFinance.getId(),applicationFinance.getOrganisation(),organisationCosts);
     }
 
     /**

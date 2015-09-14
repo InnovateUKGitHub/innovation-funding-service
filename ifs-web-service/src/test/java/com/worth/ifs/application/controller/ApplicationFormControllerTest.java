@@ -5,6 +5,7 @@ import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.UserApplicationRole;
 import org.hamcrest.Matchers;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -47,19 +49,17 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
+        this.setupFinances();
     }
 
     @Test
     public void testApplicationForm() throws Exception {
         Application app = applications.get(0);
         UserApplicationRole userAppRole = new UserApplicationRole();
-        ApplicationFinance applicationFinance = new ApplicationFinance();
-        applicationFinance.setId(1L);
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(processRoleService.findUserApplicationRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
-        when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/application-form/1"))
                 .andExpect(view().name("application-form"))
@@ -72,11 +72,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormWithOpenSection() throws Exception {
         Application app = applications.get(0);
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
-        ApplicationFinance applicationFinance = new ApplicationFinance();
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(financeService.getApplicationFinance(loggedInUser.getId(), app.getId())).thenReturn(applicationFinance);
+
         mockMvc.perform(get("/application-form/1/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", app))

@@ -1,12 +1,15 @@
 package com.worth.ifs.application.finance.cost;
 
 import com.worth.ifs.application.finance.CostType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LabourCost implements CostItem {
+    private final Log log = LogFactory.getLog(getClass());
 
     private Long id;
     private String role;
@@ -70,7 +73,7 @@ public class LabourCost implements CostItem {
     }
 
     private void calculateTotal() {
-        if(rate!=null && labourDays!=null) {
+        if(rate!=null && !rate.equals(Double.NaN) && labourDays!=null) {
             total = rate * labourDays;
         } else {
             total = 0D;

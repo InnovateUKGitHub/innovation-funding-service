@@ -83,9 +83,9 @@ public class AssessorController {
     }
 
     private Competition buildCompetitionWithId(Long competitionId, Long userId) {
-        Competition competition = competitionService.getCompetitionById(competitionId);
+        Competition competition = null;//competitionService.getCompetitionById(competitionId);
         List<Application> applications = applicationsForAssessment(competitionId, userId);
-        competition.setApplications(applications);
+        //competition.setApplications(applications);
 
         return competition;
     }
