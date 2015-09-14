@@ -39,4 +39,12 @@ public class CompetitionsRestServiceImpl extends BaseRestServiceProvider impleme
         Competition[] competitions = responseEntity.getBody();
         return Arrays.asList(competitions);
     }
+
+    public Competition getCompetitionById(Long competitionId) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Competition> responseEntity = restTemplate.getForEntity(dataRestServiceURL + competitionsRestURL + "/findById/" + competitionId, Competition.class);
+        Competition competition = responseEntity.getBody();
+        return competition;
+    }
+
 }

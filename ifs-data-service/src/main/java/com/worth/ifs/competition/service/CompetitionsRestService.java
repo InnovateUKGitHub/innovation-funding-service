@@ -11,4 +11,6 @@ public interface CompetitionsRestService {
     public Application getApplicationById(Long applicationId);
     public List<Application> getApplicationsByUserId(Long userId);
     public List<Competition> getAll();
+    public Competition getCompetitionById(Long competitionId);
+
 }

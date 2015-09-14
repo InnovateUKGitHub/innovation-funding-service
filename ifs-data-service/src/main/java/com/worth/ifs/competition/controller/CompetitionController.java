@@ -32,6 +32,12 @@ public class CompetitionController {
 
     private final Log log = LogFactory.getLog(getClass());
 
+
+    @RequestMapping("/findById/{id}")
+    public Competition getCompetitionById(@PathVariable("id") final Long id) {
+        return repository.findById(id);
+    }
+
     @RequestMapping("/id/{id}")
     public Competition getApplicationById(@PathVariable("id") final Long id) {
         return repository.findById(id);

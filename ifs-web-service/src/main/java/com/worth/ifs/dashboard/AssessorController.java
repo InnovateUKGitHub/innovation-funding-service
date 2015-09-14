@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,6 +37,15 @@ public class AssessorController {
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
+
+
+    private List<Application> applicationsForAssessment(Long competitionId, final Long userId) {
+        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId,userId, UserRoleType.ASSESSOR);
+    }
+    private User getLoggedUser(HttpServletRequest req) {
+        return userAuthenticationService.getAuthenticatedUser(req);
+    }
+
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
 
@@ -57,10 +67,44 @@ public class AssessorController {
         return "assessor-dashboard";
     }
 
-    private List<Application> applicationsForAssessment(Long competitionId, final Long userId) {
-        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId,userId, UserRoleType.ASSESSOR);
+    @RequestMapping(value="/competitions/{competitionId}/applications", method= RequestMethod.GET)
+    public String competitionApplications(Model model, @PathVariable("competitionId") final Long competitionId,
+                                          HttpServletRequest request) {
+
+        Competition competition = buildCompetitionWithId(competitionId, getLoggedUser(request).getId());
+
+        System.out.println("assessor/ompetitions/" + competition.getName() + " /applications = " + competition.getApplications().size());
+
+        //pass to view
+        model.addAttribute("competition", competition);
+
+
+        return "assessor-competition-applications";
     }
-    private User getLoggedUser(HttpServletRequest req) {
-        return userAuthenticationService.getAuthenticatedUser(req);
+
+    private Competition buildCompetitionWithId(Long competitionId, Long userId) {
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        List<Application> applications = applicationsForAssessment(competitionId, userId);
+        competition.setApplications(applications);
+
+        return competition;
     }
+
+    private UserApplicationRole getAssessorApplicationRole(List<UserApplicationRole> roles, final Long userId, UserRoleType role) {
+        int indexAt = -1;
+        int i = 0;
+        while( indexAt == -1 && i < roles.size()) {
+            if ( roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName()) )
+                indexAt = -1;
+
+            i++;
+        }
+
+        return roles.get(indexAt);
+    }
+
+
+
+
+
 }
