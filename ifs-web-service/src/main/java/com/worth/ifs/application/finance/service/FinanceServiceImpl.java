@@ -8,7 +8,6 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.UserApplicationRole;
-import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.UserRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,9 +28,6 @@ public class FinanceServiceImpl {
 
     @Autowired
     CostRestService costRestService;
-
-    @Autowired
-    OrganisationRestService organisationRestService;
 
     @Autowired
     ApplicationFinanceRestService applicationFinanceRestService;
@@ -56,7 +52,7 @@ public class FinanceServiceImpl {
         }
     }
 
-    public ApplicationFinance addApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinance addApplicationFinance(Long userId, Long applicationId) {
         UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
 
         if(userApplicationRole.getOrganisation()!=null) {
@@ -65,7 +61,7 @@ public class FinanceServiceImpl {
         return null;
     }
 
-    public ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinance getApplicationFinance(Long userId, Long applicationId) {
         UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }

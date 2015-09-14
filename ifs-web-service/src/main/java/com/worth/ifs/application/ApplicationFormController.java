@@ -88,16 +88,10 @@ public class ApplicationFormController {
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = getApplicationFinanceDetails(user.getId(), applicationId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         financeService.addCost(applicationFinance.getId(), questionId);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
-    }
-
-
-    private ApplicationFinance getApplicationFinanceDetails(Long userId, Long applicationId) {
-        UserApplicationRole userApplicationRole = processRoleService.findUserApplicationRole(userId, applicationId);
-        return financeService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     /**
@@ -150,11 +144,10 @@ public class ApplicationFormController {
     }
 
     private void addFinanceDetails(Model model, Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
+            applicationFinance = financeService.addApplicationFinance(userId, applicationId);
         }
-        log.debug("application id: " + applicationId + " userId " + userId + " finance id " + applicationFinance.getId());
         model.addAttribute("organisationFinance", financeService.getFinances(applicationFinance.getId()));
         model.addAttribute("financeTotal", financeService.getTotal(applicationFinance.getId()));
         model.addAttribute("financeSection", sectionService.getByName("Your finances"));

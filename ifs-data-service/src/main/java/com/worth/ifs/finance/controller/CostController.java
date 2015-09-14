@@ -54,7 +54,7 @@ public class CostController {
             Cost updatedCost = mapCost(id, newCost);
             Cost savedCost = costRepository.save(updatedCost);
 
-            for(CostValue costValue : updatedCost.getCostValues()) {
+            for(CostValue costValue : newCost.getCostValues()) {
                 CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
                 costValue.setCost(savedCost);
                 costValue.setCostField(costField);

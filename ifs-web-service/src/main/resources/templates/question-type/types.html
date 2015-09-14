@@ -300,20 +300,20 @@
                     <div th:each="materialCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <tr>
                             <td>
-                                <input type="text" th:name="${type +'-item-' + materialCost.id}" th:value="${materialCost.getItem()}"/>
+                                <input type="text" th:name="${type +'-item-' + materialCost.id}"  th:id="${'cost-materials-'+materialCost.id+'-item'}" th:value="${materialCost.getItem()}"/>
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-quantity-' + materialCost.id}"
-                                       th:id="${type +'-quantity-' + materialCost.id}" th:value="${materialCost.getQuantity()}"/>
+                                       th:id="${'cost-materials-'+materialCost.id+'-quantity'}" th:value="${materialCost.getQuantity()}"/>
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-cost-' + materialCost.id}"
-                                       th:id="${type +'-cost-' + materialCost.id}" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
+                                       th:id="${'cost-materials-'+materialCost.id+'-cost'}" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-total-' + materialCost.id}"
                                        th:attr="data-calculation-fields='#'+${type +'-quantity-' + materialCost.id}+',#'+${type +'-cost-' + materialCost.id}"
-                                       th:id="${type +'-cost-' + materialCost.id+'-materialTotal'}" 
+                                       th:id="${'cost-materials-'+materialCost.id+'-total'}"
                                        data-calculation-operations="*"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.getTotal(),0,0)}"/>
                             </td>
@@ -426,7 +426,8 @@
 
                         <div class="form-group">
                             <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where work will be carried out</label>
-                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country" th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
+                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country"
+                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
                         </div>
 
                         <div class="form-group">
