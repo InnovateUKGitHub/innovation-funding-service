@@ -1,5 +1,7 @@
-package com.worth.ifs.application.finance;
+package com.worth.ifs.application.finance.view;
 
+import com.worth.ifs.application.finance.CostItemMapper;
+import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.finance.cost.CostItem;
 import com.worth.ifs.application.finance.cost.LabourCost;
 import com.worth.ifs.application.finance.cost.Materials;
@@ -16,14 +18,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
 
     private Object costItemsForType;
+    private CostService costService;
 
-    @Autowired
-    CostService costService;
+    public FinanceFormHandler(CostService costService) {
+        this.costService = costService;
+    }
 
     public void handle(HttpServletRequest request) {
         List<Cost> costs = getCostsForType(request);

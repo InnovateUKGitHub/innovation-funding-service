@@ -1,6 +1,7 @@
-package com.worth.ifs.application.finance.model;
+package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.CostType;
+import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.finance.domain.ApplicationFinance;

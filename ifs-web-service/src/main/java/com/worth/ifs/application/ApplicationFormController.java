@@ -7,18 +7,15 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.finance.FinanceFormHandler;
+import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.model.OrganisationFinance;
-import com.worth.ifs.application.finance.model.OrganisationFinanceOverview;
+import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.helper.ApplicationHelper;
-import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,30 +35,11 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/application-form")
-public class ApplicationFormController {
+public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
-    public final String LABOUR = "Labour";
-    public final String WORKING_DAYS_PER_YEAR = "Working days per year";
 
-
-    @Autowired
-    ApplicationService applicationService;
-    @Autowired
-    ResponseService responseService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    ProcessRoleService processRoleService;
-    @Autowired
-    SectionService sectionService;
     @Autowired
     FinanceService financeService;
-    @Autowired
-    FinanceFormHandler financeFormHandler;
-    
-    @Autowired
-    UserAuthenticationService userAuthenticationService;
-
 
     @RequestMapping("/{applicationId}")
     public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
@@ -107,7 +85,6 @@ public class ApplicationFormController {
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
-
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
         model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
         model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
@@ -196,9 +173,10 @@ public class ApplicationFormController {
 
         setApplicationDetails(application, params);
         markQuestion(request, params, applicationId, user.getId());
-        assignQuestion(request, params, applicationId, user.getId());
+        assignQuestion(request, applicationId, user.getId());
 
         applicationService.save(application);
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
         addApplicationDetails(applicationId, user.getId(), sectionId, model);
@@ -209,20 +187,10 @@ public class ApplicationFormController {
     private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
         if(params.containsKey("mark_as_complete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
-            responseService.markQuestionAsComplete(applicationId, questionId,userId);
+            responseService.markQuestionAsComplete(applicationId, questionId, userId);
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             responseService.markQuestionAsInComplete(applicationId, questionId, userId);
-        }
-    }
-
-    private void assignQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
-        if(params.containsKey("assign_question")){
-            String assign = request.getParameter("assign_question");
-            Long questionId = Long.valueOf(assign.split("_")[0]);
-            Long assigneeId = Long.valueOf(assign.split("_")[1]);
-
-            responseService.assignQuestion(applicationId, questionId, userId, assigneeId);
         }
     }
 
@@ -294,6 +262,7 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if(inputIdentifier.startsWith("cost-")) {
             String fieldName = request.getParameter("fieldName");
+            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
             if(fieldName != null && value != null) {
                 financeFormHandler.handle(fieldName, value);
             }

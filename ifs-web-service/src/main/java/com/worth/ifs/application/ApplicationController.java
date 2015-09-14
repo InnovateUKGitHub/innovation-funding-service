@@ -32,23 +32,8 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/application")
-public class ApplicationController {
+public class ApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    ResponseService responseService;
-
-    @Autowired
-    ApplicationService applicationService;
-
-    @Autowired
-    SectionService sectionService;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    UserAuthenticationService userAuthenticationService;
 
 
     @RequestMapping("/{applicationId}")
@@ -137,10 +122,9 @@ public class ApplicationController {
                                         HttpServletRequest request){
 
         // save application details if they are in the request
-        Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey("assign_question")) {
-            assignQuestion(request, applicationId);
-        }
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+
+        assignQuestion(request, applicationId, user.getId());
 
         addApplicationDetails(applicationId, model);
         model.addAttribute("applicationSaved", true);
@@ -148,12 +132,5 @@ public class ApplicationController {
         return "application-details";
     }
 
-    private void assignQuestion(HttpServletRequest request, Long applicationId) {
-        String[] assign = request.getParameter("assign_question").split("_");
-        Long questionId = Long.valueOf(assign[0]);
-        Long assigneeId = Long.valueOf(assign[1]);
 
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        responseService.assignQuestion(applicationId, questionId, user.getId(), assigneeId);
-    }
 }
