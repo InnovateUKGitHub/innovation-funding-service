@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
@@ -40,6 +41,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     FinanceService financeService;
+    @Autowired
+    CostService costService;
 
     @RequestMapping("/{applicationId}")
     public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
@@ -61,6 +64,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}")
+    public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
+                             @PathVariable("sectionId") final Long sectionId,
+                             @PathVariable("costId") final Long costId, HttpServletRequest request) {
+
+        costService.delete(costId);
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+    }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
     public String addAnother(Model model,

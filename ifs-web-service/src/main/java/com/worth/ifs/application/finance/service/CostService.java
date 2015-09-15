@@ -9,4 +9,5 @@ public interface CostService {
     Cost getById(Long costId);
     List<CostField> getCostFields();
     public void update(Cost cost);
+    public void delete(Long costId);
 }

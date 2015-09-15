@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
@@ -48,6 +49,8 @@ public class BaseUnitTest {
     public UserService userService;
     @Mock
     public FinanceService financeService;
+    @Mock
+    public CostService costService;
     @Mock
     public ApplicationRestService applicationRestService;
 

@@ -5,7 +5,8 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostValue;
 
 /**
- * Creates specific costs for each category
+ * Creates specific costs for each category and maps the cost to cost items, which
+ * can be used in the view.
  */
 public class CostItemFactory {
     public static final String COST_FIELD_EXISTING = "existing";

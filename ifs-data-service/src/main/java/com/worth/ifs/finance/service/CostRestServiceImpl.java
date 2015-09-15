@@ -48,6 +48,11 @@ public class CostRestServiceImpl extends BaseRestServiceProvider implements Cost
         log.debug("done" + cost);
     }
 
+    public void delete(Long costId) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(dataRestServiceURL + costRestURL + "/delete/"+costId);
+    }
+
     public Cost findById(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Cost> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/findById/"+id, Cost.class);

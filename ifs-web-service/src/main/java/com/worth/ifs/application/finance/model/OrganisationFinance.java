@@ -53,10 +53,15 @@ public class OrganisationFinance {
         costs.stream().forEach(c -> addCostToCategory(c));
     }
 
+    /**
+     * The costs are converted to a representation based on its type that can be used in the view and
+     * are added to a specific category (e.g. labour).
+     * @param cost Cost to be added
+     */
     private void addCostToCategory(Cost cost) {
         CostType costType = CostType.fromString(cost.getQuestion().getQuestionType().getTitle());
-        CostCategory costCategory = costCategories.get(costType);
         CostItem costItem = costItemFactory.createCostItem(costType, cost);
+        CostCategory costCategory = costCategories.get(costType);
         costCategory.addCost(costItem);
     }
 

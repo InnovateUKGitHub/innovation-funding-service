@@ -90,4 +90,9 @@ public class CostController {
     public Cost findById(@PathVariable("id") final Long id) {
         return costRepository.findById(id);
     }
+
+    @RequestMapping("/delete/{costId}")
+    public void deleteCost(@PathVariable("costId") final Long costId) {
+        costRepository.delete(costId);
+    }
 }

@@ -178,14 +178,20 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="alignright">
+                                <td colspan="2" class="alignright">
                                     Total costs £
                                 </td>
                                 <td>
-                                    <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'}"
-                                           data-calculation-operations="/,*"
-                                           th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
+                                <input type="number"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'}"
+                                       data-calculation-operations="/,*"
+                                       th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
+
+                                </td>
+                                <td>
+                                    <p class="alignright">
+                                        <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                    </p>
                                 </td>
                             </tr>
                         </div>
@@ -317,6 +323,11 @@
                                        data-calculation-operations="*"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
+                            <td>
+                                <p class="alignright">
+                                    <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                </p>
+                            </td>
                         </tr>
                     </div>
                     </tbody>
@@ -353,6 +364,8 @@
                         <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
                         <input type="textarea" id="" class="form-control form-finances-capital-usage-item"
                                   name="capitalusage-0-capitalUsageItem" cols="40" rows="3" th:value="${capitalUsage.getDescription()}" />
+                        <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+
 
                     </div>
 
@@ -388,12 +401,6 @@
                         <input type="number" value="20" id="id_capitalusage-0-capitalUsageUtilisation" class="form-control form-finances-capital-usage-utilisation" name="capitalusage-0-capitalUsageUtilisation"
                                th:value="${capitalUsage.utilisation}"/>
                     </div>
-
-                    <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageNetCost" class="form-label">Net Cost (£)</label>
-                        <input type="number" value="1960" id="id_capitalusage-0-capitalUsageNetCost" readonly="" class="form-control form-finances-capital-usage-cost" name="capitalusage-0-capitalUsageNetCost"
-                               th:value="${#numbers.formatDecimal(capitalUsage.netCost,0,0)}"/>
-                    </div>
                 </div>
             </div>
             <p class="alignright">
@@ -422,6 +429,7 @@
                         <div class="form-group">
                             <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
                             <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
+                            <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                         </div>
 
                         <div class="form-group">
@@ -503,6 +511,9 @@
                             <td>
                                 <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
                             </td>
+                            <td>
+                                <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                            </td>
                         </tr>
                     </div>
                     </tbody>
@@ -545,6 +556,9 @@
                             </td>
                             <td>
                                 <input type="number" name="other-0-otherCost" class="form-control form-control-1-1 form-finances-other-cost" id="id_other-0-otherCost" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
+                            </td>
+                            <td>
+                                <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -609,6 +623,9 @@
                     </td>
                     <td>
                         <input type="text" />
+                    </td>
+                    <td>
+                        <a href="#">Remove</a>
                     </td>
                 </tr>
                 </tbody>

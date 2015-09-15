@@ -8,4 +8,5 @@ public interface CostRestService{
     public List<Cost> getCosts(Long applicationFinanceId);
     public void update(Cost cost);
     public Cost findById(Long id);
+    public void delete(Long costId);
 }

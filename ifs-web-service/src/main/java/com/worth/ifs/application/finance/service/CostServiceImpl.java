@@ -35,4 +35,7 @@ public class CostServiceImpl implements CostService {
     public Cost getById(Long costId) {
         return costRestService.findById(costId);
     }
+
+    @Override
+    public void delete(Long costId) {costRestService.delete(costId);}
 }
