@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS section;
 DROP TABLE IF EXISTS subcontractor;
 DROP TABLE IF EXISTS travel_cost;
+DROP TABLE IF EXISTS competition_applications;
+DROP TABLE IF EXISTS process;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_application_role;
 DROP TABLE IF EXISTS process;
