@@ -12,10 +12,10 @@ import java.util.List;
 
 @Entity
 public class Role {
-    public Role(Long id, String name, List<UserApplicationRole> userApplicationRoles) {
+    public Role(Long id, String name, List<ProcessRole> processRoles) {
         this.id = id;
         this.name = name;
-        this.userApplicationRoles = userApplicationRoles;
+        this.processRoles = processRoles;
     }
 
     @Id
@@ -24,7 +24,7 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
 
     public Role() {
     }
@@ -34,12 +34,12 @@ public class Role {
     }
 
     @JsonIgnore
-    public List<UserApplicationRole> getUserApplicationRoles() {
-        return userApplicationRoles;
+    public List<ProcessRole> getProcessRoles() {
+        return processRoles;
     }
 
-    public void setUserApplicationRoles(List<UserApplicationRole> userApplicationRoles) {
-        this.userApplicationRoles = userApplicationRoles;
+    public void setProcessRoles(List<ProcessRole> processRoles) {
+        this.processRoles = processRoles;
     }
 
     public Long getId() {

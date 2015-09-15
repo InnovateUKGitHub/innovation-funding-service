@@ -1,9 +1,9 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.UserApplicationRoleRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,14 @@ public class OrganisationController {
     @Autowired
     OrganisationRepository organisationRepository;
     @Autowired
-    UserApplicationRoleRepository userApplicationRoleRepository;
+    ProcessRoleRepository processRoleRepository;
 
     @RequestMapping("/findByApplicationId/{applicationId}")
     public Set<Organisation> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        List<UserApplicationRole> roles = userApplicationRoleRepository.findByApplicationId(applicationId);
+        List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<Organisation> organisations = new LinkedHashSet<>();
-        for (UserApplicationRole role : roles) {
-            organisations.add(organisationRepository.findByUserApplicationRoles(role));
+        for (ProcessRole role : roles) {
+            organisations.add(organisationRepository.findByProcessRoles(role));
         }
 
         return organisations;

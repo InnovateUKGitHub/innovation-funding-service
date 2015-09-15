@@ -6,10 +6,10 @@ import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.repository.UserApplicationRoleRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,7 +33,7 @@ public class ApplicationController {
     @Autowired
     ApplicationRepository repository;
     @Autowired
-    UserApplicationRoleRepository userAppRoleRepository;
+    ProcessRoleRepository userAppRoleRepository;
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
     @Autowired
@@ -57,9 +57,9 @@ public class ApplicationController {
     @RequestMapping("/findByUser/{userId}")
     public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findById(userId).get(0);
-        List<UserApplicationRole> roles =  userAppRoleRepository.findByUser(user);
+        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
-        for (UserApplicationRole role : roles) {
+        for (ProcessRole role : roles) {
             apps.add(role.getApplication());
         }
         return apps;
@@ -106,10 +106,10 @@ public class ApplicationController {
 
 
         Application app = repository.findOne(applicationId);
-        List<UserApplicationRole> userAppRoles = app.getUserApplicationRoles();
+        List<ProcessRole> userAppRoles = app.getProcessRoles();
 
         List<Response> responses = new ArrayList<Response>();
-        for (UserApplicationRole userAppRole : userAppRoles) {
+        for (ProcessRole userAppRole : userAppRoles) {
             responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
 
@@ -162,18 +162,18 @@ public class ApplicationController {
                                                                      @PathVariable("role") final UserRoleType role) {
         User user = userRepository.findById(userId).get(0);
 
-        List<UserApplicationRole> roles =  userAppRoleRepository.findByUser(user);
+        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
         List<Application> allApps= repository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {
-            if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getUserApplicationRoles(), userId, role)  ) {
+            if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)  ) {
                 apps.add(app);
             }
         }
         return apps;
     }
 
-    private boolean applicationContainsUserRole(List<UserApplicationRole> roles, final Long userId, UserRoleType role) {
+    private boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         boolean contains = false;
         int i = 0;
         while( !contains && i < roles.size()) {

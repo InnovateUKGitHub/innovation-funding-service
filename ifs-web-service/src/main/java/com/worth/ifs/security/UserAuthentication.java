@@ -28,7 +28,7 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getUserApplicationRoles().stream()
+        return user.getProcessRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRole().getName()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }

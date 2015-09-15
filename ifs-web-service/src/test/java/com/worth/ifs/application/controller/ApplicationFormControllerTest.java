@@ -5,9 +5,7 @@ import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,11 +53,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testApplicationForm() throws Exception {
         Application app = applications.get(0);
-        UserApplicationRole userAppRole = new UserApplicationRole();
+        ProcessRole userAppRole = new ProcessRole();
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(processRoleService.findUserApplicationRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
+        when(processRoleService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
 
         mockMvc.perform(get("/application-form/1"))
                 .andExpect(view().name("application-form"))

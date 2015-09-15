@@ -159,12 +159,17 @@ UNLOCK TABLES;
 -- Dumping data for table `user_application_role`
 --
 
-LOCK TABLES `user_application_role` WRITE;
-/*!40000 ALTER TABLE `user_application_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `user_application_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3);
-/*!40000 ALTER TABLE `user_application_role` ENABLE KEYS */;
+LOCK TABLES `process_role` WRITE;
+/*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3);
+/*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+LOCK TABLES `process` WRITE;
+INSERT INTO `process` (`id`,`involved_id`,`last_modified`,`status`,`target_id`,`type`) VALUES (1,1,'2015-09-15 14:24:08','PENDING',2,'ANOTHER_ONE');
+UNLOCK TABLES;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

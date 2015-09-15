@@ -8,11 +8,11 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * UserApplicationRole defines database relations and a model to use client side and server side.
+ * ProcessRole defines database relations and a model to use client side and server side.
  */
 
 @Entity
-public class UserApplicationRole {
+public class ProcessRole {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -36,16 +36,16 @@ public class UserApplicationRole {
     @OneToMany(mappedBy="updatedBy",fetch = FetchType.LAZY)
     private List<Response> responses;
 
-    public UserApplicationRole(Long id, User user, Application application, Role role, Organisation organisation) {
+    public ProcessRole(){
+
+    }
+
+    public ProcessRole(Long id, User user, Application application, Role role, Organisation organisation) {
         this.id = id;
         this.user = user;
         this.application = application;
         this.role = role;
         this.organisation = organisation;
-    }
-
-    public UserApplicationRole(){
-
     }
 
     public Role getRole() {

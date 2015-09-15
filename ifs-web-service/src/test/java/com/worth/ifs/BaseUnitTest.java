@@ -12,7 +12,7 @@ import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.HandlerMethod;
@@ -140,35 +140,34 @@ public class BaseUnitTest {
         Organisation organisation2 = new Organisation(2L, "Ludlow");
         organisations = Arrays.asList(organisation1, organisation2);
 
-        UserApplicationRole userAppRole1 = new UserApplicationRole(1L, loggedInUser, app1, role1, organisation1);
-        UserApplicationRole userAppRole2 = new UserApplicationRole(2L, loggedInUser, app2, role1, organisation1);
-        UserApplicationRole userAppRole3 = new UserApplicationRole(3L, loggedInUser, app3, role1, organisation1);
-        UserApplicationRole userAppRole4 = new UserApplicationRole(4L, loggedInUser, app4, role1, organisation1);
+        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, app1, role1, organisation1);
+        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, app2, role1, organisation1);
+        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, app3, role1, organisation1);
+        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, app4, role1, organisation1);
+        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), app1, role2, organisation2);
 
-        UserApplicationRole userAppRole5 = new UserApplicationRole(5L, users.get(1), app1, role2, organisation2);
-
-        organisation1.setUserApplicationRoles(Arrays.asList(userAppRole1, userAppRole2, userAppRole3, userAppRole4));
-        organisation2.setUserApplicationRoles(Arrays.asList(userAppRole5));
+        organisation1.setProcessRoles(Arrays.asList(processRole1, processRole2, processRole3, processRole4));
+        organisation2.setProcessRoles(Arrays.asList(processRole5));
 
         competition.addApplication(app1, app2, app3, app4);
 
         app1.setCompetition(competition);
-        app1.setUserApplicationRoles(Arrays.asList(userAppRole1, userAppRole5));
+        app1.setProcessRoles(Arrays.asList(processRole1, processRole5));
         app2.setCompetition(competition);
-        app2.setUserApplicationRoles(Arrays.asList(userAppRole2));
+        app2.setProcessRoles(Arrays.asList(processRole2));
         app3.setCompetition(competition);
-        app3.setUserApplicationRoles(Arrays.asList(userAppRole3));
+        app3.setProcessRoles(Arrays.asList(processRole3));
         app4.setCompetition(competition);
-        app4.setUserApplicationRoles(Arrays.asList(userAppRole4));
+        app4.setProcessRoles(Arrays.asList(processRole4));
 
-        loggedInUser.addUserApplicationRole(userAppRole1, userAppRole2, userAppRole3, userAppRole4);
-        users.get(1).addUserApplicationRole(userAppRole5);
+        loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
+        users.get(1).addUserApplicationRole(processRole5);
         applications = Arrays.asList(app1, app2, app3, app4);
 
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
         when(sectionService.getCompleted(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
         when(sectionService.getInCompleted(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
-        when(processRoleService.findUserApplicationRole(app1.getId(), loggedInUser.getId())).thenReturn(userAppRole1);
+        when(processRoleService.findProcessRole(app1.getId(), loggedInUser.getId())).thenReturn(processRole1);
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app1.getId())).thenReturn(app1);
         when(applicationService.getById(app2.getId())).thenReturn(app2);
@@ -182,7 +181,7 @@ public class BaseUnitTest {
         Application application = applications.get(0);
 
         Boolean markAsComplete = false;
-        UserApplicationRole userApplicationRole = loggedInUser.getUserApplicationRoles().get(0);
+        ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
         Response response = new Response(1L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(20L), application);
         Response response2 = new Response(2L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(21L), application);

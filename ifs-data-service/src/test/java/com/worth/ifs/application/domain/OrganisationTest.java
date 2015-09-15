@@ -1,7 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +14,13 @@ public class OrganisationTest {
 
     long id;
     String name;
-    List<UserApplicationRole> userApplicationRoles;
+    List<ProcessRole> processRoles;
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
         name = "test organisation";
-        userApplicationRoles = new ArrayList<UserApplicationRole>();
+        processRoles = new ArrayList<ProcessRole>();
         organisation = new Organisation(id, name);
     }
 
@@ -28,6 +28,6 @@ public class OrganisationTest {
     public void organisationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(organisation.getId(), id);
         Assert.assertEquals(organisation.getName(), name);
-        Assert.assertEquals(organisation.getUserApplicationRoles(), userApplicationRoles);
+        Assert.assertEquals(organisation.getProcessRoles(), processRoles);
     }
 }
