@@ -1,6 +1,8 @@
 package com.worth.ifs.application.repository;
 
 import com.worth.ifs.workflow.domain.Process;
+import com.worth.ifs.workflow.domain.ProcessEvent;
+import com.worth.ifs.workflow.domain.ProcessStatus;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -11,13 +13,16 @@ import java.util.List;
  */
 public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
     Process findById(@Param("id") Long id);
-    List<IProcess> findByInvolvedId(@Param("involvedId") Long involvedId);
-    List<IProcess> findByTargetId(@Param("targetId") Long targetId);
-    List<IProcess> findByInvolvedIdAndType(@Param("involvedId") Long involvedId, @Param("type") ProcessType type );
-    List<IProcess> findByTargetIdAndType(@Param("targetId") Long targetId, @Param("type") ProcessType type );
+    List<Process> findByAssigneeId(@Param("assigneeId") Long assigneeId);
+    List<Process> findBySubjectId(@Param("subjectId") Long subjectId);
+    List<Process> findByAssigneeIdAndEvent(@Param("assigneeId") Long assigneeId, @Param("event") ProcessEvent event );
 
-    List<IProcess> findByInvolvedIdAndTypeAndStatus(@Param("targetId") Long targetId,
-                                                    @Param("type") ProcessType type,  @Param("status") ProcessStatus status );
+
+    List<Process> findBySubjectIdAndEvent(@Param("subject") Long subjectId, @Param("event") ProcessEvent event );
+
+    List<Process> findByAssigneeIdAndEventAndStatus(@Param("assigneeId") Long assigneeId,
+                                                    @Param("event") ProcessEvent event,
+                                                   @Param("status") ProcessStatus status );
 
     List<Process> findAll();
 }

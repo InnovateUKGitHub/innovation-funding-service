@@ -11,7 +11,7 @@ import java.util.Calendar;
  */
 
 @Entity
-public class Process implements IProcess {
+public class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,50 +47,41 @@ public class Process implements IProcess {
 
     /** Getters **/
 
-    @Override
+
     public Long getAssignee() {
         return assigneeId;
     }
-    @Override
     public Long getSubject() {
         return subjectId;
     }
-    @Override
     public Long getId() {
         return id;
     }
-    @Override
     public ProcessStatus getStatus() {
         return status;
     }
-    @Override
     public ProcessEvent getEvent() {
         return event;
     }
 
     @JsonIgnore
-    @Override
     public Calendar getVersion() {
         return lastModified;
     }
 
     /** Setters **/
 
-    @Override
     public void setAssignee(Long assigneeId) {
         this.assigneeId = assigneeId;
     }
-    @Override
     public void setSubject(Long subjectId) {
         this.subjectId = subjectId;
     }
 
-    @Override
     public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 
-    @Override
     public void setEvent(ProcessEvent event) {
         this.event = event;
     }
