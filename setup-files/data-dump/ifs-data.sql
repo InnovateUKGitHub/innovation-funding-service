@@ -166,6 +166,11 @@ INSERT  IGNORE INTO `user_application_role` (`id`, `application_id`, `organisati
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+LOCK TABLES `process` WRITE;
+INSERT INTO `process` (`id`,`involved_id`,`last_modified`,`status`,`target_id`,`type`) VALUES (1,1,'2015-09-15 14:24:08','PENDING',2,'ANOTHER_ONE');
+UNLOCK TABLES;
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
