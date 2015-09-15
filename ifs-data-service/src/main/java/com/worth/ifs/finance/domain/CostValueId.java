@@ -26,7 +26,7 @@ public class CostValueId implements Serializable {
     public boolean equals(Object object) {
         if (object instanceof CostValueId) {
             CostValueId cv = (CostValueId)object;
-            return cost.equals(cv.cost) && costField == cv.costField;
+            return cost.equals(cv.cost) && costField.equals(cv.costField);
         } else {
             return false;
         }

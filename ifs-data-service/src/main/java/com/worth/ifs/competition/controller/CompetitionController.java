@@ -4,7 +4,7 @@ import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.repository.UserApplicationRoleRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +22,7 @@ public class CompetitionController {
     @Autowired
     CompetitionsRepository repository;
     @Autowired
-    UserApplicationRoleRepository userAppRoleRepository;
+    ProcessRoleRepository userAppRoleRepository;
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
     @Autowired

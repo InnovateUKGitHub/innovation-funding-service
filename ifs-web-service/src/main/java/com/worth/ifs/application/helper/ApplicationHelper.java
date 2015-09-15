@@ -2,8 +2,8 @@ package com.worth.ifs.application.helper;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,7 +15,7 @@ public class ApplicationHelper {
     private final Log log = LogFactory.getLog(ApplicationHelper.class);
 
     public TreeSet<Organisation> getApplicationOrganisations(Application application){
-        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
         Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<Organisation>(compareById);
@@ -26,7 +26,7 @@ public class ApplicationHelper {
         return organisations;
     }
     public Optional<Organisation> getApplicationLeadOrganisation(Application application){
-        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
 
         Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals("leadapplicant"))
@@ -36,7 +36,7 @@ public class ApplicationHelper {
         return leadOrganisation;
     }
     public Set<User> getAssignableUsers(Application application){
-        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Set<User> users = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals("leadapplicant") || uar.getRole().getName().equals("collaborator"))
                 .map(uar -> uar.getUser())
@@ -45,7 +45,7 @@ public class ApplicationHelper {
         return users;
     }
     public Set<User> getApplicationUsers(Application application){
-        List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Set<User> users = userApplicationRoles.stream()
                 .map(uar -> uar.getUser())
                 .collect(Collectors.toSet());

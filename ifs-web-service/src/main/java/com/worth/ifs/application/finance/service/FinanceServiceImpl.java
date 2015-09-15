@@ -1,13 +1,10 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.application.finance.CostCategory;
-import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.service.UserRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,16 +30,16 @@ public class FinanceServiceImpl implements FinanceService {
     ApplicationFinanceRestService applicationFinanceRestService;
 
     public ApplicationFinance addApplicationFinance(Long userId, Long applicationId) {
-        UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
+        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId);
 
-        if(userApplicationRole.getOrganisation()!=null) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, userApplicationRole.getOrganisation().getId());
+        if(processRole.getOrganisation()!=null) {
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId());
         }
         return null;
     }
 
     public ApplicationFinance getApplicationFinance(Long userId, Long applicationId) {
-        UserApplicationRole userApplicationRole = userRestService.findUserApplicationRole(userId, applicationId);
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 

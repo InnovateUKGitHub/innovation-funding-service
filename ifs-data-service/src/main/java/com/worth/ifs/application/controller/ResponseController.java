@@ -7,9 +7,9 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
-import com.worth.ifs.user.repository.UserApplicationRoleRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +35,7 @@ public class ResponseController {
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
-    UserApplicationRoleRepository userAppRoleRepository;
+    ProcessRoleRepository userAppRoleRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -48,10 +48,10 @@ public class ResponseController {
     @RequestMapping("/findResponsesByApplication/{applicationId}")
      public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
         Application app = applicationRepository.findOne(applicationId);
-        List<UserApplicationRole> userAppRoles = app.getUserApplicationRoles();
+        List<ProcessRole> userAppRoles = app.getProcessRoles();
 
         List<Response> responses = new ArrayList<Response>();
-        for (UserApplicationRole userAppRole : userAppRoles) {
+        for (ProcessRole userAppRole : userAppRoles) {
             responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
         return responses;
@@ -74,7 +74,7 @@ public class ResponseController {
         User assignee = userRepository.findOne(assigneeId);
         User user = userRepository.findOne(userId);
         Application application = applicationRepository.findOne(applicationId);
-        List<UserApplicationRole> userApplicationRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> processRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){
@@ -85,7 +85,7 @@ public class ResponseController {
         response.setUpdateDate(LocalDateTime.now());
         response.setAssignee(assignee);
         response.setAssignedDate(LocalDateTime.now());
-        response.setUpdatedBy(userApplicationRoles.get(0));
+        response.setUpdatedBy(processRoles.get(0));
 
         responseRepository.save(response);
 
@@ -98,7 +98,7 @@ public class ResponseController {
         User user = userRepository.findOne(userId);
 
 
-        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
         if(userAppRoles == null || userAppRoles.size()== 0){
             // user has no role on this application, so should not be able to write..
             log.error("FORBIDDEN TO SAVE");
@@ -129,7 +129,7 @@ public class ResponseController {
         User user = userRepository.findOne(userId);
 
         Application application = applicationRepository.findOne(applicationId);
-        List<UserApplicationRole> userApplicationRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> processRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){
@@ -140,7 +140,7 @@ public class ResponseController {
 
         response.setMarkedAsComplete(markedAsComplete);
         response.setUpdateDate(LocalDateTime.now());
-        response.setUpdatedBy(userApplicationRoles.get(0));
+        response.setUpdatedBy(processRoles.get(0));
         responseRepository.save(response);
 
         return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -164,7 +164,7 @@ public class ResponseController {
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
 
-        List<UserApplicationRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){

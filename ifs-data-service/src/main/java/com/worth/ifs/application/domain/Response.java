@@ -1,15 +1,15 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class Response {
-    public Response(Long id, LocalDateTime updateDate, String value, Boolean markedAsComplete, UserApplicationRole updatedBy, Question question, Application app) {
+    public Response(Long id, LocalDateTime updateDate, String value, Boolean markedAsComplete, ProcessRole updatedBy, Question question, Application app) {
         this.id = id;
         this.updateDate = updateDate;
         this.value = value;
@@ -33,7 +33,7 @@ public class Response {
 
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
-    private UserApplicationRole updatedBy;
+    private ProcessRole updatedBy;
 
     @ManyToOne
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -117,11 +117,11 @@ public class Response {
         this.assignedDate = assignedDate;
     }
 
-    public UserApplicationRole getUpdatedBy() {
+    public ProcessRole getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(UserApplicationRole updatedBy) {
+    public void setUpdatedBy(ProcessRole updatedBy) {
         this.updatedBy = updatedBy;
     }
 }

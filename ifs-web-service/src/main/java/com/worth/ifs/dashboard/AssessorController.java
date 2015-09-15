@@ -5,8 +5,8 @@ import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,7 +90,7 @@ public class AssessorController {
         return competition;
     }
 
-    private UserApplicationRole getAssessorApplicationRole(List<UserApplicationRole> roles, final Long userId, UserRoleType role) {
+    private ProcessRole getAssessorApplicationRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         int indexAt = -1;
         int i = 0;
         while( indexAt == -1 && i < roles.size()) {
