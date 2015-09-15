@@ -2,8 +2,13 @@
 
 rebel_project.xml
 nbijl.xml
-ifs-web-archive/.idea/libraries
 .bundle/config
+
+
+# idea files
+*/ifs-data-service.iml
+*/.idea/libraries
+*/.idea/libraries/dictionaries
 
 # Created with help from https://www.gitignore.io
 
@@ -54,3 +59,7 @@ ifs-web-service/.idea/libraries
 ifs-web-service/out
 workspace.xml
 .vagrant
+ifs-data-service/.idea/dictionaries
+*.iml
+ifs-web-service/libs
+rebel.xml
