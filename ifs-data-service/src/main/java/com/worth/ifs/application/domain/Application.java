@@ -2,7 +2,7 @@ package com.worth.ifs.application.domain;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,14 +15,6 @@ import java.util.List;
  */
 @Entity
 public class Application {
-    public Application(Competition competition, String name, List<UserApplicationRole> userApplicationRoles, ApplicationStatus applicationStatus, Long id) {
-        this.competition = competition;
-        this.name = name;
-        this.userApplicationRoles = userApplicationRoles;
-        this.applicationStatus = applicationStatus;
-        this.id = id;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,7 +25,7 @@ public class Application {
     public void setId(Long id) { this.id = id; }
 
     @OneToMany(mappedBy="application")
-    private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
 
     @OneToMany(mappedBy="application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
@@ -47,6 +39,14 @@ public class Application {
     private Competition competition;
 
     public Application() {
+    }
+
+    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
+        this.competition = competition;
+        this.name = name;
+        this.processRoles = processRoles;
+        this.applicationStatus = applicationStatus;
+        this.id = id;
     }
 
     protected boolean canEqual(Object other) {
@@ -65,12 +65,12 @@ public class Application {
         this.name = name;
     }
 
-    public List<UserApplicationRole> getUserApplicationRoles() {
-        return userApplicationRoles;
+    public List<ProcessRole> getProcessRoles() {
+        return processRoles;
     }
 
-    public void setUserApplicationRoles(List<UserApplicationRole> userApplicationRoles) {
-        this.userApplicationRoles = userApplicationRoles;
+    public void setProcessRoles(List<ProcessRole> processRoles) {
+        this.processRoles = processRoles;
     }
 
     public ApplicationStatus getApplicationStatus() {
@@ -95,11 +95,11 @@ public class Application {
         this.applicationStatus = applicationStatus;
     }
 
-    public void addUserApplicationRole(UserApplicationRole... userApplicationRoles){
-        if(this.userApplicationRoles == null){
-            this.userApplicationRoles = new ArrayList<>();
+    public void addUserApplicationRole(ProcessRole... processRoles){
+        if(this.processRoles == null){
+            this.processRoles = new ArrayList<>();
         }
-        this.userApplicationRoles.addAll(Arrays.asList(userApplicationRoles));
+        this.processRoles.addAll(Arrays.asList(processRoles));
 
 
     }

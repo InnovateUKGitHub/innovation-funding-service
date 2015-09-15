@@ -1,9 +1,6 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +12,7 @@ public class ResponseTest {
 
     Long id;
     Question question;
-    UserApplicationRole updatedBy;
+    ProcessRole updatedBy;
     Boolean markedAsComplete;
     String value;
     LocalDateTime date;
@@ -24,7 +21,7 @@ public class ResponseTest {
     public void setUp() throws Exception {
         id = 0L;
         question = new Question();
-        updatedBy = new UserApplicationRole();
+        updatedBy = new ProcessRole();
         markedAsComplete = false;
         value  = "testResponseValue";
         date = LocalDateTime.now();

@@ -1,12 +1,9 @@
-package com.worth.ifs.application.domain.Process;
+package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.tomcat.jni.Proc;
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.SourceType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Calendar;
 
 /**
@@ -20,41 +17,43 @@ public class Process implements IProcess {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "involvedId")
-    private Long involvedId;
+    @Column(name = "assigneeId")
+    private Long assigneeId;
 
-    @Column(name = "targetId")
-    private Long targetId;
+    @Column(name = "subjectId")
+    private Long subjectId;
+
+    @Enumerated(EnumType.STRING)
+    private ProcessEvent event;
 
     @Enumerated(EnumType.STRING)
     private ProcessStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private ProcessType type;
-
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar lastModified;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
 
     public Process(){}
 
-    public Process(ProcessType type, ProcessStatus status, Long involved, Long target) {
-        this.type = type;
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId) {
+        this.event = event;
         this.status = status;
-        this.involvedId = involved;
-        this.targetId = target;
+        this.assigneeId = assigneeId;
+        this.subjectId = subjectId;
     }
 
     /** Getters **/
 
     @Override
-    public Long getInvolved() {
-        return involvedId;
+    public Long getAssignee() {
+        return assigneeId;
     }
     @Override
-    public Long getTarget() {
-        return targetId;
+    public Long getSubject() {
+        return subjectId;
     }
     @Override
     public Long getId() {
@@ -65,8 +64,8 @@ public class Process implements IProcess {
         return status;
     }
     @Override
-    public ProcessType getType() {
-        return type;
+    public ProcessEvent getEvent() {
+        return event;
     }
 
     @JsonIgnore
@@ -75,27 +74,24 @@ public class Process implements IProcess {
         return lastModified;
     }
 
-
-
     /** Setters **/
 
     @Override
-    public void setInvolved(Long involved) {
-        this.involvedId = involved;
+    public void setAssignee(Long assigneeId) {
+        this.assigneeId = assigneeId;
     }
     @Override
-    public void setTarget(Long target) {
-        this.targetId = target;
+    public void setSubject(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     @Override
     public void setStatus(ProcessStatus status) {
         this.status = status;
     }
+
     @Override
-    public void setType(ProcessType type) {
-        this.type = type;
+    public void setEvent(ProcessEvent event) {
+        this.event = event;
     }
-
-
 }

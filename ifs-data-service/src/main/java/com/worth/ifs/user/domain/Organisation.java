@@ -16,7 +16,7 @@ public class Organisation {
     private String name;
 
     @OneToMany(mappedBy="organisation")
-    private List<UserApplicationRole> userApplicationRoles = new ArrayList<UserApplicationRole>();
+    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
 
     @OneToMany(mappedBy="organisation")
     private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
@@ -39,8 +39,8 @@ public class Organisation {
     }
 
     @JsonIgnore
-    public List<UserApplicationRole> getUserApplicationRoles() {
-        return userApplicationRoles;
+    public List<ProcessRole> getProcessRoles() {
+        return processRoles;
     }
 
     @JsonIgnore
@@ -48,7 +48,7 @@ public class Organisation {
         return applicationFinances;
     }
 
-    public void setUserApplicationRoles(List<UserApplicationRole> userApplicationRoles) {
-        this.userApplicationRoles = userApplicationRoles;
+    public void setProcessRoles(List<ProcessRole> processRoles) {
+        this.processRoles = processRoles;
     }
 }

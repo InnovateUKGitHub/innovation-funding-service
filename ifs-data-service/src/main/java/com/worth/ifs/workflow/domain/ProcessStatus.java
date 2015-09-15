@@ -1,4 +1,4 @@
-package com.worth.ifs.application.domain.Process;
+package com.worth.ifs.workflow.domain;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

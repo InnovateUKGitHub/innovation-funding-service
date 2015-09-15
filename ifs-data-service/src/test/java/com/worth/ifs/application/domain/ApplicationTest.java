@@ -1,9 +1,7 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,7 @@ public class ApplicationTest {
 
     Competition competition;
     String name;
-    List<UserApplicationRole> userApplicationRoles;
+    List<ProcessRole> processRoles;
     ApplicationStatus applicationStatus;
     Long id;
 
@@ -27,12 +25,12 @@ public class ApplicationTest {
         applicationStatus = new ApplicationStatus();
         competition = new Competition();
 
-        userApplicationRoles = new ArrayList<UserApplicationRole>();
-        userApplicationRoles.add(new UserApplicationRole());
-        userApplicationRoles.add(new UserApplicationRole());
-        userApplicationRoles.add(new UserApplicationRole());
+        processRoles = new ArrayList<ProcessRole>();
+        processRoles.add(new ProcessRole());
+        processRoles.add(new ProcessRole());
+        processRoles.add(new ProcessRole());
 
-        application = new Application(competition, name, userApplicationRoles, applicationStatus, id);
+        application = new Application(competition, name, processRoles, applicationStatus, id);
     }
 
     @Test
@@ -40,7 +38,7 @@ public class ApplicationTest {
         Assert.assertEquals(application.getId(), id);
         Assert.assertEquals(application.getName(), name);
         Assert.assertEquals(application.getApplicationStatus(), applicationStatus);
-        Assert.assertEquals(application.getUserApplicationRoles(), userApplicationRoles);
+        Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
     }
 }

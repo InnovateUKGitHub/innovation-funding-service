@@ -1,9 +1,9 @@
-package com.worth.ifs.application.domain.Process;
+package com.worth.ifs.workflow.domain;
 
 /**
  * Created by nunoalexandre on 15/09/15.
  */
-public enum ProcessType {
+public enum ProcessEvent {
 
     ASSESSMENT_INVITATION("assessment_invitation"),
     ANOTHER_ONE("n/a");
@@ -11,7 +11,7 @@ public enum ProcessType {
 
     private final String type;
 
-    ProcessType(String value) {
+    ProcessEvent(String value) {
         this.type = value;
     }
 }

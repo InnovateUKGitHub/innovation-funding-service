@@ -17,14 +17,14 @@ public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
 
     public User(Long id, String name, String email, String password, String token, String imageUrl,
-                List<UserApplicationRole> userApplicationRoles) {
+                List<ProcessRole> processRoles) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.token = token;
         this.imageUrl = imageUrl;
-        this.userApplicationRoles = userApplicationRoles;
+        this.processRoles = processRoles;
     }
 
     @Id
@@ -32,7 +32,7 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy="user")
-    private List<UserApplicationRole> userApplicationRoles = new ArrayList<>();
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
    // @ManyToMany(mappedBy="user")
     //private Set<Role> roles = new HashSet<>();
@@ -73,15 +73,15 @@ public class User {
     }
 
     @JsonIgnore
-    public List<UserApplicationRole> getUserApplicationRoles() {
-        return userApplicationRoles;
+    public List<ProcessRole> getProcessRoles() {
+        return processRoles;
     }
 
-    public void addUserApplicationRole(UserApplicationRole... r){
-        if(this.userApplicationRoles == null){
-            this.userApplicationRoles = new ArrayList<>();
+    public void addUserApplicationRole(ProcessRole... r){
+        if(this.processRoles == null){
+            this.processRoles = new ArrayList<>();
         }
-        this.userApplicationRoles.addAll(Arrays.asList(r));
+        this.processRoles.addAll(Arrays.asList(r));
     }
 
     public Boolean passwordEquals(String passwordInput){

@@ -1,6 +1,5 @@
-package com.worth.ifs.application.domain.Process;
+package com.worth.ifs.workflow.domain;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 /**
@@ -9,17 +8,17 @@ import java.util.Calendar;
 public interface IProcess {
 
     /** Getters **/
-    Long getInvolved();
-    Long getTarget();
+    Long getAssignee();
+    Long getSubject();
     Long getId();
     ProcessStatus getStatus();
-    ProcessType getType();
+    ProcessEvent getEvent();
     public Calendar getVersion();
 
     /** Setters **/
-    public void setInvolved(Long involved);
+    public void setAssignee(Long assigneeId);
     public void setStatus(ProcessStatus status);
-    public void setType(ProcessType type);
-    public void setTarget(Long target);
+    public void setEvent(ProcessEvent event);
+    public void setSubject(Long subjectId);
 
 }

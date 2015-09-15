@@ -2,12 +2,12 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.user.repository.UserApplicationRoleRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserApplicationRole;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class ApplicationControllerTest {
     @Mock
     ApplicationRepository applicationRepositoryMock;
     @Mock
-    UserApplicationRoleRepository userAppRoleRepositoryMock;
+    ProcessRoleRepository userAppRoleRepositoryMock;
     @Mock
     UserRepository userRepositoryMock;
 
@@ -76,10 +76,10 @@ public class ApplicationControllerTest {
         Organisation organisation1 = new Organisation(1L, "test organisation 1");
         Organisation organisation2 = new Organisation(2L, "test organisation 2");
 
-        UserApplicationRole testUserApplicationRole1 = new UserApplicationRole(0L, testUser1, testApplication1, new Role(), organisation1);
-        UserApplicationRole testUserApplicationRole2 = new UserApplicationRole(1L, testUser1, testApplication2, new Role(), organisation1);
-        UserApplicationRole testUserApplicationRole3 = new UserApplicationRole(2L, testUser2, testApplication2, new Role(), organisation2);
-        UserApplicationRole testUserApplicationRole4 = new UserApplicationRole(3L, testUser2, testApplication3, new Role(), organisation2);
+        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1, new Role(), organisation1);
+        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2, new Role(), organisation1);
+        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2, new Role(), organisation2);
+        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3, new Role(), organisation2);
 
         when(userRepositoryMock.findById(1L)).thenReturn(new ArrayList<User>() {{
             add(testUser1);
@@ -89,14 +89,14 @@ public class ApplicationControllerTest {
             add(testUser2);
         }});
 
-        when(userAppRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<UserApplicationRole>() {{
-            add(testUserApplicationRole1);
-            add(testUserApplicationRole2);
+        when(userAppRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
+            add(testProcessRole1);
+            add(testProcessRole2);
         }});
 
-        when(userAppRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<UserApplicationRole>() {{
-            add(testUserApplicationRole3);
-            add(testUserApplicationRole4);
+        when(userAppRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
+            add(testProcessRole3);
+            add(testProcessRole4);
         }});
 
         mockMvc.perform(get("/application/findByUser/1"))
