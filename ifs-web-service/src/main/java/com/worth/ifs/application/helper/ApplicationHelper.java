@@ -7,19 +7,21 @@ import com.worth.ifs.user.domain.UserApplicationRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ApplicationHelper {
     private final Log log = LogFactory.getLog(ApplicationHelper.class);
 
-    public Set<Organisation> getApplicationOrganisations(Application application){
+    public TreeSet<Organisation> getApplicationOrganisations(Application application){
         List<UserApplicationRole> userApplicationRoles = application.getUserApplicationRoles();
-        Set<Organisation> organisations = userApplicationRoles.stream()
+        Comparator<Organisation> compareById =
+                Comparator.comparingLong(Organisation::getId);
+        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<Organisation>(compareById);
+        TreeSet<Organisation> organisations = userApplicationRoles.stream()
                 .map(uar -> uar.getOrganisation())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(supplier));
 
         return organisations;
     }
