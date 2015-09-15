@@ -1,29 +1,17 @@
 package com.worth.ifs.workflow.domain;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Used for reoccurring processes, which does not involve specific types to which these processes relate to.
+ * Created by nunoalexandre on 15/09/15.
  */
-@Entity
-public class ProcessEvent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String description;
+public enum ProcessEvent {
 
-    @OneToMany(mappedBy = "processEvent")
-    private List<Process> processes = new ArrayList<Process>();
+    ASSESSMENT_INVITATION("assessment_invitation"),
+    ANOTHER_ONE("n/a");
 
-    public ProcessEvent(String description) {
-        this.description = description;
-    }
 
-    public ProcessEvent(Long id, String description, List<Process> processes) {
-        this.id = id;
-        this.description = description;
-        this.processes = processes;
+    private final String type;
+
+    ProcessEvent(String value) {
+        this.type = value;
     }
 }

@@ -96,6 +96,26 @@ INSERT  IGNORE INTO `organisation` (`id`, `name`) VALUES (1,'Nomensa'),(2,'Worth
 UNLOCK TABLES;
 
 --
+-- Dumping data for table `process`
+--
+
+LOCK TABLES `process` WRITE;
+/*!40000 ALTER TABLE `process` DISABLE KEYS */;
+INSERT  IGNORE INTO `process` (`id`, `assignee_id`, `end_date`, `event`, `last_modified`, `start_date`, `status`, `subject_id`) VALUES (1,1,'2015-09-15','ASSESSMENT_INVITATION','2015-09-15 14:24:08','2015-08-15','PENDING',2);
+/*!40000 ALTER TABLE `process` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `process_role`
+--
+
+LOCK TABLES `process_role` WRITE;
+/*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3);
+/*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `question`
 --
 
@@ -154,22 +174,7 @@ LOCK TABLES `user` WRITE;
 INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'applicant@innovateuk.gov.uk','image.jpg','Steve Smith (Lead Applicant)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'collaborator@innovateuk.gov.uk','image2.jpg','Jessica Doe (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'assessor@innovateuk.gov.uk','image3.jpg','Professor Plum (Assessor)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping data for table `user_application_role`
---
-
-LOCK TABLES `process_role` WRITE;
-/*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3);
-/*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-LOCK TABLES `process` WRITE;
-INSERT INTO `process` (`id`,`involved_id`,`last_modified`,`status`,`target_id`,`type`) VALUES (1,1,'2015-09-15 14:24:08','PENDING',2,'ANOTHER_ONE');
-UNLOCK TABLES;
-
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -179,4 +184,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-15 10:38:15
+-- Dump completed on 2015-09-15 16:48:01

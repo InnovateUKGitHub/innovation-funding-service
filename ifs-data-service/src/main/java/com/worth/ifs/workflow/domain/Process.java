@@ -1,60 +1,97 @@
 package com.worth.ifs.workflow.domain;
 
-import com.worth.ifs.user.domain.ProcessRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
 
 /**
- * The process that is taken place where a certain action should be taken place.
- * A process can be assigned to a certain user.
+ * Created by nunoalexandre on 15/09/15.
  */
+
 @Entity
-public class Process {
+public class Process implements IProcess {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "assigneeId")
+    private Long assigneeId;
+
+    @Column(name = "subjectId")
+    private Long subjectId;
+
+    @Enumerated(EnumType.STRING)
+    private ProcessEvent event;
+
+    @Enumerated(EnumType.STRING)
+    private ProcessStatus status;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @OneToMany(mappedBy="process")
-    private List<ProcessValue> processValues = new ArrayList<ProcessValue>();
 
-    @ManyToOne
-    @JoinColumn(name="processEventId", referencedColumnName="id")
-    private ProcessEvent processEvent;
+    public Process(){}
 
-
-    @ManyToOne
-    @JoinColumn(name="processTypeId", referencedColumnName="id")
-    private ProcessType processType;
-
-    public Process(LocalDate startDate, LocalDate endDate, ProcessEvent processEvent, ProcessType processType) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.processEvent = processEvent;
-        this.processType = processType;
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId) {
+        this.event = event;
+        this.status = status;
+        this.assigneeId = assigneeId;
+        this.subjectId = subjectId;
     }
 
-    public Process(List<ProcessValue> processValues) {
-        this.processValues = processValues;
+    /** Getters **/
+
+    @Override
+    public Long getAssignee() {
+        return assigneeId;
+    }
+    @Override
+    public Long getSubject() {
+        return subjectId;
+    }
+    @Override
+    public Long getId() {
+        return id;
+    }
+    @Override
+    public ProcessStatus getStatus() {
+        return status;
+    }
+    @Override
+    public ProcessEvent getEvent() {
+        return event;
     }
 
-    public List<ProcessValue> getProcessValues() {
-        return processValues;
+    @JsonIgnore
+    @Override
+    public Calendar getVersion() {
+        return lastModified;
     }
 
-    public void setProcessValues(List<ProcessValue> processValues) {
-        this.processValues = processValues;
+    /** Setters **/
+
+    @Override
+    public void setAssignee(Long assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+    @Override
+    public void setSubject(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
-    public ProcessEvent getProcessEvent() {
-        return processEvent;
+    @Override
+    public void setStatus(ProcessStatus status) {
+        this.status = status;
     }
 
-    public ProcessType getProcessType() {
-        return processType;
+    @Override
+    public void setEvent(ProcessEvent event) {
+        this.event = event;
     }
 }
