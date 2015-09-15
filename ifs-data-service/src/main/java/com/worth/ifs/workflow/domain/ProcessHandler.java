@@ -2,6 +2,7 @@ package com.worth.ifs.workflow.domain;
 
 import com.worth.ifs.application.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.*;
 import java.util.List;
@@ -10,11 +11,18 @@ import java.util.List;
  * Created by nunoalexandre on 15/09/15.
  */
 
+@Component
 public class ProcessHandler {
 
     @Autowired
     private ProcessRepository repository;
 
+    public void saveProcess(Process process) {
+        repository.save(process);
+    }
+    public Process saveProcessAndGetUpdated(Process process) {
+        return repository.save(process);
+    }
 
 
     public Process getProcessById(Long id) {

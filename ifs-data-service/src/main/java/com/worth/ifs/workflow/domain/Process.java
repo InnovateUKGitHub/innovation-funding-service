@@ -38,7 +38,7 @@ public class Process {
 
     public Process(){}
 
-    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId) {
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId ) {
         this.event = event;
         this.status = status;
         this.assigneeId = assigneeId;
