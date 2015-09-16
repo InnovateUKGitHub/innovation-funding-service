@@ -107,7 +107,7 @@ task wrapper(type: Wrapper) {
 
 task deployToTomcat(type: Copy) {
     from war
-    into "/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
+    into "$tomcatWebAppsDir"
     rename ('(.*).war', 'ROOT.war')
 }
 
