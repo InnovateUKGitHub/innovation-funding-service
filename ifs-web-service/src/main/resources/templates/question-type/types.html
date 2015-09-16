@@ -684,3 +684,108 @@
             <p><a href="">View table in full screen (opens new window)</a></p>
         </div>
     </div>
+    <!-- ===========================Form: funding breakdown =========================== -->
+    <div th:fragment="finances_summary" th:if="${financeTotalPerType}">
+
+        <p>This is the overview of the finances provided by all partners in this project.</p>
+        <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
+        <div class="form-group">
+            <div style="text-align: right;">
+                <button class="button button-small" disabled="disabled">Show all partners</button>
+                <button class="button button-small" style="margin-right: 0;">Filter partners</button>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" th:each="applicationOrganisation : ${applicationOrganisations}">
+                        <div th:text="${applicationOrganisation.name}"></div>
+                        <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
+                        <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>Total costs</th>
+                    <td>£208,000</td>
+                    <td>-</td>
+                    <td>£5,000</td>
+                    <td>£5,000</td>
+                </tr>
+                <tr>
+                    <th>% Grant</th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>50%</td>
+                    <td>60%</td>
+                </tr>
+                <tr>
+                    <th>Funding sought</th>
+                    <td>£105,000</td>
+                    <td>-</td>
+                    <td>£25,000</td>
+                    <td>£5,000</td>
+                </tr>
+                <tr>
+                    <th>Other public sector funding</th>
+                    <td>£10,000</td>
+                    <td>-</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <th>Contribution to project</th>
+                    <td>£93,000</td>
+                    <td>-</td>
+                    <td>£32,000</td>
+                    <td>£11,000</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <h2>Funding breakdown</h2>
+        <div class="form-group">
+            <div style="text-align: right;">
+                <button class="button button-small" disabled="disabled">Show all partners</button>
+                <button class="button button-small" style="margin-right: 0;">Filter partners</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col" th:each="applicationOrganisation : ${applicationOrganisations}">
+                        <div th:text="${applicationOrganisation.name}"></div>
+                        <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
+                        <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
+                    <th th:text="${financeSubSection.name}"></th>
+
+                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                        <td th:each="organisationFinance : ${organisationFinances}"
+                            th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                            th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                        </td>
+                    </div>
+                </tr>
+                <tr>
+                    <th>Total</th>
+
+                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                        <td th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                    </div>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>

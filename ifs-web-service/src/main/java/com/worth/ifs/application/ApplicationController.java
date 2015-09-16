@@ -47,11 +47,15 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping("/{applicationId}/summary")
-    public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId){
+    public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request){
         List<Response> responses = responseService.getByApplication(applicationId);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
 
         addApplicationDetails(applicationId, model);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        Application application = applicationService.getById(applicationId);
+        addFinanceDetails(model, application, user.getId());
         return "application-summary";
     }
 

@@ -40,8 +40,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    FinanceService financeService;
-    @Autowired
     CostService costService;
 
     @RequestMapping("/{applicationId}")
@@ -82,7 +80,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
-        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
@@ -110,7 +107,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<Response> responses = responseService.getByApplication(applicationId);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
 
-        addFinanceDetails(model, applicationId, userId);
+        addFinanceDetails(model, application, userId);
 
         Section currentSection = getSection(application, currentSectionId);
         model.addAttribute("currentSectionId", currentSectionId);
@@ -132,32 +129,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .findFirst();
 
         return section.isPresent() ? section.get() : null;
-    }
-
-    private void addFinanceDetails(Model model, Long applicationId, Long userId) {
-        OrganisationFinance organisationFinance = getOrganisationFinances(applicationId, userId);
-        model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
-        model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
-
-
-        Section section = sectionService.getByName("Your finances");
-        sectionService.removeSectionsQuestionsWithType(section, "empty");
-        model.addAttribute("financeSection", section);
-
-        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, applicationId);
-        model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
-        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
-        model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
-    }
-
-    private OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(userId, applicationId);
-        }
-
-        List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
-        return new OrganisationFinance(applicationFinance.getId(),applicationFinance.getOrganisation(),organisationCosts);
     }
 
     /**
@@ -275,7 +246,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             String fieldName = request.getParameter("fieldName");
             FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
             if(fieldName != null && value != null) {
-                financeFormHandler.handle(fieldName, value);
+                log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
+                financeFormHandler.storeField(fieldName, value);
             }
         } else {
             Long questionId = Long.valueOf(inputIdentifier);
