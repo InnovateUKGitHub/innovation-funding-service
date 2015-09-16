@@ -29,21 +29,11 @@ public class FinanceFormHandler {
     }
 
     public void handle(HttpServletRequest request) {
-        List<Cost> costs = getCostsForType(request);
+        List<Cost> costs = getCosts(request);
         storeCosts(costs);
     }
 
-    public void handle(String fieldName, String value) {
-        List<CostField> costFields = costService.getCostFields();
-        CostFormField costFormField = getCostFormField(fieldName, value);
-        CostType costType = CostType.fromString(costFormField.getKeyType());
-        CostItem costItem = getCostItem(costType, Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
-        CostItemMapper costItemMapper = new CostItemMapper(costFields);
-        Cost cost = costItemMapper.costItemToCost(costType, costItem);
-        costService.update(cost);
-    }
-
-    private List<Cost> getCostsForType(HttpServletRequest request) {
+    private List<Cost> getCosts(HttpServletRequest request) {
         List<CostField> costFields = costService.getCostFields();
         return mapCostItems(request, costFields);
     }
@@ -65,22 +55,6 @@ public class FinanceFormHandler {
         }
 
         return costs;
-    }
-
-    /**
-     * Retrieve the cost items from the request based on their type
-     */
-    private List<CostItem> getCostItems(Map<Long, List<CostFormField>> costFieldMap, CostType costType, List<String> costTypeKeys) {
-        List<CostItem> costItems = new ArrayList<>();
-
-        // create new cost items
-        for(Map.Entry<Long, List<CostFormField>> entry : costFieldMap.entrySet()) {
-            CostItem costItem = getCostItem(costType, entry.getKey(), entry.getValue());
-            if (costItem != null) {
-                costItems.add(costItem);
-            }
-        }
-        return costItems;
     }
 
     /**
@@ -106,6 +80,35 @@ public class FinanceFormHandler {
         }
         return costKeyMap;
     }
+
+    /**
+     * Retrieve the cost items from the request based on their type
+     */
+    private List<CostItem> getCostItems(Map<Long, List<CostFormField>> costFieldMap, CostType costType, List<String> costTypeKeys) {
+        List<CostItem> costItems = new ArrayList<>();
+
+        // create new cost items
+        for(Map.Entry<Long, List<CostFormField>> entry : costFieldMap.entrySet()) {
+            CostItem costItem = getCostItem(costType, entry.getKey(), entry.getValue());
+            if (costItem != null) {
+                costItems.add(costItem);
+            }
+        }
+        return costItems;
+    }
+
+
+    public void storeField(String fieldName, String value) {
+        List<CostField> costFields = costService.getCostFields();
+        CostFormField costFormField = getCostFormField(fieldName, value);
+        CostType costType = CostType.fromString(costFormField.getKeyType());
+        CostItem costItem = getCostItem(costType, Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
+        CostItemMapper costItemMapper = new CostItemMapper(costFields);
+        Cost cost = costItemMapper.costItemToCost(costType, costItem);
+        costService.update(cost);
+    }
+
+
 
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
