@@ -2,6 +2,7 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.workflow.controller.ProcessHandler;
 import com.worth.ifs.workflow.domain.*;
 import com.worth.ifs.workflow.domain.Process;
 import org.apache.commons.logging.Log;
