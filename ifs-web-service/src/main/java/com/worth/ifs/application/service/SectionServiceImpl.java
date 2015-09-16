@@ -31,11 +31,9 @@ public class SectionServiceImpl implements SectionService {
         sections = sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
-                .sorted()
                 .collect(Collectors.toList());
         sections.stream()
-                .filter(s -> s.getChildSections()!=null)
-                .forEach(s -> Collections.sort(s.getChildSections()));
+                .filter(s -> s.getChildSections()!=null);
         return sections;
     }
 

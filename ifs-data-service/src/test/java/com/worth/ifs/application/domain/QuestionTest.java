@@ -26,6 +26,7 @@ public class QuestionTest {
     String optionValues;
     List<Response> responses;
     QuestionType questionType;
+    Integer priority;
 
     @Before
     public void setUp() throws Exception {
@@ -43,9 +44,10 @@ public class QuestionTest {
         responses.add(new Response());
         responses.add(new Response());
         questionType = new QuestionType();
+        priority = 1;
 
 
-        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, wordCount);
+        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, wordCount, priority);
     }
 
     @Test
@@ -61,8 +63,7 @@ public class QuestionTest {
         Assert.assertEquals(question.getOptionValues(), optionValues);
         Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getQuestionType(), questionType);
-
-
+        Assert.assertEquals(question.getPriority(), priority);
     }
 
 }

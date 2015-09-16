@@ -22,11 +22,14 @@ public class Section implements Comparable<Section> {
     @Column( length = 5000 )
     private String description;
 
+    private Integer priority;
+
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
     @OneToMany(mappedBy="section")
+    @OrderBy("priority ASC")
     private List<Question> questions;
 
     @ManyToOne(fetch=FetchType.LAZY)
@@ -36,7 +39,7 @@ public class Section implements Comparable<Section> {
 
     @OneToMany(mappedBy="parentSection",fetch=FetchType.LAZY)
     @JsonManagedReference
-    @OrderBy("id ASC")
+    @OrderBy("priority ASC")
     private List<Section> childSections;
 
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
@@ -95,4 +98,9 @@ public class Section implements Comparable<Section> {
     public int compareTo(Section o) {
         return this.getId().compareTo(o.getId());
     }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
 }

@@ -35,6 +35,8 @@ public class Question {
 
     private Boolean markAsCompletedEnabled = false;
 
+    private Integer priority;
+
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
@@ -53,7 +55,7 @@ public class Question {
     @OneToMany(mappedBy="question")
     private List<Cost> costs;
 
-    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount) {
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount, Integer priority) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -65,6 +67,7 @@ public class Question {
         this.guidanceQuestion = guidanceQuestion;
         this.guidanceAnswer = guidanceAnswer;
         this.wordCount = wordCount;
+        this.priority = priority;
     }
 
     public Question(Long id, Competition competition, Section section, String name) {
@@ -139,5 +142,9 @@ public class Question {
 
     public Boolean isMarkAsCompletedEnabled() {
         return (markAsCompletedEnabled == null ? false : markAsCompletedEnabled);
+    }
+
+    public Integer getPriority() {
+        return priority;
     }
 }

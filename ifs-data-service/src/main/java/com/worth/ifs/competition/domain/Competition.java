@@ -31,6 +31,7 @@ public class Competition {
     private List<Question> questions;
 
     @OneToMany(mappedBy="competition")
+    @OrderBy("priority ASC")
     private List<Section> sections;
 
     private String name;
