@@ -47,7 +47,7 @@
                             <h4 class="heading-medium">
                                 <a th:href="@{/assessor/competitions/{id}/applications(id=${application.getId()})}" th:text="${application.name}">link for application assessment</a>
                             </h4>
-                            <div><p th:text="${application.getUserApplicationRoles().get(0).getOrganisation().getName()}" /></div>
+                            <div><p th:text="${application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
 
                         </div>
                         <div class="column-one-third">
