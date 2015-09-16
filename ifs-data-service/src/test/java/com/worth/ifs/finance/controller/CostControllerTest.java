@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.repository.CostValueRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,9 @@ public class CostControllerTest {
 
     @Mock
     CostRepository costRepositoryMock;
+
+    @Mock
+    CostValueRepository costValueRepository;
 
     private MockMvc mockMvc;
 

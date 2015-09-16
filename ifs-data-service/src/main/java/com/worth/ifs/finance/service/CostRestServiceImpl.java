@@ -34,18 +34,14 @@ public class CostRestServiceImpl extends BaseRestServiceProvider implements Cost
     }
 
     public void update(Cost cost) {
-        log.debug("Update cost - " + cost);
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + costRestURL + "/update/" +cost.getId();
 
         //set your entity to send
         HttpEntity<Cost> entity = new HttpEntity<>(cost, getJSONHeaders());
 
-        log.info("ApplicationRestRestService.saveApplication send it!");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
                 , String.class);
-
-        log.debug("done" + cost);
     }
 
     public void delete(Long costId) {

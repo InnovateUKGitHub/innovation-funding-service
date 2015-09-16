@@ -72,10 +72,7 @@ public class UserControllerTest {
     public void userControllerShouldReturnUserById() throws Exception {
         User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
-        List<User> userList = new ArrayList<User>();
-        userList.add(testUser1);
-
-        when(userRepositoryMock.findById(testUser1.getId())).thenReturn(userList);
+        when(userRepositoryMock.findOne(testUser1.getId())).thenReturn(testUser1);
         mockMvc.perform(get("/user/id/"+testUser1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id",        is((Number)testUser1.getId().intValue())))

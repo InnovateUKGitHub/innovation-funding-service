@@ -45,7 +45,7 @@ public class ApplicationController {
 
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
-        return repository.findById(id);
+        return repository.findOne(id);
     }
 
     @RequestMapping("/findAll")
@@ -56,7 +56,7 @@ public class ApplicationController {
 
     @RequestMapping("/findByUser/{userId}")
     public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
-        User user = userRepository.findById(userId).get(0);
+        User user = userRepository.findOne(userId);
         List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
@@ -160,7 +160,7 @@ public class ApplicationController {
     public List<Application> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-        User user = userRepository.findById(userId).get(0);
+        User user = userRepository.findOne(userId);
 
         List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
         List<Application> allApps= repository.findAll();

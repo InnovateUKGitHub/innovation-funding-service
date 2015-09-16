@@ -46,8 +46,8 @@ public class ApplicationFinanceController {
     public ApplicationFinance add(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-        Application application = applicationRepository.findById(applicationId);
-        Organisation organisation = organisationRepository.findById(organisationId);
+        Application application = applicationRepository.findOne(applicationId);
+        Organisation organisation = organisationRepository.findOne(organisationId);
         ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
         return applicationFinanceRepository.save(applicationFinance);
     }

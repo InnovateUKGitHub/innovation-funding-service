@@ -51,8 +51,8 @@ public class ApplicationControllerTest {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
 
-        when(applicationRepositoryMock.findById(1L)).thenReturn(testApplication1);
-        when(applicationRepositoryMock.findById(2L)).thenReturn(testApplication2);
+        when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
+        when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
         mockMvc.perform(get("/application/id/1"))
                 .andExpect(status().isOk())
@@ -81,13 +81,8 @@ public class ApplicationControllerTest {
         ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2, new Role(), organisation2);
         ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3, new Role(), organisation2);
 
-        when(userRepositoryMock.findById(1L)).thenReturn(new ArrayList<User>() {{
-            add(testUser1);
-        }});
-
-        when(userRepositoryMock.findById(2L)).thenReturn(new ArrayList<User>() {{
-            add(testUser2);
-        }});
+        when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
+        when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
 
         when(userAppRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole1);

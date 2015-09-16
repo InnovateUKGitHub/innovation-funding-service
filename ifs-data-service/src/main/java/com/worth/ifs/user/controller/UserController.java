@@ -65,7 +65,7 @@ public class UserController {
 
     @RequestMapping("/id/{id}")
     public User getUserById(@PathVariable("id") final Long id) {
-        User user = repository.findById(id).get(0);
+        User user = repository.findOne(id);
         return user;
     }
 

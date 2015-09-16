@@ -28,7 +28,7 @@ public class ProcessHandler {
 
 
     public com.worth.ifs.workflow.domain.Process getProcessById(Long id) {
-        return repository.findById(id);
+        return repository.findOne(id);
     }
 
     public  List<com.worth.ifs.workflow.domain.Process> getProcessesByAssignee(Long involved) {

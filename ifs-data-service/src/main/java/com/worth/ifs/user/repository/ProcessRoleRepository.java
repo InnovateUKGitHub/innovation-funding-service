@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
-    List<ProcessRole> findById(@Param("id") Long id);
     List<ProcessRole> findByUser(@Param("user") User user);
     List<ProcessRole> findByUserId(@Param("userId") Long userId);
     List<ProcessRole> findByUserAndApplication(@Param("user") User user, @Param("application") Application application);

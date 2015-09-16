@@ -55,10 +55,12 @@ public class CostController {
             Cost savedCost = costRepository.save(updatedCost);
 
             for(CostValue costValue : newCost.getCostValues()) {
-                CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
-                costValue.setCost(savedCost);
-                costValue.setCostField(costField);
-                costValueRepository.save(costValue);
+                if(costValue.getValue()!=null) {
+                    CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
+                    costValue.setCost(savedCost);
+                    costValue.setCostField(costField);
+                    costValueRepository.save(costValue);
+                }
             }
         }
     }
@@ -88,11 +90,12 @@ public class CostController {
 
     @RequestMapping("/findById/{id}")
     public Cost findById(@PathVariable("id") final Long id) {
-        return costRepository.findById(id);
+        return costRepository.findOne(id);
     }
 
     @RequestMapping("/delete/{costId}")
-    public void deleteCost(@PathVariable("costId") final Long costId) {
+    public void delete(@PathVariable("costId") final Long costId) {
+        costValueRepository.deleteByCostId(costId);
         costRepository.delete(costId);
     }
 }

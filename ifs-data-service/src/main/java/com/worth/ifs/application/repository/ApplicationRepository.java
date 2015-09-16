@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     List<Application> findByName(@Param("name") String name);
-    Application findById(@Param("id") Long id);
     List<Application> findAll();
 }

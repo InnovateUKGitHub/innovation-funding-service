@@ -6,6 +6,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface OrganisationRepository extends PagingAndSortingRepository<Organisation, Long> {
-    Organisation findById(@Param("id") Long id);
     Organisation findByProcessRoles(@Param("processRoles") ProcessRole processRole);
 }

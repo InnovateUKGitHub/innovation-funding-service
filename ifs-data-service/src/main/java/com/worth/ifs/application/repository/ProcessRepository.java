@@ -12,7 +12,6 @@ import java.util.List;
  * Created by nunoalexandre on 15/09/15.
  */
 public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
-    Process findById(@Param("id") Long id);
     List<Process> findByAssigneeId(@Param("assigneeId") Long assigneeId);
     List<Process> findBySubjectId(@Param("subjectId") Long subjectId);
     List<Process> findByAssigneeIdAndEvent(@Param("assigneeId") Long assigneeId, @Param("event") ProcessEvent event );
