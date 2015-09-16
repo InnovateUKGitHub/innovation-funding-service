@@ -78,9 +78,8 @@
 <!-- ========================= Duration in months =========================== -->
 
 <div th:fragment="form-duration (id, months)">
-    <div th:include="question-type/form-elements :: form-label (name='Duration',id=${id},bold=false)" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
     <div th:include="question-type/form-elements :: form-number (id=${id}, response=${months})" th:remove="tag"/>
-    months
 </div>
 
 <!-- ========================= textarea  =========================== -->

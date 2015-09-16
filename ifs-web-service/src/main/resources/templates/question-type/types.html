@@ -50,7 +50,6 @@
         <div class="form-group">
 
             <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the target start date and its planned duration. These are indicative at this stage and are not guaranteed')" th:remove="tag" />
 
             Project start date
             <br/>
@@ -88,7 +87,7 @@
         <div th:replace="question-type/types :: empty" th:with="$question=(${question})" th:remove="tag" />
         <div class="grid-row">
             <div class="column-half">
-                <p>Enter the detailed breakdown of your organisations project costs.</p>
+                <p>Enter the detailed breakdown of your organisation's project costs.</p>
                 <a class="button button-large button-block" th:href="@{/application-form/{id}/section/7/(id=${currentApplication.getId()})}" >Your project costs</a>
                 <p class="form-hint icon-info-small-blue">Only you can see this level of detail</p>
             </div>
@@ -242,19 +241,19 @@
             </div>
             <br/>
             <fieldset>
-                <legend>Do you chose to accept this rate?</legend>
+                <legend>Do you choose to accept this rate?</legend>
                 <ul id="id_overheads-acceptRate">
                     <li>
                         <label for="id_overheads-acceptRate_0">
                             <input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes"/>
-                            <span> </span><span>20% of Labour Costs</span>
+                            <span> </span><span>20% of labour costs</span>
                         </label>
                     </li>
                     <li>
                         <label for="id_overheads-acceptRate_1">
                             <input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no"/>
                             <span> </span>
-                            <span >Bespoke rate (I confirm that I will need to justify this rate if this project is granted funding by Innovate UK)</span>
+                            <span >Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)</span>
                         </label>
                     </li>
                 </ul>
@@ -395,7 +394,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">NPV at project start or purchase price (£)</label>
+                        <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">Net Present Value at the start of your project start or the price you bought it for (£)</label>
                         <input type="number" value="10000" id="id_capitalusage-0-capitalUsageNPV" class="form-control form-finances-capital-usage-npv" name="capitalusage-0-capitalUsageNPV"
                                th:value="${#numbers.formatDecimal(capitalUsage.npv,0,0)}"/>
                     </div>
@@ -443,13 +442,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where work will be carried out</label>
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where the subcontractor will work</label>
                             <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country"
                                    th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role in the project and description of work being carried out</label>
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
                             <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
                             <div th:include="question-type/form-elements :: form-textarea (
 		 					id=${'cost-subcontracting-'+subContractingCost.id+'-role'},
