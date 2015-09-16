@@ -13,7 +13,7 @@ ifs-data-service/.idea/libraries
 ifs-web-service/.idea/libraries
 
 # ignore properties
-*-build.gradle
+**/*-build.gradle
 **/application-*.properties
 
 # Created with help from https://www.gitignore.io
