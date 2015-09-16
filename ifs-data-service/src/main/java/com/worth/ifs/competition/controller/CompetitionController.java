@@ -1,5 +1,7 @@
 package com.worth.ifs.competition.controller;
 
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.workflow.controller.ProcessHandler;
@@ -26,6 +28,9 @@ public class CompetitionController {
     @Autowired
     ProcessHandler processHandler;
 
+    @Autowired
+    AssessmentRepository assessmentRepository;
+
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -44,14 +49,22 @@ public class CompetitionController {
     public List<Competition> findAll() {
 
 
-        Process p  = new Process(ProcessEvent.ASSESSMENT_INVITATION, ProcessStatus.PENDING, new Long(3), new Long(4));
+        Process p  = processHandler.getProcessesByAssigneeAndEvent (new Long(3), ProcessEvent.ASSESSMENT_INVITATION).get(0);
         //Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId)
-        processHandler.saveProcess(p);
+        try {
+            processHandler.saveProcess(p);
+        }
+        catch (Exception e) {
+            System.out.println("Exception trying to save a new process");
+        }
 
-        System.out.println("There are " + processHandler.getProcessesByAssigneeAndType(new Long(1), ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 1 and event Assessment Invit");
-        System.out.println("There are " + processHandler.getProcessesByAssigneeAndType(new Long(3),ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 3 and event Assessment Invit");
+        System.out.println("There are " + processHandler.getProcessesByAssigneeAndEvent(new Long(1), ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 1 and event Assessment Invit");
+        System.out.println("There are " + processHandler.getProcessesByAssigneeAndEvent(new Long(3),ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 3 and event Assessment Invit");
 
 
+        Assessment a = new Assessment(p);
+
+        assessmentRepository.save(a);
 
 
         return repository.findAll();

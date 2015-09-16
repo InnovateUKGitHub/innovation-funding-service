@@ -39,15 +39,15 @@ public class ProcessHandler {
         return repository.findBySubjectId(subject);
     }
 
-    public  List<com.worth.ifs.workflow.domain.Process> getProcessesByAssigneeAndType(Long assignee, ProcessEvent event) {
+    public  List<com.worth.ifs.workflow.domain.Process> getProcessesByAssigneeAndEvent(Long assignee, ProcessEvent event) {
         return repository.findByAssigneeIdAndEvent(assignee, event);
     }
 
-    public  List<com.worth.ifs.workflow.domain.Process> getProcessesBySubjectAndType(Long subject, ProcessEvent event) {
+    public  List<com.worth.ifs.workflow.domain.Process> getProcessesBySubjectAndEvent(Long subject, ProcessEvent event) {
         return repository.findBySubjectIdAndEvent(subject, event);
     }
 
-    public  List<com.worth.ifs.workflow.domain.Process> getProcessesBySubjectAndTypeAndStatus(Long subject, ProcessEvent event, ProcessStatus status) {
+    public  List<com.worth.ifs.workflow.domain.Process> getProcessesBySubjectAndEventAndStatus(Long subject, ProcessEvent event, ProcessStatus status) {
         return repository.findByAssigneeIdAndEventAndStatus(subject, event, status);
     }
 

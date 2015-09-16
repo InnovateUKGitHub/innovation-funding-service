@@ -11,6 +11,8 @@ import java.util.Calendar;
  */
 
 @Entity
+@Table(name = "process",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"assigneeId", "subjectId", "event"}))
 public class Process {
 
     @Id

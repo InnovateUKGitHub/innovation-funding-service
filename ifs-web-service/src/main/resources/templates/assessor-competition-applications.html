@@ -48,10 +48,12 @@
                                 <a th:href="@{/assessor/competitions/{id}/applications(id=${application.getId()})}" th:text="${application.name}">link for application assessment</a>
                             </h4>
                             <div><p th:text="${application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
-
                         </div>
-                        <div class="column-one-third">
-                           Hey
+                        <div class="column-third navigation-right">
+                            <div class="application-listing_pull-right">
+                                <p>Pending</p>
+                                <p class="application-listing_pending"><a href="#">accept / reject assessment</a></p>
+                            </div>
                         </div>
                     </div>
 
