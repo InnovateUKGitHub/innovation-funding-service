@@ -141,7 +141,7 @@ public class FinanceFormHandler {
             String fieldValue = costFormField.getValue();
             if (fieldValue != null) {
                 if (costFormField.getCostName().equals("grossAnnualSalary")) {
-                    grossAnnualSalary = Double.valueOf(fieldValue);
+                    grossAnnualSalary = getDoubleValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
                 } else if (costFormField.getCostName().equals("labourDays")) {
@@ -162,7 +162,7 @@ public class FinanceFormHandler {
                 if (costFormField.getCostName().equals("item")) {
                     item = fieldValue;
                 } else if (costFormField.getCostName().equals("cost")) {
-                    cost = Double.valueOf(fieldValue);
+                    cost = getDoubleValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
                     quantity = Integer.valueOf(fieldValue);
                 }
@@ -183,7 +183,7 @@ public class FinanceFormHandler {
                 if (costFormField.getCostName().equals("country")) {
                     country = fieldValue;
                 } else if (costFormField.getCostName().equals("cost")) {
-                    cost = Double.valueOf(fieldValue);
+                    cost = getDoubleValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("name")) {
                     name = fieldValue;
                 } else if (costFormField.getCostName().equals("role")) {
@@ -193,6 +193,14 @@ public class FinanceFormHandler {
         }
 
         return new SubContractingCost(id, cost, country, name, role);
+    }
+
+    private Double getDoubleValue(String value, Double defaultValue) {
+        try {
+            return Double.valueOf(value);
+        } catch(NumberFormatException nfe) {
+            return defaultValue;
+        }
     }
 
     private void storeCosts(List<Cost> costs) {

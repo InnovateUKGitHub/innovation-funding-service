@@ -116,7 +116,10 @@
                 <p class="heading-medium">Total project costs</p>
             </div>
             <div class="column-half alignright">
-                <p class="heading-medium" th:text="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"></p>
+                £ <input type="text" readOnly="readonly" class="heading-medium"
+                   data-calculation-repeating-total="[id*=total]"
+                   data-calculation-operations="+"
+                   th:value="${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
         </div>
         <p>These costs should be justified in the <a href="#">Funding section</a> of the application form.</p>
@@ -163,7 +166,7 @@
                                 </td>
                                 <td>
                                     <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'}"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
@@ -182,10 +185,13 @@
                                     Total costs £
                                 </td>
                                 <td>
-                                <input type="number"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'}"
+                                <input type="text"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
-                                       th:name="${type +'-total-' + labourCost.id}"  readonly="readonly" th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}" th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
+                                       th:name="${type +'-total-' + labourCost.id}"
+                                       readonly="readonly"
+                                       th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
+                                       th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
 
                                 </td>
                                 <td>
@@ -209,7 +215,9 @@
                         <input class="form-control form-control-1-4"
                                data-calculation-repeating-total="[id*=labourTotalCost]"
                                data-calculation-operations="+"
-                               readonly="" type="text" id="cost-labour-total-field" th:value="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                               th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                               readonly="" type="text" id="cost-labour-total-field"
+                               th:value="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                     </label>
                 </div>
             </div>
@@ -314,12 +322,14 @@
                             </td>
                             <td>
                                 <input type="number" th:name="${type +'-cost-' + materialCost.id}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-cost'}" th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"/>
+                                       th:id="${'cost-materials-'+materialCost.id+'-cost'}"
+                                       th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"
+                                />
                             </td>
                             <td>
-                                <input type="number" th:name="${type +'-total-' + materialCost.id}"
-                                       th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-total'}"
+                                <input type="text" th:name="${type +'-total-' + materialCost.id}"
+                                       th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
+                                       th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
@@ -455,7 +465,7 @@
                             <input type="number"
                                    th:name="${type +'-cost-' + subContractingCost.id}"
                                    class="form-control form-finances-subcontracting-cost"
-                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-cost'}"
+                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-subcontractingCost'}"
                                    data-calculation-input="subcontracting-cost-row"
                                    th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
                         </div>
@@ -471,7 +481,7 @@
                            readonly=""
                            type="text"
                            id="cost-subcontracting-total"
-                           data-calculation-field="[data-calculation-input=subcontracting-cost-row]"
+                           data-calculation-repeating-total="[id*=subcontractingCost]"
                            data-calculation-operations="+"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
