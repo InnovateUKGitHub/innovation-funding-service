@@ -88,7 +88,7 @@ var worthIFS = {
     initAutosaveElement : function(){
         var options = {
             callback: function (value) { worthIFS.fieldChanged(this);  },
-            wait: 2500,
+            wait: 500,
             highlight: false,
             captureLength: 1
         }
