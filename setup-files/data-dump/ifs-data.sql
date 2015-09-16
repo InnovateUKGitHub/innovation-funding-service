@@ -31,7 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `application_finance` WRITE;
 /*!40000 ALTER TABLE `application_finance` DISABLE KEYS */;
-INSERT  IGNORE INTO `application_finance` (`id`, `application_id`, `organisation_id`) VALUES (1,1,3);
+INSERT  IGNORE INTO `application_finance` (`id`, `application_id`, `organisation_id`) VALUES (1,1,3),(2,1,6),(3,1,4);
 /*!40000 ALTER TABLE `application_finance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +111,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +171,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'applicant@innovateuk.gov.uk','image.jpg','Steve Smith (Lead Applicant)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'collaborator@innovateuk.gov.uk','image2.jpg','Jessica Doe (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'assessor@innovateuk.gov.uk','image3.jpg','Professor Plum (Assessor)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi');
+INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'applicant@innovateuk.gov.uk','image.jpg','Steve Smith (Lead Applicant)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'collaborator@innovateuk.gov.uk','image2.jpg','Jessica Doe (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'assessor@innovateuk.gov.uk','image3.jpg','Professor Plum (Assessor)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi'),(8,'collaborator1@innovateuk.gov.uk','image2.jpg','Rosa	Chandler (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','867def');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -184,4 +184,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-15 16:48:01
+-- Dump completed on 2015-09-16 13:38:48
