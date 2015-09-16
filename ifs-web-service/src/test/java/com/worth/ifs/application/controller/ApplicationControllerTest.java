@@ -46,6 +46,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
+        this.setupFinances();
     }
 
 
@@ -73,7 +74,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
         Application app = applications.get(0);
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
-
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
