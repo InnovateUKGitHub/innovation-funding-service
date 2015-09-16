@@ -35,54 +35,101 @@ public class Process {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    @Column(name = "observations")
+    private String observations;
 
-    public Process(){}
 
-    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId ) {
+    public Process() {
+    }
+
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId) {
         this.event = event;
         this.status = status;
         this.assigneeId = assigneeId;
         this.subjectId = subjectId;
     }
 
-    /** Getters **/
 
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId, LocalDate startDate, LocalDate endDate) {
+        this(event, status, assigneeId, subjectId);
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId, LocalDate startDate, LocalDate endDate, String observations) {
+        this(event, status, assigneeId, subjectId, startDate, endDate);
+        this.observations = observations;
+    }
+
+
+    /**
+     * Getters
+     **/
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * Setters
+     **/
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
     public Long getAssignee() {
         return assigneeId;
     }
-    public Long getSubject() {
-        return subjectId;
-    }
-    public Long getId() {
-        return id;
-    }
-    public ProcessStatus getStatus() {
-        return status;
-    }
-    public ProcessEvent getEvent() {
-        return event;
-    }
-
-    @JsonIgnore
-    public Calendar getVersion() {
-        return lastModified;
-    }
-
-    /** Setters **/
 
     public void setAssignee(Long assigneeId) {
         this.assigneeId = assigneeId;
     }
+
+    public Long getSubject() {
+        return subjectId;
+    }
+
     public void setSubject(Long subjectId) {
         this.subjectId = subjectId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public ProcessStatus getStatus() {
+        return status;
     }
 
     public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 
+    public ProcessEvent getEvent() {
+        return event;
+    }
+
     public void setEvent(ProcessEvent event) {
         this.event = event;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+    @JsonIgnore
+    public Calendar getVersion() {
+        return lastModified;
     }
 }
