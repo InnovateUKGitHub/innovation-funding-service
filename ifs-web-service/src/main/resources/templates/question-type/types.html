@@ -221,7 +221,7 @@
                 </div>
             </div>
             <div class="alignright-button">
-                <button class="button" th:unless="${responses.get(question.getId())?.isMarkedAsComplete()}"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Mark as complete</button>
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -288,9 +288,8 @@
                            />
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -356,9 +355,8 @@
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -422,9 +420,8 @@
                     <input class="form-control form-control-1-4" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -485,9 +482,8 @@
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -538,9 +534,8 @@
                     <input class="form-control form-control-1-4" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div>
     </div>
@@ -584,9 +579,8 @@
                     <input class="form-control form-control-1-4" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
                 </label>
             </div>
-            <div class="form-group form-group--align-right">
-                <p class="saving saved"></p>
-                <a class="js-finances-complete button" href="#">Complete</a>
+            <div class="alignright-button">
+                <button class="button"  type="submit" name="mark_as_complete" th:value="${question.getId()}" >Complete</button>
             </div>
         </div> 
     </div>
