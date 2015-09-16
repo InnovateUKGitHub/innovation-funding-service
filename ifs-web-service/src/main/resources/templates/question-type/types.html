@@ -639,7 +639,7 @@
         </div>
     </div>
     <!-- ===========================Form: financial summary =========================== -->
-    <div th:fragment="financial_summary">
+    <div th:fragment="financial_summary" th:if="${financeTotalPerType}">
         <h2>Project cost breakdown</h2>
         <div class="form-group">
             <div style="overflow: auto;">

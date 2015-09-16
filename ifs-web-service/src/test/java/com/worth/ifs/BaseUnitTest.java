@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.helper.UserApplicationRole;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
@@ -136,8 +137,8 @@ public class BaseUnitTest {
         com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", new ApplicationStatus(2L, "submitted"));
         com.worth.ifs.application.domain.Application app3 = new com.worth.ifs.application.domain.Application(3L, "Mobile Phone Data for Logistics Analytics", new ApplicationStatus(3L, "approved"));
         com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", new ApplicationStatus(4L, "rejected"));
-        Role role1 = new Role(1L, "leadapplicant", null);
-        Role role2 = new Role(2L, "collaborator", null);
+        Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
+        Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
 
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
         Organisation organisation2 = new Organisation(2L, "Ludlow");

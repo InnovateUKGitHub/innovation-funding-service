@@ -29,16 +29,23 @@ public class ApplicationHelper {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
 
         Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals("leadapplicant"))
+                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> uar.getOrganisation())
                 .findFirst();
 
         return leadOrganisation;
     }
+    public Boolean isLeadApplicant(Long userId, Application application) {
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+        return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
+                .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
+
+    }
+
     public Set<User> getAssignableUsers(Application application){
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Set<User> users = userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals("leadapplicant") || uar.getRole().getName().equals("collaborator"))
+                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(uar -> uar.getUser())
                 .collect(Collectors.toSet());
         log.info("Assignable users: "+ users.size());
