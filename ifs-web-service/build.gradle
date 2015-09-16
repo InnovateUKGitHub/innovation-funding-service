@@ -1,6 +1,12 @@
 group 'worth'
 version '1.0-SNAPSHOT'
 
+if (project.hasProperty("profile")) {
+    apply from: "${project.profile}-build.gradle"
+} else {
+    apply from: "dev-build.gradle"
+}
+
 buildscript {
     ext {
         springBootVersion = '1.2.5.RELEASE'
@@ -72,6 +78,12 @@ task wrapper(type: Wrapper) {
 }
 task deployToTomcat(type: Copy) {
     from war
-    into "/Users/nbijl/Projects/Innovation Funding Service/apache-tomcat-web/webapps"
+    into "$tomcatWebAppsDir"
     rename ('(.*).war', 'ROOT.war')
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
 }

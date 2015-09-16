@@ -1,6 +1,12 @@
 group 'worth'
 version '1.0-SNAPSHOT'
 
+if (project.hasProperty("profile")) {
+    apply from: "${project.profile}-build.gradle"
+} else {
+    apply from: "dev-build.gradle"
+}
+
 buildscript {
     ext {
         springBootVersion = '1.2.5.RELEASE'
@@ -10,7 +16,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE")
     }
 }
 
@@ -54,6 +60,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.security:spring-security-crypto")
+    //compile("org.springframework.data:spring-data-rest-hal-browser") future release it's cool
     compile("mysql:mysql-connector-java")
     compile("org.springframework:spring-web")
     compile("com.fasterxml.jackson.core:jackson-databind")
@@ -71,9 +78,6 @@ dependencies {
     testCompile 'org.mockito:mockito-core'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
-    // for the api lib:
-    /*compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
-    clientCompile group: 'javax.persistence', name: 'persistence-api', version: '1.0'*/
     compile fileTree(dir: "libs", include: "*.jar")
 }
 
@@ -105,4 +109,10 @@ task deployToTomcat(type: Copy) {
     from war
     into "/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
     rename ('(.*).war', 'ROOT.war')
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
 }

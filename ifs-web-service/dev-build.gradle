@@ -1,0 +1,4 @@
+ext.serverPort="8085"
+ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-web/webapps"
+ext.ifsDataServiceRestBaseURL="http://localhost:8090"
+ext.activeProfile="example"

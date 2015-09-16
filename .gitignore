@@ -9,6 +9,12 @@ nbijl.xml
 */ifs-data-service.iml
 */.idea/libraries
 */.idea/libraries/dictionaries
+ifs-data-service/.idea/libraries
+ifs-web-service/.idea/libraries
+
+# ignore properties
+*-build.gradle
+**/application-*.properties
 
 # Created with help from https://www.gitignore.io
 
@@ -54,8 +60,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-ifs-data-service/.idea/libraries
-ifs-web-service/.idea/libraries
+
 ifs-web-service/out
 workspace.xml
 .vagrant
@@ -63,3 +68,5 @@ ifs-data-service/.idea/dictionaries
 *.iml
 ifs-web-service/libs
 rebel.xml
+
+
