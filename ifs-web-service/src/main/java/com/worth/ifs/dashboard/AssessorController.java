@@ -35,8 +35,6 @@ public class AssessorController {
 
     @Autowired
     CompetitionsRestService competitionService;
-    @Autowired
-    ApplicationRestService applicationService;
 
     @Autowired
     AssessmentRestService assessmentRestService;
@@ -45,10 +43,6 @@ public class AssessorController {
     UserAuthenticationService userAuthenticationService;
 
 
-
-    private List<Application> applicationsForAssessment(Long competitionId, final Long userId) {
-        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId,userId, UserRoleType.ASSESSOR);
-    }
     private User getLoggedUser(HttpServletRequest req) {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
@@ -70,12 +64,10 @@ public class AssessorController {
             competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedAssessmentsByCompetition(getLoggedUser(request).getId(), c.getId()));
         }
 
-        model.addAttribute("totalAssignedAssessments", competitionsTotalAssignedAssessments);
-        model.addAttribute("submittedAssessments", competitionsSubmittedAssessments);
-
-
         //pass to view
         model.addAttribute("competitionsForAssessment", competitions);
+        model.addAttribute("totalAssignedAssessments", competitionsTotalAssignedAssessments);
+        model.addAttribute("submittedAssessments", competitionsSubmittedAssessments);
 
 
         return "assessor-dashboard";
@@ -96,22 +88,5 @@ public class AssessorController {
 
         return "assessor-competition-applications";
     }
-
-    private ProcessRole getAssessorApplicationRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
-        int indexAt = -1;
-        int i = 0;
-        while( indexAt == -1 && i < roles.size()) {
-            if ( roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName()) )
-                indexAt = -1;
-
-            i++;
-        }
-
-        return roles.get(indexAt);
-    }
-
-
-
-
 
 }
