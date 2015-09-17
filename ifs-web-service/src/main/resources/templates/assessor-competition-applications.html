@@ -39,19 +39,19 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Applications for Assessments (<span th:text="${competition.applications.size()}"/>)</h3>
+            <h3 class="heading-large">Applications for Assessments (<span th:text="${assessments.size()}"/>)</h3>
             <ul class="boxed-list">
-                <li th:each="application : ${competition.applications}">
+                <li th:each="assessment : ${assessments}">
                     <div class="grid-row" >
                         <div class="column-two-thirds">
                             <h4 class="heading-medium">
-                                <a th:href="@{/assessor/competitions/{id}/applications(id=${application.getId()})}" th:text="${application.name}">link for application assessment</a>
+                                <a th:href="@{/assessor/competitions/{id}/applications(id=${assessment.getId()})}" th:text="${assessment.application.name}">link for application assessment</a>
                             </h4>
-                            <div><p th:text="${application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                            <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-third navigation-right">
                             <div class="application-listing_pull-right">
-                                <p>Pending</p>
+                                <p th:text="${assessment.status}">Assessment Status</p>
                                 <p class="application-listing_pending"><a href="#">accept / reject assessment</a></p>
                             </div>
                         </div>
@@ -60,8 +60,6 @@
                 </li>
             </ul>
         </div>
-
-
     </div>
 
 

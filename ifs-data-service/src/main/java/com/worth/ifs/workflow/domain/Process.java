@@ -11,29 +11,23 @@ import java.util.Calendar;
  */
 
 @Entity
-@Table(name = "process",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"assigneeId", "subjectId", "event"}))
-public class Process {
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public abstract class Process {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
-    @Column(name = "assigneeId")
-    private Long assigneeId;
-
-    @Column(name = "subjectId")
-    private Long subjectId;
+    @Enumerated(EnumType.STRING)
+    protected ProcessEvent event;
 
     @Enumerated(EnumType.STRING)
-    private ProcessEvent event;
-
-    @Enumerated(EnumType.STRING)
-    private ProcessStatus status;
+    protected ProcessStatus status;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar lastModified;
+
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -44,22 +38,20 @@ public class Process {
     public Process() {
     }
 
-    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId) {
+    public Process(ProcessEvent event, ProcessStatus status) {
         this.event = event;
         this.status = status;
-        this.assigneeId = assigneeId;
-        this.subjectId = subjectId;
     }
 
 
-    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId, LocalDate startDate, LocalDate endDate) {
-        this(event, status, assigneeId, subjectId);
+    public Process(ProcessEvent event, ProcessStatus status, LocalDate startDate, LocalDate endDate) {
+        this(event, status);
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId, LocalDate startDate, LocalDate endDate, String observations) {
-        this(event, status, assigneeId, subjectId, startDate, endDate);
+    public Process(ProcessEvent event, ProcessStatus status, LocalDate startDate, LocalDate endDate, String observations) {
+        this(event, status, startDate, endDate);
         this.observations = observations;
     }
 
@@ -84,22 +76,6 @@ public class Process {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public Long getAssignee() {
-        return assigneeId;
-    }
-
-    public void setAssignee(Long assigneeId) {
-        this.assigneeId = assigneeId;
-    }
-
-    public Long getSubject() {
-        return subjectId;
-    }
-
-    public void setSubject(Long subjectId) {
-        this.subjectId = subjectId;
     }
 
     public Long getId() {

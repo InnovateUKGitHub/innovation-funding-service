@@ -116,12 +116,12 @@ UNLOCK TABLES;
 --
 -- Dumping data for table `process`
 --
-
-LOCK TABLES `process` WRITE;
-/*!40000 ALTER TABLE `process` DISABLE KEYS */;
-INSERT  IGNORE INTO `process` (`id`, `assignee_id`, `end_date`, `event`, `last_modified`, `start_date`, `status`, `subject_id`, `observations`) VALUES (1,1,'2015-09-15','ASSESSMENT_INVITATION','2015-09-15 14:24:08','2015-08-15','PENDING',2,NULL);
-/*!40000 ALTER TABLE `process` ENABLE KEYS */;
-UNLOCK TABLES;
+-- 
+-- LOCK TABLES `process` WRITE;
+-- /*!40000 ALTER TABLE `process` DISABLE KEYS */;
+-- INSERT  IGNORE INTO `process` (`id`, `assignee_id`, `end_date`, `event`, `last_modified`, `start_date`, `status`, `subject_id`, `observations`) VALUES (1,1,'2015-09-15','ASSESSMENT_INVITATION','2015-09-15 14:24:08','2015-08-15','PENDING',2,NULL);
+-- /*!40000 ALTER TABLE `process` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Dumping data for table `process_role`
@@ -202,6 +202,18 @@ INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `tok
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
+
+LOCK TABLES `assessment` WRITE;
+INSERT IGNORE INTO `assessment` (`id`,`submitted`,`process_id`) VALUES (1,'Y',163840);
+INSERT IGNORE INTO `assessment` (`id`,`submitted`,`process_id`) VALUES (2,'N',1232);
+UNLOCK TABLES;
+
+LOCK TABLES `assessment_process` WRITE;
+INSERT IGNORE INTO `assessment_process` (`id`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`,`application`,`assessor`) VALUES (1232,NULL,'ASSESSMENT_INVITATION',NULL,'teste2',NULL,'PENDING',3,3);
+INSERT IGNORE INTO `assessment_process` (`id`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`,`application`,`assessor`) VALUES (163840,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57','test',NULL,'ACCEPTED',4,3);
+UNLOCK TABLES;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

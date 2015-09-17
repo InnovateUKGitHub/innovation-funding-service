@@ -1,12 +1,16 @@
 package com.worth.ifs.competition.controller;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.assessment.controller.AssessmentHandler;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.workflow.controller.ProcessHandler;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.workflow.controller.AssessmentProcessHandler;
 import com.worth.ifs.workflow.domain.*;
-import com.worth.ifs.workflow.domain.Process;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +28,6 @@ import java.util.List;
 public class CompetitionController {
     @Autowired
     CompetitionsRepository repository;
-
-    @Autowired
-    ProcessHandler processHandler;
-
-    @Autowired
-    AssessmentRepository assessmentRepository;
 
 
     private final Log log = LogFactory.getLog(getClass());
@@ -49,25 +47,12 @@ public class CompetitionController {
     public List<Competition> findAll() {
 
 
-        Process p  = processHandler.getProcessesByAssigneeAndEvent (new Long(3), ProcessEvent.ASSESSMENT_INVITATION).get(0);
-        //Process(ProcessEvent event, ProcessStatus status, Long assigneeId, Long subjectId)
-        try {
-            processHandler.saveProcess(p);
-        }
-        catch (Exception e) {
-            System.out.println("Exception trying to save a new process");
-        }
-
-        System.out.println("There are " + processHandler.getProcessesByAssigneeAndEvent(new Long(1), ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 1 and event Assessment Invit");
-        System.out.println("There are " + processHandler.getProcessesByAssigneeAndEvent(new Long(3),ProcessEvent.ASSESSMENT_INVITATION).size() + " @ with assignee 3 and event Assessment Invit");
-
-
-        Assessment a = new Assessment(p);
-
-        assessmentRepository.save(a);
 
 
         return repository.findAll();
 
     }
-}
+
+
+
+    }

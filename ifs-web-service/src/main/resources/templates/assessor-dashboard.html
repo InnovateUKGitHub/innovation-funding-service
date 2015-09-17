@@ -24,7 +24,7 @@
                                 <a th:href="@{/assessor/competitions/{id}/applications(id=${competition.getId()})}" th:text="${competition.name}">link for competition</a>
                             </h4>
                             <p class="form-hint">Assessment progress:</p>
-                            <p class="greentext"><strong>x/<span th:text="${competition.getApplications().size()}"/> Assessed</strong></p>
+                            <p class="greentext"><strong><span th:text="${submittedAssessments[competition.id]}"/>/<span th:text="${totalAssignedAssessments[competition.id]}"/> Assessed</strong></p>
                         </div>
                         <div class="column-half">
                             <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${competition.getAssessmentEndDate()}" th:remove="tag" />

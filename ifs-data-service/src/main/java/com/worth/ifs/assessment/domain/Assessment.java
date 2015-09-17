@@ -1,12 +1,12 @@
 package com.worth.ifs.assessment.domain;
 
-import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.*;
-import com.worth.ifs.workflow.domain.Process;
 import org.hibernate.annotations.Type;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -14,6 +14,18 @@ import java.util.Map;
 import java.util.Set;
 
 
+@NamedQueries({
+
+        @NamedQuery(
+                name = "findByProcessAssessor",
+                query = "from Assessment a, Process p where a.process = p and p.assessor = :assessor"
+        ),
+        @NamedQuery(
+                name = "findByProcessAssessorAndProcessApplicationCompetition",
+                query = "from Assessment a, Process p where a.process = p and p.assessor = :assessor and p.application.competition = :competition"
+        )
+
+})
 @Entity
 public class Assessment {
 
@@ -23,7 +35,7 @@ public class Assessment {
 
     @ManyToOne
     @JoinColumn(name="process_id", referencedColumnName="id")
-    private Process process;
+    private AssessmentProcess process;
 
     @ElementCollection
     private Map<Long, ResponseAssessment> assessments;
@@ -32,9 +44,18 @@ public class Assessment {
     private boolean submitted;
 
 
-    public Assessment(){}
+    public Assessment(){
+        if ( assessments == null )
+            assessments = new LinkedHashMap<>();
+    }
 
-    public Assessment(Process process) {
+    @PostConstruct
+    private void init() {
+        if ( assessments == null )
+            assessments = new LinkedHashMap<>();
+    }
+
+    public Assessment(AssessmentProcess process) {
         this.process = process;
         this.submitted = false;
         assessments = new LinkedHashMap<>();
@@ -47,7 +68,6 @@ public class Assessment {
     public Long getId() {
         return this.id;
     }
-
 
     public AssessmentStatus getStatus() {
         return solveStatus();
@@ -70,13 +90,16 @@ public class Assessment {
     }
 
 
+    public User getAssessor() {
+        return process.getAssessor();
+    }
+    public Application getApplication() {
+        return process.getApplication();
+    }
 
-
-
-
-
-
-
+    public AssessmentProcess getProcess() {
+        return process;
+    }
 
 
     //
@@ -87,10 +110,10 @@ public class Assessment {
         if ( this.process == null || this.process.getStatus().equals(ProcessStatus.REJECTED) )
             status = AssessmentStatus.INVALID;
 
-        else if ( this.process.equals(ProcessStatus.PENDING) )
+        else if ( this.process.getStatus().equals(ProcessStatus.PENDING) )
             status = AssessmentStatus.PENDING;
 
-        else if ( this.process.equals(ProcessStatus.ACCEPTED) )
+        else if ( this.process.getStatus().equals(ProcessStatus.ACCEPTED) )
             status = isSubmitted() ? AssessmentStatus.SUBMITTED : AssessmentStatus.OPEN;
 
 
