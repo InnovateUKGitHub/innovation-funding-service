@@ -57,48 +57,4 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
 
         return false;
     }
-    public Boolean markQuestionAsComplete(Long applicationId, Long questionId, Long userId, Boolean isComplete) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/markResponseAsComplete" +
-                "?applicationId={applicationId}" +
-                "&questionId={questionId}" +
-                "&userId={userId}" +
-                "&isComplete={isComplete}";
-
-        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
-        log.info("ApplicationRestRestService.markQuestionAsComplete send it!");
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, isComplete);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationRestRestService, marked as complete == ok : "+ response.getBody());
-            return true;
-        } else {
-            log.warn("Call failed.....");
-            log.error("failed with url "+ url);
-        }
-        return false;
-    }
-    public Boolean assignQuestion(Long applicationId, Long questionId, Long userId, Long assigneeId) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/assignQuestion" +
-                "?applicationId={applicationId}" +
-                "&questionId={questionId}" +
-                "&userId={userId}" +
-                "&assigneeId={assigneeId}";
-
-
-        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
-
-        log.info("ApplicationRestRestService.assignQuestion send it!");
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, questionId, userId, assigneeId);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationRestRestService, assigned == ok : "+ response.getBody());
-            return true;
-        } else {
-            log.warn("Call failed.....");
-            log.error("failed with url "+ url);
-        }
-        return false;
-    }
 }

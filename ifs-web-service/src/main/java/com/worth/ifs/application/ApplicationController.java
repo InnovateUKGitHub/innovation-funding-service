@@ -2,10 +2,12 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.application.helper.ApplicationHelper;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,17 +33,21 @@ public class ApplicationController extends AbstractApplicationController {
 
 
     @RequestMapping("/{applicationId}")
-    public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId){
+    public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request){
         log.info("Application with id " + applicationId);
-        this.addApplicationDetails(applicationId, model);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        this.addApplicationDetails(applicationId, user.getId(), model);
         return "application-details";
     }
 
     @RequestMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId){
-        addApplicationDetails(applicationId, model);
+                                     @PathVariable("sectionId") final Long sectionId,
+                                                HttpServletRequest request){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationDetails(applicationId, user.getId(), model);
         model.addAttribute("currentSectionId", sectionId);
         return "application-details";
     }
@@ -51,24 +57,28 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request){
         List<Response> responses = responseService.getByApplication(applicationId);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
-
-        addApplicationDetails(applicationId, model);
         User user = userAuthenticationService.getAuthenticatedUser(request);
+
+        addApplicationDetails(applicationId, user.getId(), model);
         Application application = applicationService.getById(applicationId);
         addFinanceDetails(model, application, user.getId());
         return "application-summary";
     }
 
     @RequestMapping("/{applicationId}/confirm-submit")
-    public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
-        addApplicationDetails(applicationId, model);
+    public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId,
+                                           HttpServletRequest request){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationDetails(applicationId, user.getId(), model);
         return "application-confirm-submit";
     }
 
     @RequestMapping("/{applicationId}/submit")
-    public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId){
+    public String applicationSubmit(Model model, @PathVariable("applicationId") final Long applicationId,
+                                    HttpServletRequest request){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationDetails(applicationId, model);
+        addApplicationDetails(applicationId, user.getId(), model);
         return "application-submitted";
     }
 
@@ -78,7 +88,7 @@ public class ApplicationController extends AbstractApplicationController {
      * @param applicationId represents the application
      * @param model model that contains the details for the application detail page
      */
-    private void addApplicationDetails(Long applicationId, Model model) {
+    private void addApplicationDetails(Long applicationId, Long userId, Model model) {
         ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getById(applicationId);
 
@@ -89,15 +99,22 @@ public class ApplicationController extends AbstractApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
+        model.addAttribute("userOrganisation", applicationHelper.getUserOrganisation(application, userId).get());
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
+        Optional<Organisation> leadOrganisation = applicationHelper.getApplicationLeadOrganisation(application);
+        if(leadOrganisation.isPresent()) {
+            model.addAttribute("leadOrganisation", leadOrganisation.get());
+            model.addAttribute("completedSections", sectionService.getCompleted(applicationId, leadOrganisation.get().getId()));
+        }
+
         model.addAttribute("sections", sectionService.getParentSections(competition.getSections()));
-        model.addAttribute("completedSections", sectionService.getCompleted(applicationId));
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        List<Question> questions = questionService.findByCompetition(competition.getId());
+        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
         List<Response> responses = responseService.getByApplication(applicationId);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
 
         int todayDay =  LocalDateTime.now().getDayOfYear();
         model.addAttribute("todayDay", todayDay);
@@ -114,21 +131,11 @@ public class ApplicationController extends AbstractApplicationController {
      * @return
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String assignQuestionToUser(Model model,
-                                        @PathVariable("applicationId") final Long applicationId,
-                                        @PathVariable("sectionId") final Long sectionId,
-                                        HttpServletRequest request){
-
-        // save application details if they are in the request
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-
-        assignQuestion(request, applicationId, user.getId());
-
-        addApplicationDetails(applicationId, model);
-        model.addAttribute("applicationSaved", true);
-
-        return "application-details";
+    public String assignQuestion(Model model,
+                                @PathVariable("applicationId") final Long applicationId,
+                                @PathVariable("sectionId") final Long sectionId,
+                                 HttpServletRequest request){
+        assignQuestion(request);
+        return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
-
-
 }

@@ -3,6 +3,8 @@ package com.worth.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -35,6 +37,8 @@ public class Question {
 
     private Boolean markAsCompletedEnabled = false;
 
+    private Boolean multipleStatuses = false;
+
     private Integer priority;
 
     @ManyToOne
@@ -51,6 +55,9 @@ public class Question {
 
     @OneToMany(mappedBy="question")
     private List<Response> responses;
+
+    @OneToMany(mappedBy="question")
+    private List<QuestionStatus> questionStatuses;
 
     @OneToMany(mappedBy="question")
     private List<Cost> costs;
@@ -117,6 +124,10 @@ public class Question {
         return description;
     }
 
+    public List<QuestionStatus> getQuestionStatuses() {
+        return questionStatuses;
+    }
+
     @JsonIgnore
     public List<Response> getResponses() {
         return responses;
@@ -140,11 +151,54 @@ public class Question {
         this.responses = responses;
     }
 
+    public void setQuestionStatuses(List<QuestionStatus> questionStatuses) {
+        this.questionStatuses = questionStatuses;
+    }
+
     public Boolean isMarkAsCompletedEnabled() {
         return (markAsCompletedEnabled == null ? false : markAsCompletedEnabled);
+    }
+
+    public Boolean hasMultipleStatuses() {
+        return multipleStatuses;
+    }
+
+    public Boolean getMultipleStatuses() {
+        return multipleStatuses;
+    }
+
+    public Boolean getMarkAsCompletedEnabled() {
+        return markAsCompletedEnabled;
     }
 
     public Integer getPriority() {
         return priority;
     }
+
+    /**
+     * For e.g. the finances the questions can be marked as complete by multiple
+     * organisations, so if one of the people from an organisation marked a question as complete
+     * then it is completed for the whole organisation. However this is specifically for one organisation.
+     *
+     * @param organisationId organisation for which the mark as complete applies
+     * @return question is marked as complete
+     */
+    public boolean isMarkedAsComplete(Long organisationId) {
+        List<QuestionStatus> questionStatuses = getQuestionStatuses();
+        Boolean questionMarkedAsComplete = false;
+        for(QuestionStatus questionStatus : questionStatuses) {
+            if(multipleStatuses) {
+                if(questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
+                    questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
+                    break;
+                }
+            } else {
+                questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
+                break;
+            }
+        }
+
+        return questionMarkedAsComplete;
+    }
+
 }

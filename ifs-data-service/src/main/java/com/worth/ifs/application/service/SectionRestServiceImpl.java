@@ -16,9 +16,9 @@ public class SectionRestServiceImpl extends BaseRestServiceProvider implements S
     String sectionRestURL;
 
 
-    public List<Long> getCompletedSectionIds(Long applicationId) {
+    public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Long[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + sectionRestURL + "/getCompletedSections/"+applicationId, Long[].class);
+        ResponseEntity<Long[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + sectionRestURL + "/getCompletedSections/"+applicationId+"/"+organisationId, Long[].class);
         Long[] sections =responseEntity.getBody();
         return Arrays.asList(sections);
     }

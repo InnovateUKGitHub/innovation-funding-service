@@ -18,5 +18,6 @@ public interface UserRestService {
     public ProcessRole findProcessRole(Long userId, Long applicationId);
     public List<ProcessRole> findProcessRole(Long applicationId);
     public List<User> findAssignableUsers(Long applicationId);
+    public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
 }

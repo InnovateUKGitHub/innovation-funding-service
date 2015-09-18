@@ -9,13 +9,11 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
-import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
-import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -93,17 +91,24 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
+        Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
+        model.addAttribute("userOrganisation", userOrganisation);
+        model.addAttribute("completedSections", sectionService.getCompleted(applicationId, userOrganisation.getId()));
+
         model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
-        model.addAttribute("leadOrganisation", applicationHelper.getApplicationLeadOrganisation(application).orElseGet(() -> null));
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
+        Optional<Organisation> organisation = applicationHelper.getApplicationLeadOrganisation(application);
+        if(organisation.isPresent()) {
+            model.addAttribute("leadOrganisation", organisation.get());
+        }
 
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
                         Function.identity()));
         model.addAttribute("sections", sections);
-        model.addAttribute("completedSections", sectionService.getCompleted(applicationId));
-
+        List<Question> questions = questionService.findByCompetition(competition.getId());
+        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
         List<Response> responses = responseService.getByApplication(applicationId);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
 
@@ -155,7 +160,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         setApplicationDetails(application, params);
         markQuestion(request, params, applicationId, user.getId());
-        assignQuestion(request, applicationId, user.getId());
+        assignQuestion(request);
 
         applicationService.save(application);
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
@@ -167,12 +172,16 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
+        ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
+        if(processRole==null) {
+            return;
+        }
         if(params.containsKey("mark_as_complete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
-            responseService.markQuestionAsComplete(applicationId, questionId, userId);
+            questionService.markAsComplete(questionId, processRole.getId());
         }else if(params.containsKey("mark_as_incomplete")){
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
-            responseService.markQuestionAsInComplete(applicationId, questionId, userId);
+            questionService.markAsInComplete(questionId, processRole.getId());
         }
     }
 

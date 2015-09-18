@@ -20,8 +20,8 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<Long> getCompleted(Long applicationId) {
-        return sectionRestService.getCompletedSectionIds(applicationId);
+    public List<Long> getCompleted(Long applicationId, Long organisationId) {
+        return sectionRestService.getCompletedSectionIds(applicationId, organisationId);
     }
 
     @Override

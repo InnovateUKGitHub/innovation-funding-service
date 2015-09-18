@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +42,8 @@ public class ApplicationController {
     UserRepository userRepository;
     @Autowired
     ResponseRepository responseRepository;
+
+    QuestionController questionController = new QuestionController();
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -104,32 +108,30 @@ public class ApplicationController {
                 .filter((q -> q.isMarkAsCompletedEnabled()))
                 .collect(Collectors.toList());
 
+        List<ProcessRole> processRoles = application.getProcessRoles();
+        Set<Organisation> organisations = processRoles.stream().map(p -> p.getOrganisation()).collect(Collectors.toSet());
 
-        Application app = repository.findOne(applicationId);
-        List<ProcessRole> userAppRoles = app.getProcessRoles();
+        Long countMultipleStatusQuestionsCompleted = organisations.stream()
+                .mapToLong(org -> questions.stream()
+                        .filter(q -> q.hasMultipleStatuses() && q.isMarkedAsComplete(org.getId())).count())
+                .sum();
+        Long countSingleStatusQuestionsCompleted = questions.stream()
+                        .filter(q -> !q.hasMultipleStatuses() && q.isMarkedAsComplete(0L)).count();
+        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
-        List<Response> responses = new ArrayList<Response>();
-        for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
-        }
+        Long totalMultipleStatusQuestions = questions.stream().filter(q -> q.hasMultipleStatuses()).count() * organisations.size();
+        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
-        int countCompleted = 0;
-        for (Response response : responses) {
-            if(response.getQuestion().isMarkAsCompletedEnabled() && response.isMarkedAsComplete()){
-                countCompleted++;
-            }
-        }
-
-        log.error("Total questions" + questions.size());
-        log.error("Total completed questions" + countCompleted);
+        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
+        log.debug("Total questions" + totalQuestions);
+        log.debug("Total completed questions" + countCompleted);
 
         double percentageCompleted;
         if(questions.size() == 0){
             percentageCompleted = 0;
         }else{
-            percentageCompleted = (100 / questions.size()) * countCompleted;
+            percentageCompleted = (100 / totalQuestions) * countCompleted;
         }
-
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();

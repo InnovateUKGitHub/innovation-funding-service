@@ -20,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,13 +34,15 @@ public class ResponseController {
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
-    ProcessRoleRepository userAppRoleRepository;
+    ProcessRoleRepository processRoleRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
     ResponseRepository responseRepository;
     @Autowired
     QuestionRepository questionRepository;
+
+    QuestionController questionController = new QuestionController();
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -57,48 +58,12 @@ public class ResponseController {
         return responses;
     }
 
-    @RequestMapping("/findResponsesByApplication/{applicationId}/section/{sectionId}")
-    public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId, @PathVariable("sectionId") final Long sectionId){
-        throw new NotImplementedException();
-    }
-
-    @RequestMapping(value="/assignQuestion")
-    public ResponseEntity<String> assignQuestion(@RequestParam("applicationId") final Long applicationId,
-                                                         @RequestParam("questionId") final Long questionId,
-                                                         @RequestParam("userId") final Long userId,
-                                                         @RequestParam("assigneeId") final Long assigneeId){
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        User assignee = userRepository.findOne(assigneeId);
-        User user = userRepository.findOne(userId);
-        Application application = applicationRepository.findOne(applicationId);
-        List<ProcessRole> processRoles = userAppRoleRepository.findByUserAndApplication(user, application);
-
-        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
-        if(response == null){
-            log.error("FORBIDDEN TO SAVE");
-            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
-        }
-
-        response.setUpdateDate(LocalDateTime.now());
-        response.setAssignee(assignee);
-        response.setAssignedDate(LocalDateTime.now());
-        response.setUpdatedBy(processRoles.get(0));
-
-        responseRepository.save(response);
-
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
-
-    }
     private Response getOrCreateResponse(Long applicationId, Long userId,  Long questionId){
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
         User user = userRepository.findOne(userId);
 
-
-        List<ProcessRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
         if(userAppRoles == null || userAppRoles.size()== 0){
             // user has no role on this application, so should not be able to write..
             log.error("FORBIDDEN TO SAVE");
@@ -107,44 +72,10 @@ public class ResponseController {
 
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
         if(response == null){
-            response = new Response(null, LocalDateTime.now(), "", false, userAppRoles.get(0), question, application);
+            response = new Response(null, LocalDateTime.now(), "", userAppRoles.get(0), question, application);
         }
 
         return response;
-    }
-
-    @RequestMapping(value="/markResponseAsComplete")
-    public ResponseEntity<String> markResponseAsComplete(@RequestParam("applicationId") final Long applicationId,
-                                                         @RequestParam("questionId") final Long questionId,
-                                                         @RequestParam("userId") final Long userId,
-                                                         @RequestParam(value = "isComplete", required = false) Boolean markedAsComplete){
-        if(markedAsComplete == null){
-            markedAsComplete = true;
-        }
-        log.info("Mark:::" + markedAsComplete);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        User user = userRepository.findOne(userId);
-
-        Application application = applicationRepository.findOne(applicationId);
-        List<ProcessRole> processRoles = userAppRoleRepository.findByUserAndApplication(user, application);
-
-        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
-        if(response == null){
-            log.error("FORBIDDEN TO SAVE");
-            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
-        }
-
-
-        response.setMarkedAsComplete(markedAsComplete);
-        response.setUpdateDate(LocalDateTime.now());
-        response.setUpdatedBy(processRoles.get(0));
-        responseRepository.save(response);
-
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
@@ -164,7 +95,7 @@ public class ResponseController {
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
 
-        List<ProcessRole> userAppRoles = userAppRoleRepository.findByUserAndApplication(user, application);
+        List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
 
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){

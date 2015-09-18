@@ -25,6 +25,7 @@ public class ApplicationHelper {
 
         return organisations;
     }
+
     public Optional<Organisation> getApplicationLeadOrganisation(Application application){
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
 
@@ -35,12 +36,25 @@ public class ApplicationHelper {
 
         return leadOrganisation;
     }
+
+    public Optional<Organisation> getUserOrganisation(Application application, Long userId){
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+
+        Optional<Organisation> userOrganisation = userApplicationRoles.stream()
+                .filter(uar -> uar.getUser().getId().equals(userId))
+                .map(uar -> uar.getOrganisation())
+                .findFirst();
+
+        return userOrganisation;
+    }
+
     public Boolean isLeadApplicant(Long userId, Application application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
+
 
     public Set<User> getAssignableUsers(Application application){
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();

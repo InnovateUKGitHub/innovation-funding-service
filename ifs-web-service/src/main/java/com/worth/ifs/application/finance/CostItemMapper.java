@@ -4,6 +4,8 @@ import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CostItemMapper {
+    private final Log log = LogFactory.getLog(getClass());
     Map<String, CostField> costFields = new HashMap<>();
 
     public CostItemMapper(List<CostField> costFields) {

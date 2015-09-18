@@ -98,25 +98,25 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">
-    <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
+    <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
 
-            <div th:unless="${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}"
+            <div th:unless="${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
         <div th:include="question-type/form-elements :: form-textarea (
 		 					id=${question.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()} or ${response?.getAssignee() != null and currentUser.getId() != response?.getAssignee()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} or ${$questionAssignee?.getAssignee() != null and currentUser.getId() != $questionAssignee?.getAssignee()?.getUser()?.getId()},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag"/>
 
         <div class="textarea-footer">
 
-            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and response?.isMarkedAsComplete()}"
+            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
             <!-- if not readonly we show mark as complete buttons -->
@@ -131,9 +131,9 @@
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div class="assignee" th:if="${response?.getAssignee() != null}">
+    <div class="assignee" th:if="${questionAssignee?.getAssignee() != null}">
         You have assigned this question to
-        <div th:text="${response?.getAssignee()?.getName()}"></div>
+        <div th:text="${questionAssignee?.getAssignee()?.getUser()?.getName()}"></div>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
@@ -145,11 +145,11 @@
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${response?.getAssignee()?.getId() == assignableUser.getId()}"
-                            th:text="${assignableUser.getName()}"
+                            th:unless="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                            th:text="${assignableUser.getUser()?.getName()}"
                             th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink"/>
-                    <div th:if="${response?.getAssignee()?.getId() == assignableUser.getId()}"
-                         th:text="${assignableUser.getName()}"/>
+                    <div th:if="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                         th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
             </ul>
         </div>
@@ -179,11 +179,11 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <button th:if="${question.isMarkAsCompletedEnabled() and not response.isMarkedAsComplete()}" type="submit"
+    <button th:if="${question.isMarkAsCompletedEnabled() and not question.isMarkedAsComplete(userOrganisation.id)}" type="submit"
             name="mark_as_complete" th:value="${question.getId()}" class="buttonlink"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
-    <button th:if="${question.isMarkAsCompletedEnabled() and response.isMarkedAsComplete()}" type="submit"
+    <button th:if="${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)}" type="submit"
             name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>

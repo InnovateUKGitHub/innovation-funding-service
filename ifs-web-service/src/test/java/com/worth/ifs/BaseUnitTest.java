@@ -54,6 +54,8 @@ public class BaseUnitTest {
     public CostService costService;
     @Mock
     public ApplicationRestService applicationRestService;
+    @Mock
+    public QuestionService questionService;
 
     @Mock
     public SectionService sectionService;
@@ -129,6 +131,7 @@ public class BaseUnitTest {
 
         competition.setSections(sections);
         competition.setQuestions(questionList);
+        when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
 
     }
 
@@ -169,7 +172,7 @@ public class BaseUnitTest {
         applications = Arrays.asList(app1, app2, app3, app4);
 
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
-        when(sectionService.getCompleted(app1.getId())).thenReturn(Arrays.asList(1L, 2L));
+        when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(Arrays.asList(1L, 2L));
         when(sectionService.getInCompleted(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
         when(processRoleService.findProcessRole(app1.getId(), loggedInUser.getId())).thenReturn(processRole1);
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
@@ -187,8 +190,8 @@ public class BaseUnitTest {
         Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDateTime.now(), "value 1", markAsComplete, userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(20L), application);
+        Response response2 = new Response(2L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(21L), application);
 
         List<Response> responses = Arrays.asList(response, response2);
         userApplicationRole.setResponses(responses);

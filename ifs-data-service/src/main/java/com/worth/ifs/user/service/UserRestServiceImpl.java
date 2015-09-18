@@ -59,18 +59,28 @@ public class UserRestServiceImpl extends BaseRestServiceProvider implements User
         ProcessRole processRole = restTemplate.getForObject(dataRestServiceURL + processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
         return processRole;
     }
+
     public List<ProcessRole> findProcessRole(Long applicationId) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ProcessRole[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + processRoleRestURL + "/findByUserApplication/"+ applicationId, ProcessRole[].class);
         ProcessRole[] processRole = responseEntity.getBody();
         return Arrays.asList(processRole);
     }
+
     public List<User> findAssignableUsers(Long applicationId){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userRestURL + "/findAssignableUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
+
+    public List<ProcessRole> findAssignableProcessRoles(Long applicationId){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ProcessRole[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + processRoleRestURL + "/findAssignable/"+applicationId, ProcessRole[].class);
+        ProcessRole[] processRoles =responseEntity.getBody();
+        return Arrays.asList(processRoles);
+    }
+
     public List<User> findRelatedUsers(Long applicationId){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);

@@ -33,10 +33,6 @@ public class User {
 
     @OneToMany(mappedBy="user")
     private List<ProcessRole> processRoles = new ArrayList<>();
-
-   // @ManyToMany(mappedBy="user")
-    //private Set<Role> roles = new HashSet<>();
-
     private String name;
     private String imageUrl;
 
@@ -94,13 +90,4 @@ public class User {
         setPassword = encoder.encode(setPassword);
         this.password = setPassword;
     }
-
-//    public boolean hasRole(Role role) {
-//        return roles.contains(role);
-//    }
-//
-//    public Set<Role> getRoles() {
-//        return new HashSet<>(roles);
-//    }
-
 }

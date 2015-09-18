@@ -12,7 +12,7 @@ import java.util.List;
 public class OrganisationTest {
     Organisation organisation;
 
-    long id;
+    Long id;
     String name;
     List<ProcessRole> processRoles;
 

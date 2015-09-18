@@ -13,7 +13,6 @@ public class ResponseTest {
     Long id;
     Question question;
     ProcessRole updatedBy;
-    Boolean markedAsComplete;
     String value;
     LocalDateTime date;
 
@@ -22,12 +21,11 @@ public class ResponseTest {
         id = 0L;
         question = new Question();
         updatedBy = new ProcessRole();
-        markedAsComplete = false;
         value  = "testResponseValue";
         date = LocalDateTime.now();
         Application application = new Application();
 
-        response = new Response(id, date, value, markedAsComplete, updatedBy, question, application);
+        response = new Response(id, date, value, updatedBy, question, application);
     }
 
     @Test
@@ -35,7 +33,6 @@ public class ResponseTest {
         Assert.assertEquals(response.getId(), id);
         Assert.assertEquals(response.getUpdateDate(), date);
         Assert.assertEquals(response.getValue(), value);
-        Assert.assertEquals(response.isMarkedAsComplete(), markedAsComplete);
         Assert.assertEquals(response.getUpdatedBy(), updatedBy);
         Assert.assertEquals(response.getQuestion(), question);
     }

@@ -61,8 +61,6 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
     }
 
     public void updateApplicationStatus(Long applicationId, Long statusId) {
-        ///updateApplicationStatus/{id}/status/{statusId}
-
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}";
 
@@ -82,17 +80,14 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
     }
 
     public Double getCompleteQuestionsPercentage(Long applicationId) {
-        //getProgressPercentageByApplicationId/{applicationId}
         if (applicationId == null) {
-            log.error("No application ID!! application id is null");
+            log.error("No application and/org organisation id!!");
         }
 
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + applicationRestURL + "/getProgressPercentageByApplicationId/{applicationId}";
 
         ObjectNode jsonResponse = restTemplate.getForObject(url, ObjectNode.class, applicationId);
-
-
         return jsonResponse.get("completedPercentage").asDouble();
     }
 

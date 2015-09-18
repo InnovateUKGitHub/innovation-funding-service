@@ -31,7 +31,7 @@
                         <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                             th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
-                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="(${subSection.getId()} == ${currentSectionId}) ? 'active':''">
+                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'')">
                                 <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
                                     th:text="${subSection.getName()}"></a>
                             </li>
@@ -58,8 +58,8 @@
                 </div>
             </div>
  
-            <div class="question" th:each="question : ${currentSection.getQuestions()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())})">
-                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
+            <div class="question" th:each="question : ${currentSection.getQuestions()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $questionAssignee=(${questionAssignee}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>

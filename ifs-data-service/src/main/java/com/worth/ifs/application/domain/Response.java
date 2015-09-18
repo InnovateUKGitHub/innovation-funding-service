@@ -9,27 +9,12 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Response {
-    public Response(Long id, LocalDateTime updateDate, String value, Boolean markedAsComplete, ProcessRole updatedBy, Question question, Application app) {
-        this.id = id;
-        this.updateDate = updateDate;
-        this.value = value;
-        this.markedAsComplete = markedAsComplete;
-        this.question = question;
-        this.application = app;
-        this.updatedBy = updatedBy;
-    }
-
-    public Response () {
-
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDateTime updateDate;
     @Column(length=5000)
     private String value;
-    private Boolean markedAsComplete;
 
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
@@ -43,11 +28,18 @@ public class Response {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    @ManyToOne
-    @JoinColumn(name="assigneeId", referencedColumnName="id")
-    private User assignee;
-    private LocalDateTime assignedDate;
+    public Response(Long id, LocalDateTime updateDate, String value, ProcessRole updatedBy, Question question, Application app) {
+        this.id = id;
+        this.updateDate = updateDate;
+        this.value = value;
+        this.question = question;
+        this.application = app;
+        this.updatedBy = updatedBy;
+    }
 
+    public Response () {
+
+    }
 
     public Long getId() {
         return id;
@@ -72,16 +64,8 @@ public class Response {
     }
 
 
-    public Boolean isMarkedAsComplete() {
-        return (markedAsComplete == true);
-    }
-
     public Question getQuestion() {
         return question;
-    }
-
-    public void setMarkedAsComplete(boolean markedAsComplete) {
-        this.markedAsComplete = markedAsComplete;
     }
 
     public void setValue(String value) {
@@ -92,29 +76,12 @@ public class Response {
         this.updateDate = updateDate;
     }
 
-
     public void setApplication(Application application) {
         this.application = application;
     }
 
     public void setQuestion(Question question) {
         this.question = question;
-    }
-
-    public User getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(User assignee) {
-        this.assignee = assignee;
-    }
-
-    public LocalDateTime getAssignedDate() {
-        return assignedDate;
-    }
-
-    public void setAssignedDate(LocalDateTime assignedDate) {
-        this.assignedDate = assignedDate;
     }
 
     public ProcessRole getUpdatedBy() {

@@ -9,6 +9,4 @@ import java.util.List;
 public interface ResponseRestService {
     public List<Response> getResponsesByApplicationId(Long applicationId);
     public Boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value);
-    public Boolean markQuestionAsComplete(Long applicationId, Long questionId, Long userId, Boolean isComplete);
-    public Boolean assignQuestion(Long applicationId, Long questionId, Long userId, Long assigneeId);
 }

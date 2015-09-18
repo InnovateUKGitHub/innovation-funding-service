@@ -1,12 +1,10 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,48 +32,37 @@ public class SectionController {
     SectionRepository sectionRepository;
 
     private final Log log = LogFactory.getLog(getClass());
+    QuestionController questionController = new QuestionController();
 
 
-    @RequestMapping("/getCompletedSections/{applicationId}")
-    public Set<Long> getCompletedSectionsJson(@PathVariable("applicationId") final Long applicationId) {
-        return this.getCompletedSections(applicationId);
-    }
-    private Set<Long> getCompletedSections(Long applicationId){
+    @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
+    public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
+                                          @PathVariable("organisationId") final Long organisationId) {
         Set<Long> completedSections = new LinkedHashSet<>();
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         for (Section section : sections) {
             List<Section> childSections = section.getChildSections();
             for (Section childSection : childSections) {
-                if(this.sectionIsComplete(childSection, applicationId)){
+                if (this.isSectionComplete(childSection, applicationId, organisationId)) {
                     completedSections.add(childSection.getId());
                 }
             }
-            if(this.sectionIsComplete(section, applicationId)){
+            if (this.isSectionComplete(section, applicationId, organisationId)) {
                 completedSections.add(section.getId());
             }
         }
         List<Long> incomplete = this.getIncompleteSections(applicationId);
 
-        completedSections=completedSections.stream()
+        completedSections = completedSections.stream()
                 .filter(c -> !incomplete.contains(c))
                 .collect(Collectors.toSet());
 
         return completedSections;
     }
 
-
     @RequestMapping("/getIncompleteSections/{applicationId}")
-    public List<Long> getIncompleteSectionsJson(@PathVariable("applicationId") final Long applicationId) {
-        return this.getIncompleteSections(applicationId);
-    }
-
-    @RequestMapping("findByName/{name}")
-    public Section findByName(@PathVariable("name") final String name) {
-        return sectionRepository.findByName(name);
-    }
-
-    public List<Long> getIncompleteSections(Long applicationId) {
+    public List<Long> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
 
         List<Section> sections = application.getCompetition().getSections();
@@ -86,43 +73,74 @@ public class SectionController {
 
             List<Question> questions = section.getQuestions();
             for (Question question : questions) {
-                if(question.getWordCount() != null && question.getWordCount() > 0){
+                if (question.getWordCount() != null && question.getWordCount() > 0) {
                     // there is a maxWordCount.
                     Response response = responseRepository.findByApplicationIdAndQuestionId(applicationId, question.getId());
-                    if(response != null && response.getWordCountLeft() < 0){
+                    if (response != null && response.getWordCountLeft() < 0) {
                         // gone over the limit !
                         sectionIncomplete = true;
                         break;
-                    }else{
+                    } else {
                         sectionIncomplete = false;
                     }
-                }else{
+                } else {
                     // no wordcount.
                     sectionIncomplete = false;
                 }
             }
-            if(sectionIncomplete){
+            if (sectionIncomplete) {
                 incompleteSections.add(section.getId());
             }
         }
 
         return incompleteSections;
     }
-    private boolean sectionIsComplete(Section section, Long applicationId){
-        List<Question> questions = section.getQuestions();
-        boolean sectionComplete = false;
-        for (Question question : questions) {
-            Response response = responseRepository.findByApplicationIdAndQuestionId(applicationId, question.getId());
-            if(response != null && response.isMarkedAsComplete()){
-                sectionComplete = true;
-            }else{
-                sectionComplete = false;
+
+    @RequestMapping("findByName/{name}")
+    public Section findByName(@PathVariable("name") final String name) {
+        return sectionRepository.findByName(name);
+    }
+
+    private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
+        boolean sectionIsComplete = true;
+        log.debug("section complete: " + section.getName() + " id: " + section.getId() + " for org: " + organisationId);
+
+        sectionIsComplete = isMainSectionComplete(section, organisationId);
+        log.debug("section after: " + section.getName() + " id: " + section.getId() + " complete: " + sectionIsComplete + " for org: " + organisationId);
+
+        // check if section has subsections, if there are subsections let the outcome depend on those subsections
+        // and the section itself if it contains questions with mark as complete attached
+        if (sectionIsComplete && section.hasChildSections()) {
+            sectionIsComplete = section.getChildSections()
+                    .stream()
+                    .allMatch(s -> isSectionComplete(s, applicationId, organisationId));
+            log.debug("section : " + section.getName() + " id: " + section.getId() + " complete: " + sectionIsComplete + " for org: " + organisationId);
+        }
+        return sectionIsComplete;
+    }
+
+    /**
+     * get questions for the sections and filter out the ones that have marked as completed turned on
+     * @param section
+     * @param organisationId
+     * @return
+     */
+    public boolean isMainSectionComplete(Section section, Long organisationId) {
+        boolean sectionIsComplete = true;
+        for(Question question : section.getQuestions()) {
+            if(!question.isMarkAsCompletedEnabled())
+                continue;
+
+            boolean questionMarkedAsComplete = question.isMarkedAsComplete(organisationId);
+
+            // if one of the questions is incomplete then the whole section is incomplete
+            if(!questionMarkedAsComplete) {
+                sectionIsComplete = false;
                 break;
             }
         }
-        return sectionComplete;
+        return sectionIsComplete;
     }
-
 
 
 }
