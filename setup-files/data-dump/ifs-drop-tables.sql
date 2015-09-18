@@ -20,6 +20,7 @@ DROP TABLE IF EXISTS organisation;
 DROP TABLE IF EXISTS other_cost;
 DROP TABLE IF EXISTS question;
 DROP TABLE IF EXISTS question_type;
+DROP TABLE IF EXISTS question_status;
 DROP TABLE IF EXISTS response;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS section;
