@@ -56,12 +56,12 @@ public class AssessorController {
         //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
         List<Competition> competitions = competitionService.getAll();
 
-        Map<Long, Long> competitionsTotalAssignedAssessments = new HashMap<>();
+        Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
 
         for ( Competition c : competitions ) {
-            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedAssessmentsByCompetition(getLoggedUser(request).getId(), c.getId()));
-            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedAssessmentsByCompetition(getLoggedUser(request).getId(), c.getId()));
+            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()));
+            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()));
         }
 
         //pass to view
@@ -73,20 +73,5 @@ public class AssessorController {
         return "assessor-dashboard";
     }
 
-    @RequestMapping(value="/competitions/{competitionId}/applications", method= RequestMethod.GET)
-    public String competitionApplications(Model model, @PathVariable("competitionId") final Long competitionId,
-                                          HttpServletRequest request) {
-
-        Competition competition = competitionService.getCompetitionById(competitionId);
-
-        List<Assessment> assessments = assessmentRestService.getAssessmentsByCompetition( getLoggedUser(request).getId(), competition.getId());
-
-        //pass to view
-        model.addAttribute("competition", competition);
-        model.addAttribute("assessments", assessments);
-
-
-        return "assessor-competition-applications";
-    }
 
 }
