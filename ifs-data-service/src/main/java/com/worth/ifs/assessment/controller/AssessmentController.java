@@ -44,6 +44,11 @@ public class AssessmentController {
         return assessmentHandler.getAllByCompetitionAndUser(competitionId, userId);
     }
 
+    @RequestMapping("/findAssessmentByApplication/{userId}/{applicationId}")
+    public Assessment getAssessmentByUserAndApplication( @PathVariable("userId") final Long userId, @PathVariable("applicationId") final Long applicationId ) {
+        return assessmentHandler.getOneByAssessorAndApplication(userId, applicationId);
+    }
+
     @RequestMapping("/totalAssignedAssessmentsByCompetition/{userId}/{competitionId}")
     public Integer getTotalAssignedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
        return assessmentHandler.getTotalAssignedAssessmentsByCompetition(competitionId, userId);
@@ -53,6 +58,10 @@ public class AssessmentController {
     public Integer getTotalSubmittedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
         return assessmentHandler.getTotalSubmittedAssessmentsByCompetition(competitionId, userId);
     }
+
+
+
+
 
 
 

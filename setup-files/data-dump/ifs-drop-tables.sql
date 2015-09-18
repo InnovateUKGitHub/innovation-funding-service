@@ -20,7 +20,6 @@ DROP TABLE IF EXISTS organisation;
 DROP TABLE IF EXISTS other_cost;
 DROP TABLE IF EXISTS question;
 DROP TABLE IF EXISTS question_type;
-DROP TABLE IF EXISTS question_status;
 DROP TABLE IF EXISTS response;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS section;
@@ -30,6 +29,7 @@ DROP TABLE IF EXISTS competition_applications;
 DROP TABLE IF EXISTS process;
 DROP TABLE IF EXISTS response_assessment_linker;
 DROP TABLE IF EXISTS assessment_assessments_linker;
+DROP TABLE IF EXISTS assessment_response_assessments;
 
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_application_role;

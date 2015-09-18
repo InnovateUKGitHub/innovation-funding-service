@@ -1,9 +1,11 @@
 package com.worth.ifs.assessment.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.annotation.PostConstruct;
@@ -37,11 +39,8 @@ public class Assessment {
     @JoinColumn(name="process_id", referencedColumnName="id")
     private AssessmentProcess process;
 
-    @ElementCollection
-    @CollectionTable(name="assessment_assessments_linker", joinColumns=@JoinColumn(name="assessment_id"))
-    @MapKeyColumn(name="response_id")
-    @JoinColumn(name="response_assessment_id")
-    private Map<Long, ResponseAssessment> responseAssessments;
+    @OneToMany
+    private Set<ResponseAssessment> responseAssessments;
 
     @Type(type="yes_no")
     private boolean submitted;
@@ -49,19 +48,19 @@ public class Assessment {
 
     public Assessment(){
         if ( responseAssessments == null )
-            responseAssessments = new LinkedHashMap<>();
+            responseAssessments = new LinkedHashSet<>();
     }
 
     @PostConstruct
     private void init() {
         if ( responseAssessments == null )
-            responseAssessments = new LinkedHashMap<>();
+            responseAssessments = new LinkedHashSet<>();
     }
 
     public Assessment(AssessmentProcess process) {
         this.process = process;
         this.submitted = false;
-        responseAssessments = new LinkedHashMap<>();
+        responseAssessments = new LinkedHashSet<>();
     }
 
     public void setSubmitted() {
@@ -77,11 +76,12 @@ public class Assessment {
     }
 
     public Set<ResponseAssessment> getResponseAssessments() {
-        return new LinkedHashSet<>(responseAssessments.values());
+        return responseAssessments;
     }
 
     public void addResponseAssessment(ResponseAssessment assessment) {
-        this.responseAssessments.put(assessment.getResponseId(), assessment);
+        //TODO - must replace to update if exists
+        this.responseAssessments.add(assessment);
     }
 
     public boolean hasAssessments() {

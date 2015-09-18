@@ -22,30 +22,39 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     String assessmentRestURL;
 
 
-    public List<Assessment> getAssessmentsByCompetition(Long userId, Long competitionId) {
+    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Assessment[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/findAssessmentsByCompetition/" + userId + "/"+competitionId , Assessment[].class);
+        ResponseEntity<Assessment[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class);
         Assessment[] assessments = responseEntity.getBody();
 
         return Arrays.asList(assessments);
     }
 
 
-    public Long getTotalAssignedAssessmentsByCompetition(Long userId, Long competitionId) {
+    public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/totalAssignedAssessmentsByCompetition/" + userId + "/"+competitionId , Integer.class);
-        Integer number = responseEntity.getBody();
+        ResponseEntity<Assessment> responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/findAssessmentByApplication/" + assessorId + "/" + applicationId , Assessment.class);
+        Assessment assessment = responseEntity.getBody();
 
-        return new Long(number);
+        return assessment;
     }
 
 
-    public Integer getTotalSubmittedAssessmentsByCompetition(Long userId, Long competitionId) {
+    public Integer getTotalAssignedByAssessorAndCompetition(Long assessorId, Long competitionId) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Integer>  responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/totalSubmittedAssessmentsByCompetition/" + userId + "/"+competitionId , Integer.class);
-        Integer number = responseEntity.getBody();
+        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/totalAssignedAssessmentsByCompetition/" + assessorId + "/" + competitionId , Integer.class);
+        Integer totalAssigned = responseEntity.getBody();
 
-        return number;
+        return totalAssigned;
+    }
+
+
+    public Integer getTotalSubmittedByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Integer>  responseEntity = restTemplate.getForEntity(dataRestServiceURL + assessmentRestURL + "/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId , Integer.class);
+        Integer totalSubmitted = responseEntity.getBody();
+
+        return totalSubmitted;
     }
 
 

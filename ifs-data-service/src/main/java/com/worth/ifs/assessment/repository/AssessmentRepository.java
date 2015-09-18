@@ -25,6 +25,9 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
     @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ?")
     List<Assessment> findByAssessorAndCompetition(Long assessorId, Long competitionId);
 
+    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.id = ?")
+    Assessment findOneByAssessorAndApplication(Long assessorId, Long applicationId);
+
     @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and a.submitted = true")
     List<Assessment> findSubmittedAssessmentsByCompetition(Long assessor, Long competition );
 

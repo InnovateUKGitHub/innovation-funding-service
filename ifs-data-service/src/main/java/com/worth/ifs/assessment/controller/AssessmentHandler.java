@@ -38,6 +38,12 @@ public class AssessmentHandler {
     public List<Assessment> getAllByCompetitionAndUser(Long competitionId, Long userId) {
         return assessments.findByAssessorAndCompetition(userId, competitionId);
     }
+
+    public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId) {
+        return assessments.findOneByAssessorAndApplication(userId, applicationId);
+    }
+
+
     public List<Assessment> getAssessmentsOfAssessor(Long assessorId) {
             return assessments.findByProcessAssessorId(assessorId);
     }

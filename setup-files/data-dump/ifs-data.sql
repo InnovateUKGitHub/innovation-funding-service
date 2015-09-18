@@ -59,9 +59,9 @@ UNLOCK TABLES;
 -- Dumping data for table `assessment_assessments`
 --
 
-LOCK TABLES `assessment_assessments` WRITE;
-/*!40000 ALTER TABLE `assessment_assessments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `assessment_assessments` ENABLE KEYS */;
+LOCK TABLES `assessment_response_assessments` WRITE;
+/*!40000 ALTER TABLE `assessment_response_assessments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assessment_response_assessments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

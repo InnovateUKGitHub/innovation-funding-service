@@ -12,11 +12,12 @@ import java.util.List;
  */
 public interface AssessmentRestService {
 
-    public List<Assessment> getAssessmentsByCompetition(Long userId, Long competitionId);
+    public List<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
 
-    public Long getTotalAssignedAssessmentsByCompetition(Long userId, Long competitionId);
+    public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId);
 
-    public Integer getTotalSubmittedAssessmentsByCompetition(Long userId, Long competitionId);
+    public Integer getTotalAssignedByAssessorAndCompetition(Long userId, Long competitionId);
 
+    public Integer getTotalSubmittedByAssessorAndCompetition(Long userId, Long competitionId);
 
-    }
+}
