@@ -71,7 +71,6 @@ public class AssessmentController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
-
         return solvePageForApplicationAssessment(assessment);
     }
 
@@ -79,16 +78,13 @@ public class AssessmentController {
 
         String pageToShow;
 
-
-        System.out.println("solvePageForApplicationAssessment - Assessment has id ? " + assessment == null ? -50 : assessment.getId());
-
         if ( assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID) )
             pageToShow = "assessor-dashboard";
         else if ( assessment.getStatus().equals(AssessmentStatus.PENDING) )
             pageToShow = "application-assessment-review";
-        else {
+        else
             pageToShow = "assessment-details";
-        }
+
 
         return pageToShow;
     }
@@ -97,6 +93,26 @@ public class AssessmentController {
     private User getLoggedUser(HttpServletRequest req) {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
+
+
+    @RequestMapping(value="/invitation_answer", method= RequestMethod.POST)
+    public String invitationAnswer(Model model, HttpServletRequest req) {
+
+
+        Map<String, String[]> params = req.getParameterMap();
+
+        boolean answer = params.containsKey("accept");
+        
+        //assessmentRestService.respondToAssessmentInvitation(answer);
+
+        System.out.println("Accepted? " + answer);
+
+        return "hello";
+    }
+
+
+
+
 
 
 }
