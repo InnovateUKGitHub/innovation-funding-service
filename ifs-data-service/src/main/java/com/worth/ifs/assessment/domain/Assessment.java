@@ -38,27 +38,30 @@ public class Assessment {
     private AssessmentProcess process;
 
     @ElementCollection
-    private Map<Long, ResponseAssessment> assessments;
+    @CollectionTable(name="assessment_assessments_linker", joinColumns=@JoinColumn(name="assessment_id"))
+    @MapKeyColumn(name="response_id")
+    @JoinColumn(name="response_assessment_id")
+    private Map<Long, ResponseAssessment> responseAssessments;
 
     @Type(type="yes_no")
     private boolean submitted;
 
 
     public Assessment(){
-        if ( assessments == null )
-            assessments = new LinkedHashMap<>();
+        if ( responseAssessments == null )
+            responseAssessments = new LinkedHashMap<>();
     }
 
     @PostConstruct
     private void init() {
-        if ( assessments == null )
-            assessments = new LinkedHashMap<>();
+        if ( responseAssessments == null )
+            responseAssessments = new LinkedHashMap<>();
     }
 
     public Assessment(AssessmentProcess process) {
         this.process = process;
         this.submitted = false;
-        assessments = new LinkedHashMap<>();
+        responseAssessments = new LinkedHashMap<>();
     }
 
     public void setSubmitted() {
@@ -74,15 +77,15 @@ public class Assessment {
     }
 
     public Set<ResponseAssessment> getResponseAssessments() {
-        return new LinkedHashSet<>(assessments.values());
+        return new LinkedHashSet<>(responseAssessments.values());
     }
 
     public void addResponseAssessment(ResponseAssessment assessment) {
-        this.assessments.put(assessment.getResponseId(), assessment);
+        this.responseAssessments.put(assessment.getResponseId(), assessment);
     }
 
     public boolean hasAssessments() {
-        return this.assessments != null && this.assessments.size() > 0;
+        return this.responseAssessments != null && this.responseAssessments.size() > 0;
     }
 
     public boolean isSubmitted() {

@@ -19,6 +19,9 @@ public class ResponseAssessment {
     @JoinColumn(name="response", referencedColumnName="id")
     private Response response;
 
+    //example
+    private Integer score;
+
     public ResponseAssessment() {}
 
     public ResponseAssessment( Response response ) {
