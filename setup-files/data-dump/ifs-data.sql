@@ -173,9 +173,6 @@ INSERT  IGNORE INTO `question_type` (`id`, `title`) VALUES (1,'textinput'),(2,'t
 /*!40000 ALTER TABLE `question_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Dumping data for table `response`
---
 
 LOCK TABLES `response` WRITE;
 /*!40000 ALTER TABLE `response` DISABLE KEYS */;

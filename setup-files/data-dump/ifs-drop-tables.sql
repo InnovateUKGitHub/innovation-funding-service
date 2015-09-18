@@ -28,15 +28,17 @@ DROP TABLE IF EXISTS subcontractor;
 DROP TABLE IF EXISTS travel_cost;
 DROP TABLE IF EXISTS competition_applications;
 DROP TABLE IF EXISTS process;
+DROP TABLE IF EXISTS response_assessment_linker;
+DROP TABLE IF EXISTS assessment_assessments_linker;
+
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_application_role;
 DROP TABLE IF EXISTS assessment;
 DROP TABLE IF EXISTS assessment_assessments;
 DROP TABLE IF EXISTS assessment_process;
 DROP TABLE IF EXISTS hibernate_sequences;
-
+DROP TABLE IF EXISTS question_status;
 DROP TABLE IF EXISTS response_assessment;
-
 DROP TABLE IF EXISTS process_event;
 DROP TABLE IF EXISTS process_role;
 DROP TABLE IF EXISTS process_type;
