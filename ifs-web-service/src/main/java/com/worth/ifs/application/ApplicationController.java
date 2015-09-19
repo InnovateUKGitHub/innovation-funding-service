@@ -99,26 +99,14 @@ public class ApplicationController extends AbstractApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
-        model.addAttribute("userOrganisation", applicationHelper.getUserOrganisation(application, userId).get());
-        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        Optional<Organisation> leadOrganisation = applicationHelper.getApplicationLeadOrganisation(application);
-        if(leadOrganisation.isPresent()) {
-            model.addAttribute("leadOrganisation", leadOrganisation.get());
-            model.addAttribute("completedSections", sectionService.getCompleted(applicationId, leadOrganisation.get().getId()));
-        }
-
-        model.addAttribute("sections", sectionService.getParentSections(competition.getSections()));
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        List<Question> questions = questionService.findByCompetition(competition.getId());
-        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
-        List<Response> responses = responseService.getByApplication(applicationId);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
 
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
+        Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
+        addOrganisationDetails(model, application, userOrganisation);
+        addQuestionsDetails(model, application, userOrganisation.getId());
+        addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
+        addDateDetails(model);
     }
 
     /**

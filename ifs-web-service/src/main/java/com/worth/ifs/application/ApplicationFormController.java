@@ -85,55 +85,19 @@ public class ApplicationFormController extends AbstractApplicationController {
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
     private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
-        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getById(applicationId);
         model.addAttribute("currentApplication", application);
-
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
+
+        ApplicationHelper applicationHelper = new ApplicationHelper();
         Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
-        model.addAttribute("userOrganisation", userOrganisation);
-        model.addAttribute("completedSections", sectionService.getCompleted(applicationId, userOrganisation.getId()));
 
-        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        Optional<Organisation> organisation = applicationHelper.getApplicationLeadOrganisation(application);
-        if(organisation.isPresent()) {
-            model.addAttribute("leadOrganisation", organisation.get());
-        }
-
-        List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        Map<Long, Section> sections =
-                sectionsList.stream().collect(Collectors.toMap(Section::getId,
-                        Function.identity()));
-        model.addAttribute("sections", sections);
-        List<Question> questions = questionService.findByCompetition(competition.getId());
-        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
-        List<Response> responses = responseService.getByApplication(applicationId);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
-
+        addOrganisationDetails(model, application, userOrganisation);
+        addQuestionsDetails(model, application, userOrganisation.getId());
         addFinanceDetails(model, application, userId);
-
-        Section currentSection = getSection(application, currentSectionId);
-        model.addAttribute("currentSectionId", currentSectionId);
-        model.addAttribute("currentSection", currentSection);
-
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
-    }
-
-
-    private Section getSection(Application application, Long sectionId) {
-        Competition comp = application.getCompetition();
-        List<Section> sections = comp.getSections();
-
-        // get the section that we want to show, so we can use this on to show the correct questions.
-        Optional<Section> section = sections.stream().
-                filter(x -> x.getId().equals(sectionId))
-                .findFirst();
-
-        return section.isPresent() ? section.get() : null;
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
+        addDateDetails(model);
     }
 
     /**

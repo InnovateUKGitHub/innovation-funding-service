@@ -11,5 +11,5 @@ public interface QuestionService {
     public void markAsComplete(Long questionId, Long markedAsCompleteById);
     public void markAsInComplete(Long questionId, Long markedAsInCompleteById);
     public List<Question> findByCompetition(Long competitionId);
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions);
+    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId);
 }
