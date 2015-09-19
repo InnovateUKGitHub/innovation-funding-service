@@ -2,11 +2,9 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
-import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -89,7 +86,6 @@ public class ApplicationController extends AbstractApplicationController {
      * @param model model that contains the details for the application detail page
      */
     private void addApplicationDetails(Long applicationId, Long userId, Model model) {
-        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getById(applicationId);
 
         if(application == null){
@@ -102,9 +98,9 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
 
-        Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
+        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
         addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation.getId());
+        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
         addDateDetails(model);
     }

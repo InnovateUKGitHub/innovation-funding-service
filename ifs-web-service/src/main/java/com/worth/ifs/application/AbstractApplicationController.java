@@ -1,16 +1,10 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.model.OrganisationFinance;
-import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
-import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.application.service.*;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.security.UserAuthenticationService;
@@ -20,6 +14,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +44,8 @@ public abstract class AbstractApplicationController {
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
 
+    @Autowired OrganisationService organisationService;
+
     @Autowired
     FinanceService financeService;
 
@@ -65,22 +62,29 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addOrganisationDetails(Model model, Application application, Organisation userOrganisation) {
-        ApplicationHelper applicationHelper = new ApplicationHelper();
-
         model.addAttribute("userOrganisation", userOrganisation);
-        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        Optional<Organisation> organisation = applicationHelper.getApplicationLeadOrganisation(application);
+        model.addAttribute("applicationOrganisations", organisationService.getApplicationOrganisations(application));
+        Optional<Organisation> organisation = organisationService.getApplicationLeadOrganisation(application);
         if(organisation.isPresent()) {
             model.addAttribute("leadOrganisation", organisation.get());
         }
     }
 
-    protected void addQuestionsDetails(Model model, Application application, Long userOrganisationId) {
-        List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
+    protected void addQuestionsDetails(Model model, Application application, Long userOrganisationId, Long userId) {
         List<Response> responses = responseService.getByApplication(application.getId());
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+        addAssigneableDetails(model, application, userOrganisationId, userId);
+
+
+    }
+
+    protected void addAssigneableDetails(Model model, Application application, Long userOrganisationId, Long userId) {
+        List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions, userOrganisationId));
+        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisationId);
+        model.addAttribute("questionAssignees", questionAssignees);
+        List<Long> assignedSections = sectionService.getUserAssignedSections(application.getCompetition().getSections(), questionAssignees, userId);
+        model.addAttribute("assignedSections", assignedSections);
     }
 
     protected void addFinanceDetails(Model model, Application application, Long userId) {

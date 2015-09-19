@@ -1,8 +1,10 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface SectionService {
@@ -11,4 +13,5 @@ public interface SectionService {
     public List<Section> getParentSections(List<Section> sections);
     public Section getByName(String name);
     public void removeSectionsQuestionsWithType(Section section, String name);
+    public List<Long> getUserAssignedSections(List<Section> sections, HashMap<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
 }

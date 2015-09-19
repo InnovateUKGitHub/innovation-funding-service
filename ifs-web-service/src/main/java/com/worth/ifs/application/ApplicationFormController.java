@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
@@ -24,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -90,11 +85,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
 
-        ApplicationHelper applicationHelper = new ApplicationHelper();
-        Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
+        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
 
         addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation.getId());
+        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addFinanceDetails(model, application, userId);
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
         addDateDetails(model);

@@ -27,7 +27,9 @@
                     <li>
                         <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
                     </li>
-                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') + ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'')">
+                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
+                            ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
+                            ((${assignedSections.contains(sectionEntry.key)}) ? 'section-status assigned ': '')">
                         <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                             th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">

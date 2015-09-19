@@ -2,6 +2,8 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     QuestionRestService questionRestService;
 
@@ -41,12 +45,10 @@ public class QuestionServiceImpl implements QuestionService {
             for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
                 if(questionStatus.getAssignee()==null)
                     continue;
-
                 boolean multipleStatuses = question.hasMultipleStatuses();
                 boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
 
-                if(questionStatus.getAssignee()!=null &&
-                        ((multipleStatuses && assigneeIsPartOfOrganisation) || multipleStatuses)) {
+                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
                     questionAssignees.put(question.getId(), questionStatus);
                     break;
                 }
