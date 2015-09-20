@@ -50,14 +50,14 @@ public abstract class AbstractApplicationController {
     FinanceService financeService;
 
 
-    protected void assignQuestion(HttpServletRequest request) {
+    protected void assignQuestion(HttpServletRequest request, Long assignedById) {
         Map<String, String[]> params = request.getParameterMap();
         if(params.containsKey("assign_question")){
             String assign = request.getParameter("assign_question");
             Long questionId = Long.valueOf(assign.split("_")[0]);
             Long assigneeId = Long.valueOf(assign.split("_")[1]);
 
-            questionService.assign(questionId, assigneeId);
+            questionService.assign(questionId, assigneeId, assignedById);
         }
     }
 
@@ -83,6 +83,9 @@ public abstract class AbstractApplicationController {
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisationId);
         model.addAttribute("questionAssignees", questionAssignees);
+        List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        model.addAttribute("notifications",notifications);
+        questionService.removeNotifications(notifications);
         List<Long> assignedSections = sectionService.getUserAssignedSections(application.getCompetition().getSections(), questionAssignees, userId);
         model.addAttribute("assignedSections", assignedSections);
     }

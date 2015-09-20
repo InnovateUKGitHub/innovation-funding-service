@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,7 +120,9 @@ public class ApplicationController extends AbstractApplicationController {
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request){
-        assignQuestion(request);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        assignQuestion(request, assignedBy.getId());
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 }

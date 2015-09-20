@@ -7,8 +7,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -17,10 +19,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionRestService questionRestService;
 
-
     @Override
-    public void assign(Long questionId, Long assigneeId) {
-        questionRestService.assign(questionId, assigneeId);
+    public void assign(Long questionId, Long assigneeId, Long assignedById) {
+        questionRestService.assign(questionId, assigneeId, assignedById);
     }
 
     @Override
@@ -55,6 +56,16 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         return questionAssignees;
+    }
+
+    @Override
+    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
+        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeNotifications(List<QuestionStatus> questionStatuses) {
+        questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
 }

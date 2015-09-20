@@ -8,9 +8,16 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
+
+    <div class="event-alert is-open" th:each="notification:${notifications}">
+        <p>
+            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned a question to you'}"></span>
+        </p>
+    </div>
 
     <h1 class="heading-xlarge">Application overview</h1>
     <div class="grid-row">

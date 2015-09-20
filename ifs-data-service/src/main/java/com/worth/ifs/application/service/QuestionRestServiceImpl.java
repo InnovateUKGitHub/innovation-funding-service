@@ -28,9 +28,9 @@ public class QuestionRestServiceImpl extends BaseRestServiceProvider implements 
     }
 
     @Override
-    public void assign(Long questionId, Long assigneeId) {
+    public void assign(Long questionId, Long assigneeId, Long assignedById) {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(dataRestServiceURL + questionRestURL + "/assign/" + questionId + "/" + assigneeId, questionId, assigneeId);
+        restTemplate.put(dataRestServiceURL + questionRestURL + "/assign/" + questionId + "/" + assigneeId + "/" + assignedById, questionId, assigneeId, assignedById);
     }
 
     @Override
@@ -39,5 +39,11 @@ public class QuestionRestServiceImpl extends BaseRestServiceProvider implements 
         ResponseEntity<Question[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + questionRestURL + "/findByCompetition/" + competitionId, Question[].class);
         Question[] applications = responseEntity.getBody();
         return Arrays.asList(applications);
+    }
+
+    @Override
+    public void updateNotification(Long questionStatusId, Boolean notify) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(dataRestServiceURL + questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify , questionStatusId, notify);
     }
 }

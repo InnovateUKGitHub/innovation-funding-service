@@ -105,6 +105,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
+        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        assignQuestion(request, assignedBy.getId());
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -118,7 +120,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         setApplicationDetails(application, params);
         markQuestion(request, params, applicationId, user.getId());
-        assignQuestion(request);
+        assignQuestion(request, assignedBy.getId());
 
         applicationService.save(application);
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
