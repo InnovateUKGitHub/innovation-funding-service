@@ -64,7 +64,7 @@
                                          <div> Assigned to <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" /></div>
                                         <span th:if="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay}" th:text="Today"/>
                                         <span th:if="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq yesterdayDay}" th:text="Yesterday"/>
-                                        <span th:unless="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay or response?.getUpdateDate().getDayOfYear() eq yesterdayDay}"
+                                        <span th:unless="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay or response?.getUpdateDate()?.getDayOfYear() eq yesterdayDay}"
                                             th:text="${#temporals.format(questionAssignee?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"/>
                                     </div>
                                 </div>  
