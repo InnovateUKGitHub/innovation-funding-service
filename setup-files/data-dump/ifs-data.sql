@@ -70,7 +70,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment_process` WRITE;
 /*!40000 ALTER TABLE `assessment_process` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment_process` (`id`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`, `application`, `assessor`) VALUES (1232,NULL,'ASSESSMENT_INVITATION',NULL,'teste2',NULL,'PENDING',3,3),(163840,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57','test',NULL,'ACCEPTED',4,3);
+INSERT  IGNORE INTO `assessment_process` (`id`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`, `application`, `assessor`) VALUES (1232,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57', 'teste2',NULL,'PENDING',3,3),(163840,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57','test',NULL,'ACCEPTED',4,3);
 /*!40000 ALTER TABLE `assessment_process` ENABLE KEYS */;
 UNLOCK TABLES;
 

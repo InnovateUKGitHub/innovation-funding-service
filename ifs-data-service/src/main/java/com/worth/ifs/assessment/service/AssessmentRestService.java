@@ -20,4 +20,6 @@ public interface AssessmentRestService {
 
     public Integer getTotalSubmittedByAssessorAndCompetition(Long userId, Long competitionId);
 
+    public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String decisionReason, String observations);
+
 }
