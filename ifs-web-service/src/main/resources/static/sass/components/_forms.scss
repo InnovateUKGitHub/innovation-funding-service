@@ -24,9 +24,28 @@ input[disabled]{
 table td input{
     width:100%; 
     @include box-sizing(border-box);
+    
+    &[type="number"]{
+        text-align: right;
+    }
 }
+
+table td{
+    &.numeric{
+        text-align: right;
+
+        input{
+            text-align: right;
+        }
+    }
+    .control{
+        padding-left: 20px
+    }
+}
+
 table td[colspan] input {
     width:auto;
+    max-width: 80px;
 }
 
 .date-group {
