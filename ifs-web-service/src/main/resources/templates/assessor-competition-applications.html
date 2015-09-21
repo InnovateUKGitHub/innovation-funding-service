@@ -8,22 +8,30 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-
+    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
+            daysLeft=${competition.getAssessmentDaysLeft()},
+            title = ${competition.name}" th:remove="tag" />
 
 
 
 
     <h1 class="heading-xlarge">Competition Details</h1>
     <div class="grid-row">
-        <div class="column-half competition-details">
-            <p th:text="${competition.getDescription()}" />
-
+        <div class="column-two-thirds competition-details">
+            <!--<p th:text="${competition.getDescription()}" />-->
+            <p>Please refer to scoring guidance found alongside each question for mark bandings.
+                Use the full range of marks and do not be afraid of the extremes if you believe that
+                the application warrants the score. Please provide constructive feedback comments for every question
+                on the score sheet, even if you think that the application is out of scope. <br/>
+                Please return all competed score sheets by <strong><span th:text="${competition.getAssessmentEndDate()}"/></strong>
+            </p>
         </div>
 
-        <div class="column-half">
-            <h2 class="bold-medium">Links</h2>
+        <div class="column-third">
             <ul class="list-bullet">
                 <li><a href="#">Competition brief</a></li>
                 <li><a href="#">Guidance for applicants</a></li>

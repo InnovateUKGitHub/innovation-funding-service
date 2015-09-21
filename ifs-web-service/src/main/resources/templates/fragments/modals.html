@@ -23,4 +23,30 @@
     </div>
 </div>
 
+ <!--assessment invitation rejection window -->
+<div th:fragment="modal-reject-assessment">
+    <div class="modal-reject-assessment" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+        <div>
+            <div class="form-group">
+                <div><label for="reject-reason">Please let us know why you are rejecting this application</label></div>
+                <div>
+                    <select name="decisionReason" id="reject-reason" required="required">
+                        <option value="">Please select one reason</option>
+                        <option value="conflict-of-interest">Conflict of interest</option>
+                        <option value="not-my-area-of-interest">Not my area of expertise</option>
+                        <option value="too-many-assessments">Too many assessments</option>
+                    </select>
+                </div>
+                <div><label for="rejection-observations">Please provide some more information</label></div>
+                <div><textarea id="rejection-observations" name="observations"></textarea></div>
+                <br/>
+                <button class="button large" name="reject" value="rejected" type="submit">Reject</button>
+            </div>
+            <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
+            <button class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</div>
 

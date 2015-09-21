@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+</head>
+<body class="app-dashboard">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${assessment.application.competition.getAssessmentDaysLeftPercentage()},
+            daysLeft=${assessment.application.competition.getAssessmentDaysLeft()},
+            title = ${assessment.application.name}" th:remove="tag" />
+
+    <div class="application-summary">
+        <div class="in-progress">
+            <h4 class="heading-large">Reject Assessment Invitation</h4>
+            <br/>
+            <form  method="post" action="/assessor/invitation_answer" >
+                <input type="hidden" name="applicationId" th:value="${assessment.application.id}"/>
+                <input type="hidden" name="competitionId" th:value="${assessment.application.competition.id}"/>
+                <div class="form-group">
+                    <div><label for="reject-reason">Please let us know why you are rejecting this application</label></div>
+                    <div>
+                        <select name="decisionReason" id="reject-reason" required="required">
+                            <option value="">Please select one reason</option>
+                            <option value="conflict-of-interest">Conflict of interest</option>
+                            <option value="not-my-area-of-interest">Not my area of expertise</option>
+                            <option value="too-many-assessments">Too many assessments</option>
+                        </select>
+                    </div>
+                    <div><label for="rejection-observations">Please provide some more information</label></div>
+                    <div><textarea id="rejection-observations" name="observations"></textarea></div>
+                    <br/>
+                    <button class="button large" name="reject" value="rejected" type="submit">Reject</button>
+                </div>
+
+            </form>
+
+
+
+        </div>
+    </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

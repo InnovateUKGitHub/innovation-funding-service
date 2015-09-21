@@ -32,33 +32,30 @@ import java.util.Map;
 @Controller
 @RequestMapping("/assessor")
 public class AssessmentController {
-    private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    CompetitionsRestService competitionService;
-
-    @Autowired
-    AssessmentRestService assessmentRestService;
-
-    @Autowired
-    UserAuthenticationService userAuthenticationService;
-
 
     /* pages */
     private final String competitionAssessments = "assessor-competition-applications";
     private final String assessorDashboard = "assessor-dashboard";
     private final String assessmentDetails = "assessment-details";
     private final String applicationReview = "application-assessment-review";
+    private final String rejectInvitation = "reject-assessment-invitation";
 
+
+    @Autowired
+    CompetitionsRestService competitionService;
+    @Autowired
+    AssessmentRestService assessmentRestService;
+    @Autowired
+    UserAuthenticationService userAuthenticationService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
     }
 
 
-    @RequestMapping(value="/competitions/{competitionId}/applications", method= RequestMethod.GET)
+    @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
     public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
-                                          HttpServletRequest request) {
+                                                 HttpServletRequest request) {
 
         Competition competition = competitionService.getCompetitionById(competitionId);
 
@@ -67,14 +64,13 @@ public class AssessmentController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessments", assessments);
-
         return competitionAssessments;
     }
 
-    @RequestMapping(value="/competitions/{competitionId}/applications/{applicationId}", method= RequestMethod.GET)
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}", method = RequestMethod.GET)
     public String applicationAssessmentDetails(Model model, @PathVariable("competitionId") final Long competitionId,
-                                                        @PathVariable("applicationId") final Long applicationId,
-                                                        HttpServletRequest req) {
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               HttpServletRequest req) {
 
 
         Competition competition = competitionService.getCompetitionById(competitionId);
@@ -90,9 +86,9 @@ public class AssessmentController {
 
         String pageToShow;
 
-        if ( assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID) )
+        if (assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID))
             pageToShow = assessorDashboard;
-        else if ( assessment.getStatus().equals(AssessmentStatus.PENDING) )
+        else if (assessment.getStatus().equals(AssessmentStatus.PENDING))
             pageToShow = applicationReview;
         else
             pageToShow = assessmentDetails;
@@ -107,7 +103,25 @@ public class AssessmentController {
     }
 
 
-    @RequestMapping(value="/invitation_answer", method= RequestMethod.POST)
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/reject-invitation", method = RequestMethod.GET)
+    public String applicationAssessmentDetailsReject(Model model, @PathVariable("competitionId") final Long competitionId,
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               HttpServletRequest req) {
+
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
+
+        //pass to view
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
+
+        return rejectInvitation;
+    }
+
+
+
+
+    @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)
     public String invitationAnswer(Model model, HttpServletRequest req) {
 
         Map<String, String[]> params = req.getParameterMap();
@@ -115,21 +129,17 @@ public class AssessmentController {
         /** builds invitation response data **/
         Boolean decision = params.containsKey("accept");
         Long userId = getLoggedUser(req).getId();
-        Long applicationId =  Long.valueOf(req.getParameter("applicationId"));
-        String decisionReason =  params.containsKey("reason") ? req.getParameter("reason") : "none";
-        String observations =  params.containsKey("observations") ? req.getParameter("observations") : "";
+        Long applicationId = Long.valueOf(req.getParameter("applicationId"));
+        String decisionReason = params.containsKey("decisionReason") ? req.getParameter("decisionReason") : "none";
+        String observations = params.containsKey("observations") ? req.getParameter("observations") : "";
 
         /** asserts the invitation response **/
         assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
 
         //gets the competition id to redirect
-        Long competitionId =  Long.valueOf(req.getParameter("competitionId"));
+        Long competitionId = Long.valueOf(req.getParameter("competitionId"));
         return "redirect:" + competitionAssessmentsURL(competitionId);
     }
-
-
-
-
 
 
 }
