@@ -1,0 +1,87 @@
+*** Settings ***
+Documentation     INFUND-210, INFUND-189
+Resource          GLOBAL_LIBRARIES.txt
+Resource          GLOBAL_VARIABLES.txt
+
+*** Test Cases ***
+Verify the applicant can assign a question
+    Given the Applicant is in the form
+    When the Applicant assigns a question to the collaborator
+    Then the success message should show
+    and the field should be disabled
+
+Verify the field is enabled for the collaborator/assignee
+    Given the Collaborator is logged-in
+    When the Collaborator edits the assigned field
+    Then the field should be editable
+
+Verify the field is disabled for other collaborators
+    Given the second Collaborator is logged in
+    When the Collaborator edits the assigned field
+    Then the field should not be editable
+
+Verify the Applicant can 'Assign to me'
+    when the applicant clicks the assign to Lead applicant
+    Then the field should be re-assigned to the Applicant
+
+Verify the field is disabled for the Collaborator
+    Given the Collaborator is logged-in
+    When the Collaborator edits the assigned field
+    Then the field should be disabled
+
+*** Keywords ***
+the Applicant is in the form
+    Go To    ${APPLICATION_URL}
+
+the Applicant assigns a question to the collaborator
+    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
+    Click Element    css=button:contains("Jessica Doe (Collaborator)")
+
+the success message should show
+    Wait Until Element Is Visible    css=body > div.event-alert > p > span
+    Capture Page Screenshot
+
+the field should be disabled
+    Element Should Be Disabled    id=11
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
+
+the Collaborator is logged-in
+    Switch Browser    2
+    open browser    ${SERVER}
+    Input Text    id=id_email    collaborator@innovateuk.gov.uk
+    Input Password    id=id_password    test
+    Click Element    css=#content > div > div:nth-child(1) > form > input
+
+the Collaborator edits the assigned field
+    Click Element    link=A novel solution to an old problem
+    Wait Until Element Is Visible    link=Application details
+    Click Element    link=Application details
+
+the field should be editable
+    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Element Should Be Enabled    id=11
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
+
+the field should not be editable
+    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Element Should Be Disabled    id=11
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
+    Close Browser
+
+the second Collaborator is logged in
+    open browser    ${SERVER}
+    Input Text    id=id_email    collaborator1@innovateuk.gov.uk
+    Input Password    id=id_password    test
+    Click Element    css=#content > div > div:nth-child(1) > form > input
+
+the applicant clicks the assign to Lead applicant
+    Switch Browser    1
+    Go To    ${APPLICATION_URL}
+    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
+    Click Element
+
+the field should be re-assigned to the Applicant
+    Element Should Be Enabled    id=11
+    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button

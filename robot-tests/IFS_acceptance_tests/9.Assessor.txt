@@ -1,0 +1,18 @@
+*** Settings ***
+Documentation     INFUND-337
+Resource          GLOBAL_LIBRARIES.txt
+Resource          GLOBAL_VARIABLES.txt
+
+*** Test Cases ***
+Verify the assessor can see the applications details page
+    [Documentation]    INFUND-337
+    When the Assessor clicks the competition
+    Then the competition's details page should be visible
+
+*** Keywords ***
+the Assessor clicks the competition
+    Click Element    link=Competition name ...
+
+the competition's details page should be visible
+    Page Should Contain    Competition Details
+    Capture Page Screenshot
