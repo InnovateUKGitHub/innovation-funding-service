@@ -34,6 +34,9 @@ public abstract class Process {
     @Column(name = "observations")
     private String observations;
 
+    @Column(name="decision_reason")
+    private String decisionReason;
+
 
     public Process() {
     }
@@ -104,6 +107,14 @@ public abstract class Process {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public String getDecisionReason() {
+        return decisionReason;
+    }
+
+    public void setDecisionReason(String reason) {
+        this.decisionReason = reason;
     }
 
     @JsonIgnore

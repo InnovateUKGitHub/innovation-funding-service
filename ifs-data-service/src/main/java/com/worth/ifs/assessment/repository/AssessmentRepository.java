@@ -22,7 +22,7 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
 
     List<Assessment> findByProcessAssessorId(Long assessorId);
 
-    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ?")
+    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and p.status != 'REJECTED' ")
     List<Assessment> findByAssessorAndCompetition(Long assessorId, Long competitionId);
 
     @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.id = ?")

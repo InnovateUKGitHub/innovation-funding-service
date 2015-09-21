@@ -84,6 +84,12 @@ public class Assessment {
         this.responseAssessments.add(assessment);
     }
 
+    public void respondToAssessmentInvitation(boolean hasAccepted, String reason, String observations) {
+        process.setStatus( hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED );
+        process.setDecisionReason(reason);
+        process.setObservations(observations);
+    }
+
     public boolean hasAssessments() {
         return this.responseAssessments != null && this.responseAssessments.size() > 0;
     }

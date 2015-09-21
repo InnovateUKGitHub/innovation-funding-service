@@ -44,6 +44,18 @@ public class AssessmentController {
     UserAuthenticationService userAuthenticationService;
 
 
+    /* pages */
+    private final String competitionAssessments = "assessor-competition-applications";
+    private final String assessorDashboard = "assessor-dashboard";
+    private final String assessmentDetails = "assessment-details";
+    private final String applicationReview = "application-assessment-review";
+
+
+    private String competitionAssessmentsURL(Long competitionID) {
+        return "/assessor/competitions/" + competitionID + "/applications";
+    }
+
+
     @RequestMapping(value="/competitions/{competitionId}/applications", method= RequestMethod.GET)
     public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
                                           HttpServletRequest request) {
@@ -56,7 +68,7 @@ public class AssessmentController {
         model.addAttribute("competition", competition);
         model.addAttribute("assessments", assessments);
 
-        return "assessor-competition-applications";
+        return competitionAssessments;
     }
 
     @RequestMapping(value="/competitions/{competitionId}/applications/{applicationId}", method= RequestMethod.GET)
@@ -79,11 +91,11 @@ public class AssessmentController {
         String pageToShow;
 
         if ( assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID) )
-            pageToShow = "assessor-dashboard";
+            pageToShow = assessorDashboard;
         else if ( assessment.getStatus().equals(AssessmentStatus.PENDING) )
-            pageToShow = "application-assessment-review";
+            pageToShow = applicationReview;
         else
-            pageToShow = "assessment-details";
+            pageToShow = assessmentDetails;
 
 
         return pageToShow;
@@ -98,16 +110,21 @@ public class AssessmentController {
     @RequestMapping(value="/invitation_answer", method= RequestMethod.POST)
     public String invitationAnswer(Model model, HttpServletRequest req) {
 
-
         Map<String, String[]> params = req.getParameterMap();
 
-        boolean answer = params.containsKey("accept");
-        
-        //assessmentRestService.respondToAssessmentInvitation(answer);
+        /** builds invitation response data **/
+        Boolean decision = params.containsKey("accept");
+        Long userId = getLoggedUser(req).getId();
+        Long applicationId =  Long.valueOf(req.getParameter("applicationId"));
+        String decisionReason =  params.containsKey("reason") ? req.getParameter("reason") : "none";
+        String observations =  params.containsKey("observations") ? req.getParameter("observations") : "";
 
-        System.out.println("Accepted? " + answer);
+        /** asserts the invitation response **/
+        assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
 
-        return "hello";
+        //gets the competition id to redirect
+        Long competitionId =  Long.valueOf(req.getParameter("competitionId"));
+        return "redirect:" + competitionAssessmentsURL(competitionId);
     }
 
 
