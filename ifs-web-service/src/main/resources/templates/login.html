@@ -19,7 +19,7 @@
 	  Your username/password combination doesn't seem to work
 	</h1>
 	<p>
-	  Please try again 
+	  Please try again  
 	</p>
 </div>
 
@@ -29,7 +29,6 @@
 	<div class="column-half">
         <form action="/login" th:object="${loginForm}" method="POST">
 			<h2 class="heading-large">Sign in</h2>
-
 			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
 				<label class="form-label" for="id_email">E-mail address</label>
 				<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />

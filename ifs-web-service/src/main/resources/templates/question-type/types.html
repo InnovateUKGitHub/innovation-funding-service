@@ -146,9 +146,9 @@
                         <thead>
                         <tr>
                             <th>Role within project</th>
-                            <th>Gross Annual Salary</th>
-                            <th>Rate (£/day)</th>
-                            <th>Days to be spent by all staff at this grade</th>
+                            <th class="numeric">Gross Annual Salary</th>
+                            <th class="numeric">Rate (£/day)</th>
+                            <th class="numeric">Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -157,13 +157,13 @@
                                 <td>
                                     <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
                                 </td>
-                                <td>
+                                <td class="numeric">
                                     <input type="number"
                                            th:name="${type +'-grossAnnualSalary-' + labourCost.id}"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourGrossSalary'}"
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
-                                <td>
+                                <td class="numeric">
                                     <input type="number"
                                            th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
@@ -172,7 +172,7 @@
                                            th:name="${type + '-labourRate-' + labourCost.id}"
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
-                                <td>
+                                <td class="numeric">
                                     <input type="number"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
@@ -180,23 +180,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="alignright">
+                                <td colspan="4" class="numeric">
                                     Total costs £
-                                </td>
-                                <td>
-                                <input type="text"
+                                    <input type="text"
                                        th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
                                        readonly="readonly"
                                        th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
                                        th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
-
-                                </td>
-                                <td>
-                                    <p class="alignright">
-                                        <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-                                    </p>
+                                        <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="control">Remove</a>
                                 </td>
                             </tr>
                         </div>
@@ -208,10 +201,10 @@
                     </p>
                 </div>
 
-                <div class="form-group form-group--align-right">
+                <div class="form-group form-group--align-right alignright">
                     <label>
                         Total labour costs £
-                        <input class="form-control form-control-1-4"
+                        <input class="form-control form-control-1-4 alignright"
                                data-calculation-repeating-total="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
@@ -277,10 +270,10 @@
                             th:value="${#numbers.formatDecimal(overheadCosts.total, 0, 'COMMA', 0, 'POINT')}"/>
                 </div>
             </div>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total overhead costs £
-                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4" readonly="" id="id_overheads-totalCosts"
+                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4 alignright" readonly="" id="id_overheads-totalCosts"
                            data-calculation-field="[data-calculation-input=overhead-calculated]"
                            data-calculation-operations="+"
                            />
@@ -300,9 +293,10 @@
                     <thead>
                     <tr>
                         <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Cost Per Item</th>
-                        <th>Total</th>
+                        <th class="numeric">Quantity</th>
+                        <th class="numeric">Cost Per Item</th>
+                        <th class="numeric">Total</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -322,16 +316,14 @@
                                 />
                             </td>
                             <td>
-                                <input type="text" th:name="${type +'-total-' + materialCost.id}"
+                                <input type="text" class="alignright" th:name="${type +'-total-' + materialCost.id}"
                                        th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
                                        th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
-                            <td>
-                                <p class="alignright">
-                                    <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-                                </p>
+                            <td class="alignright remove"> 
+                                <a th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -342,10 +334,10 @@
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total materials costs £
-                    <input class="form-control form-control-1-4 calculation-total-materials-row-js calculation-result-js"
+                    <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
                            readonly="" type="text" id="material-costs-total-field"
                            data-calculation-repeating-total="[id*=materialTotal]"
                            data-calculation-operations="+"
@@ -411,10 +403,10 @@
                 <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
             </p>
             <hr/>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="alignright-button">
@@ -467,10 +459,10 @@
             <p class="alignright">
                 <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
             </p>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total subcontracting costs £
-                    <input class="form-control form-control-1-4"
+                    <input class="form-control form-control-1-4 alignright"
                            readonly=""
                            type="text"
                            id="cost-subcontracting-total"
@@ -493,9 +485,10 @@
                     <thead>
                     <tr>
                         <th>Purpose of journey or description of subsistence cost</th>
-                        <th>Number of times</th>
-                        <th>Cost each (£)</th>
-                        <th>Total (£)</th>
+                        <th class="numeric">Number of times</th>
+                        <th class="numeric">Cost each (£)</th>
+                        <th class="numeric">Total (£)</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -504,13 +497,13 @@
                             <td>
                                 <input type="text" name="travel-0-travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
                             </td>
-                            <td>
+                            <td class="numeric">
                                 <input type="number" name="travel-0-travelNumTimes" class="form-control form-control-1-1 form-finances-travel-number" id="id_travel-0-travelNumTimes" th:value="${travelCost.getQuantity()}" />
                             </td>
-                            <td>
+                            <td class="numeric">
                                 <input type="number" name="travel-0-travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
                             </td>
-                            <td>
+                            <td class="numeric">
                                 <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
                             </td>
                             <td>
@@ -525,10 +518,10 @@
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total travel &amp; subsistence costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
                 </label>
             </div>
             <div class="alignright-button">
@@ -546,7 +539,8 @@
                     <thead>
                     <tr>
                         <th>Description and justification of the cost</th>
-                        <th>Estimated cost (£)</th>
+                        <th class="numeric">Estimated cost (£)</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -555,7 +549,7 @@
                             <td>
                                 <div th:include="question-type/form-elements :: form-textarea-simple(id='other-cost-'+${otherCost.getId()}, name='other-0-otherDescription['+${otherCost.getId()}+']', value=${otherCost.getDescription()})" th:remove="tag" />
                             </td>
-                            <td>
+                            <td class="numeric">
                                 <input type="number" name="other-0-otherCost" class="form-control form-control-1-1 form-finances-other-cost" id="id_other-0-otherCost" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
                             </td>
                             <td>
@@ -570,10 +564,10 @@
                     <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right">
+            <div class="form-group form-group--align-right alignright">
                 <label>
                     Total other costs £
-                    <input class="form-control form-control-1-4" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
                 </label>
             </div>
             <div class="alignright-button">
@@ -598,10 +592,11 @@
                 <tr>
                     <th scope="col">Source of Funding</th>
                     <th scope="col">Date Applied for</th>
-                    <th scope="col">Amount Sought (£)</th>
+                    <th scope="col" class="numeric">Amount Sought (£)</th>
                     <th scope="col">Successful?</th>
-                    <th scope="col">Amount Secured or Still Sought</th>
+                    <th scope="col" class="numeric">Amount Secured or Still Sought</th>
                     <th scope="col">Date of Decision</th>
+                    <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -612,13 +607,13 @@
                     <td>
                         <input type="text" />
                     </td>
-                    <td>
+                    <td class="numeric">
                         <input type="text" />
                     </td>
                     <td>
                         <input type="text" />
                     </td>
-                    <td>
+                    <td class="numeric">
                         <input type="text" />
                     </td>
                     <td>

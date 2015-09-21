@@ -1,10 +1,6 @@
 *** Settings ***
-Library           Selenium2Library
-Library           string
-
-*** Variables ***
-${SERVER}         http://ifs.test.worth.systems
-${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/1/section/1
+Resource          GLOBAL_LIBRARIES.txt
+Resource          GLOBAL_VARIABLES.txt
 
 *** Test Cases ***
 Verify that collaborators are visible in the overview page
