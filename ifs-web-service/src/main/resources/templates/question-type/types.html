@@ -103,7 +103,7 @@
     <div th:fragment="your_finance" th:remove="tag">
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
-                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
+                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? '':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
