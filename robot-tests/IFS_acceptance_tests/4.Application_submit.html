@@ -54,76 +54,15 @@ td.name, th.name {
 <th class="name" colspan="5">Settings</th>
 </tr>
 <tr>
-<td class="name">Library</td>
-<td>Selenium2Library</td>
+<td class="name">Resource</td>
+<td>GLOBAL_LIBRARIES.txt</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td class="name">Library</td>
-<td>string</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</table>
-<table border="1" id="variable">
-<tr>
-<th class="name" colspan="5">Variables</th>
-</tr>
-<tr>
-<td class="name">${SERVER}</td>
-<td><a href="http://ifs.test.worth.systems">http://ifs.test.worth.systems</a></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${DASHBOARD_URL}</td>
-<td>${SERVER}/applicant/dashboard</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${SCOPE_SECTION_URL}</td>
-<td>${SERVER}/application-form/1/section/2/</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${SUMMARY_URL}</td>
-<td>${SERVER}/application/1/summary</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${APPLICATION_OVERVIEW_URL}</td>
-<td>${SERVER}/application/1/section/1</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${APPLICATION_SUBMITTED_URL}</td>
-<td><a href="http://ifs.test.worth.systems/application/1/submit">http://ifs.test.worth.systems/application/1/submit</a></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${APPLICATION_DETAILS_URL}</td>
-<td>${SERVER}/application-form/1/section/1/</td>
+<td class="name">Resource</td>
+<td>GLOBAL_VARIABLES.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -142,6 +81,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the &quot;Review and submit&quot; button (overview page)">Verify the "Review and submit" button (overview page)</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-195</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>When the applicant is in the overview page</td>
 <td></td>
 <td></td>
@@ -198,6 +142,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the successful submit page">Verify the successful submit page</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-205</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the application is valid</td>
 <td></td>
 <td></td>
@@ -247,6 +196,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the Warning message when the applicant clicks the submit button in the summary page">Verify the Warning message when the applicant clicks the submit button in the summary page</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-205, INFUND-195</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the application is valid</td>
 <td></td>
 <td></td>
@@ -275,6 +229,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the &quot;Submit button&quot; is disabled when the state of the application is not valid">Verify the "Submit button" is disabled when the state of the application is not valid</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-195</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the application is not valid</td>
 <td></td>
 <td></td>
@@ -442,7 +401,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>link=Rovel Additive Manufacturing Process</td>
+<td>link=A novel solution to an old problem</td>
 <td></td>
 <td></td>
 </tr>
@@ -518,8 +477,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Wait Until Element Is Visible</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click Element</td>
-<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -588,8 +554,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Wait Until Element Is Visible</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click Element</td>
-<td>css=#question-12 .buttonlink</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>

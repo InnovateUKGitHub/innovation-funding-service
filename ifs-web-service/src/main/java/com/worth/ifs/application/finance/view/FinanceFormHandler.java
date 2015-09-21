@@ -148,7 +148,7 @@ public class FinanceFormHandler {
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
                 } else if (costFormField.getCostName().equals("labourDays")) {
-                    labourDays = Integer.valueOf(fieldValue);
+                    labourDays = getIntegerValue(fieldValue, 0);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class FinanceFormHandler {
                 } else if (costFormField.getCostName().equals("cost")) {
                     cost = getDoubleValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
-                    quantity = Integer.valueOf(fieldValue);
+                    quantity = getIntegerValue(fieldValue, 0);
                 }
             }
         }
@@ -201,6 +201,14 @@ public class FinanceFormHandler {
     private Double getDoubleValue(String value, Double defaultValue) {
         try {
             return Double.valueOf(value);
+        } catch(NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    private Integer getIntegerValue(String value, Integer defaultValue) {
+        try {
+            return Integer.valueOf(value);
         } catch(NumberFormatException nfe) {
             return defaultValue;
         }
