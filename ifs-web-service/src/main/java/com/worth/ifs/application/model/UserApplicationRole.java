@@ -1,4 +1,4 @@
-package com.worth.ifs.application.helper;
+package com.worth.ifs.application.model;
 
 public enum UserApplicationRole {
     LEAD_APPLICANT("leadapplicant"),

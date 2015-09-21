@@ -103,11 +103,12 @@ public class ResponseController {
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
         }
 
-
+        if(!response.getValue().equals(value)) {
+            response.setUpdateDate(LocalDateTime.now());
+            response.setUpdatedBy(userAppRoles.get(0));
+        }
         response.setValue(value);
-        response.setUpdateDate(LocalDateTime.now());
-        response.setUpdatedBy(userAppRoles.get(0));
-        
+
         responseRepository.save(response);
 
         log.warn("Single question saved!");

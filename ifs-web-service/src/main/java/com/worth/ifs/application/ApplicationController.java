@@ -2,12 +2,11 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
-import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -89,7 +87,6 @@ public class ApplicationController extends AbstractApplicationController {
      * @param model model that contains the details for the application detail page
      */
     private void addApplicationDetails(Long applicationId, Long userId, Model model) {
-        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getById(applicationId);
 
         if(application == null){
@@ -99,26 +96,14 @@ public class ApplicationController extends AbstractApplicationController {
         Competition competition = application.getCompetition();
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
-        model.addAttribute("userOrganisation", applicationHelper.getUserOrganisation(application, userId).get());
-        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        Optional<Organisation> leadOrganisation = applicationHelper.getApplicationLeadOrganisation(application);
-        if(leadOrganisation.isPresent()) {
-            model.addAttribute("leadOrganisation", leadOrganisation.get());
-            model.addAttribute("completedSections", sectionService.getCompleted(applicationId, leadOrganisation.get().getId()));
-        }
-
-        model.addAttribute("sections", sectionService.getParentSections(competition.getSections()));
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        List<Question> questions = questionService.findByCompetition(competition.getId());
-        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
-        List<Response> responses = responseService.getByApplication(applicationId);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
 
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
+        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
+        addOrganisationDetails(model, application, userOrganisation);
+        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
+        addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
+        addDateDetails(model);
     }
 
     /**
@@ -135,7 +120,9 @@ public class ApplicationController extends AbstractApplicationController {
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request){
-        assignQuestion(request);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        assignQuestion(request, assignedBy.getId());
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 }

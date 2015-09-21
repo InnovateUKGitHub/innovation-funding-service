@@ -8,9 +8,16 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
+
+    <div class="event-alert is-open" th:each="notification:${notifications}">
+        <p>
+            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned a question to you'}"></span>
+        </p>
+    </div>
 
     <h1 class="heading-xlarge">Application overview</h1>
     <div class="grid-row">
@@ -40,30 +47,31 @@
             <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
                 <span th:remove="tag" th:text="${section.getName()}" />
                 <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
+                <span class="section-status assigned" th:if="${assignedSections.contains(section.id)}"><span class="visuallyhidden">-</span> Assigned</span>
             </h2>
             <ul th:with="currentUser=${#authentication.getDetails()}">
-                <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee} ? 'assigned-to-me ' : ''))"
+                <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
                     th:each="question : ${section.getQuestions()}" 
                     th:if="${question?.getName() != '' }" 
                     th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(question.getId())})">
                          <div class="grid-row">
                             <div class="column-two-thirds">
                                 <h4 class="heading-medium">
-                                     <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${questionAssignee?.getAssignee()?.getUser()?.getId()}"
+                                     <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
                                         th:text="${question.getName()}" />     
                                 </h4>
                                 <div th:unless="${response == null or response?.getUpdateDate() == null}" th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
 
                             </div>
                             <div class="column-third">
-                                <div th:unless="${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}" class="assignee"  >
+                                <div th:unless="${(question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)) or completedSections.contains(section.id)}" class="assignee"  >
                                     <!--prints the last update info-->
                                     <div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
                                     <div  th:if="${questionAssignee?.getAssignee() != null} " th:remove="tag">
-                                         <div> Assigned to <strong th:text="${questionAssignee?.getAssignee()?.getUser()?.getName()}" /></div>
+                                         <div> Assigned to <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" /></div>
                                         <span th:if="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay}" th:text="Today"/>
                                         <span th:if="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq yesterdayDay}" th:text="Yesterday"/>
-                                        <span th:unless="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay or response?.getUpdateDate().getDayOfYear() eq yesterdayDay}"
+                                        <span th:unless="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay or response?.getUpdateDate()?.getDayOfYear() eq yesterdayDay}"
                                             th:text="${#temporals.format(questionAssignee?.getAssignedDate(), 'dd/MMM/yyyy HH:mm')}"/>
                                     </div>
                                 </div>  

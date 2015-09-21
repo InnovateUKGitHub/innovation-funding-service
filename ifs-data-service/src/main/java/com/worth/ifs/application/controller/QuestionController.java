@@ -76,17 +76,20 @@ public class QuestionController {
      * @param questionId question to which the assignee is assigned to
      * @param assigneeId processRoleId which represent the user role combination
      */
-    @RequestMapping(value="/assign/{questionId}/{assigneeId}")
+    @RequestMapping(value="/assign/{questionId}/{assigneeId}/{assignedById}")
     public void assign(@PathVariable("questionId") final Long questionId,
-                       @PathVariable("assigneeId") final Long assigneeId) {
+                       @PathVariable("assigneeId") final Long assigneeId,
+                       @PathVariable("assignedById") final Long assignedById) {
         Question question = questionRepository.findOne(questionId);
         ProcessRole assignee = processRoleRepository.findOne(assigneeId);
+        ProcessRole assignedBy = processRoleRepository.findOne(assignedById);
+
         QuestionStatus questionStatus = getQuestionStatusByAssigneeId(question, assigneeId);
 
         if(questionStatus==null) {
-            questionStatus = new QuestionStatus(question, assignee, LocalDateTime.now());
+            questionStatus = new QuestionStatus(question, assignee, assignedBy, LocalDateTime.now());
         } else {
-            questionStatus.setAssignee(assignee, LocalDateTime.now());
+            questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
         }
         questionStatusRepository.save(questionStatus);
     }
@@ -113,6 +116,15 @@ public class QuestionController {
             return questionStatuses.get(0);
         }
         return null;
+    }
+
+
+    @RequestMapping(value="/updateNotification/{questionStatusId}/{notify}")
+    public void updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
+                       @PathVariable("notify") final Boolean notify) {
+        QuestionStatus questionStatus = questionStatusRepository.findOne(questionStatusId);
+        questionStatus.setNotified(notify);
+        questionStatusRepository.save(questionStatus);
     }
 
     /**

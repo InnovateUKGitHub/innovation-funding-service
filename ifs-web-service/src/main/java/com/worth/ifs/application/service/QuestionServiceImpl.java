@@ -2,21 +2,26 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     QuestionRestService questionRestService;
 
-
     @Override
-    public void assign(Long questionId, Long assigneeId) {
-        questionRestService.assign(questionId, assigneeId);
+    public void assign(Long questionId, Long assigneeId, Long assignedById) {
+        questionRestService.assign(questionId, assigneeId, assignedById);
     }
 
     @Override
@@ -35,11 +40,16 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions) {
+    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
         for(Question question : questions) {
             for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
-                if(questionStatus.getAssignee()!=null) {
+                if(questionStatus.getAssignee()==null)
+                    continue;
+                boolean multipleStatuses = question.hasMultipleStatuses();
+                boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+
+                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
                     questionAssignees.put(question.getId(), questionStatus);
                     break;
                 }
@@ -47,4 +57,15 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return questionAssignees;
     }
+
+    @Override
+    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
+        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeNotifications(List<QuestionStatus> questionStatuses) {
+        questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
+    }
+
 }

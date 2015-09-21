@@ -197,6 +197,34 @@ public class Question {
                 break;
             }
         }
+        if(questionMarkedAsComplete == null)
+            questionMarkedAsComplete = false;
+
+        return questionMarkedAsComplete;
+    }
+
+    /**
+     * See if one of the questions is assigned in
+     *
+     * @param organisationId organisation for which the mark as complete applies
+     * @return question is marked as complete
+     */
+    public boolean isAssigned(Long organisationId) {
+        List<QuestionStatus> questionStatuses = getQuestionStatuses();
+        Boolean questionMarkedAsComplete = false;
+        for(QuestionStatus questionStatus : questionStatuses) {
+            if(multipleStatuses) {
+                if(questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
+                    questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
+                    break;
+                }
+            } else {
+                questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
+                break;
+            }
+        }
+        if(questionMarkedAsComplete == null)
+            questionMarkedAsComplete = false;
 
         return questionMarkedAsComplete;
     }
