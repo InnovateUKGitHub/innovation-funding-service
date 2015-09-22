@@ -7,6 +7,8 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+
+
 buildscript {
     ext {
         springBootVersion = '1.2.5.RELEASE'
@@ -45,6 +47,7 @@ configurations {
     clientCompile
 }
 
+
 sourceSets {
     client {
         java {
@@ -52,6 +55,10 @@ sourceSets {
             include 'com/worth/ifs/domain'
         }
     }
+}
+
+bootRun {
+    addResources = false
 }
 
 
