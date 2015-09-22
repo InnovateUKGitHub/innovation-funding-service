@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.domain;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
@@ -31,9 +32,8 @@ public class Assessment extends Process {
     @OneToMany
     private Map<Long,ResponseAssessment> responseAssessments;
 
-    @Column(name = "submitted", columnDefinition = "boolean default false")
     @Type(type = "yes_no")
-    private boolean submitted;
+    private Boolean submitted;
 
 
     public Assessment() {
@@ -79,7 +79,7 @@ public class Assessment extends Process {
         return this.responseAssessments != null && this.responseAssessments.size() > 0;
     }
 
-    public boolean isSubmitted() {
+    public Boolean isSubmitted() {
         return this.submitted;
     }
 
