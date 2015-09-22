@@ -59,13 +59,47 @@
                         <div class="column-third navigation-right">
                             <div class="application-listing_pull-right">
                                 <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
+
+                                <!--if assessment is pending acceptance-->
                                 <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() != T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING}">
                                     <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
+                                </p>
+
+                                <!--otherwise shows the overall score-->
+                                <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
+                                    <span th:text="${assessment.getOverallScore()}"/> %
+                                </p>
+
+                            </div> 
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+        <!--all the submitted assessments-->
+        <div class="submitted" th:unless="${submittedAssessments.size() == 0 }" >
+            <h4 class="heading-large">Submitted Assessments (<span th:text="${assessments.size()}"/>)</h4>
+            <ul class="boxed-list" >
+                <li th:each="assessment : ${submittedAssessments}">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h4 class="heading-medium" th:text="${assessment.application.name}"/>
+
+                            <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                        </div>
+                        <div class="column-third navigation-right">
+                            <div class="application-listing_pull-right">
+                                <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
+
+                                <!-- shows the overall score -->
+                                <p class="overall-score">
+                                    <span th:text="${assessment.getOverallScore()}"/> %
                                 </p>
                             </div>
                         </div>
                     </div>
-
                 </li>
             </ul>
         </div>

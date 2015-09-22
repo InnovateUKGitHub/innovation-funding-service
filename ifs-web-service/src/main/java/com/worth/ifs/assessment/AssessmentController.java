@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -59,11 +60,20 @@ public class AssessmentController {
 
         Competition competition = competitionService.getCompetitionById(competitionId);
 
-        List<Assessment> assessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+        /* gets all the assessments assigned to this assessor in this competition */
+        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+
+        //filters the assessments to just have the submitted assessments here
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toList());
+
+        //filters the assessments to just the not submmited assessments
+        List<Assessment> assessments = allAssessments.stream().filter(a -> !submittedAssessments.contains(a)).collect(Collectors.toList());
 
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessments", assessments);
+        model.addAttribute("submittedAssessments", submittedAssessments);
+
         return competitionAssessments;
     }
 

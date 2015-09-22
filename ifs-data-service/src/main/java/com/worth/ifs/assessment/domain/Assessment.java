@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.domain;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.Process;
@@ -30,7 +31,7 @@ public class Assessment extends Process {
     private Application application;
 
     @OneToMany
-    private Map<Long,ResponseAssessment> responseAssessments;
+    private Map<Long, ResponseAssessment> responseAssessments;
 
     @Type(type = "yes_no")
     private Boolean submitted;
@@ -53,7 +54,7 @@ public class Assessment extends Process {
     }
 
     @Override
-    public ProcessStatus getStatus() {
+    public ProcessStatus getProcessStatus() {
         return status;
     }
 
@@ -65,12 +66,27 @@ public class Assessment extends Process {
         return responseAssessments;
     }
 
+    public Boolean hasAssessmentStarted() {
+        return responseAssessments.size() > 0;
+    }
+
+    public Double getOverallScore() {
+        // nItems cant be 0 - math indetermination
+        Integer nItems = Math.max(1, responseAssessments.size());
+
+        return Double.valueOf(getTotalScore() / nItems);
+    }
+
+    private Integer getTotalScore() {
+        return responseAssessments.values().stream().mapToInt(i -> i.getScore()).sum();
+    }
+
     public void addResponseAssessment(ResponseAssessment responseAssessment) {
         this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);
     }
 
     public void respondToAssessmentInvitation(boolean hasAccepted, String reason, String observations) {
-        setStatus(hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED);
+        setProcessStatus(hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED);
         setDecisionReason(reason);
         setObservations(observations);
     }
@@ -97,18 +113,18 @@ public class Assessment extends Process {
 
         AssessmentStatus status = AssessmentStatus.INVALID;
 
-        if (super.getStatus().equals(ProcessStatus.REJECTED))
+        if (super.getProcessStatus().equals(ProcessStatus.REJECTED))
             status = AssessmentStatus.INVALID;
 
-        else if (super.getStatus().equals(ProcessStatus.PENDING))
+        else if (super.getProcessStatus().equals(ProcessStatus.PENDING))
             status = AssessmentStatus.PENDING;
 
-        else if (super.getStatus().equals(ProcessStatus.ACCEPTED))
-            status = isSubmitted() ? AssessmentStatus.SUBMITTED : AssessmentStatus.OPEN;
+        else if (super.getProcessStatus().equals(ProcessStatus.ACCEPTED))
+            status = isSubmitted() ? AssessmentStatus.SUBMITTED : hasAssessmentStarted() ? AssessmentStatus.ASSESSED : AssessmentStatus.OPEN;
 
 
         return status;
     }
 
-
 }
+

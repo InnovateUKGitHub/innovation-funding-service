@@ -31,4 +31,14 @@ public class ResponseAssessment {
     public Long getResponseId() {
         return response.getId();
     }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+
 }
