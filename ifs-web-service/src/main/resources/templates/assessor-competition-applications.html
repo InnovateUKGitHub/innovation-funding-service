@@ -47,7 +47,7 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Applications for Assessments (<span th:text="${assessments.size()}"/>)</h3>
+            <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
             <ul class="boxed-list" >
                 <li th:each="assessment : ${assessments}" th:unless="${assessment.getStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).INVALID}">
                     <div class="grid-row">
@@ -59,8 +59,8 @@
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-third navigation-right">
-                            <div class="application-listing_pull-right">
-                                <p th:text="${assessment.status}">Assessment Status</p>
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.status)}">
+                                <p th:text="${#strings.toLowerCase(assessment.status)}">Assessment Status</p>
                                 <p class="application-listing_pending" th:unless="${assessment.getStatus() != T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING}">
                                     <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
                                 </p>

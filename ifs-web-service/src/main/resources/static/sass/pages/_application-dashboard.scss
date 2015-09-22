@@ -1,4 +1,32 @@
 .app-dashboard {
+	
+	.application-status{
+		border-left: 1px solid $border-colour;
+		text-align: center;
+		margin: -15px;
+		min-height: 110px;
+		
+		@include media-down(mobile) {
+			min-height: auto;
+		}
+
+		p{
+			margin: 0;
+			padding: 5px;
+			color: $secondary-text-colour;
+			
+			&.application-listing_pending{
+				background-color: $link-colour;
+				padding: 35px 0;
+				a{
+					color: $page-colour;
+					text-decoration: none;
+				}
+			}
+
+		}
+	}
+
 	.boxed-list .progress-container {
 		margin: 20px 37px 55px 0;
 	}
