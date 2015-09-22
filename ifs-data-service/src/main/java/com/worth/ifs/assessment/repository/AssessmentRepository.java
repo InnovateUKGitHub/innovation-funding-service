@@ -20,25 +20,24 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
 
     List<Assessment> findAll();
 
-    List<Assessment> findByProcessAssessorId(Long assessorId);
+    List<Assessment> findByAssessorId(Long assessorId);
 
-    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and p.status != 'REJECTED' ")
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status != 'REJECTED' ")
     List<Assessment> findByAssessorAndCompetition(Long assessorId, Long competitionId);
 
-    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.id = ?")
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.id = ?")
     Assessment findOneByAssessorAndApplication(Long assessorId, Long applicationId);
 
-    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and a.submitted = true")
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.submitted = true")
     List<Assessment> findSubmittedAssessmentsByCompetition(Long assessor, Long competition );
 
-    @Query("Select count(a) from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and a.submitted = true")
+    @Query("Select count(a) from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.submitted = true")
     Integer findNumberOfSubmittedAssessmentsByCompetition(Long assessor, Long competition );
 
-    @Query("Select count(a) from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and p.status != ?")
-    Integer findNumberOfAssignedAssessmentsByCompetition(Long assessor, Long competition, ProcessStatus status );
+    @Query("Select count(a) from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status != 'REJECTED' " )
+    Integer findNumberOfAssignedAssessmentsByCompetition(Long assessor, Long competition);
 
-    @Query("Select a from Assessment a, Process p where a.process.id = p.id and p.assessor.id = ? and p.application.competition.id = ? and p.status = ?")
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status = ?")
     List<Assessment> findAssessmentsByCompetitionAndStatus(Long assessor, Long competition, ProcessStatus status );
 
-    //findNumberOfAssignedAssessmentsByCompetition
 }

@@ -1,16 +1,9 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.workflow.controller.AssessmentProcessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

@@ -86,9 +86,9 @@ public class AssessmentController {
 
         String pageToShow;
 
-        if (assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID))
+        if (assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID))
             pageToShow = assessorDashboard;
-        else if (assessment.getStatus().equals(AssessmentStatus.PENDING))
+        else if (assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING))
             pageToShow = applicationReview;
         else
             pageToShow = assessmentDetails;
@@ -126,15 +126,19 @@ public class AssessmentController {
 
         Map<String, String[]> params = req.getParameterMap();
 
-        /** builds invitation response data **/
-        Boolean decision = params.containsKey("accept");
-        Long userId = getLoggedUser(req).getId();
-        Long applicationId = Long.valueOf(req.getParameter("applicationId"));
-        String decisionReason = params.containsKey("decisionReason") ? req.getParameter("decisionReason") : "none";
-        String observations = params.containsKey("observations") ? req.getParameter("observations") : "";
+        /*** avoids to trigger an response if any other button was clicked that not accept / reject ***/
+        if ( params.containsKey("accept") || params.containsKey("reject") ) {
 
-        /** asserts the invitation response **/
-        assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
+            /** builds invitation response data **/
+            Boolean decision = params.containsKey("accept");
+            Long userId = getLoggedUser(req).getId();
+            Long applicationId = Long.valueOf(req.getParameter("applicationId"));
+            String decisionReason = params.containsKey("decisionReason") ? req.getParameter("decisionReason") : "none";
+            String observations = params.containsKey("observations") ? req.getParameter("observations") : "";
+
+            /** asserts the invitation response **/
+            assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
+        }
 
         //gets the competition id to redirect
         Long competitionId = Long.valueOf(req.getParameter("competitionId"));
