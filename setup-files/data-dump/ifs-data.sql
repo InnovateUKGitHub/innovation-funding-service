@@ -49,11 +49,7 @@ UNLOCK TABLES;
 -- Dumping data for table `assessment`
 --
 
-LOCK TABLES `assessment` WRITE;
-/*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`id`, `submitted`, `process_id`) VALUES (1,'Y',163840),(2,'N',1232);
-/*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
-UNLOCK TABLES;
+
 
 --
 -- Dumping data for table `assessment_assessments`
@@ -68,11 +64,7 @@ UNLOCK TABLES;
 -- Dumping data for table `assessment_process`
 --
 
-LOCK TABLES `assessment_process` WRITE;
-/*!40000 ALTER TABLE `assessment_process` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment_process` (`id`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`, `application`, `assessor`) VALUES (1232,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57', 'teste2',NULL,'PENDING',3,3),(163840,NULL,'ASSESSMENT_INVITATION','2015-09-17 14:02:57','test',NULL,'ACCEPTED',4,3);
-/*!40000 ALTER TABLE `assessment_process` ENABLE KEYS */;
-UNLOCK TABLES;
+
 
 --
 -- Dumping data for table `competition`
@@ -114,14 +106,6 @@ INSERT  IGNORE INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES (1
 /*!40000 ALTER TABLE `cost_value` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Dumping data for table `hibernate_sequences`
---
-
-LOCK TABLES `hibernate_sequences` WRITE;
-/*!40000 ALTER TABLE `hibernate_sequences` DISABLE KEYS */;
-/*!40000 ALTER TABLE `hibernate_sequences` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping data for table `organisation`
@@ -222,6 +206,11 @@ INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `tok
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
+INSERT IGNORE INTO `process` (`id`,`decision_reason`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'), (2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING');
+
+INSERT IGNORE INTO `assessment` (`submitted`,`process_id`,`application`,`assessor`) VALUES ('N',1,3,3), ('N',2,4,3);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

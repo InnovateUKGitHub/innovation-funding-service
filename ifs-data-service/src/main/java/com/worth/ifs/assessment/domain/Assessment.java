@@ -1,93 +1,78 @@
 package com.worth.ifs.assessment.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.workflow.domain.*;
-import org.hibernate.annotations.Cascade;
+import com.worth.ifs.workflow.domain.Process;
+import com.worth.ifs.workflow.domain.ProcessEvent;
+import com.worth.ifs.workflow.domain.ProcessStatus;
+import org.hibernate.annotations.Polymorphism;
+import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Type;
-
-import javax.annotation.PostConstruct;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.persistence.*;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
-@NamedQueries({
-
-        @NamedQuery(
-                name = "findByProcessAssessor",
-                query = "from Assessment a, Process p where a.process = p and p.assessor = :assessor"
-        ),
-        @NamedQuery(
-                name = "findByProcessAssessorAndProcessApplicationCompetition",
-                query = "from Assessment a, Process p where a.process = p and p.assessor = :assessor and p.application.competition = :competition"
-        )
-
-})
 @Entity
-public class Assessment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@Table(name = "Assessment", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
+@Polymorphism(type= PolymorphismType.EXPLICIT)
+@PrimaryKeyJoinColumn(name="process_id", referencedColumnName="id")
+public class Assessment extends Process {
 
     @ManyToOne
-    @JoinColumn(name="process_id", referencedColumnName="id")
-    private AssessmentProcess process;
+    @JoinColumn(name = "assessor", referencedColumnName = "id")
+    private User assessor;
+
+    @ManyToOne
+    @JoinColumn(name = "application", referencedColumnName = "id")
+    private Application application;
 
     @OneToMany
-    private Set<ResponseAssessment> responseAssessments;
+    private Map<Long,ResponseAssessment> responseAssessments;
 
-    @Type(type="yes_no")
+    @Column(name = "submitted", columnDefinition = "boolean default false")
+    @Type(type = "yes_no")
     private boolean submitted;
 
 
-    public Assessment(){
-        if ( responseAssessments == null )
-            responseAssessments = new LinkedHashSet<>();
+    public Assessment() {
+        if (responseAssessments == null)
+            responseAssessments = new LinkedHashMap<>();
     }
 
-    @PostConstruct
-    private void init() {
-        if ( responseAssessments == null )
-            responseAssessments = new LinkedHashSet<>();
-    }
-
-    public Assessment(AssessmentProcess process) {
-        this.process = process;
-        this.submitted = false;
-        responseAssessments = new LinkedHashSet<>();
+    public Assessment(User assessor, Application application) {
+        super(ProcessEvent.ASSESSMENT, ProcessStatus.PENDING);
+        this.assessor = assessor;
+        this.application = application;
+        responseAssessments = new HashMap<>();
     }
 
     public void setSubmitted() {
         submitted = true;
     }
 
-    public Long getId() {
-        return this.id;
+    @Override
+    public ProcessStatus getStatus() {
+        return status;
     }
 
-    public AssessmentStatus getStatus() {
+    public AssessmentStatus getAssessmentStatus() {
         return solveStatus();
     }
 
-    public Set<ResponseAssessment> getResponseAssessments() {
+    public Map<Long, ResponseAssessment> getResponseAssessments() {
         return responseAssessments;
     }
 
-    public void addResponseAssessment(ResponseAssessment assessment) {
-        //TODO - must replace to update if exists
-        this.responseAssessments.add(assessment);
+    public void addResponseAssessment(ResponseAssessment responseAssessment) {
+        this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);
     }
 
     public void respondToAssessmentInvitation(boolean hasAccepted, String reason, String observations) {
-        process.setStatus( hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED );
-        process.setDecisionReason(reason);
-        process.setObservations(observations);
+        setStatus(hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED);
+        setDecisionReason(reason);
+        setObservations(observations);
     }
 
     public boolean hasAssessments() {
@@ -98,31 +83,27 @@ public class Assessment {
         return this.submitted;
     }
 
-
     public User getAssessor() {
-        return process.getAssessor();
+        return assessor;
     }
+
     public Application getApplication() {
-        return process.getApplication();
-    }
-
-    public AssessmentProcess getProcess() {
-        return process;
+        return application;
     }
 
 
-    //
+    // follows a concrete criteria
     private AssessmentStatus solveStatus() {
 
         AssessmentStatus status = AssessmentStatus.INVALID;
 
-        if ( this.process == null || this.process.getStatus().equals(ProcessStatus.REJECTED) )
+        if (super.getStatus().equals(ProcessStatus.REJECTED))
             status = AssessmentStatus.INVALID;
 
-        else if ( this.process.getStatus().equals(ProcessStatus.PENDING) )
+        else if (super.getStatus().equals(ProcessStatus.PENDING))
             status = AssessmentStatus.PENDING;
 
-        else if ( this.process.getStatus().equals(ProcessStatus.ACCEPTED) )
+        else if (super.getStatus().equals(ProcessStatus.ACCEPTED))
             status = isSubmitted() ? AssessmentStatus.SUBMITTED : AssessmentStatus.OPEN;
 
 

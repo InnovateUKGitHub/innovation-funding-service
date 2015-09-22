@@ -1,20 +1,14 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.repository.AssessmentProcessRepository;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.workflow.domain.ProcessStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +19,6 @@ public class AssessmentHandler {
 
     @Autowired
     private AssessmentRepository assessments;
-    @Autowired
-    private AssessmentProcessRepository assessmentProcesses;
-
 
     public AssessmentHandler(){}
 
@@ -51,15 +42,15 @@ public class AssessmentHandler {
         return assessments.findOneByAssessorAndApplication(userId, applicationId);
     }
 
-    public List<Assessment> getAssessmentsOfAssessor(Long assessorId) {
-            return assessments.findByProcessAssessorId(assessorId);
+    public List<Assessment> getAllByAssessor(Long assessorId) {
+            return assessments.findByAssessorId(assessorId);
     }
     public Integer getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long userId) {
         return assessments.findNumberOfSubmittedAssessmentsByCompetition(userId, competitionId);
     }
     public Integer getTotalAssignedAssessmentsByCompetition(Long competitionId, Long userId) {
-        // By 'assigned' is meant an assessment with an open process, so all but ProcessStatus.REJECTED.
-        return assessments.findNumberOfAssignedAssessmentsByCompetition(userId, competitionId, ProcessStatus.REJECTED);
+        // By 'assigned' is meant an assessment process not rejected
+        return assessments.findNumberOfAssignedAssessmentsByCompetition(userId, competitionId);
     }
 
     /**
@@ -81,13 +72,11 @@ public class AssessmentHandler {
         Assessment assessment = getOneByAssessorAndApplication(assessorId, applicationId);
 
         // ensures the acceptance only happens if its valid to accept the invitation
-        boolean isValid = assessment != null && assessment.getStatus().equals(AssessmentStatus.PENDING);
+        boolean isValid = assessment != null && assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING);
 
         if ( isValid ) {
-            System.out.println("Hey - before respond ");
             assessment.respondToAssessmentInvitation(decision, decisionReason, observations);
             assessments.save(assessment);
-            System.out.println("Hey - after respond" );
         }
 
         return isValid;

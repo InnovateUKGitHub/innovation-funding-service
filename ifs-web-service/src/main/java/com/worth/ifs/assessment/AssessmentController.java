@@ -86,9 +86,9 @@ public class AssessmentController {
 
         String pageToShow;
 
-        if (assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID))
+        if (assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID))
             pageToShow = assessorDashboard;
-        else if (assessment.getStatus().equals(AssessmentStatus.PENDING))
+        else if (assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING))
             pageToShow = applicationReview;
         else
             pageToShow = assessmentDetails;

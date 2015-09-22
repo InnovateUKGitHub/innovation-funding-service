@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS hibernate_sequences;
 DROP TABLE IF EXISTS question_status;
 DROP TABLE IF EXISTS response_assessment;
 DROP TABLE IF EXISTS process_event;
+DROP TABLE IF EXISTS assessment_process_response_assessments;
 DROP TABLE IF EXISTS process_role;
 DROP TABLE IF EXISTS process_type;
 DROP TABLE IF EXISTS process_value;
