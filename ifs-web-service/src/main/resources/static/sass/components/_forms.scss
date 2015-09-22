@@ -30,7 +30,20 @@ table td input{
     }
 }
 
+table{
+    .width-small{
+        width: 80px;
+    }
+    .width-medium{
+        width: 150px;
+    }
+    .width-large{
+        width: 200px; 
+    }
+} 
+
 table td{
+    
     &.numeric{
         text-align: right;
 
