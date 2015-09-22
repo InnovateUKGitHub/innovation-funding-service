@@ -14,7 +14,7 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Competitions for Assessments (<span th:text="${competitionsForAssessment.size()}"/>)</h3>
+            <h3 class="heading-large">Competitions for Assessment (<span th:text="${competitionsForAssessment.size()}"/>)</h3>
             <ul class="boxed-list">
                 <li th:each="competition : ${competitionsForAssessment}">
                     <div class="grid-row" >
@@ -50,13 +50,7 @@
                 </li>
             </ul>
         </div>
-
-        <div class="announce-external-link">
-            <h5 class="heading-medium"><a href="https://www.gov.uk/government/organisations/innovate-uk">Visit Innovate UK main site</a></h5>
-        </div>
-
     </div>
-
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
