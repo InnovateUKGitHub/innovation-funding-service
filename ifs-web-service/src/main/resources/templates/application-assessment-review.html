@@ -65,10 +65,9 @@
                 <button class="button large" name="accept" value="accepted" type="submit">Accept</button>
                 <a role="button" tabindex="0" class="button large" data-js-modal="modal-reject-assessment"
                    th:href="@{/assessor/competitions/{cid}/applications/{aid}/reject-invitation(cid=${competition.id},aid=${assessment.application.id})}">Reject</a>
-
-                <div th:include="fragments/modals :: modal-reject-assessment" th:remove="tag" />
             </form>
 
+            <div th:include="fragments/modals :: modal-reject-assessment" th:remove="tag" />
 
 
         </div>
