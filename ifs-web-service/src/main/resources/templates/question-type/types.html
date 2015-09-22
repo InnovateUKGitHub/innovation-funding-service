@@ -103,7 +103,7 @@
     <div th:fragment="your_finance" th:remove="tag">
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
-                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? '':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
+                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
@@ -145,10 +145,10 @@
                     <table id="labour-costs-table">
                         <thead>
                         <tr>
-                            <th>Role within project</th>
+                            <th class="width-medium">Role within project</th>
                             <th class="numeric">Gross Annual Salary</th>
                             <th class="numeric">Rate (£/day)</th>
-                            <th class="numeric">Days to be spent by all staff at this grade</th>
+                            <th class="numeric width-medium">Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -173,7 +173,7 @@
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="number"
+                                    <input type="number" class="width-small"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
@@ -197,7 +197,7 @@
                     </table>
 
                     <p class="alignright">
-                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
 

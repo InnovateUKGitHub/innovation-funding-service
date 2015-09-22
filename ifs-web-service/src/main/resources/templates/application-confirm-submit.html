@@ -13,11 +13,11 @@
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
 
-    <h2 class="heading-large">This is your final chance to make changes to the application. You will not be able to access the application after this point. Are you sure you want to submit?</h2>
-    <h3 class="heading-medium" th:text="'Application: '+${currentApplication.getName()}+''"></h3>
+    <p>This is your final chance to make changes to the application. You will not be able to access the application after this point. Are you sure you want to submit?</p>
 
-    <div class="alignright-button">
+    <div>
         <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
+        <a role="button" tabindex="1" class="buttonlink" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Cancel</a>
     </div>
 
 

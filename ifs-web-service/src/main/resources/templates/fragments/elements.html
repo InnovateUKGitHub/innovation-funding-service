@@ -86,3 +86,12 @@
         </div>
     </div>
 </div>
+
+<!-- =========================== Element: Notification / event =========================== -->
+<div th:fragment="notification">
+    <div class="event-alert is-open" th:if="${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
+        <p>
+            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span>
+        </p>
+    </div>
+</div>
