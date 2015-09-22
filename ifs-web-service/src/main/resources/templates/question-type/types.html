@@ -145,10 +145,10 @@
                     <table id="labour-costs-table">
                         <thead>
                         <tr>
-                            <th>Role within project</th>
+                            <th class="width-medium">Role within project</th>
                             <th class="numeric">Gross Annual Salary</th>
                             <th class="numeric">Rate (£/day)</th>
-                            <th class="numeric">Days to be spent by all staff at this grade</th>
+                            <th class="numeric width-medium">Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -173,7 +173,7 @@
                                            th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="number"
+                                    <input type="number" class="width-small"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
