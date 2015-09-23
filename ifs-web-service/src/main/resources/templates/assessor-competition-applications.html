@@ -65,10 +65,14 @@
                                     <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
                                 </p>
 
-                                <!--otherwise shows the overall score-->
+                                <!--otherwise shows the overall score -->
                                 <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
-                                    <span th:text="${assessment.getOverallScore()}"/> %
+                                    <h3><span th:text="${assessment.getOverallScore()}"/> %</h3>
+                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}"> Recommended </p>
+                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"> Not recommended </p>
                                 </p>
+
+
 
                             </div> 
                         </div>
