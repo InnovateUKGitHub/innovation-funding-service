@@ -21,6 +21,12 @@ input[disabled]{
     border-color:transparent;
 }
 
+.form-group{
+    input[type="number"]{
+        text-align: right;
+    }
+}
+
 table td input{
     width:100%; 
     @include box-sizing(border-box);
@@ -30,17 +36,15 @@ table td input{
     }
 }
 
-table{
-    .width-small{
-        width: 80px;
-    }
-    .width-medium{
-        width: 150px;
-    }
-    .width-large{
-        width: 200px; 
-    }
-} 
+.width-small{
+    width: 80px;
+}
+.width-medium{
+    width: 150px;
+}
+.width-large{
+    width: 200px; 
+}
 
 table td{
     
