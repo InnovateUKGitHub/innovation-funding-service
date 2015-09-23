@@ -31,7 +31,8 @@ public class Assessment extends Process {
     @JoinColumn(name = "application", referencedColumnName = "id")
     private Application application;
 
-    @OneToMany
+    //@OneToMany
+    @Transient
     private Map<Long, ResponseAssessment> responseAssessments;
 
 
@@ -82,8 +83,7 @@ public class Assessment extends Process {
     }
 
     public Boolean hasAssessmentStarted() {
-
-        return  ! (recommendedValue == RecommendedValue.EMPTY) ;
+        return  ! recommendedValue.equals(RecommendedValue.EMPTY) ;
     }
 
 
