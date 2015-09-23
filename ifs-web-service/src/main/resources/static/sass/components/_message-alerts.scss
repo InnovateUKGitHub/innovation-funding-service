@@ -11,3 +11,13 @@
 		margin: 0;
 	}
 }
+
+.no-pad{
+	padding: 0;
+	
+	.heading-large,
+	.heading-xlarge{
+		margin-bottom: 10px;   
+	}
+
+}

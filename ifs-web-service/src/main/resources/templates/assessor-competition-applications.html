@@ -16,8 +16,10 @@
             daysLeft=${competition.getAssessmentDaysLeft()},
             title = ${competition.name}" th:remove="tag" />
 
-    
-    <h1 class="heading-xlarge">Competition Details</h1>
+    <header class="page-header group no-pad">
+        <h1 class="heading-xlarge">Competition Details</h1>
+    </header>
+
     <div class="grid-row">
         <div class="column-two-thirds competition-details">
             <!--<p th:text="${competition.getDescription()}" />-->
@@ -45,7 +47,7 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Applications for Assessments (<span th:text="${assessments.size()}"/>)</h3>
+            <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
             <ul class="boxed-list" >
                 <li th:each="assessment : ${assessments}" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).INVALID}">
                     <div class="grid-row">
@@ -80,7 +82,7 @@
 
         <!--all the submitted assessments-->
         <div class="submitted" th:unless="${submittedAssessments.size() == 0 }" >
-            <h4 class="heading-large">Submitted Assessments (<span th:text="${assessments.size()}"/>)</h4>
+            <h4 class="heading-large">Submitted Assessment (<span th:text="${assessments.size()}"/>)</h4>
             <ul class="boxed-list" >
                 <li th:each="assessment : ${submittedAssessments}">
                     <div class="grid-row">
