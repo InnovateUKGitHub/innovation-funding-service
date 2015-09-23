@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nunoalexandre on 16/09/15.
@@ -20,7 +21,7 @@ public class AssessmentController {
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
-    public List<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+    public Set<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
         return assessmentHandler.getAllByCompetitionAndUser(competitionId, userId);
     }
 

@@ -5,8 +5,7 @@ import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * AssessmentRestRestServiceIpml is a utility to use client-side to retrieve Assessment data from the data-service controllers.
@@ -19,8 +18,8 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     String assessmentRestURL;
 
 
-    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
+    public Set<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return new LinkedHashSet<>(Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class)));
     }
 
     public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {

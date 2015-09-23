@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +52,6 @@ public class AssessmentController {
         return "/assessor/competitions/" + competitionID + "/applications";
     }
 
-
     @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
     public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
                                                  HttpServletRequest request) {
@@ -61,13 +59,13 @@ public class AssessmentController {
         Competition competition = competitionService.getCompetitionById(competitionId);
 
         /* gets all the assessments assigned to this assessor in this competition */
-        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+        Set<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
 
         //filters the assessments to just have the submitted assessments here
-        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toList());
+        Set<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toSet());
 
         //filters the assessments to just the not submmited assessments
-        List<Assessment> assessments = allAssessments.stream().filter(a -> !submittedAssessments.contains(a)).collect(Collectors.toList());
+        Set<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(Collectors.toSet());
 
         //pass to view
         model.addAttribute("competition", competition);
