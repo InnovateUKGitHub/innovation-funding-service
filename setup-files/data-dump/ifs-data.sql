@@ -54,12 +54,6 @@ UNLOCK TABLES;
 --
 -- Dumping data for table `assessment_assessments`
 --
-
-LOCK TABLES `assessment_response_assessments` WRITE;
-/*!40000 ALTER TABLE `assessment_response_assessments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `assessment_response_assessments` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Dumping data for table `assessment_process`
 --
@@ -169,12 +163,6 @@ UNLOCK TABLES;
 
 --
 -- Dumping data for table `response_assessment`
---
-
-LOCK TABLES `response_assessment` WRITE;
-/*!40000 ALTER TABLE `response_assessment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `response_assessment` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping data for table `role`
@@ -210,7 +198,7 @@ UNLOCK TABLES;
 
 INSERT IGNORE INTO `process` (`id`,`decision_reason`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'), (2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING');
 
-INSERT IGNORE INTO `assessment` (`submitted`,`process_id`,`application`,`assessor`) VALUES ('N',1,3,3), ('N',2,4,3);
+INSERT IGNORE INTO `assessment` (`temp_total_score`,`temp_recommended_value`, `submitted`,`process_id`,`application`,`assessor`) VALUES ('37','NO','N',1,3,3), ('82','YES','N',2,4,3);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
