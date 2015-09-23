@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'"  th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'"  th:remove="tag"></div>
 </head>
 <body class="app-details">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
-    <div th:include="fragments/elements :: notification" th:remove="tag" />
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
+    <div th:include="fragments/elements :: notification" th:remove="tag"></div>
 
     <h1 class="heading-xlarge">Application overview</h1>
     <div class="grid-row">
@@ -20,7 +20,7 @@
             <h2 class="bold-medium">Competition details</h2>
             <p th:text="${currentCompetition.getDescription()}" />
             <h3 class="heading-small">Application progress:</h3>
-            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" th:remove="tag" />
+            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" th:remove="tag"></div>
         </div>
 
         <div class="column-half">
@@ -40,7 +40,7 @@
     <div class="collapsible section-overview js-close-others">
         <div th:remove="tag" th:each="section : ${sections}">
             <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
-                <span th:remove="tag" th:text="${section.getName()}" />
+                <span th:remove="tag" th:text="${section.getName()}"></span>
                 <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
                 <span class="section-status assigned" th:if="${assignedSections?.contains(section.id)}"><span class="visuallyhidden">-</span> Assigned</span>
             </h2>
@@ -106,10 +106,10 @@
     </div>
 
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
 </body>
 </html>
