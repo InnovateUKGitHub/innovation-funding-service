@@ -45,4 +45,28 @@
 		}
 	}
 
+	.grid-row{
+		.row{
+			@include grid-column(1);
+		}
+	}
+
+	
+	.competition-details{
+		
+		.list-bullet{
+			margin-bottom: 45px;
+		}
+
+	}
+
+	.panel-indent{
+		margin-bottom: 0;
+	}
+
+	.form-hint{
+		margin-bottom: 25px;
+	}
+
+
 }
