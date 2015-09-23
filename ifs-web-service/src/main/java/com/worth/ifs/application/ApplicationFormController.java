@@ -95,19 +95,13 @@ public class ApplicationFormController extends AbstractApplicationController {
         addUserDetails(model, application, userId);
     }
 
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button.
-     */
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String applicationFormSubmit(Model model,
-                                                 @PathVariable("applicationId") final Long applicationId,
-                                                 @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request){
+    private void saveApplicationForm( Model model,
+                                      @PathVariable("applicationId") final Long applicationId,
+                                      @PathVariable("sectionId") final Long sectionId,
+                                      HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
-        assignQuestion(request, assignedBy.getId());
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -121,7 +115,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         setApplicationDetails(application, params);
         markQuestion(request, params, applicationId, user.getId());
-        assignQuestion(request, assignedBy.getId());
 
         applicationService.save(application);
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
@@ -129,6 +122,23 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         addApplicationDetails(applicationId, user.getId(), sectionId, model);
         model.addAttribute("applicationSaved", true);
+    }
+
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
+     */
+    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    public String applicationFormSubmit( Model model,
+                                         @PathVariable("applicationId") final Long applicationId,
+                                         @PathVariable("sectionId") final Long sectionId,
+                                         HttpServletRequest request){
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey("assign_question")){
+            assignQuestion(model, applicationId, sectionId, request);
+        }
+        saveApplicationForm(model,applicationId,sectionId,request);
+
         return "application-form";
     }
 
@@ -230,4 +240,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
+    public void assignQuestion(Model model,
+                                 @PathVariable("applicationId") final Long applicationId,
+                                 @PathVariable("sectionId") final Long sectionId,
+                               HttpServletRequest request){
+        assignQuestion(request, applicationId, sectionId);
+        model.addAttribute("assignedQuestion", true);
+    }
 }

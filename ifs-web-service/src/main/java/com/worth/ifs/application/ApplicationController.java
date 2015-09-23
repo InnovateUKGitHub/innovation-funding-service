@@ -29,7 +29,6 @@ import java.util.*;
 public class ApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
 
-
     @RequestMapping("/{applicationId}")
     public String applicationDetails(Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
@@ -120,9 +119,7 @@ public class ApplicationController extends AbstractApplicationController {
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request){
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
-        assignQuestion(request, assignedBy.getId());
+        assignQuestion(request, applicationId, sectionId);
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 }
