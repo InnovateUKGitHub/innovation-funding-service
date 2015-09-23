@@ -5,5 +5,5 @@ package com.worth.ifs.assessment.constant;
  */
 public enum AssessmentStatus {
 
-    PENDING, OPEN, SUBMITTED, INVALID;
+    PENDING, OPEN, ASSESSED, SUBMITTED, INVALID;
 }

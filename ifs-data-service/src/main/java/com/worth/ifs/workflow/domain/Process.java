@@ -90,19 +90,19 @@ public abstract class Process {
         return id;
     }
 
-    public ProcessStatus getStatus()  {
+    public ProcessStatus getProcessStatus()  {
         return status;
     }
 
-    public void setStatus(ProcessStatus status) {
+    public void setProcessStatus(ProcessStatus status) {
         this.status = status;
     }
 
-    public ProcessEvent getEvent() {
+    public ProcessEvent getProcessEvent() {
         return event;
     }
 
-    public void setEvent(ProcessEvent event) {
+    public void setProcessEvent(ProcessEvent event) {
         this.event = event;
     }
 
