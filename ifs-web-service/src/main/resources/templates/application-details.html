@@ -46,9 +46,9 @@
             </h2>
             <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}">
                 <div th:case="${0}" th:remove="tag">
-                    <li  th:class="'section '+(${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
+                    <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
                         th:each="question : ${section.getQuestions()}"
-                        th:if="${question?.getName() != '' }"
+                        th:if="${!#strings.isEmpty(question.getName())}"
                         th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(question.getId())})">
                         <div class="grid-row">
                             <div class="column-two-thirds">
