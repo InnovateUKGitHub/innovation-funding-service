@@ -15,8 +15,11 @@
     <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${assessment.application.competition.getAssessmentDaysLeftPercentage()},
             daysLeft=${assessment.application.competition.getAssessmentDaysLeft()},
             title = ${assessment.application.name}" th:remove="tag" />
-
-    <h1 class="heading-xlarge">Review application</h1>
+    
+    <header class="page-header group no-pad">
+        <h1 class="heading-xlarge">Review application</h1>
+    </header>
+    
     <div class="grid-row">
         <div class="row competition-details">
             <p >
