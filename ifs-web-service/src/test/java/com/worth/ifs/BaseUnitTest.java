@@ -58,7 +58,6 @@ public class BaseUnitTest {
     public QuestionService questionService;
     @Mock
     public OrganisationService organisationService;
-
     @Mock
     public SectionService sectionService;
 
@@ -189,6 +188,7 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(app1, loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(app1)).thenReturn(organisationSet);
+        when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
 
         //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 

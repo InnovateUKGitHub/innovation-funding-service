@@ -92,6 +92,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         addFinanceDetails(model, application, userId);
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
         addDateDetails(model);
+        addUserDetails(model, application, userId);
     }
 
     /**

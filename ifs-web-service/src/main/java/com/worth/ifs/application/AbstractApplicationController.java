@@ -70,12 +70,15 @@ public abstract class AbstractApplicationController {
         }
     }
 
+    protected void addUserDetails(Model model, Application application, Long userId) {
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+    }
+
     protected void addQuestionsDetails(Model model, Application application, Long userOrganisationId, Long userId) {
         List<Response> responses = responseService.getByApplication(application.getId());
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         addAssigneableDetails(model, application, userOrganisationId, userId);
-
-
     }
 
     protected void addAssigneableDetails(Model model, Application application, Long userOrganisationId, Long userId) {

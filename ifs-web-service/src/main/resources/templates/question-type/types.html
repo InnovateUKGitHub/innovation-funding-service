@@ -581,12 +581,12 @@
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <select class="form-control form-control-1-8">
-            <option></option>
+        <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
             <option>No</option>
-            <option>Yes</option>
+            <option th:if="${userIsLeadApplicant}" selected="selected">Yes</option>
+            <option th:unless="${userIsLeadApplicant}">Yes</option>
         </select>
-        <div class="form-group">
+        <div id="otherCostsForm" class="form-group">
             <table id="other-funding">
                 <thead>
                 <tr>
@@ -602,22 +602,22 @@
                 <tbody>
                 <tr>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="Public Sector Grant" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="10-06-2015" />
                     </td>
                     <td class="numeric">
-                        <input type="text" />
+                        <input type="text" value="10,000" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="Yes" />
                     </td>
                     <td class="numeric">
-                        <input type="text" />
+                        <input type="text" value="10,000" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="06-10-2015" />
                     </td>
                     <td>
                         <a href="#">Remove</a>
@@ -720,9 +720,9 @@
                 <tr>
                     <th>Other public sector funding</th>
                     <td class="numeric">£10,000</td>
+                    <td class="numeric">£10,000</td>
                     <td class="numeric">-</td>
-                    <td class="numeric">N/A</td>
-                    <td class="numeric">N/A</td>
+                    <td class="numeric">-</td>
                 </tr>
                 <tr>
                     <th>Contribution to project</th>
