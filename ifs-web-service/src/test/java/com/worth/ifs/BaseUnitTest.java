@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
@@ -36,6 +37,8 @@ import static org.mockito.Mockito.when;
 public class BaseUnitTest {
     public MockMvc mockMvc;
     public User loggedInUser;
+    public User assessor;
+
     public UserAuthentication loggedInUserAuthentication;
 
     @Mock
@@ -79,6 +82,7 @@ public class BaseUnitTest {
     public void setup(){
         loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
         User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
+        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
         users = Arrays.asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
@@ -135,6 +139,13 @@ public class BaseUnitTest {
         competition.setQuestions(questionList);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
 
+    }
+
+    public void setupUserRoles() {
+        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
+        Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
+        loggedInUser.setRoles(Arrays.asList(applicantRole));
+        assessor.setRoles(Arrays.asList(assessorRole));
     }
 
     public void setupApplicationWithRoles(){

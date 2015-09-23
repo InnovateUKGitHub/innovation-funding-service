@@ -55,8 +55,11 @@ public class LoginController {
     }
 
     private String redirectionForUser(User user) {
-        return user.getEmail().equals("assessor@innovateuk.gov.uk") ?
-                "redirect:/assessor/dashboard" : "redirect:/applicant/dashboard";
+        String roleName = "";
+        if(user.getRoles().size() > 0) {
+            roleName = user.getRoles().get(0).getName();
+        }
+        return "redirect:/" + roleName + "/dashboard";
     }
 
     private String redirectionForUknownUser() {

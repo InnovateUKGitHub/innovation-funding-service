@@ -656,23 +656,23 @@
                         <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
                             <th th:text="${financeSubSection.name}"></th>
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
                                 th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                                 th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                    th:text="${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                                    th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             </div>
                         </tr>
                         <tr>
                             <th>Total</th>
-                            <td class="numeric" style="font-weight: 700;" th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                            <td class="numeric" style="font-weight: 700;" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                                 <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                                    th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                                    th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
                             </div>
                         </tr>
                     </tbody>

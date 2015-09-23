@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS assessment_assessments_linker;
 DROP TABLE IF EXISTS assessment_response_assessments;
 
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS user_application_role;
 DROP TABLE IF EXISTS assessment;
 DROP TABLE IF EXISTS assessment_assessments;

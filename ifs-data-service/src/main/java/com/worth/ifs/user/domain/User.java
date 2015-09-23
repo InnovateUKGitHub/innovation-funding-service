@@ -16,6 +16,32 @@ import java.util.*;
 public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
+    private String imageUrl;
+
+    @Column(unique=true)
+    private String token;
+
+    @Column(unique=true)
+    private String email;
+    private String password;
+
+    @OneToMany(mappedBy="user")
+    private List<ProcessRole> processRoles = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name="user_role",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
+            inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName = "id")})
+    private List<Role> roles;
+
+    public User(){
+
+    }
+
     public User(Long id, String name, String email, String password, String token, String imageUrl,
                 List<ProcessRole> processRoles) {
         this.id = id;
@@ -27,30 +53,6 @@ public class User {
         this.processRoles = processRoles;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @OneToMany(mappedBy="user")
-    private List<ProcessRole> processRoles = new ArrayList<>();
-    private String name;
-    private String imageUrl;
-
-    @Column(unique=true)
-    private String token;
-
-    public String getEmail() {
-        return email;
-    }
-
-    @Column(unique=true)
-    private String email;
-
-    private String password;
-
-    public User(){
-
-    }
 
     public Long getId() {
         return id;
@@ -58,6 +60,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getImageUrl() {
@@ -89,5 +95,13 @@ public class User {
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
         setPassword = encoder.encode(setPassword);
         this.password = setPassword;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
