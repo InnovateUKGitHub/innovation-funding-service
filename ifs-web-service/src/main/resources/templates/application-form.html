@@ -18,7 +18,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
-
+    <div th:include="fragments/elements :: notification" th:remove="tag" />
 
  <div class="grid-row">
     <div class="column-third">
@@ -27,7 +27,9 @@
                     <li>
                         <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
                     </li>
-                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') + ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'')">
+                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
+                            ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
+                            ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '')">
                         <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                             th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">

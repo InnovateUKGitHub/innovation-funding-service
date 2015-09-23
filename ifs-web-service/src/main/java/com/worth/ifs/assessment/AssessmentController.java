@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -32,37 +33,54 @@ import java.util.Map;
 @Controller
 @RequestMapping("/assessor")
 public class AssessmentController {
-    private final Log log = LogFactory.getLog(getClass());
+
+    /* pages */
+    private final String competitionAssessments = "assessor-competition-applications";
+    private final String assessorDashboard = "assessor-dashboard";
+    private final String assessmentDetails = "assessment-details";
+    private final String applicationReview = "application-assessment-review";
+    private final String rejectInvitation = "reject-assessment-invitation";
+
 
     @Autowired
     CompetitionsRestService competitionService;
-
     @Autowired
     AssessmentRestService assessmentRestService;
-
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
+    private String competitionAssessmentsURL(Long competitionID) {
+        return "/assessor/competitions/" + competitionID + "/applications";
+    }
 
-    @RequestMapping(value="/competitions/{competitionId}/applications", method= RequestMethod.GET)
+
+    @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
     public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
-                                          HttpServletRequest request) {
+                                                 HttpServletRequest request) {
 
         Competition competition = competitionService.getCompetitionById(competitionId);
 
-        List<Assessment> assessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+        /* gets all the assessments assigned to this assessor in this competition */
+        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+
+        //filters the assessments to just have the submitted assessments here
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toList());
+
+        //filters the assessments to just the not submmited assessments
+        List<Assessment> assessments = allAssessments.stream().filter(a -> !submittedAssessments.contains(a)).collect(Collectors.toList());
 
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessments", assessments);
+        model.addAttribute("submittedAssessments", submittedAssessments);
 
-        return "assessor-competition-applications";
+        return competitionAssessments;
     }
 
-    @RequestMapping(value="/competitions/{competitionId}/applications/{applicationId}", method= RequestMethod.GET)
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}", method = RequestMethod.GET)
     public String applicationAssessmentDetails(Model model, @PathVariable("competitionId") final Long competitionId,
-                                                        @PathVariable("applicationId") final Long applicationId,
-                                                        HttpServletRequest req) {
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               HttpServletRequest req) {
 
 
         Competition competition = competitionService.getCompetitionById(competitionId);
@@ -71,7 +89,6 @@ public class AssessmentController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
-
         return solvePageForApplicationAssessment(assessment);
     }
 
@@ -79,16 +96,13 @@ public class AssessmentController {
 
         String pageToShow;
 
+        if (assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID))
+            pageToShow = assessorDashboard;
+        else if (assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING))
+            pageToShow = applicationReview;
+        else
+            pageToShow = assessmentDetails;
 
-        System.out.println("solvePageForApplicationAssessment - Assessment has id ? " + assessment == null ? -50 : assessment.getId());
-
-        if ( assessment == null || assessment.getStatus().equals(AssessmentStatus.INVALID) )
-            pageToShow = "assessor-dashboard";
-        else if ( assessment.getStatus().equals(AssessmentStatus.PENDING) )
-            pageToShow = "application-assessment-review";
-        else {
-            pageToShow = "assessment-details";
-        }
 
         return pageToShow;
     }
@@ -96,6 +110,49 @@ public class AssessmentController {
 
     private User getLoggedUser(HttpServletRequest req) {
         return userAuthenticationService.getAuthenticatedUser(req);
+    }
+
+
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/reject-invitation", method = RequestMethod.GET)
+    public String applicationAssessmentDetailsReject(Model model, @PathVariable("competitionId") final Long competitionId,
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               HttpServletRequest req) {
+
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
+
+        //pass to view
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
+
+        return rejectInvitation;
+    }
+
+
+
+
+    @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)
+    public String invitationAnswer(Model model, HttpServletRequest req) {
+
+        Map<String, String[]> params = req.getParameterMap();
+
+        /*** avoids to trigger an response if any other button was clicked that not accept / reject ***/
+        if ( params.containsKey("accept") || params.containsKey("reject") ) {
+
+            /** builds invitation response data **/
+            Boolean decision = params.containsKey("accept");
+            Long userId = getLoggedUser(req).getId();
+            Long applicationId = Long.valueOf(req.getParameter("applicationId"));
+            String decisionReason = params.containsKey("decisionReason") ? req.getParameter("decisionReason") : "none";
+            String observations = params.containsKey("observations") ? req.getParameter("observations") : "";
+
+            /** asserts the invitation response **/
+            assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
+        }
+
+        //gets the competition id to redirect
+        Long competitionId = Long.valueOf(req.getParameter("competitionId"));
+        return "redirect:" + competitionAssessmentsURL(competitionId);
     }
 
 

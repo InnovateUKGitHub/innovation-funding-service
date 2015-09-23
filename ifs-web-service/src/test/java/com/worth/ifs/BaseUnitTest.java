@@ -4,7 +4,7 @@ import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.helper.UserApplicationRole;
+import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
@@ -56,6 +56,8 @@ public class BaseUnitTest {
     public ApplicationRestService applicationRestService;
     @Mock
     public QuestionService questionService;
+    @Mock
+    public OrganisationService organisationService;
 
     @Mock
     public SectionService sectionService;
@@ -66,6 +68,7 @@ public class BaseUnitTest {
     public Competition competition;
     public List<User> users;
     public List<Organisation> organisations;
+    TreeSet<Organisation> organisationSet;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -146,6 +149,9 @@ public class BaseUnitTest {
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
         Organisation organisation2 = new Organisation(2L, "Ludlow");
         organisations = Arrays.asList(organisation1, organisation2);
+        Comparator<Organisation> compareById = Comparator.comparingLong(Organisation::getId);
+        organisationSet = new TreeSet<>(compareById);
+        organisationSet.addAll(organisations);
 
         ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, app1, role1, organisation1);
         ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, app2, role1, organisation1);
@@ -180,6 +186,10 @@ public class BaseUnitTest {
         when(applicationService.getById(app2.getId())).thenReturn(app2);
         when(applicationService.getById(app3.getId())).thenReturn(app3);
         when(applicationService.getById(app4.getId())).thenReturn(app4);
+        when(organisationService.getUserOrganisation(app1, loggedInUser.getId())).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationOrganisations(app1)).thenReturn(organisationSet);
+
         //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 
     }
@@ -200,7 +210,6 @@ public class BaseUnitTest {
         questions.get(21L).setResponses(Arrays.asList(response2));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
-
     }
 
     public void setupFinances() {
@@ -208,7 +217,6 @@ public class BaseUnitTest {
         ApplicationFinance applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
         when(financeService.getApplicationFinances(application.getId())).thenReturn(Arrays.asList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
-
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

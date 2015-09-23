@@ -1,8 +1,11 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.PolymorphismType;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.*;
+import javax.transaction.NotSupportedException;
 import java.time.LocalDate;
 import java.util.Calendar;
 
@@ -11,17 +14,19 @@ import java.util.Calendar;
  */
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class Process {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="event")
     protected ProcessEvent event;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="status")
     protected ProcessStatus status;
 
     @Version
@@ -33,6 +38,9 @@ public abstract class Process {
 
     @Column(name = "observations")
     private String observations;
+
+    @Column(name="decision_reason")
+    private String decisionReason;
 
 
     public Process() {
@@ -82,19 +90,19 @@ public abstract class Process {
         return id;
     }
 
-    public ProcessStatus getStatus() {
+    public ProcessStatus getProcessStatus()  {
         return status;
     }
 
-    public void setStatus(ProcessStatus status) {
+    public void setProcessStatus(ProcessStatus status) {
         this.status = status;
     }
 
-    public ProcessEvent getEvent() {
+    public ProcessEvent getProcessEvent() {
         return event;
     }
 
-    public void setEvent(ProcessEvent event) {
+    public void setProcessEvent(ProcessEvent event) {
         this.event = event;
     }
 
@@ -104,6 +112,14 @@ public abstract class Process {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public String getDecisionReason() {
+        return decisionReason;
+    }
+
+    public void setDecisionReason(String reason) {
+        this.decisionReason = reason;
     }
 
     @JsonIgnore

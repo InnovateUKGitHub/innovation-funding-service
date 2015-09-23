@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.helper.ApplicationHelper;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
@@ -24,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -85,55 +80,18 @@ public class ApplicationFormController extends AbstractApplicationController {
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
     private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
-        ApplicationHelper applicationHelper = new ApplicationHelper();
         Application application = applicationService.getById(applicationId);
         model.addAttribute("currentApplication", application);
-
         Competition competition = application.getCompetition();
         model.addAttribute("currentCompetition", competition);
-        Organisation userOrganisation = applicationHelper.getUserOrganisation(application, userId).get();
-        model.addAttribute("userOrganisation", userOrganisation);
-        model.addAttribute("completedSections", sectionService.getCompleted(applicationId, userOrganisation.getId()));
 
-        model.addAttribute("applicationOrganisations", applicationHelper.getApplicationOrganisations(application));
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        Optional<Organisation> organisation = applicationHelper.getApplicationLeadOrganisation(application);
-        if(organisation.isPresent()) {
-            model.addAttribute("leadOrganisation", organisation.get());
-        }
+        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
 
-        List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        Map<Long, Section> sections =
-                sectionsList.stream().collect(Collectors.toMap(Section::getId,
-                        Function.identity()));
-        model.addAttribute("sections", sections);
-        List<Question> questions = questionService.findByCompetition(competition.getId());
-        model.addAttribute("questionAssignees", questionService.mapAssigneeToQuestion(questions));
-        List<Response> responses = responseService.getByApplication(applicationId);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
-
+        addOrganisationDetails(model, application, userOrganisation);
+        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addFinanceDetails(model, application, userId);
-
-        Section currentSection = getSection(application, currentSectionId);
-        model.addAttribute("currentSectionId", currentSectionId);
-        model.addAttribute("currentSection", currentSection);
-
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
-    }
-
-
-    private Section getSection(Application application, Long sectionId) {
-        Competition comp = application.getCompetition();
-        List<Section> sections = comp.getSections();
-
-        // get the section that we want to show, so we can use this on to show the correct questions.
-        Optional<Section> section = sections.stream().
-                filter(x -> x.getId().equals(sectionId))
-                .findFirst();
-
-        return section.isPresent() ? section.get() : null;
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
+        addDateDetails(model);
     }
 
     /**
@@ -147,6 +105,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
+        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        assignQuestion(request, assignedBy.getId());
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -160,7 +120,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         setApplicationDetails(application, params);
         markQuestion(request, params, applicationId, user.getId());
-        assignQuestion(request);
+        assignQuestion(request, assignedBy.getId());
 
         applicationService.save(application);
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);

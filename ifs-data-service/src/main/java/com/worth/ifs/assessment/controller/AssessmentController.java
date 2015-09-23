@@ -1,12 +1,6 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.workflow.controller.AssessmentProcessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,21 +16,7 @@ import java.util.List;
 public class AssessmentController {
 
     @Autowired
-    CompetitionsRepository competitions;
-
-    @Autowired
-    AssessmentProcessHandler processHandler;
-
-    @Autowired
     AssessmentHandler assessmentHandler;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
@@ -60,13 +40,24 @@ public class AssessmentController {
     }
 
 
-
-
-
-
-
-
-
+    /** this two are needed to avoid 404 in case the user doesnt specify any observations **/
+    @RequestMapping("/respondToAssessmentInvitation/{userId}/{applicationId}/{decision}/{decisionReason}/{observations}")
+    public Boolean respondToAssessmentInvitation( @PathVariable("userId") final Long userId,
+                                                  @PathVariable("applicationId") final Long applicationId,
+                                                  @PathVariable("decision") final Boolean decision,
+                                                  @PathVariable("decisionReason") final String decisionReason,
+                                                  @PathVariable("observations") final String observations)
+    {
+        return assessmentHandler.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
+    }
+    @RequestMapping("/respondToAssessmentInvitation/{userId}/{applicationId}/{decision}/{decisionReason}/")
+    public Boolean respondToAssessmentInvitationSafe( @PathVariable("userId") final Long userId,
+                                                  @PathVariable("applicationId") final Long applicationId,
+                                                  @PathVariable("decision") final Boolean decision,
+                                                  @PathVariable("decisionReason") final String decisionReason)
+    {
+        return assessmentHandler.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, "");
+    }
 
 
 }

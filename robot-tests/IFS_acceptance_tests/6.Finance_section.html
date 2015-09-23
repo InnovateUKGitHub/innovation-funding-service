@@ -54,8 +54,19 @@ td.name, th.name {
 <th class="name" colspan="5">Settings</th>
 </tr>
 <tr>
-<td class="name">Library</td>
-<td>Selenium2Library</td>
+<td class="name">Documentation</td>
+<td class="colspan4" colspan="4">INFUND-192</td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>GLOBAL_LIBRARIES.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>GLOBAL_VARIABLES.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -70,32 +81,18 @@ td.name, th.name {
 </table>
 <table border="1" id="variable">
 <tr>
-<th class="name" colspan="5">Variables</th>
+<th class="name" colspan="5">variables</th>
 </tr>
 <tr>
-<td class="name">${SERVER}</td>
-<td><a href="http://ifs.test.worth.systems">http://ifs.test.worth.systems</a></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${DASHBOARD_URL}</td>
-<td>${SERVER}/applicant/dashboard</td>
+<td class="name">${APPLICANT_USERNAME}</td>
+<td>applicant@innovateuk.gov.uk</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td class="name">${FINANCES}</td>
-<td>${SERVER}/application-form/1/section/6/</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name">${YOUR_FINANCES}</td>
-<td>${SERVER}/application-form/1/section/7/</td>
+<td class="name">${APPLICANT_PSW}</td>
+<td>test</td>
 <td></td>
 <td></td>
 <td></td>
@@ -114,6 +111,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the Finance sections">Verify the Finance sections</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>When the applicant is in the "Your Finances" sub-section</td>
 <td></td>
 <td></td>
@@ -135,6 +137,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the test guidance in the &quot;Your Finance section&quot;">Verify the test guidance in the "Your Finance section"</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>When the applicant is in the "Your Finances" sub-section</td>
 <td></td>
 <td></td>
@@ -170,6 +177,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the fields that should be read-only are not editable">Verify the fields that should be read-only are not editable</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the applicant is in the "Your Finances" sub-section</td>
 <td></td>
 <td></td>
@@ -198,6 +210,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the &quot; Labour&quot; calculations">Verify the " Labour" calculations</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the applicant is in the "Your Finances" sub-section</td>
 <td></td>
 <td></td>
@@ -226,6 +243,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the &quot;Materials&quot; calculations">Verify the "Materials" calculations</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the applicant is in the "Your Finances" sub-section</td>
 <td></td>
 <td></td>
@@ -253,28 +275,12 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="test_Verify the &quot;Capital Usage&quot; calculations">Verify the "Capital Usage" calculations</a></td>
-<td>Given the applicant is in the "Your Finances" sub-section</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>When the applicant fills the Capital Usage fields</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name"><a name="test_Verify the auto-save on the &quot;Your Finance&quot; section">Verify the auto-save on the "Your Finance" section</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the user is in the Labor form</td>
 <td></td>
 <td></td>
@@ -290,13 +296,6 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>and the Applicant refreshes the page</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>and the Applicant opens a new browser</td>
 <td></td>
 <td></td>
 <td></td>
@@ -554,7 +553,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Clear Element Text</td>
-<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(2) &gt; input</td>
+<td>name=materials-quantity-12</td>
 <td></td>
 <td></td>
 </tr>
@@ -588,9 +587,23 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the calculations of the Materials should be correct">the calculations of the Materials should be correct</a></td>
-<td>Element Should Contain</td>
-<td>css=#material-costs-table &gt; tbody &gt; tr &gt; td:nth-child(4) &gt; input</td>
-<td>100</td>
+<td>Click Element</td>
+<td>css=#content &gt; div.grid-row &gt; div.column-two-thirds &gt; form &gt; div.alignright-button &gt; input</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(5) &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Textarea Value Should Be</td>
+<td>xpath=//*[@id="cost-materials-12-materialTotal"]</td>
+<td>10</td>
 <td></td>
 </tr>
 <tr>
@@ -624,15 +637,36 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant edits the &quot;The Gross Annual Salary&quot;">the Applicant edits the "The Gross Annual Salary"</a></td>
 <td>Clear Element Text</td>
-<td>id=cost-labour-2-labourGrossSalary</td>
+<td>id=cost-labour-27-labourGrossSalary</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input Text</td>
-<td>id=cost-labour-2-labourGrossSalary</td>
+<td>id=cost-labour-27-labourGrossSalary</td>
 <td>123</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>id=cost-labour-27-labourDays</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>id=cost-labour-27-labourDays</td>
+<td>312</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Sleep</td>
+<td>1s</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
@@ -645,7 +679,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant refreshes the page">the Applicant refreshes the page</a></td>
 <td>Sleep</td>
-<td>3 seconds</td>
+<td>2s</td>
 <td></td>
 <td></td>
 </tr>
@@ -731,6 +765,41 @@ td.name, th.name {
 <td>Click Button</td>
 <td>css=input.button</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the new &quot;Gross Annual&quot; amount should be visible">the new "Gross Annual" amount should be visible</a></td>
+<td>Click Element</td>
+<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(1) &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains Element</td>
+<td>id=cost-labour-27-labourGrossSalary</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Textfield Value Should Be</td>
+<td>id=cost-labour-27-labourGrossSalary</td>
+<td>123</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Textfield Value Should Be</td>
+<td>id=cost-labour-27-labourDays</td>
+<td>321</td>
 <td></td>
 </tr>
 </table>

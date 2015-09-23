@@ -102,7 +102,6 @@
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
-
             <div th:unless="${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
@@ -110,7 +109,7 @@
 		 					id=${question.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} or ${$questionAssignee?.getAssignee() != null and currentUser.getId() != $questionAssignee?.getAssignee()?.getUser()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} or ${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag"/>
 
@@ -131,9 +130,9 @@
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div class="assignee" th:if="${questionAssignee?.getAssignee() != null}">
-        You have assigned this question to
-        <div th:text="${questionAssignee?.getAssignee()?.getUser()?.getName()}"></div>
+    <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
+        This question is assigned to
+        <div th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"></div>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->

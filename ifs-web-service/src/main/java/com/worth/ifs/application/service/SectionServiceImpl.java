@@ -1,11 +1,15 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,4 +62,20 @@ public class SectionServiceImpl implements SectionService {
                         filter(q -> q != null && q.getQuestionType() != null && !q.getQuestionType().getTitle().equals(name)).
                         collect(Collectors.toList())));
     }
+
+    @Override
+    public List<Long> getUserAssignedSections(List<Section> sections, HashMap<Long, QuestionStatus> questionAssignees, Long userId ) {
+        List<Long> userAssignedSections = new ArrayList<>();
+
+        for(Section section : sections) {
+            boolean isUserAssignedSection = section.getQuestions().stream().anyMatch(q ->
+                    (questionAssignees.get(q.getId())!=null &&
+                            questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)));
+            if(isUserAssignedSection) {
+                userAssignedSections.add(section.getId());
+            }
+        }
+        return userAssignedSections;
+    }
+
 }

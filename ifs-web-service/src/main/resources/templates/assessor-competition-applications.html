@@ -8,22 +8,28 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
+            daysLeft=${competition.getAssessmentDaysLeft()},
+            title = ${competition.name}" th:remove="tag" />
 
-
-
-
-
+    
     <h1 class="heading-xlarge">Competition Details</h1>
     <div class="grid-row">
-        <div class="column-half competition-details">
-            <p th:text="${competition.getDescription()}" />
-
+        <div class="column-two-thirds competition-details">
+            <!--<p th:text="${competition.getDescription()}" />-->
+            <p>Please refer to scoring guidance found alongside each question for mark bandings.
+                Use the full range of marks and do not be afraid of the extremes if you believe that
+                the application warrants the score. Please provide constructive feedback comments for every question
+                on the score sheet, even if you think that the application is out of scope. <br/>
+                Please return all competed score sheets by <strong><span th:text="${competition.getAssessmentEndDate()}"/></strong>
+            </p>
         </div>
 
-        <div class="column-half">
-            <h2 class="bold-medium">Links</h2>
+        <div class="column-third">
             <ul class="list-bullet">
                 <li><a href="#">Competition brief</a></li>
                 <li><a href="#">Guidance for applicants</a></li>
@@ -40,23 +46,60 @@
 
         <div class="in-progress">
             <h3 class="heading-large">Applications for Assessments (<span th:text="${assessments.size()}"/>)</h3>
-            <ul class="boxed-list">
-                <li th:each="assessment : ${assessments}">
-                    <div class="grid-row" >
+            <ul class="boxed-list" >
+                <li th:each="assessment : ${assessments}" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).INVALID}">
+                    <div class="grid-row">
                         <div class="column-two-thirds">
                             <h4 class="heading-medium">
-                                <a th:href="@{/assessor/competitions/{id}/applications(id=${assessment.getId()})}" th:text="${assessment.application.name}">link for application assessment</a>
+                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}" th:text="${assessment.application.name}">link for application assessment</a>
+                                <!--">-->
                             </h4>
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-third navigation-right">
                             <div class="application-listing_pull-right">
-                                <p th:text="${assessment.status}">Assessment Status</p>
-                                <p class="application-listing_pending"><a href="#">accept / reject assessment</a></p>
+                                <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
+
+                                <!--if assessment is pending acceptance-->
+                                <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() != T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING}">
+                                    <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
+                                </p>
+
+                                <!--otherwise shows the overall score-->
+                                <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
+                                    <span th:text="${assessment.getOverallScore()}"/> %
+                                </p>
+
+                            </div> 
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+        <!--all the submitted assessments-->
+        <div class="submitted" th:unless="${submittedAssessments.size() == 0 }" >
+            <h4 class="heading-large">Submitted Assessments (<span th:text="${assessments.size()}"/>)</h4>
+            <ul class="boxed-list" >
+                <li th:each="assessment : ${submittedAssessments}">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h4 class="heading-medium" th:text="${assessment.application.name}"/>
+
+                            <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                        </div>
+                        <div class="column-third navigation-right">
+                            <div class="application-listing_pull-right">
+                                <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
+
+                                <!-- shows the overall score -->
+                                <p class="overall-score">
+                                    <span th:text="${assessment.getOverallScore()}"/> %
+                                </p>
                             </div>
                         </div>
                     </div>
-
                 </li>
             </ul>
         </div>

@@ -2,9 +2,11 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class SectionController {
     ResponseRepository responseRepository;
     @Autowired
     SectionRepository sectionRepository;
+    @Autowired
+    QuestionStatusRepository questionStatusRepository;
 
     private final Log log = LogFactory.getLog(getClass());
     QuestionController questionController = new QuestionController();
@@ -42,12 +46,6 @@ public class SectionController {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         for (Section section : sections) {
-            List<Section> childSections = section.getChildSections();
-            for (Section childSection : childSections) {
-                if (this.isSectionComplete(childSection, applicationId, organisationId)) {
-                    completedSections.add(childSection.getId());
-                }
-            }
             if (this.isSectionComplete(section, applicationId, organisationId)) {
                 completedSections.add(section.getId());
             }
@@ -60,6 +58,7 @@ public class SectionController {
 
         return completedSections;
     }
+
 
     @RequestMapping("/getIncompleteSections/{applicationId}")
     public List<Long> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
@@ -103,10 +102,7 @@ public class SectionController {
 
     private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
-        log.debug("section complete: " + section.getName() + " id: " + section.getId() + " for org: " + organisationId);
-
         sectionIsComplete = isMainSectionComplete(section, organisationId);
-        log.debug("section after: " + section.getName() + " id: " + section.getId() + " complete: " + sectionIsComplete + " for org: " + organisationId);
 
         // check if section has subsections, if there are subsections let the outcome depend on those subsections
         // and the section itself if it contains questions with mark as complete attached
@@ -141,6 +137,5 @@ public class SectionController {
         }
         return sectionIsComplete;
     }
-
 
 }

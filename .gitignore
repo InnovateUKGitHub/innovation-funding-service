@@ -81,3 +81,12 @@ ifs-web-service/libs
 rebel.xml
 
 
+ifs-web-service/src/main/resources/templates/question-type/form-elements_BACKUP_7801.html
+ifs-web-service/src/main/resources/templates/question-type/form-elements_BASE_7801.html
+ifs-web-service/src/main/resources/templates/question-type/form-elements_LOCAL_7801.html
+ifs-web-service/src/main/resources/templates/question-type/form-elements_REMOTE_7801.html
+ifs-web-service/src/main/resources/templates/application-details.html.orig
+ifs-web-service/src/main/resources/templates/application-details_BACKUP_5617.html
+ifs-web-service/src/main/resources/templates/application-details_BASE_5617.html
+ifs-web-service/src/main/resources/templates/application-details_LOCAL_5617.html
+ifs-web-service/src/main/resources/templates/application-details_REMOTE_5617.html

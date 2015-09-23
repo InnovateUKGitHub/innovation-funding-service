@@ -1,16 +1,7 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.assessment.controller.AssessmentHandler;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.workflow.controller.AssessmentProcessHandler;
-import com.worth.ifs.workflow.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

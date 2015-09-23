@@ -27,6 +27,11 @@ public class QuestionStatus {
     private ProcessRole assignee;
     private LocalDateTime assignedDate;
 
+    @ManyToOne
+    @JoinColumn(name="assignedById", referencedColumnName="id")
+    private ProcessRole assignedBy;
+    private Boolean notified;
+
     public QuestionStatus() {
     }
 
@@ -36,10 +41,11 @@ public class QuestionStatus {
         this.question = question;
     }
 
-    public QuestionStatus(Question question, ProcessRole assignee, LocalDateTime assignedDate) {
+    public QuestionStatus(Question question, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.question = question;
         this.assignee = assignee;
         this.assignedDate = assignedDate;
+        this.assignedBy = assignedBy;
     }
 
     public Long getId() {
@@ -58,6 +64,10 @@ public class QuestionStatus {
         return assignee;
     }
 
+    public ProcessRole getAssignedBy() {
+        return assignedBy;
+    }
+
     public LocalDateTime getAssignedDate() {
         return assignedDate;
     }
@@ -70,8 +80,18 @@ public class QuestionStatus {
         this.markedAsComplete = false;
     }
 
-    public void setAssignee(ProcessRole assignee, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee;
+        this.assignedBy = assignedBy;
+        this.notified = false;
+    }
+
+    public Boolean getNotified() {
+        return notified;
+    }
+
+    public void setNotified(Boolean notified) {
+        this.notified = notified;
     }
 }
