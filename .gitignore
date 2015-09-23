@@ -11,6 +11,7 @@ nbijl.xml
 */.idea/libraries/dictionaries
 ifs-data-service/.idea/libraries
 ifs-web-service/.idea/libraries
+.idea
 
 # eclipse files
 .settings/
