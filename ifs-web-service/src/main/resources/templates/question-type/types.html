@@ -126,7 +126,8 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},
+                      type=${question.questionType.title}" th:remove="tag">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
@@ -135,7 +136,11 @@
                             <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
                         </th>
                         <td>
-                            <div th:include="question-type/form-elements :: form-textinput (id='working_days', name='working_days',response=${costCategory.getWorkingDaysPerYear()},readonly=true)" th:remove="tag" />                         
+                            <input type="number"
+                                   th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'}"
+                                   th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem.id}"
+                                   th:value="${costCategory.workingDaysPerYear}"
+                            />
                         </td>
                         <td><a href="#">change working days</a></td>
                     </tr>
@@ -152,7 +157,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <div th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}" th:remove="tag">
+                        <div th:each="labourCost : ${costCategory.costs}" th:remove="tag">
                             <tr>
                                 <td>
                                     <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
@@ -165,7 +170,7 @@
                                 </td>
                                 <td class="numeric">
                                     <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
@@ -183,7 +188,7 @@
                                 <td colspan="4" class="numeric">
                                     Total costs £
                                     <input type="text"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
                                        readonly="readonly"

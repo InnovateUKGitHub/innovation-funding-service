@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class LabourCostCategory implements CostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
-    private Integer workingDaysPerYear = 0;
+    private LabourCost workingDaysPerYear;
     private final Log log = LogFactory.getLog(getClass());
 
     List<CostItem> costs = new ArrayList<>();
@@ -25,11 +25,15 @@ public class LabourCostCategory implements CostCategory {
 
     @Override
     public Double getTotal() {
-        total = costs.stream().mapToDouble(c -> ((LabourCost)c).getTotal(workingDaysPerYear)).sum();
+        total = costs.stream().mapToDouble(c -> ((LabourCost)c).getTotal(workingDaysPerYear.getLabourDays())).sum();
         return total;
     }
 
     public Integer getWorkingDaysPerYear() {
+        return workingDaysPerYear.getLabourDays();
+    }
+
+    public LabourCost getWorkingDaysPerYearCostItem() {
         return workingDaysPerYear;
     }
 
@@ -37,12 +41,10 @@ public class LabourCostCategory implements CostCategory {
     public void addCost(CostItem costItem) {
         LabourCost labourCost = (LabourCost) costItem;
         if(labourCost.getDescription().equals(WORKING_DAYS_PER_YEAR)) {
-            workingDaysPerYear = ((LabourCost) costItem).getLabourDays();
+            workingDaysPerYear = (LabourCost) costItem;
         }
         else if(costItem!=null){
             costs.add(costItem);
         }
     }
-
-
 }

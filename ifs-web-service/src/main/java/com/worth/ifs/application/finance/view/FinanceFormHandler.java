@@ -50,7 +50,7 @@ public class FinanceFormHandler {
                     filter(k -> k.startsWith(costType.getType())).collect(Collectors.toList());
             Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
             List<CostItem> costItems = getCostItems(costFieldMap, costType, costTypeKeys);
-            List<Cost> costsForType = costItemMapper.costItemsToCost(costType,costItems);
+            List<Cost> costsForType = costItemMapper.costItemsToCost(costType, costItems);
             costs.addAll(costsForType);
         }
 
@@ -139,6 +139,7 @@ public class FinanceFormHandler {
         Double grossAnnualSalary = null;
         String role = null;
         Integer labourDays = null;
+        String description = null;
 
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
@@ -147,12 +148,13 @@ public class FinanceFormHandler {
                     grossAnnualSalary = getDoubleValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
-                } else if (costFormField.getCostName().equals("labourDays")) {
+                } else if (costFormField.getCostName().equals("labourDays") ||
+                        costFormField.getCostName().equals("workingDays")) {
                     labourDays = getIntegerValue(fieldValue, 0);
                 }
             }
         }
-        return new LabourCost(id, role, grossAnnualSalary, labourDays, "");
+        return new LabourCost(id, role, grossAnnualSalary, labourDays, description);
     }
 
     private CostItem getMaterials(Long id, List<CostFormField> costFormFields) {
