@@ -116,48 +116,69 @@ var worthIFSFinance = {
     }
 }
 
-var generateFragmentUrl = function(originalLink) {
-    var originalHref = originalLink.attr('href');
-    var urlParamsParts = originalHref.split('?');
-    var urlPart = urlParamsParts[0];
-    var paramsPart = urlParamsParts.length == 2 ? ('&' + urlParamsParts[1]) : '';
+//
+// Set up the handlers for adding and removing Cost Category costs rows
+//
+$(function() {
 
-    var questionToUpdate = originalLink.parents('[data-question-id]');
-    var owningQuestionId = questionToUpdate.attr('data-question-id');
-    var dynamicHref = urlPart + '/' + owningQuestionId + '?singleFragment=true' + paramsPart;
-    return dynamicHref;
-};
+    //
+    // Replace the non-javascript add and remove functionality with single fragment question HTML responses
+    //
+    var generateFragmentUrl = function(originalLink) {
+        var originalHref = originalLink.attr('href');
+        var urlParamsParts = originalHref.split('?');
+        var urlPart = urlParamsParts[0];
+        var paramsPart = urlParamsParts.length == 2 ? ('&' + urlParamsParts[1]) : '';
 
-$(document).on('click', '[finance-subsection-table-container] .add-another-row', function(e) {
-    var amendRowsLink = $(this);
-    var dynamicHref = generateFragmentUrl(amendRowsLink);
+        var questionToUpdate = originalLink.parents('[data-question-id]');
+        var owningQuestionId = questionToUpdate.attr('data-question-id');
+        var dynamicHref = urlPart + '/' + owningQuestionId + '?singleFragment=true' + paramsPart;
+        return dynamicHref;
+    };
 
-    $.get(dynamicHref, function(data) {
-        var htmlReplacement = $('<div>' + data + '</div>');
-        var tableSectionToUpdate = amendRowsLink.parents('[finance-subsection-table-container]');
-        var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
-        var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
-        tableSectionToUpdate.replaceWith(replacement);
-        worthIFS.initAllAutosaveElements(replacement);
-        worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
-    })
-    e.preventDefault();
-    return false;
-});
+    //
+    // Add a new row from the HTML fragment being returned, and bind / rebind the autocalc and autosave behaviours again to ensure it behaves as
+    // per other fields and that the repeating-total fields have a back-reference to any added fields
+    //
+    var addCostsRowHandler = function(e) {
+        var amendRowsLink = $(this);
+        var dynamicHref = generateFragmentUrl(amendRowsLink);
 
-$(document).on('click', '[finance-subsection-table-container] .delete-row', function(e) {
-    var amendRowsLink = $(this);
-    var dynamicHref = generateFragmentUrl(amendRowsLink);
+        $.get(dynamicHref, function(data) {
+            var htmlReplacement = $('<div>' + data + '</div>');
+            var tableSectionToUpdate = amendRowsLink.parents('[finance-subsection-table-container]');
+            var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
+            var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
+            tableSectionToUpdate.replaceWith(replacement);
+            worthIFS.initAllAutosaveElements(replacement);
+            worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+        })
+        e.preventDefault();
+        return false;
+    };
 
-    $.get(dynamicHref, function(data) {
-        var costRowsId = amendRowsLink.attr('data-cost-row');
-        var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
-        costRowsToDelete.find('[data-calculation-fields][data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
-        costRowsToDelete.remove();
-        worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
-    })
-    e.preventDefault();
-    return false;
+    //
+    // Remove a row from the HTML, but beforehand set all calculation fields being removed to zero so that the other running total fields not being
+    // removed will be updated with the removal of these figures.  Then simply remove the HTML.
+    //
+    var removeCostsRowHandler = function(e) {
+        var amendRowsLink = $(this);
+        var dynamicHref = generateFragmentUrl(amendRowsLink);
+
+        $.get(dynamicHref, function(data) {
+            var costRowsId = amendRowsLink.attr('data-cost-row');
+            var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
+            costRowsToDelete.find('[data-calculation-fields],[data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
+            costRowsToDelete.remove();
+            worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+        })
+        e.preventDefault();
+        return false;
+    };
+
+    $(document).on('click', '[finance-subsection-table-container] .add-another-row', addCostsRowHandler);
+    $(document).on('click', '[finance-subsection-table-container] .delete-row', removeCostsRowHandler);
+
 });
 
 $(document).ready(function(){
