@@ -27,6 +27,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void markAsComplete(Long questionId, Long markedAsCompleteById) {
         questionRestService.markAsComplete(questionId, markedAsCompleteById);
+        questionRestService.assign(questionId, 0L, 0L);
     }
 
     @Override

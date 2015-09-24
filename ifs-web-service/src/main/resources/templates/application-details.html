@@ -62,7 +62,7 @@
                             <div class="column-third">
                                 <div th:unless="${(question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)) or completedSections.contains(section.id)}" class="assignee"  >
                                     <!--prints the last update info-->
-                                    <div th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
+                                    <div th:include="question-type/form-elements :: assign-buttons" th:if="${userIsLeadApplicant}" th:remove="tag"/>
                                     <div  th:if="${questionAssignee?.getAssignee() != null} " th:remove="tag">
                                         <div> Assigned to <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" /></div>
                                         <span th:if="${questionAssignee?.getAssignedDate()?.getDayOfYear() eq todayDay}" th:text="Today"/>

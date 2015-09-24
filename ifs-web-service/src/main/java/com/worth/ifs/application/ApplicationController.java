@@ -103,6 +103,7 @@ public class ApplicationController extends AbstractApplicationController {
         addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
         addDateDetails(model);
+        addUserDetails(model, application, userId);
     }
 
     /**
