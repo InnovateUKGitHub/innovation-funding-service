@@ -14,14 +14,65 @@
 			margin: 0;
 			padding: 5px;
 			color: $secondary-text-colour;
-			
-			&.application-listing_pending{
-				background-color: $link-colour;
-				padding: 35px 0;
-				a{
-					color: $page-colour;
-					text-decoration: none;
+		}
+
+		&.pending{
+			p{
+				&.application-listing_pending{
+					background-color: $link-colour;
+					padding: 35px 0;
+					a{
+						color: $page-colour;
+						text-decoration: none;
+					}
 				}
+			}
+		}
+
+		&.assessed,
+		&.submitted{
+			
+			&.yes{
+				background: #d9ece1;
+			}	
+
+			&.no{
+				background: #fae0e0;
+			}
+
+			.application-listing_pending{display: none;}
+
+			.score{
+				font-size: 40px;
+				color: $black;
+				font-weight: bold;
+				margin-top: -5px;
+			}
+
+			.recommend-container + p{
+				display: none;
+			}
+
+			p.recommend{
+				background: $grey-2;
+				font-size: 14px;
+    			font-weight: 700;
+    			color: black;
+				
+				&.yes{
+					span{
+						background: url(../images/tick-green.png) left 50% no-repeat;
+						padding: 0 20px;
+					}
+				}
+
+				&.no{
+					span{
+						background: url(../images/cross-red.png) left 3px no-repeat;
+						padding: 0 20px; 
+					}
+				}
+
 			}
 
 		}

@@ -58,7 +58,7 @@
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-third navigation-right">
-                            <div class="application-listing_pull-right">
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getAssessmentStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
                                 <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
 
                                 <!--if assessment is pending acceptance-->
@@ -68,13 +68,12 @@
 
                                 <!--otherwise shows the overall score -->
                                 <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
-                                    <h3><span th:text="${assessment.getOverallScore()}"/> %</h3>
-                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}"> Recommended </p>
-                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"> Not recommended </p>
+                                    <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
+                                    <div class="recommend-container">
+                                        <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                        <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                    </div>
                                 </p>
-
-
-
                             </div> 
                         </div>
                     </div>
@@ -95,13 +94,11 @@
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-third navigation-right">
-                            <div class="application-listing_pull-right">
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getAssessmentStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
                                 <p th:text="${assessment.getAssessmentStatus()}">Assessment Status</p>
 
                                 <!-- shows the overall score -->
-                                <p class="overall-score">
-                                    <span th:text="${assessment.getOverallScore()}"/> %
-                                </p>
+                                <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
                             </div>
                         </div>
                     </div>
