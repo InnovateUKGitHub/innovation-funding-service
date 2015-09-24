@@ -29,7 +29,7 @@
                 on the score sheet, even if you think that the application is out of scope.
             </p>
             <p>
-                Please return all competed score sheets by <strong><span th:text="${competition.getAssessmentEndDate()}"/></strong>
+                Please return all competed score sheets by <strong><span th:text="${'Noon ' + #temporals.format(competition.getAssessmentEndDate(),'dd MMMM yyyy')}"/></strong>
             </p>
         </div>
 
