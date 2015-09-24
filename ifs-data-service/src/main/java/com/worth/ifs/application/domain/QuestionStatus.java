@@ -46,6 +46,7 @@ public class QuestionStatus {
         this.assignee = assignee;
         this.assignedDate = assignedDate;
         this.assignedBy = assignedBy;
+        this.notified = false;
     }
 
     public Long getId() {

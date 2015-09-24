@@ -14,7 +14,8 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
             daysLeft=${competition.getAssessmentDaysLeft()},
-            title = ${competition.name}" th:remove="tag" />
+            title = ${competition.name},
+            deadlineText= 'Days left to accept'" th:remove="tag" />
 
     <header class="page-header group no-pad">
         <h1 class="heading-xlarge">Competition Details</h1>

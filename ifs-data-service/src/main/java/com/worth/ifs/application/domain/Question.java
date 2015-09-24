@@ -188,7 +188,8 @@ public class Question {
         Boolean questionMarkedAsComplete = false;
         for(QuestionStatus questionStatus : questionStatuses) {
             if(multipleStatuses) {
-                if(questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
+                if(questionStatus.getMarkedAsCompleteBy()!=null &&
+                        questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
                     questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
                     break;
                 }
