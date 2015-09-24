@@ -119,7 +119,7 @@ public class ApplicationController extends AbstractApplicationController {
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request){
-        assignQuestion(request, applicationId, sectionId);
+        assignQuestion(request, applicationId);
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 }

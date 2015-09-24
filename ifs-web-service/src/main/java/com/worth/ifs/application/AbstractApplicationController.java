@@ -74,7 +74,7 @@ public abstract class AbstractApplicationController {
         return questionId;
     }
 
-    protected void assignQuestion(HttpServletRequest request, Long applicationId, Long assignedById) {
+    protected void assignQuestion(HttpServletRequest request, Long applicationId) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
@@ -84,7 +84,7 @@ public abstract class AbstractApplicationController {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            questionService.assign(questionId, assigneeId, assignedById);
+            questionService.assign(questionId, assigneeId, assignedBy.getId());
         }
     }
 
