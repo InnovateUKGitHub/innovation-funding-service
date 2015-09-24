@@ -244,7 +244,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request){
-        assignQuestion(request, applicationId, sectionId);
+        assignQuestion(request, applicationId);
         model.addAttribute("assignedQuestion", true);
     }
 }
