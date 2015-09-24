@@ -15,10 +15,12 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE")
+        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
     }
 }
 
@@ -29,6 +31,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
+apply plugin: 'com.bluepapa32.watch'
 
 
 war {
@@ -116,6 +119,20 @@ task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename ('(.*).war', 'ROOT.war')
+}
+
+
+watch {
+
+    java {
+        files files('src/main/java')
+        tasks 'client', 'clientCopy', 'deployToTomcat'
+    }
+
+    resources {
+        files files('src/main/resources')
+        tasks 'deployToTomcat'
+    }
 }
 
 processResources {

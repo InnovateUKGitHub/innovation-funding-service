@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -36,8 +37,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     CostService costService;
 
     @RequestMapping("/{applicationId}")
-    public String applicationForm(Model model,@PathVariable("applicationId") final Long applicationId,
-                                  HttpServletRequest request){
+    public String applicationForm(Model model, @PathVariable("applicationId") final Long applicationId,
+                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         this.addApplicationDetails(applicationId, user.getId(), 0L, model);
         return "application-form";
@@ -45,9 +46,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(Model model,
-                                     @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId,
-                                     HttpServletRequest request){
+                                                 @PathVariable("applicationId") final Long applicationId,
+                                                 @PathVariable("sectionId") final Long sectionId,
+                                                 HttpServletRequest request) {
         Application app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
@@ -60,8 +61,43 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("costId") final Long costId, HttpServletRequest request) {
 
-        costService.delete(costId);
+        doDeleteCost(costId);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+    }
+
+    @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
+    public @ResponseBody String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+                                                               @PathVariable("sectionId") final Long sectionId,
+                                                               @PathVariable("costId") final Long costId,
+                                                               @PathVariable("renderQuestionId") final Long renderQuestionId,
+                                                               HttpServletRequest request) {
+
+        doDeleteCost(costId);
+        return "{\"status\": \"OK\"}";
+    }
+
+    private void doDeleteCost(@PathVariable("costId") Long costId) {
+        costService.delete(costId);
+    }
+
+    @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
+    public String addAnotherWithFragmentResponse(Model model,
+                                                 @PathVariable("applicationId") final Long applicationId,
+                                                 @PathVariable("sectionId") final Long sectionId,
+                                                 @PathVariable("questionId") final Long questionId,
+                                                 @PathVariable("renderQuestionId") final Long renderQuestionId,
+                                                 HttpServletRequest request) {
+        addCost(applicationId, questionId, request);
+        return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request);
+    }
+
+    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        Application application = addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        Section currentSection = getSection(application.getCompetition().getSections(), sectionId);
+        Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
+        model.addAttribute("question", question);
+        return "single-question";
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
@@ -70,16 +106,20 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
+        addCost(applicationId, questionId, request);
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+    }
+
+    private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
-        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    private void addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model){
+    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
         Application application = applicationService.getById(applicationId);
         model.addAttribute("currentApplication", application);
         Competition competition = application.getCompetition();
@@ -93,6 +133,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
         addDateDetails(model);
         addUserDetails(model, application, userId);
+        return application;
     }
 
     private void saveApplicationForm( Model model,
@@ -137,7 +178,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(params.containsKey("assign_question")){
             assignQuestion(model, applicationId, sectionId, request);
         }
-        saveApplicationForm(model,applicationId,sectionId,request);
+        saveApplicationForm(model, applicationId, sectionId, request);
 
         return "application-form";
     }
@@ -241,8 +282,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     public void assignQuestion(Model model,
-                                 @PathVariable("applicationId") final Long applicationId,
-                                 @PathVariable("sectionId") final Long sectionId,
+                               @PathVariable("applicationId") final Long applicationId,
+                               @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request){
         assignQuestion(request, applicationId);
         model.addAttribute("assignedQuestion", true);
