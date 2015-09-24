@@ -30,7 +30,11 @@ public class LabourCostCategory implements CostCategory {
     }
 
     public Integer getWorkingDaysPerYear() {
-        return workingDaysPerYear.getLabourDays();
+        if (workingDaysPerYear!=null) {
+            return workingDaysPerYear.getLabourDays();
+        } else {
+            return 0;
+        }
     }
 
     public LabourCost getWorkingDaysPerYearCostItem() {

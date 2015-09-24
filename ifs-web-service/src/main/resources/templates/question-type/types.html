@@ -138,9 +138,9 @@
                     <td>
                         <input type="number"
                                th:class="${'width-small'}"
-                               th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'}"
-                               th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem.id}"
-                               th:value="${costCategory.workingDaysPerYear}"
+                               th:id="${'cost-labour-'+costCategory?.workingDaysPerYearCostItem?.id+'-workingDays'}"
+                               th:name="${type + '-workingDays-' + costCategory?.workingDaysPerYearCostItem?.id}"
+                               th:value="${costCategory?.workingDaysPerYear}"
                                 />
                     </td>
                 </tr>
@@ -170,7 +170,7 @@
                             </td>
                             <td class="numeric">
                                 <input type="number"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory?.workingDaysPerYearCostItem?.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/"
                                        readonly="readonly"
                                        th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
@@ -189,7 +189,7 @@
                                 Total costs £
                                 <input type="text"
                                        th:class="${'width-small-medium'}"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
                                        readonly="readonly"
