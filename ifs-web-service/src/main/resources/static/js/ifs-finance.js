@@ -152,7 +152,7 @@ $(document).on('click', '[finance-subsection-table-container] .delete-row', func
     $.get(dynamicHref, function(data) {
         var costRowsId = amendRowsLink.attr('data-cost-row');
         var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
-        costRowsToDelete.find('[data-calculation-fields]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
+        costRowsToDelete.find('[data-calculation-fields][data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
         costRowsToDelete.remove();
         worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
     })

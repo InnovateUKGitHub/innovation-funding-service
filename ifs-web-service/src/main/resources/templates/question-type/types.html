@@ -301,7 +301,7 @@
                     </thead>
                     <tbody>
                     <div th:each="materialCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
-                        <tr>
+                        <tr th:attr="data-cost-row=${materialCost.id}">
                             <td>
                                 <input type="text" th:name="${type +'-item-' + materialCost.id}"  th:id="${'cost-materials-'+materialCost.id+'-item'}" th:value="${materialCost.getItem()}"/>
                             </td>
@@ -323,7 +323,7 @@
                                        readonly="" th:value="${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
                             <td class="alignright remove"> 
-                                <a class="delete-row" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${materialCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -355,12 +355,12 @@
         <p th:text="${question.getDescription()}"></p>
         <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
-                <div class="form-row">
+                <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
                         <input type="textarea" id="" class="form-control form-finances-capital-usage-item"
                                   name="capitalusage-0-capitalUsageItem" cols="40" rows="3" th:value="${capitalUsage.getDescription()}" />
-                        <a class="delete-row" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                        <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
 
 
                     </div>
@@ -421,19 +421,19 @@
         <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
-                        <div class="form-group">
+                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                             <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
                             <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
-                            <a class="delete-row" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                            <a class="delete-row" th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                             <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where the subcontractor will work</label>
                             <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country"
                                    th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                             <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
                             <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
                             <div th:include="question-type/form-elements :: form-textarea (
@@ -445,7 +445,7 @@
 
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                             <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
                             <input type="number"
                                    th:name="${type +'-cost-' + subContractingCost.id}"
@@ -493,7 +493,7 @@
                     </thead>
                     <tbody>
                     <div th:each="travelCost : ${costCategory.costs}" >
-                        <tr>
+                        <tr th:attr="data-cost-row=${travelCost.id}">
                             <td>
                                 <input type="text" name="travel-0-travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
                             </td>
@@ -507,7 +507,7 @@
                                 <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
                             </td>
                             <td>
-                                <a class="delete-row" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -545,7 +545,7 @@
                     </thead>
                     <tbody>
                     <div th:each="otherCost : ${costCategory.costs}" >
-                        <tr>
+                        <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
                                 <div th:include="question-type/form-elements :: form-textarea-simple(id='other-cost-'+${otherCost.getId()}, name='other-0-otherDescription['+${otherCost.getId()}+']', value=${otherCost.getDescription()})" th:remove="tag" />
                             </td>
