@@ -11,6 +11,18 @@ nbijl.xml
 */.idea/libraries/dictionaries
 ifs-data-service/.idea/libraries
 ifs-web-service/.idea/libraries
+.idea
+
+# eclipse files
+.settings/
+.classpath
+.project
+bin/
+
+# additional application.properties locations to get in-eclipse deploys to tomcat servers working
+ifs-data-service/src/main/resources/config/
+ifs-web-service/src/main/resources/config/
+
 
 # ignore properties
 **/*-build.gradle

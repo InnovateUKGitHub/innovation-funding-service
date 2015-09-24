@@ -8,7 +8,7 @@ var worthIFS = {
         worthIFS.modalLink();
 
         if(worthIFS.isApplicationForm()){
-            worthIFS.initAutosaveElement();
+            worthIFS.initAllAutosaveElements();
             worthIFS.initUnsavedChangesWarning();
             worthIFS.closeAlertHide();
             worthIFS.initWordCount();
@@ -85,7 +85,18 @@ var worthIFS = {
           });
         }
     },
-    initAutosaveElement : function(){
+    initAllAutosaveElements : function($scope){
+
+        var $targetScope = $scope || $(document);
+
+        var inputFields = jQuery('.form-serialize-js input').not('[type="button"],[readonly="readonly"]');
+        var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
+        var fields = inputFields.add(textareas);
+
+        worthIFS.initAutosaveElements(fields);
+    },
+    initAutosaveElements : function(fields){
+
         var options = {
             callback: function (value) { worthIFS.fieldChanged(this);  },
             wait: 500,
@@ -93,12 +104,8 @@ var worthIFS = {
             captureLength: 1
         }
 
-        var inputFields = jQuery('.form-serialize-js input').not('[type="button"],[readonly="readonly"]');
-        var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
-        var fields = inputFields.add(textareas);
-      
-       fields.typeWatch(options);
-       fields.change(function(e) {
+        fields.typeWatch(options);
+        fields.off('change').on('change', function(e) {
             worthIFS.fieldChanged(e.target);
         });
 

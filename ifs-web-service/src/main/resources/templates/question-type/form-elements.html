@@ -109,17 +109,20 @@
 		 					id=${question.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} or ${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()},
+		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
+		 					    question.isMarkedAsComplete(userOrganisation.id)} or
+		 					    ${(currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId() and  questionAssignee?.getAssignee()!=null) or
+		 					    (questionAssignee?.getAssignee()==null and !userIsLeadApplicant)},
 		 					name='question['+${question.getId()}+']'
 		 					)" th:remove="tag"/>
 
         <div class="textarea-footer">
 
-            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}"
+            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
-            <!-- if not readonly we show mark as complete buttons -->
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+            <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
+            <div th:unless="${readonly} or (${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
