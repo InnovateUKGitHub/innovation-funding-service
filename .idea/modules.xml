@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/code.iml" filepath="$PROJECT_DIR$/code.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ifs-data-service/ifs-data-service.iml" filepath="$PROJECT_DIR$/ifs-data-service/ifs-data-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ifs-web-service/ifs-web-service.iml" filepath="$PROJECT_DIR$/ifs-web-service/ifs-web-service.iml" />
     </modules>
   </component>
 </project>
