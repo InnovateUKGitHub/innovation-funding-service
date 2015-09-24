@@ -13,6 +13,10 @@ var worthIFSFinance = {
         }
     },
     preProcessRepeatedFieldsForTotalElements : function(){
+        // TODO DW - upon a dynamic adding or removing of a cost row (i.e. without full page refresh), we're OK to allow
+        // this behaviour to rerun and update the field ids on the "Total" field to let it know the latest set of fields
+        // that are involved in its calculation - would be nicer to move to a delegate-based event listner approach though
+        // whereby no behaviour needs rebinding after elements are added and removed
         if(jQuery('[data-calculation-repeating-total]').length){
             $('[data-calculation-repeating-total]').each(function(index,value){
                 worthIFSFinance.preProcessRepeatedFieldsForTotalElement($(this));
@@ -20,9 +24,19 @@ var worthIFSFinance = {
         }
     },
     preProcessRepeatedFieldsForTotalElement : function(totalElement) {
+        // TODO DW - upon a dynamic adding or removing of a cost row (i.e. without full page refresh), we're OK to allow
+        // this behaviour to rerun and update the field ids on the "Total" field to let it know the latest set of fields
+        // that are involved in its calculation - would be nicer to move to a delegate-based event listner approach though
+        // whereby no behaviour needs rebinding after elements are added and removed
         var fieldSelector = worthIFSFinance.getFieldSelector(totalElement);
         var repeatedFieldElements = worthIFSFinance.getFieldsBySelector(fieldSelector);
         worthIFSFinance.addRepeatedFieldIdsToTotalElement(totalElement, repeatedFieldElements);
+    },
+    rebindCalculationFieldsOnDynamicUpdate : function() {
+        // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
+        // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
+        // model whereby no rebinding is necessary when the page is changed
+        worthIFSFinance.domReady();
     },
 
     getFieldsBySelector : function(fieldSelector) {
@@ -49,7 +63,10 @@ var worthIFSFinance = {
                 _.each(fields, function(el){
                     var field = $(el);
                     console.log('field',field);
-                    field.on('change',function(){
+                    // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
+                    // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
+                    // model whereby no rebinding is necessary when the page is changed
+                    field.off('change').on('change',function(){
                         worthIFSFinance.doMath(inst,fields);
                     });
                 });
@@ -71,14 +88,14 @@ var worthIFSFinance = {
             //one operation and more values, all get the same operation
 
             if((operation.length == 1) && (values.length > 2)) {
-                for (i = 2; i < values.length; i++) { 
+                for (i = 2; i < values.length; i++) {
                     console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
                     calculatedValue = worthIFSFinance.MathOperation[operation[0]](calculatedValue,values[i]);
                 };
             }
            //multiple operations and multiple values
             else if((operation.length > 1) && (values.length > 2)) {
-                for (i = 1; i < operation.length; i++) { 
+                for (i = 1; i < operation.length; i++) {
                     // console.log('round:',i,operation[i],calculatedValue,values[i+1])
                     calculatedValue = worthIFSFinance.MathOperation[operation[i]](calculatedValue,values[i+1]);
                 }
@@ -97,10 +114,33 @@ var worthIFSFinance = {
 
         return tostring;
     }
-} 
+}
 
-jQuery(document).ready(function(){
-  worthIFSFinance.domReady();
+$(document).on('click', '.add-another-role-fragment', function(e) {
+    var addRowLink = $(this);
+    var originalHref = addRowLink.attr('href');
+    var urlParamsParts = originalHref.split('?');
+    var urlPart = urlParamsParts[0];
+    var paramsPart = urlParamsParts[1];
+    var questionToUpdate = addRowLink.parents('[data-question-id]');
+    var owningQuestionId = questionToUpdate.attr('data-question-id');
+    var dynamicHref = urlPart + '/' + owningQuestionId + '?' + paramsPart + '&singleFragment=true';
+
+    $.get(dynamicHref, function(data) {
+        var htmlReplacement = $('<div>' + data + '</div>');
+        var tableSectionToUpdate = addRowLink.parents('[finance-subsection-table-container]');
+        var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
+        var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
+        tableSectionToUpdate.replaceWith(replacement);
+        worthIFS.initAllAutosaveElements(replacement);
+        worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+    })
+    e.preventDefault();
+    return false;
+});
+
+$(document).ready(function(){
+    worthIFSFinance.domReady();
 });
 
 

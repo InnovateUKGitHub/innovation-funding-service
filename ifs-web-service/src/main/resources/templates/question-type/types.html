@@ -103,8 +103,8 @@
     <div th:fragment="your_finance" th:remove="tag">
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
-                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
-                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:attr="data-finance-section-id=${subSection.id}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
+                <div th:each="question : ${subSection.getQuestions()}">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -126,7 +126,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
@@ -197,7 +197,7 @@
                     </table>
 
                     <p class="alignright">
-                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row add-another-role-fragment" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
 
@@ -218,7 +218,7 @@
     </div>
 
     <!-- ===========================Form: overheads =========================== -->
-    <div th:fragment="overheads">
+    <div th:fragment="overheads" class="finance-subsection-table-container">
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="grid-row">
@@ -285,7 +285,7 @@
     </div>
 
     <!-- ===========================Form: materials =========================== -->
-    <div th:fragment="materials">
+    <div th:fragment="materials" class="finance-subsection-table-container">
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
@@ -351,7 +351,7 @@
     </div>
 
     <!-- ===========================Form: capital usage =========================== -->
-    <div th:fragment="capital_usage">
+    <div th:fragment="capital_usage" class="finance-subsection-table-container">
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
@@ -416,7 +416,7 @@
     </div>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <div th:fragment="subcontracting_costs">
+    <div th:fragment="subcontracting_costs" class="finance-subsection-table-container">
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
@@ -477,7 +477,7 @@
         </div>
     </div>
     <!-- ===========================Form: travel cost =========================== -->
-    <div th:fragment="travel">
+    <div th:fragment="travel" class="finance-subsection-table-container">
         <p th:text="${question.description}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
@@ -531,7 +531,7 @@
     </div>
 
     <!-- ===========================Form: other cost =========================== -->
-    <div th:fragment="other_costs">
+    <div th:fragment="other_costs" class="finance-subsection-table-container">
         <p th:text="${question.description}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
