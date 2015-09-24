@@ -22,6 +22,7 @@ import java.util.*;
 @PrimaryKeyJoinColumn(name="process_id", referencedColumnName="id")
 public class Assessment extends Process {
 
+
     @ManyToOne
     @JoinColumn(name = "assessor", referencedColumnName = "id")
     private User assessor;
@@ -30,8 +31,22 @@ public class Assessment extends Process {
     @JoinColumn(name = "application", referencedColumnName = "id")
     private Application application;
 
-    @OneToMany
+    //@OneToMany
+    @Transient
     private Map<Long, ResponseAssessment> responseAssessments;
+
+
+    /******* TEMPORARY ********/
+
+    @Column(name="temp_totalScore")
+    private Double overallScore;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="temp_RecommendedValue")
+    private RecommendedValue recommendedValue;
+
+    /******* END TEMPORARY ********/
+
 
     @Type(type = "yes_no")
     private Boolean submitted;
@@ -47,6 +62,7 @@ public class Assessment extends Process {
         this.assessor = assessor;
         this.application = application;
         responseAssessments = new HashMap<>();
+        recommendedValue = RecommendedValue.EMPTY;
     }
 
     public void setSubmitted() {
@@ -67,19 +83,29 @@ public class Assessment extends Process {
     }
 
     public Boolean hasAssessmentStarted() {
-        return responseAssessments.size() > 0;
+        return  ! recommendedValue.equals(RecommendedValue.EMPTY) ;
     }
+
+
+    public RecommendedValue getRecommendedValue() {
+        return recommendedValue;
+    }
+
+    /******* TEMPORARY ********/
+
+
+
 
     public Double getOverallScore() {
         // nItems cant be 0 - math indetermination
-        Integer nItems = Math.max(1, responseAssessments.size());
-
-        return Double.valueOf(getTotalScore() / nItems);
+        //Integer nItems = Math.max(1, responseAssessments.size());
+        //Double.valueOf(getTotalScore() / nItems);
+        return overallScore;
     }
 
-    private Integer getTotalScore() {
-        return responseAssessments.values().stream().mapToInt(i -> i.getScore()).sum();
-    }
+//    private Integer getTotalScore() {
+//        return responseAssessments.values().stream().mapToInt(i -> i.getScore()).sum();
+//    }
 
     public void addResponseAssessment(ResponseAssessment responseAssessment) {
         this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);

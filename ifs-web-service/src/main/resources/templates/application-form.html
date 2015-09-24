@@ -5,9 +5,15 @@
 </head>
 <body class="app-form">
 
-<div class="event-alert" th:classappend="${applicationSaved}? 'is-open' : ''">
+<div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" th:classappend="is-open">
     <p>
-         <span>You have saved your field succesfully</span>
+         <span>You have saved your field successfully</span>
+    </p>
+</div>
+
+<div th:if="${assignedQuestion}" class="event-alert" th:classappend="is-open">
+    <p>
+         <span>Question assigned successfully</span>
     </p>
 </div>
 

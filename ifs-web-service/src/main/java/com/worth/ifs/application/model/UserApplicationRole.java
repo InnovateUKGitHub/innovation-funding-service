@@ -2,8 +2,7 @@ package com.worth.ifs.application.model;
 
 public enum UserApplicationRole {
     LEAD_APPLICANT("leadapplicant"),
-    COLLABORATOR("collaborator"),
-    ASSESSOR("assessor");
+    COLLABORATOR("collaborator");
 
     String roleName;
     UserApplicationRole(String roleName) {

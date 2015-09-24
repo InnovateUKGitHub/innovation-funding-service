@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: mysqlnode1.worthit.public    Database: ifs_test
+-- Host: 127.0.0.1    Database: ifs
 -- ------------------------------------------------------
--- Server version	5.5.29-0ubuntu0.12.04.2-log
+-- Server version	5.6.21-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -49,22 +49,11 @@ UNLOCK TABLES;
 -- Dumping data for table `assessment`
 --
 
-
-
---
--- Dumping data for table `assessment_assessments`
---
-
-LOCK TABLES `assessment_response_assessments` WRITE;
-/*!40000 ALTER TABLE `assessment_response_assessments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `assessment_response_assessments` ENABLE KEYS */;
+LOCK TABLES `assessment` WRITE;
+/*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
+INSERT  IGNORE INTO `assessment` (`temp_total_score`, `temp_recommended_value`, `submitted`, `process_id`, `application`, `assessor`) VALUES (37,'NO','N',1,3,3),(82,'YES','N',2,4,3);
+/*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping data for table `assessment_process`
---
-
-
 
 --
 -- Dumping data for table `competition`
@@ -106,7 +95,6 @@ INSERT  IGNORE INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES (1
 /*!40000 ALTER TABLE `cost_value` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 --
 -- Dumping data for table `organisation`
 --
@@ -115,6 +103,16 @@ LOCK TABLES `organisation` WRITE;
 /*!40000 ALTER TABLE `organisation` DISABLE KEYS */;
 INSERT  IGNORE INTO `organisation` (`id`, `name`) VALUES (1,'Nomensa'),(2,'Worth Internet Systems'),(3,'Empire Ltd'),(4,'Ludlow'),(5,'Manchester University'),(6,'EGGS'),(7,'AA Ltd');
 /*!40000 ALTER TABLE `organisation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `process`
+--
+
+LOCK TABLES `process` WRITE;
+/*!40000 ALTER TABLE `process` DISABLE KEYS */;
+INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING');
+/*!40000 ALTER TABLE `process` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -143,7 +141,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `question_status` WRITE;
 /*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,1,12),(2,NULL,'\0',NULL,1,11),(3,NULL,'',NULL,1,28),(4,NULL,'',NULL,1,33);
+INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33);
 /*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,21 +166,12 @@ INSERT  IGNORE INTO `response` (`id`, `update_date`, `value`, `application_id`, 
 UNLOCK TABLES;
 
 --
--- Dumping data for table `response_assessment`
---
-
-LOCK TABLES `response_assessment` WRITE;
-/*!40000 ALTER TABLE `response_assessment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `response_assessment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `role`
 --
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (1,'leadapplicant'),(2,'collaborator'),(3,'assessor');
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (1,'leadapplicant'),(2,'collaborator'),(3,'assessor'),(4,'applicant');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,12 +194,17 @@ LOCK TABLES `user` WRITE;
 INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'applicant@innovateuk.gov.uk','image.jpg','Steve Smith (Lead Applicant)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'collaborator@innovateuk.gov.uk','image2.jpg','Jessica Doe (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'assessor@innovateuk.gov.uk','image3.jpg','Professor Plum (Assessor)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi'),(8,'collaborator1@innovateuk.gov.uk','image2.jpg','Rosa	Chandler (Collaborator)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','867def');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping data for table `user_role`
+--
+
+LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (1,4),(2,4),(3,3),(8,4);
+/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-
-INSERT IGNORE INTO `process` (`id`,`decision_reason`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'), (2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING');
-
-INSERT IGNORE INTO `assessment` (`submitted`,`process_id`,`application`,`assessor`) VALUES ('N',1,3,3), ('N',2,4,3);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -220,4 +214,4 @@ INSERT IGNORE INTO `assessment` (`submitted`,`process_id`,`application`,`assesso
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-18 15:09:49
+-- Dump completed on 2015-09-24  0:16:37

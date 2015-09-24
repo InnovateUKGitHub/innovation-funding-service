@@ -40,7 +40,7 @@
             <li>You will receive feedback from our assessors by 30th May 2015</li>
         </ul>
 
-        <p><a class="button" tabindex="0" role="button" href="/applicant/dashboard">Return to dashboard</a></p>
+        <p><a class="button" tabindex="0" role="button" th:href="${userDashboardLink}">Return to dashboard</a></p>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

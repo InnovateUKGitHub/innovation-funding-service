@@ -26,6 +26,9 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
 
+    @ManyToMany(mappedBy="roles")
+    private List<User> users;
+
     public Role() {
     }
 
