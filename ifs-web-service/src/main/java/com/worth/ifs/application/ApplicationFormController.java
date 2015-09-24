@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -175,14 +176,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormSubmit(Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
-                                        HttpServletRequest request) {
+                                         HttpServletRequest request, RedirectAttributes redirectAttributes){
         Map<String, String[]> params = request.getParameterMap();
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
         }
         saveApplicationForm(model, applicationId, sectionId, request);
-
-        return "application-form";
+        redirectAttributes.addFlashAttribute("applicationSaved", true);
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
     private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {

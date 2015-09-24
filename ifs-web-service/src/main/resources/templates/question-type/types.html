@@ -199,6 +199,7 @@
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
                                        readonly="readonly"
+                                       th:class="${'width-small-medium'}"
                                        th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
                                        th:value="${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
                                         <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>

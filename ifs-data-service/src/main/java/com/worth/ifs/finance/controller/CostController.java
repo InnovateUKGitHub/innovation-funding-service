@@ -50,7 +50,7 @@ public class CostController {
     @RequestMapping("/update/{id}")
     public void update(@PathVariable("id") final Long id,
             @RequestBody final Cost newCost) {
-        if(costRepository.exists(id)) {
+        if(id!=null && costRepository.exists(id)) {
             Cost updatedCost = mapCost(id, newCost);
             Cost savedCost = costRepository.save(updatedCost);
 
@@ -62,6 +62,8 @@ public class CostController {
                     costValueRepository.save(costValue);
                 }
             }
+        } else {
+            log.info("DOES NOT EXIST");
         }
     }
 

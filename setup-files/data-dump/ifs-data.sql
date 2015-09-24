@@ -71,7 +71,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `cost` WRITE;
 /*!40000 ALTER TABLE `cost` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,2444,'','Project cost 1',234,1,28),(4,2300,'','Project cost 2',200,1,28),(11,233,'','',22,1,28),(12,0,'','',0,1,30),(13,59990,'','',0,1,32);
+INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,2444,'','Project cost 1',234,1,28),(4,2300,'','Project cost 2',200,1,28),(11,233,'','',22,1,28),(12,0,'','',0,1,30),(13,59990,'','',0,1,32),(15,NULL,'Working days per year',NULL,232,2,28),(16,NULL,'Working days per year',NULL,243,3,28),(17,30020,'','',6,3,28),(18,10,'','',7,3,30);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +141,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `question_status` WRITE;
 /*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33);
+INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33),(5,'2015-09-24 18:49:20','','\0',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-24  0:16:37
+-- Dump completed on 2015-09-24 19:04:10
