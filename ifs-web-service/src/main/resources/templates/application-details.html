@@ -42,7 +42,7 @@
             <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
                 <span th:remove="tag" th:text="${section.getName()}"></span>
                 <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
-                <span class="section-status assigned" th:if="${assignedSections?.contains(section.id)}"><span class="visuallyhidden">-</span> Assigned</span>
+                <span class="section-status assigned" th:if="${assignedSections?.contains(section.id)}"><span class="visuallyhidden assigned-to-me">-</span> Assigned to you</span>
             </h2>
             <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}">
                 <div th:case="${0}" th:remove="tag">
