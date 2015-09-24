@@ -114,8 +114,8 @@
             <div class="column-half">
                 <p class="heading-medium">Total project costs</p>
             </div>
-            <div class="column-half alignright">
-                £ <input type="text" readOnly="readonly" class="heading-medium"
+            <div class="column-half alignright total-cost">
+                £ <input type="text" readOnly="readonly" class="heading-medium width-medium"
                    data-calculation-repeating-total="[id*=total]"
                    data-calculation-operations="+"
                    th:value="${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
@@ -188,6 +188,7 @@
                                 <td colspan="4" class="numeric">
                                     Total costs £
                                     <input type="text"
+                                       th:class="${'width-small-medium'}"
                                        th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
