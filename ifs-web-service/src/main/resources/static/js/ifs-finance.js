@@ -120,7 +120,13 @@ var worthIFSFinance = {
             }
         }
         element.attr("data-calculation-rawvalue",calculatedValue);
-        element.val(worthIFSFinance.formatCurrency(Math.round(calculatedValue)));
+
+        var formatted = worthIFSFinance.formatCurrency(Math.round(calculatedValue));
+        if (element.is('span')) {
+            element.text(formatted);
+        } else {
+            element.val(formatted);
+        }
         element.trigger('change');
     },
 
@@ -134,6 +140,13 @@ var worthIFSFinance = {
         return tostring;
     }
 }
+
+//
+// Bind change events to update calculations
+//
+$(document).ready(function(){
+    worthIFSFinance.domReady();
+});
 
 //
 // Set up the handlers for adding and removing Cost Category costs rows
@@ -197,12 +210,19 @@ $(function() {
 
     $(document).on('click', '[finance-subsection-table-container] .add-another-row', addCostsRowHandler);
     $(document).on('click', '[finance-subsection-table-container] .delete-row', removeCostsRowHandler);
-
 });
 
-$(document).ready(function(){
-    worthIFSFinance.domReady();
+//
+// Move section elements into the section header
+//
+$(function() {
+
+    $('.place-in-header').each(function() {
+        var elementToMove = $(this);
+        var subsectionId = elementToMove.attr('data-subsection-id');
+        var header = $('[data-subsection-header=' + subsectionId + ']');
+        elementToMove.remove();
+        header.append(elementToMove);
+        elementToMove.show();
+    });
 });
-
-
-

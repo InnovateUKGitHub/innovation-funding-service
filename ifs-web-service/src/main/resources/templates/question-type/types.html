@@ -103,7 +103,7 @@
     <div th:fragment="your_finance" th:remove="tag">
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
-                <h2 th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
+                <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName() + ' ' + (completedSections.contains(subSection.id) ? 'V':'')}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
                     <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
@@ -129,6 +129,13 @@
         <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},
                       type=${question.questionType.title}">
             <div class="form-group" th:if="${costCategory!=null}">
+                <span class="section-status assigned place-in-header"
+                      style="display: none;"
+                      data-calculation-repeating-total="[id*=labourTotalCost]"
+                      data-calculation-operations="+"
+                      th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                      th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                </span>
                 <table>
                     <tbody>
                     <tr>
@@ -282,6 +289,13 @@
                            data-calculation-field="[data-calculation-input=overhead-calculated]"
                            data-calculation-operations="+"
                            />
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          data-calculation-field="[data-calculation-input=overhead-calculated]"
+                          data-calculation-operations="+"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
                 </label>
             </div>
             <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -347,6 +361,14 @@
                            data-calculation-repeating-total="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          data-calculation-repeating-total="[id*=materialTotal]"
+                          data-calculation-operations="+"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -411,7 +433,15 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs £
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field"
+                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
+
                 </label>
             </div>
             <div class="alignright-button">
@@ -474,6 +504,14 @@
                            data-calculation-repeating-total="[id*=subcontractingCost]"
                            data-calculation-operations="+"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          data-calculation-repeating-total="[id*=subcontractingCost]"
+                          data-calculation-operations="+"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -526,7 +564,14 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total travel &amp; subsistence costs £
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
+                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -572,7 +617,14 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total other costs £
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field" th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field"
+                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+
+                    <span class="section-status assigned place-in-header"
+                          style="display: none;"
+                          th:attr="data-calculation-rawvalue=${costCategory.getTotal()},data-subsection-id=${subSection.id}"
+                          th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                    </span>
                 </label>
             </div>
             <div class="alignright-button">
