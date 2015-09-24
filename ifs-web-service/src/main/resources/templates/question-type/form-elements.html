@@ -165,7 +165,7 @@
             <span th:if="${response?.getUpdateDate().getDayOfYear() eq todayDay}" th:text="Today"/>
             <span th:if="${response?.getUpdateDate().getDayOfYear() eq yesterdayDay}" th:text="Yesterday"/>
             <span th:unless="${response?.getUpdateDate().getDayOfYear() eq todayDay or response?.getUpdateDate().getDayOfYear() eq yesterdayDay}"
-                  th:text="${#temporals.format(response?.getUpdateDate(), 'dd/MMM/yyyy HH:mm')}"/>
+                  th:text="${#temporals.format(response?.getUpdateDate(), 'dd MMMM hh:mma')}"/>
 
             by <span th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
         </small></p>
