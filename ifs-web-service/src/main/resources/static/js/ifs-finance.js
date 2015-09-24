@@ -116,7 +116,7 @@ var worthIFSFinance = {
     }
 }
 
-$(document).on('click', '.add-another-role-fragment', function(e) {
+$(document).on('click', '[finance-subsection-table-container] .add-another-row', function(e) {
     var addRowLink = $(this);
     var originalHref = addRowLink.attr('href');
     var urlParamsParts = originalHref.split('?');

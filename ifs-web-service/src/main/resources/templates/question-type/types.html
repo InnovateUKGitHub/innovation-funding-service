@@ -197,7 +197,7 @@
                     </table>
 
                     <p class="alignright">
-                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row add-another-role-fragment" data-clone-rows="0-1">Add another role</a>
+                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
 
@@ -218,7 +218,7 @@
     </div>
 
     <!-- ===========================Form: overheads =========================== -->
-    <div th:fragment="overheads" class="finance-subsection-table-container">
+    <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
         <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="grid-row">
@@ -285,9 +285,9 @@
     </div>
 
     <!-- ===========================Form: materials =========================== -->
-    <div th:fragment="materials" class="finance-subsection-table-container">
+    <div th:fragment="materials">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -351,9 +351,9 @@
     </div>
 
     <!-- ===========================Form: capital usage =========================== -->
-    <div th:fragment="capital_usage" class="finance-subsection-table-container">
+    <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row">
                     <div class="form-group">
@@ -416,9 +416,9 @@
     </div>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <div th:fragment="subcontracting_costs" class="finance-subsection-table-container">
+    <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <div class="form-group">
@@ -477,9 +477,9 @@
         </div>
     </div>
     <!-- ===========================Form: travel cost =========================== -->
-    <div th:fragment="travel" class="finance-subsection-table-container">
+    <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -531,9 +531,9 @@
     </div>
 
     <!-- ===========================Form: other cost =========================== -->
-    <div th:fragment="other_costs" class="finance-subsection-table-container">
+    <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -578,56 +578,58 @@
 
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <select class="form-control form-control-1-8">
-            <option></option>
-            <option>No</option>
-            <option>Yes</option>
-        </select>
-        <div class="form-group">
-            <table id="other-funding">
-                <thead>
-                <tr>
-                    <th scope="col">Source of Funding</th>
-                    <th scope="col">Date Applied for</th>
-                    <th scope="col" class="numeric">Amount Sought (£)</th>
-                    <th scope="col">Successful?</th>
-                    <th scope="col" class="numeric">Amount Secured or Still Sought</th>
-                    <th scope="col">Date of Decision</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <input type="text" />
-                    </td>
-                    <td>
-                        <input type="text" />
-                    </td>
-                    <td class="numeric">
-                        <input type="text" />
-                    </td>
-                    <td>
-                        <input type="text" />
-                    </td>
-                    <td class="numeric">
-                        <input type="text" />
-                    </td>
-                    <td>
-                        <input type="text" />
-                    </td>
-                    <td>
-                        <a href="#">Remove</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <p style="text-align: right;">
-                <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
-            </p>
+        <div th:attr="finance-subsection-table-container=${question.getId()}">
+            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+            <select class="form-control form-control-1-8">
+                <option></option>
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+            <div class="form-group">
+                <table id="other-funding">
+                    <thead>
+                    <tr>
+                        <th scope="col">Source of Funding</th>
+                        <th scope="col">Date Applied for</th>
+                        <th scope="col" class="numeric">Amount Sought (£)</th>
+                        <th scope="col">Successful?</th>
+                        <th scope="col" class="numeric">Amount Secured or Still Sought</th>
+                        <th scope="col">Date of Decision</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" />
+                        </td>
+                        <td>
+                            <input type="text" />
+                        </td>
+                        <td class="numeric">
+                            <input type="text" />
+                        </td>
+                        <td>
+                            <input type="text" />
+                        </td>
+                        <td class="numeric">
+                            <input type="text" />
+                        </td>
+                        <td>
+                            <input type="text" />
+                        </td>
+                        <td>
+                            <a href="#">Remove</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: right;">
+                    <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
+                </p>
+            </div>
         </div>
     </div>
     <!-- ===========================Form: financial summary =========================== -->
