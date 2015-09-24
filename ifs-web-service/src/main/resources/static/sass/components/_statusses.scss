@@ -26,6 +26,11 @@
 	background-repeat: no-repeat;
 }
 
+%icon-assigned-to-me {
+    background-image: url('../images/flag-icon.png');   
+	background-repeat: no-repeat;
+}
+
 //statusses in the collapsible
 .collapsible {
 	.section.marked-as-complete {
@@ -48,6 +53,10 @@
 	}
 	.section-status.complete {
 		@extend %icon-tick;
+		background-position: right center;
+	}
+	.section-status.assigned{
+		@extend %icon-assigned-to-me;
 		background-position: right center;
 	}
 
@@ -75,4 +84,15 @@
 }
 .app-sidebar .section-status.assigned a {
 	@extend %icon-assigned;
- }
+}
+
+//Assignees
+
+.assignee.assigned-to-me{
+	span{
+		padding-left: 20px;
+		@extend %icon-assigned-to-me;
+		background-position: left center;
+	}
+}
+
