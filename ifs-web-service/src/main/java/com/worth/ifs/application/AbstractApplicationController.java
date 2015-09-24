@@ -9,8 +9,11 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -49,15 +52,39 @@ public abstract class AbstractApplicationController {
     @Autowired
     FinanceService financeService;
 
-
-    protected void assignQuestion(HttpServletRequest request, Long assignedById) {
+    protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
+        Long assigneeId = null;
         Map<String, String[]> params = request.getParameterMap();
         if(params.containsKey("assign_question")){
             String assign = request.getParameter("assign_question");
-            Long questionId = Long.valueOf(assign.split("_")[0]);
-            Long assigneeId = Long.valueOf(assign.split("_")[1]);
+            assigneeId = Long.valueOf(assign.split("_")[1]);
+        }
 
-            questionService.assign(questionId, assigneeId, assignedById);
+        return assigneeId;
+    }
+
+    protected Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
+        Long questionId = null;
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey("assign_question")){
+            String assign = request.getParameter("assign_question");
+            questionId = Long.valueOf(assign.split("_")[0]);
+        }
+
+        return questionId;
+    }
+
+    protected void assignQuestion(HttpServletRequest request, Long applicationId) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey("assign_question")){
+            String assign = request.getParameter("assign_question");
+            Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
+            Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
+
+            questionService.assign(questionId, assigneeId, assignedBy.getId());
         }
     }
 
@@ -70,12 +97,15 @@ public abstract class AbstractApplicationController {
         }
     }
 
+    protected void addUserDetails(Model model, Application application, Long userId) {
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+    }
+
     protected void addQuestionsDetails(Model model, Application application, Long userOrganisationId, Long userId) {
         List<Response> responses = responseService.getByApplication(application.getId());
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         addAssigneableDetails(model, application, userOrganisationId, userId);
-
-
     }
 
     protected void addAssigneableDetails(Model model, Application application, Long userOrganisationId, Long userId) {

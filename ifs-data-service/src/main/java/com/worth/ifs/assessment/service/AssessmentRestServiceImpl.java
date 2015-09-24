@@ -1,12 +1,22 @@
 package com.worth.ifs.assessment.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.HtmlUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * AssessmentRestRestServiceIpml is a utility to use client-side to retrieve Assessment data from the data-service controllers.
@@ -19,8 +29,8 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     String assessmentRestURL;
 
 
-    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
+    public Set<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return new LinkedHashSet<>(Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class)));
     }
 
     public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
@@ -37,14 +47,28 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
         return restCall("/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId , Integer.class);
     }
 
-    public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String decisionReason, String observations) {
-        return restCall("/respondToAssessmentInvitation/" + assessorId + "/" + applicationId + "/" + decision
-                + "/" + decisionReason + "/" + observations , Boolean.class);
+    public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String reason, String observations) {
+
+        //builds the node with the response form fields data
+        ObjectNode node =  new ObjectMapper().createObjectNode();
+        node.put("assessorId", assessorId);
+        node.put("applicationId", applicationId);
+        node.put("decision", decision);
+        node.put("reason", reason);
+        node.put("observations", HtmlUtils.htmlEscape(observations));
+
+        return restPost(node.toString(), "/respondToAssessmentInvitation/", Boolean.class);
     }
+
 
     @Override
     protected  <T> T restCall(String path, Class c) {
         return super.restCall(assessmentRestURL + path,c);
+    }
+
+    @Override
+    protected  <T> T restPost(String message, String path, Class c) {
+        return super.restPost(message, assessmentRestURL + path, c);
     }
 
 

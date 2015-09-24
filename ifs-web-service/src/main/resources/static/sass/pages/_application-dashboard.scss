@@ -1,12 +1,91 @@
 .app-dashboard {
+	
+	.application-status{
+		border-left: 1px solid $border-colour;
+		text-align: center;
+		margin: -15px;
+		min-height: 110px;
+		
+		@include media-down(mobile) {
+			min-height: auto;
+		}
+
+		p{
+			margin: 0;
+			padding: 5px;
+			color: $secondary-text-colour;
+		}
+
+		&.pending{
+			p{
+				&.application-listing_pending{
+					background-color: $link-colour;
+					padding: 35px 0;
+					a{
+						color: $page-colour;
+						text-decoration: none;
+					}
+				}
+			}
+		}
+
+		&.assessed,
+		&.submitted{
+			
+			&.yes{
+				background: #d9ece1;
+			}	
+
+			&.no{
+				background: #fae0e0;
+			}
+
+			.application-listing_pending{display: none;}
+
+			.score{
+				font-size: 40px;
+				color: $black;
+				font-weight: bold;
+				margin-top: -5px;
+			}
+
+			.recommend-container + p{
+				display: none;
+			}
+
+			p.recommend{
+				background: $grey-2;
+				font-size: 14px;
+    			font-weight: 700;
+    			color: black;
+				
+				&.yes{
+					span{
+						background: url(../images/tick-green.png) left 50% no-repeat;
+						padding: 0 20px;
+					}
+				}
+
+				&.no{
+					span{
+						background: url(../images/cross-red.png) left 3px no-repeat;
+						padding: 0 20px; 
+					}
+				}
+
+			}
+
+		}
+	}
+
 	.boxed-list .progress-container {
 		margin: 20px 37px 55px 0;
 	}
 	.boxed-list .column-half + .column-half{
-		padding:30px 30px 0 0;
+		padding: 15px 30px 0 0;
 		text-align:right;
 	} 
-	.pie-container {
+	.boxed-list .pie-container {
 		vertical-align:top;
 		margin-left:30px;
 	}
@@ -16,5 +95,29 @@
 			padding: 15px 15px;	
 		}
 	}
+
+	.grid-row{
+		.row{
+			@include grid-column(1);
+		}
+	}
+
+	
+	.competition-details{
+		
+		.list-bullet{
+			margin-bottom: 45px;
+		}
+
+	}
+
+	.panel-indent{
+		margin-bottom: 0;
+	}
+
+	.form-hint{
+		margin-bottom: 25px;
+	}
+
 
 }

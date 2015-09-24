@@ -35,7 +35,7 @@ public class CostItemMapper {
         switch(costType) {
             case LABOUR:
                 LabourCost labourCostItem = (LabourCost) costItem;
-                return new Cost(labourCostItem.getId(),labourCostItem.getRole(), "", labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
+                return new Cost(labourCostItem.getId(),labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
             case CAPITAL_USAGE:
                return mapCapitalUsage(costItem);
             case MATERIALS:

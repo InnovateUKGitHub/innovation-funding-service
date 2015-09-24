@@ -28,8 +28,8 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getProcessRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole().getName()))
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

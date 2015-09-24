@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
@@ -36,6 +37,8 @@ import static org.mockito.Mockito.when;
 public class BaseUnitTest {
     public MockMvc mockMvc;
     public User loggedInUser;
+    public User assessor;
+
     public UserAuthentication loggedInUserAuthentication;
 
     @Mock
@@ -58,7 +61,6 @@ public class BaseUnitTest {
     public QuestionService questionService;
     @Mock
     public OrganisationService organisationService;
-
     @Mock
     public SectionService sectionService;
 
@@ -80,6 +82,7 @@ public class BaseUnitTest {
     public void setup(){
         loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
         User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
+        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
         users = Arrays.asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
@@ -138,6 +141,13 @@ public class BaseUnitTest {
 
     }
 
+    public void setupUserRoles() {
+        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
+        Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
+        loggedInUser.setRoles(Arrays.asList(applicantRole));
+        assessor.setRoles(Arrays.asList(assessorRole));
+    }
+
     public void setupApplicationWithRoles(){
         com.worth.ifs.application.domain.Application app1 = new com.worth.ifs.application.domain.Application(1L, "Rovel Additive Manufacturing Process", new ApplicationStatus(1L, "created"));
         com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", new ApplicationStatus(2L, "submitted"));
@@ -189,6 +199,7 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(app1, loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(app1)).thenReturn(organisationSet);
+        when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
 
         //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 

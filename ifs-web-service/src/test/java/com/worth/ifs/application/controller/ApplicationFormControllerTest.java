@@ -94,6 +94,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("currentSectionId", 1L));
 
     }

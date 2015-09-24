@@ -95,7 +95,7 @@
                 <p>View the summary finances of every partner in your project consortium</p>
                 <a class="button button-large button-block" th:href="@{/application-form/{id}/section/8/(id=${currentApplication.getId()})}">Project financial summary</a>
                 <p class="form-hint icon-info-small-blue">All partners can view the financial overview</p>
-            </div>
+            </div> 
         </div>
     </div>
 
@@ -126,18 +126,23 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour">
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" th:remove="tag">
+        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},
+                      type=${question.questionType.title}" th:remove="tag">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
                     <tr>
-                        <th>
+                        <th class="width-large">
                             <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
                         </th>
                         <td>
-                            <div th:include="question-type/form-elements :: form-textinput (id='working_days', name='working_days',response=${costCategory.getWorkingDaysPerYear()},readonly=true)" th:remove="tag" />                         
+                            <input type="number"
+                                   th:class="${'width-small'}"
+                                   th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'}"
+                                   th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem.id}"
+                                   th:value="${costCategory.workingDaysPerYear}"
+                            />
                         </td>
-                        <td><a href="#">change working days</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -152,7 +157,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <div th:each="labourCost : ${costCategory.costs}" th:with="type=${question.questionType.title}" th:remove="tag">
+                        <div th:each="labourCost : ${costCategory.costs}" th:remove="tag">
                             <tr>
                                 <td>
                                     <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
@@ -165,7 +170,7 @@
                                 </td>
                                 <td class="numeric">
                                     <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#working_days'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
@@ -183,7 +188,7 @@
                                 <td colspan="4" class="numeric">
                                     Total costs £
                                     <input type="text"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#working_days,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
+                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                        data-calculation-operations="/,*"
                                        th:name="${type +'-total-' + labourCost.id}"
                                        readonly="readonly"
@@ -581,12 +586,12 @@
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <select class="form-control form-control-1-8">
-            <option></option>
+        <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
             <option>No</option>
-            <option>Yes</option>
+            <option th:if="${userIsLeadApplicant}" selected="selected">Yes</option>
+            <option th:unless="${userIsLeadApplicant}">Yes</option>
         </select>
-        <div class="form-group">
+        <div id="otherCostsForm" class="form-group">
             <table id="other-funding">
                 <thead>
                 <tr>
@@ -602,22 +607,22 @@
                 <tbody>
                 <tr>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="Public Sector Grant" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="10-06-2015" />
                     </td>
                     <td class="numeric">
-                        <input type="text" />
+                        <input type="text" value="10,000" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="Yes" />
                     </td>
                     <td class="numeric">
-                        <input type="text" />
+                        <input type="text" value="10,000" />
                     </td>
                     <td>
-                        <input type="text" />
+                        <input type="text" value="06-10-2015" />
                     </td>
                     <td>
                         <a href="#">Remove</a>
@@ -651,23 +656,23 @@
                         <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
                             <th th:text="${financeSubSection.name}"></th>
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
                                 th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                                 th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                    th:text="${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                                    th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             </div>
                         </tr>
                         <tr>
                             <th>Total</th>
-                            <td class="numeric" style="font-weight: 700;" th:text="${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                            <td class="numeric" style="font-weight: 700;" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                             <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                                 <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                                    th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                                    th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
                             </div>
                         </tr>
                     </tbody>
@@ -720,9 +725,9 @@
                 <tr>
                     <th>Other public sector funding</th>
                     <td class="numeric">£10,000</td>
+                    <td class="numeric">£10,000</td>
                     <td class="numeric">-</td>
-                    <td class="numeric">N/A</td>
-                    <td class="numeric">N/A</td>
+                    <td class="numeric">-</td>
                 </tr>
                 <tr>
                     <th>Contribution to project</th>

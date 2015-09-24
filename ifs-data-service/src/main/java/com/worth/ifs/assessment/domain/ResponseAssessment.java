@@ -8,15 +8,15 @@ import javax.persistence.*;
 /**
  * Created by nunoalexandre on 16/09/15.
  */
-@Entity
+//@Entity
 public class ResponseAssessment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="response", referencedColumnName="id")
+//    @ManyToOne
+//    @JoinColumn(name="response", referencedColumnName="id")
     private Response response;
 
     //example

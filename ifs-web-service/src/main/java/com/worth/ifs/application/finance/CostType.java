@@ -27,7 +27,7 @@ public enum CostType {
                 }
             }
         }
-        throw new IllegalArgumentException("Not a valid CostType");
+        throw new IllegalArgumentException("Not a valid CostType : " + type);
     }
 
     public String getType() {

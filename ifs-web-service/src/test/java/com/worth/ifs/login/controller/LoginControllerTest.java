@@ -31,6 +31,7 @@ public class LoginControllerTest extends BaseUnitTest {
     @Before
     public void setUp(){
         super.setup();
+        setupUserRoles();
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
@@ -46,11 +47,6 @@ public class LoginControllerTest extends BaseUnitTest {
      */
     @Test
     public void testLoginViewWithUsers() throws Exception {
-//        User user1 = new User(1L, "Nico Bijl", "email","password", "token1", "image", null);
-//        User user2 = new User(2L, "Rogier de Regt", "email2@email.nl","password", "token2", "image", null);
-//        User user3 = new User(3L, "Wouter de Meijer", "email3@email.nl","password", "token3", "image", null);
-//        when(userServiceMock.findAll()).thenReturn(Arrays.asList(user1, user2, user3));
-
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
@@ -72,7 +68,6 @@ public class LoginControllerTest extends BaseUnitTest {
 
     private ResultActions performLogin(String loginToken) throws Exception {
         String userPass = "test";
-        //when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
         when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
         return mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -97,18 +92,12 @@ public class LoginControllerTest extends BaseUnitTest {
                 .andExpect(view().name("redirect:/login?invalid"));
     }
 
-
-
-
     @Test
     public void testLogout() throws Exception {
         this.loginDefaultUser();
-        //when(userService.retrieveUserByEmailAndPassword(loggedInUser.getEmail(), "test")).thenReturn(loggedInUser);
-
-
-                mockMvc.perform(get("/login").param("logout", "true"))
-                        .andExpect(status().is3xxRedirection())
-                        .andExpect(view().name("redirect:/login"));
+        mockMvc.perform(get("/login").param("logout", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"));
 
         System.out.println("Testing Logout...");
     }

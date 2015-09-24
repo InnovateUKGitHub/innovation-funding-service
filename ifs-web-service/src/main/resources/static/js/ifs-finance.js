@@ -10,6 +10,7 @@ var worthIFSFinance = {
         if(worthIFS.isApplicationForm()){
             worthIFSFinance.preProcessRepeatedFieldsForTotalElements();
             worthIFSFinance.bindCalculationActionToFields();
+            worthIFSFinance.initShowHideOtherCosts();
         }
     },
     preProcessRepeatedFieldsForTotalElements : function(){
@@ -54,6 +55,24 @@ var worthIFSFinance = {
                     });
                 });
         });
+    },
+    initShowHideOtherCosts : function() {
+        worthIFSFinance.triggerOtherCostsForm($('#otherCostsShowHideToggle'));
+        worthIFSFinance.bindShowHideOtherCostsSelectTrigger();
+    },
+    bindShowHideOtherCostsSelectTrigger : function() {
+        $('#otherCostsShowHideToggle').change(function() {
+            var self = this;
+            worthIFSFinance.triggerOtherCostsForm(self);
+        });
+    },
+    triggerOtherCostsForm : function(element) {
+        if($(element).val()==="No") {
+            $('#otherCostsForm').hide();
+        }
+        else {
+            $('#otherCostsForm').show();
+        }
     },
     doMath : function(element,calcFields){
             var operation = element.attr('data-calculation-operations').split(',');

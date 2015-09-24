@@ -6,13 +6,14 @@ import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * AssessmentRestRestService is a utility to use client-side to retrieve Assessment data from the data-service controllers.
  */
 public interface AssessmentRestService {
 
-    public List<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
+    public Set<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
 
     public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId);
 

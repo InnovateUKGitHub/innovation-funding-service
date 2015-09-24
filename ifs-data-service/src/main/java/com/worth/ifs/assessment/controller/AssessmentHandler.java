@@ -1,15 +1,12 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nunoalexandre on 16/09/15.
@@ -34,7 +31,7 @@ public class AssessmentHandler {
         return assessments.findById(id);
     }
 
-    public List<Assessment> getAllByCompetitionAndUser(Long competitionId, Long userId) {
+    public Set<Assessment> getAllByCompetitionAndUser(Long competitionId, Long userId) {
         return assessments.findByAssessorAndCompetition(userId, competitionId);
     }
 
@@ -42,7 +39,7 @@ public class AssessmentHandler {
         return assessments.findOneByAssessorAndApplication(userId, applicationId);
     }
 
-    public List<Assessment> getAllByAssessor(Long assessorId) {
+    public Set<Assessment> getAllByAssessor(Long assessorId) {
             return assessments.findByAssessorId(assessorId);
     }
     public Integer getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long userId) {
