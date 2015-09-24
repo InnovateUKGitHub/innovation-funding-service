@@ -62,7 +62,7 @@ var worthIFSFinance = {
 
                 _.each(fields, function(el){
                     var field = $(el);
-                    console.log('field',field);
+                    //console.log('field',field);
                     // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
                     // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
                     // model whereby no rebinding is necessary when the page is changed
@@ -73,36 +73,36 @@ var worthIFSFinance = {
         });
     },
     doMath : function(element,calcFields){
-            var operation = element.attr('data-calculation-operations').split(',');
-            var values = [];
-            _.each(calcFields, function(field){
-                values.push(parseFloat($(field).attr("data-calculation-rawvalue") || $(field).val() || 0));
-            });
+        var operation = element.attr('data-calculation-operations').split(',');
+        var values = [];
+        _.each(calcFields, function(field){
+            values.push(parseFloat($(field).attr("data-calculation-rawvalue") || $(field).val() || 0));
+        });
 
-            if(values.length === 1) {
-                var calculatedValue=values[0];
-            }
-            else {
-                var calculatedValue = worthIFSFinance.MathOperation[operation[0]](values[0],values[1]);
-            }
-            //one operation and more values, all get the same operation
+        if(values.length === 1) {
+            var calculatedValue=values[0];
+        }
+        else {
+            var calculatedValue = worthIFSFinance.MathOperation[operation[0]](values[0],values[1]);
+        }
+        //one operation and more values, all get the same operation
 
-            if((operation.length == 1) && (values.length > 2)) {
-                for (i = 2; i < values.length; i++) {
-                    console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
-                    calculatedValue = worthIFSFinance.MathOperation[operation[0]](calculatedValue,values[i]);
-                };
+        if((operation.length == 1) && (values.length > 2)) {
+            for (i = 2; i < values.length; i++) {
+                //console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
+                calculatedValue = worthIFSFinance.MathOperation[operation[0]](calculatedValue,values[i]);
+            };
+        }
+       //multiple operations and multiple values
+        else if((operation.length > 1) && (values.length > 2)) {
+            for (i = 1; i < operation.length; i++) {
+                // console.log('round:',i,operation[i],calculatedValue,values[i+1])
+                calculatedValue = worthIFSFinance.MathOperation[operation[i]](calculatedValue,values[i+1]);
             }
-           //multiple operations and multiple values
-            else if((operation.length > 1) && (values.length > 2)) {
-                for (i = 1; i < operation.length; i++) {
-                    // console.log('round:',i,operation[i],calculatedValue,values[i+1])
-                    calculatedValue = worthIFSFinance.MathOperation[operation[i]](calculatedValue,values[i+1]);
-                }
-            }
-            element.attr("data-calculation-rawvalue",calculatedValue);
-            element.val(worthIFSFinance.formatCurrency(Math.round(calculatedValue)));
-            element.trigger('change');
+        }
+        element.attr("data-calculation-rawvalue",calculatedValue);
+        element.val(worthIFSFinance.formatCurrency(Math.round(calculatedValue)));
+        element.trigger('change');
     },
 
     formatCurrency: function(total) {
@@ -116,23 +116,44 @@ var worthIFSFinance = {
     }
 }
 
-$(document).on('click', '[finance-subsection-table-container] .add-another-row', function(e) {
-    var addRowLink = $(this);
-    var originalHref = addRowLink.attr('href');
+var generateFragmentUrl = function(originalLink) {
+    var originalHref = originalLink.attr('href');
     var urlParamsParts = originalHref.split('?');
     var urlPart = urlParamsParts[0];
-    var paramsPart = urlParamsParts[1];
-    var questionToUpdate = addRowLink.parents('[data-question-id]');
+    var paramsPart = urlParamsParts.length == 2 ? ('&' + urlParamsParts[1]) : '';
+
+    var questionToUpdate = originalLink.parents('[data-question-id]');
     var owningQuestionId = questionToUpdate.attr('data-question-id');
-    var dynamicHref = urlPart + '/' + owningQuestionId + '?' + paramsPart + '&singleFragment=true';
+    var dynamicHref = urlPart + '/' + owningQuestionId + '?singleFragment=true' + paramsPart;
+    return dynamicHref;
+};
+
+$(document).on('click', '[finance-subsection-table-container] .add-another-row', function(e) {
+    var amendRowsLink = $(this);
+    var dynamicHref = generateFragmentUrl(amendRowsLink);
 
     $.get(dynamicHref, function(data) {
         var htmlReplacement = $('<div>' + data + '</div>');
-        var tableSectionToUpdate = addRowLink.parents('[finance-subsection-table-container]');
+        var tableSectionToUpdate = amendRowsLink.parents('[finance-subsection-table-container]');
         var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
         var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
         tableSectionToUpdate.replaceWith(replacement);
         worthIFS.initAllAutosaveElements(replacement);
+        worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+    })
+    e.preventDefault();
+    return false;
+});
+
+$(document).on('click', '[finance-subsection-table-container] .delete-row', function(e) {
+    var amendRowsLink = $(this);
+    var dynamicHref = generateFragmentUrl(amendRowsLink);
+
+    $.get(dynamicHref, function(data) {
+        var costRowsId = amendRowsLink.attr('data-cost-row');
+        var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
+        costRowsToDelete.find('[data-calculation-fields]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
+        costRowsToDelete.remove();
         worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
     })
     e.preventDefault();

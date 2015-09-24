@@ -16,6 +16,7 @@ import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +62,23 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("costId") final Long costId, HttpServletRequest request) {
 
-        costService.delete(costId);
+        doDeleteCost(costId);
         return "redirect:/application-form/" + applicationId + "/section/" + sectionId;
+    }
+
+    @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
+    public @ResponseBody String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+                             @PathVariable("sectionId") final Long sectionId,
+                             @PathVariable("costId") final Long costId,
+                             @PathVariable("renderQuestionId") final Long renderQuestionId,
+                             HttpServletRequest request) {
+
+        doDeleteCost(costId);
+        return "{\"status\": \"OK\"}";
+    }
+
+    private void doDeleteCost(@PathVariable("costId") Long costId) {
+        costService.delete(costId);
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
@@ -72,8 +88,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("questionId") final Long questionId,
                                                  @PathVariable("renderQuestionId") final Long renderQuestionId,
                                                  HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
         addCost(applicationId, questionId, request);
+        return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request);
+    }
+
+    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = addApplicationDetails(applicationId, user.getId(), sectionId, model);
         Section currentSection = getSection(application.getCompetition().getSections(), sectionId);
         Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
