@@ -132,17 +132,17 @@
                 <table>
                     <tbody>
                     <tr>
-                        <th>
+                        <th class="width-large">
                             <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
                         </th>
                         <td>
                             <input type="number"
+                                   th:class="${'width-small'}"
                                    th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'}"
                                    th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem.id}"
                                    th:value="${costCategory.workingDaysPerYear}"
                             />
                         </td>
-                        <td><a href="#">change working days</a></td>
                     </tr>
                     </tbody>
                 </table>
