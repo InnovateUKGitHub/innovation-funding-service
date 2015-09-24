@@ -213,6 +213,27 @@ $(function() {
 });
 
 //
+// Bind input and output fields together to mirror values of the "input" fields in the "outputs"
+//
+$(function() {
+    $('body').on('change', '[data-binding-input]', function(e) {
+        var input = $(this);
+        var bindingId = input.attr('data-binding-input');
+        var bindingOutputs = $('[data-binding-output="' + bindingId + '"]');
+        bindingOutputs.each(function() {
+            var output = $(this);
+            if (output.is('span')) {
+                output.text(input.val());
+            } else {
+                output.val(input.val());
+            }
+        });
+        e.preventDefault();
+        return false;
+    });
+});
+
+//
 // Move section elements into the section header
 //
 $(function() {
@@ -221,7 +242,7 @@ $(function() {
         var elementToMove = $(this);
         var subsectionId = elementToMove.attr('data-subsection-id');
         var header = $('[data-subsection-header=' + subsectionId + ']');
-        elementToMove.remove();
+        elementToMove.detach();
         header.append(elementToMove);
         elementToMove.show();
     });
