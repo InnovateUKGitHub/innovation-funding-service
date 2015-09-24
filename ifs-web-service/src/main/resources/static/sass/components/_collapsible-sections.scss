@@ -59,20 +59,13 @@ Uses javascript to make it expand, when there is no javascript it will just show
 		
 		position: relative;
 
-		&.complete{
-			
-			&:after{
-				content: "Complete";
-				position: absolute;
-				top: 18px;
-				right: 50px;
-				padding-right: 30px;
-				font-size: 16px;
-				color: $secondary-text-colour;
-				background: url(../images/field/tick-icon.png) right center no-repeat;
-			}
-
+		span.section-status.place-in-header {
+			position: absolute;
+			z-index: 10;
+			top: 14px;
+			right: 40px;
 		}
+
 	}
 
 	h2 button {
