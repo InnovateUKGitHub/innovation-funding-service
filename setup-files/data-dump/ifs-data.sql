@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: 127.0.0.1    Database: ifs
+-- Host: mysqlnode1.worthit.public    Database: ifs_acc
 -- ------------------------------------------------------
--- Server version	5.6.21-log
+-- Server version	5.5.29-0ubuntu0.12.04.2-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,7 +21,7 @@
 
 LOCK TABLES `application` WRITE;
 /*!40000 ALTER TABLE `application` DISABLE KEYS */;
-INSERT  IGNORE INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`) VALUES (1,36,'A novel solution to an old problem','2015-11-01',1,1),(2,20,'Providing sustainable childcare','2015-11-01',2,1),(3,10,'Mobile Phone Data for Logistics Analytics','2015-11-01',3,1),(4,43,'Using natural gas to heat homes','2015-11-01',4,1);
+INSERT  IGNORE INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`) VALUES (1,36,'A novel solution to an old problem','2015-11-01',1,1),(2,20,'Providing sustainable childcare','2015-11-01',2,1),(3,10,'Mobile Phone Data for Logistics Analytics','2015-11-01',3,1),(4,43,'Using natural gas to heat homes','2015-11-01',4,1),(5,20,'Analytical technologies for biopharmaceuticals','2015-11-01',2,1),(6,23,'Security for the Internet of Things','2015-11-01',2,1);
 /*!40000 ALTER TABLE `application` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`temp_total_score`, `temp_recommended_value`, `submitted`, `process_id`, `application`, `assessor`) VALUES (37,'NO','N',1,3,3),(82,'YES','N',2,4,3);
+INSERT  IGNORE INTO `assessment` (`temp_total_score`, `temp_recommended_value`, `submitted`, `process_id`, `application`, `assessor`) VALUES (37,'NO','Y',1,3,3),(82,'YES','Y',2,4,3),(NULL,'EMPTY','N',3,5,3),(NULL,'EMPTY','N',4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +61,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `competition` WRITE;
 /*!40000 ALTER TABLE `competition` DISABLE KEYS */;
-INSERT  IGNORE INTO `competition` (`id`, `assessment_end_date`, `assessment_start_date`, `description`, `end_date`, `name`, `start_date`) VALUES (1,'2015-09-24','2015-09-09','Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.','2016-01-25','Technology Inspired','2015-06-24');
+INSERT  IGNORE INTO `competition` (`id`, `assessment_end_date`, `assessment_start_date`, `description`, `end_date`, `name`, `start_date`) VALUES (1,'2015-10-06','2015-09-22','Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.','2016-01-25','Technology Inspired','2015-06-24');
 /*!40000 ALTER TABLE `competition` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +111,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process` WRITE;
 /*!40000 ALTER TABLE `process` DISABLE KEYS */;
-INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING');
+INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'ACCEPTED'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'ACCEPTED'),(3,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'PENDING'),(4,'none',NULL,'ASSESSMENT','2015-09-25 00:03:50','',NULL,'PENDING');
 /*!40000 ALTER TABLE `process` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,4,1,2),(11,6,4,1,2);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +141,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `question_status` WRITE;
 /*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33),(5,'2015-09-24 18:49:20','','\0',NULL,NULL,NULL,1);
+INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33),(5,'2015-09-24 18:49:20','','\0',NULL,NULL,NULL,1),(6,'2015-09-25 00:06:12',NULL,'',1,5,NULL,13),(7,NULL,'\0',NULL,NULL,NULL,5,29),(8,'2015-09-25 00:07:50',NULL,'\0',NULL,NULL,NULL,29),(9,'2015-09-25 00:27:25',NULL,'\0',1,5,NULL,4);
 /*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-24 19:04:10
+-- Dump completed on 2015-09-25  0:28:38
