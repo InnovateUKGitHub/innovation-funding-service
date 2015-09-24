@@ -18,6 +18,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 //        classpath "com.github.robfletcher:compass-gradle-plugin:2.0.5"
     }
 }
@@ -28,6 +29,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
+apply plugin: 'com.bluepapa32.watch'
 
 war {
     baseName = 'ifs-web-service'
@@ -84,6 +86,19 @@ task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename ('(.*).war', 'ROOT.war')
+}
+
+watch {
+
+    java {
+        files files('src/main/java')
+        tasks 'deployToTomcat'
+    }
+
+    resources {
+        files files('src/main/resources')
+        tasks 'deployToTomcat'
+    }
 }
 
 processResources {
