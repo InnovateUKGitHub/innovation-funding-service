@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -63,15 +62,17 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("costId") final Long costId, HttpServletRequest request) {
 
         doDeleteCost(costId);
-        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+        return "redirect:/application-form/" + applicationId + "/section/" + sectionId;
     }
 
     @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
-    public @ResponseBody String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
-                                                               @PathVariable("sectionId") final Long sectionId,
-                                                               @PathVariable("costId") final Long costId,
-                                                               @PathVariable("renderQuestionId") final Long renderQuestionId,
-                                                               HttpServletRequest request) {
+    public
+    @ResponseBody
+    String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+                                          @PathVariable("sectionId") final Long sectionId,
+                                          @PathVariable("costId") final Long costId,
+                                          @PathVariable("renderQuestionId") final Long renderQuestionId,
+                                          HttpServletRequest request) {
 
         doDeleteCost(costId);
         return "{\"status\": \"OK\"}";
@@ -108,7 +109,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
         addCost(applicationId, questionId, request);
-        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+        return "redirect:/application-form/" + applicationId + "/section/" + sectionId;
     }
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
@@ -137,10 +138,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         return application;
     }
 
-    private void saveApplicationForm( Model model,
-                                      @PathVariable("applicationId") final Long applicationId,
-                                      @PathVariable("sectionId") final Long sectionId,
-                                      HttpServletRequest request) {
+    private void saveApplicationForm(Model model,
+                                     @PathVariable("applicationId") final Long applicationId,
+                                     @PathVariable("sectionId") final Long sectionId,
+                                     HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -162,6 +163,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
+        addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        model.addAttribute("applicationSaved", true);
     }
 
     /**
@@ -169,28 +172,28 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String applicationFormSubmit( Model model,
-                                         @PathVariable("applicationId") final Long applicationId,
-                                         @PathVariable("sectionId") final Long sectionId,
-                                         HttpServletRequest request, RedirectAttributes redirectAttributes){
+    public String applicationFormSubmit(Model model,
+                                        @PathVariable("applicationId") final Long applicationId,
+                                        @PathVariable("sectionId") final Long sectionId,
+                                        HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey("assign_question")){
+        if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
         }
         saveApplicationForm(model, applicationId, sectionId, request);
-        redirectAttributes.addFlashAttribute("applicationSaved", true);
-        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+
+        return "application-form";
     }
 
     private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
-        if(processRole==null) {
+        if (processRole == null) {
             return;
         }
-        if(params.containsKey("mark_as_complete")){
+        if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
             questionService.markAsComplete(questionId, processRole.getId());
-        }else if(params.containsKey("mark_as_incomplete")){
+        } else if (params.containsKey("mark_as_incomplete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             questionService.markAsInComplete(questionId, processRole.getId());
         }
@@ -199,10 +202,10 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         // saving questions from section
         for (Question question : questions) {
-            if(request.getParameterMap().containsKey("question[" + question.getId() + "]")){
+            if (request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
                 String value = request.getParameter("question[" + question.getId() + "]");
                 Boolean saved = responseService.save(userId, applicationId, question.getId(), value);
-                if(!saved){
+                if (!saved) {
                     log.error("save failed. " + question.getId());
                 }
             }
@@ -210,18 +213,18 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
-        if(applicationDetailParams.containsKey("question[application_details-title]")){
+        if (applicationDetailParams.containsKey("question[application_details-title]")) {
             String title = applicationDetailParams.get("question[application_details-title]")[0];
             application.setName(title);
         }
-        if(applicationDetailParams.containsKey("question[application_details-startdate][year]")){
+        if (applicationDetailParams.containsKey("question[application_details-startdate][year]")) {
             int year = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][year]")[0]);
             int month = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][month]")[0]);
             int day = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][day]")[0]);
             LocalDate date = LocalDate.of(year, month, day);
             application.setStartDate(date);
         }
-        if(applicationDetailParams.containsKey("question[application_details-duration]")){
+        if (applicationDetailParams.containsKey("question[application_details-duration]")) {
             Long duration = Long.valueOf(applicationDetailParams.get("question[application_details-duration]")[0]);
             application.setDurationInMonths(duration);
         }
@@ -231,41 +234,43 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This method is for supporting ajax saving from the application form.
      */
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public @ResponseBody JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
-                                                  @RequestParam("value") String value,
-                                                  @RequestParam("applicationId") Long applicationId,
-                                                  HttpServletRequest request) {
+    public
+    @ResponseBody
+    JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
+                             @RequestParam("value") String value,
+                             @RequestParam("applicationId") Long applicationId,
+                             HttpServletRequest request) {
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        if(inputIdentifier.equals("application_details-title")){
+        if (inputIdentifier.equals("application_details-title")) {
             Application application = applicationService.getById(applicationId);
             application.setName(value);
             applicationService.save(application);
-        } else if(inputIdentifier.equals("application_details-duration")){
+        } else if (inputIdentifier.equals("application_details-duration")) {
             Application application = applicationService.getById(applicationId);
             application.setDurationInMonths(Long.valueOf(value));
             applicationService.save(application);
-        } else if(inputIdentifier.startsWith("application_details-startdate")){
+        } else if (inputIdentifier.startsWith("application_details-startdate")) {
             Application application = applicationService.getById(applicationId);
             LocalDate startDate = application.getStartDate();
 
-            if(startDate == null){
+            if (startDate == null) {
                 startDate = LocalDate.now();
             }
             if (inputIdentifier.endsWith("_day")) {
                 startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-            }else if (inputIdentifier.endsWith("_month")) {
+            } else if (inputIdentifier.endsWith("_month")) {
                 startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-            }else if (inputIdentifier.endsWith("_year")) {
+            } else if (inputIdentifier.endsWith("_year")) {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
             }
             application.setStartDate(startDate);
             applicationService.save(application);
-        } else if(inputIdentifier.startsWith("cost-")) {
+        } else if (inputIdentifier.startsWith("cost-")) {
             String fieldName = request.getParameter("fieldName");
             FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-            if(fieldName != null && value != null) {
+            if (fieldName != null && value != null) {
                 log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
                 financeFormHandler.storeField(fieldName, value);
             }
@@ -283,7 +288,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public void assignQuestion(Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("sectionId") final Long sectionId,
-                               HttpServletRequest request){
+                               HttpServletRequest request) {
         assignQuestion(request, applicationId);
         model.addAttribute("assignedQuestion", true);
     }
