@@ -95,7 +95,22 @@ var worthIFSFinance = {
         var operation = element.attr('data-calculation-operations').split(',');
         var values = [];
         _.each(calcFields, function(field){
-            values.push(parseFloat($(field).attr("data-calculation-rawvalue") || $(field).val() || 0));
+
+            var input = $(field);
+            var rawValue = input.attr("data-calculation-rawvalue");
+
+            // TODO DW - would be better to force all fields to have a raw value at the start rather than these fallback cases
+            if (typeof rawValue !== 'undefined') {
+                values.push(parseFloat(rawValue));
+            } else {
+                var displayValue = input.val();
+                if (typeof displayValue !== 'undefined' && displayValue.length > 0) {
+                    var parsed = displayValue.indexOf('£ ') == 0 ? displayValue.substring(2) : displayValue;
+                    values.push(parseFloat(parsed));
+                } else {
+                    values.push(parseFloat(0));
+                }
+            }
         });
 
         if(values.length === 1) {
