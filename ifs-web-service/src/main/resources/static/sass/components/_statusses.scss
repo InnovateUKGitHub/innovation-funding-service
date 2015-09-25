@@ -37,6 +37,27 @@
 
 //statusses in the collapsible
 .collapsible {
+	
+	h2{
+		span.section-status.place-in-header {
+			position: absolute;
+			z-index: 10;
+			top: 14px;
+			right: 40px;
+		}
+
+		.no-js &.complete:after{
+			content: " ";
+			position: absolute;
+			z-index: 10;
+			top: 20px;
+			right: 40px;
+			width: 20px;
+			height: 20px;
+			@extend %icon-tick;
+		}
+	}
+
 	.section.marked-as-complete {
 		@extend %mark-done-right;
 		background-position: right top;
