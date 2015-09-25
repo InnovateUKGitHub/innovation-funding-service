@@ -44,7 +44,7 @@
             <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
         </div>
 
         <div class="form-group">

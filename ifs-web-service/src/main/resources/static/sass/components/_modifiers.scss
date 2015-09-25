@@ -1,0 +1,17 @@
+.no-pad{
+	padding: 0;
+	
+	.heading-large,
+	.heading-xlarge{
+		margin-bottom: 10px;   
+	}
+
+}
+
+.button-warning{
+	@include button(#c00000);
+
+	&.large{
+		box-shadow: 0px 4px 0px darken(#c00000,15%);
+	}
+}

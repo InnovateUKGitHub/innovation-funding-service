@@ -36,10 +36,35 @@
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
+<!-- ========================= input field type text =========================== -->
+
+<div th:fragment="form-textinput-full-width (id, response)">
+    <input class="form-control width-full"
+           th:readonly="${readonly}"
+           type="text"
+           th:id="${id}"
+           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
+           th:value="${response}"
+           th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+            />
+</div>
 <!-- ========================= input field type number =========================== -->
 
 <div th:fragment="form-number (id, response)">
     <input class="form-control"
+           th:readonly="${readonly}"
+           type="number"
+           th:id="${id}"
+           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
+           th:value="${response}"
+           th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+            />
+</div>
+
+<!-- ========================= input field type number =========================== -->
+
+<div th:fragment="form-number-extra-small (id, response)">
+    <input class="form-control width-extra-small"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
@@ -54,21 +79,21 @@
 <div th:fragment="form-dateinput (id, day, month, year)">
     <div class="date-group">
         <div class="day">
-            <div th:include="question-type/form-elements :: form-label (name='day',id=${id}+'_day',bold=false)"
+            <div th:include="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-number (id=${id}+'_day', response=${day},placeholder='DD')"
+            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', response=${day},placeholder='DD')"
                  th:remove="tag"/>
         </div>
         <div class="month">
-            <div th:include="question-type/form-elements :: form-label (name='month',id=${id}+'_month',bold=false)"
+            <div th:include="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-number (id=${id}+'_month', response=${month},placeholder='MM')"
+            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', response=${month},placeholder='MM')"
                  th:remove="tag"/>
         </div>
         <div class="year">
-            <div th:include="question-type/form-elements :: form-label (name='year',id=${id}+'_year',bold=false)"
+            <div th:include="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-number (id=${id}+'_year', response=${year},placeholder='YYYY')"
+            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', response=${year},placeholder='YYYY')"
                  th:remove="tag"/>
         </div>
     </div>
@@ -79,7 +104,7 @@
 
 <div th:fragment="form-duration (id, months)">
     <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
-    <div th:include="question-type/form-elements :: form-number (id=${id}, response=${months})" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${months})" th:remove="tag"/>
 </div>
 
 <!-- ========================= textarea  =========================== -->
