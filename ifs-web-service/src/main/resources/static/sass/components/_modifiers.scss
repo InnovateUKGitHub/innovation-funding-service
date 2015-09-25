@@ -15,3 +15,14 @@
 		box-shadow: 0px 4px 0px darken(#c00000,15%);
 	}
 }
+
+.total-cost{
+    margin-top: -5px;
+    font-size: 24px;
+    font-weight: bold;
+    input[readonly]{
+        color: $black;
+        text-align: right;
+        margin-right: 80px;
+    }
+}

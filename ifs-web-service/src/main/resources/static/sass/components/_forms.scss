@@ -55,15 +55,6 @@ table td input{
     width: 100%;
 }
 
-.total-cost{
-    margin-top: -5px;
-    font-size: 24px;
-    font-weight: bold;
-    input[readonly]{
-        color: $black;
-    }
-}
-
 table td{
     
     &.numeric{
