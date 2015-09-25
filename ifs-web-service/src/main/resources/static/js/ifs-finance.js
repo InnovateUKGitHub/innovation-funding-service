@@ -131,13 +131,11 @@ var worthIFSFinance = {
     },
 
     formatCurrency: function(total) {
-        total = Math.abs(total);
-        parsedFloat = parseFloat(total, 10);
-        tofixed = parsedFloat.toFixed();
-        replaced = tofixed.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
-        tostring= replaced.toString();
-
-        return tostring;
+        var absTotal = Math.abs(total);
+        var parsedFloat = parseFloat(absTotal, 10);
+        var toFixed = parsedFloat.toFixed();
+        var replaced = toFixed.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
+        return '£ ' + replaced.toString();
     }
 }
 
