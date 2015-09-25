@@ -111,10 +111,13 @@ var worthIFS = {
 
     },
     fieldChanged : function (element){
+
+        var field = $(element);
+
         var jsonObj = {
-                value:element.value,
-                questionId: jQuery(element).attr('id'),
-                fieldName: jQuery(element).attr('name'),
+                value: element.value,
+                questionId: field.attr('id'),
+                fieldName: field.attr('name'),
                 applicationId: jQuery(".form-serialize-js #application_id").val()
          };
 
@@ -127,8 +130,9 @@ var worthIFS = {
          }).done(function(){
             // set the form-saved-state
             $('.form-serialize-js').data('serializedFormState',formState);
-         }).fail(function(){
-            // ajax save failed.
+             field.removeClass('error');
+         }).fail(function(data){
+             field.addClass('error');
          });
     },
     initUnsavedChangesWarning : function(){
