@@ -113,10 +113,11 @@ var worthIFS = {
     fieldChanged : function (element){
 
         var field = $(element);
+        var fieldId = field.attr('id');
 
         var jsonObj = {
                 value: element.value,
-                questionId: field.attr('id'),
+                questionId: fieldId,
                 fieldName: field.attr('name'),
                 applicationId: jQuery(".form-serialize-js #application_id").val()
          };
@@ -128,11 +129,30 @@ var worthIFS = {
              data: jsonObj,
              dataType: "json"
          }).done(function(){
+
             // set the form-saved-state
             $('.form-serialize-js').data('serializedFormState',formState);
              field.removeClass('error');
-         }).fail(function(data){
-             field.addClass('error');
+             var formGroup = field.closest('.form-group');
+             formGroup.removeClass('error');
+             formGroup.find('span.error-message').remove();
+
+         }).fail(function(data) {
+
+             var formGroup = field.closest('.form-group');
+             if (formGroup.length) {
+                 formGroup.addClass('error');
+
+                 var label = formGroup.find('label').first();
+                 if (label.length) {
+                     label.find('span.error-message').remove();
+                     var errorMessage = data.responseJSON.errorMessage;
+                     label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                 }
+
+             } else {
+                 field.addClass('error');
+             }
          });
     },
     initUnsavedChangesWarning : function(){

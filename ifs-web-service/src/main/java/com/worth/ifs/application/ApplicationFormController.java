@@ -291,7 +291,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return node;
 
         } catch (Exception e) {
-            throw new AutosaveElementException(inputIdentifier, value, applicationId);
+            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
         }
     }
 
