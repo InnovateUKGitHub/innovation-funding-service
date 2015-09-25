@@ -6,12 +6,9 @@ nbijl.xml
 
 
 # idea files
-*/ifs-data-service.iml
-*/.idea/libraries
-*/.idea/libraries/dictionaries
-ifs-data-service/.idea/libraries
-ifs-web-service/.idea/libraries
+*/**.iml
 .idea
+
 
 # eclipse files
 .settings/
