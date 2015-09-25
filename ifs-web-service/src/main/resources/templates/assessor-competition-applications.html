@@ -70,6 +70,7 @@
                                 <!--otherwise shows the overall score -->
                                 <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
                                     <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
+                                    <small>Overall score</small>
                                     <div class="recommend-container">
                                         <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
                                         <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
@@ -100,6 +101,11 @@
 
                                 <!-- shows the overall score -->
                                 <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
+                                <small>Overall score</small>
+                                <div class="recommend-container">
+                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                </div>
                             </div>
                         </div>
                     </div>
