@@ -114,8 +114,8 @@
             <div class="column-half">
                 <p class="heading-medium">Total project costs</p>
             </div>
-            <div class="column-half alignright">
-                £ <input type="text" readOnly="readonly" class="heading-medium"
+            <div class="column-half alignright total-cost">
+                £ <input type="text" readOnly="readonly" class="heading-medium width-medium"
                    data-calculation-repeating-total="[id*=total]"
                    data-calculation-operations="+"
                    th:value="${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
