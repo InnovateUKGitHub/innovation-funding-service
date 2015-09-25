@@ -48,7 +48,8 @@
 
         <div class="in-progress">
             <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
-            <ul class="boxed-list" >
+            <ul class="boxed-list" th:unless="${assessments.size() == 0 }" >
+                <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST" onsubmit="return confirm('This is your final chance to make changes to the assessment. You will not be able to access the application after this point. Are you sure you want to submit?');">
                 <li th:each="assessment : ${assessments}" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).INVALID}">
                     <div class="grid-row">
                         <div class="column-two-thirds">
@@ -79,7 +80,17 @@
                             </div> 
                         </div>
                     </div>
+                    <label>
+                        <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" th:value="${assessment.id}" />
+                    </label>
                 </li>
+
+                    <p style="margin-right: 0;" align="right" >
+                        <input type="hidden" name="competitionId" th:value="${competition.id}" />
+                        <button class="button button-pull-right" name="submit_assessments" id="formSubmitAssessmentButton" type="submit">Submit applications</button>
+                    </p>
+                </form>
+
             </ul>
         </div>
 
@@ -118,7 +129,11 @@
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
+
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+
+
 </body>
 </html>

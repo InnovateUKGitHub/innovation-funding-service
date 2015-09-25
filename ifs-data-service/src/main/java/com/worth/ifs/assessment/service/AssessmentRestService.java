@@ -23,4 +23,6 @@ public interface AssessmentRestService {
 
     public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String decisionReason, String observations);
 
+    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds);
+
 }

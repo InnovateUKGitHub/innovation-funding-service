@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -153,5 +154,35 @@ public class AssessmentController {
         return "redirect:" + competitionAssessmentsURL(competitionId);
     }
 
+    @RequestMapping(value = "/submit-assessments", method = RequestMethod.POST)
+    public String assessmentsSubmissions(Model model, HttpServletRequest req) {
 
+        Map<String, String[]> params = req.getParameterMap();
+
+        /*** avoids to trigger an response if any other button was clicked that not accept / reject ***/
+        if ( params.containsKey("submit_assessments") && params.containsKey("submitted[]") ) {
+
+            // gets the set of assessments Ids to be submitted
+            Set<Long> assessmentsToSubmit = convertStringListToLongSet(Arrays.asList(req.getParameterValues("submitted[]")));
+            //gets the logged assessor Id
+            Long userId = getLoggedUser(req).getId();
+
+            /** asserts the invitation response **/
+            assessmentRestService.submitAssessments(userId, assessmentsToSubmit);
+        }
+
+        //gets the competition id to redirect
+        Long competitionId = Long.valueOf(req.getParameter("competitionId"));
+        return "redirect:" + competitionAssessmentsURL(competitionId);
+    }
+
+
+    private Set<Long> convertStringListToLongSet(List<String> aList)
+    {
+        Set<Long> converted = new HashSet<>();
+        for ( String value : aList )
+            converted.add(Long.valueOf(value));
+
+        return converted;
+    }
 }

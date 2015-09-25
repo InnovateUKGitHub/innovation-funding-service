@@ -80,4 +80,22 @@ public class AssessmentHandler {
     }
 
 
+    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentsToSubmit) {
+
+        for ( Long assessmentId : assessmentsToSubmit ) {
+            Assessment assessment = assessments.findById(assessmentId);
+            if ( assessmentIsValidToSubmit( assessment ) ) {
+                assessment.submit();
+                assessments.save(assessment);
+            }
+        }
+        return new Boolean(true);
+    }
+
+
+    public Boolean assessmentIsValidToSubmit( Assessment assessment ) {
+        return assessment != null && assessment.hasAssessmentStarted() &&  ! assessment.isSubmitted();
+    }
+
+
 }

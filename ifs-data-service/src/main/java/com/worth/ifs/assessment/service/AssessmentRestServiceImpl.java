@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
@@ -60,6 +61,17 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
         return restPost(node.toString(), "/respondToAssessmentInvitation/", Boolean.class);
     }
 
+    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds ) {
+
+        //builds the node with the response form fields data
+        ObjectNode node =  new ObjectMapper().createObjectNode();
+        node.put("assessorId", assessorId);
+        ArrayNode assessmentsToSubmit =  new ObjectMapper().valueToTree(assessmentIds);
+        node.putArray("assessmentsToSubmit").addAll(assessmentsToSubmit);
+
+        return restPost(node.toString(), "/submitAssessments/", Boolean.class);
+
+    }
 
     @Override
     protected  <T> T restCall(String path, Class c) {
