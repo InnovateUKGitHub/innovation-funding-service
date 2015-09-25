@@ -290,6 +290,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            data-calculation-field="[data-calculation-input=overhead-calculated]"
                            data-calculation-operations="+"
+                           th:value="'£ 0'"
                            />
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -435,7 +436,7 @@
                     Total capital usage costs
                     <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
-                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -565,7 +566,7 @@
                     Total travel &amp; subsistence costs
                     <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
-                           th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
