@@ -8,12 +8,16 @@
 %mark-done-left {
 	background-image: url('../images/field/field-done.png');
 	background-repeat: no-repeat;
-
 }
+
 %mark-assigned-right {
 	background-image: url('../images/field/field-assigned-right.png');
 	background-repeat: no-repeat;
+}
 
+%mark-assigned-left{
+	background-image: url('../images/field/field-assigned.png');
+	background-repeat: no-repeat;
 }
 
 %icon-assigned {
@@ -67,12 +71,17 @@
 	&.marked-as-complete .textarea-header {
 		@extend %mark-done-left;
 	}
+	&.assigned-to-me .textarea-header {
+		@extend %mark-assigned-left;
+	}
+
 	&.marked-as-complete textarea[readonly],
 	&.marked-as-complete .textarea-header {
 		border-width:2px;
         border-color: $button-colour;
         background-color:$grey-4;
     }
+
 } 
 
 .app-sidebar .section-status a {

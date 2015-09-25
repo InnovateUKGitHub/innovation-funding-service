@@ -145,7 +145,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
-        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -178,11 +177,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("sectionId") final Long sectionId,
                                          HttpServletRequest request, RedirectAttributes redirectAttributes){
         Map<String, String[]> params = request.getParameterMap();
+        redirectAttributes.addFlashAttribute("applicationSaved", true);
+
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
+            redirectAttributes.addFlashAttribute("assignedQuestion", true);
+
         }
         saveApplicationForm(model, applicationId, sectionId, request);
-        redirectAttributes.addFlashAttribute("applicationSaved", true);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
