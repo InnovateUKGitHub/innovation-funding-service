@@ -98,7 +98,7 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">
-    <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' : '')+' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
+    <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')) +' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
