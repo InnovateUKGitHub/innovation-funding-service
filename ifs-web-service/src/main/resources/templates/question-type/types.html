@@ -220,7 +220,7 @@
                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                             <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                    th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                                    th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                             </span>
                         </span>
                     </label>
@@ -366,7 +366,7 @@
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
                     </span>
                 </label>
@@ -439,7 +439,7 @@
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
                     </span>
                 </label>
@@ -508,7 +508,7 @@
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
                     </span>
                 </label>
@@ -569,7 +569,7 @@
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
                     </span>
                 </label>
