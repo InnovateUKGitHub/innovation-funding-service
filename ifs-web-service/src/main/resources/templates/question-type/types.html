@@ -105,7 +105,8 @@
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id))} ? 'complete' : '')"
+                         th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
         </div>
@@ -125,9 +126,9 @@
     </div>
 
     <!-- ===========================Form: labour =========================== -->
-    <div th:fragment="labour">
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},
-                      type=${question.questionType.title}">
+    <div th:fragment="labour (complete)">
+        <div th:attr="finance-subsection-table-container=${question.getId()}"
+             th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},type=${question.questionType.title}">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
@@ -216,7 +217,7 @@
                                th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
                                readonly="" type="text" id="cost-labour-total-field"
                                th:value="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-                        <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                        <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                             £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                     th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                             </span>
@@ -289,7 +290,7 @@
                            data-calculation-field="[data-calculation-input=overhead-calculated]"
                            data-calculation-operations="+"
                            />
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
@@ -361,7 +362,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
@@ -434,7 +435,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
@@ -503,7 +504,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
@@ -564,7 +565,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
@@ -618,7 +619,7 @@
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
 
-                    <span th:class="'section-status ' + ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)) ? 'complete' : ''} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
+                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         £ <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
                                 th:text="${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
                         </span>
