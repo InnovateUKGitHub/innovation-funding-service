@@ -164,7 +164,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeFormHandler.handle(request);
 
         addApplicationDetails(applicationId, user.getId(), sectionId, model);
-        model.addAttribute("applicationSaved", true);
     }
 
     /**
