@@ -1,12 +1,15 @@
 package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -54,5 +57,29 @@ public class AssessmentController {
         // delegates to the handler and returns its operation success
         return assessmentHandler.respondToAssessmentInvitation(assessorId, applicationId, decision, reason, observations);
     }
+
+    @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
+    public Boolean submitAssessments(@RequestBody JsonNode formData) {
+
+        //unpacks all the response form data fields
+        Long assessorId = formData.get("assessorId").asLong();
+        ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
+
+        // delegates to the handler and returns its operation success
+        return assessmentHandler.submitAssessments(assessorId, fromArrayNodeToSet(assessmentsIds));
+    }
+
+    private Set<Long> fromArrayNodeToSet(ArrayNode array) {
+        Set<Long> longsSet = new HashSet<>();
+        Iterator<JsonNode> iterator = array.elements();
+
+        while ( iterator.hasNext() ) {
+            JsonNode aValue = iterator.next();
+            longsSet.add(aValue.asLong());
+        }
+
+        return longsSet;
+    }
+
 
 }

@@ -65,7 +65,8 @@ public class Assessment extends Process {
         recommendedValue = RecommendedValue.EMPTY;
     }
 
-    public void setSubmitted() {
+
+    public void submit() {
         submitted = true;
     }
 
