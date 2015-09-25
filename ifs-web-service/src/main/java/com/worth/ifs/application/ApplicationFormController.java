@@ -9,6 +9,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -243,48 +246,53 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @RequestParam("applicationId") Long applicationId,
                              HttpServletRequest request) {
 
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        try {
+            User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        if (inputIdentifier.equals("application_details-title")) {
-            Application application = applicationService.getById(applicationId);
-            application.setName(value);
-            applicationService.save(application);
-        } else if (inputIdentifier.equals("application_details-duration")) {
-            Application application = applicationService.getById(applicationId);
-            application.setDurationInMonths(Long.valueOf(value));
-            applicationService.save(application);
-        } else if (inputIdentifier.startsWith("application_details-startdate")) {
-            Application application = applicationService.getById(applicationId);
-            LocalDate startDate = application.getStartDate();
+            if (inputIdentifier.equals("application_details-title")) {
+                Application application = applicationService.getById(applicationId);
+                application.setName(value);
+                applicationService.save(application);
+            } else if (inputIdentifier.equals("application_details-duration")) {
+                Application application = applicationService.getById(applicationId);
+                application.setDurationInMonths(Long.valueOf(value));
+                applicationService.save(application);
+            } else if (inputIdentifier.startsWith("application_details-startdate")) {
+                Application application = applicationService.getById(applicationId);
+                LocalDate startDate = application.getStartDate();
 
-            if (startDate == null) {
-                startDate = LocalDate.now();
+                if (startDate == null) {
+                    startDate = LocalDate.now();
+                }
+                if (inputIdentifier.endsWith("_day")) {
+                    startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+                } else if (inputIdentifier.endsWith("_month")) {
+                    startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+                } else if (inputIdentifier.endsWith("_year")) {
+                    startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+                }
+                application.setStartDate(startDate);
+                applicationService.save(application);
+            } else if (inputIdentifier.startsWith("cost-")) {
+                String fieldName = request.getParameter("fieldName");
+                FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
+                if (fieldName != null && value != null) {
+                    log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
+                    financeFormHandler.storeField(fieldName, value);
+                }
+            } else {
+                Long questionId = Long.valueOf(inputIdentifier);
+                responseService.save(user.getId(), applicationId, questionId, value);
             }
-            if (inputIdentifier.endsWith("_day")) {
-                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-            } else if (inputIdentifier.endsWith("_month")) {
-                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-            } else if (inputIdentifier.endsWith("_year")) {
-                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-            }
-            application.setStartDate(startDate);
-            applicationService.save(application);
-        } else if (inputIdentifier.startsWith("cost-")) {
-            String fieldName = request.getParameter("fieldName");
-            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-            if (fieldName != null && value != null) {
-                log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
-                financeFormHandler.storeField(fieldName, value);
-            }
-        } else {
-            Long questionId = Long.valueOf(inputIdentifier);
-            responseService.save(user.getId(), applicationId, questionId, value);
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("success", "true");
+            return node;
+
+        } catch (Exception e) {
+            throw new AutosaveElementException(inputIdentifier, value, applicationId);
         }
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("success", "true");
-        return node;
     }
 
     public void assignQuestion(Model model,
