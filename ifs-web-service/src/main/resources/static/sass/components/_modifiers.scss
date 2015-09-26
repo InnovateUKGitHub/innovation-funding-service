@@ -17,9 +17,13 @@
 }
 
 .total-cost{
-    margin-top: -5px;
     font-size: 24px;
     font-weight: bold;
+
+    .alignright{
+    	margin-top: -5px;
+    }
+
     input[readonly]{
         color: $black;
         text-align: right;
@@ -30,4 +34,14 @@
         	margin-right: 0;
         }
     }
+
+    @include media-down(tablet) {
+		.heading-medium{
+			font-size: 20px;
+		}
+		input[readonly]{
+			font-size: 20px;
+			width: 140px;
+		}
+	}
 }
