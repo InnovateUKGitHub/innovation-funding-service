@@ -1,17 +1,17 @@
-//Innovation Funding Services javascript by Worth
-var worthIFS = {
+// Innovation Funding Services control methods
+var IFS = {
     collapsibleEl : '.collapsible > h2, .assign-container .assign-button',
     pieEl : '.pie',
     domReady : function(){
-        worthIFS.collapsible();
-        worthIFS.pieChart();
-        worthIFS.modalLink();
+        IFS.collapsible();
+        IFS.pieChart();
+        IFS.modalLink();
 
-        if(worthIFS.isApplicationForm()){
-            worthIFS.initAllAutosaveElements();
-            worthIFS.initUnsavedChangesWarning();
-            worthIFS.closeAlertHide();
-            worthIFS.initWordCount();
+        if(IFS.isApplicationForm()){
+            IFS.initAllAutosaveElements();
+            IFS.initUnsavedChangesWarning();
+            IFS.closeAlertHide();
+            IFS.initWordCount();
         }
     },
     isApplicationForm : function(){
@@ -24,7 +24,7 @@ var worthIFS = {
       /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
       -----------------------------------------------------------------------------
       */
-      jQuery(worthIFS.collapsibleEl).each(function(index,value) {
+      jQuery(IFS.collapsibleEl).each(function(index,value) {
         var inst = jQuery(this);
         var id = 'collapsible-' + index;   // create unique id for a11y relationship
         var loadstate = inst.hasClass('open');
@@ -64,7 +64,7 @@ var worthIFS = {
         Lea verou's SVG pie, adjusted with jquery and modernizr for more legacy support
         */
         if(Modernizr.svg && Modernizr.inlinesvg){
-           jQuery(worthIFS.pieEl).each(function(index,pie) {
+           jQuery(IFS.pieEl).each(function(index,pie) {
             var p = parseFloat(pie.textContent);
             var NS = "http://www.w3.org/2000/svg";
             var svg = document.createElementNS(NS, "svg");
@@ -93,12 +93,12 @@ var worthIFS = {
         var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
         var fields = inputFields.add(textareas);
 
-        worthIFS.initAutosaveElements(fields);
+        IFS.initAutosaveElements(fields);
     },
     initAutosaveElements : function(fields){
 
         var options = {
-            callback: function (value) { worthIFS.fieldChanged(this);  },
+            callback: function (value) { IFS.fieldChanged(this);  },
             wait: 500,
             highlight: false,
             captureLength: 1
@@ -106,7 +106,7 @@ var worthIFS = {
 
         fields.typeWatch(options);
         fields.off('change').on('change', function(e) {
-            worthIFS.fieldChanged(e.target);
+            IFS.fieldChanged(e.target);
         });
 
     },
@@ -224,7 +224,7 @@ var worthIFS = {
                    }
                 })
             });
-            worthIFS.modalCloseLink();
+            IFS.modalCloseLink();
         }
     },
     modalCloseLink : function(){
@@ -254,7 +254,7 @@ var worthIFS = {
 } 
 
 jQuery(document).ready(function(){
-  worthIFS.domReady();
+  IFS.domReady();
 });
 
 
