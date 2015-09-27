@@ -6,11 +6,11 @@ var IFS = {
         IFS.collapsible();
         IFS.pieChart();
         IFS.modalLink();
+        IFS.closeAlertHide();
 
         if(IFS.isApplicationForm()){
             IFS.initAllAutosaveElements();
             IFS.initUnsavedChangesWarning();
-            IFS.closeAlertHide();
             IFS.initWordCount();
         }
     },

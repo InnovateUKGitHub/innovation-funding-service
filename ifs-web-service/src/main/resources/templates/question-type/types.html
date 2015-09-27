@@ -171,13 +171,13 @@
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                    <input type="textr"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + labourCost.id}"
-                                           th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
+                                           th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
                                     <input type="number" class="width-small"
