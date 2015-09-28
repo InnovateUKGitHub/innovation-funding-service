@@ -81,7 +81,8 @@
                         </div>
                     </div>
                     <label>
-                        <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" th:value="${assessment.id}" />
+                        <input th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}"
+                               class="assessment-submit-checkbox" type="checkbox" name="submitted[]" th:value="${assessment.id}" />
                     </label>
                 </li>
 

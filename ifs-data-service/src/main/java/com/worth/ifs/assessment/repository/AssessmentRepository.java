@@ -20,11 +20,6 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
 
     Set<Assessment> findAll();
 
-    Set<Assessment> findByAssessorId(Long assessorId);
-
-    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status != 'REJECTED' ")
-    Set<Assessment> findByAssessorAndCompetition(Long assessorId, Long competitionId);
-
     @Query("Select a from Assessment a where a.assessor.id = ? and a.application.id = ?")
     Assessment findOneByAssessorAndApplication(Long assessorId, Long applicationId);
 
@@ -37,7 +32,13 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
     @Query("Select count(a) from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status != 'REJECTED' " )
     Integer findNumberOfAssignedAssessmentsByCompetition(Long assessor, Long competition);
 
-    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status = ?")
-    Set<Assessment> findAssessmentsByCompetitionAndStatus(Long assessor, Long competition, ProcessStatus status );
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status = ? order by a.overallScore ASC")
+    List<Assessment> findByAssessorAndCompetitionAndStatus(Long assessor, Long competition, ProcessStatus status );
 
+
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status='ACCEPTED' and a.recommendedValue = 'EMPTY' ")
+    List<Assessment> findOpenByAssessorAndCompetition(Long assessor, Long competition );
+
+    @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status='ACCEPTED' and a.recommendedValue != 'EMPTY' ")
+    List<Assessment> findStartedByAssessorAndCompetition(Long assessor, Long competition );
 }

@@ -25,8 +25,8 @@ public class AssessmentController {
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
-    public Set<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessmentHandler.getAllByCompetitionAndUser(competitionId, userId);
+    public List<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+        return assessmentHandler.getAllByCompetitionAndAssessor(competitionId, userId);
     }
 
     @RequestMapping("/findAssessmentByApplication/{userId}/{applicationId}")
