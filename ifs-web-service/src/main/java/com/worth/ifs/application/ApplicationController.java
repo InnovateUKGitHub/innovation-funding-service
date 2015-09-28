@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,10 +112,10 @@ public class ApplicationController extends AbstractApplicationController {
      * This method is for the post request when the users clicks the input[type=submit] button.
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", params="singleFragment=true", method = RequestMethod.POST)
+    @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
     public String assignQuestionAndReturnSectionFragment(Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
-                                                         @PathVariable("sectionId") final Long sectionId,
+                                                         @RequestParam("sectionId") final Long sectionId,
                                                          HttpServletRequest request, RedirectAttributes redirectAttributes){
 
         doAssignQuestion(applicationId, request, redirectAttributes);
@@ -126,6 +127,7 @@ public class ApplicationController extends AbstractApplicationController {
         this.addApplicationDetails(applicationId, user.getId(), model);
 
         // TODO DW - quite a lot of rework here to get a hold of more single-section focused
+        // TODO DW - sectionId should be determined from the clicked button as per the questionId as grabbed below
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
         Section currentSection = getSection(application.getCompetition().getSections(), sectionId);

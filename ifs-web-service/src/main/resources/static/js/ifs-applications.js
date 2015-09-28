@@ -12,11 +12,12 @@ $(function() {
 
         var link = $(this);
         var form = link.closest('form.application-overview');
+        var sectionToUpdate = link.closest('li.section[data-question-id]');
+        var sectionId = sectionToUpdate.attr('data-section-id');
 
         var handleFormPost = function (data) {
 
             var htmlReplacement = $('<div>' + data + '</div>');
-            var sectionToUpdate = link.closest('li.section[data-question-id]');
             var questionId = sectionToUpdate.attr('data-question-id');
             var replacement = htmlReplacement.find('li.section[data-question-id=' + questionId + ']');
             sectionToUpdate.replaceWith(replacement);
@@ -26,7 +27,7 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: '?singleFragment=true',
+            url: '?singleFragment=true&sectionId=' + sectionId,
             data: form.serialize() + '&' + link.attr('name') + '=' + link.attr('value'),
             success: handleFormPost
         });
