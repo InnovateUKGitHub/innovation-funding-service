@@ -1,0 +1,1 @@
+./gradlew deployToTomcat watch

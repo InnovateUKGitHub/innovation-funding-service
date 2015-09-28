@@ -1,11 +1,17 @@
 .app-dashboard {
 
-	.column-two-thirds{
-		@include grid-column( 3/4 );
+	.column-assessment-details{
+		@include grid-column( 13/16 );
 	}
 
-	.column-third{
-		@include grid-column( 1/4 );
+	.column-assessment-status{
+		@include grid-column( 3/16 );
+	}
+
+	.assessment-submit-checkbox{
+		position: absolute;
+		top: 6px;
+		right:4px;
 	}
 	
 	.application-status{
@@ -37,6 +43,12 @@
 			}
 		}
 
+		&.open{
+			p{
+				padding-top: 45px;
+			}
+		}
+
 		&.assessed,
 		&.submitted{
 			
@@ -54,7 +66,7 @@
 				font-size: 40px;
 				color: $black;
 				font-weight: bold;
-				margin-top: -5px;
+				line-height: 1em;
 			}
 
 			.recommend-container + p{
@@ -70,20 +82,46 @@
 				&.yes{
 					span{
 						background: url(../images/tick-green.png) left 50% no-repeat;
-						padding: 0 20px;
+						padding: 0 0 0 20px;
 					}
 				}
 
 				&.no{
 					span{
 						background: url(../images/cross-red.png) left 3px no-repeat;
-						padding: 0 20px; 
+						padding: 0 0 0 20px; 
 					}
 				}
 
 			}
 
 		}
+
+		@include media-down(mobile) {
+			
+			border-top: 1px solid $border-colour;
+			border-left: none;
+
+			&.open{
+				p{
+					padding: 5px;
+				}
+			}
+
+			&.pending{
+				p{
+					&.application-listing_pending{
+						padding: 15px;
+					}
+				}
+			}
+		}
+
+	}
+
+	button[name="submit_assessments"]{
+		margin: 15px 0 0 0;
+
 	}
 
 	.boxed-list .progress-container {
