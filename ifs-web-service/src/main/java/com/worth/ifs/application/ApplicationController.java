@@ -6,7 +6,6 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -103,7 +102,6 @@ public class ApplicationController extends AbstractApplicationController {
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
-        addDateDetails(model);
         addUserDetails(model, application, userId);
     }
 

@@ -155,12 +155,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), userOrganisationId));
     }
 
-    protected void addDateDetails(Model model) {
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
-    }
-
     protected Section getSection(List<Section> sections, Long sectionId) {
         // get the section that we want to show, so we can use this on to show the correct questions.
         Optional<Section> section = sections.stream().
