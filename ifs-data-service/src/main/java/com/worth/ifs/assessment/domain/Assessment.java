@@ -42,6 +42,11 @@ public class Assessment extends Process {
     @Column(name="temp_RecommendedValue")
     private RecommendedValue recommendedValue;
 
+    @Column(name="recommendation_feedback")
+    private String suitableFeedback;
+    @Column(name="comments")
+    private String comments;
+
     /******* END TEMPORARY ********/
 
 
@@ -62,6 +67,11 @@ public class Assessment extends Process {
         recommendedValue = RecommendedValue.EMPTY;
     }
 
+    public void setSummary(RecommendedValue value, String feedback, String comments) {
+        this.recommendedValue = value;
+        this.suitableFeedback = feedback;
+        this.comments = comments;
+    }
 
     public void submit() {
         submitted = true;
