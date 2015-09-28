@@ -11,8 +11,9 @@ import java.util.Set;
 
 
 /**
- * Created by nunoalexandre on 16/09/15.
+ * AssessmentRepository is an interface between the outside and the ORM Assessment interaction.
  */
+
 
 public interface AssessmentRepository extends PagingAndSortingRepository<Assessment, Long> {
 

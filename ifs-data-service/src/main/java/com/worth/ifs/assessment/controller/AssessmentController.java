@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by nunoalexandre on 16/09/15.
+ * AssessmentController is http requests controller that maps those requests and delegates their intent
+ * to the AssessmentHandler and only that.
  */
 @RestController
 @RequestMapping("/assessment")

@@ -12,7 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by nunoalexandre on 16/09/15.
+ * AssessmentHandler is responsible to manage the domain logic around the Assessment's domain range.
+ * This avoids code coupling and spread knlowledge and responsability over Assessment's and allows us
+ * to have the access to them centered here, preventing any incoherence by multiple ways.
+ *
+ * So this class is responsible to manage interactions with the AssessmentRepository, being a facade between
+ * the outside world and the Assessment's world.
  */
 @Component
 public class AssessmentHandler {
