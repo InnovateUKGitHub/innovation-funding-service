@@ -1,11 +1,8 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.PolymorphismType;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.*;
-import javax.transaction.NotSupportedException;
 import java.time.LocalDate;
 import java.util.Calendar;
 

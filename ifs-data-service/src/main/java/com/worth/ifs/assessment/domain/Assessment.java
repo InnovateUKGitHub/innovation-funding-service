@@ -1,8 +1,6 @@
 package com.worth.ifs.assessment.domain;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.Process;
@@ -11,7 +9,6 @@ import com.worth.ifs.workflow.domain.ProcessStatus;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Type;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.persistence.*;
 import java.util.*;
 
