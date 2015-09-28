@@ -16,21 +16,21 @@ public class QuestionRestServiceImpl extends BaseRestServiceProvider implements 
     String questionRestURL;
 
     @Override
-    public void markAsComplete(Long questionId, Long markedAsCompleteById) {
+    public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(dataRestServiceURL + questionRestURL + "/markAsComplete/"+questionId + "/" + markedAsCompleteById, questionId, markedAsCompleteById);
+        restTemplate.put(dataRestServiceURL + questionRestURL + "/markAsComplete/"+questionId + "/" + applicationId + "/" + markedAsCompleteById, null);
     }
 
     @Override
-    public void markAsInComplete(Long questionId, Long markedAsInCompleteById) {
+    public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(dataRestServiceURL + questionRestURL + "/markAsInComplete/"+questionId + "/" + markedAsInCompleteById, questionId, markedAsInCompleteById);
+        restTemplate.put(dataRestServiceURL + questionRestURL + "/markAsInComplete/"+questionId + "/" + applicationId + "/" + markedAsInCompleteById, null);
     }
 
     @Override
-    public void assign(Long questionId, Long assigneeId, Long assignedById) {
+    public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(dataRestServiceURL + questionRestURL + "/assign/" + questionId + "/" + assigneeId + "/" + assignedById, questionId, assigneeId, assignedById);
+        restTemplate.put(dataRestServiceURL + questionRestURL + "/assign/" + questionId + "/" + applicationId + "/" + assigneeId + "/" + assignedById, null);
     }
 
     @Override

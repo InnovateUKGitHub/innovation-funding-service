@@ -196,10 +196,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
-            questionService.markAsComplete(questionId, processRole.getId());
+            questionService.markAsComplete(questionId, applicationId, processRole.getId());
         } else if (params.containsKey("mark_as_incomplete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
-            questionService.markAsInComplete(questionId, processRole.getId());
+            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
         }
     }
 
