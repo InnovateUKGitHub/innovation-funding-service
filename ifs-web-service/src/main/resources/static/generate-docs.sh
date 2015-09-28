@@ -10,6 +10,8 @@ bundle exec compass compile -c config-docs.rb
 ./node_modules/.bin/styledocco -n "Innovation Funding Service styleguide" css-docs/docs.css \
 	--include ./js/vendor/modernizr/modernizr.js \
 	--include ./js/ifs.js \
+	--include ./js/ifs-finance.js \
+	--include ./js/ifs-applications.js \
 	--include ./js/vendor/govuk/selection-buttons.js \
 	--include ./js/vendor/govuk/application.js \
 	--verbose &&
