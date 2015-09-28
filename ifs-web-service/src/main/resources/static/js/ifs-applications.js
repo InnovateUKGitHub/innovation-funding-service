@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals $: false, worthIFS: false */
+/* globals $: false, IFS: false */
 
 //
 // Handlers for single section refreshing when assigning questions to users on the Application Overview
@@ -22,7 +22,7 @@ $(function() {
             var replacement = htmlReplacement.find('li.section[data-question-id=' + questionId + ']');
             sectionToUpdate.replaceWith(replacement);
 
-            worthIFS.collapsibleWithinScope(replacement);
+            IFS.collapsibleWithinScope(replacement);
         };
 
         $.ajax({
