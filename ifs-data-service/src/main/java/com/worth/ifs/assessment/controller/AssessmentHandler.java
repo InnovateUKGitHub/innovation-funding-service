@@ -3,9 +3,12 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.workflow.domain.ProcessStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,17 +34,34 @@ public class AssessmentHandler {
         return assessments.findById(id);
     }
 
-    public Set<Assessment> getAllByCompetitionAndUser(Long competitionId, Long userId) {
-        return assessments.findByAssessorAndCompetition(userId, competitionId);
+
+    /**
+     * Get's all the assessments by competition and assessor.
+     * By 'All' is meant all the assessments whose invitation was not rejected.
+     * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
+     * @param competitionId
+     * @param assessorId
+     * @return
+     */
+    public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
+
+        List<Assessment> allAssessments = new ArrayList<>();
+
+        /* HQL has no select union this this seems to be the simplest solution */
+        //1 pending
+        allAssessments.addAll(assessments.findByAssessorAndCompetitionAndStatus(assessorId, competitionId, ProcessStatus.PENDING));
+        //2 open
+        allAssessments.addAll(assessments.findOpenByAssessorAndCompetition(assessorId, competitionId));
+        //3 started
+        allAssessments.addAll(assessments.findStartedByAssessorAndCompetition(assessorId, competitionId));
+
+        return allAssessments;
     }
 
     public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId) {
         return assessments.findOneByAssessorAndApplication(userId, applicationId);
     }
 
-    public Set<Assessment> getAllByAssessor(Long assessorId) {
-            return assessments.findByAssessorId(assessorId);
-    }
     public Integer getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long userId) {
         return assessments.findNumberOfSubmittedAssessmentsByCompetition(userId, competitionId);
     }

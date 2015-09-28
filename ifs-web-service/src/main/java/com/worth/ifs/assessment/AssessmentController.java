@@ -60,13 +60,13 @@ public class AssessmentController {
         Competition competition = competitionService.getCompetitionById(competitionId);
 
         /* gets all the assessments assigned to this assessor in this competition */
-        Set<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
 
         //filters the assessments to just have the submitted assessments here
-        Set<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toSet());
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toList());
 
         //filters the assessments to just the not submmited assessments
-        Set<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(Collectors.toSet());
+        List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(Collectors.toList());
 
         //pass to view
         model.addAttribute("competition", competition);

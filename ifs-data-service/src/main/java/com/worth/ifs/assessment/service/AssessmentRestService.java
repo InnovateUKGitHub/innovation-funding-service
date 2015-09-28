@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public interface AssessmentRestService {
 
-    public Set<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
+    public List<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
 
     public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId);
 

@@ -30,8 +30,8 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     String assessmentRestURL;
 
 
-    public Set<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return new LinkedHashSet<>(Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class)));
+    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return Arrays.asList(restCall("/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
     }
 
     public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
