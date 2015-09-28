@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: mysqlnode1.worthit.public    Database: ifs_acc
+-- Host: 127.0.0.1    Database: ifs
 -- ------------------------------------------------------
--- Server version	5.5.29-0ubuntu0.12.04.2-log
+-- Server version	5.6.21-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -51,8 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT IGNORE INTO `assessment` (`temp_total_score`,`temp_recommended_value`,`submitted`,`process_id`,`application`,`assessor`) VALUES (37,'NO','N',1,3,3), (82,'YES','Y',2,4,3), (40,'EMPTY','N',3,5,3), (0,'EMPTY','N',4,6,3);
-
+INSERT  IGNORE INTO `assessment` (`temp_total_score`, `temp_recommended_value`, `submitted`, `process_id`, `application`, `assessor`) VALUES (37,'NO','N',1,3,3),(82,'YES','Y',2,4,3),(40,'EMPTY','N',3,5,3),(0,'EMPTY','N',4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +141,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `question_status` WRITE;
 /*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,NULL,NULL,1,12),(2,NULL,'\0',NULL,NULL,NULL,1,11),(3,NULL,'',NULL,NULL,NULL,1,28),(4,NULL,'',NULL,NULL,NULL,1,33),(5,'2015-09-24 18:49:20','','\0',NULL,NULL,NULL,1),(6,'2015-09-25 00:06:12',NULL,'',1,5,NULL,13),(7,NULL,'\0',NULL,NULL,NULL,5,29),(8,'2015-09-25 00:07:50',NULL,'\0',NULL,NULL,NULL,29),(9,'2015-09-25 00:27:25',NULL,'\0',1,5,NULL,4);
+INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `application_id`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (1,NULL,'',NULL,1,NULL,NULL,1,12),(2,NULL,'\0',NULL,1,NULL,NULL,1,11),(3,NULL,'',NULL,1,NULL,NULL,1,28),(4,NULL,'',NULL,1,NULL,NULL,1,33),(5,'2015-09-24 18:49:20','','\0',1,NULL,NULL,NULL,1),(6,'2015-09-25 00:06:12',NULL,'',1,1,5,NULL,13),(7,NULL,'\0',NULL,1,NULL,NULL,5,29),(8,'2015-09-25 00:07:50',NULL,'\0',1,NULL,NULL,NULL,29),(9,'2015-09-25 00:27:25',NULL,'\0',1,1,5,NULL,4);
 /*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-25  0:28:38
+-- Dump completed on 2015-09-28 18:18:22
