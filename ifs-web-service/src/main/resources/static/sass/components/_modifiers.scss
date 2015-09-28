@@ -26,6 +26,8 @@
 
     input[readonly]{
         color: $black;
+        background: none;
+        border: none;
         text-align: right;
         margin-right: 60px;
         width: 170px;
