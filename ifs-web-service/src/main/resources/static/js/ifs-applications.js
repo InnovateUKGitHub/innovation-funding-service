@@ -10,9 +10,9 @@ $(function() {
 
     var handleAssignQuestionFragmentReload = function(e) {
 
-        var link = $(this);
-        var form = link.closest('form.application-overview');
-        var sectionToUpdate = link.closest('li.section[data-question-id]');
+        var button = $(this);
+        var form = button.closest('form.application-overview');
+        var sectionToUpdate = button.closest('li.section[data-question-id]');
         var sectionId = sectionToUpdate.attr('data-section-id');
 
         var handleFormPost = function (data) {
@@ -27,8 +27,9 @@ $(function() {
 
         $.ajax({
             type: "POST",
+            // TODO DW - shouldn't have to pass the sectionId via a request parameter - it should instead be made available by the "name" and "value" params on the clicked button, as per the questionId
             url: '?singleFragment=true&sectionId=' + sectionId,
-            data: form.serialize() + '&' + link.attr('name') + '=' + link.attr('value'),
+            data: form.serialize() + '&' + button.attr('name') + '=' + button.attr('value'),
             success: handleFormPost
         });
 
