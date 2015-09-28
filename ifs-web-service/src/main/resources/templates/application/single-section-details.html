@@ -6,7 +6,8 @@
     <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
         th:each="question : ${section.getQuestions()}"
         th:if="${!#strings.isEmpty(question.getName())}"
-        th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(question.getId())})">
+        th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(question.getId())})"
+        th:attr="data-question-id=${question.id}">
         <div class="grid-row">
             <div class="column-two-thirds">
                 <h4 class="heading-medium">
