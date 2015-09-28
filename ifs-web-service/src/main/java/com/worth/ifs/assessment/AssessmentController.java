@@ -38,6 +38,7 @@ public class AssessmentController {
     private final String competitionAssessments = "assessor-competition-applications";
     private final String assessorDashboard = "assessor-dashboard";
     private final String assessmentDetails = "assessment-details";
+    private final String assessmentSubmitReview = "assessment-submit-review";
     private final String applicationReview = "application-assessment-review";
     private final String rejectInvitation = "reject-assessment-invitation";
 
@@ -60,13 +61,13 @@ public class AssessmentController {
         Competition competition = competitionService.getCompetitionById(competitionId);
 
         /* gets all the assessments assigned to this assessor in this competition */
-        Set<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
+        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
 
         //filters the assessments to just have the submitted assessments here
-        Set<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toSet());
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(Collectors.toList());
 
         //filters the assessments to just the not submmited assessments
-        Set<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(Collectors.toSet());
+        List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(Collectors.toList());
 
         //pass to view
         model.addAttribute("competition", competition);
@@ -81,6 +82,7 @@ public class AssessmentController {
                                                @PathVariable("applicationId") final Long applicationId,
                                                HttpServletRequest req) {
 
+        //TO BE DRY
 
         Competition competition = competitionService.getCompetitionById(competitionId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
@@ -117,6 +119,8 @@ public class AssessmentController {
                                                @PathVariable("applicationId") final Long applicationId,
                                                HttpServletRequest req) {
 
+        //TO BE DRY
+
         Competition competition = competitionService.getCompetitionById(competitionId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
 
@@ -127,7 +131,21 @@ public class AssessmentController {
         return rejectInvitation;
     }
 
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/summary", method = RequestMethod.GET)
+    public String getAssessmentSubmitReview(Model model, @PathVariable("competitionId") final Long competitionId,
+                                                     @PathVariable("applicationId") final Long applicationId,
+                                                     HttpServletRequest req) {
 
+        //TO BE DRY
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
+
+        //pass to view
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
+
+        return assessmentSubmitReview;
+    }
 
 
     @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)

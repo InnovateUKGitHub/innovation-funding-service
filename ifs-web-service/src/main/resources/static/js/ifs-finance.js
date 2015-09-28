@@ -1,5 +1,5 @@
-//Innovation Funding Services javascript by Worth
-var worthIFSFinance = {
+//Innovation Funding Services javascript for calculating the finance fields
+var IFSFinance = {
     MathOperation : {
         '+': function (x, y) { return x + y },
         '-': function (x, y) { return x - y },
@@ -7,10 +7,10 @@ var worthIFSFinance = {
         '/': function (x, y) { return x / y }
     },
     domReady : function(){
-        if(worthIFS.isApplicationForm()){
-            worthIFSFinance.preProcessRepeatedFieldsForTotalElements();
-            worthIFSFinance.bindCalculationActionToFields();
-            worthIFSFinance.initShowHideOtherCosts();
+        if(IFS.isApplicationForm()){
+            IFSFinance.preProcessRepeatedFieldsForTotalElements();
+            IFSFinance.bindCalculationActionToFields();
+            IFSFinance.initShowHideOtherCosts();
         }
     },
     preProcessRepeatedFieldsForTotalElements : function(){
@@ -20,7 +20,7 @@ var worthIFSFinance = {
         // whereby no behaviour needs rebinding after elements are added and removed
         if(jQuery('[data-calculation-repeating-total]').length){
             $('[data-calculation-repeating-total]').each(function(index,value){
-                worthIFSFinance.preProcessRepeatedFieldsForTotalElement($(this));
+                IFSFinance.preProcessRepeatedFieldsForTotalElement($(this));
             });
         }
     },
@@ -29,15 +29,15 @@ var worthIFSFinance = {
         // this behaviour to rerun and update the field ids on the "Total" field to let it know the latest set of fields
         // that are involved in its calculation - would be nicer to move to a delegate-based event listner approach though
         // whereby no behaviour needs rebinding after elements are added and removed
-        var fieldSelector = worthIFSFinance.getFieldSelector(totalElement);
-        var repeatedFieldElements = worthIFSFinance.getFieldsBySelector(fieldSelector);
-        worthIFSFinance.addRepeatedFieldIdsToTotalElement(totalElement, repeatedFieldElements);
+        var fieldSelector = IFSFinance.getFieldSelector(totalElement);
+        var repeatedFieldElements = IFSFinance.getFieldsBySelector(fieldSelector);
+        IFSFinance.addRepeatedFieldIdsToTotalElement(totalElement, repeatedFieldElements);
     },
     rebindCalculationFieldsOnDynamicUpdate : function() {
         // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
         // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
         // model whereby no rebinding is necessary when the page is changed
-        worthIFSFinance.domReady();
+        IFSFinance.domReady();
     },
 
     getFieldsBySelector : function(fieldSelector) {
@@ -68,19 +68,19 @@ var worthIFSFinance = {
                     // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
                     // model whereby no rebinding is necessary when the page is changed
                     field.off('change').on('change',function(){
-                        worthIFSFinance.doMath(inst,fields);
+                        IFSFinance.doMath(inst,fields);
                     });
                 });
         });
     },
     initShowHideOtherCosts : function() {
-        worthIFSFinance.triggerOtherCostsForm($('#otherCostsShowHideToggle'));
-        worthIFSFinance.bindShowHideOtherCostsSelectTrigger();
+        IFSFinance.triggerOtherCostsForm($('#otherCostsShowHideToggle'));
+        IFSFinance.bindShowHideOtherCostsSelectTrigger();
     },
     bindShowHideOtherCostsSelectTrigger : function() {
         $('#otherCostsShowHideToggle').change(function() {
             var self = this;
-            worthIFSFinance.triggerOtherCostsForm(self);
+            IFSFinance.triggerOtherCostsForm(self);
         });
     },
     triggerOtherCostsForm : function(element) {
@@ -117,26 +117,26 @@ var worthIFSFinance = {
             var calculatedValue=values[0];
         }
         else {
-            var calculatedValue = worthIFSFinance.MathOperation[operation[0]](values[0],values[1]);
+            var calculatedValue = IFSFinance.MathOperation[operation[0]](values[0],values[1]);
         }
         //one operation and more values, all get the same operation
 
         if((operation.length == 1) && (values.length > 2)) {
             for (i = 2; i < values.length; i++) {
                 //console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
-                calculatedValue = worthIFSFinance.MathOperation[operation[0]](calculatedValue,values[i]);
+                calculatedValue = IFSFinance.MathOperation[operation[0]](calculatedValue,values[i]);
             };
         }
        //multiple operations and multiple values
         else if((operation.length > 1) && (values.length > 2)) {
             for (i = 1; i < operation.length; i++) {
                 // console.log('round:',i,operation[i],calculatedValue,values[i+1])
-                calculatedValue = worthIFSFinance.MathOperation[operation[i]](calculatedValue,values[i+1]);
+                calculatedValue = IFSFinance.MathOperation[operation[i]](calculatedValue,values[i+1]);
             }
         }
         element.attr("data-calculation-rawvalue",calculatedValue);
 
-        var formatted = worthIFSFinance.formatCurrency(Math.round(calculatedValue));
+        var formatted = IFSFinance.formatCurrency(Math.round(calculatedValue));
         if (element.is('span')) {
             element.text(formatted);
         } else {
@@ -158,7 +158,7 @@ var worthIFSFinance = {
 // Bind change events to update calculations
 //
 $(document).ready(function(){
-    worthIFSFinance.domReady();
+    IFSFinance.domReady();
 });
 
 //
@@ -195,8 +195,8 @@ $(function() {
             var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
             var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
             tableSectionToUpdate.replaceWith(replacement);
-            worthIFS.initAllAutosaveElements(replacement);
-            worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+            IFS.initAllAutosaveElements(replacement);
+            IFSFinance.rebindCalculationFieldsOnDynamicUpdate();
         })
         e.preventDefault();
         return false;
@@ -215,7 +215,7 @@ $(function() {
             var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
             costRowsToDelete.find('[data-calculation-fields],[data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
             costRowsToDelete.remove();
-            worthIFSFinance.rebindCalculationFieldsOnDynamicUpdate();
+            IFSFinance.rebindCalculationFieldsOnDynamicUpdate();
         })
         e.preventDefault();
         return false;

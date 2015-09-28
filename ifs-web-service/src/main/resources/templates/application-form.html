@@ -5,19 +5,6 @@
 </head>
 <body class="app-form">
 
-<div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-    <p>
-         <span>You have saved your field successfully</span>
-    </p>
-</div>
-
-<div th:if="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-    <p>
-         <span>Question assigned successfully</span>
-    </p>
-</div>
-
-
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 

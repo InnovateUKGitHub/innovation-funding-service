@@ -112,11 +112,11 @@
             </div>
         </div>
         <hr/>
-        <div class="grid-row">
+        <div class="grid-row total-cost">
             <div class="column-half">
                 <p class="heading-medium">Total project costs</p>
             </div>
-            <div class="column-half alignright total-cost">
+            <div class="column-half alignright">
                 <input type="text" readOnly="readonly" class="heading-medium width-medium"
                    data-calculation-repeating-total="[id*=total]"
                    data-calculation-operations="+"
@@ -171,13 +171,13 @@
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="number"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary ,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                    <input type="textr"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + labourCost.id}"
-                                           th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
+                                           th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
                                     <input type="number" class="width-small"
@@ -690,9 +690,14 @@
             </p>
         </div>
     </div>
-    <!-- ===========================Form: financial summary =========================== -->
+    <!-- ===========================Form: financial summary (question type) =========================== -->
     <div th:fragment="financial_summary" th:if="${financeTotalPerType}">
         <h2>Project cost breakdown</h2>
+        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+            <p><a href="">View table in full screen (opens new window)</a></p>
+    </div>
+    <!-- ===========================Form: financial summary/breakdown table =========================== -->
+    <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="form-group">
             <div style="overflow: auto;">
                 <table>
@@ -708,36 +713,36 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
-                            <th th:text="${financeSubSection.name}"></th>
-                            <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
-                            </td>
-                            <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                    <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
+                        <th th:text="${financeSubSection.name}"></th>
+                        <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                            th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                        </td>
+                        <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
                                 th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                                 th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                                    th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                                th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
-                            </div>
-                        </tr>
-                        <tr>
-                            <th>Total</th>
-                            <td class="numeric" style="font-weight: 700;" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
-                            </td>
-                            <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                                <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                                    th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
-                            </div>
-                        </tr>
+                        </div>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric" style="font-weight: 700;" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                        </td>
+                        <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                            <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                                th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                        </div>
+                    </tr>
                     </tbody>
                 </table>
             </div>
-            <p><a href="">View table in full screen (opens new window)</a></p>
         </div>
     </div>
+
     <!-- ===========================Form: funding breakdown =========================== -->
-    <div th:fragment="finances_summary" th:if="${financeTotalPerType}">
+    <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
 
         <p>This is the overview of the finances provided by all partners in this project.</p>
         <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
@@ -794,43 +799,8 @@
                 </tbody>
             </table>
         </div>
-
-
         <h2>Funding breakdown</h2>
-        <div class="form-group">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col">&nbsp;</th>
-                    <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}">
-                        <div th:text="${applicationOrganisation.name}"></div>
-                        <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
-                        <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
-                    <th th:text="${financeSubSection.name}"></th>
+        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
 
-                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
-                            th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                            th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
-                            th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
-                        </td>
-                    </div>
-                </tr>
-                <tr>
-                    <th>Total</th>
-
-                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                            th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
-                    </div>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 </html>

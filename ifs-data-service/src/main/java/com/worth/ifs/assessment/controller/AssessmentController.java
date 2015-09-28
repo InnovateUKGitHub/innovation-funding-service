@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by nunoalexandre on 16/09/15.
+ * AssessmentController is http requests controller that maps those requests and delegates their intent
+ * to the AssessmentHandler and only that.
  */
 @RestController
 @RequestMapping("/assessment")
@@ -25,8 +26,8 @@ public class AssessmentController {
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
-    public Set<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessmentHandler.getAllByCompetitionAndUser(competitionId, userId);
+    public List<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+        return assessmentHandler.getAllByCompetitionAndAssessor(competitionId, userId);
     }
 
     @RequestMapping("/findAssessmentByApplication/{userId}/{applicationId}")

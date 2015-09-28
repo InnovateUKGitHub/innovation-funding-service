@@ -1,17 +1,17 @@
-//Innovation Funding Services javascript by Worth
-var worthIFS = {
+// Innovation Funding Services control methods
+var IFS = {
     collapsibleEl : '.collapsible > h2, .assign-container .assign-button',
     pieEl : '.pie',
     domReady : function(){
-        worthIFS.collapsible();
-        worthIFS.pieChart();
-        worthIFS.modalLink();
+        IFS.collapsible();
+        IFS.pieChart();
+        IFS.modalLink();
+        IFS.closeAlertHide();
 
-        if(worthIFS.isApplicationForm()){
-            worthIFS.initAllAutosaveElements();
-            worthIFS.initUnsavedChangesWarning();
-            worthIFS.closeAlertHide();
-            worthIFS.initWordCount();
+        if(IFS.isApplicationForm()){
+            IFS.initAllAutosaveElements();
+            IFS.initUnsavedChangesWarning();
+            IFS.initWordCount();
         }
     },
     isApplicationForm : function(){
@@ -20,71 +20,51 @@ var worthIFS = {
         }
         return false;
     },
-    collapsible : function() {
-        /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
-         -----------------------------------------------------------------------------
-         */
-        worthIFS.collapsibleWithinScope($(document));
-    },
-    collapsibleWithinScope : function($scope) {
-
-        var existingCollapsibles = $scope.find('[data-collapsible-id]');
-
-        var maxId = 0;
-
-        existingCollapsibles.each(function(index, element) {
-            var id = element.attr('data-collapsible-id');
-            maxId = Math.max(maxId, parseInt(id));
-        });
-
-        $scope.find(worthIFS.collapsibleEl).each(function(index,value) {
-            var inst = $(this);
-            worthIFS.addCollapsibleBehaviourToElement(inst, index, maxId + 1);
-        });
-    },
-    addCollapsibleBehaviourToElement : function(inst, index, idOffset) {
-
-        var id = 'collapsible-' + (index + idOffset);   // create unique id for a11y relationship
-
+    collapsible : function(){
+      /*  Progressive collapsibles written by @Heydonworks altered by Worth Systems
+      -----------------------------------------------------------------------------
+      */
+      jQuery(IFS.collapsibleEl).each(function(index,value) {
+        var inst = jQuery(this);
+        var id = 'collapsible-' + index;   // create unique id for a11y relationship
         var loadstate = inst.hasClass('open');
-
+        
         var closeAll = false;
-        if(inst.closest('.collapsible').hasClass('js-close-others')){
-            closeAll = true;
-        }
+         if(inst.closest('.collapsible').hasClass('js-close-others')){
+            closeAll = true;       
+         }
         // wrap the content and make it focusable
-        inst.nextUntil('h2').wrapAll('<div id="'+ id +'" data-collapsible-id="' + id + '" aria-hidden="'+!loadstate+'">');
+        inst.nextUntil('h2').wrapAll('<div id="'+ id +'" aria-hidden="'+!loadstate+'">');
         var panel = inst.next();
 
-        // Add the button inside the <h2> so both the heading and button semanics are read
+        // Add the button inside the <h2> so both the heading and button semanics are read  
         inst.wrapInner('<button aria-expanded="'+loadstate+'" aria-controls="'+ id +'" type="button">');
         var button = inst.children('button');
 
-        // Toggle the state properties
-        // TODO DW - direct event handling placed on button difficult to maintain when allowing partial page updates via ajax
-        // Consider moving to event delegation-based handling wherever possible
-        button.off('click').on('click', function() {
-            var state = $(this).attr('aria-expanded') === 'false' ? true : false;
+        // Toggle the state properties  
+        button.on('click', function() {
+          var state = jQuery(this).attr('aria-expanded') === 'false' ? true : false;
 
-            //close all other buttons on click, defined by the js-close-others class on the container element
-            if(closeAll){
-                var container =  jQuery(this).closest('.collapsible')
-                container.find('[aria-expanded]').attr('aria-expanded','false');
-                container.find('[aria-hidden]').attr('aria-hidden','true');
-            }
+          //close all other buttons on click, defined by the js-close-others class on the container element
+          if(closeAll){
+              var container =  jQuery(this).closest('.collapsible')
+              container.find('[aria-expanded]').attr('aria-expanded','false');
+              container.find('[aria-hidden]').attr('aria-hidden','true');
+          }
 
 
-            //toggle the current
-            jQuery(this).attr('aria-expanded', state);
-            panel.attr('aria-hidden', !state);
+          //toggle the current
+          jQuery(this).attr('aria-expanded', state);
+          panel.attr('aria-hidden', !state);
         });
+      });
     },
     pieChart : function() {
         /* 
         Lea verou's SVG pie, adjusted with jquery and modernizr for more legacy support
         */
         if(Modernizr.svg && Modernizr.inlinesvg){
-           jQuery(worthIFS.pieEl).each(function(index,pie) {
+           jQuery(IFS.pieEl).each(function(index,pie) {
             var p = parseFloat(pie.textContent);
             var NS = "http://www.w3.org/2000/svg";
             var svg = document.createElementNS(NS, "svg");
@@ -113,12 +93,12 @@ var worthIFS = {
         var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
         var fields = inputFields.add(textareas);
 
-        worthIFS.initAutosaveElements(fields);
+        IFS.initAutosaveElements(fields);
     },
     initAutosaveElements : function(fields){
 
         var options = {
-            callback: function (value) { worthIFS.fieldChanged(this);  },
+            callback: function (value) { IFS.fieldChanged(this);  },
             wait: 500,
             highlight: false,
             captureLength: 1
@@ -126,7 +106,7 @@ var worthIFS = {
 
         fields.typeWatch(options);
         fields.off('change').on('change', function(e) {
-            worthIFS.fieldChanged(e.target);
+            IFS.fieldChanged(e.target);
         });
 
     },
@@ -244,7 +224,7 @@ var worthIFS = {
                    }
                 })
             });
-            worthIFS.modalCloseLink();
+            IFS.modalCloseLink();
         }
     },
     modalCloseLink : function(){
@@ -274,7 +254,7 @@ var worthIFS = {
 } 
 
 jQuery(document).ready(function(){
-  worthIFS.domReady();
+  IFS.domReady();
 });
 
 
