@@ -5,7 +5,11 @@
 	.heading-xlarge{
 		margin-bottom: 10px;   
 	}
+}
 
+
+.no-margin{
+	margin: 0;
 }
 
 .button-warning{
@@ -26,6 +30,8 @@
 
     input[readonly]{
         color: $black;
+        background: none;
+        border: none;
         text-align: right;
         margin-right: 60px;
         width: 170px;

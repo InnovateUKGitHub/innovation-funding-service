@@ -18,7 +18,7 @@ textarea[disabled],
 input[readonly],
 input[disabled]{
     color:$secondary-text-colour;
-    border-color:transparent;
+    background: $grey-4;
 }
 
 .form-group{
@@ -29,6 +29,7 @@ input[disabled]{
 
 table td input{
     width:100%; 
+    @extend .form-control;
     @include box-sizing(border-box);
     
     &[type="number"]{
@@ -117,15 +118,20 @@ table td{
 
 }
 
-
-
-
-
 .count-label {
     padding:2px 0;
     float:right;
     color: $grey-1;
 }
+
+.form-group{
+    &.alignright{
+        .form-control{
+            margin-right: 1.25em;
+        }
+    }
+}
+
 
     //    .form-group_header-status {
     //     color: #666;
