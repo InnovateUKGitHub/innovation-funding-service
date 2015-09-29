@@ -44,7 +44,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), 0L, model);
+        addApplicationDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-form";
     }
 
@@ -55,7 +55,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         Application app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        addApplicationDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
         return "application-form";
     }
@@ -99,8 +99,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Application application = addApplicationDetails(applicationId, user.getId(), sectionId, model);
-        Section currentSection = getSection(application.getCompetition().getSections(), sectionId);
+        Application application = addApplicationDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
         Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
@@ -120,25 +120,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
-    }
-
-    /**
-     * Get the details of the current application, add this to the model so we can use it in the templates.
-     */
-    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
-        Application application = applicationService.getById(applicationId);
-        model.addAttribute("currentApplication", application);
-        Competition competition = application.getCompetition();
-        model.addAttribute("currentCompetition", competition);
-
-        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
-
-        addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
-        addFinanceDetails(model, application, userId);
-        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
-        addUserDetails(model, application, userId);
-        return application;
     }
 
     private void saveApplicationForm(Model model,
@@ -165,7 +146,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
-        addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        addApplicationDetails(applicationId, user.getId(), Optional.of(sectionId), model);
     }
 
     /**

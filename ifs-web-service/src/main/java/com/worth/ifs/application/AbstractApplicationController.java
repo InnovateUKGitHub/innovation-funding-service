@@ -5,6 +5,8 @@ import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.security.UserAuthenticationService;
@@ -88,13 +90,41 @@ public abstract class AbstractApplicationController {
         }
     }
 
-    protected void addOrganisationDetails(Model model, Application application, Organisation userOrganisation) {
-        model.addAttribute("userOrganisation", userOrganisation);
+    /**
+     * Get the details of the current application, add this to the model so we can use it in the templates.
+     */
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+
+        Application application = applicationService.getById(applicationId);
+        Competition competition = application.getCompetition();
+
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
+
+        addOrganisationDetails(model, application, userOrganisation);
+        addQuestionsDetails(model, application, userOrganisation, userId);
+        addUserDetails(model, application, userId);
+
+        userOrganisation.ifPresent (org -> {
+            addAssigneableDetails(model, application, org, userId);
+        });
+
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
+
+        return application;
+    }
+
+    protected void addOrganisationDetails(Model model, Application application, Optional<Organisation> userOrganisation) {
+
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("applicationOrganisations", organisationService.getApplicationOrganisations(application));
-        Optional<Organisation> organisation = organisationService.getApplicationLeadOrganisation(application);
-        if(organisation.isPresent()) {
-            model.addAttribute("leadOrganisation", organisation.get());
-        }
+
+        Optional<Organisation> leadOrganisation = organisationService.getApplicationLeadOrganisation(application);
+        leadOrganisation.ifPresent(org -> {
+            model.addAttribute("leadOrganisation", org);
+        });
     }
 
     protected void addUserDetails(Model model, Application application, Long userId) {
@@ -102,19 +132,18 @@ public abstract class AbstractApplicationController {
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
     }
 
-    protected void addQuestionsDetails(Model model, Application application, Long userOrganisationId, Long userId) {
+    protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
         List<Response> responses = responseService.getByApplication(application.getId());
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
-        addAssigneableDetails(model, application, userOrganisationId, userId);
     }
 
-    protected void addAssigneableDetails(Model model, Application application, Long userOrganisationId, Long userId) {
+    protected void addAssigneableDetails(Model model, Application application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisationId);
+        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
         model.addAttribute("questionAssignees", questionAssignees);
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
-        model.addAttribute("notifications",notifications);
+        model.addAttribute("notifications", notifications);
         questionService.removeNotifications(notifications);
         List<Long> assignedSections = sectionService.getUserAssignedSections(application.getCompetition().getSections(), questionAssignees, userId);
         model.addAttribute("assignedSections", assignedSections);
@@ -135,33 +164,47 @@ public abstract class AbstractApplicationController {
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
     }
 
-    protected void addMappedSectionsDetails(Model model, Application application, Long currentSectionId, Long userOrganisationId) {
-        addSectionDetails(model, application, currentSectionId, userOrganisationId);
+    protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
+
         List<Section> sectionsList = sectionService.getParentSections(application.getCompetition().getSections());
+
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
                         Function.identity()));
+
         model.addAttribute("sections", sections);
+        addSectionDetails(model, application, currentSectionId, userOrganisation);
     }
-    protected void addSectionsDetails(Model model, Application application, Long currentSectionId, Long userOrganisationId) {
-        addSectionDetails(model, application, currentSectionId, userOrganisationId);
+
+    protected void addSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
+        addSectionDetails(model, application, currentSectionId, userOrganisation);
         List<Section> sections = sectionService.getParentSections(application.getCompetition().getSections());
         model.addAttribute("sections", sections);
     }
-    private void addSectionDetails(Model model, Application application, Long currentSectionId, Long userOrganisationId) {
+    private void addSectionDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
         Section currentSection = getSection(application.getCompetition().getSections(), currentSectionId);
-        model.addAttribute("currentSectionId", currentSectionId);
+        model.addAttribute("currentSectionId", currentSection.getId());
         model.addAttribute("currentSection", currentSection);
-        model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), userOrganisationId));
+
+        userOrganisation.ifPresent(org -> {
+            model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId()));
+        });
     }
 
-    protected Section getSection(List<Section> sections, Long sectionId) {
-        // get the section that we want to show, so we can use this on to show the correct questions.
-        Optional<Section> section = sections.stream().
-                filter(x -> x.getId().equals(sectionId))
-                .findFirst();
+    protected Section getSection(List<Section> sections, Optional<Long> sectionId) {
 
-        return section.isPresent() ? section.get() : null;
+        // TODO DW - previously if a sectionId wasn't supplied, a section wouldn't have been "current"
+        if (sectionId.isPresent()) {
+
+            Long id = sectionId.get();
+
+            // get the section that we want to show, so we can use this on to show the correct questions.
+            Optional<Section> section = sections.stream().filter(x -> x.getId().equals(id)).findFirst();
+            return section.isPresent() ? section.get() : null;
+
+        } else {
+            return sections.get(0);
+        }
     }
 
     protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
