@@ -11,6 +11,7 @@ bundle exec compass compile -c config-docs.rb
 	--include ./js/vendor/modernizr/modernizr.js \
 	--include ./js/ifs.js \
 	--include ./js/ifs-finance.js \
+	--include ./js/ifs-assessment.js \
 	--include ./js/ifs-applications.js \
 	--include ./js/vendor/govuk/selection-buttons.js \
 	--include ./js/vendor/govuk/application.js \

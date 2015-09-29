@@ -74,13 +74,23 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     }
 
     public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
+
+        System.out.println("AssessmentRestImp > saveAssessmentSummary ");
+
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
         node.put("assessorId", assessorId);
         node.put("applicationId", applicationId);
         node.put("suitableValue", suitableValue);
+
         node.put("suitableFeedback", suitableFeedback);
+        System.out.println("AssessmentRestImp > saveAssessmentSummary before comment ");
+
         node.put("comments", comments);
+        System.out.println("AssessmentRestImp > saveAssessmentSummary after comment ");
+
+
+        System.out.println("node.toString() is " + node.toString());
 
         return restPost(node.toString(), "/saveAssessmentSummary/", Boolean.class);
     }
