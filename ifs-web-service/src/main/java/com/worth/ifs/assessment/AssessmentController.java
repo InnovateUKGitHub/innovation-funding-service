@@ -1,18 +1,13 @@
 package com.worth.ifs.assessment;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/assessor")
-public class AssessmentController {
+public class AssessmentController extends AbstractApplicationController {
 
     /* pages */
     private final String competitionAssessments = "assessor-competition-applications";
@@ -82,30 +75,42 @@ public class AssessmentController {
                                                @PathVariable("applicationId") final Long applicationId,
                                                HttpServletRequest req) {
 
-        //TO BE DRY
-
-        Competition competition = competitionService.getCompetitionById(competitionId);
-        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
-
-        //pass to view
-        model.addAttribute("competition", competition);
-        model.addAttribute("assessment", assessment);
-        return solvePageForApplicationAssessment(assessment);
+        Long userId = getLoggedUser(req).getId();
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, userId);
     }
 
-    private String solvePageForApplicationAssessment(Assessment assessment) {
+    private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Long userId) {
 
-        String pageToShow;
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
+        boolean invalidAssessment = assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID);
+        boolean pendingApplication = !invalidAssessment && assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING);
 
-        if (assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID))
-            pageToShow = assessorDashboard;
-        else if (assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING))
-            pageToShow = applicationReview;
-        else
-            pageToShow = assessmentDetails;
+        if (invalidAssessment)
+            return showInvalidAssessmentView(model, competitionId, assessment);
+        else if (pendingApplication) {
+            return showApplicationReviewView(model, competitionId, assessment);
+        }
 
+        return showReadOnlyApplicationFormView(model, assessment, userId);
+    }
 
-        return pageToShow;
+    private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Long userId) {
+        addApplicationDetails(assessment.getApplication().getId(), userId, Optional.empty(), model);
+        return assessmentDetails;
+    }
+
+    private String showInvalidAssessmentView(Model model, Long competitionId, Assessment assessment) {
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
+        return assessorDashboard;
+    }
+
+    private String showApplicationReviewView(Model model, Long competitionId, Assessment assessment) {
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
+        return applicationReview;
     }
 
 

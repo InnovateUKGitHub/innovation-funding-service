@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
 </head>
@@ -9,28 +9,25 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content" th:with="currentApplication=${assessment.application}">
+<main id="content">
 
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
-    <!--<div th:include="fragments/elements :: notification" th:remove="tag"></div>-->
+    <!--/* div th:include="fragments/elements :: notification" th:remove="tag"></div> */--> <!--/* TODO DW - removed this from assessor's view */-->
 
 
     <div class="grid-row">
         <div class="column-third">
-            <nav role="navigation" class="app-sidebar">
+            <nav role="navigation" class="app-sidebar" th:with="urlPrefix='/assessor'"> <!--/* TODO DW - added urlPrefix */-->
                 <ul>
-                    <li>
-                        <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
-                    </li>
-                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
-                                ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
-                                ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '')">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
+                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'')"> <!--/* TODO DW - removed the following -  + ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') + ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '') */-->
+                        <!--/* TODO DW - added urlPrefix */-->
+                        <a th:href="${urlPrefix} + @{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                            th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
-                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'')">
-                                <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
+                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'')">  <!--/* TODO DW - removed the following -  + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'') */-->
+                                <!--/* TODO DW - added urlPrefix */-->
+                                <a th:href="${urlPrefix} + @{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
                                    th:text="${subSection.getName()}"></a>
                             </li>
                         </ul>
@@ -38,11 +35,60 @@
                 </ul>
             </nav>
         </div>
+
+        <div class="column-two-thirds">
+
+            <!--/* <form action="#"  method="post" class="form-serialize-js"> */--> <!--/* TODO DW - removed form from assessor's view as it is read only */-->
+
+                <div th:each="sectionEntry : ${sections}"  th:remove="tag">
+                    <div th:if="(${sectionEntry.key} == ${currentSectionId})" th:remove="tag">
+                        <h1 class="heading-xlarge" th:text="${sectionEntry.value.getName()}"></h1>
+                        <p class="subtitle" th:text="${sectionEntry.value.getDescription()}"></p>
+                    </div>
+                    <div th:each="subSection : ${sectionEntry.value.getChildSections()}" th:if="${sectionEntry.value.getChildSections()}!=null and ${sectionEntry.key} != ${currentSectionId}"  th:remove="tag">
+                        <div th:if="(${subSection.getId()} == ${currentSectionId})" th:remove="tag">
+                            <h1 class="heading-xlarge" th:text="${subSection.getName()}"></h1>
+                            <p class="subtitle" th:text="${subSection.getDescription()}"></p>
+                        </div>
+                    </div>
+                </div>
+<!--/*
+                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $questionAssignee=(${questionAssignee}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
+                </div>
+
+                <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+
+                <ul class="pagination">
+                    <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
+                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
+                            <span class="pagination-label">Previous</span>
+                            <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
+                        </a>
+                    </li>
+                    <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
+                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part">
+                            <span class="pagination-label">Next</span>
+                            <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="alignright-button">
+                    <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
+                        Review &amp; submit
+                    </a>
+
+                    <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
+                </div>
+            </form> TODO DW - removed form from assessor's view as it is read only
+
+        </div>
+
+        */-->
+
+        </div>
     </div>
-
-
-    <!--<h1>Application details</h1>-->
-    <!--<a class="button button-pull-right no-margin" th:href="@{/assessor/competitions/{cid}/applications/{aid}/summary(cid=${competition.id},aid=${assessment.application.id})}">Review applications</a>-->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
