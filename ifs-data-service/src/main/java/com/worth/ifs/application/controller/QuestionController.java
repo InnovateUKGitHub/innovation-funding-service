@@ -56,7 +56,7 @@ public class QuestionController {
      * @param questionId question which has been completed / incompleted
      * @param markedAsInCompleteById processRoleId which represents the user role combination
      */
-    @RequestMapping(value="/markAsInComplete/{questionId}/{markedAsInCompleteById}")
+    @RequestMapping(value="/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public void markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById){

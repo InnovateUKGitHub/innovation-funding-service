@@ -17,6 +17,58 @@
 
     <h1 class="heading-xlarge">Application status</h1>
 
+    <img src="/images/mockups/application-tracking.png" style="max-width: 100%; margin-top: 30px;" alt=""/>
+
+    <ul class="status-list hidden">
+    	<li class="step step-complete">
+    		<div class="step-contents">
+    			<h2 class="heading-medium">Submitted application</h2>
+    			<p>Your full stage application was submitted on March 12th at 10:17am</p>
+    			<p><a href="#">View application</a> <a href="#">Download file</a></p>
+    		</div>
+    	</li>
+    	<li class="step step-current">
+    		<div class="step-contents">
+    			<h2 class="heading-medium">Assessment process</h2>
+    			<p>Your application is currently in the process of being assessed. Once the competition siubmission deadline is reached, all application submitted to the competition are sent for assessment.</p>
+
+    			<ul class="list-bullet">
+    				<li>Your application is currently being assessed independently by experts from both business and academia.</li>
+    				<li>Each application is assessed by up to five Assessors and against the same set of gateway and criteria questions.</li>
+    				<li>Each assesor is reqiuired to complete and submit a score-sheet with comments for each application they are assigned to assess.</li>
+    			</ul>
+    			<p><a href="#">Find out more about the assessment process</a></p>
+    		</div>
+    	</li>
+    	<li class="step">
+    		<div class="step-contents">
+    			<div class="hgroup">
+    				<h2 class="heading-medium">Decision notification</h2>
+    				<h3 class="subtitle">You will be notified of our decision by 25th April 2015.</h3>
+    			</div>
+				
+				<p>Once all applications have been assessed and checked for completeness, you will be informed of the decision in this site and by e-mail. All partners in the project consortia will be notified of teh outcome.</p>
+
+    		</div>
+    	</li>
+    	<li class="step result">
+    		<div class="step-contents">
+    			<h2 class="heading-medium">Successful</h2>
+    			<p>
+    				If you are successful with this application, you will be sent a Conditional Grant Letter which you will be asked to accept. There will be additional documents you will be required to provide, including: Collaboration agreement, financial forecasts, confirmation of BACs details, detailed project plan, milestone and risk register and exploitation plan.
+    			</p>
+    		</div>
+    	</li>
+    	<li class="step result">
+			<div class="step-contents">
+    			<h2 class="heading-medium">Unsuccessful</h2>
+    			<p>
+    				If you are unsuccessful with this application, you will be sent a .... (REQUIRE TEXT)
+    			</p>
+    		</div>
+    	</li>
+    </ul>
+
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 

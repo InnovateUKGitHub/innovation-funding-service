@@ -219,9 +219,6 @@ public class AssessmentController extends AbstractApplicationController {
             String suitableFeedback = req.getParameter("suitable-for-funding-feedback");
             String commentsToShare = req.getParameter("comments-to-share");
 
-            System.out.println("AssessmentController - complete - values are:  " + suitableForFundingValue + " -- " + suitableFeedback + " -- " + commentsToShare);
-
-
             /** asserts the invitation response **/
             assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare);
         }
