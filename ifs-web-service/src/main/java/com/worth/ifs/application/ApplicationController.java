@@ -5,7 +5,6 @@ import com.worth.ifs.application.domain.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,6 +80,14 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-submitted";
     }
 
+    @RequestMapping("/{applicationId}/track")
+    public String applicationTrack(Model model, @PathVariable("applicationId") final Long applicationId,
+                                    HttpServletRequest request){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationDetails(applicationId, user.getId(), model);
+        return "application-track";
+    }
+
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      *
@@ -104,7 +111,6 @@ public class ApplicationController extends AbstractApplicationController {
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, userOrganisation.getId(), userId);
         addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
-        addDateDetails(model);
         addUserDetails(model, application, userId);
     }
 

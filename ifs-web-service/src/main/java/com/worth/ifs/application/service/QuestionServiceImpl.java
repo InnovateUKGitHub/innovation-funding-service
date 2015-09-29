@@ -20,19 +20,19 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionRestService questionRestService;
 
     @Override
-    public void assign(Long questionId, Long assigneeId, Long assignedById) {
-        questionRestService.assign(questionId, assigneeId, assignedById);
+    public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
+        questionRestService.assign(questionId, applicationId, assigneeId, assignedById);
     }
 
     @Override
-    public void markAsComplete(Long questionId, Long markedAsCompleteById) {
-        questionRestService.markAsComplete(questionId, markedAsCompleteById);
-        questionRestService.assign(questionId, 0L, 0L);
+    public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
+        questionRestService.markAsComplete(questionId, applicationId, markedAsCompleteById);
+        questionRestService.assign(questionId, applicationId, 0L, 0L);
     }
 
     @Override
-    public void markAsInComplete(Long questionId, Long markedAsInCompleteById) {
-        questionRestService.markAsInComplete(questionId, markedAsInCompleteById);
+    public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
+        questionRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
     @Override

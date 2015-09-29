@@ -194,6 +194,36 @@ public class AssessmentController {
         return "redirect:" + competitionAssessmentsURL(competitionId);
     }
 
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)
+    public String assessmentSubmissionComplete(Model model, @PathVariable("competitionId") final Long competitionId,
+                                            @PathVariable("applicationId") final Long applicationId,
+                                            HttpServletRequest req)
+    {
+
+        Map<String, String[]> params = req.getParameterMap();
+
+        System.out.println("AssessmentController - complete - has the button? " + params.containsKey("confirm-submission"));
+
+        if ( params.containsKey("confirm-submission") ) {
+
+            //gets the logged assessor Id
+            Long userId = getLoggedUser(req).getId();
+
+            //gets the values from the form
+            String suitableForFundingValue = req.getParameter("is-suitable-for-funding");
+            String suitableFeedback = req.getParameter("suitable-for-funding-feedback");
+            String commentsToShare = req.getParameter("comments-to-share");
+
+            System.out.println("AssessmentController - complete - values are:  " + suitableForFundingValue + " -- " + suitableFeedback + " -- " + commentsToShare);
+
+
+            /** asserts the invitation response **/
+            assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare);
+        }
+
+        //gets the competition id to redirect
+        return "redirect:" + competitionAssessmentsURL(competitionId);
+    }
 
     private Set<Long> convertStringListToLongSet(List<String> aList)
     {

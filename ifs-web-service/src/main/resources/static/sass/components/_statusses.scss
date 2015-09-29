@@ -35,6 +35,11 @@
 	background-repeat: no-repeat;
 }
 
+%icon-incomplete {
+    background-image: url('../images/warning-icon.png');   
+	background-repeat: no-repeat;
+}
+
 //statusses in the collapsible
 .collapsible {
 	
@@ -56,6 +61,32 @@
 			width: 20px;
 			height: 20px;
 			@extend %icon-tick;
+		}
+
+		&.section-complete:before{
+			content: "Complete";
+			color: $grey-1;
+			font-size: 16px;
+			position: absolute;
+			z-index: 10;
+			top: 18px;
+			right: 55px;
+			padding-right: 25px;
+			@extend %icon-tick;
+			background-position: right 50%;
+		}
+
+		&.section-incomplete:before{
+			content: "Incomplete";
+			color: $grey-1;
+			font-size: 16px;
+			position: absolute;
+			z-index: 10;
+			top: 18px;
+			right: 55px;
+			padding-right: 25px;
+			@extend %icon-incomplete;
+			background-position: right 50%;
 		}
 	}
 

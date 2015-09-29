@@ -84,7 +84,7 @@ public abstract class AbstractApplicationController {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            questionService.assign(questionId, assigneeId, assignedBy.getId());
+            questionService.assign(questionId, applicationId, assigneeId, assignedBy.getId());
         }
     }
 
@@ -153,12 +153,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("currentSectionId", currentSectionId);
         model.addAttribute("currentSection", currentSection);
         model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), userOrganisationId));
-    }
-
-    protected void addDateDetails(Model model) {
-        int todayDay =  LocalDateTime.now().getDayOfYear();
-        model.addAttribute("todayDay", todayDay);
-        model.addAttribute("yesterdayDay", todayDay-1);
     }
 
     protected Section getSection(List<Section> sections, Long sectionId) {

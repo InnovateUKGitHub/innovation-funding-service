@@ -1,7 +1,9 @@
 package com.worth.ifs.application.controller;
 
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -34,16 +36,19 @@ public class QuestionController {
     @Autowired
     QuestionRepository questionRepository;
 
+    @Autowired
+    ApplicationRepository applicationRepository;
 
     /**
      * Mark a question as complete
      * @param questionId question which has been completed / incompleted
      * @param markedAsCompleteById processRoleId which represents the user role combination
      */
-    @RequestMapping(value="/markAsComplete/{questionId}/{markedAsCompleteById}")
+    @RequestMapping(value="/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public void markAsComplete(@PathVariable("questionId") final Long questionId,
+                               @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsCompleteById") final Long markedAsCompleteById){
-        setComplete(questionId, markedAsCompleteById, true);
+        setComplete(questionId, applicationId, markedAsCompleteById, true);
     }
 
     /**
@@ -53,16 +58,18 @@ public class QuestionController {
      */
     @RequestMapping(value="/markAsInComplete/{questionId}/{markedAsInCompleteById}")
     public void markAsInComplete(@PathVariable("questionId") final Long questionId,
+                                 @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById){
-        setComplete(questionId, markedAsInCompleteById, false);
+        setComplete(questionId, applicationId, markedAsInCompleteById, false);
     }
 
-    private void setComplete(Long questionId, Long markedById, boolean markedAsComplete) {
+    private void setComplete(Long questionId, Long applicationId, Long markedById, boolean markedAsComplete) {
         ProcessRole markedAsCompleteBy = processRoleRepository.findOne(markedById);
+        Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
-        QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, markedById);
+        QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, markedById);
         if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, markedAsCompleteBy, markedAsComplete);
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markedAsComplete);
         } else if (markedAsComplete) {
             questionStatus.markAsComplete();
         } else {
@@ -76,42 +83,44 @@ public class QuestionController {
      * @param questionId question to which the assignee is assigned to
      * @param assigneeId processRoleId which represent the user role combination
      */
-    @RequestMapping(value="/assign/{questionId}/{assigneeId}/{assignedById}")
+    @RequestMapping(value="/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public void assign(@PathVariable("questionId") final Long questionId,
+                       @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
                        @PathVariable("assignedById") final Long assignedById) {
         Question question = questionRepository.findOne(questionId);
+        Application application = applicationRepository.findOne(applicationId);
         ProcessRole assignee = processRoleRepository.findOne(assigneeId);
         ProcessRole assignedBy = processRoleRepository.findOne(assignedById);
 
-        QuestionStatus questionStatus = getQuestionStatusByAssigneeId(question, assigneeId);
+        QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, applicationId, assigneeId);
 
         if(questionStatus==null) {
-            questionStatus = new QuestionStatus(question, assignee, assignedBy, LocalDateTime.now());
+            questionStatus = new QuestionStatus(question, application, assignee, assignedBy, LocalDateTime.now());
         } else {
             questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
         }
         questionStatusRepository.save(questionStatus);
     }
 
-    private QuestionStatus getQuestionStatusByAssigneeId(Question question, Long assigneeId) {
+    private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, Long applicationId, Long assigneeId) {
         if(question.hasMultipleStatuses()) {
-            return questionStatusRepository.findByQuestionIdAndAssigneeId(question.getId(), assigneeId);
+            return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(question.getId(), applicationId, assigneeId);
         } else {
-            return findByQuestionId(question.getId());
+            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
         }
     }
 
-    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, Long markedAsCompleteById) {
+    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, Long applicationId, Long markedAsCompleteById) {
         if(question.hasMultipleStatuses()) {
-            return questionStatusRepository.findByQuestionIdAndMarkedAsCompleteById(question.getId(), markedAsCompleteById);
+            return questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(question.getId(), applicationId, markedAsCompleteById);
         } else {
-            return findByQuestionId(question.getId());
+            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
         }
     }
 
-    private QuestionStatus findByQuestionId(Long questionId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionId(questionId);
+    private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         if(questionStatuses!=null && questionStatuses.size()>0) {
             return questionStatuses.get(0);
         }
