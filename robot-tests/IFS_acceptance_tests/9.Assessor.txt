@@ -3,6 +3,10 @@ Documentation     INFUND-337
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 
+*** Variables ***
+${reject_application_name}    Analytical technologies for biopharmaceuticals
+${accept_application_name}    Security for the Internet of Things
+
 *** Test Cases ***
 Verify the assessor can see the applications details page
     [Documentation]    INFUND-337
@@ -17,6 +21,17 @@ Verify the applications details page has two lists
     Then the details page should contain a list with the applications for assessment
     and the the page should contain a list with the submitted assessments
 
+Verify the change of state when accepting an application for assessment
+    When the assessor opens a Pending application    ${accept_application_name}
+    and the assessor accepts the Application
+    Then the application status should change to Open    ${accept_application_name}
+
+Verify the change of state when rejecting an application for assessment
+    Given the assessor opens a pending application    ${reject_application_name}
+    When the assessor rejects the Application
+    and the assessor enters the reason for rejection
+    Then the Application is not visible in the Applications list    ${reject_application_name}
+
 *** Keywords ***
 the Assessor clicks the competition
     Click Element    link=Technology Inspired
@@ -28,5 +43,30 @@ the competition's details page should be visible
 the details page should contain a list with the applications for assessment
     Page Should Contain Element    css=#content > div.my-applications > div.in-progress
 
+when the Assessor clicks
+    Click Element    xpath=//li[.//div[contains(@class,"pending")]]//a
+
+the assessor accepts the application
+    Click Element    css=#content div.application-summary form button
+
+the application status should change to open
+    [Arguments]    ${application_name}
+    Element Should Contain    xpath=//li[.//a[contains(text(),'${application_name}')]]//div[contains(@class,"open")]    Open
+
+the assessor rejects the application
+    Click Element    xpath=//*[@id="content"]//*[@class="application-summary"]//a[contains(text(),"Reject")]
+
+the assessor enters the reason for rejection
+    Input Text    id=rejection-observations    Test rejections
+    Click Element    xpath=//*[@class="modal-reject-assessment"]//button[@name="reject"]
+
 the the page should contain a list with the submitted assessments
     Page Should Contain Element    css=#content > div.my-applications > div.submitted
+
+the application is not visible in the applications list
+    [Arguments]    ${application_name}
+    Page Should Not Contain Element    xpath=//li//a[contains(text(),'${application_name}')]
+
+the Assessor opens a pending application
+    [Arguments]    ${application_name}
+    Click Element    xpath=//li//a[contains(text(),'${application_name}')]
