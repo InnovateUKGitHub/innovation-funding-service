@@ -84,7 +84,7 @@ public abstract class AbstractApplicationController {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            questionService.assign(questionId, assigneeId, assignedBy.getId());
+            questionService.assign(questionId, applicationId, assigneeId, assignedBy.getId());
         }
     }
 

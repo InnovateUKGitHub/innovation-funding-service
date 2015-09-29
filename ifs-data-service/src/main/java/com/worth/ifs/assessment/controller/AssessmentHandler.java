@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.workflow.domain.ProcessStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +118,36 @@ public class AssessmentHandler {
         return new Boolean(true);
     }
 
+    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
+
+        Assessment assessment = assessments.findOneByAssessorAndApplication(assessorId,applicationId);
+        System.out.println("AssessmentHandler > submit > assessment with assessor and app " + assessorId + " - " + applicationId);
+
+        assessment.setSummary(getRecommendedValueFromString(suitableValue), suitableFeedback, comments);
+        assessments.save(assessment);
+
+        return true;
+    }
+
 
     public Boolean assessmentIsValidToSubmit( Assessment assessment ) {
         return assessment != null && assessment.hasAssessmentStarted() &&  ! assessment.isSubmitted();
+    }
+
+    public Boolean assessmentIsValidToCompleteAndSubmit( Assessment assessment ) {
+        return assessment != null &&  ! assessment.isSubmitted();
+    }
+
+
+    private RecommendedValue getRecommendedValueFromString(String value) {
+
+        if ( value.equals("yes") )
+            return RecommendedValue.YES;
+        else  if ( value.equals("no"))
+            return RecommendedValue.NO;
+        else
+            return RecommendedValue.EMPTY;
+
     }
 
 

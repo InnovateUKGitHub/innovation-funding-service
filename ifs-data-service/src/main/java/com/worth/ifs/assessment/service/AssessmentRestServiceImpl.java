@@ -35,17 +35,17 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
     }
 
     public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
-        return restGet("/findAssessmentByApplication/" + assessorId + "/" + applicationId , Assessment.class);
+        return restGet("/findAssessmentByApplication/" + assessorId + "/" + applicationId, Assessment.class);
     }
 
 
     public Integer getTotalAssignedByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return restGet("/totalAssignedAssessmentsByCompetition/" + assessorId + "/" + competitionId , Integer.class);
+        return restGet("/totalAssignedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
     }
 
 
     public Integer getTotalSubmittedByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return restGet("/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId , Integer.class);
+        return restGet("/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
     }
 
     public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String reason, String observations) {
@@ -73,9 +73,22 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
 
     }
 
+    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
+        //builds the node with the response form fields data
+        ObjectNode node =  new ObjectMapper().createObjectNode();
+        node.put("assessorId", assessorId);
+        node.put("applicationId", applicationId);
+        node.put("suitableValue", suitableValue);
+        node.put("suitableFeedback", suitableFeedback);
+        node.put("comments", comments);
+
+        return restPost(node.toString(), "/saveAssessmentSummary/", Boolean.class);
+    }
+
+
     @Override
     protected  <T> T restGet(String path, Class c) {
-        return super.restGet(assessmentRestURL + path,c);
+        return super.restGet(assessmentRestURL + path, c);
     }
 
     @Override

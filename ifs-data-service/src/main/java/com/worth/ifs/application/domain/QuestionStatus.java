@@ -28,6 +28,10 @@ public class QuestionStatus {
     private LocalDateTime assignedDate;
 
     @ManyToOne
+    @JoinColumn(name="applicationId", referencedColumnName="id")
+    private Application application;
+
+    @ManyToOne
     @JoinColumn(name="assignedById", referencedColumnName="id")
     private ProcessRole assignedBy;
     private Boolean notified;
@@ -35,14 +39,16 @@ public class QuestionStatus {
     public QuestionStatus() {
     }
 
-    public QuestionStatus(Question question,  ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+    public QuestionStatus(Question question,  Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+        this.application = application;
         this.markedAsComplete = markedAsComplete;
         this.markedAsCompleteBy = markedAsCompleteBy;
         this.question = question;
     }
 
-    public QuestionStatus(Question question, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatus(Question question, Application application, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.question = question;
+        this.application = application;
         this.assignee = assignee;
         this.assignedDate = assignedDate;
         this.assignedBy = assignedBy;
@@ -86,6 +92,10 @@ public class QuestionStatus {
         this.assignee = assignee;
         this.assignedBy = assignedBy;
         this.notified = false;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public Boolean getNotified() {

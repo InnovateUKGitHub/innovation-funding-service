@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface QuestionStatusRepository extends CrudRepository<QuestionStatus, Long> {
-    QuestionStatus findByQuestionIdAndMarkedAsCompleteById(@Param("questionId") Long questionId, @Param("markedAsCompleteById") Long markAsCompleteById);
-    QuestionStatus findByQuestionIdAndAssigneeId(@Param("questionId") Long questionId, @Param("assigneeId") Long assigneeId);
-    List<QuestionStatus> findByQuestionId(@Param("questionId") Long questionId);
+    QuestionStatus findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId, @Param("markedAsCompleteById") Long markAsCompleteById);
+    QuestionStatus findByQuestionIdAndApplicationIdAndAssigneeId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
+    List<QuestionStatus> findByQuestionIdAndApplicationId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId);
 
 }

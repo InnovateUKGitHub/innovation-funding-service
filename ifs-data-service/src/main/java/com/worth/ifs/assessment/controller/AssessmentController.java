@@ -82,5 +82,21 @@ public class AssessmentController {
         return longsSet;
     }
 
+    @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
+    public Boolean submitAssessment(@RequestBody JsonNode formData) {
+
+        //unpacks all the response form data fields
+        Long assessorId = formData.get("assessorId").asLong();
+        Long applicationId = formData.get("applicationId").asLong();
+
+        String suitableValue = formData.get("suitableValue").asText();
+        String suitableFeedback = formData.get("suitableFeedback").asText();
+        String comments = formData.get("comments").asText();
+
+        // delegates to the handler and returns its operation success
+        return assessmentHandler.saveAssessmentSummary(assessorId, applicationId, suitableValue, suitableFeedback, comments);
+    }
+
+
 
 }

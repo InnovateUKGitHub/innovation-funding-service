@@ -25,4 +25,7 @@ public interface AssessmentRestService {
 
     public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds);
 
+    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments);
+
+
 }
