@@ -2,8 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -35,7 +33,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request){
         log.info("Application with id " + applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-details";
     }
 
@@ -45,7 +43,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
         return "application-details";
     }
 
@@ -56,7 +54,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-summary";
     }
 
@@ -64,7 +62,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-confirm-submit";
     }
 
@@ -73,7 +71,7 @@ public class ApplicationController extends AbstractApplicationController {
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-submitted";
     }
 
@@ -81,7 +79,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationTrack(Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-track";
     }
 
@@ -101,7 +99,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         Application application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
         // TODO DW - quite a lot of rework here to get a hold of more single-section focused
         // TODO DW - sectionId should be determined from the clicked button as per the questionId as grabbed below
@@ -155,7 +153,7 @@ public class ApplicationController extends AbstractApplicationController {
         redirectAttributes.addFlashAttribute("assignedQuestion", true);
     }
 
-    private Application addApplicationSectionAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+    private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
         Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));

@@ -5,9 +5,7 @@
 
     <div th:fragment="textinput" class="form-group">
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses.get(question.getId()).getValue()})" th:remove="tag" />
+        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
@@ -15,9 +13,7 @@
 
     <div th:fragment="textarea"  class="form-group">
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
     </div>
 
 
@@ -106,7 +102,7 @@
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id))} ? 'complete' : '')"
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()} (complete=${!readonly ? ${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id))} ? 'complete' : '')} : ''"
                          th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>

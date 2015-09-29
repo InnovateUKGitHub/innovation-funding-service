@@ -164,7 +164,7 @@
             <div th:unless="${readonly} or (${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
             <!-- if  readonly we show the edit form button-->
-            <div th:if="${readonlyButEditable}" th:include="question-type/form-elements :: form-edit-question-button"
+            <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-word-count" th:remove="tag"/>
         </div>

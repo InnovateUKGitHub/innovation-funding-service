@@ -53,8 +53,8 @@
                     </div>
                 </div>
 
-                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, readonlyButEditable=false, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
+                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
+                    <div th:replace="question-type/types-readonly :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
                 </div>
 <!--/*
                 <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>

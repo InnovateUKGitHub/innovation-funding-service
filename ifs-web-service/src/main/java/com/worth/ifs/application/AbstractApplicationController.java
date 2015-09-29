@@ -112,7 +112,6 @@ public abstract class AbstractApplicationController {
         });
 
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
-
         return application;
     }
 
