@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+    <!-- ==============General Readonly Label and paragraph pairs ============= -->
+
+    <div th:fragment="label-and-paragraph (label, text, id)" class="form-group">
+        <div th:include="question-type/form-elements :: form-label (name=${label}, id=${id}, bold=true)" th:remove="tag" />
+        <p th:id="${id}" th:text="${text}" />
+    </div>
+
+    <div th:fragment="question-label-and-paragraph (question, responses)">
+        <div th:include="question-type/types-readonly :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()})" th:remove="tag"></div>
+    </div>
+
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
+        <div th:include="question-type/types-readonly :: question-label-and-paragraph (question=${question}, responses=${responses})" th:remove="tag"></div>
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
+    <div th:fragment="textarea" class="form-group">
+        <div th:include="question-type/types-readonly :: question-label-and-paragraph (question=${question}, responses=${responses})" th:remove="tag"></div>
     </div>
 
 
@@ -38,10 +47,7 @@
 
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
+            <div th:include="question-type/types-readonly :: label-and-paragraph (label='Project title', text=${currentApplication.getName()}, id='application_details-title')" th:remove="tag"></div>
         </div>
 
         <div class="form-group">
