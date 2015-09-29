@@ -6,9 +6,11 @@ Resource          GLOBAL_VARIABLES.txt
 
 *** Test Cases ***
 Open browser(Firefox)
+    [Tags]    Applicant    Assessor
     The user opens the browser
 
 Log-in (Applicant)
+    [Tags]    Applicant
     When the guest user inserts applicant user name & password    applicant@innovateuk.gov.uk    test
     And the guest user clicks the log-in button
     Then the guest user should be logged-in as Applicant and redirected to the My applications page
@@ -20,6 +22,7 @@ Log-in (Collaborator)
 
 Log-in(Assessor)
     [Documentation]    INFUND-286
+    [Tags]    Assessor
     When the guest user inserts applicant user name & password    assessor@innovateuk.gov.uk    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as an Assessor
