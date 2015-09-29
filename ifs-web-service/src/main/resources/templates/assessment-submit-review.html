@@ -295,6 +295,9 @@
         <div class="form-group" id="recommendation-feedback-group">
             <p><strong>Your feedback</strong></p>
             <p><small>Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback</small></p>
+            <span class="error-message" id="feedback-empty-error">
+
+            </span>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
                           id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"></textarea>
@@ -332,7 +335,7 @@
         </p>
 
         <p style="text-align: right;">
-            <button class="button button-large" name="confirm-submission" type="submit">Save assessment</button>
+            <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" type="submit">Save assessment</button>
         </p>
 
     </form>
