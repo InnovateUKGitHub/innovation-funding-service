@@ -177,7 +177,7 @@
                                            readonly="readonly"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + labourCost.id}"
-                                           th:value="${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
+                                           th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
                                     <input type="number" class="width-small"
@@ -488,7 +488,7 @@
                                    class="form-control form-finances-subcontracting-cost"
                                    th:id="${'cost-subcontracting-'+subContractingCost.id+'-subcontractingCost'}"
                                    data-calculation-input="subcontracting-cost-row"
-                                   th:value="'£ ' + ${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
+                                   th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
                         </div>
                 </div>
             </div>
