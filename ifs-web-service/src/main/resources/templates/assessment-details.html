@@ -89,9 +89,13 @@
 
         </div>
     </div>
-
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+
+    <div class="grid-row" align="right">
+        <a class="button button-pull-right no-margin" th:href="@{/assessor/competitions/{cid}/applications/{aid}/summary(cid=${currentCompetition.id},aid=${currentApplication.id})}">Review applications</a>
+    </div>
 </main>
+
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />

@@ -8,25 +8,30 @@ $(function() {
       }).trigger( "change" );
 });
 
-$(function() {
-    $( "#not-suitable-feedback" ).change(function() {
-       var charactersLeft = maxCharacters - $("#not-suitable-feedback").val().length;
-        $("#feedbackWordCount").text(charactersLeft);
 
-     }).trigger( "change" );
+
+$(function() {
+    $( "#not-suitable-feedback" ).keyup(function() {
+        setWordsLeft ( "#not-suitable-feedback", "#feedbackWordCount" );
+     }).trigger( "keyup" );
 });
 
 $(function() {
-    $( "#summary-comments" ).change(function() {
-       var charactersLeft = maxCharacters - $("#summary-comments").val().length;
-        $("#commentsWordCount").text(charactersLeft);
-     }).trigger( "change" );
+    setWordCountObserver ( "#not-suitable-feedback",  "#feedbackWordCount" );
+    setWordCountObserver ( "#summary-comments",  "#commentsWordCount");
 });
 
+function setWordCountObserver( observable, observer ) {
+     $( observable ).keyup(function() {
+            setWordsLeft(observable, observer );
+         }).trigger( "keyup" );
+}
+function setWordsLeft( textElement, targetElement ) {
+    var wordsLeft = maxWords - $(textElement).val().split(' ').length;
+    $(targetElement).text(wordsLeft);
+}
 
-
-
-var maxCharacters = 350;
+var maxWords = 350;
 
 
 //

@@ -57,8 +57,6 @@ public class ApplicationController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
-        Application application = applicationService.getById(applicationId);
-        addFinanceDetails(model, application, user.getId());
         return "application-summary";
     }
 
