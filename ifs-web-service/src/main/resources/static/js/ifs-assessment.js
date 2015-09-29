@@ -8,3 +8,37 @@ $(function() {
       }).trigger( "change" );
 });
 
+$(function() {
+    $( "#not-suitable-feedback" ).change(function() {
+       var charactersLeft = maxCharacters - $("#not-suitable-feedback").val().length;
+        $("#feedbackWordCount").text(charactersLeft);
+
+     }).trigger( "change" );
+});
+
+$(function() {
+    $( "#summary-comments" ).change(function() {
+       var charactersLeft = maxCharacters - $("#summary-comments").val().length;
+        $("#commentsWordCount").text(charactersLeft);
+     }).trigger( "change" );
+});
+
+
+
+
+var maxCharacters = 350;
+
+
+//
+//function wordCount( val ){
+//    return {
+//        charactersNoSpaces : val.replace(/\s+/g, '').length,
+//        characters         : val.length,
+//        words              : val.match(/\S+/g).length,
+//        lines              : val.split(/\r*\n/).length
+//    };
+//}
+
+
+
+
