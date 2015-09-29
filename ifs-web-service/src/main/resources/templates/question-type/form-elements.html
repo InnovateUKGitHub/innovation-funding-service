@@ -168,7 +168,7 @@
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="assign-buttons">
-    <div class="assign-container collapsible">
+    <div class="assign-container collapsible" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">Assign question</div>
         <div class="assign-team">
             <ul class="list-bullet">
@@ -188,7 +188,6 @@
 
 <div  th:fragment="last-update-info">
         <p th:if="${response?.getUpdateDate()}"><small><span>Last updated: </span>
-
             <div th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"
                  th:remove="tag"/>
 

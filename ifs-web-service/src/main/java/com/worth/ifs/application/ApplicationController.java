@@ -80,6 +80,14 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-submitted";
     }
 
+    @RequestMapping("/{applicationId}/track")
+    public String applicationTrack(Model model, @PathVariable("applicationId") final Long applicationId,
+                                    HttpServletRequest request){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationDetails(applicationId, user.getId(), model);
+        return "application-track";
+    }
+
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      *

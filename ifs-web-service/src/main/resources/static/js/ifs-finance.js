@@ -8,69 +8,46 @@ var IFSFinance = {
     },
     domReady : function(){
         if(IFS.isApplicationForm()){
-            IFSFinance.preProcessRepeatedFieldsForTotalElements();
-            IFSFinance.bindCalculationActionToFields();
             IFSFinance.initShowHideOtherCosts();
         }
     },
-    preProcessRepeatedFieldsForTotalElements : function(){
-        // TODO DW - upon a dynamic adding or removing of a cost row (i.e. without full page refresh), we're OK to allow
-        // this behaviour to rerun and update the field ids on the "Total" field to let it know the latest set of fields
-        // that are involved in its calculation - would be nicer to move to a delegate-based event listner approach though
-        // whereby no behaviour needs rebinding after elements are added and removed
-        if(jQuery('[data-calculation-repeating-total]').length){
-            $('[data-calculation-repeating-total]').each(function(index,value){
-                IFSFinance.preProcessRepeatedFieldsForTotalElement($(this));
-            });
-        }
-    },
-    preProcessRepeatedFieldsForTotalElement : function(totalElement) {
-        // TODO DW - upon a dynamic adding or removing of a cost row (i.e. without full page refresh), we're OK to allow
-        // this behaviour to rerun and update the field ids on the "Total" field to let it know the latest set of fields
-        // that are involved in its calculation - would be nicer to move to a delegate-based event listner approach though
-        // whereby no behaviour needs rebinding after elements are added and removed
-        var fieldSelector = IFSFinance.getFieldSelector(totalElement);
-        var repeatedFieldElements = IFSFinance.getFieldsBySelector(fieldSelector);
-        IFSFinance.addRepeatedFieldIdsToTotalElement(totalElement, repeatedFieldElements);
-    },
-    rebindCalculationFieldsOnDynamicUpdate : function() {
-        // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
-        // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
-        // model whereby no rebinding is necessary when the page is changed
-        IFSFinance.domReady();
-    },
-
-    getFieldsBySelector : function(fieldSelector) {
-        var fields = [];
-
-        $(fieldSelector).each(function(){
-            fields.push('#'+$(this).attr('id'));
-        });
-
-        return fields;
-    },
-    getFieldSelector : function(totalElement) {
-        return totalElement.attr("data-calculation-repeating-total");
-    },
-    addRepeatedFieldIdsToTotalElement : function(totalElement, repeatedFieldElements) {
-        totalElement.attr('data-calculation-fields',repeatedFieldElements.join());
-    },
-
     bindCalculationActionToFields : function(){
-        $('[data-calculation-fields]').each(function(index,value){
-                var inst = $(this);
-                var fields = inst.attr("data-calculation-fields").split(',');
 
-                _.each(fields, function(el){
-                    var field = $(el);
-                    //console.log('field',field);
-                    // TODO DW - currently having to bind / rebind change event listeners upon the dynamic adding or removing
-                    // of Cost rows (i.e. without a full page refresh).  Would be nicer to move to a delegate event handling
-                    // model whereby no rebinding is necessary when the page is changed
-                    field.off('change').on('change',function(){
-                        IFSFinance.doMath(inst,fields);
-                    });
-                });
+        var updateBasedOnDataCalculationFieldsIfNecessary = function(dependantField, input) {
+
+            var dependencySelectors = dependantField.attr("data-calculation-fields").split(',');
+
+            var matchingDependenciesInArrays = dependencySelectors.map(function(selector) {
+                return $(selector);
+            });
+
+            var matchingDependencies = matchingDependenciesInArrays.reduce(function(combined, currentJqueryObject) {
+                return $.merge(combined, currentJqueryObject);
+            });
+
+            var idFn = function(element) {
+              if (element instanceof jQuery) {
+                  return element.attr('id');
+              }
+              return $(element).attr('id');
+            };
+
+            if (matchingDependencies.toArray().map(idFn).indexOf(idFn(input)) !== -1) {
+                IFSFinance.doMath(dependantField, matchingDependencies);
+            }
+        };
+
+        $('body').on('change', 'input', function() {
+
+            var input = $(this);
+
+            var fieldsDependantOnOthers = $('[data-calculation-fields]');
+
+            fieldsDependantOnOthers.each(function(i, element) {
+                var dependantField = $(element);
+                updateBasedOnDataCalculationFieldsIfNecessary(dependantField, input);
+            });
+
         });
     },
     initShowHideOtherCosts : function() {
@@ -155,9 +132,17 @@ var IFSFinance = {
 }
 
 //
-// Bind change events to update calculations
+// Bind calculations
 //
-$(document).ready(function(){
+$(function() {
+
+    IFSFinance.bindCalculationActionToFields();
+});
+
+//
+// Bind Other Costs events
+//
+$(function() {
     IFSFinance.domReady();
 });
 
@@ -196,7 +181,6 @@ $(function() {
             var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
             tableSectionToUpdate.replaceWith(replacement);
             IFS.initAllAutosaveElements(replacement);
-            IFSFinance.rebindCalculationFieldsOnDynamicUpdate();
         })
         e.preventDefault();
         return false;
@@ -215,7 +199,6 @@ $(function() {
             var costRowsToDelete = $('[data-cost-row=' + costRowsId + ']');
             costRowsToDelete.find('[data-calculation-fields],[data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
             costRowsToDelete.remove();
-            IFSFinance.rebindCalculationFieldsOnDynamicUpdate();
         })
         e.preventDefault();
         return false;
@@ -241,8 +224,6 @@ $(function() {
                 output.val(input.val());
             }
         });
-        e.preventDefault();
-        return false;
     });
 });
 

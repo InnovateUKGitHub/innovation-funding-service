@@ -41,7 +41,7 @@
                     <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-two-thirds">
                             <h4 class="heading-medium">
-                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                                <a th:href="@{/application/{id}/track(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <strong class="greentext">Application submitted</strong>
