@@ -220,7 +220,8 @@ public class AssessmentController extends AbstractApplicationController {
             String commentsToShare = req.getParameter("comments-to-share");
 
             /** asserts the invitation response **/
-            assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare);
+            if ( assessmentSummaryIsValidToSave(suitableForFundingValue, suitableFeedback) )
+                assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare);
         }
 
         //gets the competition id to redirect
@@ -234,5 +235,9 @@ public class AssessmentController extends AbstractApplicationController {
             converted.add(Long.valueOf(value));
 
         return converted;
+    }
+
+    public boolean assessmentSummaryIsValidToSave(String recommendationValue, String feedback) {
+        return ! (recommendationValue.equals("no") && feedback.isEmpty());
     }
 }
