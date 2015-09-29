@@ -9,13 +9,42 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
+<main id="content" th:with="currentApplication=${assessment.application}">
 
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
+    <!--<div th:include="fragments/elements :: notification" th:remove="tag"></div>-->
+
+
+    <div class="grid-row">
+        <div class="column-third">
+            <nav role="navigation" class="app-sidebar">
+                <ul>
+                    <li>
+                        <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
+                    </li>
+                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
+                                ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
+                                ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '')">
+                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
+                           th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
+                        <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
+                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'')">
+                                <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
+                                   th:text="${subSection.getName()}"></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+    <!--<h1>Application details</h1>-->
+    <!--<a class="button button-pull-right no-margin" th:href="@{/assessor/competitions/{cid}/applications/{aid}/summary(cid=${competition.id},aid=${assessment.application.id})}">Review applications</a>-->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-    <h1></h1>
-    <a class="button button-pull-right no-margin" th:href="@{/assessor/competitions/{cid}/applications/{aid}/summary(cid=${competition.id},aid=${assessment.application.id})}">Review applications</a>
-
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

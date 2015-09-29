@@ -55,7 +55,7 @@
             </ul>
 
             <h3 class="heading-medium">Summary</h3>
-            <p>The summary about this application must be shown here.</p>
+            <p th:text="${assessment.application.summary}">The summary about this application must be shown here.</p>
             <h3 class="heading-medium">Are you able to assess this application?</h3>
             <p class="form-hint">If you are unsure whether you are able to assess, accept to review the full application.</p>
             <form  method="post" action="/assessor/invitation_answer" >
