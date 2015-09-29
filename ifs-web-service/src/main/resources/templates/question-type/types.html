@@ -118,7 +118,7 @@
             </div>
             <div class="column-half alignright">
                 <input type="text" readOnly="readonly" class="heading-medium width-medium"
-                   data-calculation-repeating-total="[id*=total]"
+                   data-calculation-fields="[id*=total]"
                    data-calculation-operations="+"
                    th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
@@ -171,7 +171,7 @@
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="textr"
+                                    <input type="text"
                                            th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
@@ -213,7 +213,7 @@
                     <label>
                         Total labour costs
                         <input class="form-control form-control-1-4 alignright"
-                               data-calculation-repeating-total="[id*=labourTotalCost]"
+                               data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
                                readonly="" type="text" id="cost-labour-total-field"
@@ -360,7 +360,7 @@
                     Total materials costs
                     <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
                            readonly="" type="text" id="material-costs-total-field"
-                           data-calculation-repeating-total="[id*=materialTotal]"
+                           data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
@@ -502,7 +502,7 @@
                            readonly=""
                            type="text"
                            id="cost-subcontracting-total"
-                           data-calculation-repeating-total="[id*=subcontractingCost]"
+                           data-calculation-fields="[id*=subcontractingCost]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
