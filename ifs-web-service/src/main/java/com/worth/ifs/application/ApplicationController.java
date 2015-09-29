@@ -35,7 +35,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request){
         log.info("Application with id " + applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-details";
     }
 
@@ -45,8 +45,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationDetails(applicationId, user.getId(), model);
-        model.addAttribute("currentSectionId", sectionId);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
         return "application-details";
     }
 
@@ -57,7 +56,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         Application application = applicationService.getById(applicationId);
         addFinanceDetails(model, application, user.getId());
         return "application-summary";
@@ -67,7 +66,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationConfirmSubmit(Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-confirm-submit";
     }
 
@@ -76,7 +75,7 @@ public class ApplicationController extends AbstractApplicationController {
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-submitted";
     }
 
@@ -84,34 +83,8 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationTrack(Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-track";
-    }
-
-    /**
-     * Get the details of the current application, add this to the model so we can use it in the templates.
-     *
-     * @param applicationId represents the application
-     * @param model model that contains the details for the application detail page
-     */
-    private void addApplicationDetails(Long applicationId, Long userId, Model model) {
-        Application application = applicationService.getById(applicationId);
-
-        if(application == null){
-            throw new ObjectNotFoundException("Application not found.");
-        }
-
-        Competition competition = application.getCompetition();
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-
-        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
-        addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
-        addSectionsDetails(model, application, userOrganisation.getId(), userOrganisation.getId());
-        addUserDetails(model, application, userId);
     }
 
     /**
@@ -130,13 +103,13 @@ public class ApplicationController extends AbstractApplicationController {
 
         Application application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), model);
+        addApplicationSectionAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
         // TODO DW - quite a lot of rework here to get a hold of more single-section focused
         // TODO DW - sectionId should be determined from the clicked button as per the questionId as grabbed below
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
-        Section currentSection = getSection(application.getCompetition().getSections(), sectionId);
+        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
         Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
@@ -184,6 +157,11 @@ public class ApplicationController extends AbstractApplicationController {
         redirectAttributes.addFlashAttribute("assignedQuestion", true);
     }
 
-
-
+    private Application addApplicationSectionAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
+        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        addFinanceDetails(model, application, userId);
+        return application;
+    }
 }
