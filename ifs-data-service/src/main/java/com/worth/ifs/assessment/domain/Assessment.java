@@ -99,10 +99,13 @@ public class Assessment extends Process {
         return recommendedValue;
     }
 
+    public String getSuitableFeedback() {
+        return suitableFeedback;
+    }
+    public String getComments() {
+        return comments;
+    }
     /******* TEMPORARY ********/
-
-
-
 
     public Double getOverallScore() {
         // nItems cant be 0 - math indetermination

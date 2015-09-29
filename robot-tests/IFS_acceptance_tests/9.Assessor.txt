@@ -6,13 +6,27 @@ Resource          GLOBAL_VARIABLES.txt
 *** Test Cases ***
 Verify the assessor can see the applications details page
     [Documentation]    INFUND-337
+    [Tags]    Assessor
     When the Assessor clicks the competition
     Then the competition's details page should be visible
 
+Verify the applications details page has two lists
+    [Documentation]    INFUND-322
+    [Tags]    Assessor
+    When the Assessor clicks the competition
+    Then the details page should contain a list with the applications for assessment
+    and the the page should contain a list with the submitted assessments
+
 *** Keywords ***
 the Assessor clicks the competition
-    Click Element    link=Competition name ...
+    Click Element    link=Technology Inspired
 
 the competition's details page should be visible
     Page Should Contain    Competition Details
     Capture Page Screenshot
+
+the details page should contain a list with the applications for assessment
+    Page Should Contain Element    css=#content > div.my-applications > div.in-progress
+
+the the page should contain a list with the submitted assessments
+    Page Should Contain Element    css=#content > div.my-applications > div.submitted

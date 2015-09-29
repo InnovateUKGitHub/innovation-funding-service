@@ -37,6 +37,10 @@ public class Question {
 
     private Boolean markAsCompletedEnabled = false;
 
+
+
+    private Boolean assignEnabled = true;
+
     private Boolean multipleStatuses = false;
 
     private Integer priority;
@@ -169,6 +173,15 @@ public class Question {
 
     public Boolean getMarkAsCompletedEnabled() {
         return markAsCompletedEnabled;
+    }
+
+    public Boolean isAssignEnabled() {
+        // never return a null value.. it is enabled or disabled.
+        return (assignEnabled == null ? true : assignEnabled);
+    }
+
+    public void setAssignEnabled(Boolean assignEnabled) {
+        this.assignEnabled = assignEnabled;
     }
 
     public Integer getPriority() {

@@ -283,19 +283,21 @@
         <p><strong>Do you believe that this application is suitable for funding?</strong></p>
         <div class="form-group">
             <select name="is-suitable-for-funding" id="suitable-for-funding" required="required">
-                <option value=""></option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+
+                <option value="" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY }"></option>
+                <option value="yes" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES }">Yes</option>
+                <option value="no" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO }">No</option>
             </select>
         </div>
 
         <!-- .form-group -->
 
-        <div class="form-group">
+        <div class="form-group" id="recommendation-feedback-group">
             <p><strong>Your feedback</strong></p>
             <p><small>Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback</small></p>
             <div class="form-control-wrap">
-                <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area" id="not-suitable-feedback" data-reactid=".qi22iy69kw" data-react-checksum="1247366089"></textarea>
+                <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
+                          id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"></textarea>
             </div>
 
             <div class="form-group_footer">
@@ -310,7 +312,8 @@
         <div class="form-group">
             <p><strong>Do you have any comments about this application that you would like to share with Innovate UK? (Optional)</strong></p>
             <div class="form-control-wrap">
-                <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area" id="id_innovate_comments" data-reactid=".qi22iy69kw" data-react-checksum="1247366089"></textarea>
+                <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
+                          id="id_innovate_comments" th:text="${assessment.getComments()}"></textarea>
             </div>
 
             <div class="form-group_footer">
@@ -340,5 +343,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
 </body>
 </html>

@@ -4,6 +4,7 @@ Resource          GLOBAL_VARIABLES.txt
 
 *** Test Cases ***
 Verify that collaborators are visible in the overview page
+    [Tags]    Collaborator
     When the Applicant is in the overview page
     Then the collaborators should be visible
 
