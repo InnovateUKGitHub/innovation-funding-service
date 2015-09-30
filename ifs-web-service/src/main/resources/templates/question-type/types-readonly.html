@@ -12,6 +12,11 @@
 
     <div th:fragment="question-label-and-paragraph (question, responses, bold)">
         <div th:include="question-type/types-readonly :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
+        <label th:for="'assessor-score-question-' + ${question.getId()}">Question Score</label>
+        <select name="'assessor-score-question-' + ${question.getId()}" id="'assessor-score-question-' + ${question.getId()}">
+            <option value=""></option>
+            <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
+        </select> / 10
     </div>
 
     <!-- ===========================Form: Textinput =========================== -->
