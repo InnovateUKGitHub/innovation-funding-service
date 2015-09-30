@@ -41,7 +41,7 @@
             <!--/* <form action="#"  method="post" class="form-serialize-js"> */--> <!--/* TODO DW - removed form from assessor's view as it is read only */-->
 
                 <div th:each="sectionEntry : ${sections}"  th:remove="tag">
-                    <div th:if="(${sectionEntry.key} == ${currentSectionId})" th:remove="tag">
+                    <div th:if="(${sectionEntry.key} == ${currentSectionId})" class="page-header no-pad">
                         <h1 class="heading-xlarge" th:text="${sectionEntry.value.getName()}"></h1>
                         <p class="subtitle" th:text="${sectionEntry.value.getDescription()}"></p>
                     </div>
