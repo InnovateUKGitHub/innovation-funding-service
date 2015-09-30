@@ -2,8 +2,8 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/assessor")
 public class AssessmentController {
+    private final Log log = LogFactory.getLog(getClass());
 
     /* pages */
     private final String competitionAssessments = "assessor-competition-applications";
@@ -96,12 +97,11 @@ public class AssessmentController {
     private String solvePageForApplicationAssessment(Assessment assessment) {
 
         String pageToShow;
-
-        if (assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID))
+        if (assessment == null || assessment.getProcessStatus().equals(AssessmentStates.REJECTED.name()))
             pageToShow = assessorDashboard;
-        else if (assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING))
+        else if (assessment.getProcessStatus().equals(AssessmentStates.PENDING.name())) {
             pageToShow = applicationReview;
-        else
+        } else
             pageToShow = assessmentDetails;
 
 
@@ -164,7 +164,18 @@ public class AssessmentController {
             String observations = params.containsKey("observations") ? req.getParameter("observations") : "";
 
             /** asserts the invitation response **/
-            assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
+            if(decision) {
+                Assessment assessment = new Assessment();
+                assessment.setProcessStatus("pending");
+                assessmentRestService.acceptAssessmentInvitation(applicationId, userId,  assessment);
+            } else {
+                Assessment assessment = new Assessment();
+                assessment.setProcessStatus("pending");
+                assessment.setDecisionReason(decisionReason);
+                assessment.setObservations(observations);
+                assessmentRestService.rejectAssessmentInvitation(applicationId, userId, assessment);
+            }
+            //assessmentRestService.respondToAssessmentInvitation(userId, applicationId, decision, decisionReason, observations);
         }
 
         //gets the competition id to redirect

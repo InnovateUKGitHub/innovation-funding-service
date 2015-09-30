@@ -85,6 +85,23 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
         return restPost(node.toString(), "/saveAssessmentSummary/", Boolean.class);
     }
 
+    @Override
+    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + assessmentRestURL + "/acceptAssessmentInvitation/" + applicationId + "/" + assessorId;
+
+        HttpEntity<Assessment> entity = new HttpEntity<>(assessment, getJSONHeaders());
+        restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+    }
+
+    @Override
+    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + assessmentRestURL + "/rejectAssessmentInvitation/" + applicationId + "/" + assessorId;
+
+        HttpEntity<Assessment> entity = new HttpEntity<>(assessment, getJSONHeaders());
+        restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+    }
 
     @Override
     protected  <T> T restGet(String path, Class c) {

@@ -1,11 +1,10 @@
 package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessEvent;
-import com.worth.ifs.workflow.domain.ProcessStatus;
+import com.worth.ifs.workflow.domain.ProcessStates;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Type;
@@ -60,7 +59,7 @@ public class Assessment extends Process {
     }
 
     public Assessment(User assessor, Application application) {
-        super(ProcessEvent.ASSESSMENT, ProcessStatus.PENDING);
+        super(ProcessEvent.ASSESSMENT.name(), AssessmentStates.PENDING.name());
         this.assessor = assessor;
         this.application = application;
         responseAssessments = new HashMap<>();
@@ -78,12 +77,8 @@ public class Assessment extends Process {
     }
 
     @Override
-    public ProcessStatus getProcessStatus() {
+    public String getProcessStatus() {
         return status;
-    }
-
-    public AssessmentStatus getAssessmentStatus() {
-        return solveStatus();
     }
 
     public Map<Long, ResponseAssessment> getResponseAssessments() {
@@ -120,7 +115,7 @@ public class Assessment extends Process {
     }
 
     public void respondToAssessmentInvitation(boolean hasAccepted, String reason, String observations) {
-        setProcessStatus(hasAccepted ? ProcessStatus.ACCEPTED : ProcessStatus.REJECTED);
+        setProcessStatus(hasAccepted ? AssessmentStates.ACCEPTED.getState() : AssessmentStates.REJECTED.getState());
         setDecisionReason(reason);
         setObservations(observations);
     }
@@ -139,25 +134,6 @@ public class Assessment extends Process {
 
     public Application getApplication() {
         return application;
-    }
-
-
-    // follows a concrete criteria
-    private AssessmentStatus solveStatus() {
-
-        AssessmentStatus status = AssessmentStatus.INVALID;
-
-        if (super.getProcessStatus().equals(ProcessStatus.REJECTED))
-            status = AssessmentStatus.INVALID;
-
-        else if (super.getProcessStatus().equals(ProcessStatus.PENDING))
-            status = AssessmentStatus.PENDING;
-
-        else if (super.getProcessStatus().equals(ProcessStatus.ACCEPTED))
-            status = isSubmitted() ? AssessmentStatus.SUBMITTED : hasAssessmentStarted() ? AssessmentStatus.ASSESSED : AssessmentStatus.OPEN;
-
-
-        return status;
     }
 
 }

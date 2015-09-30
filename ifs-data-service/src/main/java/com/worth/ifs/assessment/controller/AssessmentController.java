@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class AssessmentController {
 
     @Autowired
     AssessmentHandler assessmentHandler;
+
+    @Autowired
+    AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
@@ -57,6 +61,20 @@ public class AssessmentController {
 
         // delegates to the handler and returns its operation success
         return assessmentHandler.respondToAssessmentInvitation(assessorId, applicationId, decision, reason, observations);
+    }
+
+    @RequestMapping(value = "/acceptAssessmentInvitation/{applicationId}/{assessorId}")
+    public void acceptAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("assessorId") final Long assessorId,
+                                           @RequestBody Assessment assessment) {
+        assessmentWorkflowEventHandler.acceptInvitation(applicationId, assessorId, assessment);
+    }
+
+    @RequestMapping(value = "/rejectAssessmentInvitation/{applicationId}/{assessorId}")
+    public void rejectAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("assessorId") final Long assessorId,
+                                           @RequestBody Assessment assessment) {
+        assessmentWorkflowEventHandler.rejectInvitation(applicationId, assessorId, assessment);
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
