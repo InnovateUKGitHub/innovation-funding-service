@@ -9,7 +9,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
+<main id="content" th:with="urlPrefix='/assessor/competitions/' + ${currentCompetition.id} + '/applications/' + ${currentApplication.id}"> <!--/* TODO DW - added urlPrefix */-->
 
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
@@ -18,11 +18,11 @@
 
     <div class="grid-row">
         <div class="column-third">
-            <nav role="navigation" class="app-sidebar" th:with="urlPrefix='/assessor'"> <!--/* TODO DW - added urlPrefix */-->
+            <nav role="navigation" class="app-sidebar">
                 <ul>
                     <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'')"> <!--/* TODO DW - removed the following -  + ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') + ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '') */-->
                         <!--/* TODO DW - added urlPrefix */-->
-                        <a th:href="${urlPrefix} + @{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
+                        <a th:href="${urlPrefix} + @{/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                            th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
                             <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'')">  <!--/* TODO DW - removed the following -  + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'') */-->
@@ -54,45 +54,41 @@
                 </div>
 
                 <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
-                    <div th:replace="question-type/types-readonly :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
+                    <div th:replace="question-type/types-readonly :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-readonly template file /*-->
                 </div>
-<!--/*
-                <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
 
                 <ul class="pagination">
                     <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
+                        <a th:href="${urlPrefix} + @{/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part"> <!--*/ TODO DW - added urlPrefix of /assessor */-->
                             <span class="pagination-label">Previous</span>
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
                         </a>
                     </li>
                     <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part">
+                        <a th:href="${urlPrefix} + @{/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part"> <!--*/ TODO DW - added urlPrefix of /assessor */-->
                             <span class="pagination-label">Next</span>
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
                         </a>
                     </li>
-                </ul>
+                </ul><!-- -->
 
+            <!--*/ TODO DW - removed "Save" and "Review and Submit" buttons from Assessor view
                 <div class="alignright-button">
                     <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
                         Review &amp; submit
                     </a>
 
                     <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
-                </div>
-            </form> TODO DW - removed form from assessor's view as it is read only
+                </div> */-->
 
-        </div>
-
-        */-->
+            <!--/* </form> TODO DW - removed form from assessor's view as it is read only */-->
 
         </div>
     </div>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 
     <div class="grid-row" align="right">
-        <a class="button button-pull-right no-margin" th:href="@{/assessor/competitions/{cid}/applications/{aid}/summary(cid=${currentCompetition.id},aid=${currentApplication.id})}">Review applications</a>
+        <a class="button button-pull-right no-margin" th:href="${urlPrefix} + '/summary'">Review applications</a>
     </div>
 </main>
 
