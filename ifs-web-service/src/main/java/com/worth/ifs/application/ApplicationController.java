@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -91,9 +93,9 @@ public class ApplicationController extends AbstractApplicationController {
     public String assignQuestionAndReturnSectionFragment(Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
                                                          @RequestParam("sectionId") final Long sectionId,
-                                                         HttpServletRequest request, RedirectAttributes redirectAttributes){
+                                                         HttpServletRequest request, HttpServletResponse response){
 
-        doAssignQuestion(applicationId, request, redirectAttributes);
+        doAssignQuestion(applicationId, request, response);
 
         // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
 
@@ -142,15 +144,16 @@ public class ApplicationController extends AbstractApplicationController {
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request,
-                                 RedirectAttributes redirectAttributes){
+                                 HttpServletResponse response){
 
-        doAssignQuestion(applicationId, request, redirectAttributes);
+        doAssignQuestion(applicationId, request, response);
+
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 
-    private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
         assignQuestion(request, applicationId);
-        redirectAttributes.addFlashAttribute("assignedQuestion", true);
+        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
     private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {

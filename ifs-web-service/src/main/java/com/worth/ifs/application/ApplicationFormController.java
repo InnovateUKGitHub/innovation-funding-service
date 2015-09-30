@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -122,6 +122,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
+    /**
+     * Get the details of the current application, add this to the model so we can use it in the templates.
+     */
+    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
+        Application application = applicationService.getById(applicationId);
+        model.addAttribute("currentApplication", application);
+        Competition competition = application.getCompetition();
+        model.addAttribute("currentCompetition", competition);
+
+        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
+
+        addOrganisationDetails(model, application, Optional.of(userOrganisation));
+        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
+        addFinanceDetails(model, application, userId);
+        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation));
+        addUserDetails(model, application, userId);
+
+        return application;
+    }
+
     private void saveApplicationForm(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
@@ -157,14 +177,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormSubmit(Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
-                                         HttpServletRequest request, RedirectAttributes redirectAttributes){
+                                        HttpServletRequest request,
+                                        HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-        redirectAttributes.addFlashAttribute("applicationSaved", true);
+        cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
-            redirectAttributes.addFlashAttribute("assignedQuestion", true);
-
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
         saveApplicationForm(model, applicationId, sectionId, request);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
@@ -280,7 +300,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
-        model.addAttribute("assignedQuestion", true);
     }
 
     protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {

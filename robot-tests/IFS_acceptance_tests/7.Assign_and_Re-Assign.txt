@@ -7,7 +7,7 @@ Resource          GLOBAL_VARIABLES.txt
 Verify the applicant can assign a question
     [Tags]    Collaborator
     Given the Applicant is in the form
-    When the Applicant assigns the question 11 to the collaborator
+    When the Applicant assigns the question 11 to the collaborator    Jessica
     Then the success message should show
     and the field should be disabled
 
@@ -37,9 +37,10 @@ the Applicant is in the form
     Go To    ${APPLICATION_URL}
 
 When the Applicant assigns the question 11 to the collaborator
+    [Arguments]    ${assignee_name}
     #Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
     #Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Wait Until Page Contains Element    css=#collapsible-0 > div > ul > li > button:contains("Jessica Doe (Collaborator)")
+    Wait Until Page Contains Element    xpath=//div[@id="question-11"]//button[contains(text(),"${assignee_name}")]
 
 the success message should show
     Wait Until Element Is Visible    css=body > div.event-alert > p > span
@@ -54,7 +55,6 @@ the Collaborator is logged-in
     Input Text    id=id_email    collaborator@innovateuk.gov.uk
     Input Password    id=id_password    test
     Click Element    css=#content > div > div:nth-child(1) > form > input
-    ${/}
 
 the Collaborator edits the assigned field
     Click Element    link=A novel solution to an old problem
