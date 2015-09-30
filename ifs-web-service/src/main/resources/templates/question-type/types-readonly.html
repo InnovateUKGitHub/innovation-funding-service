@@ -11,10 +11,13 @@
     </div>
 
     <div th:fragment="question-label-and-paragraph (question, responses, bold)">
-
         <div th:include="question-type/types-readonly :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-readonly :: assessor-feedback (question=${question}, response=${response})" th:remove="tag" />
+    </div>
 
-        <div th:with="response=${responses.get(questionId)}, questionId=${question.getId()}" th:remove="tag">
+    <div th:fragment="assessor-feedback (question, response)">
+
+        <div th:with="questionId=${question.getId()}" th:remove="tag">
 
             <div th:if="${question.needingAssessorScore}" th:remove="tag">
                 <h2>Question Score</h2>
@@ -73,10 +76,9 @@
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-            <input type="file"/>
+        <div th:include="question-type/form-elements :: form-label (name='Appendix', id=${question.getId()}, bold=true)" th:remove="tag" />
+        <a href="#">Appendix document (2.4mb PDF)</a>
+        <div th:include="question-type/types-readonly :: assessor-feedback (question=${question}, response=${response})" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
