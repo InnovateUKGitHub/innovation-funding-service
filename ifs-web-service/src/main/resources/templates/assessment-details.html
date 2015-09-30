@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
-                    <div th:replace="question-type/types-readonly :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-readonly template file /*-->
+                    <div th:replace="question-type/types-assessment-details :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-assessment-details template file /*-->
                 </div>
 
                 <ul class="pagination">

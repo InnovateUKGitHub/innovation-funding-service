@@ -103,9 +103,7 @@ var IFS = {
           });
         }
     },
-    initAllAutosaveElements : function($scope){
-
-        var $targetScope = $scope || $(document);
+    initAllAutosaveElements : function(){
 
         var inputFields = jQuery('.form-serialize-js input').not('[type="button"],[readonly="readonly"]');
         var textareas = jQuery('.form-serialize-js textarea').not('[readonly="readonly"]'); 
