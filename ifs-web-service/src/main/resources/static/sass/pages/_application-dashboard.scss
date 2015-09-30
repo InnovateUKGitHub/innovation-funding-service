@@ -184,5 +184,47 @@
 		margin-bottom: 25px;
 	}
 
+	.collapsible{
+		.column-three-quarters{
+			padding-left: 30px;
+		}
+
+		.column-full{
+			padding: 0 18px;
+		}
+
+		.accordion_item{
+
+			border-top: 1px solid $border-colour;
+			padding-top: 20px;
+
+			&:first-child{
+				border: none;
+			}
+		}
+	
+		.assessor-score{
+			text-align: center;
+			margin-right: 60px;
+			font-weight: bold;
+			float: right;
+			.score{
+				font-size: 48px;
+			}
+		}
+
+	}
+
+	textarea{
+		&.form-control-large{
+			width: 100%;
+		}
+	}
+
+	select{
+		&#suitable-for-funding{
+			max-width: 120px;
+		}
+	}
 
 }

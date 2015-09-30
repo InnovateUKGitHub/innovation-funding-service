@@ -76,10 +76,20 @@ public class AssessmentController extends AbstractApplicationController {
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
-        return solvePageForApplicationAssessment(model, competitionId, applicationId, userId);
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.empty(), userId);
     }
 
-    private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Long userId) {
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
+    public String applicationAssessmentDetails(Model model, @PathVariable("competitionId") final Long competitionId,
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               @PathVariable("sectionId") final Long sectionId,
+                                               HttpServletRequest req) {
+
+        Long userId = getLoggedUser(req).getId();
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId);
+    }
+
+    private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
 
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
         boolean invalidAssessment = assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID);
@@ -91,11 +101,11 @@ public class AssessmentController extends AbstractApplicationController {
             return showApplicationReviewView(model, competitionId, assessment);
         }
 
-        return showReadOnlyApplicationFormView(model, assessment, userId);
+        return showReadOnlyApplicationFormView(model, assessment, sectionId, userId);
     }
 
-    private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Long userId) {
-        addApplicationDetails(assessment.getApplication().getId(), userId, Optional.empty(), model);
+    private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
+        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model);
         return assessmentDetails;
     }
 
@@ -191,7 +201,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)
-    public String assessmentSubmissionComplete(Model model, @PathVariable("competitionId") final Long competitionId,
+    public String assessmentSummaryComplete(Model model, @PathVariable("competitionId") final Long competitionId,
                                             @PathVariable("applicationId") final Long applicationId,
                                             HttpServletRequest req)
     {

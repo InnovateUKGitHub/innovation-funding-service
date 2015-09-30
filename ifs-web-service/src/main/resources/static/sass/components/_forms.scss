@@ -122,6 +122,19 @@ table td{
     padding:2px 0;
     float:right;
     color: $grey-1;
+    
+    .negative{
+        color: $orange;
+        font-weight: 700;
+    }
+
+    .word-count-reached &{
+        .count-down{
+            color: $orange;
+            font-weight: 700;
+        }
+    }
+
 }
 
 .form-group{
@@ -129,6 +142,12 @@ table td{
         .form-control{
             margin-right: 1.25em;
         }
+    }
+}
+
+select{
+    &.form-control{
+        -webkit-appearance: menulist;
     }
 }
 
