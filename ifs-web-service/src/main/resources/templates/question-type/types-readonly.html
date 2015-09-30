@@ -23,8 +23,8 @@
                 <h2>Question Score</h2>
 
                 <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}">
-                    <option value=""></option>
-                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
+                    <option value="" th:selected="${response.assessmentScore == null}"></option>
+                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}" th:selected="${response.assessmentScore == i}">1</option>
                 </select> / 10
             </div>
 
@@ -33,9 +33,9 @@
                 <h2 th:text="${question.assessorConfirmationQuestion}">A Confirmation Question</h2>
 
                 <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}">
-                    <option value=""></option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
+                    <option value="" th:selected="${response.assessmentConfirmation == null}"></option>
+                    <option value="Yes" th:selected="${response.assessmentConfirmation == true}">Yes</option>
+                    <option value="No" th:selected="${response.assessmentConfirmation == false}">No</option>
                 </select>
             </div>
 
@@ -44,7 +44,7 @@
 
                 <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
 
-                <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value='', wordCount=350, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+                <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value=${response.assessmentFeedback}, wordCount=350, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
             </div>
 
         </div>
@@ -78,8 +78,6 @@
 
         <div th:include="question-type/types-readonly :: label-and-paragraph (label='Project title', text=${currentApplication.getName()}, id='application_details-title', bold=true)" th:remove="tag"></div>
 
-        <!-- <div th:include="question-type/form-elements :: form-label (name='Project timescalesTEST', id='details-application-timescale',bold=true)" th:remove="tag" /> -->
-
         <h2 th:text="${'Project timescales'}" class="heading-medium"></h2>
 
         <dl class="dl-pad">
@@ -90,9 +88,6 @@
             <dd th:text="${currentApplication.getDurationInMonths() + ' months'}">Months</dd>
         </dl>
 
-        <!-- <div th:include="question-type/types-readonly :: label-and-paragraph (label='Project start date', id='application_details-startdate', text=${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}, bold=false)" th:remove="tag" /><br/>
-        <div th:include="question-type/types-readonly :: label-and-paragraph (label='Duration', id='application_details-duration', text=${currentApplication.getDurationInMonths() + ' months'}, bold=false)" th:remove="tag" /><br/> -->
-    
         <div class="form-group">
             <h2 th:text="${'Lead organisation'}" class="heading-medium"></h2>
             <div th:text="${leadOrganisation.getName()}"></div>
