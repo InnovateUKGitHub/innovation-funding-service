@@ -19,6 +19,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -230,8 +232,18 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setStartDate(date);
         }
         if (applicationDetailParams.containsKey("question[application_details-duration]")) {
-            Long duration = Long.valueOf(applicationDetailParams.get("question[application_details-duration]")[0]);
+            String durationString = applicationDetailParams.get("question[application_details-duration]")[0];
+
+            Long duration = null;
+            if(StringUtils.hasText(durationString)){
+                try{
+                    duration = Long.parseLong(durationString);
+                }catch(NumberFormatException e){
+                    // just use the null value.
+                }
+            }
             application.setDurationInMonths(duration);
+
         }
     }
 
