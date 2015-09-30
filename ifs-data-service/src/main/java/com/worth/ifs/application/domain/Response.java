@@ -12,9 +12,13 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private LocalDateTime updateDate;
+
     @Column(length=5000)
     private String value;
+
+    private Integer assessmentScore;
 
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
@@ -91,4 +95,10 @@ public class Response {
     public void setUpdatedBy(ProcessRole updatedBy) {
         this.updatedBy = updatedBy;
     }
+
+    public Integer getAssessmentScore() { return assessmentScore; }
+
+    public void setAssessmentScore(Integer assessmentScore) { this.assessmentScore = assessmentScore; }
+
+    public void setId(Long id) { this.id = id; }
 }
