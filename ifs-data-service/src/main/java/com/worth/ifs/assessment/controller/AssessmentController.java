@@ -92,8 +92,8 @@ public class AssessmentController {
         Long applicationId = formData.get("applicationId").asLong();
 
         String suitableValue = formData.get("suitableValue").asText();
-        String suitableFeedback = formData.get("suitableFeedback").asText();
-        String comments = formData.get("comments").textValue();
+        String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
+        String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
         return assessmentHandler.saveAssessmentSummary(assessorId, applicationId, suitableValue, suitableFeedback, comments);

@@ -12,9 +12,17 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private LocalDateTime updateDate;
+
     @Column(length=5000)
     private String value;
+
+    // TODO DW - for Alpha, storing the Assessor's score against a Response.  In Beta, the Assessor will
+    // probably be assessing ALL responses for a question at the same time, at which point a new table
+    // will be needed, like "question_response_set" or "consortium_response", that links a question to a
+    // set of responses and also allows storing of scores against it
+    private Integer assessmentScore;
 
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
@@ -91,4 +99,10 @@ public class Response {
     public void setUpdatedBy(ProcessRole updatedBy) {
         this.updatedBy = updatedBy;
     }
+
+    public Integer getAssessmentScore() { return assessmentScore; }
+
+    public void setAssessmentScore(Integer assessmentScore) { this.assessmentScore = assessmentScore; }
+
+    public void setId(Long id) { this.id = id; }
 }
