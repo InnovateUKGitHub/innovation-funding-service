@@ -6,17 +6,31 @@
     <div th:fragment="label-and-paragraph (label, text, id, bold)">
         <div class="form-group">
             <h2 th:text="${label}" class="heading-medium no-margin"></h2>
-            <p th:id="${id}" th:text="${text}" />
+            <p th:id="${id}" th:text="${text}"></p>
         </div>
     </div>
 
     <div th:fragment="question-label-and-paragraph (question, responses, bold)">
+
         <div th:include="question-type/types-readonly :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
-        <label th:for="'assessor-score-question-' + ${question.getId()}">Question Score</label>
-        <select name="'assessor-score-question-' + ${question.getId()}" id="'assessor-score-question-' + ${question.getId()}">
-            <option value=""></option>
-            <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
-        </select> / 10
+
+        <div th:with="response=${responses.get(questionId)}, questionId=${question.getId()}" th:remove="tag">
+
+            <h2>Question Score</h2>
+
+            <select th:name="'assessor-question-score' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}">
+                <option value=""></option>
+                <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
+            </select> / 10
+
+            <h2>Your feedback</h2>
+
+            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+
+            <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value='', wordCount=5000, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag" />
+
+        </div>
+
     </div>
 
     <!-- ===========================Form: Textinput =========================== -->
