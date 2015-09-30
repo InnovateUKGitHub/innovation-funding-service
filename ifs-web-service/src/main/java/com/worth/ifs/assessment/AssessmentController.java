@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
@@ -83,8 +82,8 @@ public class AssessmentController extends AbstractApplicationController {
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Long userId) {
 
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
-        boolean invalidAssessment = assessment == null || assessment.getAssessmentStatus().equals(AssessmentStatus.INVALID);
-        boolean pendingApplication = !invalidAssessment && assessment.getAssessmentStatus().equals(AssessmentStatus.PENDING);
+        boolean invalidAssessment = assessment == null || assessment.getProcessStatus().equals(AssessmentStates.REJECTED);
+        boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING);
 
         if (invalidAssessment)
             return showInvalidAssessmentView(model, competitionId, assessment);
@@ -163,11 +162,9 @@ public class AssessmentController extends AbstractApplicationController {
             /** asserts the invitation response **/
             if(decision) {
                 Assessment assessment = new Assessment();
-                assessment.setProcessStatus("pending");
                 assessmentRestService.acceptAssessmentInvitation(applicationId, userId,  assessment);
             } else {
                 Assessment assessment = new Assessment();
-                assessment.setProcessStatus("pending");
                 assessment.setDecisionReason(decisionReason);
                 assessment.setObservations(observations);
                 assessmentRestService.rejectAssessmentInvitation(applicationId, userId, assessment);
