@@ -147,7 +147,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void saveApplicationForm(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
-                                     HttpServletRequest request) {
+                                     HttpServletRequest request, HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -162,9 +162,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         params.forEach((key, value) -> log.info("key " + key));
 
         setApplicationDetails(application, params);
-        markQuestion(request, params, applicationId, user.getId());
+        boolean marked = markQuestion(request, params, applicationId, user.getId());
 
         applicationService.save(application);
+        // if a question is marked as complete, don't show the field saved message.
+        if(!marked){
+            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
+
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
@@ -182,28 +187,31 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         HttpServletRequest request,
                                         HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-        cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        saveApplicationForm(model, applicationId, sectionId, request, response);
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
-        saveApplicationForm(model, applicationId, sectionId, request);
+
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
-    private void markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
+    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
         if (processRole == null) {
-            return;
+            return false;
         }
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
             questionService.markAsComplete(questionId, applicationId, processRole.getId());
+            return true;
         } else if (params.containsKey("mark_as_incomplete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+            return true;
         }
+        return false;
     }
 
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
