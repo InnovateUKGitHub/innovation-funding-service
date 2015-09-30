@@ -16,18 +16,33 @@
 
         <div th:with="response=${responses.get(questionId)}, questionId=${question.getId()}" th:remove="tag">
 
-            <h2>Question Score</h2>
+            <div th:if="${question.needingAssessorScore}" th:remove="tag">
+                <h2>Question Score</h2>
 
-            <select th:name="'assessor-question-score' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}">
-                <option value=""></option>
-                <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
-            </select> / 10
+                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}">
+                    <option value=""></option>
+                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">1</option>
+                </select> / 10
+            </div>
 
-            <h2>Your feedback</h2>
+            <div th:if="${not #strings.isEmpty(question.assessorConfirmationQuestion)}" th:remove="tag">
 
-            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                <h2 th:text="${question.assessorConfirmationQuestion}">A Confirmation Question</h2>
 
-            <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value='', wordCount=5000, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag" />
+                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}">
+                    <option value=""></option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <div th:if="${question.needingAssessorFeedback}" th:remove="tag">
+                <h2>Your feedback</h2>
+
+                <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+
+                <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value='', wordCount=5000, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+            </div>
 
         </div>
 
