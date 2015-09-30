@@ -191,7 +191,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)
-    public String assessmentSubmissionComplete(Model model, @PathVariable("competitionId") final Long competitionId,
+    public String assessmentSummaryComplete(Model model, @PathVariable("competitionId") final Long competitionId,
                                             @PathVariable("applicationId") final Long applicationId,
                                             HttpServletRequest req)
     {
