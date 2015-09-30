@@ -8,25 +8,55 @@ $(function() {
       }).trigger( "change" );
 });
 
-$(function() {
-    $( "#not-suitable-feedback" ).change(function() {
-       var charactersLeft = maxCharacters - $("#not-suitable-feedback").val().length;
-        $("#feedbackWordCount").text(charactersLeft);
 
-     }).trigger( "change" );
+
+$(function() {
+    $( "#not-suitable-feedback" ).keyup(function() {
+        setWordsLeft ( "#not-suitable-feedback", "#feedbackWordCount" );
+     }).trigger( "keyup" );
 });
 
 $(function() {
-    $( "#summary-comments" ).change(function() {
-       var charactersLeft = maxCharacters - $("#summary-comments").val().length;
-        $("#commentsWordCount").text(charactersLeft);
-     }).trigger( "change" );
+    setWordCountObserver ( "#not-suitable-feedback",  "#feedbackWordCount" );
+    setWordCountObserver ( "#summary-comments",  "#commentsWordCount");
+});
+
+function setWordCountObserver( observable, observer ) {
+     $( observable ).keyup(function() {
+            setWordsLeft(observable, observer );
+         }).trigger( "keyup" );
+}
+
+function setWordsLeft( textElement, targetElement ) {
+    var wordsLeft = maxWords - $(textElement).val().split(' ').length;
+    $(targetElement).text(wordsLeft);
+}
+
+var maxWords = 350;
+
+$(function() {
+    setWordCountObserver ( "#not-suitable-feedback",  "#feedbackWordCount" );
+    setWordCountObserver ( "#summary-comments",  "#commentsWordCount");
 });
 
 
+$(function() {
+    $( "#submission_questions" ).submit( function( event ) {
+           var recommendedValue = $( "#suitable-for-funding option:selected" ).val();
+           var feedbackIsEmpty = $("#not-suitable-feedback").val().trim()  == '';
 
 
-var maxCharacters = 350;
+           if ( recommendedValue == "no" && feedbackIsEmpty ) {
+                event.preventDefault();
+                $( "#feedback-empty-error" ).text( "Please justify your decision..." ).show();
+                return false;
+           }
+           else
+               $( "#feedback-empty-error" ).hide();
+
+
+    });
+ });
 
 
 //

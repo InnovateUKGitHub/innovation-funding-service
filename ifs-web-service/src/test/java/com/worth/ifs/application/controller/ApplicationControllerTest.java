@@ -16,6 +16,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -101,6 +104,9 @@ public class ApplicationControllerTest extends BaseUnitTest {
         Application app = applications.get(0);
         Section section = sections.get(2);
 
+        Map<Long, Section> collectedSections =
+                sections.stream().collect(Collectors.toMap(Section::getId,
+                        Function.identity()));
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -111,7 +117,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", app.getCompetition()))
-                .andExpect(model().attribute("sections", sections))
+                .andExpect(model().attribute("sections", collectedSections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))

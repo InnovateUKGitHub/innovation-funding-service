@@ -256,23 +256,23 @@
             </tr>
             <tr>
                 <th>Score</th>
-                <td style="font-weight: 700;">4</td>
                 <td style="font-weight: 700;">8</td>
+                <td style="font-weight: 700;">7</td>
                 <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">3</td>
+                <td style="font-weight: 700;">4</td>
                 <td style="font-weight: 700;">6</td>
                 <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">10</td>
                 <td style="font-weight: 700;">1</td>
-                <td style="font-weight: 700;">4</td>
+                <td style="font-weight: 700;">8</td>
+                <td style="font-weight: 700;">7</td>
+                <td style="font-weight: 700;">6</td>
             </tr>
             </tbody>
         </table>
         <br/>
         <p style="text-align: right; font-weight: 700;">
-            Total: 54/100<br/>
-            54%
+            Total: 60/100<br/>
+            60%
         </p>
 
         <hr style="border-top: 1px solid #ccc;"/>
@@ -295,6 +295,9 @@
         <div class="form-group" id="recommendation-feedback-group">
             <p><strong>Your feedback</strong></p>
             <p><small>Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback</small></p>
+            <span class="error-message" id="feedback-empty-error">
+
+            </span>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
                           id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"></textarea>
@@ -304,7 +307,7 @@
                 <div class="grid-row">
                     <div class="column-half column-half--first">
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Characters remaining:</span> <strong class="count-down" id="feedbackWordCount">350</strong> </span></div>
+                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="feedbackWordCount">350</strong> </span></div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
@@ -321,7 +324,7 @@
                     <div class="column-half column-half--first">
 
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Characters remaining:</span> <strong class="count-down" id="commentsWordCount">350</strong> </span></div>
+                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="commentsWordCount">350</strong> </span></div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
@@ -332,7 +335,7 @@
         </p>
 
         <p style="text-align: right;">
-            <button class="button button-large" name="confirm-submission" type="submit">Save assessment</button>
+            <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" type="submit">Save assessment</button>
         </p>
 
     </form>

@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +44,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), 0L, model);
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-form";
     }
 
@@ -55,7 +55,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         Application app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        this.addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
         return "application-form";
     }
@@ -99,8 +99,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Application application = addApplicationDetails(applicationId, user.getId(), sectionId, model);
-        Section currentSection = getSection(application.getCompetition().getSections(), sectionId);
+        Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
         Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
@@ -133,10 +133,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
 
-        addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation.getId(), userId);
+        addOrganisationDetails(model, application, Optional.of(userOrganisation));
+        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
         addFinanceDetails(model, application, userId);
-        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
+        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation));
         addUserDetails(model, application, userId);
 
         return application;
@@ -166,7 +166,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
-        addApplicationDetails(applicationId, user.getId(), sectionId, model);
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
     }
 
     /**
@@ -300,5 +300,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
+    }
+
+    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
+        addFinanceDetails(model, application, userId);
+        return application;
     }
 }
