@@ -63,7 +63,7 @@
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
                         </a>
                     </li>
-                    <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
+                    <li class="next" th:if="${sections.containsKey(currentSectionId+1) and not sections.get(currentSectionId+1).name.equals('Finances')}">
                         <a th:href="${urlPrefix} + @{/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part"> <!--*/ TODO DW - added urlPrefix of /assessor */-->
                             <span class="pagination-label">Next</span>
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
