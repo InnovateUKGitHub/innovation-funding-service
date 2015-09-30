@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+    <!-- ==============General Readonly Label and paragraph pairs ============= -->
+
+    <div th:fragment="label-and-paragraph (label, text, id, bold)">
+        <div class="form-group">
+            <h2 th:text="${label}" class="heading-medium no-margin"></h2>
+            <p th:id="${id}" th:text="${text}" />
+        </div>
+    </div>
+
+    <div th:fragment="question-label-and-paragraph (question, responses, bold)">
+        <div th:include="question-type/types-readonly :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
+    </div>
+
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
+        <div th:include="question-type/types-readonly :: question-label-and-paragraph (question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-        <p th:id="${question.getId()}" th:text="${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}" />
+    <div th:fragment="textarea" class="form-group">
+        <div th:include="question-type/types-readonly :: question-label-and-paragraph (question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
 
@@ -37,32 +48,31 @@
     <!-- ===========================Form: application_details =========================== -->
 
     <div th:fragment="application_details" th:remove="tag">
+
+        <div th:include="question-type/types-readonly :: label-and-paragraph (label='Project title', text=${currentApplication.getName()}, id='application_details-title', bold=true)" th:remove="tag"></div>
+
+        <!-- <div th:include="question-type/form-elements :: form-label (name='Project timescalesTEST', id='details-application-timescale',bold=true)" th:remove="tag" /> -->
+
+        <h2 th:text="${'Project timescales'}" class="heading-medium"></h2>
+
+        <dl class="dl-pad">
+            <dt th:text="${'Project start date'}">Title</dt>
+            <dd th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}">Date</dd>
+
+            <dt th:text="${'Duration'}">Duration</dt>
+            <dd th:text="${currentApplication.getDurationInMonths() + ' months'}">Months</dd>
+        </dl>
+
+        <!-- <div th:include="question-type/types-readonly :: label-and-paragraph (label='Project start date', id='application_details-startdate', text=${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}, bold=false)" th:remove="tag" /><br/>
+        <div th:include="question-type/types-readonly :: label-and-paragraph (label='Duration', id='application_details-duration', text=${currentApplication.getDurationInMonths() + ' months'}, bold=false)" th:remove="tag" /><br/> -->
+    
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
-        </div>
-
-        <div class="form-group">
-
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
-
-            Project start date
-            <br/>
-
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
-        </div>
-
-        <div class="form-group">
-            <strong>Lead organisation</strong>
+            <h2 th:text="${'Lead organisation'}" class="heading-medium"></h2>
             <div th:text="${leadOrganisation.getName()}"></div>
         </div>
 
         <div class="form-group">
-            <strong>Partners</strong>
+            <h2 th:text="${'Partners'}" class="heading-medium"></h2>
             <ul class="list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>

@@ -5,11 +5,20 @@
 	.heading-xlarge{
 		margin-bottom: 10px;   
 	}
-}
 
+	.subtitle{
+		margin: 20px 0 30px 0;
+	}
+}
 
 .no-margin{
 	margin: 0;
+}
+
+.dl-pad{
+	dd{
+		padding-bottom: 20px;
+	}
 }
 
 .button-warning{
