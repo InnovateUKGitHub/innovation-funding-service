@@ -118,20 +118,17 @@ public class AssessmentController extends AbstractApplicationController {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
 
+    private Long getLoggedUserId( HttpServletRequest req) {
+        return getLoggedUser(req).getId();
+    }
+
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/reject-invitation", method = RequestMethod.GET)
     public String applicationAssessmentDetailsReject(Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                HttpServletRequest req) {
 
-        //TO BE DRY
-
-        Competition competition = competitionService.getCompetitionById(competitionId);
-        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
-
-        //pass to view
-        model.addAttribute("competition", competition);
-        model.addAttribute("assessment", assessment);
+        getAndPassAssessmentDetails(competitionId, applicationId, getLoggedUserId(req), model);
 
         return rejectInvitation;
     }
@@ -141,13 +138,7 @@ public class AssessmentController extends AbstractApplicationController {
                                                      @PathVariable("applicationId") final Long applicationId,
                                                      HttpServletRequest req) {
 
-        //TO BE DRY
-        Competition competition = competitionService.getCompetitionById(competitionId);
-        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(getLoggedUser(req).getId(), applicationId);
-
-        //pass to view
-        model.addAttribute("competition", competition);
-        model.addAttribute("assessment", assessment);
+        getAndPassAssessmentDetails(competitionId, applicationId, getLoggedUserId(req), model);
 
         return assessmentSubmitReview;
     }
@@ -239,5 +230,16 @@ public class AssessmentController extends AbstractApplicationController {
 
     public boolean assessmentSummaryIsValidToSave(String recommendationValue, String feedback) {
         return ! (recommendationValue.equals("no") && feedback.isEmpty());
+    }
+
+
+    private void getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
+        //gets
+        Competition competition = competitionService.getCompetitionById(competitionId);
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
+
+        //pass to view
+        model.addAttribute("competition", competition);
+        model.addAttribute("assessment", assessment);
     }
 }
