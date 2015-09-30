@@ -3,5 +3,5 @@
 $(function() {
     "use strict";
 
-    $('body').on('change', '')
+    $('body').on('change', 'assessor-question-score-')
 });
