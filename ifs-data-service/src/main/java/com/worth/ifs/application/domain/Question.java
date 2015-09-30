@@ -3,8 +3,6 @@ package com.worth.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -44,6 +42,22 @@ public class Question {
     private Boolean multipleStatuses = false;
 
     private Integer priority;
+
+    // TODO DW - added for Alpha phase to determine which questions are scorable by the Assessor - in Beta probably need an
+    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
+    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
+    private Boolean needingAssessorScore;
+
+    // TODO DW - added for Alpha phase to determine which questions need feedback from the Assessor - in Beta probably need an
+    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
+    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
+    private Boolean needingAssessorFeedback;
+
+    // TODO DW - added for Alpha phase to determine which questions need Yes / No responses from assessor and the text - in Beta probably need an
+    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
+    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
+    // that, if present, will be asked of them with a Yes / No answer
+    private String assessorConfirmationQuestion;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -243,4 +257,15 @@ public class Question {
         return questionMarkedAsComplete;
     }
 
+    public Boolean getNeedingAssessorScore() {
+        return needingAssessorScore;
+    }
+
+    public Boolean getNeedingAssessorFeedback() {
+        return needingAssessorFeedback;
+    }
+
+    public String getAssessorConfirmationQuestion() {
+        return assessorConfirmationQuestion;
+    }
 }

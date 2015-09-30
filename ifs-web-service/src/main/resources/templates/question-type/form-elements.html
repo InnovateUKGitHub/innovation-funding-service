@@ -119,6 +119,7 @@
                 th:text="${value}"
                 th:readonly="${readonly}"
                 th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+                th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
                 >
 		</textarea>
 </div>
@@ -233,7 +234,7 @@
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
 				<span class="count-down" aria-live="polite"
-                      th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</span>
+                      th:text="${responses.get(question.getId())?.getWordCountLeft()}" th:classappend="${responses.get(question.getId())?.getWordCountLeft() &lt; 0}? negative : positive" >0</span>
 		</span>
     </div>
 </div>
