@@ -7,16 +7,15 @@ import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,9 @@ public abstract class AbstractApplicationController {
     protected UserAuthenticationService userAuthenticationService;
 
     @Autowired OrganisationService organisationService;
+
+
+    @Autowired CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
     FinanceService financeService;

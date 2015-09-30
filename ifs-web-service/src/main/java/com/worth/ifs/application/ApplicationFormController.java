@@ -24,9 +24,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -138,6 +138,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         addFinanceDetails(model, application, userId);
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation.getId());
         addUserDetails(model, application, userId);
+
         return application;
     }
 
@@ -176,14 +177,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormSubmit(Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
-                                         HttpServletRequest request, RedirectAttributes redirectAttributes){
+                                        HttpServletRequest request,
+                                        HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-        redirectAttributes.addFlashAttribute("applicationSaved", true);
+        cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
-            redirectAttributes.addFlashAttribute("assignedQuestion", true);
-
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
         saveApplicationForm(model, applicationId, sectionId, request);
         return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
@@ -299,6 +300,5 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
-        model.addAttribute("assignedQuestion", true);
     }
 }
