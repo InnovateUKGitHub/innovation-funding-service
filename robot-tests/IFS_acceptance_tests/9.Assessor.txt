@@ -60,6 +60,19 @@ Application state changes when rejecting an invitation for assessment
     and Assessor enters the reason for rejection
     Then Application is not visible in the applications list    ${reject_application_name}
 
+Application Summary shows your feedback when appropriate
+    Given Assessor opens a pending application    ${accept_application_name}
+    and Assessor clicks the Review Button
+    When Assessor selects "No"
+    Then Your feedback textarea appears
+    When Assessor selects "Yes"
+    Then Your feedback textarea disappears
+
+Application Summary returns an error message when submitting empty feedback
+    When Assessor selects "No"
+    and Assessor save while Your Feedback is empty
+    Then form will not be submitted
+
 Assessor can see the competitions that he/she accepted
     When Assessor is viewing the Competitions list
     Then Assessor sees competitions he or she accepted
@@ -84,6 +97,15 @@ Assessment progress is 1 out of 3
 Assessor clicks the competition
     Click Element    link=${competition_name}
 
+Assessor clicks the Review Button
+    Click Element    link=Review applications
+
+Assessor selects "No"
+    Select From List    xpath=//*[@name="is-suitable-for-funding"]    No
+
+Your Feedback textarea appears
+    Wait Until Element Is Visible    xpath=//*[@id="recommendation-feedback-group"]
+
 Competition's details page should be visible
     Page Should Contain    ${competition_details_page_title}
     Capture Page Screenshot
@@ -92,7 +114,7 @@ Details page should contain a list with the applications for assessment
     Page Should Contain Element    css=#content > div.my-applications > div.in-progress
 
 Assessor accepts the application
-    Click Element    css=#content div.application-summary form button
+    Click Element    xpath=//button[@name="accept"]
 
 Application status should change to open
     [Arguments]    ${application_name}
@@ -155,3 +177,16 @@ Application invitation Review page shows the Application title
 
 Application invitation Review page shows the Partners organisations
     Element Should Be Visible    xpath=//*[contains(text(),"${partners_header_text}")]/following-sibling::*[1]//*[contains(text(),"${partner_to_check}")]
+
+Assessor selects "Yes"
+    Select From List    xpath=//*[@name="is-suitable-for-funding"]    Yes
+
+Your Feedback textarea disappears
+    Wait Until Element Is Not Visible    xpath=//*[@id="recommendation-feedback-group"]
+
+Assessor save while Your Feedback is empty
+    Input Text    name=suitable-for-funding-feedback    ${EMPTY}
+    Click Element    name=confirm-submission
+
+Form will not be submitted
+    Location Should Contain    summary
