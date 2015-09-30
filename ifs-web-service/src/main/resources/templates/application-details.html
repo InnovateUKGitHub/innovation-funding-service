@@ -37,7 +37,7 @@
    
     <form action="#" method="post" class="application-overview">
         <div class="collapsible section-overview js-close-others">
-            <div th:remove="tag" th:each="section : ${sections}">
+            <div th:remove="tag" th:each="section : ${sections.values()}">
                 <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
                     <span th:remove="tag" th:text="${section.getName()}"></span>
                     <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>

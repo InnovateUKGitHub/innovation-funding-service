@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${assessment.application.name}" th:remove="tag" />
 </head>
 
 <body class="app-dashboard">
@@ -30,210 +30,245 @@
     <div class="grid-row">
 
 
-        <div class="accordion js-accordion">
-            <h3 class="js-accordion_control" aria-controls="js-accordion_panel--00" aria-expanded="false" aria-pressed="false" id="js-accordion_control--00" role="button" tabindex="0"><span>
-            Scope (Gateway question)
-            <span class="section-status">
-                Complete
-                <img alt="" src="/images/tick-icon.png"/>
-            </span>
-        </span></h3>
-            <div class="js-accordion_panel" aria-hidden="true" aria-labelledby="js-accordion_control--00" id="js-accordion_panel--00" style="display: none;">
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">How does this application align with the specific competition scope?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/scope#anchor-id_project_scope_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                <span class="score">Yes</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-            </div>
+        <div class="collapsible">
 
-            <h3 class="js-accordion_control" aria-controls="js-accordion_panel--01" aria-expanded="false" aria-pressed="false" id="js-accordion_control--01" role="button" tabindex="0"><span>
-            Business proposition (Q1 - Q4)
-            <span class="section-status">
-                Incomplete
-                <img alt="" src="/images/warning-icon.png"/>
-            </span>
-        </span></h3>
-            <div class="js-accordion_panel" aria-hidden="true" aria-labelledby="js-accordion_control--01" id="js-accordion_panel--01" style="display: none;">
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">1. What is the business opportunity that this project addresses?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/proposition#anchor-id_project_proposition_business_opportunity_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">6</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">2. What is the size of the market opportunity that this project might open up?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/proposition#anchor-id_project_proposition_market_opportunity_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">-</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">3. How will the results of the project be exploited and disseminated?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/proposition#anchor-id_project_proposition_results_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">8</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">4. What economic, social and environmental benefits is the project expected to deliver to those inside and outside of the consortium, and over what timescale?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/proposition#anchor-id_project_proposition_benefits_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">5</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-            </div>
+            <!--start item-->
+            <h2 data-subsection-header="9" class="section-status-finance complete">
+                <span>Scope (Gateway question)</span>
+            </h2>
+            <span style="" data-subsection-id="9" class="section-status complete place-in-header"><span data-binding-output="subsection-total-9">Complete</span></span>
 
-            <h3 class="js-accordion_control" aria-controls="js-accordion_panel--02" aria-expanded="false" aria-pressed="false" id="js-accordion_control--02" role="button" tabindex="0"><span>
-            Project approach (Q5 - Q8)
-            <span class="section-status">
-                Incomplete
-                <img alt="" src="/images/warning-icon.png"/>
-            </span>
-        </span></h3>
-            <div class="js-accordion_panel" aria-hidden="true" aria-labelledby="js-accordion_control--02" id="js-accordion_panel--02" style="display: none;">
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">5. What technical approach will be adopted and how will the project be managed?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/approach#anchor-id_project_details_technical_approach_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">5</span>
-                            </p>
-                        </div>
+            <div id="collapsible-1" aria-hidden="false">
+                <div class="grid-row">
+                    <div class="column-three-quarters">
+                        <h4 class="form-label form-label-bold">How does this application align with the specific competition scope?</h4>
+                        <p>
+                            Pre -Industry - The application is considered in scope as it both investigate a better user interface and also improved sensors
+                        </p>
+                        <p><a href="/assessor/competitions/1/applications/1/scope#anchor-id_project_scope_feedback">Return to this question in the application</a></p>
                     </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">6. What is innovative about this project?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/approach#anchor-id_project_details_innovative_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">-</span>
-                            </p>
-                        </div>
+                    <div class="column-quarter">
+                        <p class="assessor-score">
+                            <span class="score">Yes</span>
+                        </p>
                     </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/approach#anchor-id_project_details_risks_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">-</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/approach#anchor-id_project_details_skills_feedback">Return to this question in the application</a></p>
-                        </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">8</span>
-                            </p>
-                        </div>
-                    </div>
-                </div><!-- .accordion_item -->
+                </div>
             </div>
+            <!-- ends item-->
 
-            <h3 class="js-accordion_control" aria-controls="js-accordion_panel--03" aria-expanded="false" aria-pressed="false" id="js-accordion_control--03" role="button" tabindex="0"><span>
-            Funding (Q9 - Q10)
-            <span class="section-status">
-                Incomplete
-                <img alt="" src="/images/warning-icon.png"/>
-            </span>
-        </span></h3>
-            <div class="js-accordion_panel" aria-hidden="true" aria-labelledby="js-accordion_control--03" id="js-accordion_panel--03" style="display: none;">
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">9. What is the financial commitment required for the project?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/funding#anchor-id_project_funding_financial_commitment_feedback">Return to this question in the application</a></p>
+
+
+
+
+            <!--starts item-->
+            <h2 data-subsection-header="10" class="section-status-finance complete">
+                <span>Your business proposition (Q1 - Q4)</span>
+                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
+                        <span data-binding-output="subsection-total-10">Complete</span>
+                    </span>
+            </h2>
+
+            <div id="collapsible-2" aria-hidden="false">
+                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--01" id="js-accordion_panel--01" style="display: block;">
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">1. What is the business opportunity that this project addresses?</h4>
+                                <p>The applicant plans to test the feasibility of a system which will aid the instruction to ensure the most efficient and least stressful use.   This should enable use and create a viable business model for the applicant.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/proposition#anchor-id_project_proposition_business_opportunity_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">8</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">10</span>
-                            </p>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">2. What is the size of the market opportunity that this project might open up?</h4>
+                                <p>The market discussed for the device and interface is clearly  defined. The aim to produce product presents a great opportunity.  The plans for IP and copyright protection appear weak for the apparent potential of this product. </p>
+                                <p><a href="/assessor/competitions/1/applications/1/proposition#anchor-id_project_proposition_market_opportunity_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">7</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </div><!-- .accordion_item -->
-                <div class="accordion_item">
-                    <div class="grid-row">
-                        <div class="column-three-quarters">
-                            <h4 class="form-label form-label-bold">10. How does financial support from Innovate UK and its funding collaborators add value?</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non magna leo. Aenean gravida dolor ut dolor tincidunt, non porta lectus pharetra. Suspendisse laoreet ante feugiat velit condimentum dictum eu non metus. Nam efficitur volutpat finibus. Aliquam eros nibh, pharetra eu vulputate a, viverra sit amet purus. Duis nibh orci, tincidunt id accumsan eu, dignissim id erat. Nullam libero nibh, aliquet sit amet malesuada eget, luctus vitae purus. Suspendisse sapien augue, viverra vel viverra eu, dapibus vitae felis. Nullam sodales euismod porttitor.</p>
-                            <p><a href="/assessor/competitions/4/applications/5/funding#project_funding_financial_support_feedback">Return to this question in the application</a></p>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">3. How will the results of the project be exploited and disseminated?</h4>
+                                <p>The discussion on the route to market is very academic and lacks  business passion.  The hope business success will  result from a good idea is apparent from the answer provided  and sadly rarely occurs.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/proposition#anchor-id_project_proposition_results_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">5</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="column-quarter">
-                            <p class="assessor-score">
-                                Score given<br/>
-                                <span class="score">-</span>
-                            </p>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">4. What economic, social and environmental benefits is the project expected to deliver to those inside and outside of the consortium, and over what timescale?</h4>
+                                <p>The applicant and clearly answered the social reason for the project but has not answered the economic or environmental.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/proposition#anchor-id_project_proposition_benefits_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">4</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </div><!-- .accordion_item -->
+                    </div><!-- .accordion_item -->
+                </div>
+
+
             </div>
+            <!--ends item-->
+
+            <!--starts item-->
+            <h2 data-subsection-header="10" class="section-status-finance complete">
+                <span>Your approach to the project (Q5 - Q8)</span>
+                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
+                    <span data-binding-output="subsection-total-10">Complete</span>
+                </span>
+            </h2>
+
+            <div id="collapsible-3" aria-hidden="false">
+                <div><p>Your approach to the project - Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
+
+                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--02" id="js-accordion_panel--02" style="display: block;">
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">5. What technical approach will be adopted and how will the project be managed?</h4>
+                                <p>The applicant has provide a very lengthy discussion on the planned technical approach but has not related that to a detailed work package approach related Gantt chart.  The three line Gantt chart provide is not consider to be adequate.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/approach#anchor-id_project_details_technical_approach_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">6</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">6. What is innovative about this project?</h4>
+                                <p>The discussion on innovation is conducted through  the entire application and the proposal is clearly innovative and has potential.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/approach#anchor-id_project_details_innovative_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">8</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?</h4>
+                                <p>Sadly the promised risk analysis in appendix b is not sufficient.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/approach#anchor-id_project_details_risks_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">1</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?</h4>
+                                <p>The details of the applicants and their organisations would appear to show  that they could produce the product planned.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/approach#anchor-id_project_details_skills_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">8</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                </div>
+
+            </div>
+            <!--ends item-->
+
+            <!--starts item-->
+            <h2 data-subsection-header="10" class="section-status-finance complete">
+                <span>Funding (Q9 - Q10)</span>
+                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
+                        <span data-binding-output="subsection-total-10">Complete</span>
+                    </span>
+            </h2>
+
+            <div id="collapsible-4" aria-hidden="false">
+                <div><p>Fundings - Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
+
+                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--03" id="js-accordion_panel--03" style="display: block;">
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">9. What is the financial commitment required for the project?</h4>
+                                <p>The cost for the feasibility of the project as presented and the figure given would appear realistic and reasonable. A more granular level of detail could have increased the marks awarded.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/funding#anchor-id_project_funding_financial_commitment_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">7</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                    <div class="accordion_item">
+                        <div class="grid-row">
+                            <div class="column-three-quarters">
+                                <h4 class="form-label form-label-bold">10. How does financial support from Innovate UK and its funding collaborators add value?</h4>
+                                <p>The applicant provide an adequate set of reason for needing public support. The whole proposal lacks a business passion and appears very academic.</p>
+                                <p><a href="/assessor/competitions/1/applications/1/funding#project_funding_financial_support_feedback">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                                <p class="assessor-score">
+                                    Score given<br/>
+                                    <span class="score">6</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- .accordion_item -->
+                </div>
+
+            </div>
+            <!--ends item-->
+
+
+
+
+
+
+
+
+
+
         </div>
 
         <hr style="border-top: 1px solid #ccc;"/>
@@ -256,23 +291,23 @@
             </tr>
             <tr>
                 <th>Score</th>
-                <td style="font-weight: 700;">4</td>
                 <td style="font-weight: 700;">8</td>
+                <td style="font-weight: 700;">7</td>
                 <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">3</td>
+                <td style="font-weight: 700;">4</td>
                 <td style="font-weight: 700;">6</td>
                 <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">10</td>
                 <td style="font-weight: 700;">1</td>
-                <td style="font-weight: 700;">4</td>
+                <td style="font-weight: 700;">8</td>
+                <td style="font-weight: 700;">7</td>
+                <td style="font-weight: 700;">6</td>
             </tr>
             </tbody>
         </table>
         <br/>
         <p style="text-align: right; font-weight: 700;">
-            Total: 54/100<br/>
-            54%
+            Total: 60/100<br/>
+            60%
         </p>
 
         <hr style="border-top: 1px solid #ccc;"/>
@@ -283,26 +318,31 @@
         <p><strong>Do you believe that this application is suitable for funding?</strong></p>
         <div class="form-group">
             <select name="is-suitable-for-funding" id="suitable-for-funding" required="required">
-                <option value=""></option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+
+                <option value="" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY }"></option>
+                <option value="yes" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES }">Yes</option>
+                <option value="no" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO }">No</option>
             </select>
         </div>
 
         <!-- .form-group -->
 
-        <div class="form-group">
+        <div class="form-group" id="recommendation-feedback-group">
             <p><strong>Your feedback</strong></p>
             <p><small>Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback</small></p>
+            <span class="error-message" id="feedback-empty-error">
+
+            </span>
             <div class="form-control-wrap">
-                <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area" id="not-suitable-feedback" data-reactid=".qi22iy69kw" data-react-checksum="1247366089"></textarea>
+                <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
+                          id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"></textarea>
             </div>
 
             <div class="form-group_footer">
                 <div class="grid-row">
                     <div class="column-half column-half--first">
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Characters remaining:</span> <strong class="count-down">350</strong> </span></div>
+                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="feedbackWordCount">350</strong> </span></div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
@@ -310,7 +350,8 @@
         <div class="form-group">
             <p><strong>Do you have any comments about this application that you would like to share with Innovate UK? (Optional)</strong></p>
             <div class="form-control-wrap">
-                <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area" id="id_innovate_comments" data-reactid=".qi22iy69kw" data-react-checksum="1247366089"></textarea>
+                <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
+                          id="summary-comments" th:text="${assessment.getComments()}"></textarea>
             </div>
 
             <div class="form-group_footer">
@@ -318,7 +359,7 @@
                     <div class="column-half column-half--first">
 
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Characters remaining:</span> <strong class="count-down">350</strong> </span></div>
+                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="commentsWordCount">350</strong> </span></div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
@@ -329,7 +370,7 @@
         </p>
 
         <p style="text-align: right;">
-            <button class="button button-large" name="confirm-submission" type="submit">Save assessment</button>
+            <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" type="submit">Save assessment</button>
         </p>
 
     </form>
@@ -340,5 +381,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
 </body>
 </html>

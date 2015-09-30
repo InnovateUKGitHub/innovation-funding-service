@@ -88,6 +88,11 @@ task deployToTomcat(type: Copy) {
     rename ('(.*).war', 'ROOT.war')
 }
 
+task copyResourcesInPlace(dependsOn: processResources, type: Copy) {
+    into '$tomcatWebAppsDir/ROOT/WEB-INF/classes'
+    from 'build/resources/main'
+}
+
 watch {
 
     java {
@@ -97,7 +102,7 @@ watch {
 
     resources {
         files files('src/main/resources')
-        tasks 'deployToTomcat'
+        tasks 'copyResourcesInPlace'
     }
 }
 

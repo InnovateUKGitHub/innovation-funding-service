@@ -3,16 +3,137 @@ Documentation     INFUND-337
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 
+*** Variables ***
+${reject_application_name}    Analytical technologies for biopharmaceuticals
+${accept_application_name}    Security for the Internet of Things
+${competition_name}    Technology Inspired
+${deadline_month}    december
+${deadline_day}    31
+${competitions_for_assessment_string}    Competitions for Assessment
+${competition_details_page_title}    Competition Details
+@{competitions_assessment_progress_before}    1    4
+@{competitions_assessment_progress_after}    1    3
+
 *** Test Cases ***
+Verify the Assessment progress is 1 out of 4
+    When the Assessor is viewing the Competitions list
+    Then the Competitions progress should show    @{competitions_assessment_progress_before}
+
 Verify the assessor can see the applications details page
     [Documentation]    INFUND-337
+    [Tags]    Assessor
     When the Assessor clicks the competition
     Then the competition's details page should be visible
 
+Verify the applications details page has two lists
+    [Documentation]    INFUND-322
+    [Tags]    Assessor
+    When the Assessor is viewing the Competitions list
+    When the Assessor clicks the competition
+    Then the details page should contain a list with the applications for assessment
+    and the the page should contain a list with the submitted assessments
+
+Verify the change of state when accepting an application for assessment
+    [Tags]    Assessor
+    Given the Assessor is viewing the Competitions Applications list
+    When the assessor opens a Pending application    ${accept_application_name}
+    and the assessor accepts the Application
+    Then the application status should change to Open    ${accept_application_name}
+
+Verify the change of state when rejecting an application for assessment
+    [Tags]    Assessor
+    Given the Assessor is viewing the Competitions Applications list
+    Given the assessor opens a pending application    ${reject_application_name}
+    When the assessor rejects the Application
+    and the assessor enters the reason for rejection
+    Then the Application is not visible in the Applications list    ${reject_application_name}
+
+Verify the Assessor can see the competitions that he/she accepted
+    When the Assessor is viewing the Competitions list
+    Then the Assessor sees competitions he or she accepted
+
+Verify the Competition has a deadline
+    When the Assessor is viewing the Competitions list
+    Then the Competition has a deadline
+
+Verify the Competition has days remaining
+    When the Assessor is viewing the Competitions list
+    Then the Competition has a number of days remaining
+
+Verify the Competition for Assessment count
+    When the Assessor is viewing the Competitions list
+    Then the Competitions Competitions for Assessment shows an amount of competitions
+
+Verify the Assessment progress is 1 out of 3
+    When the Assessor is viewing the Competitions list
+    Then the Competitions progress should show    @{competitions_assessment_progress_after}
+
 *** Keywords ***
 the Assessor clicks the competition
-    Click Element    link=Competition name ...
+    Click Element    link=${competition_name}
 
 the competition's details page should be visible
-    Page Should Contain    Competition Details
+    Page Should Contain    ${competition_details_page_title}
     Capture Page Screenshot
+
+the details page should contain a list with the applications for assessment
+    Page Should Contain Element    css=#content > div.my-applications > div.in-progress
+
+the assessor accepts the application
+    Click Element    css=#content div.application-summary form button
+
+the application status should change to open
+    [Arguments]    ${application_name}
+    Element Should Contain    xpath=//li[.//a[contains(text(),'${application_name}')]]//div[contains(@class,"open")]    Open
+
+the assessor rejects the application
+    Click Element    xpath=//*[@id="content"]//*[@class="application-summary"]//a[contains(text(),"Reject")]
+
+the assessor enters the reason for rejection
+    Input Text    id=rejection-observations    Test rejections
+    Click Element    xpath=//*[@class="modal-reject-assessment"]//button[@name="reject"]
+
+the the page should contain a list with the submitted assessments
+    Page Should Contain Element    css=#content > div.my-applications > div.submitted
+
+the application is not visible in the applications list
+    [Arguments]    ${application_name}
+    Page Should Not Contain Element    xpath=//li//a[contains(text(),'${application_name}')]
+
+the Assessor opens a pending application
+    [Arguments]    ${application_name}
+    Click Element    xpath=//li//a[contains(text(),'${application_name}')]
+
+the Assessor is viewing the Competitions list
+    Go To    ${SERVER}/assessor/dashboard
+
+the Assessor sees competitions he or she accepted
+    Element Should Be Visible    xpath=//*[@class='my-applications' and .//*[contains(text(),"${competition_name}")]]
+
+the Competition has a deadline
+    Element Should Be Visible    css=.competition-deadline
+    Element Should Contain    css=.competition-deadline .day    ${deadline_day}
+    Element Should Contain    css=.competition-deadline .month    ${deadline_month}
+
+the Competition has a number of days remaining
+    ${number_of_days_element_text}=    Get Text    //*[@class='in-progress' and .//*[contains(text(),"Technology Inspired")]]//div[./span[contains(text(), "Days left")]]/div
+    Should Match Regexp    ${number_of_days_element_text}    ^[0-9]{1,3}$
+
+the Competitions Competitions for Assessment shows an amount of competitions
+    ${competitions_amount_element_text} =    Get Text    xpath=//*[contains(text(),'${competitions_for_assessment_string}')]
+    Should Match Regexp    ${competitions_amount_element_text}    ${competitions_for_assessment_string} \\([0-9]+\\)
+
+the Assessor is viewing a Competition
+    Go To    ${SERVER}/assessor/dashboard
+
+the Assessor is viewing the Competitions Applications list
+    Go To    ${SERVER}/assessor/dashboard
+    Click Element    link=${competition_name}
+
+the Competitions progress should show
+    [Arguments]    @{assessment_progress}
+    ${assessment_progress_element} =    Set Variable    //*[@class='in-progress' and .//*[contains(text(),"${competition_name}")]]//div[//*[contains(text(), "Assessment progress")]]/div/p/strong
+    ${assessment_progress_assessed}=    Get Text    xpath=${assessment_progress_element}/span[1]
+    ${assessment_progress_total}=    Get Text    xpath=${assessment_progress_element}/span[2]
+    Should Be Equal As Integers    ${assessment_progress_assessed}    @{assessment_progress}[0]
+    Should Be Equal As Integers    ${assessment_progress_total}    @{assessment_progress}[1]

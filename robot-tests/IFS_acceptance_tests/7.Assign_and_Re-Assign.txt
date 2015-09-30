@@ -5,26 +5,29 @@ Resource          GLOBAL_VARIABLES.txt
 
 *** Test Cases ***
 Verify the applicant can assign a question
+    [Tags]    Collaborator
     Given the Applicant is in the form
-    When the Applicant assigns a question to the collaborator
+    When the Applicant assigns the question 11 to the collaborator    Jessica
     Then the success message should show
     and the field should be disabled
 
 Verify the field is enabled for the collaborator/assignee
+    [Tags]    Collaborator
     Given the Collaborator is logged-in
     When the Collaborator edits the assigned field
-    Then the field should be editable
+    Then question 11 should be assigned to the collaborator
+    and the field of the question 11 should be editable
+
+Verify the ' Last update message'
 
 Verify the field is disabled for other collaborators
+    [Tags]    Collaborator
     Given the second Collaborator is logged in
     When the Collaborator edits the assigned field
     Then the field should not be editable
 
-Verify the Applicant can 'Assign to me'
-    when the applicant clicks the assign to Lead applicant
-    Then the field should be re-assigned to the Applicant
-
 Verify the field is disabled for the Collaborator
+    [Tags]    Collaborator
     Given the Collaborator is logged-in
     When the Collaborator edits the assigned field
     Then the field should be disabled
@@ -33,10 +36,11 @@ Verify the field is disabled for the Collaborator
 the Applicant is in the form
     Go To    ${APPLICATION_URL}
 
-the Applicant assigns a question to the collaborator
-    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Click Element    css=button:contains("Jessica Doe (Collaborator)")
+When the Applicant assigns the question 11 to the collaborator
+    [Arguments]    ${assignee_name}
+    #Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    #Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
+    Wait Until Page Contains Element    xpath=//div[@id="question-11"]//button[contains(text(),"${assignee_name}")]
 
 the success message should show
     Wait Until Element Is Visible    css=body > div.event-alert > p > span
@@ -44,7 +48,6 @@ the success message should show
 
 the field should be disabled
     Element Should Be Disabled    id=11
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
 
 the Collaborator is logged-in
     Switch Browser    2
@@ -58,9 +61,10 @@ the Collaborator edits the assigned field
     Wait Until Element Is Visible    link=Application details
     Click Element    link=Application details
 
-the field should be editable
+the field of the question 11 should be editable
     Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
     Element Should Be Enabled    id=11
+    Input Text    id=11    collaboration test!@#
     Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
 
 the field should not be editable
@@ -85,3 +89,7 @@ the applicant clicks the assign to Lead applicant
 the field should be re-assigned to the Applicant
     Element Should Be Enabled    id=11
     Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
+
+question 11 should be assigned to the collaborator
+    Page Should Contain Element    css=the field should be editable
+    Page Should Contain Element    css=#content > div.grid-row > div.column-third > nav > ul > li.active.section-status.assigned

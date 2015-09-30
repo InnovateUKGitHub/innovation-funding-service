@@ -6,21 +6,29 @@ Resource          GLOBAL_VARIABLES.txt
 
 *** Test Cases ***
 Open browser(Firefox)
+    [Tags]    Applicant    Assessor
     The user opens the browser
 
-Log-in (Applicant)
-    When the guest user inserts applicant user name & password    applicant@innovateuk.gov.uk    test
+Log-in (Lead Applicant)
+    [Tags]    Applicant
+    When the guest user inserts applicant user name & password    jessica.doe@ludlow.co.uk    test
     And the guest user clicks the log-in button
     Then the guest user should be logged-in as Applicant and redirected to the My applications page
 
-Log-in (Collaborator)
-    When the guest user inserts applicant user name & password    collaborator@innovateuk.gov.uk    test
+Log-in (Collaborator 1)
+    When the guest user inserts applicant user name & password    jessica.doe@ludlow.co.uk    test
+    And the guest user clicks the log-in button
+    Then the user should be logged-in as Collaborator
+
+Log-in (Collaborator 2)
+    When the guest user inserts applicant user name & password    pete.tom@egg.com    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as Collaborator
 
 Log-in(Assessor)
     [Documentation]    INFUND-286
-    When the guest user inserts applicant user name & password    assessor@innovateuk.gov.uk    test
+    [Tags]    Assessor
+    When the guest user inserts applicant user name & password    paul.plum@gmail.com    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as an Assessor
 
@@ -41,3 +49,6 @@ the guest user should be logged-in as Applicant and redirected to the My applica
 
 the user should be logged-in as an Assessor
     Title Should Be    Innovation Funding Service - Assessor Dashboard
+
+the user should be logged-in as Collaborator
+    Element Should Be Visible    link=Logout

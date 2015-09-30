@@ -126,7 +126,17 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">
-    <div th:class="'textarea-wrapped '+ (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')) +' '+(${question.getWordCount() == 0} ? '' : 'word-count')"
+    <div th:class="'textarea-wrapped ' +
+                   (${readonly} ? '' : (
+                            (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' :
+                                (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')
+                            )
+                       )
+                       + ' ' +
+                       (${question.getWordCount() == 0} ? '' : 'word-count')
+                   )
+                  "
+
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
@@ -142,7 +152,8 @@
 		 					    ${(currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId() and  questionAssignee?.getAssignee()!=null) or
 		 					    (questionAssignee?.getAssignee()==null and !userIsLeadApplicant)},
 		 					name='question['+${question.getId()}+']'
-		 					)" th:remove="tag"/>
+		 					)" th:remove="tag">
+        </div>
 
         <div class="textarea-footer">
 
@@ -168,7 +179,7 @@
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="assign-buttons">
-    <div class="assign-container collapsible">
+    <div class="assign-container collapsible" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">Assign question</div>
         <div class="assign-team">
             <ul class="list-bullet">
@@ -188,7 +199,6 @@
 
 <div  th:fragment="last-update-info">
         <p th:if="${response?.getUpdateDate()}"><small><span>Last updated: </span>
-
             <div th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"
                  th:remove="tag"/>
 
@@ -223,7 +233,7 @@
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
 				<span class="count-down" aria-live="polite"
-                      th:text="${responses.get(question.getId())?.getWordCountLeft()}">0</span>
+                      th:text="${responses.get(question.getId())?.getWordCountLeft()}" th:classappend="${responses.get(question.getId())?.getWordCountLeft() &lt; 0}? negative : positive" >0</span>
 		</span>
     </div>
 </div>

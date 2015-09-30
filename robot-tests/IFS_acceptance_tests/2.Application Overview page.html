@@ -81,6 +81,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify that the Applicant can access the Overview page">Verify that the Applicant can access the Overview page</a></td>
+<td>[Tags]</td>
+<td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the user is logged in as applicant</td>
 <td></td>
 <td></td>
@@ -109,6 +116,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify that the Applicant can see the List with the sections">Verify that the Applicant can see the List with the sections</a></td>
+<td>[Tags]</td>
+<td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the Applicant is in the application overview page</td>
 <td></td>
 <td></td>
@@ -130,6 +144,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify that when Applicant clicks the &quot;Scope&quot; this section is expanded">Verify that when Applicant clicks the "Scope" this section is expanded</a></td>
+<td>[Tags]</td>
+<td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the Applicant is in the application overview page</td>
 <td></td>
 <td></td>
@@ -173,6 +194,39 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>And the "Scope" sub-section should be visible</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify that only the main questions show and not the file uploads">Verify that only the main questions show and not the file uploads</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-428</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the Applicant is in the application overview page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant clicks the "Yous approach" section </td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the uploads should not be visible</td>
 <td></td>
 <td></td>
 <td></td>
@@ -240,7 +294,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the Applicant is in the application overview page">the Applicant is in the application overview page</a></td>
-<td>Location Should Be</td>
+<td>Go To</td>
 <td>${APPLICATION_OVERVIEW_URL}</td>
 <td></td>
 <td></td>
@@ -406,6 +460,48 @@ td.name, th.name {
 <td class="name"></td>
 <td>Capture Page Screenshot</td>
 <td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the Applicant clicks the &quot;Yous approach&quot; section">the Applicant clicks the "Yous approach" section</a></td>
+<td>Click Element</td>
+<td>css=#content &gt; form &gt; div &gt; h2:nth-child(7) &gt; button</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the uploads should not be visible">the uploads should not be visible</a></td>
+<td>Element Should Not Be Visible</td>
+<td>css=#question-14 &gt; div &gt; input[type="file"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Not Be Visible</td>
+<td>css=#question-17 &gt; div &gt; input[type="file"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Not Be Visible</td>
+<td>css=#question-18 &gt; div &gt; input[type="file"]</td>
 <td></td>
 <td></td>
 </tr>
