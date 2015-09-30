@@ -83,10 +83,10 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
         node.put("applicationId", applicationId);
         node.put("suitableValue", suitableValue);
 
-        node.put("suitableFeedback", suitableFeedback);
+        node.put("suitableFeedback", HtmlUtils.htmlEscape(suitableFeedback));
         System.out.println("AssessmentRestImp > saveAssessmentSummary before comment ");
 
-        node.put("comments", comments);
+        node.put("comments",  HtmlUtils.htmlEscape(comments));
         System.out.println("AssessmentRestImp > saveAssessmentSummary after comment ");
 
 

@@ -119,6 +119,7 @@
                 th:text="${value}"
                 th:readonly="${readonly}"
                 th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+                th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
                 >
 		</textarea>
 </div>

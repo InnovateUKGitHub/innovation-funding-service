@@ -22,6 +22,9 @@ public class Section implements Comparable<Section> {
     @Column( length = 5000 )
     private String description;
 
+    @Column( length = 5000 )
+    private String assessorGuidanceDescription;
+
     private Integer priority;
 
     @ManyToOne
@@ -111,4 +114,7 @@ public class Section implements Comparable<Section> {
         return priority;
     }
 
+    public String getAssessorGuidanceDescription() { return assessorGuidanceDescription; }
+
+    public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }
 }
