@@ -13,6 +13,8 @@ ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
 @{competitions_assessment_progress_before}    1    4
 @{competitions_assessment_progress_after}    1    3
+${partners_header_text}    Partners
+${partner_to_check}    Ludlow
 
 *** Test Cases ***
 Assessment progress is 1 out of 4
@@ -33,14 +35,24 @@ Applications details page has two lists
     Then Details page should contain a list with the applications for assessment
     and Page should contain a list with the submitted assessments
 
-Application state changes when accepting an application for assessment
+Application invitation review page shows the title
+    Given Assessor is viewing the Competitions Applications list
+    When Assessor opens a pending application    ${accept_application_name}
+    Then Application invitation Review page shows the Application title
+
+Application invitation review page shows partners
+    Given Assessor is viewing the Competitions Applications list
+    When Assessor opens a pending application    ${accept_application_name}
+    Then Application invitation Review page shows the Partners organisations
+
+Application state changes when accepting an invitation for assessment
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens a pending application    ${accept_application_name}
     and Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
-Application state changes when rejecting an application for assessment
+Application state changes when rejecting an invitation for assessment
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens a pending application    ${reject_application_name}
@@ -137,3 +149,9 @@ Competitions progress should show
     ${assessment_progress_total}=    Get Text    xpath=${assessment_progress_element}/span[2]
     Should Be Equal As Integers    ${assessment_progress_assessed}    @{assessment_progress}[0]
     Should Be Equal As Integers    ${assessment_progress_total}    @{assessment_progress}[1]
+
+Application invitation Review page shows the Application title
+    Element Should Be Visible    xpath=//*[contains(text(),"${accept_application_name}")]
+
+Application invitation Review page shows the Partners organisations
+    Element Should Be Visible    xpath=//*[contains(text(),"${partners_header_text}")]/following-sibling::*[1]//*[contains(text(),"${partner_to_check}")]
