@@ -18,7 +18,7 @@
             <nav role="navigation" class="app-sidebar">
                 <ul>
                     <li>
-                        <a th:href="@{/application/{id}/section/1(id=${currentApplication.getId()})}">Overview</a>
+                        <a th:href="@{/application/{id}(id=${currentApplication.getId()})}">Overview</a>
                     </li>
                     <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
                             ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
