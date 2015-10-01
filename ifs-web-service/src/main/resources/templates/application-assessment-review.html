@@ -16,7 +16,7 @@
             daysLeft=${assessment.application.competition.getAssessmentDaysLeft()},
             title = ${assessment.application.name},
             deadlineText='Days left to accept'" th:remove="tag" />
-    
+
     <header class="page-header group no-pad">
         <h1 class="heading-xlarge">Review application</h1>
     </header>
@@ -49,8 +49,8 @@
             <h2 class="heading-large" th:text="${assessment.application.name}">Application Title</h2>
             <h3 class="heading-medium">Partners</h3>
             <ul class="list-bullet">
-                 <li th:each="role : ${assessment.getApplication().getProcessRoles()}">
-                     <span th:text="${role.getOrganisation().getName()}">Partner name</span>
+                 <li th:each="partner : ${partners}" >
+                     <span th:text="${partner}">Partner name</span>
                  </li>
             </ul>
 
