@@ -27,6 +27,18 @@
 		}
 	}
 
+	.awaiting-assessment{
+		background: url(../images/icons/icon-awaiting-assessment.png) no-repeat;
+		width: 105px;
+		text-align: center;
+		line-height: 1.2em;
+		font-size: 14px;
+		padding-top: 110px;
+		float: right;
+		color: $secondary-text-colour;
+		margin: 12px 12px 0 0;
+	}
+
 	.assessment-submit-checkbox{
 		position: absolute;
 		top: 35%;
