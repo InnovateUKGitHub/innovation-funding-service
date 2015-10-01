@@ -110,6 +110,10 @@
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${months})" th:remove="tag"/>
 </div>
 
+<div th:fragment="form-percentage (id, name, percentage)">
+    <div th:include="question-type/form-elements :: form-label (name=${name},id=${id},bold=false)" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${percentage})" th:remove="tag"/>
+</div>
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">

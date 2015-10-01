@@ -1,5 +1,5 @@
 .message-alert{
-	background: #e4eff6 url(../images/message-alert.png) 25px 25px no-repeat;;
+	background: #e4eff6 url(../images/message-alert.png) 25px 25px no-repeat;
 	padding: 20px 20px 20px 130px;
 	margin-top: 25px;
 
@@ -10,4 +10,12 @@
 	.heading-medium{
 		margin: 0;
 	}
+}
+
+.icon-info{
+	background: url(../images/icons/icon-information-2x.png) no-repeat;
+	clear: both;
+    display: block;
+    min-height: 54px;
+    padding-left: 70px;
 }

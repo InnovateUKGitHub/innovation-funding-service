@@ -145,6 +145,12 @@ table td{
     }
 }
 
+select{
+    &.form-control{
+        -webkit-appearance: menulist;
+    }
+}
+
 
     //    .form-group_header-status {
     //     color: #666;
