@@ -60,6 +60,7 @@ public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String
                     .and()
                 .withExternal()
                     .source(AssessmentStates.OPEN.getState()).target(AssessmentStates.ASSESSED.getState())
+                    .source(AssessmentStates.ASSESSED.getState()).target(AssessmentStates.ASSESSED.getState())
                     .event(AssessmentEvents.RECOMMEND.getEvent())
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
