@@ -6,11 +6,16 @@ import com.worth.ifs.assessment.domain.AssessmentStates;
 public class AssessmentStatusComparator implements java.util.Comparator<Assessment> {
     @Override
     public int compare(Assessment assessment1, Assessment assessment2) {
-        int result = Integer.compare(AssessmentStates.getByState(assessment1.getProcessStatus()).getOrdinal(),
-                AssessmentStates.getByState(assessment2.getProcessStatus()).getOrdinal());
+        AssessmentStates assessmentStates1 = AssessmentStates.getByState(assessment1.getProcessStatus());
+        AssessmentStates assessmentStates2 = AssessmentStates.getByState(assessment2.getProcessStatus());
+        int result = 0;
+        if(assessmentStates1!=null && assessmentStates2!=null) {
+            result = Integer.compare(AssessmentStates.getByState(assessment1.getProcessStatus()).getOrdinal(),
+                    AssessmentStates.getByState(assessment2.getProcessStatus()).getOrdinal());
+        }
 
         if(result == 0) {
-            return assessment1.getId().compareTo(assessment2.getId());
+            result = assessment1.getId().compareTo(assessment2.getId());
         }
         return result;
     }
