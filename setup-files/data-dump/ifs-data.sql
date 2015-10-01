@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES (NULL,60,'YES','N',NULL,1,1,3),(NULL,82,'YES','Y',NULL,2,4,3),(NULL,40,'EMPTY','N',NULL,3,5,3),(NULL,0,'EMPTY','N',NULL,4,6,3);
+INSERT IGNORE INTO `assessment` (`comments`,`temp_total_score`,`temp_recommended_value`,`submitted`,`recommendation_feedback`,`process_id`,`application`,`assessor`) VALUES ('',60,'YES','N','hey',1,1,3), (NULL,82,'YES','N',NULL,2,4,3), ('',40,'EMPTY','N','',3,5,3), (NULL,0,'EMPTY','N',NULL,4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +111,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process` WRITE;
 /*!40000 ALTER TABLE `process` DISABLE KEYS */;
-INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'accepted'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'accepted'),(3,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'pending'),(4,'none',NULL,'ASSESSMENT','2015-09-25 00:03:50','',NULL,'pending');
+INSERT IGNORE INTO `process` (`id`,`decision_reason`,`end_date`,`event`,`last_modified`,`observations`,`start_date`,`status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-10-01 11:42:40',NULL,NULL,'assessed'), (2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'pending'), (3,NULL,NULL,'ASSESSMENT','2015-10-01 11:43:01',NULL,NULL,'open'), (4,'not-my-area-of-interest',NULL,'ASSESSMENT','2015-10-01 11:42:54','',NULL,'pending');
 /*!40000 ALTER TABLE `process` ENABLE KEYS */;
 UNLOCK TABLES;
 
