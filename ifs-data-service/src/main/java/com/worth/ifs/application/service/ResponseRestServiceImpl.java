@@ -47,6 +47,25 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        return handleResponseStatus(response);
+    }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorScore(Long assessorUserId, Long responseId, Integer score) {
+        return saveAssessorFeedback(assessorUserId, responseId, "score", score);
+    }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorConfirmationAnswer(Long assessorUserId, Long responseId, Boolean confirmation) {
+        return saveAssessorFeedback(assessorUserId, responseId, "confirmationAnswer", confirmation);
+    }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, String feedback) {
+        return saveAssessorFeedback(assessorUserId, responseId, "feedbackText", feedback);
+    }
+
+    private Boolean handleResponseStatus(ResponseEntity<String> response) {
         if (response.getStatusCode() == HttpStatus.ACCEPTED) {
             return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
@@ -56,5 +75,13 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         }
 
         return false;
+    }
+
+
+    private Boolean saveAssessorFeedback(Long assessorUserId, Long responseId, String paramName, Object paramValue) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&" + paramName + "=" + paramValue;
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, null, String.class, responseId, assessorUserId, paramValue);
+        return handleResponseStatus(response);
     }
 }

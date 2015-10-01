@@ -24,6 +24,14 @@ public class Response {
     // set of responses and also allows storing of scores against it
     private Integer assessmentScore;
 
+    @Column(length=5000) // TODO DW - actually in prototype, set to 350 characters - but setting higher
+    // for now as this column will probably move along with assessmentScore
+    private String assessmentFeedback;
+
+    // TODO DW - this "Yes / No" response to a question in the assessor's Application view will move along
+    // with assessmentScore and assessmentFeedback into a proper mechanism when in Beta
+    private Boolean assessmentConfirmation;
+
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
     private ProcessRole updatedBy;
@@ -102,7 +110,25 @@ public class Response {
 
     public Integer getAssessmentScore() { return assessmentScore; }
 
-    public void setAssessmentScore(Integer assessmentScore) { this.assessmentScore = assessmentScore; }
+    public String getAssessmentFeedback() {
+        return assessmentFeedback;
+    }
+
+    public Boolean getAssessmentConfirmation() {
+        return assessmentConfirmation;
+    }
+
+    public void setAssessmentScore(Integer assessmentScore) {
+        this.assessmentScore = assessmentScore;
+    }
+
+    public void setAssessmentFeedback(String assessmentFeedback) {
+        this.assessmentFeedback = assessmentFeedback;
+    }
+
+    public void setAssessmentConfirmation(Boolean assessmentConfirmation) {
+        this.assessmentConfirmation = assessmentConfirmation;
+    }
 
     public void setId(Long id) { this.id = id; }
 }

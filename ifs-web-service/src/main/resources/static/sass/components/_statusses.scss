@@ -112,6 +112,10 @@
 		@extend %icon-tick;
 		background-position: right center;
 	}
+	.section-status.incomplete {
+		@extend %icon-incomplete;
+		background-position: right center;
+	}
 	.section-status.assigned{
 		@extend %icon-assigned-to-me;
 		background-position: right center;

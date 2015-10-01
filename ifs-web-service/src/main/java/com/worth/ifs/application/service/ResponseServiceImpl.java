@@ -31,4 +31,19 @@ public class ResponseServiceImpl implements ResponseService {
     public Boolean save(Long userId, Long applicationId, Long questionId, String value) {
         return responseRestService.saveQuestionResponse(userId, applicationId, questionId, value);
     }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorScore(Long assessorUserId, Long responseId, Integer score) {
+        return responseRestService.saveQuestionResponseAssessorScore(assessorUserId, responseId, score);
+    }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorConfirmationAnswer(Long assessorUserId, Long responseId, Boolean confirmation) {
+        return responseRestService.saveQuestionResponseAssessorConfirmationAnswer(assessorUserId, responseId, confirmation);
+    }
+
+    @Override
+    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, String feedback) {
+        return responseRestService.saveQuestionResponseAssessorFeedback(assessorUserId, responseId, feedback);
+    }
 }

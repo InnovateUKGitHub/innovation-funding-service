@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <!-- ==============General readonly header and paragraph pairs ============= -->
+
+    <div th:fragment="label-and-paragraph (label, text, id, bold)">
+        <div class="form-group">
+            <h2 th:text="${label}" class="heading-medium no-margin"></h2>
+            <p th:id="${id}" th:text="${text}"></p>
+        </div>
+    </div>
+
+
+    <!-- ==============General readonly header, paragraph and assessor feedback blocks ============= -->
+
+    <div th:fragment="question-label-and-paragraph (section, question, responses, bold)">
+        <div th:include="question-type/types-assessment-details :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
+    </div>
+
+
+    <!-- ==============Assessor feedback block ============= -->
+
+    <div th:fragment="assessor-feedback (section, question, response)">
+
+        <div th:if="${response != null}" th:with="questionId=${question.getId()}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${response.id}">
+
+            <div th:if="${question.needingAssessorScore}" th:remove="tag">
+                <h2 class="heading-small">Question Score</h2>
+
+                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}" class="form-control width-small">
+                    <option value="" th:selected="${response.assessmentScore == null}"></option>
+                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}" th:selected="${response.assessmentScore == i}">1</option>
+                </select> / 10
+            </div>
+
+            <div th:if="${not #strings.isEmpty(question.assessorConfirmationQuestion)}" th:remove="tag">
+
+                <h2 th:text="${question.assessorConfirmationQuestion}" class="heading-small">A Confirmation Question</h2>
+
+                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small">
+                    <option value="" th:selected="${response.assessmentConfirmation == null}"></option>
+                    <option value="Yes" th:selected="${response.assessmentConfirmation == true}">Yes</option>
+                    <option value="No" th:selected="${response.assessmentConfirmation == false}">No</option>
+                </select>
+            </div>
+
+            <div th:if="${question.needingAssessorFeedback}" th:remove="tag">
+                <h2 class="heading-small">Your feedback</h2>
+
+                <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+
+                <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value=${response.assessmentFeedback}, wordCount=350, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===========================Readonly textinput with Assessor feedback =========================== -->
+
+    <div th:fragment="textinput" class="form-group">
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+    </div>
+
+    <!-- ===========================Readonly textarea with Assessor feedback =========================== -->
+    <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
+
+    <div th:fragment="textarea" class="form-group">
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+    </div>
+
+
+    <!-- ===========================Readonly file download link with Assessor feedback  =========================== -->
+    <div th:fragment="fileupload" class="form-group">
+        <div th:include="question-type/form-elements :: form-label (name='Appendix', id=${question.getId()}, bold=true)" th:remove="tag" />
+        <a href="#">Appendix document (2.4mb PDF)</a>
+        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
+    </div>
+
+    <!-- ===========================Readonly application_details block for Assessor view =========================== -->
+
+    <div th:fragment="application_details" th:remove="tag">
+
+        <div th:include="question-type/types-assessment-details :: label-and-paragraph (label='Project title', text=${currentApplication.getName()}, id='application_details-title', bold=true)" th:remove="tag"></div>
+
+        <h2 th:text="${'Project timescales'}" class="heading-medium"></h2>
+
+        <dl class="dl-pad">
+            <dt th:text="${'Project start date'}">Title</dt>
+            <dd th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}">Date</dd>
+
+            <dt th:text="${'Duration'}">Duration</dt>
+            <dd th:text="${currentApplication.getDurationInMonths() + ' months'}">Months</dd>
+        </dl>
+
+        <div class="form-group">
+            <h2 th:text="${'Lead organisation'}" class="heading-medium"></h2>
+            <div th:text="${leadOrganisation.getName()}"></div>
+        </div>
+
+        <div class="form-group">
+            <h2 th:text="${'Partners'}" class="heading-medium"></h2>
+            <ul class="list-bullet">
+                <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
+                    <span th:text="${organisation.getName()}"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</html>

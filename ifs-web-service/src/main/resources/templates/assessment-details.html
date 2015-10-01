@@ -38,7 +38,7 @@
 
         <div class="column-two-thirds">
 
-            <!--/* <form action="#"  method="post" class="form-serialize-js"> */--> <!--/* TODO DW - removed form from assessor's view as it is read only */-->
+            <form th:action="${urlPrefix}" method="post"> <!--/* TODO DW - removed class="form-serialize-js" */-->
 
                 <div th:each="sectionEntry : ${sections}"  th:remove="tag">
                     <div th:if="(${sectionEntry.key} == ${currentSectionId})" class="page-header no-pad">
@@ -52,8 +52,8 @@
                     </div>
                 </div>
 
-                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
-                    <div th:replace="question-type/types-readonly :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-readonly template file /*-->
+                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, section=${currentSection}, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
+                    <div th:replace="question-type/types-assessment-details :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-assessment-details template file /*-->
                 </div>
 
                 <ul class="pagination">
@@ -63,7 +63,7 @@
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
                         </a>
                     </li>
-                    <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
+                    <li class="next" th:if="${sections.containsKey(currentSectionId+1) and not sections.get(currentSectionId+1).name.equals('Finances')}">
                         <a th:href="${urlPrefix} + @{/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part"> <!--*/ TODO DW - added urlPrefix of /assessor */-->
                             <span class="pagination-label">Next</span>
                             <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
@@ -80,7 +80,7 @@
                     <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
                 </div> */-->
 
-            <!--/* </form> TODO DW - removed form from assessor's view as it is read only */-->
+            </form>
 
         </div>
     </div>

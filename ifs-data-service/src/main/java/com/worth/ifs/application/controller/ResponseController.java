@@ -24,6 +24,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ApplicationController exposes Application data through a REST API.
@@ -47,7 +48,7 @@ public class ResponseController {
     private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
-     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+    public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
         Application app = applicationRepository.findOne(applicationId);
         List<ProcessRole> userAppRoles = app.getProcessRoles();
 
@@ -114,5 +115,25 @@ public class ResponseController {
         log.warn("Single question saved!");
 
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
+    public String saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
+                                                    @RequestParam("assessorUserId") Long assessorUserId,
+                                                    @RequestParam("score") Optional<Integer> scoreParam,
+                                                    @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
+                                                    @RequestParam("feedbackText") Optional<String> feedbackTextParam
+    ) {
+
+        // TODO DW - permissions checking and failure cases based upon assessorUserId, db failures, assessment state machine integration etc...
+
+        Response response = responseRepository.findOne(responseId);
+
+        scoreParam.ifPresent(score -> response.setAssessmentScore(score));
+        confirmationAnswerParam.ifPresent(confirmationAnswer -> response.setAssessmentConfirmation(confirmationAnswer));
+        feedbackTextParam.ifPresent(feedbackText -> response.setAssessmentFeedback(feedbackText));
+
+        responseRepository.save(response);
+        return "{\"status\": \"OK\"}";
     }
 }
