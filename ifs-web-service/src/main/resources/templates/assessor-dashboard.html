@@ -49,7 +49,7 @@
                         </div>
                         <div class="column-half">
                             <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${competition.getAssessmentEndDate()}" th:remove="tag" />
-                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competition.getStartDateToEndDatePercentage()}, daysLeft=${competition.getAssessmentDaysLeft()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competition.getAssessmentDaysLeftPercentage()}, daysLeft=${competition.getAssessmentDaysLeft()}" th:remove="tag" />
                         </div>
                     </div>
 

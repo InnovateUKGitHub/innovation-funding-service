@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.workflow.domain.ProcessStatus;
+import com.worth.ifs.assessment.domain.AssessmentStates;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -34,7 +34,7 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
     Integer findNumberOfAssignedAssessmentsByCompetition(Long assessor, Long competition);
 
     @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status = ? order by a.overallScore ASC")
-    List<Assessment> findByAssessorAndCompetitionAndStatus(Long assessor, Long competition, ProcessStatus status );
+    List<Assessment> findByAssessorAndCompetitionAndStatus(Long assessor, Long competition, String status );
 
 
     @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status='ACCEPTED' and a.recommendedValue = 'EMPTY' ")
@@ -42,4 +42,6 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
 
     @Query("Select a from Assessment a where a.assessor.id = ? and a.application.competition.id = ? and a.status='ACCEPTED' and a.recommendedValue != 'EMPTY' ")
     List<Assessment> findStartedByAssessorAndCompetition(Long assessor, Long competition );
+
+    List<Assessment> findByAssessorIdAndApplicationCompetitionIdAndStatusIn(Long assessorId, Long competitionId, Set<String> status);
 }

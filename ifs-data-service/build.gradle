@@ -15,6 +15,7 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven { url "http://repo.spring.io/milestone" }
         jcenter()
     }
     dependencies {
@@ -44,6 +45,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
 }
 configurations {
     providedRuntime
@@ -79,6 +81,8 @@ dependencies {
     compile("com.jayway.jsonpath:json-path-assert:2.0.0")
     compile("org.springframework.hateoas:spring-hateoas")
     compile("com.jayway.jsonpath:json-path")
+    compile("org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1")
+    compile("org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1")
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
