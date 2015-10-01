@@ -4,7 +4,11 @@ var IFSFinance = {
         '+': function (x, y) { return x + y },
         '-': function (x, y) { return x - y },
         '*': function (x, y) { return x * y },
-        '/': function (x, y) { return x / y }
+        '/': function (x, y) {
+        if(y === 0) {
+            return 0;
+        }
+        return x / y }
     },
     domReady : function(){
         if(IFS.isApplicationForm()){
