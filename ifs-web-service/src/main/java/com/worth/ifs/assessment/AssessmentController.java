@@ -94,7 +94,6 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
-        log.info("- --- - USER: " + userId + "  applicatoinid: " + applicationId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
         boolean invalidAssessment = assessment == null || assessment.getProcessStatus().equals(AssessmentStates.REJECTED.getState());
         boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
