@@ -1,4 +1,5 @@
 [role="dialog"]{
+	border-top: 10px solid $link-colour;
 	width:80%;
 	margin-left:-40%;
 	left:50%;
@@ -27,7 +28,8 @@
 		}
 	}
 	.close.close {
-		border:1px solid #000;
+		border: none;
+		font-weight: bold;
 	}
 }
 .modal-overlay {
