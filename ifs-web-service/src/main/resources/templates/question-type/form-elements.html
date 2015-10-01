@@ -171,7 +171,7 @@
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-word-count" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response.getWordCountLeft()})" th:remove="tag"/>
         </div>
     </div>
 </div>
@@ -233,12 +233,12 @@
 
 <!-- ========================= word count =========================== -->
 
-<div th:fragment="form-word-count">
-    <div th:unless="${question.getWordCount() == 0}" th:remove="tag">
+<div th:fragment="form-word-count (maxWords, currentWordsLeft)">
+    <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
 				<span class="count-down" aria-live="polite"
-                      th:text="${responses.get(question.getId())?.getWordCountLeft()}" th:classappend="${responses.get(question.getId())?.getWordCountLeft() &lt; 0}? negative : positive" >0</span>
+                      th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
 		</span>
     </div>
 </div>

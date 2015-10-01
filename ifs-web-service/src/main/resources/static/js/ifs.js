@@ -7,12 +7,14 @@ var IFS = {
         IFS.pieChart();
         IFS.modalLink();
         IFS.closeAlertHide();
+        IFS.initWordCount();
 
         if(IFS.isApplicationForm()){
             IFS.initAllAutosaveElements();
             IFS.initUnsavedChangesWarning();
-            IFS.initWordCount();
+
         }
+
     },
     isApplicationForm : function(){
         if(jQuery('body.app-form').size()==1){
@@ -208,11 +210,11 @@ var IFS = {
             delta = element.dataset.max_words - element.value.split(" ").length
 
             count = element.value.length;
-            jQuery(element).parent(".word-count").find(".count-down").html(delta);
+            jQuery(element).parents(".word-count").find(".count-down").html(delta);
             if(delta < 0 ){
-                jQuery(element).parent(".word-count").addClass("word-count-reached");
+                jQuery(element).parents(".word-count").addClass("word-count-reached");
             }else{
-                jQuery(element).parent(".word-count").removeClass("word-count-reached");
+                jQuery(element).parents(".word-count").removeClass("word-count-reached");
             }
         }
 
