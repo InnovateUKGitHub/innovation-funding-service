@@ -45,6 +45,7 @@
                       <h1 class="heading-xlarge" th:text="${sectionEntry.value.getName()}"></h1>
                       <p class="subtitle" th:text="${sectionEntry.value.getDescription()}"></p>
                 </div>
+
                 <div th:each="subSection : ${sectionEntry.value.getChildSections()}" th:if="${sectionEntry.value.getChildSections()}!=null and ${sectionEntry.key} != ${currentSectionId}"  th:remove="tag">
                     <div th:if="(${subSection.getId()} == ${currentSectionId})" th:remove="tag">
                         <h1 class="heading-xlarge" th:text="${subSection.getName()}"></h1>
@@ -52,7 +53,9 @@
                     </div>
                 </div>
             </div>
- 
+
+            <h1 class="heading-large" th:if="${currentSection.getName() == 'Finances' }">Funding rules for this competition</h1>
+
             <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="response=(${responses.get(question.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                 <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()}" th:with="$question=(${question}), $response=(${response}), $questionAssignee=(${questionAssignee}), $currentApplication=(${currentApplication}), $currentSection=(${currentSection})" />
             </div>
