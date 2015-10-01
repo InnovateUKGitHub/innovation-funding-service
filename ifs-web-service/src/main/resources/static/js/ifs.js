@@ -205,14 +205,23 @@ var IFS = {
         });
 
         function updateWordCount(element){
-            delta = element.dataset.max_words - element.value.split(" ").length
+            var count;
+            var field = $(element);
+            var value = field.val();
 
-            count = element.value.length;
-            jQuery(element).parents(".word-count").find(".count-down").html(delta);
+            if (value.length === 0) {
+                count = 0;
+            } else {
+                count = value.split(" ").length - 1;
+            }
+
+            var delta = element.dataset.max_words - count;
+
+            field.parents(".word-count").find(".count-down").html(delta);
             if(delta < 0 ){
-                jQuery(element).parents(".word-count").addClass("word-count-reached");
+                field.parents(".word-count").addClass("word-count-reached");
             }else{
-                jQuery(element).parents(".word-count").removeClass("word-count-reached");
+                field.parents(".word-count").removeClass("word-count-reached");
             }
         }
 
