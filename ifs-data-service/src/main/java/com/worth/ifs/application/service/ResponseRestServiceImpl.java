@@ -80,7 +80,7 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
 
     private Boolean saveAssessorFeedback(Long assessorUserId, Long responseId, String paramName, Object paramValue) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&" + paramName + "=" + paramValue;
+        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&" + paramName + "=" + (paramValue != null ? paramValue : "");
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, null, String.class, responseId, assessorUserId, paramValue);
         return handleResponseStatus(response);
     }

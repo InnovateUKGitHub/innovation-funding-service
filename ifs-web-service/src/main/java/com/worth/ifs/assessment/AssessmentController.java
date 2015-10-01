@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -99,19 +99,18 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public @ResponseBody String updateQuestionAssessmentScore(Model model, @PathVariable("competitionId") final Long competitionId,
+    public @ResponseBody String updateQuestionAssessmentFeedback(Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                @PathVariable("responseId") final Long responseId,
                                                @RequestParam("score") final Optional<Integer> scoreParam,
-                                               @RequestParam("confirmationAnswer") final Optional<Boolean> confirmationAnswerParam,
+                                               @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
                                                @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
-                                               HttpServletRequest request,
-                                               HttpServletResponse response) {
+                                               HttpServletRequest request) {
 
         Long userId = getLoggedUser(request).getId();
-        scoreParam.ifPresent(score -> responseService.saveQuestionResponseAssessorScore(userId, responseId, score));
-        confirmationAnswerParam.ifPresent(confirmationAnswer -> responseService.saveQuestionResponseAssessorConfirmationAnswer(userId, responseId, confirmationAnswer));
-        feedbackTextParam.ifPresent(feedbackText -> responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackText));
+        requestParameterPresent("score", request).ifPresent(b -> responseService.saveQuestionResponseAssessorScore(userId, responseId, scoreParam.orElse(null)));
+        requestParameterPresent("confirmationAnswer", request).ifPresent(b -> responseService.saveQuestionResponseAssessorConfirmationAnswer(userId, responseId, confirmationAnswerParam.orElse(null)));
+        requestParameterPresent("feedbackText", request).ifPresent(b -> responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackTextParam.orElse(null)));
         return "{\"status\": \"OK\"}";
 
     }

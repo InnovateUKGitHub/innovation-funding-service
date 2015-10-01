@@ -138,6 +138,17 @@
 
 	}
 
+	.submitted{
+		.boxed-list{
+			li{
+				background: #e8e9eb; 
+			}
+		}
+		.application-status{
+			background: #e8e9eb !important;
+		}
+	}
+
 	button[name="submit_assessments"]{
 		margin: 15px 0 0 0;
 
