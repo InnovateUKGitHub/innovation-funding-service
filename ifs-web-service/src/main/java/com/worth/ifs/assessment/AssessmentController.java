@@ -9,6 +9,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public @ResponseBody String updateQuestionAssessmentFeedback(Model model, @PathVariable("competitionId") final Long competitionId,
+    public @ResponseBody JsonStatusResponse updateQuestionAssessmentFeedback(Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                @PathVariable("responseId") final Long responseId,
                                                @RequestParam("score") final Optional<Integer> scoreParam,
@@ -111,7 +112,7 @@ public class AssessmentController extends AbstractApplicationController {
         requestParameterPresent("score", request).ifPresent(b -> responseService.saveQuestionResponseAssessorScore(userId, responseId, scoreParam.orElse(null)));
         requestParameterPresent("confirmationAnswer", request).ifPresent(b -> responseService.saveQuestionResponseAssessorConfirmationAnswer(userId, responseId, confirmationAnswerParam.orElse(null)));
         requestParameterPresent("feedbackText", request).ifPresent(b -> responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackTextParam.orElse(null)));
-        return "{\"status\": \"OK\"}";
+        return JsonStatusResponse.ok();
 
     }
 
@@ -130,7 +131,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
-        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model);
+        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
         return assessmentDetails;
     }
 
@@ -283,13 +284,5 @@ public class AssessmentController extends AbstractApplicationController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
-    }
-
-    private void sendHttpResponseCode(HttpServletResponse response, int httpServletResponseScCode) {
-        try {
-            response.sendError(httpServletResponseScCode);
-        } catch (IOException e) {
-            log.error("Error sending error response code to response", e);
-        }
     }
 }

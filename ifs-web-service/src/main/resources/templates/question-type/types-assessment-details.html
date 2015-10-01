@@ -46,11 +46,14 @@
             </div>
 
             <div th:if="${question.needingAssessorFeedback}" th:remove="tag">
-                <h2 class="heading-small">Your feedback</h2>
-
-                <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-
-                <div th:include="question-type/form-elements :: form-textarea (name=${'assessor-question-feedback-' + questionId}, id=${'assessor-question-feedback-' + questionId}, value=${response.assessmentFeedback}, wordCount=350, readonly=false)" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+                <div class="form-group extra-margin feedback">
+                    <div th:include="question-type/types :: textarea-wordcount(name=${'Your feedback'},
+                        id=${'assessor-question-feedback-' + questionId},
+                        inputName=${'assessor-question-feedback-' + questionId},
+                        hint='Please justify your score by writing two or three sentences which will be returned to the applicant as feedback',
+                        maxWords=350,
+                        value=${response.assessmentFeedback})" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+                    </div>
             </div>
 
         </div>

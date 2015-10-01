@@ -14,6 +14,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,16 +73,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
-    public
-    @ResponseBody
-    String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+    public @ResponseBody JsonStatusResponse deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("sectionId") final Long sectionId,
                                           @PathVariable("costId") final Long costId,
                                           @PathVariable("renderQuestionId") final Long renderQuestionId,
                                           HttpServletRequest request) {
 
         doDeleteCost(costId);
-        return "{\"status\": \"OK\"}";
+        return JsonStatusResponse.ok();
     }
 
     private void doDeleteCost(@PathVariable("costId") Long costId) {
@@ -102,8 +101,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
-        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
-        Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
+        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
+        Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
     }
@@ -138,7 +137,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         addOrganisationDetails(model, application, Optional.of(userOrganisation));
         addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
         addFinanceDetails(model, application, userId);
-        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation));
+        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
         addUserDetails(model, application, userId);
 
         return application;
@@ -323,7 +322,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true);
         addFinanceDetails(model, application, userId);
         return application;
     }

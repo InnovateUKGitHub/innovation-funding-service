@@ -26,7 +26,7 @@
                     <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-half">
                             <h4 class="heading-medium">
-                                <a th:href="@{/application/{id}/section/1(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
                             </h4>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <p class="form-hint">Current progress: </p>
@@ -46,8 +46,10 @@
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <strong class="greentext">Application submitted</strong>
                         </div>
-                        <div class="column-one-third">
-                            Awaiting assessment
+                        <div class="column-third">
+                            <div class="awaiting-assessment">
+                                Awaiting <br/> assessment
+                            </div>
                         </div>
                     </div>
                 </li>

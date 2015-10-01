@@ -11,6 +11,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +122,7 @@ public class ResponseController {
     }
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
-    public String saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
+    public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
                                                     @RequestParam("assessorUserId") Long assessorUserId,
                                                     @RequestParam("score") Optional<Integer> scoreParam,
                                                     @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
@@ -139,6 +140,6 @@ public class ResponseController {
         requestParameterPresent("feedbackText", request).ifPresent(b -> response.setAssessmentFeedback(feedbackTextParam.orElse(null)));
 
         responseRepository.save(response);
-        return "{\"status\": \"OK\"}";
+        return JsonStatusResponse.ok();
     }
 }

@@ -128,6 +128,22 @@
 		</textarea>
 </div>
 
+<div th:fragment="form-textarea-wordcount (id, name, value, readonly, maxWords)">
+    <div class="textarea-wrapped word-count">
+        <div th:include="question-type/form-elements :: form-textarea (
+		 					id=${id},
+		 					value=${value},
+		 					wordCount=${maxWords},
+		 					readonly=false,
+		 					name=${name}
+		 					)" th:remove="tag">
+        </div>
+
+        <div class="textarea-footer">
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+        </div>
+    </div>
+</div>
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">

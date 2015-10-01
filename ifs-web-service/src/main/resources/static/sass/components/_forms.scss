@@ -151,6 +151,11 @@ select{
     }
 }
 
+.feedback{
+    .textarea-wrapped textarea{
+        border: 1px solid $border-colour;
+    }
+}
 
     //    .form-group_header-status {
     //     color: #666;
