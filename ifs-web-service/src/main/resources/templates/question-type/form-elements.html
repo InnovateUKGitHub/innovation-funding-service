@@ -171,7 +171,7 @@
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response.getWordCountLeft()})" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
     </div>
 </div>
