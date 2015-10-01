@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
@@ -13,9 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -206,7 +205,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     private void acceptInvitation(Long applicationId, Long userId) {
         Assessment assessment = new Assessment();
-        assessmentRestService.acceptAssessmentInvitation(applicationId, userId,  assessment);
+        assessmentRestService.acceptAssessmentInvitation(applicationId, userId, assessment);
     }
 
     private void rejectInvitation(Long applicationId, Long userId, String decisionReason, String observations) {
