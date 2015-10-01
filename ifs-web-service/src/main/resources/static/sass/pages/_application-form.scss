@@ -17,6 +17,15 @@
 		font-weight:300;
 	}
 
+	.button{
+		&.button-block{
+			display: block;
+			width: 100%;
+			text-align: center;
+			padding: 15px;
+		}
+	}
+
 }
 
 .question {

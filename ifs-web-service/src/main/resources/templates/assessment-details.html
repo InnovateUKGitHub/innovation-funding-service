@@ -15,6 +15,10 @@
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
     <!--/* div th:include="fragments/elements :: notification" th:remove="tag"></div> */--> <!--/* TODO DW - removed this from assessor's view */-->
 
+    <div>
+        <br/>
+        <small><a th:href="@{/assessor/competitions/{cid}/applications(cid=${currentCompetition.id})}">&lt; Back to competition dashboard</a></small>
+    </div>
 
     <div class="grid-row">
         <div class="column-third">
