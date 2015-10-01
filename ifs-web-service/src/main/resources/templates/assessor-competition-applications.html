@@ -50,7 +50,7 @@
             <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
             <ul class="boxed-list" th:unless="${assessments.size() == 0 }" >
                 <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST" onsubmit="return confirm('This is your final chance to make changes to the assessment. You will not be able to access the application after this point. Are you sure you want to submit?');">
-                <li th:each="assessment : ${assessments}" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).INVALID}">
+                <li th:each="assessment : ${assessments}" th:unless="${assessment.getProcessStatus().equals('rejected')}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium">
@@ -60,16 +60,16 @@
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-assessment-status navigation-right">
-                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getAssessmentStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
-                                <p th:text="${#strings.capitalizeWords(assessment.getAssessmentStatus().toString().toLowerCase())}">Assessment Status</p>
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
+                                <p th:text="${#strings.capitalizeWords(assessment.getProcessStatus().toLowerCase())}">Assessment Status</p>
 
                                 <!--if assessment is pending acceptance-->
-                                <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() != T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING}">
+                                <p class="application-listing_pending" th:unless="${assessment.getProcessStatus()} neq 'pending'">
                                     <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
                                 </p>
 
                                 <!--otherwise shows the overall score -->
-                                <p class="application-listing_pending" th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}">
+                                <p class="application-listing_pending" th:unless="${assessment.getProcessStatus() eq 'pending' or assessment.hasAssessmentStarted() == false}">
                                     <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
                                     <small>Overall score</small>
                                     <div class="recommend-container">
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <label>
-                        <input th:unless="${assessment.getAssessmentStatus() == T(com.worth.ifs.assessment.constant.AssessmentStatus).PENDING or assessment.hasAssessmentStarted() == false}"
+                        <input th:unless="${assessment.getProcessStatus() eq 'pending' or assessment.hasAssessmentStarted() == false}"
                                class="assessment-submit-checkbox" type="checkbox" name="submitted[]" th:value="${assessment.id}" />
                     </label>
                 </li>
@@ -108,8 +108,8 @@
                             <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-assessment-status navigation-right">
-                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getAssessmentStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
-                                <p th:text="${#strings.capitalizeWords(assessment.getAssessmentStatus().toString().toLowerCase())}">Assessment Status</p>
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
+                                <p th:text="${#strings.capitalizeWords(assessment.getProcessStatus().toLowerCase())}">Assessment Status</p>
 
                                 <!-- shows the overall score -->
                                 <h3 class="score"><span th:text="${assessment.getOverallScore()}"/>%</h3>

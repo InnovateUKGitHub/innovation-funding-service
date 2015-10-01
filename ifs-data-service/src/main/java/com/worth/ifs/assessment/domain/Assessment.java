@@ -117,12 +117,6 @@ public class Assessment extends Process {
         this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);
     }
 
-    public void respondToAssessmentInvitation(boolean hasAccepted, String reason, String observations) {
-        setProcessStatus(hasAccepted ? AssessmentStates.ACCEPTED.getState() : AssessmentStates.REJECTED.getState());
-        setDecisionReason(reason);
-        setObservations(observations);
-    }
-
     public boolean hasAssessments() {
         return this.responseAssessments != null && this.responseAssessments.size() > 0;
     }
