@@ -374,7 +374,7 @@
                            readonly="" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
+                           th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.total}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
