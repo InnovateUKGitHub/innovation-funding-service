@@ -107,8 +107,8 @@ public class ApplicationController extends AbstractApplicationController {
         // TODO DW - sectionId should be determined from the clicked button as per the questionId as grabbed below
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
-        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
-        Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
+        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), true);
+        Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
 
@@ -157,7 +157,7 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addFinanceDetails(model, application, userId);

@@ -49,7 +49,7 @@ public class IfsFunctions {
             if (wasPresent) {
                 return wasPresentResult;
             }
-            return elseFunction.get();
+            return elseFunction != null ? elseFunction.get() : null;
         }
     }
 

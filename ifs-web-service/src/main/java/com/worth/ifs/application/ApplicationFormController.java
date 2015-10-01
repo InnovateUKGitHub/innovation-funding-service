@@ -101,8 +101,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
-        Section currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId));
-        Question question = currentSection.getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
+        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
+        Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
     }
@@ -137,7 +137,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         addOrganisationDetails(model, application, Optional.of(userOrganisation));
         addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
         addFinanceDetails(model, application, userId);
-        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation));
+        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
         addUserDetails(model, application, userId);
 
         return application;
@@ -322,7 +322,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model);
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true);
         addFinanceDetails(model, application, userId);
         return application;
     }

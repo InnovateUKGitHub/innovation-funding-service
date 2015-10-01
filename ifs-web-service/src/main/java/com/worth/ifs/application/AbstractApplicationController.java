@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import static com.worth.ifs.util.IfsFunctions.ifPresent;
 
 public abstract class AbstractApplicationController {
 
@@ -52,6 +53,8 @@ public abstract class AbstractApplicationController {
 
 
     @Autowired CookieFlashMessageFilter cookieFlashMessageFilter;
+
+
 
     @Autowired
     FinanceService financeService;
@@ -95,7 +98,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
@@ -109,11 +112,11 @@ public abstract class AbstractApplicationController {
         addQuestionsDetails(model, application, userOrganisation, userId);
         addUserDetails(model, application, userId);
 
-        userOrganisation.ifPresent (org -> {
+        userOrganisation.ifPresent(org -> {
             addAssigneableDetails(model, application, org, userId);
         });
 
-        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
         return application;
     }
 
@@ -165,7 +168,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
     }
 
-    protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
+    protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         List<Section> sectionsList = sectionService.getParentSections(application.getCompetition().getSections());
 
@@ -174,38 +177,40 @@ public abstract class AbstractApplicationController {
                         Function.identity()));
 
         model.addAttribute("sections", sections);
-        addSectionDetails(model, application, currentSectionId, userOrganisation);
+        addSectionDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
     }
 
-    protected void addSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
-        addSectionDetails(model, application, currentSectionId, userOrganisation);
+    protected void addSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
+        addSectionDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
         List<Section> sections = sectionService.getParentSections(application.getCompetition().getSections());
         model.addAttribute("sections", sections);
     }
-    private void addSectionDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
-        Section currentSection = getSection(application.getCompetition().getSections(), currentSectionId);
-        model.addAttribute("currentSectionId", currentSection.getId());
-        model.addAttribute("currentSection", currentSection);
+    private void addSectionDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
+        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
+        model.addAttribute("currentSectionId", ifPresent(currentSection, s -> s.getId()).orElse(null));
+        model.addAttribute("currentSection", currentSection.orElse(null));
 
         userOrganisation.ifPresent(org -> {
             model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId()));
         });
     }
 
-    protected Section getSection(List<Section> sections, Optional<Long> sectionId) {
+    // TODO DW - the selectFirstSectionIfNoneCurrentlySelected feels a little hacky but is currently here to ensure that at least a single section is always
+    // selected for the Assessor views of the Application
+    protected Optional<Section> getSection(List<Section> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
-        // TODO DW - previously if a sectionId wasn't supplied, a section wouldn't have been "current"
         if (sectionId.isPresent()) {
 
             Long id = sectionId.get();
 
             // get the section that we want to show, so we can use this on to show the correct questions.
-            Optional<Section> section = sections.stream().filter(x -> x.getId().equals(id)).findFirst();
-            return section.isPresent() ? section.get() : null;
+            return sections.stream().filter(x -> x.getId().equals(id)).findFirst();
 
-        } else {
-            return sections.get(0);
+        } else if (selectFirstSectionIfNoneCurrentlySelected) {
+            return sections.size() > 0 ? Optional.of(sections.get(0)) : Optional.empty();
         }
+
+        return Optional.empty();
     }
 
     protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
