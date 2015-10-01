@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()
-                .accessDeniedPage("/access?error")
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint("/login"))
             .and()
                 .headers().cacheControl()
             .and()
