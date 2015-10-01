@@ -118,5 +118,17 @@ public class Response {
         return assessmentConfirmation;
     }
 
+    public void setAssessmentScore(Integer assessmentScore) {
+        this.assessmentScore = assessmentScore;
+    }
+
+    public void setAssessmentFeedback(String assessmentFeedback) {
+        this.assessmentFeedback = assessmentFeedback;
+    }
+
+    public void setAssessmentConfirmation(Boolean assessmentConfirmation) {
+        this.assessmentConfirmation = assessmentConfirmation;
+    }
+
     public void setId(Long id) { this.id = id; }
 }

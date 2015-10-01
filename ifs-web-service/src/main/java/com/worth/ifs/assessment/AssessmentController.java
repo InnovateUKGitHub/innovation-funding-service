@@ -1,6 +1,11 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.constant.AssessmentStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.service.AssessmentRestService;
@@ -8,16 +13,20 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -26,6 +35,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/assessor")
 public class AssessmentController extends AbstractApplicationController {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     /* pages */
     private final String competitionAssessments = "assessor-competition-applications";
@@ -42,6 +53,8 @@ public class AssessmentController extends AbstractApplicationController {
     AssessmentRestService assessmentRestService;
     @Autowired
     UserAuthenticationService userAuthenticationService;
+    @Autowired
+    ResponseService responseService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -87,6 +100,24 @@ public class AssessmentController extends AbstractApplicationController {
 
         Long userId = getLoggedUser(req).getId();
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId);
+    }
+
+    @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
+    public @ResponseBody String updateQuestionAssessmentScore(Model model, @PathVariable("competitionId") final Long competitionId,
+                                               @PathVariable("applicationId") final Long applicationId,
+                                               @PathVariable("responseId") final Long responseId,
+                                               @RequestParam("score") final Optional<Integer> scoreParam,
+                                               @RequestParam("confirmationAnswer") final Optional<Boolean> confirmationAnswerParam,
+                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
+                                               HttpServletRequest request,
+                                               HttpServletResponse response) {
+
+        Long userId = getLoggedUser(request).getId();
+        scoreParam.ifPresent(score -> responseService.saveQuestionResponseAssessorScore(userId, responseId, score));
+        confirmationAnswerParam.ifPresent(confirmationAnswer -> responseService.saveQuestionResponseAssessorConfirmationAnswer(userId, responseId, confirmationAnswer));
+        feedbackTextParam.ifPresent(feedbackText -> responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackText));
+        return "{\"status\": \"OK\"}";
+
     }
 
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
@@ -251,5 +282,13 @@ public class AssessmentController extends AbstractApplicationController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
+    }
+
+    private void sendHttpResponseCode(HttpServletResponse response, int httpServletResponseScCode) {
+        try {
+            response.sendError(httpServletResponseScCode);
+        } catch (IOException e) {
+            log.error("Error sending error response code to response", e);
+        }
     }
 }

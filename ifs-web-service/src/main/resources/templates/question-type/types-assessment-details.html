@@ -13,17 +13,17 @@
 
     <!-- ==============General readonly header, paragraph and assessor feedback blocks ============= -->
 
-    <div th:fragment="question-label-and-paragraph (question, responses, bold)">
+    <div th:fragment="question-label-and-paragraph (section, question, responses, bold)">
         <div th:include="question-type/types-assessment-details :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
-        <div th:include="question-type/types-assessment-details :: assessor-feedback (question=${question}, response=${response})" th:remove="tag" />
+        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
     </div>
 
 
     <!-- ==============Assessor feedback block ============= -->
 
-    <div th:fragment="assessor-feedback (question, response)">
+    <div th:fragment="assessor-feedback (section, question, response)">
 
-        <div th:if="${response != null}" th:with="questionId=${question.getId()}" th:remove="tag">
+        <div th:if="${response != null}" th:with="questionId=${question.getId()}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${response.id}">
 
             <div th:if="${question.needingAssessorScore}" th:remove="tag">
                 <h2 class="heading-small">Question Score</h2>
@@ -60,14 +60,14 @@
     <!-- ===========================Readonly textinput with Assessor feedback =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
     <!-- ===========================Readonly textarea with Assessor feedback =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
     <div th:fragment="textarea" class="form-group">
-        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
 
@@ -75,7 +75,7 @@
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-label (name='Appendix', id=${question.getId()}, bold=true)" th:remove="tag" />
         <a href="#">Appendix document (2.4mb PDF)</a>
-        <div th:include="question-type/types-assessment-details :: assessor-feedback (question=${question}, response=${response})" th:remove="tag" />
+        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
     </div>
 
     <!-- ===========================Readonly application_details block for Assessor view =========================== -->
