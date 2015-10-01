@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +66,7 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         return saveAssessorFeedback(assessorUserId, responseId, "feedbackText", feedback);
     }
 
-    private Boolean handleResponseStatus(ResponseEntity<String> response) {
+    private Boolean handleResponseStatus(ResponseEntity<?> response) {
         if (response.getStatusCode() == HttpStatus.ACCEPTED) {
             return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
@@ -81,7 +82,9 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
     private Boolean saveAssessorFeedback(Long assessorUserId, Long responseId, String paramName, Object paramValue) {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&" + paramName + "=" + (paramValue != null ? paramValue : "");
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, null, String.class, responseId, assessorUserId, paramValue);
+
+        HttpEntity<String> entity = new HttpEntity<>(getJSONHeaders());
+        ResponseEntity<JsonStatusResponse> response = restTemplate.exchange(url, HttpMethod.PUT, entity, JsonStatusResponse.class, responseId, assessorUserId, paramValue);
         return handleResponseStatus(response);
     }
 }
