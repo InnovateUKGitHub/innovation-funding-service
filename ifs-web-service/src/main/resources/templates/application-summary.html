@@ -24,8 +24,6 @@
 
     <div class="collapsible section-overview">
         <div th:remove="tag" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-            <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
-
             <h2 th:text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +
                     ' '+ ((${completedSections.contains(section.getId())}) ? 'section-complete':'')+
                     ' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
