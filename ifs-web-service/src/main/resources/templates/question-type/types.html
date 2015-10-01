@@ -20,6 +20,12 @@
         <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
+    <div th:fragment="textarea-wordcount (name, id, inputName, hint, maxWords, value)"  class="form-group">
+        <div th:include="question-type/form-elements :: form-label (name=${name}, id=${id}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-textarea-wordcount (id=${id}, name=${inputName}, value=${value},readonly=false, maxWords=${maxWords})" th:remove="tag" />
+    </div>
+
 
     <!-- ===========================Form: Date input =========================== -->
 
