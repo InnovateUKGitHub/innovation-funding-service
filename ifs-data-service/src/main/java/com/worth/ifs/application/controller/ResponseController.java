@@ -21,10 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
 
 /**
  * ApplicationController exposes Application data through a REST API.
@@ -122,16 +125,18 @@ public class ResponseController {
                                                     @RequestParam("assessorUserId") Long assessorUserId,
                                                     @RequestParam("score") Optional<Integer> scoreParam,
                                                     @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
-                                                    @RequestParam("feedbackText") Optional<String> feedbackTextParam
-    ) {
+                                                    @RequestParam("feedbackText") Optional<String> feedbackTextParam,
+                                                    HttpServletRequest request
+
+                                                    ) {
 
         // TODO DW - permissions checking and failure cases based upon assessorUserId, db failures, assessment state machine integration etc...
 
         Response response = responseRepository.findOne(responseId);
 
-        scoreParam.ifPresent(score -> response.setAssessmentScore(score));
-        confirmationAnswerParam.ifPresent(confirmationAnswer -> response.setAssessmentConfirmation(confirmationAnswer));
-        feedbackTextParam.ifPresent(feedbackText -> response.setAssessmentFeedback(feedbackText));
+        requestParameterPresent("score", request).ifPresent(b -> response.setAssessmentScore(scoreParam.orElse(null)));
+        requestParameterPresent("confirmationAnswer", request).ifPresent(b -> response.setAssessmentConfirmation(confirmationAnswerParam.orElse(null)));
+        requestParameterPresent("feedbackText", request).ifPresent(b -> response.setAssessmentFeedback(feedbackTextParam.orElse(null)));
 
         responseRepository.save(response);
         return "{\"status\": \"OK\"}";

@@ -103,6 +103,7 @@ task client(type: Jar) {
         include "com/worth/ifs/*/domain/**"
         include "com/worth/ifs/*/constant/**"
         include "com/worth/ifs/*/resource/**"
+        include "com/worth/ifs/util/**"
     }
 }
 task clientCopy(type: Copy){
