@@ -8,6 +8,7 @@ import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
@@ -146,6 +147,9 @@ public class AssessmentController extends AbstractApplicationController {
         Competition competition = competitionService.getCompetitionById(competitionId);
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
+        Set<String> partners =  assessment.getApplication().getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
+        model.addAttribute("partners", partners);
+
         return applicationReview;
     }
 

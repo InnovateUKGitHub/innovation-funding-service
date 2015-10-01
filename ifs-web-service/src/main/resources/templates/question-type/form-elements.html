@@ -223,7 +223,10 @@
             <div th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"
                  th:remove="tag"/>
 
-            by <span th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
+            by
+            <span th:if="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="you"/>
+            <span th:unless="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
+
         </small></p>
 </div>
 

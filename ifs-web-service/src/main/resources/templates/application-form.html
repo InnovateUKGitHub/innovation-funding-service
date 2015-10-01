@@ -26,7 +26,7 @@
                         <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
                             th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
                         <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
-                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ((${completedSections.contains(subSection.id)}) ? 'section-status complete ':'')">
+                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ' ' + ((${completedSections.contains(subSection.getId())}) ? 'section-status complete ':'')">
                                 <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
                                     th:text="${subSection.getName()}"></a>
                             </li>

@@ -42,9 +42,17 @@ public class LabourCost implements CostItem {
         return grossAnnualSalary;
     }
 
+    public Double getRatePerDay(Integer workingDaysPerYear) {
+        if(workingDaysPerYear.equals(0)) {
+            return 0D;
+        }
+        return grossAnnualSalary / workingDaysPerYear.doubleValue();
+    }
+
     public Double getRate(Integer workingDaysPerYear) {
+
         if(grossAnnualSalary!=null && workingDaysPerYear != null) {
-            rate = grossAnnualSalary / workingDaysPerYear.doubleValue();
+            rate = getRatePerDay(workingDaysPerYear);
             return rate;
         }
         return rate;
