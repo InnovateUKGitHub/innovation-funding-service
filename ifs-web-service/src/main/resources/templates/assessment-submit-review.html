@@ -327,7 +327,7 @@
 
         <!-- .form-group -->
 
-        <div class="form-group" id="recommendation-feedback-group">
+        <div class="form-group word-count" id="recommendation-feedback-group">
             <h4 class="heading-medium">Your feedback</h4>
             <p class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</p>
             <span class="error-message" id="feedback-empty-error">
@@ -335,7 +335,8 @@
             </span>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
-                          id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"></textarea>
+                          id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"
+                          th:attrappend="data-max_words=350" ></textarea>
             </div>
 
             <div class="form-group_footer">
@@ -343,16 +344,19 @@
                     <div class="column-half column-half--first">
                         &nbsp;
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="feedbackWordCount">350</strong> </span></div>
+                    <div class="column-half column-half--second">
+                        <div th:include="question-type/form-elements :: form-word-count (maxWords=350, currentWordsLeft=350)" th:remove="tag"/>
+                    </div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
 
-        <div class="form-group">
+        <div class="form-group word-count">
             <h4 class="heading-medium">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)</h4>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
-                          id="summary-comments" th:text="${assessment.getComments()}"></textarea>
+                          id="summary-comments" th:text="${assessment.getComments()}"
+                          th:attrappend="data-max_words=350"></textarea>
             </div>
 
             <div class="form-group_footer">
@@ -360,7 +364,9 @@
                     <div class="column-half column-half--first">
                     &nbsp;
                     </div>
-                    <div class="column-half column-half--second"><span class="count-label"><span class="count-message">Words remaining:</span> <strong class="count-down" id="commentsWordCount">350</strong> </span></div>
+                    <div class="column-half column-half--second">
+                        <div th:include="question-type/form-elements :: form-word-count (maxWords=350, currentWordsLeft=350)" th:remove="tag"/>
+                    </div>
                 </div>
             </div><!-- .form-group_footer -->
         </div><!-- .form-group -->
