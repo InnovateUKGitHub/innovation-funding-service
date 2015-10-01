@@ -3,6 +3,9 @@ package com.worth.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +23,13 @@ import java.util.Set;
 @RestController
 @RequestMapping("/assessment")
 public class AssessmentController {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     AssessmentHandler assessmentHandler;
+
+    @Autowired
+    AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
@@ -45,18 +52,23 @@ public class AssessmentController {
         return assessmentHandler.getTotalSubmittedAssessmentsByCompetition(competitionId, userId);
     }
 
-    @RequestMapping(value = "/respondToAssessmentInvitation", method = RequestMethod.POST)
-    public Boolean respondToAssessmentInvitation(@RequestBody JsonNode formData) {
+    @RequestMapping(value = "/acceptAssessmentInvitation/{applicationId}/{assessorId}")
+    public void acceptAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("assessorId") final Long assessorId,
+                                           @RequestBody Assessment assessment) {
+        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        assessment.setProcessStatus(assessmentOriginal.getProcessStatus());
+        assessmentWorkflowEventHandler.acceptInvitation(applicationId, assessorId, assessment);
+    }
 
-        //unpacks all the response form data fields
-        Long assessorId = formData.get("assessorId").asLong();
-        Long applicationId = formData.get("applicationId").asLong();
-        Boolean decision = formData.get("decision").asBoolean();
-        String reason = formData.get("reason").asText("");
-        String observations = HtmlUtils.htmlUnescape(formData.get("observations").asText(""));
-
-        // delegates to the handler and returns its operation success
-        return assessmentHandler.respondToAssessmentInvitation(assessorId, applicationId, decision, reason, observations);
+    @RequestMapping(value = "/rejectAssessmentInvitation/{applicationId}/{assessorId}")
+    public void rejectAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("assessorId") final Long assessorId,
+                                           @RequestBody Assessment assessment) {
+        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        String currentProcessStatus = assessmentOriginal.getProcessStatus();
+        assessment.setProcessStatus(currentProcessStatus);
+        assessmentWorkflowEventHandler.rejectInvitation(applicationId, assessorId, assessment);
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
@@ -65,9 +77,12 @@ public class AssessmentController {
         //unpacks all the response form data fields
         Long assessorId = formData.get("assessorId").asLong();
         ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
-
-        // delegates to the handler and returns its operation success
-        return assessmentHandler.submitAssessments(assessorId, fromArrayNodeToSet(assessmentsIds));
+        Set<Long> assessments = fromArrayNodeToSet(assessmentsIds);
+        for(Long assessmentId : assessments) {
+            Assessment assessment = assessmentHandler.getOne(assessmentId);
+            assessmentWorkflowEventHandler.submit(assessment);
+        }
+        return new Boolean(true);
     }
 
     private Set<Long> fromArrayNodeToSet(ArrayNode array) {
@@ -84,10 +99,6 @@ public class AssessmentController {
 
     @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
     public Boolean submitAssessment(@RequestBody JsonNode formData) {
-
-        System.out.println("AssessmentController > saveAssessmentSummary");
-
-        //unpacks all the response form data fields
         Long assessorId = formData.get("assessorId").asLong();
         Long applicationId = formData.get("applicationId").asLong();
 
@@ -96,7 +107,13 @@ public class AssessmentController {
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
-        return assessmentHandler.saveAssessmentSummary(assessorId, applicationId, suitableValue, suitableFeedback, comments);
+        Assessment assessment = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        Assessment newAssessment = new Assessment();
+        newAssessment.setSummary(assessmentHandler.getRecommendedValueFromString(suitableValue), suitableFeedback, comments);
+        newAssessment.setProcessStatus(assessment.getProcessStatus());
+
+        assessmentWorkflowEventHandler.recommend(applicationId, assessorId, newAssessment);
+        return true;
     }
 
 

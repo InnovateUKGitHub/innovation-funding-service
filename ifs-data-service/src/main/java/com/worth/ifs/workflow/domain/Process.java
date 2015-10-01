@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -18,13 +19,11 @@ public abstract class Process {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="event")
-    protected ProcessEvent event;
+    protected String event;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="status")
-    protected ProcessStatus status;
+    protected String status;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,19 +42,19 @@ public abstract class Process {
     public Process() {
     }
 
-    public Process(ProcessEvent event, ProcessStatus status) {
+    public Process(String event, String status) {
         this.event = event;
         this.status = status;
     }
 
 
-    public Process(ProcessEvent event, ProcessStatus status, LocalDate startDate, LocalDate endDate) {
+    public Process(String event, String status, LocalDate startDate, LocalDate endDate) {
         this(event, status);
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Process(ProcessEvent event, ProcessStatus status, LocalDate startDate, LocalDate endDate, String observations) {
+    public Process(String event, String status, LocalDate startDate, LocalDate endDate, String observations) {
         this(event, status, startDate, endDate);
         this.observations = observations;
     }
@@ -87,19 +86,19 @@ public abstract class Process {
         return id;
     }
 
-    public ProcessStatus getProcessStatus()  {
+    public String getProcessStatus()  {
         return status;
     }
 
-    public void setProcessStatus(ProcessStatus status) {
+    public void setProcessStatus(String status) {
         this.status = status;
     }
 
-    public ProcessEvent getProcessEvent() {
+    public String getProcessEvent() {
         return event;
     }
 
-    public void setProcessEvent(ProcessEvent event) {
+    public void setProcessEvent(String event) {
         this.event = event;
     }
 
