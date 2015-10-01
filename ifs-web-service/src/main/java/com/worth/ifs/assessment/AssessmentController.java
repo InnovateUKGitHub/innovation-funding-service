@@ -131,7 +131,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
-        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model);
+        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
         return assessmentDetails;
     }
 
@@ -284,13 +284,5 @@ public class AssessmentController extends AbstractApplicationController {
         //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
-    }
-
-    private void sendHttpResponseCode(HttpServletResponse response, int httpServletResponseScCode) {
-        try {
-            response.sendError(httpServletResponseScCode);
-        } catch (IOException e) {
-            log.error("Error sending error response code to response", e);
-        }
     }
 }
