@@ -14,6 +14,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,16 +73,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
-    public
-    @ResponseBody
-    String deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+    public @ResponseBody JsonStatusResponse deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("sectionId") final Long sectionId,
                                           @PathVariable("costId") final Long costId,
                                           @PathVariable("renderQuestionId") final Long renderQuestionId,
                                           HttpServletRequest request) {
 
         doDeleteCost(costId);
-        return "{\"status\": \"OK\"}";
+        return JsonStatusResponse.ok();
     }
 
     private void doDeleteCost(@PathVariable("costId") Long costId) {
