@@ -1,20 +1,12 @@
 package com.worth.ifs.application.controller;
 
+import com.worth.ifs.BaseControllerMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,29 +17,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationControllerTest {
-    @InjectMocks
-    private ApplicationController applicationController;
+public class ApplicationControllerTest extends BaseControllerMocksTest<ApplicationController> {
 
-    @Mock
-    ApplicationRepository applicationRepositoryMock;
-    @Mock
-    ProcessRoleRepository userAppRoleRepositoryMock;
-    @Mock
-    UserRepository userRepositoryMock;
-
-    private MockMvc mockMvc;
-
-    @Before
-    public void setUp() {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
-                .build();
+    @Override
+    protected ApplicationController supplyControllerUnderTest() {
+        return new ApplicationController();
     }
 
     @Test
-     public void applicationControllerShouldReturnApplicationById() throws Exception {
+    public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
 

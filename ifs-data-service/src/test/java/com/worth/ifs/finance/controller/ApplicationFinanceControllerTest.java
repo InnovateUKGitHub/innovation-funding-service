@@ -1,16 +1,11 @@
 package com.worth.ifs.finance.controller;
 
+import com.worth.ifs.BaseControllerMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.finance.controller.ApplicationFinanceController;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -18,24 +13,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationFinanceControllerTest {
+public class ApplicationFinanceControllerTest extends BaseControllerMocksTest<ApplicationFinanceController> {
 
-    @Mock
-    ApplicationFinanceController applicationFinanceController;
-
-    @Mock
-    ApplicationFinanceRepository applicationFinanceRepository;
 
     ApplicationFinance applicationFinance;
 
-    private MockMvc mockMvc;
+    @Override
+    protected ApplicationFinanceController supplyControllerUnderTest() {
+        return new ApplicationFinanceController();
+    }
 
     @Before
     public void setUp() {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationFinanceController)
-                .build();
+
+        super.setUp();
+
         Application application = new Application();
         application.setId(1L);
         Organisation organisation = new Organisation(1L, "Worth Internet Systems");
