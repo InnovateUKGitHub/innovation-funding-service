@@ -28,6 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ApplicationControllerTest extends BaseControllerTest<ApplicationController> {
 
+    @Override
+    protected ApplicationController supplyControllerUnderTest() {
+        return new ApplicationController();
+    }
+
     @Test
     public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);

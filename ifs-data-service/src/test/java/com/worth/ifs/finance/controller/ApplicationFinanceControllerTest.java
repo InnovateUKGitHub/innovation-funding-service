@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerTest;
+import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
@@ -24,7 +25,10 @@ public class ApplicationFinanceControllerTest extends BaseControllerTest<Applica
 
     ApplicationFinance applicationFinance;
 
-    private MockMvc mockMvc;
+    @Override
+    protected ApplicationFinanceController supplyControllerUnderTest() {
+        return new ApplicationFinanceController();
+    }
 
     @Before
     public void setUp() {

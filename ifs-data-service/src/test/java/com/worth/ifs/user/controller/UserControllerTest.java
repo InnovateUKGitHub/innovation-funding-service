@@ -26,6 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserControllerTest extends BaseControllerTest<UserController> {
 
+    @Override
+    protected UserController supplyControllerUnderTest() {
+        return new UserController();
+    }
+
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {
         User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);

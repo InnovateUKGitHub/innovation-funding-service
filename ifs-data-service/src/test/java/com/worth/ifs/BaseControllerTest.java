@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public abstract class BaseControllerTest<ControllerType> {
 
     @InjectMocks
-    protected ControllerType controller;
+    protected ControllerType controller = supplyControllerUnderTest();
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;
@@ -39,5 +39,7 @@ public abstract class BaseControllerTest<ControllerType> {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
+
+    protected abstract ControllerType supplyControllerUnderTest();
 
 }
