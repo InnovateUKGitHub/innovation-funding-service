@@ -20,7 +20,16 @@
 
 	}
 
-	.boxed-list{
+	.in-progress .boxed-list{
+		h4{
+			margin-bottom: 0.83em;
+		}
+		.grid-row{
+			margin: 5px 0 0 12px;
+		}
+	}
+
+	.boxed-list form{
 		max-width: 96%;
 		@include media-down(mobile) {
 			max-width: 92%;
@@ -36,7 +45,7 @@
 		padding-top: 110px;
 		float: right;
 		color: $secondary-text-colour;
-		margin: 12px 12px 0 0;
+		margin: 0;
 	}
 
 	.assessment-submit-checkbox{
@@ -170,7 +179,7 @@
 		margin: 20px 37px 55px 0;
 	}
 	.boxed-list .column-half + .column-half{
-		padding: 15px 30px 0 0;
+		padding: 0 20px 0 0;
 		text-align:right;
 	} 
 	.boxed-list .pie-container {
@@ -204,7 +213,7 @@
 	}
 
 	.form-hint{
-		margin-bottom: 25px;
+		margin-bottom: 0;
 	}
 
 	.collapsible{
