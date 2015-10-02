@@ -1,5 +1,6 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.BaseControllerTest;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.controller.UserController;
@@ -23,22 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-public class UserControllerTest {
-    @InjectMocks
-    private UserController userController;
-
-    @Mock
-    UserRepository userRepositoryMock;
-
-    private MockMvc mockMvc;
-
-    @Before
-    public void setUp() throws Exception {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .build();
-    }
+public class UserControllerTest extends BaseControllerTest<UserController> {
 
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {

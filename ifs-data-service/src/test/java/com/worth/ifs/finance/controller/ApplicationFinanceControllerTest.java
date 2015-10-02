@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.controller;
 
+import com.worth.ifs.BaseControllerTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
@@ -18,13 +19,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationFinanceControllerTest {
+public class ApplicationFinanceControllerTest extends BaseControllerTest<ApplicationFinanceController> {
 
-    @Mock
-    ApplicationFinanceController applicationFinanceController;
-
-    @Mock
-    ApplicationFinanceRepository applicationFinanceRepository;
 
     ApplicationFinance applicationFinance;
 
@@ -32,10 +28,9 @@ public class ApplicationFinanceControllerTest {
 
     @Before
     public void setUp() {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationFinanceController)
-                .build();
+
+        super.setUp();
+
         Application application = new Application();
         application.setId(1L);
         Organisation organisation = new Organisation(1L, "Worth Internet Systems");
