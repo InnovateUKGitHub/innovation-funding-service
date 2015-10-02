@@ -27,10 +27,4 @@ public class Application extends SpringBootServletInitializer {
         System.out.println("Spring boot Application main method");
         SpringApplication.run(Application.class, args);
     }
-
-    @Bean(name = "restTemplateSupplier")
-    public Supplier<RestTemplate> getRestTemplateSupplier() {
-        return () -> new RestTemplate();
-    }
-
 }
