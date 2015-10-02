@@ -17,15 +17,13 @@ public abstract class BaseRestServiceProvider {
 
     protected String dataRestServiceURL;
 
-    private Supplier<RestTemplate> restTemplateSupplier;
+    private Supplier<RestTemplate> restTemplateSupplier = () -> new RestTemplate();
 
     @Value("${ifs.data.service.rest.baseURL}")
     public void setDataRestServiceUrl(String dataRestServiceURL) {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
-    @Autowired
-    @Qualifier("restTemplateSupplier")
     public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
         this.restTemplateSupplier = restTemplateSupplier;
     }
