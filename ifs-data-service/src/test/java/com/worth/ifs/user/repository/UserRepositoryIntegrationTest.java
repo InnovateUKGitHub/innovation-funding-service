@@ -6,7 +6,6 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by dwatson on 02/10/15.
  */
-public class UserRepositoryTest extends BaseRepositoryIntegrationTest<UserRepository> {
+public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
 
     @Override
     @Autowired
@@ -44,7 +43,6 @@ public class UserRepositoryTest extends BaseRepositoryIntegrationTest<UserReposi
     }
 
     @Test
-    @Transactional
     @Rollback
     public void test_createUser() {
 
@@ -65,7 +63,6 @@ public class UserRepositoryTest extends BaseRepositoryIntegrationTest<UserReposi
     }
 
     @Test
-    @Transactional
     @Rollback
     public void test_deleteNewUser() {
 
