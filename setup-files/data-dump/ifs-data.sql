@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT IGNORE INTO `assessment` (`comments`,`temp_total_score`,`temp_recommended_value`,`submitted`,`recommendation_feedback`,`process_id`,`application`,`assessor`) VALUES ('',60,'YES','N','hey',1,1,3), (NULL,82,'YES','N',NULL,2,4,3), ('',40,'EMPTY','N','',3,5,3), (NULL,0,'EMPTY','N',NULL,4,6,3);
+INSERT IGNORE INTO `assessment` (`comments`,`temp_total_score`,`temp_recommended_value`,`submitted`,`recommendation_feedback`,`process_id`,`application`,`assessor`) VALUES ('',60,'YES','N','hey',1,1,3), (NULL,82,'EMPTY','N',NULL,2,4,3), ('',40,'EMPTY','N','',3,5,3), (NULL,0,'EMPTY','N',NULL,4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
