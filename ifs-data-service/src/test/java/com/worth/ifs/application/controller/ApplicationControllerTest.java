@@ -1,5 +1,6 @@
 package com.worth.ifs.application.controller;
 
+import com.worth.ifs.BaseControllerTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -25,29 +26,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationControllerTest {
-    @InjectMocks
-    private ApplicationController applicationController;
+public class ApplicationControllerTest extends BaseControllerTest<ApplicationController> {
 
-    @Mock
-    ApplicationRepository applicationRepositoryMock;
-    @Mock
-    ProcessRoleRepository userAppRoleRepositoryMock;
-    @Mock
-    UserRepository userRepositoryMock;
-
-    private MockMvc mockMvc;
-
-    @Before
-    public void setUp() {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
-                .build();
+    @Override
+    protected ApplicationController supplyControllerUnderTest() {
+        return new ApplicationController();
     }
 
     @Test
-     public void applicationControllerShouldReturnApplicationById() throws Exception {
+    public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
 
