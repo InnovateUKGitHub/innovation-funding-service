@@ -35,7 +35,7 @@
 		}
 	}
 
-	.boxed-list form{
+	.boxed-list.bulk-select{
 		max-width: 96%;
 		@include media-down(mobile) {
 			max-width: 92%;
