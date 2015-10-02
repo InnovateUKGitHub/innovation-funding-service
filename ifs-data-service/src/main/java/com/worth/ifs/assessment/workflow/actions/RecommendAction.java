@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +27,9 @@ public class RecommendAction implements Action<String, String> {
                     updatedAssessment.getSuitableFeedback(),
                     updatedAssessment.getComments());
 
-            assessment.setProcessStatus(context.getTransition().getTarget().getId());
+            if(!assessment.getRecommendedValue().equals(RecommendedValue.EMPTY)) {
+                assessment.setProcessStatus(context.getTransition().getTarget().getId());
+            }
             assessmentRepository.save(assessment);
         }
     }

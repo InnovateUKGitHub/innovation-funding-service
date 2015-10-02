@@ -10,21 +10,12 @@ import com.worth.ifs.assessment.workflow.guards.AssessmentGuard;
 import com.worth.ifs.assessment.workflow.guards.SubmitGuard;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.EnableStateMachine;
-import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.listener.StateMachineListener;
-import org.springframework.statemachine.listener.StateMachineListenerAdapter;
-import org.springframework.statemachine.state.State;
-import org.springframework.stereotype.Component;
-
-import java.util.EnumSet;
 
 /**
  * Describes the workflow for assessment. This is from accepting a competition to submitting the application.
@@ -63,7 +54,7 @@ public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String
                     .event(AssessmentEvents.RECOMMEND.getEvent())
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
-                    .and()
+                .and()
                 .withExternal()
                     .source(AssessmentStates.ASSESSED.getState()).target(AssessmentStates.ASSESSED.getState())
                     .event(AssessmentEvents.RECOMMEND.getEvent())
@@ -106,4 +97,5 @@ public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String
     public SubmitGuard submitGuard() {
         return new SubmitGuard();
     }
+
 }
