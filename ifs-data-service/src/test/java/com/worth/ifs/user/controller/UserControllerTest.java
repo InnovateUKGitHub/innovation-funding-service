@@ -1,16 +1,8 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.BaseControllerTest;
+import com.worth.ifs.BaseControllerMocksTest;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.user.controller.UserController;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-public class UserControllerTest extends BaseControllerTest<UserController> {
+public class UserControllerTest extends BaseControllerMocksTest<UserController> {
 
     @Override
     protected UserController supplyControllerUnderTest() {

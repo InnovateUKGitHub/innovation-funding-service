@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 /**
  * Created by dwatson on 02/10/15.
  */
-public abstract class BaseControllerTest<ControllerType> extends BaseUnitTestMocksTest {
+public abstract class BaseControllerMocksTest<ControllerType> extends BaseUnitTestMocksTest {
 
     @InjectMocks
     protected ControllerType controller = supplyControllerUnderTest();

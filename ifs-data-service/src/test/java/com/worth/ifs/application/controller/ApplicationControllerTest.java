@@ -1,21 +1,12 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.BaseControllerTest;
+import com.worth.ifs.BaseControllerMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationControllerTest extends BaseControllerTest<ApplicationController> {
+public class ApplicationControllerTest extends BaseControllerMocksTest<ApplicationController> {
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
