@@ -26,6 +26,13 @@
 		}
 	}
 
+
+	.js-enabled &{
+		input[name="submit-section"]{
+			display: none;
+		}
+	}
+
 }
 
 .question {
