@@ -17,12 +17,12 @@
 	}
 	.day span {
 		vertical-align:top;
-		font-size:22px;
+		font-size: 45px;
 	}
 	.month,.time {
-		font-size:12px;
+		font-size: 14px;
 	}
 	.time {
-		color:$grey-2;
+		color: $secondary-text-colour;
 	}
 }
