@@ -42,15 +42,20 @@ public class User {
 
     }
 
-    public User(Long id, String name, String email, String password, String token, String imageUrl,
+    public User(String name, String email, String password, String token, String imageUrl,
                 List<ProcessRole> processRoles) {
-        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.token = token;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
+    }
+
+    public User(Long id, String name, String email, String password, String token, String imageUrl,
+                List<ProcessRole> processRoles) {
+        this(name, email, password, token, imageUrl, processRoles);
+        this.id = id;
     }
 
 
