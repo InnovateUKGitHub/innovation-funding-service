@@ -14,18 +14,23 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 /**
  * Created by dwatson on 02/10/15.
  */
-public abstract class BaseControllerTest<ControllerType> extends BaseUnitTestMocksTest {
+public abstract class BaseUnitTestMocksTest {
 
-    @InjectMocks
-    protected ControllerType controller = supplyControllerUnderTest();
+    @Mock
+    protected ApplicationRepository applicationRepositoryMock;
 
-    protected MockMvc mockMvc;
+    @Mock
+    protected ApplicationFinanceRepository applicationFinanceRepository;
 
-    protected abstract ControllerType supplyControllerUnderTest();
+    @Mock
+    protected ProcessRoleRepository userAppRoleRepositoryMock;
+
+    @Mock
+    protected UserRepository userRepositoryMock;
 
     @Before
     public void setUp() {
-        super.setUp();
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
     }
 }
