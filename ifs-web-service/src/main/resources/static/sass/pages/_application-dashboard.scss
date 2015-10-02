@@ -20,12 +20,18 @@
 
 	}
 
-	.in-progress .boxed-list{
+	.my-applications .in-progress .boxed-list{
 		h4{
 			margin-bottom: 0.83em;
 		}
 		.grid-row{
 			margin: 5px 0 0 12px;
+		}
+
+		form{
+			.grid-row{
+				margin: 0 -15px;
+			}
 		}
 	}
 
