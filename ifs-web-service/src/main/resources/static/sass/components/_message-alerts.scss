@@ -7,9 +7,18 @@
 		font-size: 16px;
 		margin-bottom: 0.6em;
 	}
+	
+	.heading-small{
+		margin-top: 10px;
+	}
 
 	.heading-medium{
 		margin-top: 0;
+	}
+
+	.grid-row &{
+		margin-top: 0;
+		margin-bottom: 30px;
 	}
 }
 
