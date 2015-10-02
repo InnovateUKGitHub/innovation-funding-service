@@ -67,12 +67,12 @@
         </div>
 
         <div class="form-group">
-            <strong>Lead organisation</strong>
+            <h2 class="heading-medium">Lead organisation</h2>
             <div th:text="${leadOrganisation.getName()}"></div>
         </div>
 
         <div class="form-group">
-            <strong>Partners</strong>
+            <h2 class="heading-medium">Partners</h2>
             <ul class="list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
