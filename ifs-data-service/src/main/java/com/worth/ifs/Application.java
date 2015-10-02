@@ -6,6 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.function.Supplier;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
@@ -23,5 +28,9 @@ public class Application extends SpringBootServletInitializer {
         SpringApplication.run(Application.class, args);
     }
 
+    @Bean(name = "restTemplateSupplier")
+    public Supplier<RestTemplate> getRestTemplateSupplier() {
+        return () -> new RestTemplate();
+    }
 
 }

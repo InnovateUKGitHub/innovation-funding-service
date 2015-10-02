@@ -1,19 +1,34 @@
 package com.worth.ifs.commons.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 /**
  * BaseRestServiceProvider provides a base for all Service classes.
  */
 
-public class BaseRestServiceProvider {
+public abstract class BaseRestServiceProvider {
+
+    protected String dataRestServiceURL;
+
+    private Supplier<RestTemplate> restTemplateSupplier;
 
     @Value("${ifs.data.service.rest.baseURL}")
-    protected String dataRestServiceURL;
+    public void setDataRestServiceUrl(String dataRestServiceURL) {
+        this.dataRestServiceURL = dataRestServiceURL;
+    }
+
+    @Autowired
+    @Qualifier("restTemplateSupplier")
+    public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
+        this.restTemplateSupplier = restTemplateSupplier;
+    }
 
     /**
      * restGet is a generic method that performs a RESTful GET request.
@@ -47,6 +62,10 @@ public class BaseRestServiceProvider {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         return headers;
+    }
+
+    protected RestTemplate getRestTemplate() {
+        return restTemplateSupplier.get();
     }
 }
 
