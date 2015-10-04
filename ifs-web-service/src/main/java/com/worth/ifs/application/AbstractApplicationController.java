@@ -111,6 +111,7 @@ public abstract class AbstractApplicationController {
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, userOrganisation, userId);
         addUserDetails(model, application, userId);
+        addMarkedAsCompleteDetails(model, application, userOrganisation);
 
         userOrganisation.ifPresent(org -> {
             addAssigneableDetails(model, application, org, userId);
@@ -131,16 +132,23 @@ public abstract class AbstractApplicationController {
         });
     }
 
-    protected void addUserDetails(Model model, Application application, Long userId) {
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
-    }
-
     protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
         List<Response> responses = responseService.getByApplication(application.getId());
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
     }
 
+    protected void addUserDetails(Model model, Application application, Long userId) {
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+    }
+
+    protected  void addMarkedAsCompleteDetails(Model model, Application application, Optional<Organisation> userOrganisation) {
+        Long organisationId=0L;
+        if(userOrganisation.isPresent()) {
+            organisationId = userOrganisation.get().getId();
+        }
+        model.addAttribute("markedAsComplete", questionService.getMarkedAsComplete(application.getId(), organisationId));
+    }
     protected void addAssigneableDetails(Model model, Application application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));

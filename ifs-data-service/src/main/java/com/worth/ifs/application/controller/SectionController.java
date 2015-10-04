@@ -2,11 +2,8 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +30,9 @@ public class SectionController {
     @Autowired
     SectionRepository sectionRepository;
     @Autowired
-    QuestionStatusRepository questionStatusRepository;
+    QuestionController questionController;
 
     private final Log log = LogFactory.getLog(getClass());
-    QuestionController questionController = new QuestionController();
-
 
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
@@ -102,7 +97,7 @@ public class SectionController {
 
     private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
-        sectionIsComplete = isMainSectionComplete(section, organisationId);
+        sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
 
         // check if section has subsections, if there are subsections let the outcome depend on those subsections
         // and the section itself if it contains questions with mark as complete attached
@@ -121,14 +116,13 @@ public class SectionController {
      * @param organisationId
      * @return
      */
-    public boolean isMainSectionComplete(Section section, Long organisationId) {
+    public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
             if(!question.isMarkAsCompletedEnabled())
                 continue;
 
-            boolean questionMarkedAsComplete = question.isMarkedAsComplete(organisationId);
-
+            boolean questionMarkedAsComplete = questionController.isMarkedAsComplete(question, applicationId, organisationId);
             // if one of the questions is incomplete then the whole section is incomplete
             if(!questionMarkedAsComplete) {
                 sectionIsComplete = false;

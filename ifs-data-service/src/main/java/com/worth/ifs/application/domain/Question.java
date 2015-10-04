@@ -6,6 +6,7 @@ import com.worth.ifs.finance.domain.Cost;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Question defines database relations and a model to use client side and server side.
@@ -200,61 +201,6 @@ public class Question {
 
     public Integer getPriority() {
         return priority;
-    }
-
-    /**
-     * For e.g. the finances the questions can be marked as complete by multiple
-     * organisations, so if one of the people from an organisation marked a question as complete
-     * then it is completed for the whole organisation. However this is specifically for one organisation.
-     *
-     * @param organisationId organisation for which the mark as complete applies
-     * @return question is marked as complete
-     */
-    public boolean isMarkedAsComplete(Long organisationId) {
-        List<QuestionStatus> questionStatuses = getQuestionStatuses();
-        Boolean questionMarkedAsComplete = false;
-        for(QuestionStatus questionStatus : questionStatuses) {
-            if(multipleStatuses) {
-                if(questionStatus.getMarkedAsCompleteBy()!=null &&
-                        questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
-                    questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
-                    break;
-                }
-            } else {
-                questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
-                break;
-            }
-        }
-        if(questionMarkedAsComplete == null)
-            questionMarkedAsComplete = false;
-
-        return questionMarkedAsComplete;
-    }
-
-    /**
-     * See if one of the questions is assigned in
-     *
-     * @param organisationId organisation for which the mark as complete applies
-     * @return question is marked as complete
-     */
-    public boolean isAssigned(Long organisationId) {
-        List<QuestionStatus> questionStatuses = getQuestionStatuses();
-        Boolean questionMarkedAsComplete = false;
-        for(QuestionStatus questionStatus : questionStatuses) {
-            if(multipleStatuses) {
-                if(questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
-                    questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
-                    break;
-                }
-            } else {
-                questionMarkedAsComplete = questionStatus.getMarkedAsComplete();
-                break;
-            }
-        }
-        if(questionMarkedAsComplete == null)
-            questionMarkedAsComplete = false;
-
-        return questionMarkedAsComplete;
     }
 
     public Boolean getNeedingAssessorScore() {

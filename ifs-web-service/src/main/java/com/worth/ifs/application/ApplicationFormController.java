@@ -215,8 +215,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         // saving questions from section
-        for (Question question : questions) {
-            if (request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
+        for(Question question : questions) {
+            if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
                 String value = request.getParameter("question[" + question.getId() + "]");
                 Boolean saved = responseService.save(userId, applicationId, question.getId(), value);
                 if (!saved) {
@@ -243,9 +243,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             Long duration = null;
             if(StringUtils.hasText(durationString)){
-                try{
+                try {
                     duration = Long.parseLong(durationString);
-                }catch(NumberFormatException e){
+                } catch(NumberFormatException e){
                     // just use the null value.
                 }
             }
