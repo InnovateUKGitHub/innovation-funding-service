@@ -44,7 +44,7 @@
 
 
 /*
-##6. small elements
+##6. Small elements
 */
 @import "layout/small";
 
@@ -60,7 +60,9 @@
 @import "components/modifiers";
 @import "components/header"; 
 
-//pages
+/*
+##8. Page specific elements
+*/
 @import "pages/application-details";
 @import "pages/application-form";
 @import "pages/application-summary";

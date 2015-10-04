@@ -891,7 +891,7 @@
 &lt;div class="form-group"&gt;
     &lt;label class="form-label" for=""&gt;Full&lt;/label&gt;
     &lt;input class="width-full" id="width-full" value="100%"&gt;
-&lt;/div&gt;</textarea><h2 id="6-small-elements">6. small elements</h2>
+&lt;/div&gt;</textarea><h2 id="6-small-elements">6. Small elements</h2>
 <h3 id="text">Text</h3>
 <textarea class="preview-code" spellcheck="false">&lt;p&gt;I am &lt;strong&gt;such a strong character&lt;/strong&gt;&lt;/p&gt;
 
@@ -902,7 +902,7 @@ Hello world &lt;small&gt;(just testing smalltext)&lt;/small&gt;</textarea><h3 id
     &lt;button class="button"&gt;Button 1&lt;/button&gt;
     &lt;button class="button"&gt;Button 2&lt;/button&gt;
 &lt;/div&gt;</textarea><h3 id="subtitle-for-header">subtitle for header</h3>
-<textarea class="preview-code" spellcheck="false">&lt;p class="subtitle"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.&lt;/p&gt;</textarea><h2 id="pagination">Pagination</h2>
+<textarea class="preview-code" spellcheck="false">&lt;p class="subtitle"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.&lt;/p&gt;</textarea><h2 id="7-pagination">7. Pagination</h2>
 <p> Next and previous page navigation</p>
 <textarea class="preview-code" spellcheck="false">&lt;ul class="pagination"&gt;
     &lt;li class="prev""&gt;
@@ -930,5 +930,79 @@ Hello world &lt;small&gt;(just testing smalltext)&lt;/small&gt;</textarea><h3 id
             &lt;/li&gt;
         &lt;/ul&gt;
     &lt;/div&gt;
+&lt;/div&gt;</textarea><h2 id="8-page-specific-elements">8. Page specific elements</h2>
+<h2 id="assessor-view-application-status">Assessor view - Application Status</h2>
+<p>Different views for application status</p>
+<textarea class="preview-code" spellcheck="false">&lt;div class="app-dashboard"&gt;
+    &lt;ul class="boxed-list bulk-select"&gt;
+        &lt;li&gt;
+            &lt;div class="grid-row"&gt;
+                &lt;div class="column-assessment-details"&gt;
+                    &lt;h4 class="heading-medium"&gt;
+                        &lt;a href="/assessor/competitions/1/applications/1"&gt;A novel solution to an old problem&lt;/a&gt;
+                    &lt;/h4&gt;
+                    &lt;div&gt;&lt;p&gt;Empire Ltd&lt;/p&gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class="column-assessment-status navigation-right"&gt;
+                    &lt;div class="application-status submitted open"&gt;
+                        &lt;p&gt;Open&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;label&gt;
+                &lt;input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1"&gt;
+            &lt;/label&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;div class="grid-row"&gt;
+                &lt;div class="column-assessment-details"&gt;
+                    &lt;h4 class="heading-medium"&gt;
+                        &lt;a href="/assessor/competitions/1/applications/1"&gt;A novel solution to an old problem&lt;/a&gt;
+                    &lt;/h4&gt;
+                    &lt;div&gt;&lt;p&gt;Empire Ltd&lt;/p&gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class="column-assessment-status navigation-right"&gt;
+                    &lt;div class="application-status submitted no"&gt;
+                        &lt;p&gt;Submitted&lt;/p&gt;
+                        &lt;p class="application-listing_pending"&gt;
+                            &lt;/p&gt;&lt;h3 class="score"&gt;&lt;span&gt;60.0&lt;/span&gt;%&lt;/h3&gt;
+                            &lt;small&gt;Overall score&lt;/small&gt;
+                            &lt;div class="recommend-container"&gt;
+                                &lt;p class="recommend no"&gt; &lt;span&gt;Not recommended&lt;/span&gt; &lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;p&gt;&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;label&gt;
+                &lt;input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1"&gt;
+            &lt;/label&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;div class="grid-row"&gt;
+                &lt;div class="column-assessment-details"&gt;
+                    &lt;h4 class="heading-medium"&gt;
+                        &lt;a href="/assessor/competitions/1/applications/1"&gt;A novel solution to an old problem&lt;/a&gt;
+                    &lt;/h4&gt;
+                    &lt;div&gt;&lt;p&gt;Empire Ltd&lt;/p&gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class="column-assessment-status navigation-right"&gt;
+                    &lt;div class="application-status submitted yes"&gt;
+                        &lt;p&gt;Submitted&lt;/p&gt;
+                        &lt;p class="application-listing_pending"&gt;
+                            &lt;/p&gt;&lt;h3 class="score"&gt;&lt;span&gt;60.0&lt;/span&gt;%&lt;/h3&gt;
+                            &lt;small&gt;Overall score&lt;/small&gt;
+                            &lt;div class="recommend-container"&gt;
+                                &lt;p class="recommend yes"&gt; &lt;span&gt;Recommended&lt;/span&gt; &lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;p&gt;&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;label&gt;
+                &lt;input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1"&gt;
+            &lt;/label&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
 &lt;/div&gt;</textarea>
 </div></div><div class="col-md-3"><div role="complementary" class="bs-docs-sidebar hidden-print"><ul class="nav bs-docs-sidenav"></ul><a href="#top" class="back-to-top">Back to top</a></div></div></div></div><footer role="contentinfo" class="bs-docs-footer"><div class="container"><a href="http://www.worth.systems"><img src="./images/worth-logo.png" alt="Worth Systems"></a><p>&copy; Innovation Funding Service styleguide</p><div class="bar bottom"><div hidden class="settings container"><!-- Icons from http://iconmonstr.com--><button title="Desktop (1280)" data-width='1280'><svg viewBox="0 0 412 386" height="24" width="26" class="icon"><path d="m147.6,343.9c-4.5,15.9-26.2,37.6-42.1,42.1h201c-15.3,-4-38.1,-26.8-42.1,-42.1H147.6zM387,0.5H25c-13.8,0-25,11.2-25,25V294c0,13.8 11.2,25 25,25h362c13.8,0 25,-11.2 25,-25V25.5C412,11.7 400.8,0.5 387,0.5zM369.9,238.2H42.1L42.1,42.6 369.9,42.6V238.2z"></path></svg></button><button title="Laptop (1024)" data-width='1024'><svg viewBox="0 0 384 312" height="23" width="28" class="icon"><path d="m349.2,20.5c0,-11-9,-20-20,-20H53.6c-11,0-20,9-20,20v194H349.2v-194zm-27,167H60.6V27.5H322.2v160zm28,42H32.6L2.6,282.1c-3.5,6.2-3.5,13.8 0.1,19.9 3.6,6.2 10.2,9.9 17.3,9.9H363.1c7.1,0 13.7,-3.8 17.3,-10 3.6,-6.2 3.6,-13.8 0,-20l-30.2,-52.5zm-196.9,54 8,-23.5h60.5l8,23.5h-76.5z"></path></svg></button><button title="Tablet (768)" data-width='768'><svg viewBox="0 0 317 412" height="24" width="18" class="icon"><path d="M 316.5,380 V 32 c 0,-17.7 -14.3,-32 -32,-32 H 32 C 14.3,0 0,14.3 0,32 v 348 c 0,17.7 14.3,32 32,32 h 252.5 c 17.7,0 32,-14.3 32,-32 z M 40,367 V 45 H 276.5 V 367 H 40 z m 109.8,22.7 c 0,-4.7 3.8,-8.5 8.5,-8.5 4.7,0 8.5,3.8 8.5,8.5 0,4.7 -3.8,8.5 -8.5,8.5 -4.7,0 -8.5,-3.8 -8.5,-8.5 z"></path></svg></button><button title="Smart phone (320)" data-width='320'><svg viewBox="0 0 224 412" height="24" width="13" class="icon"><path d="M 190.7,0 H 33 C 14.8,0 0,14.8 0,33 v 346 c 0,18.2 14.8,33 33,33 h 157.7 c 18.2,0 33,-14.8 33,-33 V 33 c 0,-18.2 -14.8,-33 -33,-33 z M 94.3,30.2 h 37 c 2.2,0 4,1.8 4,4 0,2.2 -1.8,4 -4,4 h -37 c -2.2,0 -4,-1.8 -4,-4 0,-2.2 1.8,-4 4,-4 z m 18.5,362.8 c -8.8,0 -16,-7.2 -16,-16 0,-8.8 7.2,-16 16,-16 8.8,0 16,7.2 16,16 0,8.8 -7.2,16 -16,16 z M 198.6,343.8 H 25.1 V 68.2 h 173.5 v 275.5 z"></path></svg></button><button title="Feature phone (240)" data-width='240'><svg viewBox="0 0 201 412" height="24" width="12" class="icon"><path d="M 165.5,0.2 V 45 H 25 c -13.8,0 -25,11.2 -25,25 V 387 c 0,13.8 11.2,25 25,25 h 150.5 c 13.8,0 25,-11.2 25,-25 V 0.2 h -35 z M 65.2,366.5 H 34.2 v -24.5 h 31 v 24.5 z m 0,-44.3 H 34.2 v -24.5 h 31 v 24.5 z m 50.5,44.3 H 84.7 v -24.5 h 31 v 24.5 z m 0,-44.3 H 84.7 v -24.5 h 31 v 24.5 z m 50.5,44.3 h -31 v -24.5 h 31 v 24.5 z m 0,-44.3 h -31 v -24.5 h 31 v 24.5 z m 0,-59.3 h -132 V 95.4 h 132 V 262.9 z"></path></svg></button><button title="Random size" data-width="auto" class="random">Random</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div></div></footer><script>(function(){var a=[{title:"docs",filename:"docs",url:"docs.html"},{title:"",filename:"docs",url:"docs.html#"},{title:"GOV.UK Elements",filename:"docs",url:"docs.html#govuk-elements"},{title:"Nomensa/Worth Elements",filename:"docs",url:"docs.html#nomensaworth-elements"}];(function(){"use strict";var a=function(a,b){return Array.prototype.indexOf.call(a,b)!==-1},b=function(a,b){return Array.prototype.filter.call(a,b)},c=function(a,b){return Array.prototype.forEach.call(a,b)},d=document.getElementsByTagName("body")[0];(function(){var c=d.getElementsByClassName("bs-docs-sidenav")[0];if(!c)return;b(d.getElementsByTagName("*"),function(b){return a(["h1","h2","h3"],b.tagName.toLowerCase())}).map(function(a){var b=document.createElement("li"),d=document.createElement("a"),e=a.tagName.toLowerCase()[1];d.classList.add("lv"+e),b.appendChild(d),d.href="#"+a.id,d.innerHTML=a.innerHTML,c.appendChild(b)}),c.removeChild(c.firstChild)})(),function(){var a=d.getElementsByClassName("preview-code");if(!a)return;c(a,function(a){a.classList.add("highlight")})}(),function(){var a=d.querySelectorAll(".bs-docs-section>h1");if(!a)return;c(a,function(a){a.classList.add("page-header")})}()})(),function(){"use strict";if(location.hash==="#__preview__"||location.protocol==="data:")return;var a=function(a,b){return Array.prototype.forEach.call(a,b)},b=function(a,b){var e=Array.prototype.slice.call(arguments,2);return d(a,function(a){return(c(b)?b||a:a[b]).apply(a,e)})},c=function(a){return Object.prototype.toString.call(a)==="[object Function]"},d=function(a,b){return Array.prototype.map.call(a,b)},e=function(a,b){return d(a,function(a){return a[b]})},f=function(a){var b={},c=a.split(";");for(var d=0;c.length>d;d++){var e=c[d].trim().split("=");b[e[0]]=e[1]}return b},g=function(a,c){return b(e(a,"classList"),"remove",c)},h=function(a,b){a.contentDocument.defaultView.postMessage(b,"*")},i=document.getElementsByTagName("head")[0],j=document.getElementsByTagName("body")[0],k=e(i.querySelectorAll('style[type="text/preview"]'),"innerHTML").join(""),l=e(i.querySelectorAll('script[type="text/preview"]'),"innerHTML").join(""),m=location.href.split("#")[0]+"#__preview__",n=document.createElement("iframe");n.src="data:text/html,",j.appendChild(n),n.addEventListener("load",function(){var b={sameOriginDataUri:!1};try{this.contentDocument,this.contentDocument||(b.sameOriginDataUri=!1)}catch(c){b.sameOriginDataUri=!1}this.parentNode.removeChild(this),a(j.getElementsByTagName("textarea"),function(a,c){o(a,b,c),q(),p(a)})});var o=function(a,b,c){var d,e,f;d=document.createElement("div"),d.appendChild(e=document.createElement("div")),d.className="bs-example",e.appendChild(f=document.createElement("iframe")),e.className="resizeable",f.setAttribute("scrolling","no"),f.name="iframe"+c++,f.addEventListener("load",function(){var c,d,e,f,g,i,j;j=this.contentDocument;if(!b.sameOriginDataUri&&this.src!==m)return;this.src===m&&(c=j.createElement("html"),c.className="js-enabled",c.appendChild(j.createElement("head")),c.appendChild(d=j.createElement("body")),d.innerHTML=a.textContent,j.replaceChild(c,j.documentElement)),g=j.createElement("head"),g.appendChild(f=j.createElement("style")),g.appendChild(e=j.createElement("script")),e.textContent=l,f.textContent=k,i=j.getElementsByTagName("head")[0],i.parentNode.replaceChild(g,i),h(this,"getHeight")});var g;b.sameOriginDataUri?g="data:text/html;charset=utf-8,"+encodeURIComponent("<!doctype html><html><head></head></body>"+a.textContent):g=m,f.setAttribute("src",g);var i=function(){f.contentDocument.body.innerHTML=this.value,h(f,"getHeight")};a.addEventListener("keypress",i),a.addEventListener("keyup",i),a.parentNode.insertBefore(d,a)},p=function(a){var b=document.createElement("div");b.className="preview-code",b.style.position="absolute",b.style.top=0,b.style.left="-9999px",j.appendChild(b);var c=parseInt(window.getComputedStyle(a).getPropertyValue("max-height"),10),d=function(a){b.textContent=this.value+"\n";var d=b.offsetHeight+2;d>=c?this.style.overflow="auto":this.style.overflow="hidden",this.style.height=b.offsetHeight+2+16+"px"};a.addEventListener("keypress",d),a.addEventListener("keyup",d),d.call(a)},q=function(){var b=j.getElementsByClassName("settings")[0],c=j.getElementsByClassName("resizeable"),d=30,e=function(b){document.cookie="preview-width="+b,a(c,function(a){b==="auto"&&(b=a.parentNode.offsetWidth),a.style.width=b+"px",h(a.getElementsByTagName("iframe")[0],"getHeight")})},i=f(document.cookie)["preview-width"];if(i){e(i),g(b.getElementsByClassName("is-active"),"is-active");var k=b.querySelector('button[data-width="'+i+'"]');k&&k.classList.add("is-active")}window.addEventListener("message",function(a){if(a.data==null||!a.source)return;var b=a.data,c=document.getElementsByName(a.source.name)[0];b.height!=null&&c&&(c.parentNode.style.height=b.height+d+"px")},!1),b&&c.length>0&&(b.hidden=!1,b.addEventListener("click",function(a){var c=a.target.tagName.toLowerCase(),d;if(c==="button")d=a.target;else{if(c!=="svg")return;d=a.target.parentNode}a.preventDefault(),g(b.getElementsByClassName("is-active"),"is-active"),d.classList.add("is-active");if(d.classList.contains("random")==1)var f=Math.floor(Math.random()*785+240);else var f=d.dataset.width;e(f)}))}}()})()</script><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script><script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><script src="./js/docs.min.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
