@@ -122,14 +122,14 @@ public class ApplicationController {
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        log.debug("Total questions" + totalQuestions);
-        log.debug("Total completed questions" + countCompleted);
+        log.info("Total questions" + totalQuestions);
+        log.info("Total completed questions" + countCompleted);
 
         double percentageCompleted;
         if(questions.size() == 0){
             percentageCompleted = 0;
         }else{
-            percentageCompleted = (100 / totalQuestions) * countCompleted;
+            percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
 
         ObjectMapper mapper = new ObjectMapper();
