@@ -4,8 +4,8 @@ Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 
 *** Variables ***
-${reject_application_name}    Analytical technologies for biopharmaceuticals
-${accept_application_name}    Security for the Internet of Things
+${reject_application_name}    Security for the Internet of Things
+${accept_application_name}    A novel solution to an old problem
 ${competition_name}    Technology Inspired
 ${deadline_month}    december
 ${deadline_day}    31
@@ -98,7 +98,7 @@ Assessor clicks the competition
     Click Element    link=${competition_name}
 
 Assessor clicks the Review Button
-    Click Element    link=Review applications
+    Click Element    link=Review assessment
 
 Assessor selects "No"
     Select From List    xpath=//*[@name="is-suitable-for-funding"]    No
