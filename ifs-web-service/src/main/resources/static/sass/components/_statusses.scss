@@ -1,4 +1,5 @@
-//statusses
+
+//statuses
 	
 %mark-done-right {
 	background-image:  url('../images/field/field-done-right.png');
@@ -40,8 +41,8 @@
 	background-repeat: no-repeat;
 }
 
-//statusses in the collapsible
-.collapsible {
+
+.collapsible { 
 	
 	h2{
 		span.section-status.place-in-header {
@@ -123,7 +124,34 @@
 
 }
 
-//wrapped-textarea 
+
+/*
+###Wrapped text areas
+Complete
+```
+<div class="textarea-wrapped marked-as-complete word-count">
+	<div class="textarea-header">
+		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>	   
+    </div>
+        
+	<textarea data-max_words="500" id="12" name="question[12]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+	</textarea>
+</div>
+```
+
+Assigned to me
+```
+<div class="textarea-wrapped assigned-to-me word-count">
+	<div class="textarea-header">
+		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>	   
+    </div>
+        
+	<textarea data-max_words="500" id="12" name="question[12]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+	</textarea>
+</div>
+```
+*/
+
 .textarea-wrapped {
 	&.marked-as-complete .textarea-header {
 		@extend %mark-done-left;
@@ -139,7 +167,21 @@
         background-color:$grey-4;
     }
 
-} 
+}
+
+
+/*
+###Application sidebar statuses
+```
+<nav role="navigation" class="app-sidebar">
+	<ul>
+		<li><a href="#">Item 1</a></li>
+		<li class="section-status assigned"><a href="#">Item 2</a></li>
+		<li class="section-status complete"><a href="#">Item 3</a></li>
+	</ul>
+</nav>
+```
+*/
 
 .app-sidebar .section-status a {
 	background-position: 98% center;

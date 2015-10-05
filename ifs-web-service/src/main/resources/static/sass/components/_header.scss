@@ -1,3 +1,36 @@
+/*
+
+```
+<header role="banner" id="global-header">
+	<div class="header-wrapper">
+		<div class="header-global">
+			<div>
+				<div class="header-logo">
+					<a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
+						<img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="Innovate UK logo">GOV.UK
+					</a>
+				</div>
+				<p class="innovate-title">Innovation Funding Service</p>
+			</div>
+			<div>
+				<div class="header-links">
+					<ul class="navigation-list navigation-right">
+						<li>
+							<a href="/applicant/dashboard">My dashboard</a>
+						</li>
+						<li>
+							<a href="/logout">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+```
+*/
+
+
 #global-header{
 
 	.header-global{
