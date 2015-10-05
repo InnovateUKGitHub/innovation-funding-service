@@ -1,3 +1,27 @@
+/*
+
+###Message Alert Dialog
+Large message panel
+
+```
+<div class="message-alert">
+    <h1 class="heading-medium">
+        New request for assessment
+    </h1>
+
+    <p>
+      You have been requested to act as an assessor on a new competition: <strong>Solving urban problems with data</strong> 
+    </p>
+
+    <ul class="message-summary-list">
+      <li><strong><a href="#">Respond to assessment request</a></strong></li>
+    </ul>
+ </div>
+
+ ```
+*/
+ 
+
 .message-alert{
 	background: #e4eff6 url(../images/message-alert.png) 25px 25px no-repeat;
 	padding: 20px 20px 20px 130px;
@@ -5,10 +29,20 @@
 
 	p{
 		font-size: 16px;
+		margin-bottom: 0.6em;
+	}
+	
+	.heading-small{
+		margin-top: 10px;
 	}
 
 	.heading-medium{
-		margin: 0;
+		margin-top: 0;
+	}
+
+	.grid-row &{
+		margin-top: 0;
+		margin-bottom: 30px;
 	}
 }
 
@@ -19,6 +53,18 @@
     min-height: 54px;
     padding-left: 70px;
 }
+
+
+/*
+
+###Small Alert Dialog
+Small dialog warning usually used as a warning before submitting a form
+
+```
+<p class="form-hint icon-info-small-blue">Only you can see this level of detail</p>
+
+ ```
+*/
 
 .icon-info-small-blue{
 	background: url(../images/icons/icon-information.png) no-repeat;

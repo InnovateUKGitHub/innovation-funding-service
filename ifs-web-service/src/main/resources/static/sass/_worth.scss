@@ -34,6 +34,7 @@
 ##4. Event alert 
 */
 @import "components/event-alert";
+@import "components/message-alerts";
 
 /* 
 ##5. Extra form elements 
@@ -43,7 +44,7 @@
 
 
 /*
-##6. small elements
+##6. Small elements
 */
 @import "layout/small";
 
@@ -56,11 +57,12 @@
 @import "layout/a11y";
 @import "components/competition-deadline";
 @import "components/statusses";
-@import "components/message-alerts";
 @import "components/modifiers";
 @import "components/header"; 
 
-//pages
+/*
+##8. Page specific elements
+*/ 
 @import "pages/application-details";
 @import "pages/application-form";
 @import "pages/application-summary";

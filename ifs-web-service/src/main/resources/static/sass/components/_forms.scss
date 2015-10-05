@@ -37,6 +37,42 @@ table td input{
     }
 }
 
+
+/*
+
+###Input sizes
+Used to define input widths, so they can be more specific to digits that need to ne entered. Used particularly for numerical fields
+
+```
+<div class="form-group">
+    <label class="form-label" for="">Extra small</label>
+    <input class="width-extra-small" id="width-extra-small" value="65px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small</label>
+    <input class="width-small" id="width-small" value="80px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small medium</label>
+    <input class="width-small-medium" id="width-small-medium" value="100px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Medium</label>
+    <input class="width-medium" id="width-medium" value="150px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">LARGE</label>
+    <input class="width-large" id="width-large" value="200px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Full</label>
+    <input class="width-full" id="width-full" value="100%">
+</div>
+ ```
+*/
+
+
+
 .width-extra-small{
     width: 65px;
 }

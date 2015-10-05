@@ -27,7 +27,7 @@ cp -r ./sass-docs/js ./docs
 #FILEPATH=`pwd`
 #open -a "Google Chrome"  "$FILEPATH/docs/index.html"
 #
-open -a "Google Chrome"  "http://localhost:8085/docs/index.html"
+open -a "Google Chrome"  "http://localhost:8080/docs/index.html"
 
 #remove css-docs folder
 if [ -d "./css-docs" ]; then
