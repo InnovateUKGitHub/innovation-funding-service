@@ -775,10 +775,12 @@
                 <tbody>
                 <tr>
                     <th>Total costs</th>
-                    <td class="numeric">£208,000</td>
-                    <td class="numeric">-</td>
-                    <td class="numeric">£5,000</td>
-                    <td class="numeric">£5,000</td>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                    </td>
+                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                    </div>
                 </tr>
                 <tr>
                     <th>% Grant</th>
