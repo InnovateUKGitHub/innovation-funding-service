@@ -15,6 +15,8 @@ ${competition_details_page_title}    Competition Details
 @{competitions_assessment_progress_after}    1    3
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
+${accept_application_first_question_title}    How does this application align with the specific competition scope?
+${persistence_application_name}    A novel solution to an old problem
 
 *** Test Cases ***
 Assessment progress is 1 out of 4
@@ -37,31 +39,48 @@ Applications details page has two lists
 
 Application invitation review page shows the title
     Given Assessor is viewing the Competitions Applications list
-    When Assessor opens a pending application    ${accept_application_name}
+    When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
     Given Assessor is viewing the Competitions Applications list
-    When Assessor opens a pending application    ${accept_application_name}
+    When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
 
 Application state changes when accepting an invitation for assessment
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
-    When Assessor opens a pending application    ${accept_application_name}
+    When Assessor opens an application    ${accept_application_name}
     and Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
 Application state changes when rejecting an invitation for assessment
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
-    Given Assessor opens a pending application    ${reject_application_name}
+    Given Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
     and Assessor enters the reason for rejection
     Then Application is not visible in the applications list    ${reject_application_name}
 
+Application Summary sections can be opened and closed
+    [Documentation]    INFUND-354
+    Given Assessor is viewing the Competitions Applications list
+    When Assessor opens an application    ${accept_application_name}
+    and Assessor clicks the Review Button
+    and the Assessor clicks a collapsible section
+    Then the Section contents will be visible
+
+Application Summary sections contain questions
+    [Documentation]    INFUND-354
+    Given Assessor is viewing the Competitions Applications list
+    When Assessor opens an application    ${accept_application_name}
+    and Assessor clicks the Review Button
+    and the Assessor clicks a collapsible section
+    Then the Section contents will contain a question    ${accept_application_first_question_title}
+
 Application Summary shows your feedback when appropriate
-    Given Assessor opens a pending application    ${accept_application_name}
+    Given Assessor is viewing the Competitions Applications list
+    Given Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
     When Assessor selects "No"
     Then Your feedback textarea appears
@@ -92,6 +111,18 @@ Competition for Assessment count
 Assessment progress is 1 out of 3
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
+
+Application Review changes are persisted when saving
+    [Documentation]    INFUND-354
+    ${section_name} =    Set Variable    Scope
+    ${feedback_selection_value} =    Set Variable    No
+    ${feedback_textarea_value} =     Set Variable    Test feedback text UNIQUE123
+    Given Assessor is viewing the Competitions Applications list
+    and Assessor opens an application    ${persistence_application_name}
+    and Assessor clicks a section    ${section_name}
+    When the assessor enters feedback    ${feedback_selection_value}    ${feedback_textarea_value}
+    and refreshes the page
+    Then the feedback should be present    ${feedback_selection_value}    ${feedback_textarea_value}
 
 *** Keywords ***
 Assessor clicks the competition
@@ -134,7 +165,7 @@ Application is not visible in the applications list
     [Arguments]    ${application_name}
     Page Should Not Contain Element    xpath=//li//a[contains(text(),'${application_name}')]
 
-Assessor opens a pending application
+Assessor opens an application
     [Arguments]    ${application_name}
     Click Element    xpath=//li//a[contains(text(),'${application_name}')]
 
@@ -190,3 +221,32 @@ Assessor save while Your Feedback is empty
 
 Form will not be submitted
     Location Should Contain    summary
+
+the Assessor clicks a collapsible section
+    Click Element    xpath=//*[@aria-controls="collapsible-1"]
+
+the Section contents will be visible
+    Wait Until Element Is Visible    xpath=//*[@id="collapsible-1"]
+
+the Section contents will contain a question
+    [Arguments]    ${question_title}
+    Wait Until Element Is Visible    xpath=//*[@id="collapsible-1"]//*[contains(text(), "${question_title}")]
+
+Assessor clicks a section
+    [Arguments]    ${section_name}
+    Click Element    link=${section_name}
+
+the assessor enters feedback
+    [Arguments]    ${feedback_dropdown_value}    ${feedback_text_value}
+    Select From List    xpath=//*[@class="question"]//select    ${feedback_dropdown_value}
+    Input Text    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
+    Sleep    1s
+
+refreshes the page
+    Reload Page
+
+the feedback should be present
+    [Arguments]    ${feedback_dropdown_value}    ${feedback_text_value}
+    ${selected_value} =    Get Selected List Value    xpath=//*[@class="question"]//select
+    Should Be Equal As Strings    ${selected_value}    ${feedback_dropdown_value}
+    Textarea Value Should Be    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
