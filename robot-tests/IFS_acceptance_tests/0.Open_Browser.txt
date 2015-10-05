@@ -1,49 +1,39 @@
 *** Settings ***
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
+Resource          Login_actions.txt
 
 *** Variables ***
 
 *** Test Cases ***
 Open browser(Firefox)
     [Tags]    Applicant    Assessor
-    The user opens the browser
+    The guest user opens the browser
 
 Log-in (Lead Applicant)
     [Tags]    Applicant
-    When the guest user inserts applicant user name & password    steve.smith@empire.com    test
+    When The guest user inserts user email & password    steve.smith@empire.com    test
     And the guest user clicks the log-in button
     Then the guest user should be logged-in as Applicant and redirected to the My applications page
 
 Log-in (Collaborator 1)
-    When the guest user inserts applicant user name & password    jessica.doe@ludlow.co.uk    test
+    When The guest user inserts user email & password    jessica.doe@ludlow.co.uk    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as Collaborator
 
 Log-in (Collaborator 2)
-    When the guest user inserts applicant user name & password    pete.tom@egg.com    test
+    When The guest user inserts user email & password    pete.tom@egg.com    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as Collaborator
 
 Log-in(Assessor)
     [Documentation]    INFUND-286
     [Tags]    Assessor
-    When the guest user inserts applicant user name & password    paul.plum@gmail.com    test
+    When The guest user inserts user email & password    paul.plum@gmail.com    test
     And the guest user clicks the log-in button
     Then the user should be logged-in as an Assessor
 
 *** Keywords ***
-The user opens the browser
-    Open Browser    ${SERVER}
-
-the guest user inserts applicant user name & password
-    [Arguments]    ${USERNAME}    ${PSW}
-    Input Text    id=id_email    ${USERNAME}
-    Input Password    id=id_password    ${PSW}
-
-the guest user clicks the log-in button
-    Click Button    css=input.button
-
 the guest user should be logged-in as Applicant and redirected to the My applications page
     Element Should Be Visible    link=Logout
 

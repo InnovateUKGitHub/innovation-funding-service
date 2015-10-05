@@ -1,7 +1,9 @@
 *** Settings ***
 Documentation     INFUND-337
+Suite Setup       Login as user    ${assessor_email}    ${assessor_password}
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
+Resource          Login_actions.txt
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -17,9 +19,12 @@ ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does this application align with the specific competition scope?
 ${persistence_application_name}    A novel solution to an old problem
+${assessor_email}    paul.plum@gmail.com
+${assessor_password}    test
 
 *** Test Cases ***
 Assessment progress is 1 out of 4
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
@@ -38,11 +43,13 @@ Applications details page has two lists
     and Page should contain a list with the submitted assessments
 
 Application invitation review page shows the title
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
@@ -64,6 +71,7 @@ Application state changes when rejecting an invitation for assessment
 
 Application Summary sections can be opened and closed
     [Documentation]    INFUND-354
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -72,6 +80,7 @@ Application Summary sections can be opened and closed
 
 Application Summary sections contain questions
     [Documentation]    INFUND-354
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -79,6 +88,7 @@ Application Summary sections contain questions
     Then the Section contents will contain a question    ${accept_application_first_question_title}
 
 Application Summary shows your feedback when appropriate
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -88,32 +98,42 @@ Application Summary shows your feedback when appropriate
     Then Your feedback textarea disappears
 
 Application Summary returns an error message when submitting empty feedback
+    [Tags]    Assessor
+    Given Assessor is viewing the Competitions Applications list
+    Given Assessor opens an application    ${accept_application_name}
+    and Assessor clicks the Review Button
     When Assessor selects "No"
     and Assessor save while Your Feedback is empty
     Then form will not be submitted
 
 Assessor can see the competitions that he/she accepted
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Assessor sees competitions he or she accepted
 
 Competition has a deadline
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competition has a deadline
 
 Competition has days remaining
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competition has a number of days remaining
 
 Competition for Assessment count
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions for Assessment shows an amount of competitions
 
 Assessment progress is 1 out of 3
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
 Application Review changes are persisted when saving
     [Documentation]    INFUND-354
+    [Tags]    Assessor
     ${section_name} =    Set Variable    Scope
     ${feedback_selection_value} =    Set Variable    No
     ${feedback_textarea_value} =     Set Variable    Test feedback text UNIQUE123
