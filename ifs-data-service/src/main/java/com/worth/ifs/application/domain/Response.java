@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.worth.ifs.application.domain.ResponseAssessorFeedback.createForResponseAndAssessor;
-import static com.worth.ifs.util.IfsFunctions.ifPresent;
+import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 @Entity
 public class Response {
