@@ -41,9 +41,8 @@ public class ApplicationController {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ResponseRepository responseRepository;
+    QuestionController questionController;
 
-    QuestionController questionController = new QuestionController();
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -113,24 +112,24 @@ public class ApplicationController {
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
-                        .filter(q -> q.hasMultipleStatuses() && q.isMarkedAsComplete(org.getId())).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, org.getId())).count())
                 .sum();
         Long countSingleStatusQuestionsCompleted = questions.stream()
-                        .filter(q -> !q.hasMultipleStatuses() && q.isMarkedAsComplete(0L)).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
         Long totalMultipleStatusQuestions = questions.stream().filter(q -> q.hasMultipleStatuses()).count() * organisations.size();
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        log.debug("Total questions" + totalQuestions);
-        log.debug("Total completed questions" + countCompleted);
+        log.info("Total questions" + totalQuestions);
+        log.info("Total completed questions" + countCompleted);
 
         double percentageCompleted;
         if(questions.size() == 0){
             percentageCompleted = 0;
         }else{
-            percentageCompleted = (100 / totalQuestions) * countCompleted;
+            percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
 
         ObjectMapper mapper = new ObjectMapper();

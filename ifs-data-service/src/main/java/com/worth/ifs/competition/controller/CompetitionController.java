@@ -19,10 +19,7 @@ import java.util.List;
 public class CompetitionController {
     @Autowired
     CompetitionsRepository repository;
-
-
     private final Log log = LogFactory.getLog(getClass());
-
 
     @RequestMapping("/findById/{id}")
     public Competition getCompetitionById(@PathVariable("id") final Long id) {
@@ -36,14 +33,6 @@ public class CompetitionController {
 
     @RequestMapping("/findAll")
     public List<Competition> findAll() {
-
-
-
-
         return repository.findAll();
-
     }
-
-
-
-    }
+}

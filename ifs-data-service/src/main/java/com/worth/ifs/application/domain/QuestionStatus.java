@@ -105,4 +105,5 @@ public class QuestionStatus {
     public void setNotified(Boolean notified) {
         this.notified = notified;
     }
+
 }

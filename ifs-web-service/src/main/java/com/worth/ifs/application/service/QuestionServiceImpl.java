@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,4 +70,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
+    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
+        return questionRestService.getMarkedAsComplete(applicationId, organisationId);
+    }
 }

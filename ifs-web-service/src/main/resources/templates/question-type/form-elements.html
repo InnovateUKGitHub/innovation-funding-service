@@ -149,7 +149,7 @@
 <div th:fragment="form-textarea-wrapped">
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
-                            (${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} ? 'marked-as-complete' :
+                            (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
                                 (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')
                             )
                        )
@@ -161,7 +161,7 @@
          th:with="currentUser=${#authentication.getDetails()}">
         <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
-            <div th:unless="${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)}"
+            <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
         <div th:include="question-type/form-elements :: form-textarea (
@@ -169,7 +169,7 @@
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
-		 					    question.isMarkedAsComplete(userOrganisation.id)} or
+		 					    markedAsComplete?.contains(question.id)} or
 		 					    ${(currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId() and  questionAssignee?.getAssignee()!=null) or
 		 					    (questionAssignee?.getAssignee()==null and !userIsLeadApplicant)},
 		 					name='question['+${question.getId()}+']'
@@ -178,7 +178,7 @@
 
         <div class="textarea-footer">
 
-            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and question?.isMarkedAsComplete(userOrganisation.id)} or ${!userIsLeadApplicant}"
+            <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
             <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
@@ -233,11 +233,11 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <button th:if="${question.isMarkAsCompletedEnabled() and not question.isMarkedAsComplete(userOrganisation.id)}" type="submit"
+    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}" type="submit"
             name="mark_as_complete" th:value="${question.getId()}" class="buttonlink"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
-    <button th:if="${question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id)}" type="submit"
+    <button th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" type="submit"
             name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>

@@ -1,5 +1,6 @@
 package com.worth.ifs.application.controller;
 
+import com.sun.javafx.scene.control.behavior.OptionalBoolean;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * QuestionController exposes question data through a REST API.
@@ -63,14 +67,14 @@ public class QuestionController {
         setComplete(questionId, applicationId, markedAsInCompleteById, false);
     }
 
-    private void setComplete(Long questionId, Long applicationId, Long markedById, boolean markedAsComplete) {
+    private void setComplete(Long questionId, Long applicationId, Long markedById, boolean markAsComplete) {
         ProcessRole markedAsCompleteBy = processRoleRepository.findOne(markedById);
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
         QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, markedById);
         if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markedAsComplete);
-        } else if (markedAsComplete) {
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+        } else if (markAsComplete) {
             questionStatus.markAsComplete();
         } else {
             questionStatus.markAsInComplete();
@@ -103,6 +107,23 @@ public class QuestionController {
         questionStatusRepository.save(questionStatus);
     }
 
+    @RequestMapping(value="/getMarkedAsComplete/{applicationId}/{organisationId}")
+    public Set<Long> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
+                                         @PathVariable("organisationId") Long organisationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
+        Set<Long> questionsMarkedAsComplete = questions
+                .stream()
+                .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
+                        .stream()
+                        .anyMatch(qs ->
+                                (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, applicationId, organisationId).orElse(Boolean.FALSE)) ||
+                                (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
+                .map(Question::getId).collect(Collectors.toSet());
+        return questionsMarkedAsComplete;
+    }
+
+
     private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, Long applicationId, Long assigneeId) {
         if(question.hasMultipleStatuses()) {
             return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(question.getId(), applicationId, assigneeId);
@@ -127,7 +148,6 @@ public class QuestionController {
         return null;
     }
 
-
     @RequestMapping(value="/updateNotification/{questionStatusId}/{notify}")
     public void updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                        @PathVariable("notify") final Boolean notify) {
@@ -144,5 +164,51 @@ public class QuestionController {
     @RequestMapping(value="/findByCompetition/{competitionId}")
     public List<Question> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionRepository.findByCompetitionId(competitionId);
+    }
+
+    public Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
+        if(question.hasMultipleStatuses()) {
+            return isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId);
+        } else {
+            return isMarkedAsCompleteForSingleStatus(question.getId(), applicationId);
+        }
+    }
+
+    private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+
+        for(QuestionStatus questionStatus : questionStatuses) {
+            Optional<Boolean> markedAsComplete = isMarkedAsCompleteForOrganisation(questionStatus, applicationId, organisationId);
+            if(markedAsComplete.isPresent()) {
+                return markedAsComplete.get();
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    private Boolean isMarkedAsCompleteForSingleStatus(Long questionId, Long applicationId) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+        if(questionStatuses!=null && questionStatuses.size() > 0) {
+            return isMarkedAsCompleteForSingleStatus(questionStatuses.get(0)).orElse(Boolean.FALSE);
+        }
+        return Boolean.FALSE;
+    }
+
+
+    private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, Long applicationId, Long organisationId) {
+        Boolean markedAsComplete = null;
+        if (questionStatus.getMarkedAsCompleteBy() != null &&
+                questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
+            markedAsComplete = questionStatus.getMarkedAsComplete();
+        }
+        return Optional.ofNullable(markedAsComplete);
+    }
+
+    private Optional<Boolean> isMarkedAsCompleteForSingleStatus(QuestionStatus questionStatus) {
+        Boolean markedAsComplete = null;
+        if(questionStatus!=null) {
+            markedAsComplete = questionStatus.getMarkedAsComplete();
+        }
+        return Optional.ofNullable(markedAsComplete);
     }
 }

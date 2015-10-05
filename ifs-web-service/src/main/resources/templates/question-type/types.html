@@ -118,7 +118,7 @@
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and question.isMarkedAsComplete(userOrganisation.id))} ? 'complete' : '')"
+                    <div th:replace="question-type/types :: ${question.getQuestionType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')"
                          th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
                 </div>
             </div>
@@ -151,8 +151,8 @@
                         <td>
                             <input type="number"
                                    th:class="${'width-small'}"
-                                   th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'}"
-                                   th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem.id}"
+                                   th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
+                                   th:name="${type + '-workingDays-' + costCategory.workingDaysPerYearCostItem?.id}"
                                    th:value="${costCategory.workingDaysPerYear}"
                             />
                         </td>

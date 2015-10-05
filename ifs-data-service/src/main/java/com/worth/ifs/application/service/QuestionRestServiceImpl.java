@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestionRestServiceImpl extends BaseRestServiceProvider implements  QuestionRestService {
@@ -45,5 +47,13 @@ public class QuestionRestServiceImpl extends BaseRestServiceProvider implements 
     public void updateNotification(Long questionStatusId, Boolean notify) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(dataRestServiceURL + questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify , questionStatusId, notify);
+    }
+
+    @Override
+    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Long[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + questionRestURL + "/getMarkedAsComplete/" + applicationId + "/" + organisationId, Long[].class);
+        Long[] questionIds = responseEntity.getBody();
+        return new HashSet<Long>(Arrays.asList(questionIds));
     }
 }
