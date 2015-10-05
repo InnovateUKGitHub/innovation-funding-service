@@ -1,82 +1,122 @@
 /*
 
-## Assessor view - Application Status
-Different views for application status
+## Assessor view - Applications for assessment
+Each row appears as a list item within 'boxed-list', the status column changes colour depending on whether it is submitted and recommended, or submitted and not recommended. The boxed-list also has an extra class of 'bulk-select', this allows room for the bulk select checkboxes to appear to the right of each row. 
 
 ```
 <div class="app-dashboard">
-	<ul class="boxed-list bulk-select">
-		<li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h4 class="heading-medium">
-	                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-	                </h4>
-	                <div><p>Empire Ltd</p></div>
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="application-status submitted open">
-	                    <p>Open</p>
-	                </div>
-	            </div>
-	        </div>
-	        <label>
-	            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-	        </label>
-	    </li>
-	    <li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h4 class="heading-medium">
-	                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-	                </h4>
-	                <div><p>Empire Ltd</p></div>
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="application-status submitted no">
-	                    <p>Submitted</p>
-	                    <p class="application-listing_pending">
-	                        </p><h3 class="score"><span>60.0</span>%</h3>
-	                        <small>Overall score</small>
-	                        <div class="recommend-container">
-	                            <p class="recommend no"> <span>Not recommended</span> </p>
-	                        </div>
-	                    <p></p>
-	                </div>
-	            </div>
-	        </div>
-	        <label>
-	            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-	        </label>
-	    </li>
-		<li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h4 class="heading-medium">
-	                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-	                </h4>
-	                <div><p>Empire Ltd</p></div>
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="application-status submitted yes">
-	                    <p>Submitted</p>
-	                    <p class="application-listing_pending">
-	                        </p><h3 class="score"><span>60.0</span>%</h3>
-	                        <small>Overall score</small>
-	                        <div class="recommend-container">
-	                            <p class="recommend yes"> <span>Recommended</span> </p>
-	                        </div>
-	                    <p></p>
-	                </div>
-	            </div>
-	        </div>
-	        <label>
-	            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-	        </label>
-	    </li>
-	</ul>
+	<div class="in-progress">
+		<ul class="boxed-list bulk-select">
+			<li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h4 class="heading-medium">
+		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
+		                </h4>
+		                <div><p>Empire Ltd</p></div>
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="application-status submitted open">
+		                    <p>Open</p>
+		                </div>
+		            </div>
+		        </div>
+		        <label>
+		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
+		        </label>
+		    </li>
+		    <li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h4 class="heading-medium">
+		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
+		                </h4>
+		                <div><p>Empire Ltd</p></div>
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="application-status submitted no">
+		                    <p>Submitted</p>
+		                    <p class="application-listing_pending">
+		                        </p><h3 class="score"><span>60.0</span>%</h3>
+		                        <small>Overall score</small>
+		                        <div class="recommend-container">
+		                            <p class="recommend no"> <span>Not recommended</span> </p>
+		                        </div>
+		                    <p></p>
+		                </div>
+		            </div>
+		        </div>
+		        <label>
+		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
+		        </label>
+		    </li>
+			<li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h4 class="heading-medium">
+		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
+		                </h4>
+		                <div><p>Empire Ltd</p></div>
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="application-status submitted yes">
+		                    <p>Submitted</p>
+		                    <p class="application-listing_pending">
+		                        </p><h3 class="score"><span>60.0</span>%</h3>
+		                        <small>Overall score</small>
+		                        <div class="recommend-container">
+		                            <p class="recommend yes"> <span>Recommended</span> </p>
+		                        </div>
+		                    <p></p>
+		                </div>
+		            </div>
+		        </div>
+		        <label>
+		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
+		        </label>
+		    </li>
+		</ul>
+	</div>
 </div>
 
+```
+
+
+## Assessor view - Submitted applications
+The view is similar to the applications for assessment, but have a grey background
+
+```
+<div class="app-dashboard">
+	<div class="submitted">
+		<ul class="boxed-list bulk-select">
+			<li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h4 class="heading-medium">
+		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
+		                </h4>
+		                <div><p>Empire Ltd</p></div>
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="application-status submitted yes">
+		                    <p>Submitted</p>
+		                    <p class="application-listing_pending">
+		                        </p><h3 class="score"><span>60.0</span>%</h3>
+		                        <small>Overall score</small>
+		                        <div class="recommend-container">
+		                            <p class="recommend yes"> <span>Recommended</span> </p>
+		                        </div>
+		                    <p></p>
+		                </div>
+		            </div>
+		        </div>
+		        <label>
+		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
+		        </label>
+		    </li>
+		</ul>
+	</div>
+</div>
 ```
 */
 
