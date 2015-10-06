@@ -957,22 +957,67 @@ Hello world &lt;small&gt;(just testing smalltext)&lt;/small&gt;</textarea><h3 id
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;/header&gt;</textarea><h2 id="10-statuses">10. Statuses</h2>
-<h3 id="wrapped-text-areas">Wrapped text areas</h3>
+<h3 id="collapsible-showing-form-status">Collapsible showing form status</h3>
+<p>Status is displayed in the collapsible header area.</p>
+<textarea class="preview-code" spellcheck="false">&lt;div class="collapsible"&gt;
+    &lt;h2 class="open" class="section-status-finance complete"&gt;
+        Application details 1  
+        &lt;span style="" data-subsection-id="1" class="section-status complete place-in-header"&gt;&lt;span data-binding-output="subsection-total-1"&gt;Complete&lt;/span&gt;&lt;/span&gt;
+    &lt;/h2&gt;
+    &lt;div&gt;
+        &lt;ul&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Application details&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Project Summary&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Public Description&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;h2 class="section-status-finance incomplete"&gt;Another Section 2
+        &lt;span style="" data-subsection-id="2" class="section-status incomplete place-in-header"&gt;&lt;span data-binding-output="subsection-total-2"&gt;Incomplete&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;
+    &lt;div&gt;
+        &lt;ul&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Another subsection&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Another subsection&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;h2 class="section-status-finance assigned"&gt;Another Section 3
+        &lt;span style="" data-subsection-id="3" class="section-status assigned place-in-header"&gt;&lt;span data-binding-output="subsection-total-3"&gt;Assigned to me&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;
+    &lt;/h2&gt;
+    &lt;div&gt;
+        &lt;ul&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Another subsection&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="section"&gt;
+                &lt;a tabindex="0" href="#"&gt;Another subsection&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</textarea><h3 id="wrapped-text-areas">Wrapped text areas</h3>
 <p>Complete</p>
-<textarea class="preview-code" spellcheck="false">&lt;div class="textarea-wrapped marked-as-complete word-count"&gt;
+<textarea class="preview-code" spellcheck="false">&lt;div class="textarea-wrapped marked-as-complete"&gt;
     &lt;div class="textarea-header"&gt;
         &lt;p&gt;&lt;small&gt;&lt;span&gt;Last updated:&lt;/span&gt;&lt;span&gt;&lt;span&gt;18 September 10:35AM&lt;/span&gt; &lt;/span&gt;by &lt;span&gt;you&lt;/span&gt;&lt;/small&gt;&lt;/p&gt;       
     &lt;/div&gt;
 
-    &lt;textarea data-max_words="500" id="12" name="question[12]" readonly="readonly"&gt;Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+    &lt;textarea data-max_words="500" id="question-1" name="question[1]" readonly="readonly"&gt;Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
     &lt;/textarea&gt;
 &lt;/div&gt;</textarea><p>Assigned to me</p>
-<textarea class="preview-code" spellcheck="false">&lt;div class="textarea-wrapped assigned-to-me word-count"&gt;
+<textarea class="preview-code" spellcheck="false">&lt;div class="textarea-wrapped assigned-to-me"&gt;
     &lt;div class="textarea-header"&gt;
         &lt;p&gt;&lt;small&gt;&lt;span&gt;Last updated:&lt;/span&gt;&lt;span&gt;&lt;span&gt;18 September 10:35AM&lt;/span&gt; &lt;/span&gt;by &lt;span&gt;you&lt;/span&gt;&lt;/small&gt;&lt;/p&gt;       
     &lt;/div&gt;
 
-    &lt;textarea data-max_words="500" id="12" name="question[12]" readonly="readonly"&gt;Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+    &lt;textarea data-max_words="500" id="question-2" name="question[2]" readonly="readonly"&gt;Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
     &lt;/textarea&gt;
 &lt;/div&gt;</textarea><h3 id="application-sidebar-statuses">Application sidebar statuses</h3>
 <textarea class="preview-code" spellcheck="false">&lt;nav role="navigation" class="app-sidebar"&gt;
