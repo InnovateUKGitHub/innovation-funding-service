@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
+import static com.worth.ifs.util.IfsFunctionUtils.requestParameterPresent;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,

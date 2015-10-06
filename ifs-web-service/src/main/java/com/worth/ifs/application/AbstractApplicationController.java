@@ -24,7 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import static com.worth.ifs.util.IfsFunctions.ifPresent;
+
+import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 public abstract class AbstractApplicationController {
 
