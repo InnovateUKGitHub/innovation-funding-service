@@ -12,26 +12,28 @@
 
 <!-- confirm submit modal --> 
 
-<div th:fragment="modal-confirm-submit (message,submitLink, submitText, cancelText)">
+<div th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
         <div>        
-            <a role="button" tabindex="0" class="button" th:href="${submitLink}" th:text="${submitText}"></a>
-            <button class="js-close buttonlink" th:text="${cancelText}"></button>
+            <a role="button" tabindex="0" class="button large" th:href="${submitLink}" th:text="${submitText}"></a>
+            <button class="js-close buttonlink large" th:text="${cancelText}"></button>
         </div>
     </div>
 </div>
 
 <!-- confirm submit modal -->
 
-<div th:fragment="modal-confirm-submit-post (message, submitName, submitText, cancelText)">
+<div th:fragment="modal-confirm-submit-post (messageTitle, message, submitName, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
         <div>
-            <button role="button" tabindex="0" class="button" th:name="${submitName}" type="submit" th:text="${submitText}"></button>
-            <button class="js-close buttonlink" th:text="${cancelText}"></button>
+            <button role="button" tabindex="0" class="button large" th:name="${submitName}" type="submit" th:text="${submitText}"></button>
+            <button class="js-close button buttonlink large" th:text="${cancelText}"></button>
         </div>
     </div>
 </div>

@@ -51,7 +51,8 @@
             <ul class="boxed-list" th:unless="${assessments.size() == 0 }" >
                 <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST">
                     <div th:include="fragments/modals :: modal-confirm-submit-post
-                        (message='This is your final chance to make changes to the assessments. You will not be able to access the applications after this point. Are you sure you want to submit?',
+                        (messageTitle='This is your final chance to make changes to the assessments. ',
+                         message='You will not be able to access the applications after this point. Are you sure you want to submit?',
                          submitName='submit_assessments',
                          submitText='Yes, I want to submit the applications',
                          cancelText='Cancel')"

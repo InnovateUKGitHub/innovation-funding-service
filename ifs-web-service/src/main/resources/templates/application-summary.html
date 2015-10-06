@@ -6,7 +6,8 @@
 <body class="app-summary">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
 <div th:include="fragments/modals ::modal-confirm-submit
-    (message='This is your final chance to make changes to the application. You will not be able to access the application after this point. Are you sure you want to submit?',
+    (messageTitle='This is your final chance to make changes to the application.',
+     message='You will not be able to access the application after this point. Are you sure you want to submit?',
      submitLink='/application/'+${currentApplication.getId()}+'/submit',
      submitText='Yes, I want to submit my application',
      cancelText='Cancel')"
