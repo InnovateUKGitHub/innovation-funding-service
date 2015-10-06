@@ -1,7 +1,11 @@
 *** Settings ***
 Documentation     INFUND-210, INFUND-189
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    User closes the browser
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
+Resource          Login_actions.txt
+Resource          User_credentials.txt
 
 *** Test Cases ***
 Verify the applicant can assign a question
