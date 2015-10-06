@@ -1,9 +1,11 @@
 *** Settings ***
 Documentation     INFUND-337
 Suite Setup       Login as user    ${assessor_email}    ${assessor_password}
+Suite Teardown    User closes the browser
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 Resource          Login_actions.txt
+Resource          Assessor_actions.txt
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -19,8 +21,6 @@ ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does this application align with the specific competition scope?
 ${persistence_application_name}    A novel solution to an old problem
-${assessor_email}    paul.plum@gmail.com
-${assessor_password}    test
 
 *** Test Cases ***
 Assessment progress is 1 out of 4
@@ -145,9 +145,6 @@ Application Review changes are persisted when saving
     Then the feedback should be present    ${feedback_selection_value}    ${feedback_textarea_value}
 
 *** Keywords ***
-Assessor clicks the competition
-    Click Element    link=${competition_name}
-
 Assessor clicks the Review Button
     Click Element    link=Review assessment
 
