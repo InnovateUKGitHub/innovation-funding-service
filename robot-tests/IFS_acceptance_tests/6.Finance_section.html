@@ -218,46 +218,6 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="test_Verify the fields that should be read-only are not editable">Verify the fields that should be read-only are not editable</a></td>
-<td>[Documentation]</td>
-<td class="colspan3" colspan="3">INFUND-192</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>[Tags]</td>
-<td>not ready</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Given the applicant is in the "Your Finances" sub-section</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>When the Applicant is in the Labour sub-section</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Then the read-only fields are not editable</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name"><a name="test_Verify the &quot; Labour&quot; calculations">Verify the " Labour" calculations</a></td>
 <td>[Documentation]</td>
 <td class="colspan3" colspan="3">INFUND-192</td>
@@ -286,6 +246,46 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Then the calculations of the labour should be correct</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify the fields that should be read-only are not editable">Verify the fields that should be read-only are not editable</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-192</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>not ready</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the applicant is in the "Your Finances" sub-section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant is in the Labour sub-section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the read-only fields are not editable</td>
 <td></td>
 <td></td>
 <td></td>
@@ -516,7 +516,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant clicks the &quot;Labour costs guidance&quot;">the Applicant clicks the "Labour costs guidance"</a></td>
 <td>Click Element</td>
-<td>css=#collapsible-0 &gt; div:nth-child(1) &gt; details &gt; summary</td>
+<td>css=#collapsible-1 summary</td>
 <td></td>
 <td></td>
 </tr>
@@ -536,13 +536,6 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Page Should Contain Element</td>
-<td>css=#collapsible-0 &gt; div:nth-child(1) &gt; details &gt; summary[aria-expanded="true"]</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td></td>
 <td></td>
 <td></td>
@@ -551,21 +544,21 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the read-only fields are not editable">the read-only fields are not editable</a></td>
 <td>Element Should Be Disabled</td>
-<td>css=#cost-labour-2-labourRate</td>
+<td>css=#labour-costs-table tbody td:nth-of-type(3) input</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element Should Be Disabled</td>
-<td>css=#cost-labour-total-field</td>
+<td>xpath=//*[@id="collapsible-1"]//td[contains(text(),"Total costs")]/input</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element Should Be Disabled</td>
-<td>css=#cost-labour-2-labourTotalCost</td>
+<td>xpath=//*[@id="collapsible-1"]//*[contains(text(), "Total labour costs")]//input</td>
 <td></td>
 <td></td>
 </tr>
@@ -579,14 +572,21 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant fills the Labour costs">the Applicant fills the Labour costs</a></td>
 <td>Click Element</td>
-<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(1) &gt; button</td>
+<td>xpath=//*[@aria-controls="collapsible-1"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>css=#cost-labour-1-workingDays</td>
+<td>Click Element</td>
+<td>link=Add another role</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains Element</td>
+<td>css=#labour-costs-table tbody td:nth-of-type(2) input</td>
 <td></td>
 <td></td>
 </tr>
@@ -599,36 +599,22 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>css=#cost-labour-2-labourGrossSalary</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Input Text</td>
-<td>css=#cost-labour-2-labourGrossSalary</td>
+<td>css=#labour-costs-table tbody td:nth-of-type(2) input</td>
 <td>120000</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>css=#cost-labour-2-labourDays</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Input Text</td>
-<td>css=#cost-labour-2-labourDays</td>
+<td>css=#labour-costs-table tbody td:nth-of-type(4) input</td>
 <td>100</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Click Element</td>
-<td>css=#cost-labour-2-labourGrossSalary</td>
+<td>Sleep</td>
+<td>1s</td>
 <td></td>
 <td></td>
 </tr>
@@ -641,15 +627,22 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the calculations of the labour should be correct">the calculations of the labour should be correct</a></td>
+<td>Reload Page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Textfield Value Should Be</td>
-<td>css=#cost-labour-2-labourRate</td>
+<td>css=#labour-costs-table tbody td:nth-of-type(3) input</td>
 <td>£ 522</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Textfield Value Should Be</td>
-<td>css=#cost-labour-2-labourTotalCost</td>
+<td>xpath=//*[@id="collapsible-1"]//td[contains(text(),"Total costs")]/input</td>
 <td>£ 52,174</td>
 <td></td>
 </tr>
@@ -663,35 +656,35 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the Applicant fills the Materials fields">the Applicant fills the Materials fields</a></td>
 <td>Click Element</td>
-<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(5) &gt; button</td>
+<td>xpath=//*[@aria-controls="collapsible-3"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>xpath=//*[@id="cost-materials-12-quantity"]</td>
+<td>Click Element</td>
+<td>link=Add another materials cost</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains Element</td>
+<td>css=#material-costs-table tbody td:nth-of-type(2) input</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input Text</td>
-<td>xpath=//*[@id="cost-materials-12-quantity"]</td>
+<td>css=#material-costs-table tbody td:nth-of-type(2) input</td>
 <td>10</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>xpath=//*[@id="cost-materials-12-cost"]</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Input Text</td>
-<td>xpath=//*[@id="cost-materials-12-cost"]</td>
+<td>css=#material-costs-table tbody td:nth-of-type(3) input</td>
 <td>100</td>
 <td></td>
 </tr>
@@ -704,23 +697,30 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the calculations of the Materials should be correct">the calculations of the Materials should be correct</a></td>
-<td>Click Element</td>
-<td>css=#content &gt; div.grid-row &gt; div.column-two-thirds &gt; form &gt; div.alignright-button &gt; input</td>
+<td>Reload Page</td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-20 &gt; div.collapsible &gt; h2:nth-child(5) &gt; button</td>
+<td>Confirm Action</td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Textfield Value Should Be</td>
-<td>css=#cost-materials-12-materialTotal</td>
+<td>css=#material-costs-table tbody td:nth-of-type(4) input</td>
 <td>£ 1000</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Textfield Value Should Be</td>
+<td>css=#material-costs-total-field</td>
+<td>£ 1,000</td>
 <td></td>
 </tr>
 <tr>
@@ -889,6 +889,27 @@ td.name, th.name {
 <td>Textfield Value Should Be</td>
 <td>css=#cost-subcontracting-total</td>
 <td>£ 100</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Input has value">Input has value</a></td>
+<td>${input_value} =</td>
+<td>Get Value</td>
+<td>${input_selector}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Be Equal As Strings</td>
+<td>${input_value} =</td>
+<td>£ 522</td>
 <td></td>
 </tr>
 </table>
