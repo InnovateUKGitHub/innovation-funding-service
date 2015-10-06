@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -133,6 +135,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
         addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
+        addFinanceDetails(model, assessment.getApplication());
         return assessmentDetails;
     }
 
@@ -281,11 +284,8 @@ public class AssessmentController extends AbstractApplicationController {
 
 
     private void getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
-        //gets
         Competition competition = competitionService.getCompetitionById(competitionId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
-
-        //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
     }
