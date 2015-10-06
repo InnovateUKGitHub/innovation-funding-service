@@ -1,3 +1,34 @@
+/*
+
+###Modal dialogs
+Controlled with javascript, an alternative standard html page should be used for non-js users
+```
+<div class="modal-overlay js-close"></div>
+<div class="modal-reject-assessment" role="dialog" aria-hidden="false" style="margin-top: -100px;">  
+	<button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+			<form method="post" action="#">
+			    <div class="form-group">
+			        <label for="reject-reason" class="form-label">Please let us know why you are rejecting this application</label>
+			        <select name="decisionReason" id="reject-reason" required="required" class="form-control">
+			            <option value="none">Please select one reason</option>
+			            <option value="conflict-of-interest">Conflict of interest</option>
+			            <option value="not-my-area-of-interest">Not my area of expertise</option>
+			            <option value="too-many-assessments">Too many assessments</option>
+			        </select>
+			    </div>
+			    <div class="form-group">
+			        <label for="rejection-observations" class="form-label">Please provide some more information</label>
+			        <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
+			    </div>
+			    <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
+			</form>
+        </div>
+    </div>
+```
+
+*/
+
 [role="dialog"]{
 	border-top: 10px solid $link-colour;
 	width:80%;
@@ -49,6 +80,6 @@
 	top:0;
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
-	z-index: 9 ; 
+	z-index: 9 ;
 }
 
