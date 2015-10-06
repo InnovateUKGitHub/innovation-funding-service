@@ -19,6 +19,7 @@ import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,8 +73,11 @@ public class ResponseController {
 
         List<Response> responses = new ArrayList<Response>();
         for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
+            List<Response> response = responseRepository.findByUpdatedBy(userAppRole);
+            response.forEach(r -> r.getResponseAssessmentFeedbacks().size());
+            responses.addAll(response);
         }
+
         return responses;
     }
 
