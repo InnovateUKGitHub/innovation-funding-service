@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',60,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('',40,'EMPTY','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3);
+INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',60,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('',60,'EMPTY','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,4,1,2),(11,6,4,2,2),(12,5,3,2,1),(13,5,6,2,8);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,4,2,2),(11,6,4,2,2),(12,5,3,1,1),(13,5,6,2,8);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-06 10:30:50
+-- Dump completed on 2015-10-06 17:21:36
