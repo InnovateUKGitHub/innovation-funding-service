@@ -52,7 +52,7 @@ the field should be disabled
 the Collaborator is logged-in
     Switch Browser    2
     open browser    ${SERVER}
-    Input Text    id=id_email    collaborator@innovateuk.gov.uk
+    Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
     Click Element    css=#content > div > div:nth-child(1) > form > input
 
@@ -75,7 +75,7 @@ the field should not be editable
 
 the second Collaborator is logged in
     open browser    ${SERVER}
-    Input Text    id=id_email    collaborator1@innovateuk.gov.uk
+    Input Text    id=id_email    pete.tom@egg.com
     Input Password    id=id_password    test
     Click Element    css=#content > div > div:nth-child(1) > form > input
 
@@ -84,7 +84,6 @@ the applicant clicks the assign to Lead applicant
     Go To    ${APPLICATION_URL}
     Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
     Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Click Element
 
 the field should be re-assigned to the Applicant
     Element Should Be Enabled    id=11

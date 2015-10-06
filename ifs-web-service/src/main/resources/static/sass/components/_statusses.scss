@@ -42,6 +42,58 @@
 }
 
 
+/*
+###Collapsible showing form status
+Status is displayed in the collapsible header area.
+
+```
+<div class="collapsible">
+    <h2 class="open" class="section-status-finance complete">
+    	Application details 1  
+    	<span style="" data-subsection-id="1" class="section-status complete place-in-header"><span data-binding-output="subsection-total-1">Complete</span></span>
+    </h2>
+    <div>
+        <ul>
+            <li class="section">
+                <a tabindex="0" href="#">Application details</a>
+            </li>
+            <li class="section">
+                <a tabindex="0" href="#">Project Summary</a>
+            </li>
+            <li class="section">
+                <a tabindex="0" href="#">Public Description</a>
+            </li>
+        </ul>
+    </div>
+    <h2 class="section-status-finance incomplete">Another Section 2
+    	<span style="" data-subsection-id="2" class="section-status incomplete place-in-header"><span data-binding-output="subsection-total-2">Incomplete</span></span></h2>
+    <div>
+        <ul>
+            <li class="section">
+                <a tabindex="0" href="#">Another subsection</a>
+            </li>
+            <li class="section">
+                <a tabindex="0" href="#">Another subsection</a>
+            </li>
+        </ul>
+    </div>
+    <h2 class="section-status-finance assigned">Another Section 3
+		<span style="" data-subsection-id="3" class="section-status assigned place-in-header"><span data-binding-output="subsection-total-3">Assigned to me</span></span></h2>
+    </h2>
+    <div>
+        <ul>
+            <li class="section">
+                <a tabindex="0" href="#">Another subsection</a>
+            </li>
+            <li class="section">
+                <a tabindex="0" href="#">Another subsection</a>
+            </li>
+        </ul>
+    </div>
+</div>
+```
+*/
+
 .collapsible { 
 	
 	h2{
@@ -129,24 +181,24 @@
 ###Wrapped text areas
 Complete
 ```
-<div class="textarea-wrapped marked-as-complete word-count">
+<div class="textarea-wrapped marked-as-complete">
 	<div class="textarea-header">
 		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>	   
     </div>
         
-	<textarea data-max_words="500" id="12" name="question[12]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+	<textarea data-max_words="500" id="question-1" name="question[1]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
 	</textarea>
 </div>
 ```
 
 Assigned to me
 ```
-<div class="textarea-wrapped assigned-to-me word-count">
+<div class="textarea-wrapped assigned-to-me">
 	<div class="textarea-header">
 		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>	   
     </div>
         
-	<textarea data-max_words="500" id="12" name="question[12]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
+	<textarea data-max_words="500" id="question-2" name="question[2]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
 	</textarea>
 </div>
 ```
@@ -202,5 +254,4 @@ Assigned to me
 		@extend %icon-assigned-to-me;
 		background-position: left center;
 	}
-}
-
+} 

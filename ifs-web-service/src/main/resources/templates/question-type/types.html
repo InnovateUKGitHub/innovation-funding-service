@@ -140,7 +140,7 @@
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour (complete)">
         <div th:attr="finance-subsection-table-container=${question.getId()}"
-             th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},type=${question.questionType.title}">
+             th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))},type=${question.questionType.title}">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
                     <tbody>
@@ -244,7 +244,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="grid-row">
                 <strong class="column-half">
                     20% of labour costs
@@ -318,7 +318,7 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -392,7 +392,7 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
@@ -465,7 +465,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
@@ -533,7 +533,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -595,7 +595,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
+        <div th:attr="finance-subsection-table-container=${question.getId()}" th:with="costCategory=${organisationFinance.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -729,13 +729,13 @@
                     <tbody>
                     <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)}">
                         <th th:text="${financeSubSection.name}"></th>
-                        <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                        <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
                             th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                         </td>
                         <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
                                 th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                                th:with="category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
+                                th:with="category = ${organisationFinance.getCostCategory(SuccessType(com.worth.ifs.application.finance.CostType).fromString(question.questionType.title))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                         </div>
@@ -775,38 +775,40 @@
                 <tbody>
                 <tr>
                     <th>Total costs</th>
-                    <td class="numeric">£208,000</td>
-                    <td class="numeric">-</td>
-                    <td class="numeric">£5,000</td>
-                    <td class="numeric">£5,000</td>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
+                    </td>
+                    <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
+                    </div>
                 </tr>
                 <tr>
                     <th>% Grant</th>
-                    <td class="numeric">-</td>
-                    <td class="numeric">40%</td>
-                    <td class="numeric">20%</td>
-                    <td class="numeric">-</td>
+                    <td class="numeric">58%</td>
+                    <td class="numeric">50%</td>
+                    <td class="numeric">70%</td>
+                    <td class="numeric">70%</td>
                 </tr>
                 <tr>
                     <th>Funding sought</th>
-                    <td class="numeric">£105,000</td>
-                    <td class="numeric">-</td>
-                    <td class="numeric">£25,000</td>
-                    <td class="numeric">£5,000</td>
+                    <td class="numeric">£240,623</td>
+                    <td class="numeric">£124,300</td>
+                    <td class="numeric">£73,862</td>
+                    <td class="numeric">£42,461</td>
                 </tr>
                 <tr>
                     <th>Other public sector funding</th>
-                    <td class="numeric">£10,000</td>
-                    <td class="numeric">£10,000</td>
-                    <td class="numeric">-</td>
-                    <td class="numeric">-</td>
+                    <td class="numeric">£0</td>
+                    <td class="numeric">£0</td>
+                    <td class="numeric">£0</td>
+                    <td class="numeric">£0</td>
                 </tr>
                 <tr>
                     <th>Contribution to project</th>
-                    <td class="numeric">£93,000</td>
-                    <td class="numeric">-</td>
-                    <td class="numeric">£32,000</td>
-                    <td class="numeric">£11,000</td>
+                    <td class="numeric">£174,153</td>
+                    <td class="numeric">£124,300</td>
+                    <td class="numeric">£31,655</td>
+                    <td class="numeric">£18,198</td>
                 </tr>
                 </tbody>
             </table>

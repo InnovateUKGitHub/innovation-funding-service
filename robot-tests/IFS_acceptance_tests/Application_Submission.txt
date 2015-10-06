@@ -1,0 +1,62 @@
+*** Settings ***
+Documentation     INFUND-342
+Suite Setup       Login as user    ${assessor_email}    ${assessor_password}
+Suite Teardown    User closes the browser
+Force Tags
+Resource          GLOBAL_LIBRARIES.txt
+Resource          GLOBAL_VARIABLES.txt
+Resource          Login_actions.txt
+Resource          Assessor_actions.txt
+
+*** Variables ***
+${application_name}    Mobile Phone Data for Logistics Analytics
+${competition_name}    Technology Inspired
+
+*** Test Cases ***
+Submitting an application shows a confirmation popup
+    [Tags]    Assessor
+    When Assessor clicks the competition
+    When Select Application Checkbox    ${application_name}
+    And Submit Selected Applications
+    Then Cancel the confirmation popup
+
+Cancelling the confirmation leaves the Application in unchanged state
+    [Tags]    Assessor
+    Given Select Application Checkbox    ${application_name}
+    And Submit Selected Applications
+    When Cancel the confirmation popup
+    Then Application is not submitted
+
+Confirming the popup changes the Application state to submitted
+    [Tags]    Assessor
+    Given Select Application Checkbox    ${application_name}
+    And Submit Selected Applications
+    When Confirm the confirmation popup
+    Then Application is submitted
+
+*** Keywords ***
+Select Application Checkbox
+    [Arguments]    ${application_name}
+    Click Element    xpath=//li[.//a[contains(text(),'${application_name}')]]//input[@class="assessment-submit-checkbox"]
+
+Submit Selected Applications
+    Choose Cancel On Next Confirmation
+    Click Element    xpath=//*[@name="submit_assessments"]
+
+Confirmation Popup Appears
+
+Cancel the confirmation popup
+    Choose Cancel On Next Confirmation
+    Confirm Action
+
+Confirm the confirmation popup
+    Choose Ok On Next Confirmation
+    Confirm Action
+
+Application is not submitted
+    Reload Page
+    Page Should Contain Element    xpath=//*[@class="in-progress"]//a[contains(text(),'${application_name}')]
+
+Application is submitted
+    Reload Page
+    Page Should Contain Element    xpath=//*[@class="submitted"]//*[contains(text(),'${application_name}')]
