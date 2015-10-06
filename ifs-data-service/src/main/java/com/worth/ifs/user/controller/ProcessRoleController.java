@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This RestController exposes CRUD operations
+ * to manage {@link ProcessRole} related data.
+ */
 @RestController
 @RequestMapping("/processrole")
 public class ProcessRoleController {

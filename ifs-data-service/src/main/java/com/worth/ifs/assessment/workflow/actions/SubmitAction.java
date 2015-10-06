@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
+/**
+ * The SubmitAction is used by the assessor.
+ * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
+ */
 public class SubmitAction implements Action<String, String> {
     private final Log log = LogFactory.getLog(getClass());
 

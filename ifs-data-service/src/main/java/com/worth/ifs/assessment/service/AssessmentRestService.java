@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentRestRestService is a utility to use client-side to retrieve Assessment data from the data-service controllers.
+ * Interface for CRUD operations on {@link Assessment} related data.
  */
 public interface AssessmentRestService {
 

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Section}.
+ * SectionRestServiceImpl is a utility for CRUD operations on {@link Section}.
  * This class connects to the {@link com.worth.ifs.application.controller.SectionController}
  * through a REST call.
  */

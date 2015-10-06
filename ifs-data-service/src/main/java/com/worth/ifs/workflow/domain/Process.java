@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.Calendar;
 
 /**
- * Created by nunoalexandre on 15/09/15.
+ * Process defines database relations and a model to use client side and server side.
+ * This is used for multiple types of events/processes.
  */
-
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class Process {
@@ -58,19 +58,16 @@ public abstract class Process {
         this.observations = observations;
     }
 
-    /**
-     * Getters
-     **/
     public LocalDate getStartDate() {
         return startDate;
     }
 
-
-    /**
-     * Setters
-     **/
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDate getEndDate() {

@@ -41,11 +41,6 @@ public class QuestionController {
     @Autowired
     ApplicationRepository applicationRepository;
 
-    /**
-     * Mark a question as complete
-     * @param questionId question which has been completed / incompleted
-     * @param markedAsCompleteById processRoleId which represents the user role combination
-     */
     @RequestMapping(value="/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public void markAsComplete(@PathVariable("questionId") final Long questionId,
                                @PathVariable("applicationId") final Long applicationId,
@@ -53,11 +48,6 @@ public class QuestionController {
         setComplete(questionId, applicationId, markedAsCompleteById, true);
     }
 
-    /**
-     * Mark a question as incomplete
-     * @param questionId question which has been completed / incompleted
-     * @param markedAsInCompleteById processRoleId which represents the user role combination
-     */
     @RequestMapping(value="/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public void markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
@@ -80,11 +70,6 @@ public class QuestionController {
         questionStatusRepository.save(questionStatus);
     }
 
-    /**
-     * Assign a question to one of the collaborators or lead applicant
-     * @param questionId question to which the assignee is assigned to
-     * @param assigneeId processRoleId which represent the user role combination
-     */
     @RequestMapping(value="/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public void assign(@PathVariable("questionId") final Long questionId,
                        @PathVariable("applicationId") final Long applicationId,
@@ -154,11 +139,6 @@ public class QuestionController {
         questionStatusRepository.save(questionStatus);
     }
 
-    /**
-     * Retrieve questions for the competition
-     * @param competitionId the competition id
-     * @return list of questions belonging to the competition
-     */
     @RequestMapping(value="/findByCompetition/{competitionId}")
     public List<Question> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionRepository.findByCompetitionId(competitionId);

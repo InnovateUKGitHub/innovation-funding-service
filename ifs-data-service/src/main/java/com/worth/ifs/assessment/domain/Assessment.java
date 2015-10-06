@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
+/**
+ * Assessment defines database relations and a model to use client side and server side.
+ */
 @Entity
 @Table(name = "Assessment", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
 @Polymorphism(type= PolymorphismType.EXPLICIT)

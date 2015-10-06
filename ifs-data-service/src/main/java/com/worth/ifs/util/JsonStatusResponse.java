@@ -6,6 +6,9 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This class is created to simplify creating or sending a JSON response.
+ */
 public class JsonStatusResponse {
 
     private static final Log log = LogFactory.getLog(JsonStatusResponse.class);

@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
+ * to manage {@link ApplicationFinance} related data.
+ */
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {

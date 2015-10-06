@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
  */
-
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {

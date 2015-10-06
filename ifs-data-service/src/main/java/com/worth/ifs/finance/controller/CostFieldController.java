@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.finance.service.CostFieldRestServiceImpl} and other REST-API users
+ * to manage {@link CostField} related data.
+ */
 @RestController
 @RequestMapping("/costfield")
 public class CostFieldController {

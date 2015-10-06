@@ -2,9 +2,6 @@ package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.application.domain.Response;
 
-/**
- * Created by nunoalexandre on 16/09/15.
- */
 //@Entity
 public class ResponseAssessment {
 

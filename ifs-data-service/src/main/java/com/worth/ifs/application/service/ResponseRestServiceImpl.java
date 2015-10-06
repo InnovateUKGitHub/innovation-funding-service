@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
+ * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
  * This class connects to the {@link com.worth.ifs.application.controller.ResponseController}
  * through a REST call.
  */

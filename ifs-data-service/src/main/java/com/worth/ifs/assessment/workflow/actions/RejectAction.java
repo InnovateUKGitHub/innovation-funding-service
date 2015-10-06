@@ -7,6 +7,10 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
 
+/**
+ * The RejectAction is used by the assessor.
+ * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
+ */
 @Component
 public class RejectAction implements Action<String, String> {
     @Autowired

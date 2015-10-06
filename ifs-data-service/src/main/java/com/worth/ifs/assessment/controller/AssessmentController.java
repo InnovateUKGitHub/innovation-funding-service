@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentController is http requests controller that maps those requests and delegates their intent
+ * AssessmentController is REST controller that handles requests and delegates their intent
  * to the AssessmentHandler and only that.
  */
 @RestController

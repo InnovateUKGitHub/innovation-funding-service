@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-
 @Entity
 public class Question {
     @Id

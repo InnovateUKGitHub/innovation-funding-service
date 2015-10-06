@@ -10,6 +10,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * CostFieldRestServiceImpl is a utility for CRUD operations on {@link CostField}.
+ * This class connects to the {@link com.worth.ifs.finance.controller.CostFieldController}
+ * through a REST call.
+ */
 @Service
 public class CostFieldRestServiceImpl extends BaseRestServiceProvider implements CostFieldRestService {
     @Value("${ifs.data.service.rest.costfield}")

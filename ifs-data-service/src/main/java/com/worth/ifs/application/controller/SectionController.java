@@ -115,9 +115,6 @@ public class SectionController {
 
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
-     * @param section
-     * @param organisationId
-     * @return
      */
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;

@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentRestRestServiceIpml is a utility to use client-side to retrieve Assessment data from the data-service controllers.
+ * AssessmentRestServiceImpl is a utility for CRUD operations on {@link Assessment}.
+ * This class connects to the {@link com.worth.ifs.assessment.controller.AssessmentController}
+ * through a REST call.
  */
-
 @Service
 public class AssessmentRestServiceImpl extends BaseRestServiceProvider implements AssessmentRestService {
 

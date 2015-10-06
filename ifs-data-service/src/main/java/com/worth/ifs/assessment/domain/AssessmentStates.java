@@ -7,13 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by nunoalexandre on 15/09/15.
- */
-
 public enum AssessmentStates implements ProcessStates {
-
-    /***  All types of status  ***/
+    // All types of status
     PENDING("pending", 1),
     REJECTED("rejected", 2),
     OPEN("open", 3),

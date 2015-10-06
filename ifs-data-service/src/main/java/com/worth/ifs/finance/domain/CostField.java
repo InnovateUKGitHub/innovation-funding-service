@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * CostFields defines database relations and a model to use client side and server side.
  * Holds all the fields which do not belong to the defined general costs.
  */
 @Entity
