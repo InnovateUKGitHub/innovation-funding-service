@@ -1,14 +1,11 @@
 package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentEvents;
-import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class RejectAction implements Action<String, String> {

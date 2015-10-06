@@ -1,6 +1,5 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;

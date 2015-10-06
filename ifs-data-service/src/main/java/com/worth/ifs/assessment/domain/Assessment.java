@@ -4,12 +4,14 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessEvent;
-import com.worth.ifs.workflow.domain.ProcessStates;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 @Entity

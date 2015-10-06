@@ -1,7 +1,6 @@
 package com.worth.ifs.application.domain;
 
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

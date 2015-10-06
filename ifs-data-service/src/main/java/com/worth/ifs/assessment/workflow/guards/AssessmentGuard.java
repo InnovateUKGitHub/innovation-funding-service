@@ -1,11 +1,6 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
-import com.worth.ifs.assessment.domain.AssessmentEvents;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;

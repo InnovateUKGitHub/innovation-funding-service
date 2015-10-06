@@ -1,6 +1,9 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;

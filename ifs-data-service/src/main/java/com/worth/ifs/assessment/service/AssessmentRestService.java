@@ -1,9 +1,6 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.User;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Set;

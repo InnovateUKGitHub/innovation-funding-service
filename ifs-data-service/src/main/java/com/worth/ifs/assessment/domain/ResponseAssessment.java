@@ -1,9 +1,6 @@
 package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.competition.domain.Competition;
-
-import javax.persistence.*;
 
 /**
  * Created by nunoalexandre on 16/09/15.

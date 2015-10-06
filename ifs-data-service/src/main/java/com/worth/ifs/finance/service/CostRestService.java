@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.finance.domain.Cost;
+
 import java.util.List;
 
 public interface CostRestService{

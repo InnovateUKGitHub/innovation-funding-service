@@ -1,7 +1,7 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
+
 import java.util.List;
 
 /**

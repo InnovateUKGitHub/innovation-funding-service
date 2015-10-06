@@ -2,7 +2,6 @@ package com.worth.ifs.application.repository;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

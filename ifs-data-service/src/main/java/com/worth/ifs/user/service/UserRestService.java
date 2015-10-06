@@ -1,6 +1,5 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 

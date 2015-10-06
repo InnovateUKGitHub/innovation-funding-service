@@ -1,13 +1,12 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.domain.AssessmentStates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

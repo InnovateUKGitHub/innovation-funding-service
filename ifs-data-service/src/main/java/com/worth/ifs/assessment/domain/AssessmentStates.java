@@ -2,7 +2,10 @@ package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.workflow.domain.ProcessStates;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by nunoalexandre on 15/09/15.
