@@ -228,6 +228,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Verify the last update metadata">Verify the last update metadata</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Verify that, if a users edits a response, the last-update date is saved, and displayed on both the application form and the application overview page.\n<br>
+\n<br>
+INFUND-283</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the applicant is on the application overview page</td>
 <td></td>
 <td></td>
@@ -285,6 +292,27 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Then the last update date should be updated</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the applicant is on the application overview page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and opens the 'Your business proposition' section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the last update date should be updated</td>
 <td></td>
 <td></td>
 <td></td>
@@ -1184,7 +1212,7 @@ INFUND-202</td>
 <tr>
 <td class="name"><a name="keyword_opens the 'Your business proposition' section">opens the 'Your business proposition' section</a></td>
 <td>Click Button</td>
-<td>value=Your business proposition</td>
+<td>css=#section-3 button</td>
 <td></td>
 <td></td>
 </tr>
