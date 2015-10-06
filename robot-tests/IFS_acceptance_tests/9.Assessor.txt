@@ -1,11 +1,12 @@
 *** Settings ***
 Documentation     INFUND-337
-Suite Setup       Login as user    ${assessor_email}    ${assessor_password}
+Suite Setup       Login as user    &{assessor_credentials}
 Suite Teardown    User closes the browser
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 Resource          Login_actions.txt
 Resource          Assessor_actions.txt
+Resource          User_credentials.txt
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -136,7 +137,7 @@ Application Review changes are persisted when saving
     [Tags]    Assessor
     ${section_name} =    Set Variable    Scope
     ${feedback_selection_value} =    Set Variable    No
-    ${feedback_textarea_value} =     Set Variable    Test feedback text UNIQUE123
+    ${feedback_textarea_value} =    Set Variable    Test feedback text UNIQUE123
     Given Assessor is viewing the Competitions Applications list
     and Assessor opens an application    ${persistence_application_name}
     and Assessor clicks a section    ${section_name}

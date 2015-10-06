@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation     INFUND-342
-Suite Setup       Login as user    ${assessor_email}    ${assessor_password}
+Suite Setup       Login as user    &{assessor_credentials}
 Suite Teardown    User closes the browser
-Force Tags
 Resource          GLOBAL_LIBRARIES.txt
 Resource          GLOBAL_VARIABLES.txt
 Resource          Login_actions.txt
 Resource          Assessor_actions.txt
+Resource          User_credentials.txt
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
