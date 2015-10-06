@@ -12,13 +12,26 @@
 
 <!-- confirm submit modal --> 
 
-<div th:fragment="modal-confirm-submit">
+<div th:fragment="modal-confirm-submit (message,submitLink, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
-        <p>This is your final chance to make changes to the application. You will not be able to access the application after this point. Are you sure you want to submit?</p>
+        <p th:text="${message}"></p>
         <div>        
-            <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>
-            <button class="js-close buttonlink">Cancel</button>
+            <a role="button" tabindex="0" class="button" th:href="${submitLink}" th:text="${submitText}"></a>
+            <button class="js-close buttonlink" th:text="${cancelText}"></button>
+        </div>
+    </div>
+</div>
+
+<!-- confirm submit modal -->
+
+<div th:fragment="modal-confirm-submit-post (message, submitName, submitText, cancelText)">
+    <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <p th:text="${message}"></p>
+        <div>
+            <button role="button" tabindex="0" class="button" th:name="${submitName}" type="submit" th:text="${submitText}"></button>
+            <button class="js-close buttonlink" th:text="${cancelText}"></button>
         </div>
     </div>
 </div>

@@ -226,7 +226,6 @@ public class AssessmentController extends AbstractApplicationController {
     public String assessmentsSubmissions(Model model, HttpServletRequest req) {
 
         Map<String, String[]> params = req.getParameterMap();
-
         /*** avoids to trigger an response if any other button was clicked that not accept / reject ***/
         if ( params.containsKey("submit_assessments") && params.containsKey("submitted[]") ) {
 
@@ -242,6 +241,11 @@ public class AssessmentController extends AbstractApplicationController {
         //gets the competition id to redirect
         Long competitionId = Long.valueOf(req.getParameter("competitionId"));
         return "redirect:" + competitionAssessmentsURL(competitionId);
+    }
+
+    @RequestMapping(value = "/confirm-submit")
+    public String confirmSubmit(Model model, HttpServletRequest req) {
+        return "assessment-confirm-submit";
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)

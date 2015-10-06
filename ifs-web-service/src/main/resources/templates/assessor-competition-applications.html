@@ -49,8 +49,14 @@
         <div class="in-progress">
             <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
             <ul class="boxed-list" th:unless="${assessments.size() == 0 }" >
-                <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST" onsubmit="return confirm('This is your final chance to make changes to the assessment. You will not be able to access the application after this point. Are you sure you want to submit?');">
-                <li th:each="assessment : ${assessments}" th:unless="${assessment.getProcessStatus().equals('rejected')}">
+                <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST">
+                    <div th:include="fragments/modals :: modal-confirm-submit-post
+                        (message='This is your final chance to make changes to the assessments. You will not be able to access the applications after this point. Are you sure you want to submit?',
+                         submitName='submit_assessments',
+                         submitText='Yes, I want to submit the applications',
+                         cancelText='Cancel')"
+                                             th:remove="tag" />
+                    <li th:each="assessment : ${assessments}" th:unless="${assessment.getProcessStatus().equals('rejected')}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium">
@@ -88,7 +94,7 @@
 
                     <div class="alignright">
                         <input type="hidden" name="competitionId" th:value="${competition.id}" />
-                        <button class="button button-pull-right no-margin" name="submit_assessments" id="formSubmitAssessmentButton" type="submit">Submit applications</button>
+                        <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit">Submit applications</a>
                     </div>
                 </form>
 
