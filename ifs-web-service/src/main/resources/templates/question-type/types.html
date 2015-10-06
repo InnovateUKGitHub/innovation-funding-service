@@ -94,7 +94,7 @@
         <div th:replace="question-type/types :: empty" th:with="$question=(${question})" th:remove="tag" />
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-percentage (id='application_details-duration', name='Please enter the grant % you wish to claim for this project', percentage=40)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-percentage (id='application_details-duration', name='Please enter the grant % you wish to claim for this project', percentage=50)" th:remove="tag" />
             <span>%</span>
         </div>
 
