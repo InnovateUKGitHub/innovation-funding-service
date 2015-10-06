@@ -1,6 +1,3 @@
-/**
- * Created by nunoalexandre on 10/09/15.
- */
 package com.worth.ifs.competition.repository;
 
 import com.worth.ifs.competition.domain.Competition;
