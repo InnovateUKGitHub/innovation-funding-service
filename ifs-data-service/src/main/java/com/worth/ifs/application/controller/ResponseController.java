@@ -4,16 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.ResponseAssessorFeedback;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
@@ -27,16 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
-import static com.worth.ifs.util.IfsCommonTasks.jsonResponseWithProcessRole;
-import static com.worth.ifs.util.IfsFunctions.Either.right;
-import static com.worth.ifs.util.IfsFunctions.ifPresent;
 import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
 
 /**
@@ -47,8 +38,6 @@ import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
 public class ResponseController {
     @Autowired
     ApplicationRepository applicationRepository;
-    @Autowired
-    RoleRepository roleRepository;
     @Autowired
     ProcessRoleRepository processRoleRepository;
     @Autowired
@@ -138,7 +127,7 @@ public class ResponseController {
                                                     @RequestParam("score") Optional<Integer> scoreParam,
                                                     @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
                                                     @RequestParam("feedbackText") Optional<String> feedbackTextParam,
-                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse
+                                                    HttpServletRequest request
 
                                                     ) {
 
@@ -146,14 +135,11 @@ public class ResponseController {
 
         Response response = responseRepository.findOne(responseId);
 
-        Application application = response.getApplication();
+        requestParameterPresent("score", request).ifPresent(b -> response.setAssessmentScore(scoreParam.orElse(null)));
+        requestParameterPresent("confirmationAnswer", request).ifPresent(b -> response.setAssessmentConfirmation(confirmationAnswerParam.orElse(null)));
+        requestParameterPresent("feedbackText", request).ifPresent(b -> response.setAssessmentFeedback(feedbackTextParam.orElse(null)));
 
-        return jsonResponseWithProcessRole(assessorUserId, UserRoleType.ASSESSOR, application.getId(), roleRepository, processRoleRepository, httpResponse, assessor -> {
-            ResponseAssessorFeedback responseFeedback = response.getOrCreateResponseAssessorFeedback(assessor);
-            requestParameterPresent("score", httpRequest).ifPresent(b -> responseFeedback.setAssessmentValue(scoreParam.orElse(null)));
-            requestParameterPresent("feedbackText", httpRequest).ifPresent(b -> responseFeedback.setAssessmentFeedback(feedbackTextParam.orElse(null)));
-            responseRepository.save(response);
-            return right(JsonStatusResponse.ok());
-        });
+        responseRepository.save(response);
+        return JsonStatusResponse.ok();
     }
 }
