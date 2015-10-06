@@ -206,9 +206,6 @@ Competitions for Assessment shows an amount of competitions
     ${competitions_amount_element_text} =    Get Text    xpath=//*[contains(text(),'${competitions_for_assessment_string}')]
     Should Match Regexp    ${competitions_amount_element_text}    ${competitions_for_assessment_string} \\([0-9]+\\)
 
-Assessor is viewing a Competition
-    Go To    ${SERVER}/assessor/dashboard
-
 Assessor is viewing the Competitions Applications list
     Go To    ${SERVER}/assessor/dashboard
     Click Element    link=${competition_name}
