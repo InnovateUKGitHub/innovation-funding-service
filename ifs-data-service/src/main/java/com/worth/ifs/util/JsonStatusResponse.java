@@ -6,9 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by dwatson on 01/10/15.
- */
 public class JsonStatusResponse {
 
     private static final Log log = LogFactory.getLog(JsonStatusResponse.class);

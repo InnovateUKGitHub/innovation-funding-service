@@ -31,7 +31,7 @@ import java.util.Optional;
 import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
 
 /**
- * ApplicationController exposes Application data through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/response")

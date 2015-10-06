@@ -1,10 +1,11 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
+
 import java.util.List;
 
 /**
- * UserRestService is a utility to use client-side to retrieve User data from the data-service controllers.
+ * Interface for CRUD operations on {@link Section} related data.
  */
 public interface SectionRestService {
     public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId);

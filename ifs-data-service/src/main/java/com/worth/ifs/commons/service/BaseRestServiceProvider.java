@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 /**
  * BaseRestServiceProvider provides a base for all Service classes.
  */
-
 public abstract class BaseRestServiceProvider {
 
     protected String dataRestServiceURL;

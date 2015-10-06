@@ -7,6 +7,10 @@ import com.worth.ifs.user.domain.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Response class defines the model in which the response on a {@link Question} is stored.
+ * For each question-application combination {@link Application} there can be a response.
+ */
 @Entity
 public class Response {
     @Id

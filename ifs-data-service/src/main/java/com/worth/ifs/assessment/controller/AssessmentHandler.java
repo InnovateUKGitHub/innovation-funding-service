@@ -43,9 +43,6 @@ public class AssessmentHandler {
      * Get's all the assessments by competition and assessor.
      * By 'All' is meant all the assessments whose invitation was not rejected.
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
-     * @param competitionId
-     * @param assessorId
-     * @return
      */
     public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
         //List<Assessment> allAssessments = new ArrayList<>();

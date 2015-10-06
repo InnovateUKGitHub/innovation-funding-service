@@ -6,6 +6,10 @@ import com.worth.ifs.user.domain.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * QuestionStatus defines the model and relations that are stored in the database.
+ * This model is used to store metadata related to BOTH {@link Question} and {@link Application}
+ */
 @Entity
 public class QuestionStatus {
     @Id

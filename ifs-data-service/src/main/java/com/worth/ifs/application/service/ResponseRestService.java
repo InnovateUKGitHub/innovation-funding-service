@@ -1,10 +1,11 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+
 import java.util.List;
 
 /**
- * ApplicationRestRestService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ * Interface for CRUD operations on {@link Response} related data.
  */
 public interface ResponseRestService {
     public List<Response> getResponsesByApplicationId(Long applicationId);

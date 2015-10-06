@@ -1,14 +1,14 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 
 import java.util.List;
 
 /**
- * UserRestService is a utility to use client-side to retrieve User data from the data-service controllers.
+ * Interface for CRUD operations on {@link User} related data.
  */
-
 public interface UserRestService {
     public User retrieveUserByToken(String token);
     public User retrieveUserByEmailAndPassword(String email, String password);

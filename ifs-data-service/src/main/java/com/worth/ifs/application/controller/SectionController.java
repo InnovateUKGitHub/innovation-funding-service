@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ApplicationController exposes Application data through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/section")

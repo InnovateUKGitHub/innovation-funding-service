@@ -32,7 +32,7 @@ public class Assessment extends Process {
     private Map<Long, ResponseAssessment> responseAssessments;
 
 
-    /******* TEMPORARY ********/
+    /* ****** TEMPORARY ******* */
 
     @Column(name="temp_totalScore")
     private Double overallScore;
@@ -46,7 +46,7 @@ public class Assessment extends Process {
     @Column(name="comments")
     private String comments;
 
-    /******* END TEMPORARY ********/
+    /* ****** END TEMPORARY ******* */
 
 
     @Type(type = "yes_no")

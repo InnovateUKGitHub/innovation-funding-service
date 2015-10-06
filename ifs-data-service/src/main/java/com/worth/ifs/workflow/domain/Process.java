@@ -30,23 +30,22 @@ public abstract class Process {
     private Calendar lastModified;
 
     private LocalDate startDate;
-    private LocalDate endDate;
 
+    private LocalDate endDate;
     @Column(name = "observations")
     private String observations;
 
     @Column(name="decision_reason")
     private String decisionReason;
 
-
     public Process() {
     }
+
 
     public Process(String event, String status) {
         this.event = event;
         this.status = status;
     }
-
 
     public Process(String event, String status, LocalDate startDate, LocalDate endDate) {
         this(event, status);
@@ -54,11 +53,11 @@ public abstract class Process {
         this.endDate = endDate;
     }
 
+
     public Process(String event, String status, LocalDate startDate, LocalDate endDate, String observations) {
         this(event, status, startDate, endDate);
         this.observations = observations;
     }
-
 
     /**
      * Getters
@@ -66,6 +65,7 @@ public abstract class Process {
     public LocalDate getStartDate() {
         return startDate;
     }
+
 
     /**
      * Setters

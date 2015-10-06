@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * QuestionController exposes question data through a REST API.
+ * QuestionController exposes question data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/question")

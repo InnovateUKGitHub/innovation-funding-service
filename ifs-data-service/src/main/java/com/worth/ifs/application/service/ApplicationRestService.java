@@ -6,9 +6,8 @@ import com.worth.ifs.user.domain.UserRoleType;
 import java.util.List;
 
 /**
- * ApplicationRestRestService is a utility to use client-side to retrieve Application data from the data-service controllers.
+ * Interface for CRUD operations on {@link Application} related data.
  */
-
 public interface ApplicationRestService {
     public Application getApplicationById(Long applicationId);
     public List<Application> getApplicationsByUserId(Long userId);

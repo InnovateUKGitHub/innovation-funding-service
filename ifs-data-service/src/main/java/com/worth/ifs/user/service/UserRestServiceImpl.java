@@ -1,6 +1,8 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
+ * This class connects to the {@link com.worth.ifs.user.controller.UserController}
+ * through a REST call.
+ */
 @Service
 public class UserRestServiceImpl extends BaseRestServiceProvider implements UserRestService {
 
