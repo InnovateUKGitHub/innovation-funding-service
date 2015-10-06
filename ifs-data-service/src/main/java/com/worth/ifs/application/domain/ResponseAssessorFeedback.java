@@ -15,10 +15,6 @@ import javax.persistence.*;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"responseId", "assessorId"}))
 public class ResponseAssessorFeedback {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name="responseId", referencedColumnName="id")
     private Response response;
@@ -48,10 +44,6 @@ public class ResponseAssessorFeedback {
     @SuppressWarnings("unused")
     ResponseAssessorFeedback() {
         // for ORM user
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @SuppressWarnings("unused")
