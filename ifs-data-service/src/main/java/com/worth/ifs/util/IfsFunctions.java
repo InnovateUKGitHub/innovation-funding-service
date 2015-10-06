@@ -4,18 +4,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * Created by dwatson on 01/10/15.
  */
-public class IfsFunctionUtils {
+public class IfsFunctions {
 
     /**
      * Checks to see whether or not the given request parameter is present and if so, returns a non-empty Optional upon which
-     * an "ifPresent" call can be inChain
+     * an "ifPresent" call can be chained
      *
      * @param parameterName
      * @param request
@@ -46,25 +45,11 @@ public class IfsFunctionUtils {
             this.wasPresentResult = wasPresentResult;
         }
 
-        public <R> Either<R, T> orElseOther(Supplier<R> elseFunction) {
-            if (wasPresent) {
-                return Either.right(wasPresentResult);
-            }
-            return Either.left(elseFunction != null ? elseFunction.get() : null);
-        }
-
-        public T orElseGet(Supplier<T> elseFunction) {
+        public T orElse(Supplier<T> elseFunction) {
             if (wasPresent) {
                 return wasPresentResult;
             }
             return elseFunction != null ? elseFunction.get() : null;
-        }
-
-        public T orElse(T elseFunction) {
-            if (wasPresent) {
-                return wasPresentResult;
-            }
-            return elseFunction != null ? elseFunction : null;
         }
     }
 
@@ -87,28 +72,5 @@ public class IfsFunctionUtils {
         }
 
         return new IfPresentElse(false, null);
-    }
-
-    public static class FunctionChains {
-
-        public static <A, B, Z> Function<A, Either<Z, B>> chainEithers(Function<A, Either<Z, B>> f1) {
-            return a -> f1.apply(a);
-        }
-
-        public static <A, B, C, Z> Function<A, Either<Z, C>> chainEithers(Function<A, Either<Z, B>> f1, Function<Either<Z, B>, Either<Z, C>> f2) {
-            return f1.andThen(f2);
-        }
-
-        public static <A, B, C, D, Z> Function<A, Either<Z, D>> chainEithers(Function<A, Either<Z, B>> f1, Function<Either<Z, B>, Either<Z, C>> f2, Function<Either<Z, C>, Either<Z, D>> f3) {
-            return f1.andThen(f2).andThen(f3);
-        }
-
-        public static <A, B, Z> Function<Either<Z, A>, Either<Z, B>> inChain(Function<A, Either<Z, B>> fn) {
-            Function<Either<Z, A>, Either<Z, B>> wrapped = either -> {
-                return either.isLeft() ? Either.left(either.getLeft()) : fn.apply(either.getRight());
-            };
-
-            return wrapped;
-        }
     }
 }

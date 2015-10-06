@@ -25,9 +25,10 @@
 	.textarea-wrapped textarea[readonly] {
 		padding:0;
 		border:none;
+		background:none;
 	}
 
 	.question {
-		margin-left:10px;
+		margin-left:10px; 
 	}
-}
+} 
