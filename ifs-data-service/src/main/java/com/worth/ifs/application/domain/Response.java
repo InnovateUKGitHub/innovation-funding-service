@@ -104,6 +104,7 @@ public class Response {
 
     public void setId(Long id) { this.id = id; }
 
+    @JsonIgnore
     public Application getApplication() {
         return application;
     }

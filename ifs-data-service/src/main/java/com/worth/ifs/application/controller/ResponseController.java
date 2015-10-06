@@ -74,7 +74,6 @@ public class ResponseController {
         List<Response> responses = new ArrayList<Response>();
         for (ProcessRole userAppRole : userAppRoles) {
             List<Response> response = responseRepository.findByUpdatedBy(userAppRole);
-            response.forEach(r -> r.getResponseAssessmentFeedbacks().size());
             responses.addAll(response);
         }
 
