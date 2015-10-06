@@ -43,8 +43,6 @@ Submit Selected Applications
     Choose Cancel On Next Confirmation
     Click Element    xpath=//*[@name="submit_assessments"]
 
-Confirmation Popup Appears
-
 Cancel the confirmation popup
     Choose Cancel On Next Confirmation
     Confirm Action
