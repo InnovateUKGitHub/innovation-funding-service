@@ -1,13 +1,9 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,8 +30,9 @@ public class AssessmentSubmitReviewModel {
     private final int totalScore;
     private final int possibleScore;
     private final Map<Long, AssessorFeedback> responseIdsAndFeedback;
-    private final Map<Long, Response> questionIdsAndResponses;
+    private final Map<Long, Optional<Response>> questionIdsAndResponses;
     private final int scorePercentage;
+    private final List<AssessmentSummarySection> assessmentSummarySections;
 
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
 
@@ -49,8 +46,14 @@ public class AssessmentSubmitReviewModel {
 
         scorableQuestions = questions.stream().filter(Question::getNeedingAssessorScore).collect(toList());
 
-        Map<Question, Response> questionsAndResponses = responses.stream().collect(toMap(Response::getQuestion, Function.identity()));
-        questionIdsAndResponses = questionsAndResponses.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
+        Map<Question, Optional<Response>> questionsAndResponses = questions.stream().
+                map(question -> Pair.of(question, responses.stream().
+                        filter(response -> response.getQuestion().getId().equals(question.getId())).
+                        findFirst())).
+                collect(toMap(Pair::getLeft, Pair::getRight));
+
+        questionIdsAndResponses = questionsAndResponses.entrySet().stream().
+                collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
@@ -62,7 +65,7 @@ public class AssessmentSubmitReviewModel {
         totalScore = questionsAndResponses.entrySet().stream().
                 filter(e -> e.getKey().getNeedingAssessorScore()).
                 map(e -> e.getValue()).
-                map(response -> Optional.ofNullable(responseIdsAndFeedback.get(response.getId()))).
+                map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(Optional.empty())).
                 map(optionalFeedback -> ifPresent(optionalFeedback, AssessorFeedback::getAssessmentValue).orElse("0")).
                 collect(summingInt(score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0));
 
@@ -70,7 +73,18 @@ public class AssessmentSubmitReviewModel {
                 filter(Question::getNeedingAssessorScore).
                 collect(summingInt(q -> 10));
 
-        scorePercentage = (int) ((totalScore * 100) / possibleScore);
+        scorePercentage = (totalScore * 100) / possibleScore;
+
+        List<Section> sections = competition.getSections();
+
+        Map<Question, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
+                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(Optional.empty()))).
+                        collect(toMap(Pair::getLeft, Pair::getRight));
+
+        assessmentSummarySections = sections.stream().
+                filter(Section::isDisplayInAssessmentApplicationSummary).
+                map(section -> new AssessmentSummarySection(section, questionsAndFeedback)).
+                collect(toList());
     }
 
     public Assessment getAssessment() {
@@ -105,8 +119,12 @@ public class AssessmentSubmitReviewModel {
         return scorePercentage;
     }
 
+    public List<AssessmentSummarySection> getAssessmentSummarySections() {
+        return assessmentSummarySections;
+    }
+
     public AssessorFeedback getFeedbackForQuestion(Question question) {
-        Optional<Response> responseOption = Optional.ofNullable(questionIdsAndResponses.get(question.getId()));
+        Optional<Response> responseOption = questionIdsAndResponses.get(question.getId());
         return responseOption.map(response -> responseIdsAndFeedback.get(response.getId())).orElse(null);
     }
 }

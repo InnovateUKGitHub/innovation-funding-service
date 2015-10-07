@@ -44,6 +44,9 @@ public class Section implements Comparable<Section> {
     @OrderBy("priority ASC")
     private List<Section> childSections;
 
+    @Column(nullable = false)
+    private boolean displayInAssessmentApplicationSummary = false;
+
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
         this.id = id;
         this.competition = competition;
@@ -116,4 +119,8 @@ public class Section implements Comparable<Section> {
     public String getAssessorGuidanceDescription() { return assessorGuidanceDescription; }
 
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }
+
+    public boolean isDisplayInAssessmentApplicationSummary() {
+        return displayInAssessmentApplicationSummary;
+    }
 }

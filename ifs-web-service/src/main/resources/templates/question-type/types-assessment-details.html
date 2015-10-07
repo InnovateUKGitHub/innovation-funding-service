@@ -40,8 +40,8 @@
 
                 <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
                     <option value="" th:selected="${assessmentFeedback?.assessmentValue == null}"></option>
-                    <option value="true" th:selected="${assessmentFeedback?.assessmentValue == 'true'}">Yes</option>
-                    <option value="false" th:selected="${assessmentFeedback?.assessmentValue == 'false'}">No</option>
+                    <option value="Yes" th:selected="${assessmentFeedback?.assessmentValue == 'Yes'}">Yes</option>
+                    <option value="No" th:selected="${assessmentFeedback?.assessmentValue == 'No'}">No</option>
                 </select>
             </div>
 
