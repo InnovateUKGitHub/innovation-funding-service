@@ -87,28 +87,4 @@ public class IfsFunctionUtils {
 
         return new IfPresentElse(false, null);
     }
-
-
-    public static class FunctionChains {
-
-        public static <A, B, Z> Function<A, Either<Z, B>> chainEithers(Function<A, Either<Z, B>> f1) {
-            return a -> f1.apply(a);
-        }
-
-        public static <A, B, C, Z> Function<A, Either<Z, C>> chainEithers(Function<A, Either<Z, B>> f1, Function<Either<Z, B>, Either<Z, C>> f2) {
-            return f1.andThen(f2);
-        }
-
-        public static <A, B, C, D, Z> Function<A, Either<Z, D>> chainEithers(Function<A, Either<Z, B>> f1, Function<Either<Z, B>, Either<Z, C>> f2, Function<Either<Z, C>, Either<Z, D>> f3) {
-            return f1.andThen(f2).andThen(f3);
-        }
-
-        public static <A, B, Z> Function<Either<Z, A>, Either<Z, B>> inChain(Function<A, Either<Z, B>> fn) {
-            Function<Either<Z, A>, Either<Z, B>> wrapped = either -> {
-                return either.isLeft() ? Either.left(either.getLeft()) : fn.apply(either.getRight());
-            };
-
-            return wrapped;
-        }
-    }
 }

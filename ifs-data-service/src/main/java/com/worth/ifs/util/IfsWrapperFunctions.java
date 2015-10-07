@@ -2,10 +2,7 @@ package com.worth.ifs.util;
 
 import com.worth.ifs.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,7 +11,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.getEither;
-import static com.worth.ifs.util.IfsFunctionUtils.FunctionChains.inChain;
 import static com.worth.ifs.util.IfsCommonFunctions.getProcessRoleForRoleUserAndApplication;
 import static com.worth.ifs.util.IfsCommonFunctions.getRoleForRoleTypeFn;
 
@@ -29,14 +25,10 @@ public class IfsWrapperFunctions {
                                                                                                 Function<ProcessRole, Either<FailureType, SuccessType>> doWithProcessRoleFn,
                                                                                                 Supplier<FailureType> noProcessRoleAvailableForApplicationAndUser, Supplier<FailureType> noRoleAvailable) {
 
-        RoleRepository roleRepository = serviceLocator.getRoleRepository();
-        ProcessRoleRepository processRoleRepository = serviceLocator.getProcessRoleRepository();
-
-        Function<UserRoleType, Either<FailureType, Role>> getRole = getRoleForRoleTypeFn(roleRepository, noRoleAvailable);
-        Function<Role, Either<FailureType, ProcessRole>> getProcessRole =
-                getProcessRoleForRoleUserAndApplication(userId, applicationId, processRoleRepository, noProcessRoleAvailableForApplicationAndUser);
-
-        return getRole.andThen(inChain(getProcessRole)).andThen(inChain(doWithProcessRoleFn)).apply(roleType);
+        return getRoleForRoleTypeFn(roleType, serviceLocator.getRoleRepository(), noRoleAvailable).andThen(role -> {
+            return getProcessRoleForRoleUserAndApplication(role, userId, applicationId, serviceLocator.getProcessRoleRepository(), noProcessRoleAvailableForApplicationAndUser).
+                    andThen(doWithProcessRoleFn);
+        });
     }
 
     public static Function<Function<ProcessRole, Either<JsonStatusResponse, JsonStatusResponse>>, JsonStatusResponse> withProcessRoleReturnJsonResponse(Long userId, UserRoleType roleType, Long applicationId, HttpServletResponse httpResponse,
