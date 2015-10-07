@@ -5,11 +5,10 @@ import com.worth.ifs.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.service.ResponseService;
+import com.worth.ifs.service.AssessorService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -58,7 +57,7 @@ public class ResponseController {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    ResponseService assessorService;
+    AssessorService assessorService;
 
     @Autowired
     ServiceLocator serviceLocator;

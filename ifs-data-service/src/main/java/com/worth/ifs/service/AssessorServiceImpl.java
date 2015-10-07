@@ -20,7 +20,7 @@ import static com.worth.ifs.util.Either.right;
  * Created by dwatson on 06/10/15.
  */
 @Service
-public class ResponseServiceImpl implements ResponseService {
+public class AssessorServiceImpl implements AssessorService {
 
     @Autowired
     private ResponseRepository responseRepository;
@@ -51,12 +51,12 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     private Either<ServiceFailure, Response> getResponse(Long responseId) {
-        return Optional.ofNullable(responseRepository.findOne(responseId)).map(ResponseServiceImpl::rightResponse)
+        return Optional.ofNullable(responseRepository.findOne(responseId)).map(AssessorServiceImpl::rightResponse)
                 .orElse(left(new ServiceFailure()));
     };
 
     private Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
-        return Optional.of(processRoleRepository.findOne(processRoleId)).map(ResponseServiceImpl::rightResponse)
+        return Optional.of(processRoleRepository.findOne(processRoleId)).map(AssessorServiceImpl::rightResponse)
                 .orElse(left(new ServiceFailure()));
     };
 
