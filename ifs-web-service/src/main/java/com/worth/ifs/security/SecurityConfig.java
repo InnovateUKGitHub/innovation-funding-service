@@ -15,7 +15,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Every request is stateless and is checked if the user has access to requested resource.
- *
  */
 @Configuration
 @EnableWebMvcSecurity

@@ -6,6 +6,9 @@ import org.springframework.security.core.Authentication;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This interface contains the most important methods we need for authentication.
+ */
 public interface UserAuthenticationService {
 
     public User authenticate(String emailAddress, String password);

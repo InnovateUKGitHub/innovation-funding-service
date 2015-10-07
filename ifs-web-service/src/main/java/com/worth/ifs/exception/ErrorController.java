@@ -12,6 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * This controller can handle all Exceptions, so the user should always gets a
+ * nice looking error page, or a json error message is returned.
+ */
 @ControllerAdvice
 public class ErrorController {
     private final Log log = LogFactory.getLog(getClass());
