@@ -13,7 +13,6 @@ import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -24,8 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link Application} data.
@@ -200,7 +197,7 @@ public abstract class AbstractApplicationController {
     }
     private void addSectionDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
-        model.addAttribute("currentSectionId", ifPresent(currentSection, s -> s.getId()).orElse(null));
+        model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
 
         userOrganisation.ifPresent(org -> {

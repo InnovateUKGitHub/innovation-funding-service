@@ -15,7 +15,6 @@ import java.util.function.BiFunction;
 
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
-import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 /**
  * Created by dwatson on 06/10/15.
@@ -52,12 +51,12 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     private Either<ServiceFailure, Response> getResponse(Long responseId) {
-        return ifPresent(Optional.ofNullable(responseRepository.findOne(responseId)), ResponseServiceImpl::rightResponse)
+        return Optional.ofNullable(responseRepository.findOne(responseId)).map(ResponseServiceImpl::rightResponse)
                 .orElse(left(new ServiceFailure()));
     };
 
     private Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
-        return ifPresent(Optional.of(processRoleRepository.findOne(processRoleId)), ResponseServiceImpl::rightResponse)
+        return Optional.of(processRoleRepository.findOne(processRoleId)).map(ResponseServiceImpl::rightResponse)
                 .orElse(left(new ServiceFailure()));
     };
 

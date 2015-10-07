@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.worth.ifs.application.domain.AssessorFeedback.createForResponseAndAssessor;
-import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -121,7 +120,7 @@ public class Response {
 
     public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
         Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
-        return ifPresent(existingFeedback, Function.identity()).orElseGet(() -> {
+        return existingFeedback.map(Function.identity()).orElseGet(() -> {
             AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
             responseAssessmentFeedbacks.add(feedback);
             return feedback;

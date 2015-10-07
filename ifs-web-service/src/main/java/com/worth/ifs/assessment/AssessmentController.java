@@ -1,10 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -17,7 +14,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,17 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
-import static com.worth.ifs.util.IfsFunctionUtils.requestParameterPresent;
-import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,

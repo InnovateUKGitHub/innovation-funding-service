@@ -15,11 +15,8 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 
-import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.summingInt;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * Created by dwatson on 07/10/15.
