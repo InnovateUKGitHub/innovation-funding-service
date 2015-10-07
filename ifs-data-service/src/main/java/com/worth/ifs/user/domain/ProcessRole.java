@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * ProcessRole defines database relations and a model to use client side and server side.
  */
-
 @Entity
 public class ProcessRole {
     @Id

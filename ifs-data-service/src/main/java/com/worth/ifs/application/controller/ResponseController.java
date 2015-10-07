@@ -5,10 +5,10 @@ import com.worth.ifs.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.ResponseAssessorFeedback;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.service.ResponseService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -39,7 +39,7 @@ import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.IfsWrapperFunctions.withProcessRoleReturnJsonResponse;
 
 /**
- * ApplicationController exposes Application data through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/response")
@@ -73,10 +73,8 @@ public class ResponseController {
 
         List<Response> responses = new ArrayList<Response>();
         for (ProcessRole userAppRole : userAppRoles) {
-            List<Response> response = responseRepository.findByUpdatedBy(userAppRole);
-            responses.addAll(response);
+            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
-
         return responses;
     }
 

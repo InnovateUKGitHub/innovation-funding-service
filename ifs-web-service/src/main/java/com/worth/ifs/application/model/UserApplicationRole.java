@@ -1,5 +1,8 @@
 package com.worth.ifs.application.model;
 
+/**
+ * This enumerations defines the available UserApplicationRoles.
+ */
 public enum UserApplicationRole {
     LEAD_APPLICANT("leadapplicant"),
     COLLABORATOR("collaborator");

@@ -54,6 +54,20 @@ td.name, th.name {
 <th class="name" colspan="5">Settings</th>
 </tr>
 <tr>
+<td class="name">Suite Setup</td>
+<td>Login as User</td>
+<td>&amp;{lead_applicant_credentials}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Suite Teardown</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Resource</td>
 <td>GLOBAL_LIBRARIES.txt</td>
 <td></td>
@@ -63,6 +77,20 @@ td.name, th.name {
 <tr>
 <td class="name">Resource</td>
 <td>GLOBAL_VARIABLES.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>Login_actions.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>User_credentials.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -155,6 +183,100 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
+<td class="name"><a name="test_Verify the &quot;Submit button&quot; is disabled when the state of the application is not valid">Verify the "Submit button" is disabled when the state of the application is not valid</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-195</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the application is not valid</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant is in the summary page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the submit button should be disabled</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Mark Question as incomplete</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify the Warning message when the applicant clicks the submit button in the summary page">Verify the Warning message when the applicant clicks the submit button in the summary page</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-205, INFUND-195</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the application is valid</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the applicant submits the application in the summary page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the applicant should get a warning message</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Mark Question as incomplete</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name"><a name="test_Verify the successful submit page">Verify the successful submit page</a></td>
 <td>[Documentation]</td>
 <td class="colspan3" colspan="3">INFUND-205</td>
@@ -210,81 +332,8 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="test_Verify the Warning message when the applicant clicks the submit button in the summary page">Verify the Warning message when the applicant clicks the submit button in the summary page</a></td>
-<td>[Documentation]</td>
-<td class="colspan3" colspan="3">INFUND-205, INFUND-195</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>[Tags]</td>
-<td>Applicant</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Given the application is valid</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>When the applicant submits the application in the summary page</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Then the applicant should get a warning message</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="test_Verify the &quot;Submit button&quot; is disabled when the state of the application is not valid">Verify the "Submit button" is disabled when the state of the application is not valid</a></td>
-<td>[Documentation]</td>
-<td class="colspan3" colspan="3">INFUND-195</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>[Tags]</td>
-<td>Applicant</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Given the application is not valid</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>When the Applicant is in the summary page</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Then the submit button should be disabled</td>
-<td></td>
+<td>[Teardown]</td>
+<td>Mark question as incomplete</td>
 <td></td>
 <td></td>
 </tr>
@@ -338,21 +387,28 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>css=#content &gt; div.grid-row &gt; div.column-two-thirds &gt; form &gt; div.alignright-button &gt; a</td>
+<td>link=Review &amp; submit</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Element Is Visible</td>
+<td>xpath=//*[@data-js-modal="modal-confirm-submit"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>css=#content &gt; div.alignright-button &gt; a</td>
+<td>xpath=//*[@data-js-modal="modal-confirm-submit"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>css=body &gt; div.modal-confirm-submit &gt; div &gt; a</td>
+<td>css=.modal-confirm-submit .button</td>
 <td></td>
 <td></td>
 </tr>
@@ -443,6 +499,13 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
+<td>xpath=//*[@aria-controls="collapsible-1"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
 <td>link=Application details</td>
 <td></td>
 <td></td>
@@ -512,36 +575,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Wait Until Element Is Visible</td>
-<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td>Enter invalid data into Question field</td>
 <td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>name=question[12]</td>
+<td>Mark Question as complete</td>
 <td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Input Text</td>
-<td>name=question[12]</td>
-<td>1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
@@ -589,36 +631,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Wait Until Element Is Visible</td>
-<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td>Enter valid data into Question field</td>
 <td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Clear Element Text</td>
-<td>name=question[12]</td>
+<td>Mark Question as complete</td>
 <td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Input Text</td>
-<td>name=question[12]</td>
-<td>This is a valid text !@#</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Click Element</td>
-<td>css=#question-12 &gt; div &gt; div &gt; div.textarea-footer &gt; button</td>
 <td></td>
 <td></td>
 </tr>
@@ -683,6 +704,111 @@ td.name, th.name {
 <td>go to</td>
 <td>${SCOPE_SECTION_URL}</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Mark Question as complete">Mark Question as complete</a></td>
+<td>Wait Until Element Is Visible</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_complete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_complete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Mark Question as incomplete">Mark Question as incomplete</a></td>
+<td>Go To</td>
+<td>${APPLICATION_DETAILS_URL}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Element Is Visible</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_incomplete"]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Enter valid data into Question field">Enter valid data into Question field</a></td>
+<td>Wait Until Element Is Visible</td>
+<td>name=question[12]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>name=question[12]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>name=question[12]</td>
+<td>This is a valid text !@#</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Enter invalid data into Question field">Enter invalid data into Question field</a></td>
+<td>Wait Until Element Is Visible</td>
+<td>name=question[12]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear Element Text</td>
+<td>name=question[12]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>name=question[12]</td>
+<td>1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10</td>
 <td></td>
 </tr>
 </table>

@@ -15,6 +15,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.user.service.OrganisationRestServiceImpl} and other REST-API users
+ * to manage {@link Organisation} related data.
+ */
 @RestController
 @RequestMapping("/organisation")
 public class OrganisationController {

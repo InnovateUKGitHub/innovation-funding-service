@@ -6,6 +6,9 @@ import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 
+/**
+ * ApplicationFinance defines database relations and a model to use client side and server side.
+ */
 @Entity
 public class ApplicationFinance {
     @Id

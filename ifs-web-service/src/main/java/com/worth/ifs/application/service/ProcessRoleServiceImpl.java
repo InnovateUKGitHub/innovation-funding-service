@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class contains methods to retrieve and store {@link ProcessRole} related data,
+ * through the RestService {@link UserRestService}.
+ */
 @Service
 public class ProcessRoleServiceImpl implements ProcessRoleService {
     @Autowired

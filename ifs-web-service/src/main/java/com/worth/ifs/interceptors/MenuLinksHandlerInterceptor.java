@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+/**
+ * Have the menu links globally available for each controller.
+ * So it does not have to be added to each call separately anymore.
+ */
 public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public static final String USER_DASHBOARD_LINK="userDashboardLink";

@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains methods to retrieve and store {@link Question} related data,
+ * through the RestService {@link QuestionRestService}.
+ */
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private final Log log = LogFactory.getLog(getClass());

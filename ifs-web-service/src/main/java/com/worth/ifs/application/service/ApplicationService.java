@@ -1,12 +1,13 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Application;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Interface for CRUD operations on {@link Application} related data.
+ */
 public interface ApplicationService {
     public Application getById(Long applicationId);
     public List<Application> getInProgress(Long userId);

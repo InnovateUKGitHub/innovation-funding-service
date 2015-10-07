@@ -13,10 +13,18 @@ import com.worth.ifs.finance.repository.CostValueRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.finance.service.CostRestServiceImpl} and other REST-API users
+ * to manage {@link Cost} related data.
+ */
 @RestController
 @RequestMapping("/cost")
 public class CostController {

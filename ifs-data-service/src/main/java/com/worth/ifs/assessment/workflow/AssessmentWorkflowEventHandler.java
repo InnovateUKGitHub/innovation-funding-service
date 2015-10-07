@@ -12,6 +12,11 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 
+/**
+ * {@code AssessmentWorkflowEventHandler} is the entry point for triggering the workflow.
+ * Based on the assessment's current state the next one is tried to transition to by triggering
+ * an event.
+ */
 public class AssessmentWorkflowEventHandler {
     private final Log log = LogFactory.getLog(getClass());
     private final PersistStateMachineHandler stateHandler;

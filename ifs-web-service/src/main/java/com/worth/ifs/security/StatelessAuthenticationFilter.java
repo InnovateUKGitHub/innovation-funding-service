@@ -42,6 +42,10 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         return ignored.matches(request);
     }
 
+    /**
+     * This methods returns a request matchers with all requests that don't have to be authenticate.
+     * For example static resources.
+     */
     public RequestMatcher getIgnoredRequestMatchers() {
         List<RequestMatcher> antPathRequestMatchers = new ArrayList<RequestMatcher>();
         antPathRequestMatchers.add(new AntPathRequestMatcher("/error"));

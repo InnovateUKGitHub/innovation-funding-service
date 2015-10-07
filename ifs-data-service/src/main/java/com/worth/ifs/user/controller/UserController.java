@@ -15,9 +15,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * UserController exposes User data through a REST API.
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
+ * to manage {@link User} related data.
  */
-
 @RestController
 @RequestMapping("/user")
 public class UserController {

@@ -54,6 +54,20 @@ td.name, th.name {
 <th class="name" colspan="5">Settings</th>
 </tr>
 <tr>
+<td class="name">Suite Setup</td>
+<td>Login as User</td>
+<td>&amp;{lead_applicant_credentials}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Suite Teardown</td>
+<td>User closes the browser</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Resource</td>
 <td>GLOBAL_VARIABLES.txt</td>
 <td></td>
@@ -63,6 +77,20 @@ td.name, th.name {
 <tr>
 <td class="name">Resource</td>
 <td>GLOBAL_LIBRARIES.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>Login_actions.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>User_credentials.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -219,7 +247,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>When the Applicant clicks the "Yous approach" section </td>
+<td>When the Applicant clicks the "Yous approach" section</td>
 <td></td>
 <td></td>
 <td></td>
@@ -246,7 +274,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the user is logged in as Applicant">the user is logged in as Applicant</a></td>
 <td>Location Should Be</td>
-<td>${DASHBOARD_URL}</td>
+<td>${applicant_dashboard_url}</td>
 <td></td>
 <td></td>
 </tr>

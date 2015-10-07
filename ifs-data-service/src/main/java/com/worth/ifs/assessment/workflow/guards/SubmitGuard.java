@@ -6,6 +6,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 
+/**
+ * {@code SubmitGuard} is responsible for testing if the transition can take place
+ * to the next state. This will not happen if the evaluation is failing.
+ */
 public class SubmitGuard implements Guard<String, String> {
     private final Log log = LogFactory.getLog(getClass());
 

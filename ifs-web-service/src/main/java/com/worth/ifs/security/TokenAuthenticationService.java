@@ -28,10 +28,6 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     /**
      * Authenticate the user by email address and password
-     *
-     * @param emailAddress user's email address
-     * @param password user's password
-     * @return authenticated user
      */
     public User authenticate(String emailAddress, String password) {
         User user = userRestService.retrieveUserByEmailAndPassword(emailAddress, password);
@@ -45,9 +41,6 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     /**
      * Retrieve the Authenticated user by its authentication token in the request header.
-     *
-     * @param request the servlet request.
-     * @return the authenticated user
      */
     public User getAuthenticatedUser(HttpServletRequest request) {
         Authentication authentication = getAuthentication(request);
@@ -76,9 +69,6 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     /**
      * Retrieve the token from the browser cookie, such that it can be
      * used for further requests
-     *
-     * @param request
-     * @return
      */
     protected String getToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -95,10 +85,6 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     /**
      * For every request a token needs to be added, which is used for authentication
-     *
-     * @param response servlet response
-     * @param user put the user's token in a cookie for further use
-     * @return
      */
     public void addAuthentication(HttpServletResponse response, User user) {
         Cookie cookie = new Cookie(AUTH_TOKEN, user.getToken());

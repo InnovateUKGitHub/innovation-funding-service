@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Interface for CRUD operations on {@link Competition} related data.
+ */
 @Service
 public interface CompetitionService {
     List<Competition> getAllCompetitions();

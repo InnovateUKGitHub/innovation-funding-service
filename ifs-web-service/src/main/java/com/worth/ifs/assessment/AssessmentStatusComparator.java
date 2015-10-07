@@ -3,6 +3,9 @@ package com.worth.ifs.assessment;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 
+/**
+ * Comparator for the assessment status, uses the ordinal attribute to compare, used for sorting the assessments.
+ */
 public class AssessmentStatusComparator implements java.util.Comparator<Assessment> {
     @Override
     public int compare(Assessment assessment1, Assessment assessment2) {

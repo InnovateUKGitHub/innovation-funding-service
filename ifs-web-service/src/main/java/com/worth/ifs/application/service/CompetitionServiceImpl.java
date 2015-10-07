@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class contains methods to retrieve and store {@link Competition} related data,
+ * through the RestService {@link CompetitionsRestService}.
+ */
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
     @Autowired

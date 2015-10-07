@@ -6,12 +6,10 @@ import com.worth.ifs.finance.domain.Cost;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-
 @Entity
 public class Question {
     @Id

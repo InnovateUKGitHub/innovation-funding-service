@@ -6,7 +6,6 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.exception.ObjectNotFoundException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.security.CookieFlashMessageFilter;
@@ -27,6 +26,9 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
+/**
+ * This object contains shared methods for all the Controllers related to the {@link Application} data.
+ */
 public abstract class AbstractApplicationController {
 
     @Autowired
@@ -52,10 +54,7 @@ public abstract class AbstractApplicationController {
 
     @Autowired OrganisationService organisationService;
 
-
     @Autowired CookieFlashMessageFilter cookieFlashMessageFilter;
-
-
 
     @Autowired
     FinanceService financeService;

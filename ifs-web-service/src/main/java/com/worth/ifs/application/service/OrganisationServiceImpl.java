@@ -13,6 +13,10 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains methods to retrieve and store {@link Organisation} related data,
+ * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
+ */
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
     public TreeSet<Organisation> getApplicationOrganisations(Application application) {

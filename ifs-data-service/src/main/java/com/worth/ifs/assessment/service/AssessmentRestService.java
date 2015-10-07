@@ -1,15 +1,12 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.User;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentRestRestService is a utility to use client-side to retrieve Assessment data from the data-service controllers.
+ * Interface for CRUD operations on {@link Assessment} related data.
  */
 public interface AssessmentRestService {
 

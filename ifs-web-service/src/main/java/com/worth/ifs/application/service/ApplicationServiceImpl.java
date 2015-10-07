@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains methods to retrieve and store {@link Application} related data,
+ * through the RestService {@link ApplicationRestService}.
+ */
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 

@@ -1,10 +1,10 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This RestController exposes CRUD operations to both the
+ * {@link com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
+ * to manage {@link ApplicationFinance} related data.
+ */
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {

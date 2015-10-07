@@ -10,6 +10,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * SectionRestServiceImpl is a utility for CRUD operations on {@link Section}.
+ * This class connects to the {@link com.worth.ifs.application.controller.SectionController}
+ * through a REST call.
+ */
 @Service
 public class SectionRestServiceImpl extends BaseRestServiceProvider implements SectionRestService {
     @Value("${ifs.data.service.rest.section}")

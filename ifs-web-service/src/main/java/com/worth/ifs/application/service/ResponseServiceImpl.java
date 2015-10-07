@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class contains methods to retrieve and store {@link Response} related data,
+ * through the RestService {@link ResponseRestService}.
+ */
 @Service
 public class ResponseServiceImpl implements ResponseService {
 

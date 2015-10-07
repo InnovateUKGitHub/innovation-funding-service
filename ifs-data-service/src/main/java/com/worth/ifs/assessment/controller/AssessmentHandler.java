@@ -1,13 +1,12 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.domain.AssessmentStates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,9 +42,6 @@ public class AssessmentHandler {
      * Get's all the assessments by competition and assessor.
      * By 'All' is meant all the assessments whose invitation was not rejected.
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
-     * @param competitionId
-     * @param assessorId
-     * @return
      */
     public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
         //List<Assessment> allAssessments = new ArrayList<>();

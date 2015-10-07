@@ -1,15 +1,14 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
-import com.worth.ifs.assessment.domain.AssessmentEvents;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 
+/**
+ * {@code AssessmentGuard} is responsible for testing if the transition can take place
+ * to the next state. This will not happen if the evaluation is failing.
+ */
 @Configuration
 public class AssessmentGuard implements Guard<String, String> {
 

@@ -58,6 +58,20 @@ td.name, th.name {
 <td class="colspan4" colspan="4">INFUND-210, INFUND-189</td>
 </tr>
 <tr>
+<td class="name">Suite Setup</td>
+<td>Login as User</td>
+<td>&amp;{lead_applicant_credentials}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Suite Teardown</td>
+<td>User closes the browser</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Resource</td>
 <td>GLOBAL_LIBRARIES.txt</td>
 <td></td>
@@ -67,6 +81,20 @@ td.name, th.name {
 <tr>
 <td class="name">Resource</td>
 <td>GLOBAL_VARIABLES.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>Login_actions.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>User_credentials.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -187,6 +215,104 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>When the Applicant clicks the sections then the Applicant navigates to the correct sections</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Verify the last update metadata">Verify the last update metadata</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">Verify that, if a users edits a response, the last-update date is saved, and displayed on both the application form and the application overview page.\n<br>
+\n<br>
+INFUND-283</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the applicant is on the application overview page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and opens the 'Your business proposition' section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the last update date of question 1 is a date in the past</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the Applicant opens the "Rovel additive" application form</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the applicant is on section 'Your business proposition'</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the last update date of question 1 is a date in the past</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the Applicant edits question 1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the Applicant refreshes the page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the last update date should be updated</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the applicant is on the application overview page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and opens the 'Your business proposition' section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the last update date should be updated</td>
 <td></td>
 <td></td>
 <td></td>
@@ -969,6 +1095,125 @@ INFUND-202</td>
 <td>Page Should Not Contain Element</td>
 <td>css=#question-12.marked-as-complete</td>
 <td>Mark as complete class is not found, that's correct</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the last update date of question 1 is a date in the past">the last update date of question 1 is a date in the past</a></td>
+<td>Page Should Contain Element</td>
+<td>css=#question-1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Contain</td>
+<td>css=#question-1</td>
+<td>Last updated: 18 September 10:33AM by you</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the Applicant edits question 1">the Applicant edits question 1</a></td>
+<td>Clear Element Text</td>
+<td>css=#question-1 textarea</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input Text</td>
+<td>css=#question-1 textarea</td>
+<td>Check last updated date.</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Focus</td>
+<td>css=.app-submit-btn</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Sleep</td>
+<td>2s</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the last update date should be updated">the last update date should be updated</a></td>
+<td>Page Should Contain Element</td>
+<td>css=#question-1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Contain</td>
+<td>css=#question-1</td>
+<td>Last updated: Today by you</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the applicant is on section 'Your business proposition'">the applicant is on section 'Your business proposition'</a></td>
+<td>Go To</td>
+<td>${YOUR_BUSINESS_URL}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the applicant is on the application overview page">the applicant is on the application overview page</a></td>
+<td>Go To</td>
+<td>${APPLICATION_OVERVIEW_URL}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_opens the 'Your business proposition' section">opens the 'Your business proposition' section</a></td>
+<td>Click Button</td>
+<td>css=#section-3 button</td>
+<td></td>
 <td></td>
 </tr>
 </table>

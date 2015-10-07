@@ -229,9 +229,9 @@ var IFS = {
 
             field.parents(".word-count").find(".count-down").html(delta);
             if(delta < 0 ){
-                field.parents(".word-count").addClass("word-count-reached");
+                field.parents(".word-count").find(".count-down").removeClass("positive").addClass("negative");
             }else{
-                field.parents(".word-count").removeClass("word-count-reached");
+                field.parents(".word-count").find(".count-down").removeClass("negative").addClass("positive");
             }
         }
 

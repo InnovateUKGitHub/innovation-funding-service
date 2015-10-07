@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
+ * CostValue defines database relations and a model to use client side and server side.
  * Holds the reference between the extra cost fields and the original cost.
  * The value is stored and the type determines how it is processed.
  */

@@ -12,6 +12,10 @@ import java.util.function.Function;
 import static com.worth.ifs.application.domain.AssessorFeedback.createForResponseAndAssessor;
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
+/**
+ * Response class defines the model in which the response on a {@link Question} is stored.
+ * For each question-application combination {@link Application} there can be a response.
+ */
 @Entity
 public class Response {
     @Id
@@ -101,8 +105,6 @@ public class Response {
     public void setUpdatedBy(ProcessRole updatedBy) {
         this.updatedBy = updatedBy;
     }
-
-    public void setId(Long id) { this.id = id; }
 
     @JsonIgnore
     public Application getApplication() {

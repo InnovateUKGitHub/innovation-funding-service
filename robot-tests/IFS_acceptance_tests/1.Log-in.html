@@ -45,13 +45,27 @@ td.name, th.name {
   width: 10em;
 }
 </style>
-<title>1.Log-in (Applicant)</title>
+<title>1.Log-in</title>
 </head>
 <body>
-<h1>1.Log-in (Applicant)</h1>
+<h1>1.Log-in</h1>
 <table border="1" id="setting">
 <tr>
 <th class="name" colspan="5">Settings</th>
+</tr>
+<tr>
+<td class="name">Suite Setup</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Suite Teardown</td>
+<td>User closes the browser</td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td class="name">Resource</td>
@@ -63,6 +77,20 @@ td.name, th.name {
 <tr>
 <td class="name">Resource</td>
 <td>GLOBAL_LIBRARIES.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>Login_actions.txt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>User_credentials.txt</td>
 <td></td>
 <td></td>
 <td></td>
@@ -84,6 +112,13 @@ td.name, th.name {
 <td>[Tags]</td>
 <td>Applicant</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Setup]</td>
+<td>Login as user</td>
+<td>&amp;{lead_applicant_credentials}</td>
 <td></td>
 </tr>
 <tr>
@@ -118,6 +153,13 @@ td.name, th.name {
 <td class="name"><a name="test_Invalid Login">Invalid Login</a></td>
 <td>[Tags]</td>
 <td>Applicant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Setup]</td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -172,6 +214,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>[Setup]</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Given the user is not logged-in</td>
 <td></td>
 <td></td>
@@ -180,14 +229,14 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>When the guest user inserts applicant user name</td>
-<td></td>
+<td>${lead_applicant_credentials["email"]}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>And the user inserts password</td>
-<td></td>
+<td>${lead_applicant_credentials["password"]}</td>
 <td></td>
 <td></td>
 </tr>
@@ -200,8 +249,167 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Then the guest user should be logged-in as Applicant and redirected to the My applications page</td>
+<td>Then the user should be logged in</td>
 <td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user is redirected to the Applicant dashboard page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Logout as user</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Valid login as Collaborator">Valid login as Collaborator</a></td>
+<td>[Setup]</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the user is not logged-in</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the guest user inserts applicant user name</td>
+<td>${collaborator1_credentials["email"]}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user inserts password</td>
+<td>${collaborator1_credentials["password"]}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the guest user clicks the log-in button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the user should be logged in</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user is redirected to the Applicant dashboard page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Logout as user</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Valid login as Assessor">Valid login as Assessor</a></td>
+<td>[Documentation]</td>
+<td class="colspan3" colspan="3">INFUND-286</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Tags]</td>
+<td>Assessor</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Setup]</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Given the user is not logged-in</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When the guest user inserts applicant user name</td>
+<td>${assessor_credentials["email"]}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user inserts password</td>
+<td>${assessor_credentials["password"]}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the guest user clicks the log-in button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the user should be logged in</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user is redirected to the Assessor dashboard page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>And the user should be logged-in as an Assessor</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>[Teardown]</td>
+<td>Logout as user</td>
 <td></td>
 <td></td>
 </tr>
@@ -289,9 +497,16 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the guest user inserts applicant user name">the guest user inserts applicant user name</a></td>
+<td>[Arguments]</td>
+<td>${email}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Input Text</td>
 <td>id=id_email</td>
-<td>steve.smith@empire.com</td>
+<td>${email}</td>
 <td></td>
 </tr>
 <tr>
@@ -303,9 +518,16 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the user inserts password">the user inserts password</a></td>
+<td>[Arguments]</td>
+<td>${password}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Input Password</td>
 <td>id=id_password</td>
-<td>test</td>
+<td>${password}</td>
 <td></td>
 </tr>
 <tr>
@@ -330,7 +552,7 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="keyword_the guest user should be logged-in as Applicant and redirected to the My applications page">the guest user should be logged-in as Applicant and redirected to the My applications page</a></td>
+<td class="name"><a name="keyword_the user should be logged in">the user should be logged in</a></td>
 <td>Element Should Be Visible</td>
 <td>link=Logout</td>
 <td></td>
@@ -375,6 +597,48 @@ td.name, th.name {
 <td class="name"><a name="keyword_the Applicant is logged-in">the Applicant is logged-in</a></td>
 <td>Element Should Be Visible</td>
 <td>link=Logout</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the user is redirected to the Applicant dashboard page">the user is redirected to the Applicant dashboard page</a></td>
+<td>Location Should Be</td>
+<td>${applicant_dashboard_url}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the user should be logged-in as an Assessor">the user should be logged-in as an Assessor</a></td>
+<td>Title Should Be</td>
+<td>Innovation Funding Service - Assessor Dashboard</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the user is redirected to the Assessor dashboard page">the user is redirected to the Assessor dashboard page</a></td>
+<td>Location Should Be</td>
+<td>${assessor_dashboard_url}</td>
 <td></td>
 <td></td>
 </tr>

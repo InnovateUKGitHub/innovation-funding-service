@@ -12,6 +12,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * QuestionRestServiceImpl is a utility for CRUD operations on {@link Question}.
+ * This class connects to the {@link com.worth.ifs.application.controller.QuestionController}
+ * through a REST call.
+ */
 @Service
 public class QuestionRestServiceImpl extends BaseRestServiceProvider implements  QuestionRestService {
     @Value("${ifs.data.service.rest.question}")
