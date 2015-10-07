@@ -9,6 +9,7 @@ import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
+import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -187,55 +189,21 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/summary", method = RequestMethod.GET)
-    public String getAssessmentSubmitReview(Model model, @PathVariable("competitionId") final Long competitionId,
+    public ModelAndView getAssessmentSubmitReview(Model model, @PathVariable("competitionId") final Long competitionId,
                                             @PathVariable("applicationId") final Long applicationId,
                                             User user) {
 
-        addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, false);
-
-        Pair<Competition, Assessment> added = getAndPassAssessmentDetails(competitionId, applicationId, user.getId(), model);
-        Assessment assessment = added.getRight();
-
-        List<Question> questions = assessment.getApplication().getCompetition().getSections().stream().
-                flatMap(section -> section.getQuestions().stream()).
-                collect(toList());
-
+        Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(user.getId(), applicationId);
         List<Response> responses = getResponses(assessment.getApplication());
-        Map<Question, Response> questionsAndResponses = responses.stream().collect(toMap(Response::getQuestion, Function.identity()));
-        Map<Long, Response> questionIdsAndResponses = questionsAndResponses.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
-
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
-        Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
-                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
-                filter(pair -> pair.getRight().isPresent()).
-                collect(toMap(pair -> pair.getLeft(), pair -> pair.getRight().get()));
+        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
 
-        Map<Long, AssessorFeedback> responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
-
-        Integer totalScore = questionsAndResponses.entrySet().stream().
-                filter(e -> e.getKey().getNeedingAssessorScore()).
-                map(e -> e.getValue()).
-                map(response -> Optional.ofNullable(responseIdsAndFeedback.get(response.getId()))).
-                map(optionalFeedback -> ifPresent(optionalFeedback, AssessorFeedback::getAssessmentValue).orElse("0")).
-                collect(summingInt(score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0));
-
-        Integer possibleScore = questions.stream().
-                filter(Question::getNeedingAssessorScore).
-                collect(summingInt(q -> 10));
-
-        model.addAttribute("questions", questions);
-        model.addAttribute("questionsAndResponses", questionIdsAndResponses);
-        model.addAttribute("responsesAndFeedback", responseIdsAndFeedback);
-        model.addAttribute("totalScore", totalScore);
-        model.addAttribute("possibleScore", possibleScore);
-        model.addAttribute("scorePercentage", (int) ((totalScore * 100) / possibleScore));
-
-        return assessmentSubmitReview;
+        return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }
 
     @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)
