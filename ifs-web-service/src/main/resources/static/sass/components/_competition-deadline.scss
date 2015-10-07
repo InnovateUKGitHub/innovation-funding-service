@@ -1,12 +1,21 @@
+/*
 
-        // <div class="day" th:text="${endDate.getDayOfMonth()}" />
-        // <div class="month" th:text="${endDate.getMonth()}" />
-        // <div class="time">
-        //     <span th:text="${endDate.getHour()}" />:<span th:text="${endDate.getMinute()}" />
-        // </div>
-
+```
+<div class="competition-deadline">
+    <div class="day">
+    	11<span>th</span> 
+    </div>
+    <div class="month">
+    	November deadline
+    </div>
+    <div class="time">
+        12:00 Midday  
+    </div>
+</div>
+```
+*/
 .competition-deadline {
-	@include inline-block;
+	@include inline-block; 
 	margin:0 10px;
 	text-align: left;
 
