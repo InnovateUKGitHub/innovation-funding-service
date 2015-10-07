@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 import static java.util.stream.Collectors.summingInt;
@@ -34,6 +35,23 @@ public class AssessmentSubmitReviewModel {
     private final int scorePercentage;
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
+    private static <R, T> Predicate<Pair<R, Optional<T>>> rightPairIsPresent() {
+        return pair -> pair.getRight().isPresent();
+    }
+
+    private static <R, T> Function<Pair<R, Optional<T>>, T> presentRightPair() {
+        return pair -> pair.getRight().get();
+    }
+
+    private static <R, T> Function<Pair<R, T>, R> leftPair() {
+        return pair -> pair.getLeft();
+    }
+
+    private static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
+        return e -> e.getValue();
+    }
+
+
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
 
         this.assessment = assessment;
@@ -53,18 +71,19 @@ public class AssessmentSubmitReviewModel {
                 collect(toMap(Pair::getLeft, Pair::getRight));
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
-                collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
+                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
-                filter(pair -> pair.getRight().isPresent()).
-                collect(toMap(pair -> pair.getLeft(), pair -> pair.getRight().get()));
+                filter(rightPairIsPresent()).
+                collect(toMap(leftPair(), presentRightPair()));
 
-        responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
+        responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
+                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
         totalScore = questionsAndResponses.entrySet().stream().
                 filter(e -> e.getKey().getNeedingAssessorScore()).
-                map(e -> e.getValue()).
+                map(mapEntryValue()).
                 map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(Optional.empty())).
                 map(optionalFeedback -> ifPresent(optionalFeedback, AssessorFeedback::getAssessmentValue).orElse("0")).
                 collect(summingInt(score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0));
