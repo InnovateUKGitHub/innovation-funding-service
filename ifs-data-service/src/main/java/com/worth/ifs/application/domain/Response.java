@@ -127,4 +127,34 @@ public class Response {
             return feedback;
         });
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Response response = (Response) o;
+
+        if (id != null ? !id.equals(response.id) : response.id != null) return false;
+        if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
+        if (value != null ? !value.equals(response.value) : response.value != null) return false;
+        if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
+        if (question != null ? !question.equals(response.question) : response.question != null) return false;
+        if (application != null ? !application.equals(response.application) : response.application != null)
+            return false;
+        return !(responseAssessmentFeedbacks != null ? !responseAssessmentFeedbacks.equals(response.responseAssessmentFeedbacks) : response.responseAssessmentFeedbacks != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
+        result = 31 * result + (question != null ? question.hashCode() : 0);
+        result = 31 * result + (application != null ? application.hashCode() : 0);
+        result = 31 * result + (responseAssessmentFeedbacks != null ? responseAssessmentFeedbacks.hashCode() : 0);
+        return result;
+    }
 }

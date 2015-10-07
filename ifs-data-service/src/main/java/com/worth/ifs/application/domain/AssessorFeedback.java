@@ -83,5 +83,31 @@ public class AssessorFeedback {
         return assessorId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        AssessorFeedback that = (AssessorFeedback) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (response != null ? !response.equals(that.response) : that.response != null) return false;
+        if (assessor != null ? !assessor.equals(that.assessor) : that.assessor != null) return false;
+        if (assessorId != null ? !assessorId.equals(that.assessorId) : that.assessorId != null) return false;
+        if (assessmentValue != null ? !assessmentValue.equals(that.assessmentValue) : that.assessmentValue != null)
+            return false;
+        return !(assessmentFeedback != null ? !assessmentFeedback.equals(that.assessmentFeedback) : that.assessmentFeedback != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (response != null ? response.hashCode() : 0);
+        result = 31 * result + (assessor != null ? assessor.hashCode() : 0);
+        result = 31 * result + (assessorId != null ? assessorId.hashCode() : 0);
+        result = 31 * result + (assessmentValue != null ? assessmentValue.hashCode() : 0);
+        result = 31 * result + (assessmentFeedback != null ? assessmentFeedback.hashCode() : 0);
+        return result;
+    }
 }

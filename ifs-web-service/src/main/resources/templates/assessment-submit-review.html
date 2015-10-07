@@ -281,23 +281,14 @@
             </tr>
             <tr>
                 <th>Score</th>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">7</td>
-                <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">4</td>
-                <td style="font-weight: 700;">6</td>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">1</td>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">7</td>
-                <td style="font-weight: 700;">6</td>
+                <td th:each="question:${questions}" th:if="${question.needingAssessorScore}" th:with="response=${questionsAndResponses.get(question.id)}, feedback=${response != null ? responsesAndFeedback.get(response.id) : null}" th:text="${feedback?.assessmentValue}">Q1</td>
             </tr>
             </tbody>
         </table>
         <br/>
         <p style="text-align: right; font-weight: 700;">
-            Total: 60/100<br/>
-            60%
+            Total: <span th:text="${totalScore}" th:remove="tag">60</span>/<span th:text="${possibleScore}" th:remove="tag">100</span><br/>
+            <span th:text="${scorePercentage}" th:remove="tag">60</span>%
         </p>
 
         <hr style="border-top: 1px solid #ccc;"/>

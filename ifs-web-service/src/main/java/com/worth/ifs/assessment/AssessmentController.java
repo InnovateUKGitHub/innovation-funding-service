@@ -16,6 +16,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,9 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 import static com.worth.ifs.util.IfsFunctionUtils.requestParameterPresent;
+import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -197,6 +201,8 @@ public class AssessmentController extends AbstractApplicationController {
                 collect(toList());
 
         List<Response> responses = getResponses(assessment.getApplication());
+        Map<Question, Response> questionsAndResponses = responses.stream().collect(toMap(Response::getQuestion, Function.identity()));
+        Map<Long, Response> questionIdsAndResponses = questionsAndResponses.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
 
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
@@ -204,14 +210,30 @@ public class AssessmentController extends AbstractApplicationController {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
-        Map<Response, AssessorFeedback> assessmentFeedbacks = responses.stream().
+        Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
                 filter(pair -> pair.getRight().isPresent()).
                 collect(toMap(pair -> pair.getLeft(), pair -> pair.getRight().get()));
 
+        Map<Long, AssessorFeedback> responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().collect(toMap(e -> e.getKey().getId(), e -> e.getValue()));
+
+        Integer totalScore = questionsAndResponses.entrySet().stream().
+                filter(e -> e.getKey().getNeedingAssessorScore()).
+                map(e -> e.getValue()).
+                map(response -> Optional.ofNullable(responseIdsAndFeedback.get(response.getId()))).
+                map(optionalFeedback -> ifPresent(optionalFeedback, AssessorFeedback::getAssessmentValue).orElse("0")).
+                collect(summingInt(score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0));
+
+        Integer possibleScore = questions.stream().
+                filter(Question::getNeedingAssessorScore).
+                collect(summingInt(q -> 10));
+
         model.addAttribute("questions", questions);
-        model.addAttribute("responses", responses);
-        model.addAttribute("assessmentFeedbacks", assessmentFeedbacks);
+        model.addAttribute("questionsAndResponses", questionIdsAndResponses);
+        model.addAttribute("responsesAndFeedback", responseIdsAndFeedback);
+        model.addAttribute("totalScore", totalScore);
+        model.addAttribute("possibleScore", possibleScore);
+        model.addAttribute("scorePercentage", (int) ((totalScore * 100) / possibleScore));
 
         return assessmentSubmitReview;
     }

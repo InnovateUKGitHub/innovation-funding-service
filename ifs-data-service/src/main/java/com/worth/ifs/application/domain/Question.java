@@ -34,8 +34,6 @@ public class Question {
 
     private Boolean markAsCompletedEnabled = false;
 
-
-
     private Boolean assignEnabled = true;
 
     private Boolean multipleStatuses = false;
@@ -45,12 +43,14 @@ public class Question {
     // TODO DW - added for Alpha phase to determine which questions are scorable by the Assessor - in Beta probably need an
     // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
     // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
-    private Boolean needingAssessorScore;
+    @Column(nullable = false)
+    private boolean needingAssessorScore = false;
 
     // TODO DW - added for Alpha phase to determine which questions need feedback from the Assessor - in Beta probably need an
     // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
     // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
-    private Boolean needingAssessorFeedback;
+    @Column(nullable = false)
+    private boolean needingAssessorFeedback = false;
 
     // TODO DW - added for Alpha phase to determine which questions need Yes / No responses from assessor and the text - in Beta probably need an
     // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
@@ -204,11 +204,11 @@ public class Question {
         return priority;
     }
 
-    public Boolean getNeedingAssessorScore() {
+    public boolean getNeedingAssessorScore() {
         return needingAssessorScore;
     }
 
-    public Boolean getNeedingAssessorFeedback() {
+    public boolean getNeedingAssessorFeedback() {
         return needingAssessorFeedback;
     }
 
@@ -218,5 +218,73 @@ public class Question {
 
     public String getQuestionNumber() {
         return questionNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        if (needingAssessorScore != question.needingAssessorScore) return false;
+        if (needingAssessorFeedback != question.needingAssessorFeedback) return false;
+        if (id != null ? !id.equals(question.id) : question.id != null) return false;
+        if (name != null ? !name.equals(question.name) : question.name != null) return false;
+        if (description != null ? !description.equals(question.description) : question.description != null)
+            return false;
+        if (guidanceQuestion != null ? !guidanceQuestion.equals(question.guidanceQuestion) : question.guidanceQuestion != null)
+            return false;
+        if (guidanceAnswer != null ? !guidanceAnswer.equals(question.guidanceAnswer) : question.guidanceAnswer != null)
+            return false;
+        if (wordCount != null ? !wordCount.equals(question.wordCount) : question.wordCount != null) return false;
+        if (optionValues != null ? !optionValues.equals(question.optionValues) : question.optionValues != null)
+            return false;
+        if (markAsCompletedEnabled != null ? !markAsCompletedEnabled.equals(question.markAsCompletedEnabled) : question.markAsCompletedEnabled != null)
+            return false;
+        if (assignEnabled != null ? !assignEnabled.equals(question.assignEnabled) : question.assignEnabled != null)
+            return false;
+        if (multipleStatuses != null ? !multipleStatuses.equals(question.multipleStatuses) : question.multipleStatuses != null)
+            return false;
+        if (priority != null ? !priority.equals(question.priority) : question.priority != null) return false;
+        if (assessorConfirmationQuestion != null ? !assessorConfirmationQuestion.equals(question.assessorConfirmationQuestion) : question.assessorConfirmationQuestion != null)
+            return false;
+        if (competition != null ? !competition.equals(question.competition) : question.competition != null)
+            return false;
+        if (section != null ? !section.equals(question.section) : question.section != null) return false;
+        if (questionType != null ? !questionType.equals(question.questionType) : question.questionType != null)
+            return false;
+        if (responses != null ? !responses.equals(question.responses) : question.responses != null) return false;
+        if (questionStatuses != null ? !questionStatuses.equals(question.questionStatuses) : question.questionStatuses != null)
+            return false;
+        if (costs != null ? !costs.equals(question.costs) : question.costs != null) return false;
+        return !(questionNumber != null ? !questionNumber.equals(question.questionNumber) : question.questionNumber != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (guidanceQuestion != null ? guidanceQuestion.hashCode() : 0);
+        result = 31 * result + (guidanceAnswer != null ? guidanceAnswer.hashCode() : 0);
+        result = 31 * result + (wordCount != null ? wordCount.hashCode() : 0);
+        result = 31 * result + (optionValues != null ? optionValues.hashCode() : 0);
+        result = 31 * result + (markAsCompletedEnabled != null ? markAsCompletedEnabled.hashCode() : 0);
+        result = 31 * result + (assignEnabled != null ? assignEnabled.hashCode() : 0);
+        result = 31 * result + (multipleStatuses != null ? multipleStatuses.hashCode() : 0);
+        result = 31 * result + (priority != null ? priority.hashCode() : 0);
+        result = 31 * result + (needingAssessorScore ? 1 : 0);
+        result = 31 * result + (needingAssessorFeedback ? 1 : 0);
+        result = 31 * result + (assessorConfirmationQuestion != null ? assessorConfirmationQuestion.hashCode() : 0);
+        result = 31 * result + (competition != null ? competition.hashCode() : 0);
+        result = 31 * result + (section != null ? section.hashCode() : 0);
+        result = 31 * result + (questionType != null ? questionType.hashCode() : 0);
+        result = 31 * result + (responses != null ? responses.hashCode() : 0);
+        result = 31 * result + (questionStatuses != null ? questionStatuses.hashCode() : 0);
+        result = 31 * result + (costs != null ? costs.hashCode() : 0);
+        result = 31 * result + (questionNumber != null ? questionNumber.hashCode() : 0);
+        return result;
     }
 }
