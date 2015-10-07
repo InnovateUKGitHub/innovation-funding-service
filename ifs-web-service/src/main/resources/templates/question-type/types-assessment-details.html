@@ -23,14 +23,14 @@
 
     <div th:fragment="assessor-feedback (section, question, response)">
 
-        <div th:if="${response != null}" th:with="questionId=${question.getId()}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${response.id}">
+        <div th:if="${response != null}" th:with="questionId=${question.getId()}, assessmentFeedback=${response.getResponseAssessmentForAssessor(processRole).orElse(null)}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${response.id}">
 
             <div th:if="${question.needingAssessorScore}" th:remove="tag">
                 <h2 class="heading-small">Question Score</h2>
 
-                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}" class="form-control width-small">
-                    <option value="" th:selected="${response.assessmentScore == null}"></option>
-                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}" th:selected="${response.assessmentScore == i}">1</option>
+                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
+                    <option value="" th:selected="${assessmentFeedback?.assessmentValue == null}"></option>
+                    <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}" th:selected="${assessmentFeedback?.assessmentValue == i.toString()}">1</option>
                 </select> / 10
             </div>
 
@@ -38,21 +38,21 @@
 
                 <h2 th:text="${question.assessorConfirmationQuestion}" class="heading-small">A Confirmation Question</h2>
 
-                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small">
-                    <option value="" th:selected="${response.assessmentConfirmation == null}"></option>
-                    <option value="Yes" th:selected="${response.assessmentConfirmation == true}">Yes</option>
-                    <option value="No" th:selected="${response.assessmentConfirmation == false}">No</option>
+                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
+                    <option value="" th:selected="${assessmentFeedback?.assessmentConfirmation == null}"></option>
+                    <option value="true" th:selected="${assessmentFeedback?.assessmentValue == 'true'}">Yes</option>
+                    <option value="false" th:selected="${assessmentFeedback?.assessmentValue == 'false'}">No</option>
                 </select>
             </div>
 
             <div th:if="${question.needingAssessorFeedback}" th:remove="tag">
                 <div class="form-group extra-margin feedback">
                     <div th:include="question-type/types :: textarea-wordcount(name=${'Your feedback'},
-                        id=${'assessor-question-feedback-' + questionId},
+                        id=${'assessor-question-feedback-text-' + questionId},
                         inputName=${'assessor-question-feedback-' + questionId},
                         hint='Please justify your score by writing two or three sentences which will be returned to the applicant as feedback',
                         maxWords=350,
-                        value=${response.assessmentFeedback})" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+                        value=${assessmentFeedback?.assessmentFeedback})" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
                     </div>
             </div>
 

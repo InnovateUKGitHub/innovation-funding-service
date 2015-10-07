@@ -25,10 +25,15 @@ public class Either<L, R> {
         right = r;
     }
 
-    public <T> T map(
+    public <T> T andThen(
             Function<? super L, ? extends T> lFunc,
             Function<? super R, ? extends T> rFunc) {
         return left.map(lFunc).orElseGet(() -> right.map(rFunc).get());
+    }
+
+    public <T> Either<L, T> andThen(
+            Function<? super R, Either<L, T>> rFunc) {
+        return isLeft() ? left(left.get()) : rFunc.apply(right.get());
     }
 
     public <T> Either<T, R> mapLeft(Function<? super L, ? extends T> lFunc) {
@@ -75,6 +80,10 @@ public class Either<L, R> {
 
     public static <L, R> Supplier<Either<L, R>> toLeft(L leftValue) {
         return () -> left(leftValue);
+    }
+
+    public static <L, R> Supplier<Either<L, R>> toSuppliedLeft(Supplier<L> leftValueSupplier) {
+        return () -> left(leftValueSupplier.get());
     }
 
     public static <L, R> Supplier<Either<L, R>> toRight(R rightValue) {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.worth.ifs.application.domain.ResponseAssessorFeedback.createForResponseAndAssessor;
+import static com.worth.ifs.application.domain.AssessorFeedback.createForResponseAndAssessor;
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 @Entity
@@ -35,8 +35,8 @@ public class Response {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    @OneToMany(mappedBy="response")
-    private List<ResponseAssessorFeedback> responseAssessmentFeedbacks;
+    @OneToMany(mappedBy="response", cascade = CascadeType.ALL)
+    private List<AssessorFeedback> responseAssessmentFeedbacks;
 
     public Response(Long id, LocalDateTime updateDate, String value, ProcessRole updatedBy, Question question, Application app) {
         this.id = id;
@@ -109,18 +109,18 @@ public class Response {
         return application;
     }
 
-    public List<ResponseAssessorFeedback> getResponseAssessmentFeedbacks() {
+    public List<AssessorFeedback> getResponseAssessmentFeedbacks() {
         return responseAssessmentFeedbacks;
     }
 
-    public Optional<ResponseAssessorFeedback> getResponseAssessmentForAssessor(ProcessRole assessor) {
-        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessor().equals(assessor)).findFirst();
+    public Optional<AssessorFeedback> getResponseAssessmentForAssessor(ProcessRole assessor) {
+        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessorId().equals(assessor.getId())).findFirst();
     }
 
-    public ResponseAssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
-        Optional<ResponseAssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
+    public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
+        Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
         return ifPresent(existingFeedback, Function.identity()).orElseGet(() -> {
-            ResponseAssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
+            AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
             responseAssessmentFeedbacks.add(feedback);
             return feedback;
         });

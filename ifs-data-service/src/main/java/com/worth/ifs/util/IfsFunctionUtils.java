@@ -68,7 +68,6 @@ public class IfsFunctionUtils {
         }
     }
 
-
     /**
      * An ifPresent method that allows return values, unlike Optional's ifPresent.  Will return an IfPresentElse which a "orElse"
      * call can be supplied to in the event that the ifPresent test is false
@@ -88,6 +87,7 @@ public class IfsFunctionUtils {
 
         return new IfPresentElse(false, null);
     }
+
 
     public static class FunctionChains {
 

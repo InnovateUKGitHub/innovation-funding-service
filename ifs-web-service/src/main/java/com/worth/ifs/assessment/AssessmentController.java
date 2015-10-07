@@ -10,6 +10,7 @@ import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,15 +105,12 @@ public class AssessmentController extends AbstractApplicationController {
     public @ResponseBody JsonStatusResponse updateQuestionAssessmentFeedback(Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                @PathVariable("responseId") final Long responseId,
-                                               @RequestParam("score") final Optional<Integer> scoreParam,
-                                               @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
+                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
                                                HttpServletRequest request) {
 
         Long userId = getLoggedUser(request).getId();
-        requestParameterPresent("score", request).ifPresent(b -> responseService.saveQuestionResponseAssessorScore(userId, responseId, scoreParam.orElse(null)));
-        requestParameterPresent("confirmationAnswer", request).ifPresent(b -> responseService.saveQuestionResponseAssessorConfirmationAnswer(userId, responseId, confirmationAnswerParam.orElse(null)));
-        requestParameterPresent("feedbackText", request).ifPresent(b -> responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackTextParam.orElse(null)));
+        responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
         return JsonStatusResponse.ok();
 
     }
@@ -122,17 +120,24 @@ public class AssessmentController extends AbstractApplicationController {
         boolean invalidAssessment = assessment == null || assessment.getProcessStatus().equals(AssessmentStates.REJECTED.getState());
         boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
 
+        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, assessment.getApplication().getId());
+
+        if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
+            throw new IllegalStateException("User is not an Assessor on this application");
+        }
+
         if (invalidAssessment)
             return showInvalidAssessmentView(model, competitionId, assessment);
         else if (pendingApplication) {
             return showApplicationReviewView(model, competitionId, assessment);
         }
 
-        return showReadOnlyApplicationFormView(model, assessment, sectionId, userId);
+        return showReadOnlyApplicationFormView(model, assessment, sectionId, userId, assessorProcessRole);
     }
 
-    private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
+    private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
         addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
+        model.addAttribute("processRole", assessorProcessRole);
         return assessmentDetails;
     }
 

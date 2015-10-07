@@ -11,6 +11,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.left;
+import static com.worth.ifs.util.Either.toLeft;
+import static com.worth.ifs.util.Either.toSuppliedLeft;
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
 
 /**
@@ -21,7 +23,7 @@ public class IfsCommonFunctions {
     public static <FailureType> Function<UserRoleType, Either<FailureType, Role>> getRoleForRoleTypeFn(RoleRepository roleRepository, Supplier<FailureType> noAssessorRoleOnApplication) {
         return type -> {
             Optional<Role> matchingRole = roleRepository.findByName(type.getName()).stream().findFirst();
-            return ifPresent(matchingRole, Either::<FailureType, Role> right).orElse(left(noAssessorRoleOnApplication.get()));
+            return ifPresent(matchingRole, Either::<FailureType, Role> right).orElseGet(toSuppliedLeft(noAssessorRoleOnApplication));
         };
     }
 
@@ -29,7 +31,7 @@ public class IfsCommonFunctions {
                                                                                                                          Supplier<FailureType> noAssessorProcessRole) {
         return role -> {
             Optional<ProcessRole> matchingRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId).stream().findFirst();
-            return ifPresent(matchingRole, Either::<FailureType, ProcessRole> right).orElse(left(noAssessorProcessRole.get()));
+            return ifPresent(matchingRole, Either::<FailureType, ProcessRole> right).orElseGet(toSuppliedLeft(noAssessorProcessRole));
         };
     }
 }
