@@ -69,18 +69,21 @@
 */ 
 @import "components/modal";
 
-//still to be documented 
-@import "layout/a11y";
+/*
+##12. Competition deadlines
+*/ 
 @import "components/competition-deadline";
+
+//Modifiers
+@import "layout/a11y";
 @import "components/modifiers";
 
-
 /*
-##12. Page specific elements
+#Page specific elements
 */ 
 @import "pages/application-details";
 @import "pages/application-form";
 @import "pages/application-summary";
 @import "pages/application-dashboard";
-@import "pages/application-track";
+@import "pages/application-track";  
 
