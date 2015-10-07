@@ -1,6 +1,9 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
@@ -18,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ApplicationController exposes Application data through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/section")
@@ -112,9 +115,6 @@ public class SectionController {
 
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
-     * @param section
-     * @param organisationId
-     * @return
      */
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;

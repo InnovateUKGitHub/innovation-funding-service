@@ -14,6 +14,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * CostRestServiceImpl is a utility for CRUD operations on {@link Cost}.
+ * This class connects to the {@link com.worth.ifs.finance.controller.CostController}
+ * through a REST call.
+ */
 @Service
 public class CostRestServiceImpl extends BaseRestServiceProvider implements CostRestService {
     private final Log log = LogFactory.getLog(getClass());

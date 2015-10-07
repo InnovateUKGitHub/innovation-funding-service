@@ -1,5 +1,10 @@
 package com.worth.ifs.application.constant;
 
+
+/**
+ * Java enumeration of the current available Application workflow statuses.
+ * The value of these entries are used when saving to the database.
+ */
 public enum ApplicationStatusConstants {
     CREATED(Long.valueOf(1), "created"),
     SUBMITTED(Long.valueOf(2), "submitted"),

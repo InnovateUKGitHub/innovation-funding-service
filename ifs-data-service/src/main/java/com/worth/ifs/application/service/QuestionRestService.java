@@ -5,6 +5,9 @@ import com.worth.ifs.application.domain.Question;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Interface for CRUD operations on {@link Question} related data.
+ */
 public interface QuestionRestService {
     public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
     public void markAsInComplete(Long questionId, Long applicationId,  Long markedAsInCompleteById);

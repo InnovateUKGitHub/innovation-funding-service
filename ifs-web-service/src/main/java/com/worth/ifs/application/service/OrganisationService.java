@@ -6,6 +6,9 @@ import com.worth.ifs.user.domain.Organisation;
 import java.util.Optional;
 import java.util.TreeSet;
 
+/**
+ * Interface for CRUD operations on {@link Organisation} related data.
+ */
 public interface OrganisationService {
     public TreeSet<Organisation> getApplicationOrganisations(Application application);
     public Optional<Organisation> getApplicationLeadOrganisation(Application application);

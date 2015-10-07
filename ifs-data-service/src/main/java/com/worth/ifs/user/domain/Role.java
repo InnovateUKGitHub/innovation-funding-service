@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Role defines database relations and a model to use client side and server side.
  */
-
 @Entity
 public class Role {
     public Role(Long id, String name, List<ProcessRole> processRoles) {

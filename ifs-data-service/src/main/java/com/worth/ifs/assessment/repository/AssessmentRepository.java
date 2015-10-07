@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,10 +10,10 @@ import java.util.Set;
 
 
 /**
- * AssessmentRepository is an interface between the outside and the ORM Assessment interaction.
+ * This interface is used to generate Spring Data Repositories.
+ * For more info:
+ * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-
-
 public interface AssessmentRepository extends PagingAndSortingRepository<Assessment, Long> {
 
     Assessment findById(@Param("id") Long id);

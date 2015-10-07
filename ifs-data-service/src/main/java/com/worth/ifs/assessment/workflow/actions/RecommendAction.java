@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
+/**
+ * The {@code RecommendAction} is used by the assessor. It handles the recommendation
+ * assessment event applied to an application.
+ * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
+ */
 public class RecommendAction implements Action<String, String> {
     private final Log log = LogFactory.getLog(getClass());
 

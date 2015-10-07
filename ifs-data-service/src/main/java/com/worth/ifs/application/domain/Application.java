@@ -1,7 +1,7 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;

@@ -12,6 +12,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * OrganisationRestServiceImpl is a utility for CRUD operations on {@link Organisation}.
+ * This class connects to the {@link com.worth.ifs.user.controller.OrganisationController}
+ * through a REST call.
+ */
 @Service
 public class OrganisationRestServiceImpl extends BaseRestServiceProvider implements OrganisationRestService {
     @Value("${ifs.data.service.rest.organisation}")

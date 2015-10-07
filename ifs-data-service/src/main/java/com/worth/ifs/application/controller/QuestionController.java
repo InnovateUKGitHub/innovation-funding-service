@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.sun.javafx.scene.control.behavior.OptionalBoolean;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
@@ -14,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -24,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * QuestionController exposes question data through a REST API.
+ * QuestionController exposes question data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/question")
@@ -43,11 +41,6 @@ public class QuestionController {
     @Autowired
     ApplicationRepository applicationRepository;
 
-    /**
-     * Mark a question as complete
-     * @param questionId question which has been completed / incompleted
-     * @param markedAsCompleteById processRoleId which represents the user role combination
-     */
     @RequestMapping(value="/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public void markAsComplete(@PathVariable("questionId") final Long questionId,
                                @PathVariable("applicationId") final Long applicationId,
@@ -55,11 +48,6 @@ public class QuestionController {
         setComplete(questionId, applicationId, markedAsCompleteById, true);
     }
 
-    /**
-     * Mark a question as incomplete
-     * @param questionId question which has been completed / incompleted
-     * @param markedAsInCompleteById processRoleId which represents the user role combination
-     */
     @RequestMapping(value="/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public void markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
@@ -82,11 +70,6 @@ public class QuestionController {
         questionStatusRepository.save(questionStatus);
     }
 
-    /**
-     * Assign a question to one of the collaborators or lead applicant
-     * @param questionId question to which the assignee is assigned to
-     * @param assigneeId processRoleId which represent the user role combination
-     */
     @RequestMapping(value="/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public void assign(@PathVariable("questionId") final Long questionId,
                        @PathVariable("applicationId") final Long applicationId,
@@ -156,11 +139,6 @@ public class QuestionController {
         questionStatusRepository.save(questionStatus);
     }
 
-    /**
-     * Retrieve questions for the competition
-     * @param competitionId the competition id
-     * @return list of questions belonging to the competition
-     */
     @RequestMapping(value="/findByCompetition/{competitionId}")
     public List<Question> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionRepository.findByCompetitionId(competitionId);

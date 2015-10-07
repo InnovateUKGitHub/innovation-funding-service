@@ -1,18 +1,19 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains methods to retrieve and store {@link Section} related data,
+ * through the RestService {@link SectionRestService}.
+ */
 @Service
 public class SectionServiceImpl implements SectionService {
     @Autowired

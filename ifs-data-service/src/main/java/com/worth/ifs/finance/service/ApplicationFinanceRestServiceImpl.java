@@ -3,13 +3,19 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * ApplicationFinanceRestServiceImpl is a utility for CRUD operations on {@link ApplicationFinance}.
+ * This class connects to the {@link com.worth.ifs.finance.controller.ApplicationFinanceController}
+ * through a REST call.
+ */
 @Service
 public class ApplicationFinanceRestServiceImpl extends BaseRestServiceProvider implements ApplicationFinanceRestService {
     @Value("${ifs.data.service.rest.applicationfinance}")

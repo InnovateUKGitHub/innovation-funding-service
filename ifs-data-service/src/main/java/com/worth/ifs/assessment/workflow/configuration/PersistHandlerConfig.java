@@ -7,6 +7,12 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
+/**
+ * The {@link PersistStateMachineHandler} is being used for the assessor workflow
+ * and is configured here.
+ * This allows having multiple instances of one state machine, so each individual
+ * state can be transferred to the next, depending on its starting position.
+ */
 @WithStateMachine
 public class PersistHandlerConfig {
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * ApplicationController exposes Application data through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/competition")

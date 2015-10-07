@@ -19,6 +19,11 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
+ * This class connects to the {@link com.worth.ifs.application.controller.ResponseController}
+ * through a REST call.
+ */
 @Service
 public class ResponseRestServiceImpl extends BaseRestServiceProvider implements ResponseRestService {
     @Value("${ifs.data.service.rest.response}")

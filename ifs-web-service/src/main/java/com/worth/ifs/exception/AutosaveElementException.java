@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.DateTimeException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by dwatson on 25/09/15.
+ * This object is used when a autosave is unsuccessful. We can then set the error
+ * message to display to the user, or configure logging.
  */
 public class AutosaveElementException extends RuntimeException {
 

@@ -1,5 +1,7 @@
 package com.worth.ifs.application.model;
-
+/**
+ * This enumerations defines the available UserRoles.
+ */
 public enum UserRole {
     APPLICANT("applicant"),
     ASSESSOR("assessor");

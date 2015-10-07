@@ -7,7 +7,6 @@ import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentController is http requests controller that maps those requests and delegates their intent
+ * AssessmentController is REST controller that handles requests and delegates their intent
  * to the AssessmentHandler and only that.
  */
 @RestController

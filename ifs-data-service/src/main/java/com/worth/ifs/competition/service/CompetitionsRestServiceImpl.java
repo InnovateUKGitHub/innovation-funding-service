@@ -1,7 +1,6 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.logging.Log;
@@ -14,6 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
+ * This class connects to the {@link com.worth.ifs.competition.controller.CompetitionController}
+ * through a REST call.
+ */
 @Service
 public class CompetitionsRestServiceImpl extends BaseRestServiceProvider implements CompetitionsRestService {
     @Value("${ifs.data.service.rest.competition}")
@@ -47,8 +51,4 @@ public class CompetitionsRestServiceImpl extends BaseRestServiceProvider impleme
         Competition competition = responseEntity.getBody();
         return competition;
     }
-
-
-
-
 }

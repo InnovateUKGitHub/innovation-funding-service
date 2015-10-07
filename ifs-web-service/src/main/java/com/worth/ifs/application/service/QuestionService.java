@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Interface for CRUD operations on {@link Question} related data.
+ */
 public interface QuestionService {
     public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
     public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);

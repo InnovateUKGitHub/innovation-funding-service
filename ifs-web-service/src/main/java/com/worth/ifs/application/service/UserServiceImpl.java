@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains methods to retrieve and store {@link User} related data,
+ * through the RestService {@link UserRestService}.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 

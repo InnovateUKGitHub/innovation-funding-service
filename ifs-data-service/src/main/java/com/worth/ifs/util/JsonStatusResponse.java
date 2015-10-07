@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by dwatson on 01/10/15.
+ * This class is created to simplify creating or sending a JSON response.
  */
 public class JsonStatusResponse {
 

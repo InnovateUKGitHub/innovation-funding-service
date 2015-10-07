@@ -1,7 +1,7 @@
 package com.worth.ifs.user.domain;
 
 /**
- * Created by nunoalexandre on 14/09/15.
+ * The UserRoleType enumeration defines the available user roles.
  */
 public enum UserRoleType {
 

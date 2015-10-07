@@ -8,7 +8,6 @@ import javax.persistence.Id;
 /**
  * ApplicationStatus defines database relations and a model to use client side and server side.
  */
-
 @Entity
 public class ApplicationStatus {
 

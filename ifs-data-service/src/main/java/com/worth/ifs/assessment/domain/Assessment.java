@@ -4,14 +4,18 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessEvent;
-import com.worth.ifs.workflow.domain.ProcessStates;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-
+/**
+ * Assessment defines database relations and a model to use client side and server side.
+ */
 @Entity
 @Table(name = "Assessment", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
 @Polymorphism(type= PolymorphismType.EXPLICIT)
@@ -32,7 +36,7 @@ public class Assessment extends Process {
     private Map<Long, ResponseAssessment> responseAssessments;
 
 
-    /******* TEMPORARY ********/
+    /* ****** TEMPORARY ******* */
 
     @Column(name="temp_totalScore")
     private Double overallScore;
@@ -46,7 +50,7 @@ public class Assessment extends Process {
     @Column(name="comments")
     private String comments;
 
-    /******* END TEMPORARY ********/
+    /* ****** END TEMPORARY ******* */
 
 
     @Type(type = "yes_no")

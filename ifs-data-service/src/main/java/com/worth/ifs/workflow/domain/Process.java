@@ -1,16 +1,15 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Calendar;
 
 /**
- * Created by nunoalexandre on 15/09/15.
+ * Process defines database relations and a model to use client side and server side.
+ * This is used for multiple types of events/processes.
  */
-
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class Process {
@@ -30,23 +29,22 @@ public abstract class Process {
     private Calendar lastModified;
 
     private LocalDate startDate;
-    private LocalDate endDate;
 
+    private LocalDate endDate;
     @Column(name = "observations")
     private String observations;
 
     @Column(name="decision_reason")
     private String decisionReason;
 
-
     public Process() {
     }
+
 
     public Process(String event, String status) {
         this.event = event;
         this.status = status;
     }
-
 
     public Process(String event, String status, LocalDate startDate, LocalDate endDate) {
         this(event, status);
@@ -54,24 +52,22 @@ public abstract class Process {
         this.endDate = endDate;
     }
 
+
     public Process(String event, String status, LocalDate startDate, LocalDate endDate, String observations) {
         this(event, status, startDate, endDate);
         this.observations = observations;
     }
 
-
-    /**
-     * Getters
-     **/
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    /**
-     * Setters
-     **/
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDate getEndDate() {

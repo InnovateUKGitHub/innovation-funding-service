@@ -2,15 +2,13 @@ package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.workflow.domain.ProcessStates;
 
-import java.util.*;
-
-/**
- * Created by nunoalexandre on 15/09/15.
- */
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public enum AssessmentStates implements ProcessStates {
-
-    /***  All types of status  ***/
+    // All types of status
     PENDING("pending", 1),
     REJECTED("rejected", 2),
     OPEN("open", 3),

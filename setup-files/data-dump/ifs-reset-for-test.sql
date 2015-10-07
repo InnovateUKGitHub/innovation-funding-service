@@ -3,6 +3,7 @@ SET SQL_SAFE_UPDATES = 0; # Ignore warnings when using a update without PK in th
 TRUNCATE question_status; 										# Remove all question statuses so no question is already assigned or marked as complete
 UPDATE response SET value=''; 									# Reset all responses to nothing so all questions start empty
 UPDATE cost SET cost=0, quantity=0,item=''; 					# reset all costs to zero for testing the application form
+UPDATE application SET application_status_id='1' WHERE id=1; #Unsubmit first application for Lead Applicant form testing
 UPDATE process SET status='pending' WHERE id='3' OR id='4'; 	# Set two applications up as pending for Assessor testing
 UPDATE process SET status='assessed' WHERE id='1'; 	# Set two applications up as pending for Assessor testing
 UPDATE assessment SET submitted='Y' WHERE application=1; 		# Set first application to submitted for Assessor testing

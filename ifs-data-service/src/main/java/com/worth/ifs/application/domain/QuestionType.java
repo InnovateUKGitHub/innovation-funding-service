@@ -1,9 +1,16 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
+
+/**
+ * QuestionType is used to identify what response a question needs.
+ * This is also used to choose a template in the web-service. Depending on the QuestionType we
+ * can also implement extra behaviour like form / input validation.
+ */
 @Entity
 public class QuestionType {
     @Id
