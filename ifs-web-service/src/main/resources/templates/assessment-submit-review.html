@@ -48,7 +48,7 @@
                         <p th:if="${question.feedback == null}">
                             No feedback has yet been provided.
                         </p>
-                        <p><a th:href="@{/assessor/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}(competitionId=${model.competition.id},applicationId=${model.application.id},sectionId=${section.id})}">Return to this question in the application</a></p>
+                        <p><a th:href="@{/assessor/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}(competitionId=${model.competition.id},applicationId=${model.application.id},sectionId=${section.id})} + ${'#question-' + question.id}">Return to this question in the application</a></p>
                     </div>
                     <div class="column-quarter">
                         <p class="assessor-score">
