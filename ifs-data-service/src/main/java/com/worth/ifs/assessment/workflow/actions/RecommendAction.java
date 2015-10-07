@@ -10,7 +10,8 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
 /**
- * The RecommendAction is used by the assessor.
+ * The {@code RecommendAction} is used by the assessor. It handles the recommendation
+ * assessment event applied to an application.
  * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
  */
 public class RecommendAction implements Action<String, String> {
