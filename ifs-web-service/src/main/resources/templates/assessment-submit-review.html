@@ -24,7 +24,6 @@
     </div>
 
 
-
     <div class="grid-row">
         <header class="page-header group no-pad">
             <h1 class="heading-xlarge">Assessment summary</h1>
@@ -278,16 +277,7 @@
             <tbody>
             <tr>
                 <th>Question</th>
-                <td>Q1</td>
-                <td>Q2</td>
-                <td>Q3</td>
-                <td>Q4</td>
-                <td>Q5</td>
-                <td>Q6</td>
-                <td>Q7</td>
-                <td>Q8</td>
-                <td>Q9</td>
-                <td>Q10</td>
+                <td th:each="question:${questions}" th:if="${question.needingAssessorScore}" th:text="${question.questionNumber}">Q1</td>
             </tr>
             <tr>
                 <th>Score</th>

@@ -79,7 +79,9 @@ public class Question {
     @OneToMany(mappedBy="question")
     private List<Cost> costs;
 
-    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount, Integer priority) {
+    private String questionNumber;
+
+    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String questionNumber, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount, Integer priority) {
         this.optionValues = optionValues;
         this.id = id;
         this.competition = competition;
@@ -87,6 +89,7 @@ public class Question {
         this.questionType = questionType;
         this.responses = responses;
         this.name = name;
+        this.questionNumber = questionNumber;
         this.description = description;
         this.guidanceQuestion = guidanceQuestion;
         this.guidanceAnswer = guidanceAnswer;
@@ -211,5 +214,9 @@ public class Question {
 
     public String getAssessorConfirmationQuestion() {
         return assessorConfirmationQuestion;
+    }
+
+    public String getQuestionNumber() {
+        return questionNumber;
     }
 }

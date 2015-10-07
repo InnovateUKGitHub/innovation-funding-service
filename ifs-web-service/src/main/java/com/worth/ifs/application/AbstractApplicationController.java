@@ -13,6 +13,7 @@ import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -133,8 +134,12 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
-        List<Response> responses = responseService.getByApplication(application.getId());
+        List<Response> responses = getResponses(application);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+    }
+
+    protected List<Response> getResponses(Application application) {
+        return responseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, Application application, Long userId) {
