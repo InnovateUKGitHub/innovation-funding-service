@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import static com.worth.ifs.service.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 
@@ -21,6 +22,13 @@ import static com.worth.ifs.util.Either.right;
  */
 @Service
 public class AssessorServiceImpl implements AssessorService {
+
+    public enum Failures {
+        RESPONSE_NOT_FOUND, //
+        PROCESS_ROLE_NOT_FOUND, //
+        PROCESS_ROLE_INCORRECT_TYPE, //
+        PROCESS_ROLE_INCORRECT_APPLICATION, //
+    }
 
     @Autowired
     private ResponseRepository responseRepository;
@@ -52,20 +60,20 @@ public class AssessorServiceImpl implements AssessorService {
 
     private Either<ServiceFailure, Response> getResponse(Long responseId) {
         return Optional.ofNullable(responseRepository.findOne(responseId)).map(AssessorServiceImpl::rightResponse)
-                .orElse(left(new ServiceFailure()));
+                .orElse(left(error(Failures.RESPONSE_NOT_FOUND)));
     };
 
     private Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
         return Optional.of(processRoleRepository.findOne(processRoleId)).map(AssessorServiceImpl::rightResponse)
-                .orElse(left(new ServiceFailure()));
+                .orElse(left(error(Failures.PROCESS_ROLE_NOT_FOUND)));
     };
 
     private Either<ServiceFailure, ProcessRole> validateProcessRoleInApplication(Response response, ProcessRole processRole) {
-        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? rightResponse(processRole) : left(new ServiceFailure());
+        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? rightResponse(processRole) : left(error(Failures.PROCESS_ROLE_INCORRECT_APPLICATION));
     };
 
     private Either<ServiceFailure, ProcessRole> validateProcessRoleCorrectType(ProcessRole processRole, UserRoleType type) {
-        return processRole.getRole().getName().equals(type.getName()) ? rightResponse(processRole) : left(new ServiceFailure());
+        return processRole.getRole().getName().equals(type.getName()) ? rightResponse(processRole) : left(error(Failures.PROCESS_ROLE_INCORRECT_TYPE));
     };
 
     private static <T> Either<ServiceFailure, T> rightResponse(T response) {

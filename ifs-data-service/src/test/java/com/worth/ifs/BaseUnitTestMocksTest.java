@@ -1,8 +1,10 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -27,6 +29,15 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected UserRepository userRepositoryMock;
+
+    @Mock
+    protected RoleRepository roleRepositoryMock;
+
+    @Mock
+    protected ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    protected ResponseRepository responseRepositoryMock;
 
     @Before
     public void setUp() {
