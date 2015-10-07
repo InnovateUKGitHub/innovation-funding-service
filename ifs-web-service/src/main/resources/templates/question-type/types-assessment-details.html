@@ -39,7 +39,7 @@
                 <h2 th:text="${question.assessorConfirmationQuestion}" class="heading-small">A Confirmation Question</h2>
 
                 <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
-                    <option value="" th:selected="${assessmentFeedback?.assessmentConfirmation == null}"></option>
+                    <option value="" th:selected="${assessmentFeedback?.assessmentValue == null}"></option>
                     <option value="true" th:selected="${assessmentFeedback?.assessmentValue == 'true'}">Yes</option>
                     <option value="false" th:selected="${assessmentFeedback?.assessmentValue == 'false'}">No</option>
                 </select>
