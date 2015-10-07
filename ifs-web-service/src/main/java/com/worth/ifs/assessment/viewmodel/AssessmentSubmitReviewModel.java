@@ -58,7 +58,6 @@ public class AssessmentSubmitReviewModel {
         return toMap(Pair::getLeft, Pair::getRight);
     }
 
-
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {

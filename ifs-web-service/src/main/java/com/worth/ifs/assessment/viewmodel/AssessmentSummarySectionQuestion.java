@@ -21,7 +21,9 @@ public class AssessmentSummarySectionQuestion {
     }
 
     public AssessmentSummarySectionQuestion(Question question, Optional<AssessorFeedback> feedback) {
-        this(question.getId(), question.getName(), feedback.map(AssessmentSummarySectionQuestionFeedback::new).orElse(null));
+        this(question.getParentQuestion() != null ? question.getParentQuestion().getId() : question.getId(),
+             question.getParentQuestion() != null ? question.getParentQuestion().getName() : question.getName(),
+             feedback.map(AssessmentSummarySectionQuestionFeedback::new).orElse(null));
     }
 
     public Long getId() {
