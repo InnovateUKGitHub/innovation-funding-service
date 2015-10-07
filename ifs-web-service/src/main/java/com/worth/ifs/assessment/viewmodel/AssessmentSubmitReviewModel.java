@@ -12,8 +12,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
 
 import static com.worth.ifs.util.IfsFunctionUtils.ifPresent;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -51,6 +54,12 @@ public class AssessmentSubmitReviewModel {
         return e -> e.getValue();
     }
 
+    private static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
+        return toMap(Pair::getLeft, Pair::getRight);
+    }
+
+
+    private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
 
@@ -68,7 +77,7 @@ public class AssessmentSubmitReviewModel {
                 map(question -> Pair.of(question, responses.stream().
                         filter(response -> response.getQuestion().getId().equals(question.getId())).
                         findFirst())).
-                collect(toMap(Pair::getLeft, Pair::getRight));
+                collect(pairsToMap());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
@@ -84,9 +93,9 @@ public class AssessmentSubmitReviewModel {
         totalScore = questionsAndResponses.entrySet().stream().
                 filter(e -> e.getKey().getNeedingAssessorScore()).
                 map(mapEntryValue()).
-                map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(Optional.empty())).
-                map(optionalFeedback -> ifPresent(optionalFeedback, AssessorFeedback::getAssessmentValue).orElse("0")).
-                collect(summingInt(score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0));
+                map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(empty())).
+                map(optionalFeedback -> optionalFeedback.map(AssessorFeedback::getAssessmentValue).orElse("0")).
+                collect(summingInt(stringToInteger));
 
         possibleScore = questions.stream().
                 filter(Question::getNeedingAssessorScore).
@@ -97,8 +106,8 @@ public class AssessmentSubmitReviewModel {
         List<Section> sections = competition.getSections();
 
         Map<Question, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
-                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(Optional.empty()))).
-                        collect(toMap(Pair::getLeft, Pair::getRight));
+                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
+                        collect(pairsToMap());
 
         assessmentSummarySections = sections.stream().
                 filter(Section::isDisplayInAssessmentApplicationSummary).
