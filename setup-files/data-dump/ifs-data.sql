@@ -175,16 +175,6 @@ INSERT  IGNORE INTO `response` (`id`, `update_date`, `value`, `application_id`, 
 UNLOCK TABLES;
 
 --
--- Dumping data for table `response_assessor_feedback`
---
-
-LOCK TABLES `response_assessor_feedback` WRITE;
-/*!40000 ALTER TABLE `response_assessor_feedback` DISABLE KEYS */;
-INSERT  IGNORE INTO `response_assessor_feedback` (`id`, `assessment_feedback`, `assessment_value`, `assessor_id`, `response_id`) VALUES (1,'','',16,21);
-/*!40000 ALTER TABLE `response_assessor_feedback` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `role`
 --
 
