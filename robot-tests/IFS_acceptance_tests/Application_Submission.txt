@@ -14,6 +14,7 @@ ${competition_name}    Technology Inspired
 
 *** Test Cases ***
 Submitting an application shows a confirmation popup
+    [Documentation]     INFUND-342
     [Tags]    Assessor
     When Assessor clicks the competition
     When Select Application Checkbox    ${application_name}
@@ -40,16 +41,14 @@ Select Application Checkbox
     Click Element    xpath=//li[.//a[contains(text(),'${application_name}')]]//input[@class="assessment-submit-checkbox"]
 
 Submit Selected Applications
-    Choose Cancel On Next Confirmation
-    Click Element    xpath=//*[@name="submit_assessments"]
+    #Choose Cancel On Next Confirmation
+    Click Element    xpath=//*[@id="formSubmitAssessmentButton"]
 
 Cancel the confirmation popup
-    Choose Cancel On Next Confirmation
-    Confirm Action
+    Click Element    css=#bulk_assessments_submission > div.modal-confirm-submit > div > button.js-close.button.buttonlink.large
 
 Confirm the confirmation popup
-    Choose Ok On Next Confirmation
-    Confirm Action
+    Click Element    css=#bulk_assessments_submission > div.modal-confirm-submit > div > button:nth-child(1)
 
 Application is not submitted
     Reload Page
