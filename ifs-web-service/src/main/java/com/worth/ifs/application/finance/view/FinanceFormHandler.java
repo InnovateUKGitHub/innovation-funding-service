@@ -2,10 +2,7 @@ package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.CostItemMapper;
 import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.cost.CostItem;
-import com.worth.ifs.application.finance.cost.LabourCost;
-import com.worth.ifs.application.finance.cost.Materials;
-import com.worth.ifs.application.finance.cost.SubContractingCost;
+import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -18,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * {@code FinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
+ * transfered to view or stored. The costs retrieved from the {@link CostService} are converted
+ * to {@link CostItem}.
+ */
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
 
@@ -112,7 +114,6 @@ public class FinanceFormHandler {
 
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
-
         if (keyParts.length > 2) {
             Long id = Long.valueOf(keyParts[2]);
             return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
@@ -131,6 +132,8 @@ public class FinanceFormHandler {
                 break;
             case SUBCONTRACTING_COSTS:
                 costItem = getSubContractingCosts(id, costFields);
+            case FINANCE:
+                costItem = getClaimGrantPercentage(id, costFields);
         }
         return costItem;
     }
@@ -198,6 +201,15 @@ public class FinanceFormHandler {
         }
 
         return new SubContractingCost(id, cost, country, name, role);
+    }
+
+    private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {
+        Optional<CostFormField> grantClaimPercentageField = costFormFields.stream().findFirst();
+        Integer grantClaimPercentage = 0;
+        if(grantClaimPercentageField.isPresent()) {
+            grantClaimPercentage = getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
+        }
+        return new GrantClaim(id, grantClaimPercentage);
     }
 
     private Double getDoubleValue(String value, Double defaultValue) {

@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * {@code LabourCostCategory} implementation for {@link CostCategory}. Calculating the Labour costs
+ * for an application.
+ */
 public class LabourCostCategory implements CostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
     private LabourCost workingDaysPerYear;

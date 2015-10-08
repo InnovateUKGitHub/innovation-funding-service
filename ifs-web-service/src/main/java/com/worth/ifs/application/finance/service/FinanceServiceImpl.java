@@ -16,6 +16,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@code FinanceServiceImpl} implements {@link FinanceService} handles the finances for each of the organisations.
+ */
 @Service
 public class FinanceServiceImpl implements FinanceService {
     private final Log log = LogFactory.getLog(getClass());

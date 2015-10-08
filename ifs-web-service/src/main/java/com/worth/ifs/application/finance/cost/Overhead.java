@@ -2,6 +2,9 @@ package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * {@code Overhead} implements {@link CostItem}
+ */
 public class Overhead implements CostItem {
     String acceptRate;
     Integer customRate;

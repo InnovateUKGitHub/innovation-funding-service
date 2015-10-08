@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * {@code LabourCost} implements {@link CostItem}
+ */
 public class LabourCost implements CostItem {
     private final Log log = LogFactory.getLog(getClass());
 

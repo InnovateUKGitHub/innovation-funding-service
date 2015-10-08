@@ -268,7 +268,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         try {
             User user = userAuthenticationService.getAuthenticatedUser(request);
-
+            log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
                 Application application = applicationService.getById(applicationId);
                 application.setName(value);
