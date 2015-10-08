@@ -5,6 +5,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -54,8 +55,22 @@ public class Response {
 
     }
 
+    public Response(Response other) {
+        this.id = other.id;
+        this.updateDate = other.updateDate;
+        this.value = other.value;
+        this.updatedBy = other.updatedBy;
+        this.question = other.question;
+        this.application = other.application;
+        this.responseAssessmentFeedbacks = new ArrayList<>(other.responseAssessmentFeedbacks);
+    }
+
     public Long getId() {
         return id;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getUpdateDate() {

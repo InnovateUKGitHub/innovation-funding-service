@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +46,15 @@ public class ProcessRole {
         this.application = application;
         this.role = role;
         this.organisation = organisation;
+    }
+
+    public ProcessRole(ProcessRole other) {
+        this.id = other.id;
+        this.user = other.user;
+        this.application = other.application;
+        this.role = other.role;
+        this.organisation = other.organisation;
+        this.responses = new ArrayList<>(other.responses);
     }
 
     public Role getRole() {

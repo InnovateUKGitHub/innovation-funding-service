@@ -1,13 +1,10 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
 
-import java.util.Optional;
-
-import static com.worth.ifs.service.AssessorServiceImpl.*;
+import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
 import static com.worth.ifs.service.AssessorServiceImpl.Failures.*;
 import static java.util.Optional.empty;
 import static org.junit.Assert.assertArrayEquals;
@@ -32,7 +29,21 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         when(responseRepositoryMock.findOne(responseId)).thenReturn(null);
         Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, 2L, empty(), empty());
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(Failures.RESPONSE_NOT_FOUND.name()));
+        assertTrue(serviceResult.getLeft().is(RESPONSE_NOT_FOUND));
+    }
+
+    @Test
+    public void test_processRoleNotFound() {
+
+        long responseId = 1L;
+        long processRoleId = 2L;
+
+        when(responseRepositoryMock.findOne(responseId)).thenReturn(newResponse().build());
+        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
+        assertTrue(serviceResult.isLeft());
+        assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_NOT_FOUND));
     }
 
 }

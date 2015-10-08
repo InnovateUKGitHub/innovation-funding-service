@@ -25,9 +25,6 @@ public abstract class BaseUnitTestMocksTest {
     protected ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
-    protected ProcessRoleRepository userAppRoleRepositoryMock;
-
-    @Mock
     protected UserRepository userRepositoryMock;
 
     @Mock

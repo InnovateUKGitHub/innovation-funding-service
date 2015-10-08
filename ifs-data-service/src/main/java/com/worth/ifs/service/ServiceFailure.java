@@ -70,4 +70,8 @@ public class ServiceFailure {
         List<String> messagesList = asList(messages);
         return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
     }
+
+    public boolean is(Enum<?>... messages) {
+        return is(asList(messages).stream().map(Enum::name).collect(toList()).toArray(new String[] {}));
+    }
 }

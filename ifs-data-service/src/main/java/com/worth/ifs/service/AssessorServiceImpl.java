@@ -64,7 +64,7 @@ public class AssessorServiceImpl implements AssessorService {
     };
 
     private Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
-        return Optional.of(processRoleRepository.findOne(processRoleId)).map(AssessorServiceImpl::rightResponse)
+        return Optional.ofNullable(processRoleRepository.findOne(processRoleId)).map(AssessorServiceImpl::rightResponse)
                 .orElse(left(error(Failures.PROCESS_ROLE_NOT_FOUND)));
     };
 
