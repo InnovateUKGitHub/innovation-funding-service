@@ -27,60 +27,43 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void test_findAll() {
-
-        //
         // Fetch the list of users
-        //
         List<User> users = repository.findAll();
-        assertEquals(6, users.size());
+        assertEquals(7, users.size());
 
-        //
         // Assert that we've got the users we were expecting
-        //
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com");
+        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
 
     @Test
     @Rollback
     public void test_createUser() {
-
-        //
         // Create a new user
-        //
         User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<ProcessRole>()));
         assertNotNull(newUser.getId());
 
-        //
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
-        //
         List<User> users = repository.findAll();
-        assertEquals(7, users.size());
+        assertEquals(8, users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "new@example.com");
+        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "new@example.com");
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
 
     @Test
     @Rollback
     public void test_deleteNewUser() {
-
-        //
         // Create a new user
-        //
         User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<ProcessRole>()));
 
-        //
         // and immediately delete them
-        //
         repository.delete(newUser.getId());
 
-        //
         // Fetch the list of users and assert that the user doesn't exist in this list
-        //
         List<User> users = repository.findAll();
-        assertEquals(6, users.size());
+        assertEquals(7, users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         assertFalse(emailAddresses.contains("new@example.com"));
     }
