@@ -1,5 +1,9 @@
 *** Settings ***
-Documentation     INFUND-337
+Documentation     -INFUND-225 As an assessor and I am signed in, I have an overview of the competitions for which I assess the applications, so that I can see my workload.
+...
+...               -INFUND-246 As an assessor I want to see my assessment progress at competition level (how many assessments completed vs. total), so I can manage workload.
+...
+...               INFUND-337
 Suite Setup       Login as user    &{assessor_credentials}
 Suite Teardown    User closes the browser
 Resource          GLOBAL_LIBRARIES.txt
@@ -10,9 +14,9 @@ Resource          User_credentials.txt
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
-${accept_application_name}    A novel solution to an old problem
+${accept_application_name}    A new innovative solution
 ${competition_name}    Technology Inspired
-${deadline_month}    december
+${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
@@ -21,10 +25,11 @@ ${competition_details_page_title}    Competition Details
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does this application align with the specific competition scope?
-${persistence_application_name}    A novel solution to an old problem
+${persistence_application_name}    A new innovative solution
 
 *** Test Cases ***
 Assessment progress is 1 out of 4
+    [Documentation]    INFUND-302
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
@@ -44,18 +49,21 @@ Applications details page has two lists
     and Page should contain a list with the submitted assessments
 
 Application invitation review page shows the title
+    [Documentation]    INFUND-329
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
+    [Documentation]    INFUND-329
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
 
 Application state changes when accepting an invitation for assessment
+    [Documentation]    INFUND-338
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
@@ -63,6 +71,7 @@ Application state changes when accepting an invitation for assessment
     Then Application status should change to open    ${accept_application_name}
 
 Application state changes when rejecting an invitation for assessment
+    [Documentation]    INFUND-338
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${reject_application_name}
@@ -89,6 +98,7 @@ Application Summary sections contain questions
     Then the Section contents will contain a question    ${accept_application_first_question_title}
 
 Application Summary shows your feedback when appropriate
+    [Documentation]    INFUND-357
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
@@ -99,6 +109,7 @@ Application Summary shows your feedback when appropriate
     Then Your feedback textarea disappears
 
 Application Summary returns an error message when submitting empty feedback
+    [Documentation]    INFUND-357
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
@@ -108,26 +119,31 @@ Application Summary returns an error message when submitting empty feedback
     Then form will not be submitted
 
 Assessor can see the competitions that he/she accepted
+    [Documentation]    INFUND-292
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Assessor sees competitions he or she accepted
 
 Competition has a deadline
+    [Documentation]    INFUND-292
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competition has a deadline
 
 Competition has days remaining
+    [Documentation]    INFUND-292
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competition has a number of days remaining
 
 Competition for Assessment count
+    [Documentation]    INFUND-292
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions for Assessment shows an amount of competitions
 
 Assessment progress is 1 out of 3
+    [Documentation]    INFUND-302
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}

@@ -44,8 +44,8 @@ Verify the field is disabled for the Collaborator
     Then the field should be disabled for the lead applicant
 
 Verify the Lead applicant can assign a question back to him self
+    [Setup]    Mark Question as incomplete
     Given the Applicant opens again the application form
-    and the question 11 is editable
     when the Applicant assigns the question 11 to the collaborator    Jessica Doe
     and the field should be disabled for the lead applicant
     and the lead applicant re-assign the question to him self    Steve Smith
@@ -143,10 +143,11 @@ the lead applicant re-assign the question to him self
     Element Should Be Enabled    id=11
     Close Browser
 
-the question 11 is editable
-    Wait Until Element Is Visible    css=#question-11 .buttonlink
-    Click Element    css=#question-11 .buttonlink
-
 the Applicant opens again the application form
     Switch Browser    1
-    go to     ${APPLICATION_URL}
+    go to    ${APPLICATION_URL}
+
+Mark Question as incomplete
+    Switch Browser    1
+    Wait Until Element Is Visible    css=#question-12 div.textarea-footer > button[name="mark_as_incomplete"]
+    Click Element    css=#question-12 div.textarea-footer > button[name="mark_as_incomplete"]
