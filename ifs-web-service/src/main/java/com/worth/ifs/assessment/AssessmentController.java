@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -133,6 +135,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId) {
         addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
+        addFinanceDetails(model, assessment.getApplication());
         return assessmentDetails;
     }
 
@@ -223,7 +226,6 @@ public class AssessmentController extends AbstractApplicationController {
     public String assessmentsSubmissions(Model model, HttpServletRequest req) {
 
         Map<String, String[]> params = req.getParameterMap();
-
         /*** avoids to trigger an response if any other button was clicked that not accept / reject ***/
         if ( params.containsKey("submit_assessments") && params.containsKey("submitted[]") ) {
 
@@ -239,6 +241,11 @@ public class AssessmentController extends AbstractApplicationController {
         //gets the competition id to redirect
         Long competitionId = Long.valueOf(req.getParameter("competitionId"));
         return "redirect:" + competitionAssessmentsURL(competitionId);
+    }
+
+    @RequestMapping(value = "/confirm-submit")
+    public String confirmSubmit(Model model, HttpServletRequest req) {
+        return "assessment-confirm-submit";
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)
@@ -281,11 +288,8 @@ public class AssessmentController extends AbstractApplicationController {
 
 
     private void getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
-        //gets
         Competition competition = competitionService.getCompetitionById(competitionId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
-
-        //pass to view
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
     }

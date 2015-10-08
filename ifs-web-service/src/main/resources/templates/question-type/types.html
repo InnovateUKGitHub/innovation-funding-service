@@ -94,7 +94,7 @@
         <div th:replace="question-type/types :: empty" th:with="$question=(${question})" th:remove="tag" />
 
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-percentage (id='application_details-duration', name='Please enter the grant % you wish to claim for this project', percentage=40)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-percentage (id='application_details-duration', name='Please enter the grant % you wish to claim for this project', percentage=50)" th:remove="tag" />
             <span>%</span>
         </div>
 
@@ -653,9 +653,8 @@
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
-            <option>No</option>
-            <option th:if="${userIsLeadApplicant}" selected="selected">Yes</option>
-            <option th:unless="${userIsLeadApplicant}">Yes</option>
+            <option selected="selected">No</option>
+            <option>Yes</option>
         </select>
         <div id="otherCostsForm" class="form-group">
             <table id="other-funding">
@@ -673,22 +672,22 @@
                 <tbody>
                 <tr>
                     <td>
-                        <input type="text" value="Public Sector Grant" />
+                        <input type="text"/>
                     </td>
                     <td>
-                        <input type="text" value="10-06-2015" />
+                        <input type="text"/>
                     </td>
                     <td class="numeric">
-                        <input type="text" value="10,000" />
+                        <input type="text"/>
                     </td>
                     <td>
-                        <input type="text" value="Yes" />
+                        <input type="text"/>
                     </td>
                     <td class="numeric">
-                        <input type="text" value="10,000" />
+                        <input type="text"/>
                     </td>
                     <td>
-                        <input type="text" value="06-10-2015" />
+                        <input type="text"/>
                     </td>
                     <td>
                         <a href="#">Remove</a>
@@ -784,15 +783,15 @@
                 </tr>
                 <tr>
                     <th>% Grant</th>
-                    <td class="numeric">58%</td>
+                    <td class="numeric">57%</td>
                     <td class="numeric">50%</td>
                     <td class="numeric">70%</td>
                     <td class="numeric">70%</td>
                 </tr>
                 <tr>
                     <th>Funding sought</th>
-                    <td class="numeric">£240,623</td>
-                    <td class="numeric">£124,300</td>
+                    <td class="numeric">£258,727</td>
+                    <td class="numeric">£142,404</td>
                     <td class="numeric">£73,862</td>
                     <td class="numeric">£42,461</td>
                 </tr>
@@ -805,8 +804,8 @@
                 </tr>
                 <tr>
                     <th>Contribution to project</th>
-                    <td class="numeric">£174,153</td>
-                    <td class="numeric">£124,300</td>
+                    <td class="numeric">£192,256</td>
+                    <td class="numeric">£142,404</td>
                     <td class="numeric">£31,655</td>
                     <td class="numeric">£18,198</td>
                 </tr>

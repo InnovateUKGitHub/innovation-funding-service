@@ -77,9 +77,18 @@ small {
 button,
 .button,
 input[type="button"] {
-		&.large {
+	&.large {
 	    box-shadow: 0px 4px 0px darken($button-colour,15%);
 	    padding: 15px 45px;
+	    font-size: 18px; 
+	    &.buttonlink{
+	    	box-shadow: none;
+	    	color: $link-colour;
+	    	&:hover,
+	    	&:focus{
+	    		background: none; 
+	    	}
+	    }
 	}
 }
 

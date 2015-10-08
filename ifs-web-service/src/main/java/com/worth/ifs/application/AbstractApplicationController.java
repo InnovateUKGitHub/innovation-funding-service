@@ -13,6 +13,8 @@ import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -30,6 +32,7 @@ import static com.worth.ifs.util.IfsFunctions.ifPresent;
  * This object contains shared methods for all the Controllers related to the {@link Application} data.
  */
 public abstract class AbstractApplicationController {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     protected ResponseService responseService;
@@ -161,13 +164,16 @@ public abstract class AbstractApplicationController {
         model.addAttribute("assignedSections", assignedSections);
     }
 
-    protected void addFinanceDetails(Model model, Application application, Long userId) {
+    protected void addOrganisationFinanceDetails(Model model, Application application, Long userId) {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
+    }
 
+    protected void addFinanceDetails(Model model, Application application) {
         Section section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
+        log.info("FINANCE DETAILS : " + section);
         model.addAttribute("financeSection", section);
 
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, application.getId());

@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: mysqlnode1.worthit.public    Database: ifs_acc
+-- Host: 127.0.0.1    Database: ifs
 -- ------------------------------------------------------
--- Server version	5.5.29-0ubuntu0.12.04.2-log
+-- Server version	5.6.21-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,7 +21,7 @@
 
 LOCK TABLES `application` WRITE;
 /*!40000 ALTER TABLE `application` DISABLE KEYS */;
-INSERT  IGNORE INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`) VALUES (1,36,'A novel solution to an old problem','2015-11-01',1,1),(2,20,'Providing sustainable childcare','2015-11-01',2,1),(3,10,'Mobile Phone Data for Logistics Analytics','2015-11-01',3,1),(4,43,'Using natural gas to heat homes','2015-11-01',4,1),(5,20,'A novel solution to an old problem','2015-11-01',2,1),(6,23,'Security for the Internet of Things','2015-11-01',2,1);
+INSERT  IGNORE INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`) VALUES (1,36,'A novel solution to an old problem','2016-03-01',1,1),(2,20,'Providing sustainable childcare','2015-11-01',2,1),(3,10,'Mobile Phone Data for Logistics Analytics','2015-11-01',3,1),(4,43,'Using natural gas to heat homes','2015-11-01',4,1),(5,20,'A new innovative solution','2015-11-01',2,1),(6,23,'Security for the Internet of Things','2015-11-01',2,1);
 /*!40000 ALTER TABLE `application` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -31,7 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `application_finance` WRITE;
 /*!40000 ALTER TABLE `application_finance` DISABLE KEYS */;
-INSERT  IGNORE INTO `application_finance` (`id`, `application_id`, `organisation_id`) VALUES (1,1,3),(2,1,6),(3,1,4),(4,5,4);
+INSERT  IGNORE INTO `application_finance` (`id`, `application_id`, `organisation_id`) VALUES (1,1,3),(2,1,6),(3,1,4),(4,5,4),(5,2,3),(6,5,3),(7,5,6);
 /*!40000 ALTER TABLE `application_finance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',60,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('',40,'EMPTY','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3);
+INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',72,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('',60,'EMPTY','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +71,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `cost` WRITE;
 /*!40000 ALTER TABLE `cost` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,2444,'','Project cost 1',234,1,28),(4,2300,'','Project cost 2',200,1,28),(11,233,'','',22,1,28),(12,0,'','',0,1,30),(13,59990,'','',0,1,32),(15,NULL,'Working days per year',NULL,232,2,28),(16,NULL,'Working days per year',NULL,243,3,28),(17,30020,'','',6,3,28),(18,10,'','',7,3,30);
+INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,50000,'','Manager',168,1,28),(4,30000,'','Engineer',696,1,28),(12,100,'','Powder',20,1,30),(13,150000,'specialist consultant','Mr Francis Bois',0,1,32),(15,NULL,'Working days per year',NULL,227,2,28),(16,NULL,'Working days per year',NULL,227,3,28),(17,45000,'','Manager',120,3,28),(18,140,'','Raw materials',120,3,30),(19,600,'','crucibles',6,1,30),(20,250,'','valves',12,1,30),(21,32000,'','Engineer',250,3,28),(22,28000,'','Technician',220,3,28),(23,50,'','components',30,3,30),(24,150,'','Tooling',7,3,30),(25,76800,'','Research engineer',132,2,28),(26,5000,'Machining of parts','East engineering',0,2,32),(27,400,'','Plates',5,2,30),(28,200,'','Powder',45,2,30),(29,NULL,'Working days per year',NULL,232,6,28),(30,50000,'','Manager',168,6,28),(31,30000,'','Engineer',696,6,28),(32,100,'','Powder',20,6,30),(33,150000,'specialist consultant','Mr Francis Bois',0,6,32),(34,NULL,'Working days per year',NULL,227,7,28),(35,NULL,'Working days per year',NULL,227,4,28),(36,45000,'','Manager',120,4,28),(37,140,'','Raw materials',120,4,30),(38,600,'','crucibles',6,6,30),(39,250,'','valves',12,6,30),(40,32000,'','Engineer',250,4,28),(41,28000,'','Technician',220,4,28),(42,50,'','components',30,4,30),(43,150,'','Tooling',7,4,30),(44,76800,'','Research engineer',132,7,28),(45,5000,'Machining of parts','East engineering',0,7,32),(46,400,'','Plates',5,7,30),(47,200,'','Powder',45,7,30);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +91,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `cost_value` WRITE;
 /*!40000 ALTER TABLE `cost_value` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES (13,1,'test454');
+INSERT  IGNORE INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES (13,1,'France'),(26,1,'UK'),(33,1,'France'),(45,1,'UK');
 /*!40000 ALTER TABLE `cost_value` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,4,1,2),(11,6,4,1,2);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,3,1,1),(11,6,4,1,2),(12,5,4,2,2),(13,5,6,2,8);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +141,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `question_status` WRITE;
 /*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `application_id`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (2,NULL,'\0',NULL,1,NULL,NULL,1,11),(3,NULL,'',NULL,1,NULL,NULL,1,28),(4,NULL,'',NULL,1,NULL,NULL,1,33),(6,'2015-09-25 00:06:12',NULL,'',1,1,5,NULL,13),(7,NULL,'\0',NULL,1,NULL,NULL,5,29),(8,'2015-09-25 00:07:50',NULL,'\0',1,NULL,NULL,NULL,29),(9,'2015-09-25 00:27:25',NULL,'',1,1,5,NULL,4),(10,'2015-10-02 17:03:42','','\0',5,NULL,NULL,10,12),(12,'2015-10-02 17:03:28','','\0',5,NULL,NULL,10,11),(13,'2015-10-02 17:04:05','','\0',5,NULL,NULL,10,13),(14,'2015-10-02 17:04:24','','\0',5,NULL,NULL,10,1),(15,'2015-10-02 17:05:51','','\0',5,NULL,NULL,10,2),(16,'2015-10-02 17:06:06','','\0',5,NULL,NULL,10,3),(17,'2015-10-02 17:06:20','','\0',5,NULL,NULL,10,4),(18,'2015-10-02 17:06:42','','\0',5,NULL,NULL,10,5),(19,'2015-10-02 17:06:57','','\0',5,NULL,NULL,10,6),(20,'2015-10-02 17:07:17','','\0',5,NULL,NULL,10,7),(21,'2015-10-02 17:07:31','','\0',5,NULL,NULL,10,8),(22,'2015-10-02 17:07:50','','\0',5,NULL,NULL,10,15),(23,'2015-10-02 17:08:03','','\0',5,NULL,NULL,10,16);
+INSERT  IGNORE INTO `question_status` (`id`, `assigned_date`, `marked_as_complete`, `notified`, `application_id`, `assigned_by_id`, `assignee_id`, `marked_as_complete_by_id`, `question_id`) VALUES (2,'2015-10-02 17:37:31','','\0',1,NULL,NULL,1,11),(3,NULL,'',NULL,1,NULL,NULL,1,28),(4,NULL,'',NULL,1,NULL,NULL,1,33),(6,'2015-10-02 17:46:54','','\0',1,NULL,NULL,NULL,13),(7,NULL,'',NULL,1,NULL,NULL,5,29),(8,'2015-09-25 00:07:50',NULL,'\0',1,NULL,NULL,NULL,29),(9,'2015-09-25 00:27:25',NULL,'',1,1,5,NULL,4),(10,'2015-10-02 17:03:42','','\0',5,NULL,NULL,10,12),(12,'2015-10-02 17:03:28','','\0',5,NULL,NULL,10,11),(13,'2015-10-02 17:04:05','','\0',5,NULL,NULL,10,13),(14,'2015-10-02 17:04:24','','\0',5,NULL,NULL,10,1),(15,'2015-10-02 17:05:51','','\0',5,NULL,NULL,10,2),(16,'2015-10-02 17:06:06','','\0',5,NULL,NULL,10,3),(17,'2015-10-02 17:06:20','','\0',5,NULL,NULL,10,4),(18,'2015-10-02 17:06:42','','\0',5,NULL,NULL,10,5),(19,'2015-10-02 17:06:57','','\0',5,NULL,NULL,10,6),(20,'2015-10-02 17:07:17','','\0',5,NULL,NULL,10,7),(21,'2015-10-02 17:07:31','','\0',5,NULL,NULL,10,8),(22,'2015-10-02 17:07:50','','\0',5,NULL,NULL,10,15),(23,'2015-10-02 17:08:03','','\0',5,NULL,NULL,10,16),(24,NULL,'',NULL,1,NULL,NULL,1,30),(25,'2015-10-02 16:41:52',NULL,'\0',1,NULL,NULL,NULL,30),(26,NULL,'',NULL,1,NULL,NULL,1,29),(27,'2015-10-02 16:41:59',NULL,'\0',1,NULL,NULL,NULL,29),(28,NULL,'',NULL,1,NULL,NULL,1,31),(29,'2015-10-02 16:42:07',NULL,'\0',1,NULL,NULL,NULL,31),(30,NULL,'',NULL,1,NULL,NULL,1,32),(31,'2015-10-02 16:43:05',NULL,'\0',1,NULL,NULL,NULL,32),(32,NULL,'',NULL,1,NULL,NULL,1,34),(33,'2015-10-02 16:43:21',NULL,'\0',1,NULL,NULL,NULL,34),(34,NULL,'',NULL,1,NULL,NULL,5,28),(35,'2015-10-02 16:49:18',NULL,'\0',1,NULL,NULL,NULL,28),(36,NULL,'',NULL,1,NULL,NULL,5,30),(37,'2015-10-02 16:50:23',NULL,'\0',1,NULL,NULL,NULL,30),(38,'2015-10-02 16:50:37',NULL,'\0',1,NULL,NULL,NULL,29),(39,NULL,'',NULL,1,NULL,NULL,9,28),(40,'2015-10-02 16:53:02',NULL,'\0',1,NULL,NULL,NULL,28),(41,NULL,'',NULL,1,NULL,NULL,9,32),(42,'2015-10-02 16:54:46',NULL,'\0',1,NULL,NULL,NULL,32),(43,NULL,'',NULL,1,NULL,NULL,9,30),(44,'2015-10-02 16:55:52',NULL,'\0',1,NULL,NULL,NULL,30),(45,NULL,'',NULL,1,NULL,NULL,5,31),(46,'2015-10-02 17:39:40',NULL,'\0',1,NULL,NULL,NULL,31),(47,NULL,'',NULL,1,NULL,NULL,5,32),(48,'2015-10-02 17:39:45',NULL,'\0',1,NULL,NULL,NULL,32),(49,NULL,'',NULL,1,NULL,NULL,5,33),(50,'2015-10-02 17:39:50',NULL,'\0',1,NULL,NULL,NULL,33),(51,NULL,'',NULL,1,NULL,NULL,5,34),(52,'2015-10-02 17:43:55',NULL,'\0',1,NULL,NULL,NULL,34),(53,NULL,'',NULL,1,NULL,NULL,9,29),(54,'2015-10-02 17:45:09',NULL,'\0',1,NULL,NULL,NULL,29),(55,NULL,'',NULL,1,NULL,NULL,9,31),(56,'2015-10-02 17:45:15',NULL,'\0',1,NULL,NULL,NULL,31),(57,NULL,'',NULL,1,NULL,NULL,9,33),(58,'2015-10-02 17:45:20',NULL,'\0',1,NULL,NULL,NULL,33),(59,NULL,'',NULL,1,NULL,NULL,9,34),(60,'2015-10-02 17:45:28',NULL,'\0',1,NULL,NULL,NULL,34);
 /*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,7 +181,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `section` WRITE;
 /*!40000 ALTER TABLE `section` DISABLE KEYS */;
-INSERT  IGNORE INTO `section` (`id`, `assessor_guidance_description`, `description`, `name`, `priority`, `competition_id`, `parent_section_id`) VALUES (1,'This section provides context for the application but should not be assessed.',NULL,'Application details',1,1,NULL),(2,'Please indicate whether this application is in scope for this competition.','','Scope',2,1,NULL),(3,NULL,'We will score each of the 4 questions in this section out of 10. Maximum score 40 points.','Your business proposition',3,1,NULL),(4,NULL,'We will score each of the 4 questions in this section out of 10. Maximum score 40 points.','Your approach to the project',4,1,NULL),(5,NULL,'We will score each of the 2 questions in this section out of 10. Maximum score 20 points.','Funding ',5,1,NULL),(6,NULL,'In this section we need to understand the project costs for each partner in your consortium. They mush provide details of their costs within each category according to their role.','Finances',6,1,NULL),(7,NULL,'You can use this section to detail costs for your organisation only. Only your organisation can see this level of detail.','Your finances',1,1,6),(8,NULL,'This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in \"your finances\" section. All partners will see this level of detail.','Project financial summary',2,1,6),(9,NULL,NULL,'Labour',1,1,7),(10,NULL,NULL,'Overheads',2,1,7),(11,NULL,NULL,'Materials',3,1,7),(12,NULL,NULL,'Capital usage',4,1,7),(13,NULL,NULL,'Subcontracting costs',5,1,7),(14,NULL,NULL,'Travel and subsistence',6,1,7),(15,NULL,NULL,'Other Costs',7,1,7);
+INSERT  IGNORE INTO `section` (`id`, `assessor_guidance_description`, `description`, `name`, `priority`, `competition_id`, `parent_section_id`) VALUES (1,'This section provides context for the application but should not be assessed.',NULL,'Application details',1,1,NULL),(2,'Please indicate whether this application is in scope for this competition.','','Scope',2,1,NULL),(3,NULL,'We will score each of the 4 questions in this section out of 10. Maximum score 40 points.','Your business proposition',3,1,NULL),(4,NULL,'We will score each of the 4 questions in this section out of 10. Maximum score 40 points.','Your approach to the project',4,1,NULL),(5,NULL,'We will score each of the 2 questions in this section out of 10. Maximum score 20 points.','Funding',5,1,NULL),(6,NULL,'In this section we need to understand the project costs for each partner in your consortium. They mush provide details of their costs within each category according to their role.','Finances',6,1,NULL),(7,NULL,'You can use this section to detail costs for your organisation only. Only your organisation can see this level of detail.','Your finances',1,1,6),(8,NULL,'This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in \"your finances\" section. All partners will see this level of detail.','Project financial summary',2,1,6),(9,NULL,NULL,'Labour',1,1,7),(10,NULL,NULL,'Overheads',2,1,7),(11,NULL,NULL,'Materials',3,1,7),(12,NULL,NULL,'Capital usage',4,1,7),(13,NULL,NULL,'Subcontracting costs',5,1,7),(14,NULL,NULL,'Travel and subsistence',6,1,7),(15,NULL,NULL,'Other Costs',7,1,7);
 /*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-02 14:51:33
+-- Dump completed on 2015-10-07  9:43:41
