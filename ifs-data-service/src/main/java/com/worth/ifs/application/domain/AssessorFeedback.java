@@ -79,8 +79,13 @@ public class AssessorFeedback {
         return response;
     }
 
+    // TODO DW - workaround for getting assessorId back to web layer over REST without sending assessor - fix with DTOs in beta
     public Long getAssessorId() {
-        return assessorId;
+        return assessor != null ? assessor.getId() : assessorId;
+    }
+
+    void setAssessor(ProcessRole assessor) {
+        this.assessor = assessor;
     }
 
     @Override

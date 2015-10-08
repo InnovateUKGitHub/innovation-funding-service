@@ -40,7 +40,7 @@ public class Response {
     private Application application;
 
     @OneToMany(mappedBy="response", cascade = CascadeType.ALL)
-    private List<AssessorFeedback> responseAssessmentFeedbacks;
+    private List<AssessorFeedback> responseAssessmentFeedbacks = new ArrayList<>();
 
     public Response(Long id, LocalDateTime updateDate, String value, ProcessRole updatedBy, Question question, Application app) {
         this.id = id;
@@ -55,7 +55,8 @@ public class Response {
 
     }
 
-    public Response(Response other) {
+    // copy constructor for builder code
+    Response(Response other) {
         this.id = other.id;
         this.updateDate = other.updateDate;
         this.value = other.value;
