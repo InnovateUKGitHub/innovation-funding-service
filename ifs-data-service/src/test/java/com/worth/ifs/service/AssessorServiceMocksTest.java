@@ -1,11 +1,14 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
@@ -14,9 +17,8 @@ import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.domain.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.*;
 import static java.util.Optional.empty;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -96,6 +98,39 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_APPLICATION));
+    }
+
+    @Test
+    public void test_happyPath_assessmentFeedbackUpdated() {
+
+        long responseId = 1L;
+        long processRoleId = 2L;
+        long applicationId = 3L;
+
+        ProcessRole processRole =
+                newProcessRole().
+                        withId(processRoleId).
+                        withRole(newRole().withType(ASSESSOR)).
+                        withApplication(newApplication().withId(applicationId)).
+                        build();
+
+        Response response =
+                newResponse().
+                        withApplication(newApplication().withId(applicationId)).
+                        build();
+
+        when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
+        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
+        when(responseRepositoryMock.save(response)).thenReturn(response);
+
+        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, Optional.of("newFeedbackValue"), Optional.of("newFeedbackText"));
+        assertTrue(serviceResult.isRight());
+
+        AssessorFeedback feedback = response.getResponseAssessmentForAssessor(processRole).orElse(null);
+
+        assertNotNull(feedback);
+        assertEquals("newFeedbackValue", feedback.getAssessmentValue());
+        assertEquals("newFeedbackText", feedback.getAssessmentFeedback());
     }
 
 }

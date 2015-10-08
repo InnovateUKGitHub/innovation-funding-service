@@ -79,7 +79,7 @@ public class AssessorServiceImpl implements AssessorService {
             }
             return response;
         } catch (Exception e) {
-            log.info("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
+            log.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
             rollbackTransaction();
             return errorResponse(UNEXPECTED_ERROR);
         }

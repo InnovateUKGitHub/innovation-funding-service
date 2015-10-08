@@ -94,4 +94,8 @@ public class ProcessRole {
     void setApplication(Application application) {
         this.application = application;
     }
+
+    void setId(Long id) {
+        this.id = id;
+    }
 }

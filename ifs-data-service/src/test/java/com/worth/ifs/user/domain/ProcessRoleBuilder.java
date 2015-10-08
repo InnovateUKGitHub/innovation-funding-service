@@ -28,6 +28,10 @@ public class ProcessRoleBuilder implements Builder<ProcessRole> {
         return new ProcessRoleBuilder(newValue);
     }
 
+    public ProcessRoleBuilder withId(Long id) {
+        return with(processRole -> processRole.setId(id));
+    }
+
     public ProcessRoleBuilder withRole(Builder<Role> role) {
         return with(processRole -> processRole.setRole(role.build()));
     }
