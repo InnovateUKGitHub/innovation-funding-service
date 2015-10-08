@@ -27,7 +27,7 @@ public class RoleBuilder implements Builder<Role> {
     }
 
     public RoleBuilder withType(UserRoleType type) {
-        return with(role -> role.setName(type.name()));
+        return with(role -> role.setName(type.getName()));
     }
 
     @Override

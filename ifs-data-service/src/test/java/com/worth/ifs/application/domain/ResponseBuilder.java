@@ -4,8 +4,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import java.util.function.Consumer;
 
-import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
-
 /**
  * Created by dwatson on 08/10/15.
  */
@@ -13,8 +11,8 @@ public class ResponseBuilder implements Builder<Response> {
 
     private final Response current;
 
+    // for factory method and with() use
     private ResponseBuilder(Response newValue) {
-        // uninstantiable
         this.current = newValue;
     }
 
@@ -40,6 +38,10 @@ public class ResponseBuilder implements Builder<Response> {
 
     public ResponseBuilder withValue(String value) {
         return with(response -> response.setValue(value));
+    }
+
+    public ResponseBuilder withApplication(Builder<Application> application) {
+        return with(response -> response.setApplication(application.build()));
     }
 
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole> value) {

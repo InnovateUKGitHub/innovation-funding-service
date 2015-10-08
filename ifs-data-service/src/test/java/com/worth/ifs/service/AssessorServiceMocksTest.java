@@ -1,11 +1,13 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
 
+import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
 import static com.worth.ifs.service.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
@@ -67,6 +69,33 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_TYPE));
+    }
+
+    @Test
+    public void test_processRoleNotCorrectApplication() {
+
+        long responseId = 1L;
+        long processRoleId = 2L;
+        long correctApplicationId = 3L;
+        long incorrectApplicationId = -999L;
+
+        ProcessRole incorrectApplicationProcessRole =
+                newProcessRole().
+                    withRole(newRole().withType(ASSESSOR)).
+                    withApplication(newApplication().withId(incorrectApplicationId)).
+                    build();
+
+        Response response =
+                newResponse().
+                    withApplication(newApplication().withId(correctApplicationId)).
+                    build();
+
+        when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
+        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(incorrectApplicationProcessRole);
+
+        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
+        assertTrue(serviceResult.isLeft());
+        assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_APPLICATION));
     }
 
 }

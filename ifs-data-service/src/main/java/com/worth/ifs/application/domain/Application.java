@@ -49,6 +49,18 @@ public class Application {
         this.id = id;
     }
 
+    // copy constructor for builder
+    Application(Application other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.startDate = other.startDate;
+        this.durationInMonths = other.durationInMonths;
+        this.processRoles = other.processRoles;
+        this.applicationFinances = other.applicationFinances;
+        this.applicationStatus = other.applicationStatus;
+        this.competition = other.competition;
+    }
+
     protected boolean canEqual(Object other) {
         return other instanceof Application;
     }
