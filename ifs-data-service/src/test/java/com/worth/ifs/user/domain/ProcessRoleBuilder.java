@@ -20,10 +20,14 @@ public class ProcessRoleBuilder implements Builder<ProcessRole> {
     }
 
     @Override
-    public Builder<ProcessRole> with(Consumer<ProcessRole> amendFunction) {
+    public ProcessRoleBuilder with(Consumer<ProcessRole> amendFunction) {
         ProcessRole newValue = new ProcessRole(current);
         amendFunction.accept(newValue);
         return new ProcessRoleBuilder(newValue);
+    }
+
+    public ProcessRoleBuilder withRole(Builder<Role> role) {
+        return with(processRole -> processRole.setRole(role.build()));
     }
 
     @Override

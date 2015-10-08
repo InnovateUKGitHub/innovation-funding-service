@@ -45,15 +45,4 @@ public class ResponseBuilder implements Builder<Response> {
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole> value) {
         return with(response -> response.setUpdatedBy(value.build()));
     }
-
-    public static void main(String[] args) {
-
-        newResponse().
-                withId(1L).
-                withValue("New value").
-                withUpdatedBy(newProcessRole()).
-                build();
-    }
-
-
 }

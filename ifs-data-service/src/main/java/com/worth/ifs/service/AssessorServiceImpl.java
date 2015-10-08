@@ -49,9 +49,9 @@ public class AssessorServiceImpl implements AssessorService {
 
         return getResponse(responseId).andThen(response -> {
             return getProcessRole(assessorProcessRoleId).andThen(processRole -> {
-                return validateProcessRoleInApplication(response, processRole).andThen(roleInApplication -> {
-                    return validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).andThen(assessorRole -> {
-                        return process.apply(assessorRole, response);
+                return validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).andThen(assessorRole -> {
+                    return validateProcessRoleInApplication(response, processRole).andThen(roleInApplication -> {
+                            return process.apply(assessorRole, response);
                     });
                 });
             });

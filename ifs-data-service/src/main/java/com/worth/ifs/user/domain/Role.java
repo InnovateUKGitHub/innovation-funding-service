@@ -23,12 +23,20 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany(mappedBy="roles")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();;
 
     public Role() {
+    }
+
+    // copy constructor for builder
+    Role(Role other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.processRoles = new ArrayList<>(other.processRoles);
+        this.users = new ArrayList<>(other.users);
     }
 
     protected Boolean canEqual(Object other) {
@@ -50,5 +58,9 @@ public class Role {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

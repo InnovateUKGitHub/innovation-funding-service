@@ -34,7 +34,7 @@ public class ProcessRole {
     private Organisation organisation;
 
     @OneToMany(mappedBy="updatedBy",fetch = FetchType.LAZY)
-    private List<Response> responses;
+    private List<Response> responses = new ArrayList<>();
 
     public ProcessRole(){
 
@@ -48,7 +48,8 @@ public class ProcessRole {
         this.organisation = organisation;
     }
 
-    public ProcessRole(ProcessRole other) {
+    // copy constructor for builder code
+    ProcessRole(ProcessRole other) {
         this.id = other.id;
         this.user = other.user;
         this.application = other.application;
@@ -84,5 +85,9 @@ public class ProcessRole {
 
     public void setResponses(List<Response> responses) {
         this.responses = responses;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
