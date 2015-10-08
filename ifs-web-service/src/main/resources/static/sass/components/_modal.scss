@@ -39,7 +39,7 @@ Controlled with javascript, an alternative standard html page should be used for
 	top:50%;
 	padding: 40px 30px 30px 30px;
 	@include box-sizing(border-box);
-	z-index: 10;
+	z-index: 20;
 	@include transition-property(top,margin);
 	@include transition-duration(300ms);
 	
@@ -80,6 +80,6 @@ Controlled with javascript, an alternative standard html page should be used for
 	top:0;
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
-	z-index: 9 ;
-}
+	z-index: 9 ; 
+} 
 

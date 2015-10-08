@@ -154,6 +154,7 @@ public class AssessmentController extends AbstractApplicationController {
         getAndPassAssessmentDetails(competitionId, assessment.getId(), userId, model);
         Set<String> partners =  assessment.getApplication().getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
         model.addAttribute("partners", partners);
+
         return applicationReview;
     }
 
@@ -163,7 +164,6 @@ public class AssessmentController extends AbstractApplicationController {
         return userAuthenticationService.getAuthenticatedUser(request);
     }
 
-    @ModelAttribute
     private Long getLoggedUserId( HttpServletRequest request) {
         return getLoggedUser(request).getId();
     }
@@ -194,6 +194,7 @@ public class AssessmentController extends AbstractApplicationController {
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }
+
 
     @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)
     public String invitationAnswer(Model model, HttpServletRequest request) {
@@ -254,6 +255,11 @@ public class AssessmentController extends AbstractApplicationController {
         //gets the competition id to redirect
         Long competitionId = Long.valueOf(req.getParameter("competitionId"));
         return "redirect:" + competitionAssessmentsURL(competitionId);
+    }
+
+    @RequestMapping(value = "/confirm-submit")
+    public String confirmSubmit(Model model, HttpServletRequest req) {
+        return "assessment-confirm-submit";
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)

@@ -311,9 +311,14 @@ The view is similar to the applications for assessment, but have a grey backgrou
 		}
 	}
 
-	button[name="submit_assessments"]{
+	.button[name="submit_assessments"]{
 		margin: 15px 0 0 0;
+	}
 
+	.modal-confirm-submit{
+		.button[name="submit_assessments"]{
+			margin: 0;
+		}
 	}
 
 	.boxed-list .progress-container {
@@ -400,4 +405,4 @@ The view is similar to the applications for assessment, but have a grey backgrou
 		}
 	}
 
-}
+} 

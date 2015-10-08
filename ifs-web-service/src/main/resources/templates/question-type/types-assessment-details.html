@@ -111,4 +111,12 @@
             </ul>
         </div>
     </div>
+
+    <!-- ===========================Financial summary =========================== -->
+    <div th:fragment="financial_summary">
+        <h2 class="heading-medium">Finances Summary</h2>
+        <div th:include="question-type/types :: application_finances_summary" th:remove="tag" />
+        <h2 class="heading-medium">Project cost breakdown</h2>
+        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+    </div>
 </html>
