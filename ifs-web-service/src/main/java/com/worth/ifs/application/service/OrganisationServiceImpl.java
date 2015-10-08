@@ -25,8 +25,9 @@ public class OrganisationServiceImpl implements OrganisationService {
                 Comparator.comparingLong(Organisation::getId);
         Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<Organisation>(compareById);
         TreeSet<Organisation> organisations = userApplicationRoles.stream()
-                .map(uar -> uar.getOrganisation())
-                .collect(Collectors.toCollection(supplier));
+                .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
+                        .map(uar -> uar.getOrganisation())
+                        .collect(Collectors.toCollection(supplier));
 
         return organisations;
     }

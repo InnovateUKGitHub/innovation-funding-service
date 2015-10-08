@@ -81,7 +81,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `cost` WRITE;
 /*!40000 ALTER TABLE `cost` DISABLE KEYS */;
-INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,50000,'','Manager',168,1,28),(4,30000,'','Engineer',696,1,28),(12,100,'','Powder',20,1,30),(13,150000,'specialist consultant','Mr Francis Bois',0,1,32),(15,NULL,'Working days per year',NULL,227,2,28),(16,NULL,'Working days per year',NULL,227,3,28),(17,45000,'','Manager',120,3,28),(18,140,'','Raw materials',120,3,30),(19,600,'','crucibles',6,1,30),(20,250,'','valves',12,1,30),(21,32000,'','Engineer',250,3,28),(22,28000,'','Technician',220,3,28),(23,50,'','components',30,3,30),(24,150,'','Tooling',7,3,30),(25,76800,'','Research engineer',132,2,28),(26,5000,'Machining of parts','East engineering',0,2,32),(27,400,'','Plates',5,2,30),(28,200,'','Powder',45,2,30),(29,NULL,'Working days per year',NULL,232,6,28),(30,50000,'','Manager',168,6,28),(31,30000,'','Engineer',696,6,28),(32,100,'','Powder',20,6,30),(33,150000,'specialist consultant','Mr Francis Bois',0,6,32),(34,NULL,'Working days per year',NULL,227,7,28),(35,NULL,'Working days per year',NULL,227,4,28),(36,45000,'','Manager',120,4,28),(37,140,'','Raw materials',120,4,30),(38,600,'','crucibles',6,6,30),(39,250,'','valves',12,6,30),(40,32000,'','Engineer',250,4,28),(41,28000,'','Technician',220,4,28),(42,50,'','components',30,4,30),(43,150,'','Tooling',7,4,30),(44,76800,'','Research engineer',132,7,28),(45,5000,'Machining of parts','East engineering',0,7,32),(46,400,'','Plates',5,7,30),(47,200,'','Powder',45,7,30),(48,0,'Grant Claim','',16,1,38);
+INSERT  IGNORE INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (1,NULL,'Working days per year',NULL,232,1,28),(2,50000,'','Manager',168,1,28),(4,30000,'','Engineer',696,1,28),(12,100,'','Powder',20,1,30),(13,150000,'specialist consultant','Mr Francis Bois',0,1,32),(15,NULL,'Working days per year',NULL,227,2,28),(16,NULL,'Working days per year',NULL,227,3,28),(17,45000,'','Manager',120,3,28),(18,140,'','Raw materials',120,3,30),(19,600,'','crucibles',6,1,30),(20,250,'','valves',12,1,30),(21,32000,'','Engineer',250,3,28),(22,28000,'','Technician',220,3,28),(23,50,'','components',30,3,30),(24,150,'','Tooling',7,3,30),(25,76800,'','Research engineer',132,2,28),(26,5000,'Machining of parts','East engineering',0,2,32),(27,400,'','Plates',5,2,30),(28,200,'','Powder',45,2,30),(29,NULL,'Working days per year',NULL,232,6,28),(30,50000,'','Manager',168,6,28),(31,30000,'','Engineer',696,6,28),(32,100,'','Powder',20,6,30),(33,150000,'specialist consultant','Mr Francis Bois',0,6,32),(34,NULL,'Working days per year',NULL,227,7,28),(35,NULL,'Working days per year',NULL,227,4,28),(36,45000,'','Manager',120,4,28),(37,140,'','Raw materials',120,4,30),(38,600,'','crucibles',6,6,30),(39,250,'','valves',12,6,30),(40,32000,'','Engineer',250,4,28),(41,28000,'','Technician',220,4,28),(42,50,'','components',30,4,30),(43,150,'','Tooling',7,4,30),(44,76800,'','Research engineer',132,7,28),(45,5000,'Machining of parts','East engineering',0,7,32),(46,400,'','Plates',5,7,30),(47,200,'','Powder',45,7,30),(48,0,'Grant Claim','',50,1,38),(49,0,'Grant Claim','',70,2,38),(50,0,'Grant Claim','',70,3,38);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,3,1,1),(11,6,4,1,2),(12,5,4,2,2),(13,5,6,2,8),(14,1,2,3,3),(15,2,2,3,3),(16,5,2,3,3),(17,6,2,3,3),(18,1,2,3,9),(19,2,2,3,9),(20,3,2,3,9),(21,4,2,3,9),(22,5,2,3,9),(23,6,2,3,9);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,3,1,1),(11,6,4,1,2),(12,5,4,2,2),(13,5,6,2,8),(15,2,2,3,3),(16,5,2,3,3),(17,6,2,3,3),(18,1,2,3,9),(19,2,2,3,9),(20,3,2,3,9),(21,4,2,3,9),(22,5,2,3,9),(23,6,2,3,9);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-08 23:00:26
+-- Dump completed on 2015-10-08 23:39:05

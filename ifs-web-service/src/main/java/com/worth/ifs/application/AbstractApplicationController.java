@@ -186,6 +186,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+        model.addAttribute("grantTotalPercentage", organisationFinanceOverview.getTotalGrantPercentage());
     }
 
     protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
