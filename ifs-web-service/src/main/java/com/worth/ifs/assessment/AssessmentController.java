@@ -152,7 +152,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, Assessment assessment) {
-        getAndPassAssessmentDetails(competitionId, assessment.getId(), userId, model);
+        getAndPassAssessmentDetails(competitionId, assessment.getApplication().getId(), userId, model);
         Set<String> partners =  assessment.getApplication().getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
         model.addAttribute("partners", partners);
 
