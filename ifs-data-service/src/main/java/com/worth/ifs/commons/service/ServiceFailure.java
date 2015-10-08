@@ -1,4 +1,4 @@
-package com.worth.ifs.service;
+package com.worth.ifs.commons.service;
 
 import java.util.List;
 

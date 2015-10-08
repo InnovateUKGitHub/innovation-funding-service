@@ -2,11 +2,11 @@ package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationBuilder;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
 
