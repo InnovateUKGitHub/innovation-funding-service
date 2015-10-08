@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
-INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',72,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('',60,'EMPTY','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3);
+INSERT  IGNORE INTO `assessment` (`comments`, `temp_total_score`, `temp_recommended_value`, `submitted`, `recommendation_feedback`, `process_id`, `application`, `assessor`) VALUES ('',72,'YES','N','hey',1,3,3),(NULL,82,'EMPTY','N',NULL,2,4,3),('asdf',37,'YES','N','',3,5,3),(NULL,60,'EMPTY','N',NULL,4,6,3),(NULL,0,'EMPTY','N',NULL,5,3,9),(NULL,0,'EMPTY','N',NULL,6,4,9),(NULL,0,'EMPTY','N',NULL,7,5,9),(NULL,0,'EMPTY','N',NULL,8,6,9);
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,6 +61,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `assessor_feedback` WRITE;
 /*!40000 ALTER TABLE `assessor_feedback` DISABLE KEYS */;
+INSERT  IGNORE INTO `assessor_feedback` (`id`, `assessment_feedback`, `assessment_value`, `assessor_id`, `response_id`) VALUES (5,'asdf','Yes',16,25),(6,'qwer','3',16,21),(7,'zxcv asdf qwer asdf','7',16,22),(8,'','3',16,24),(9,'asdfg','3',16,23),(10,'','2',16,32),(11,'','7',16,33),(12,'','5',16,28),(13,'','7',16,34);
 /*!40000 ALTER TABLE `assessor_feedback` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +121,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process` WRITE;
 /*!40000 ALTER TABLE `process` DISABLE KEYS */;
-INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-10-01 11:42:40',NULL,NULL,'assessed'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'pending'),(3,NULL,NULL,'ASSESSMENT','2015-10-02 16:22:22',NULL,NULL,'open'),(4,'not-my-area-of-interest',NULL,'ASSESSMENT','2015-10-01 11:42:54','',NULL,'pending');
+INSERT  IGNORE INTO `process` (`id`, `decision_reason`, `end_date`, `event`, `last_modified`, `observations`, `start_date`, `status`) VALUES (1,NULL,NULL,'ASSESSMENT','2015-10-01 11:42:40',NULL,NULL,'assessed'),(2,NULL,NULL,'ASSESSMENT','2015-09-22 14:34:16',NULL,NULL,'pending'),(3,NULL,NULL,'ASSESSMENT','2015-10-08 15:16:19',NULL,NULL,'assessed'),(4,'not-my-area-of-interest',NULL,'ASSESSMENT','2015-10-01 11:42:54','',NULL,'pending'),(5,NULL,NULL,'ASSESSMENT','2015-10-07 11:22:33',NULL,NULL,'pending'),(6,NULL,NULL,'ASSESSMENT','2015-10-07 11:22:33',NULL,NULL,'pending'),(7,NULL,NULL,'ASSESSMENT','2015-10-07 11:22:33',NULL,NULL,'pending'),(8,NULL,NULL,'ASSESSMENT','2015-10-07 11:22:33',NULL,NULL,'pending');
 /*!40000 ALTER TABLE `process` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +131,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `process_role` WRITE;
 /*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,3,1,1),(11,6,4,1,2),(12,5,4,2,2),(13,5,6,2,8),(14,1,2,3,3),(15,2,2,3,3),(16,5,2,3,3),(17,6,2,3,3);
+INSERT  IGNORE INTO `process_role` (`id`, `application_id`, `organisation_id`, `role_id`, `user_id`) VALUES (1,1,3,1,1),(2,2,3,1,1),(3,3,3,1,1),(4,4,3,1,1),(5,1,4,2,2),(6,4,4,2,2),(7,3,2,3,3),(8,4,3,3,3),(9,1,6,2,8),(10,5,3,1,1),(11,6,4,1,2),(12,5,4,2,2),(13,5,6,2,8),(14,1,2,3,3),(15,2,2,3,3),(16,5,2,3,3),(17,6,2,3,3),(18,1,2,3,9),(19,2,2,3,9),(20,3,2,3,9),(21,4,2,3,9),(22,5,2,3,9),(23,6,2,3,9);
 /*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +201,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'steve.smith@empire.com','image.jpg','Steve Smith','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'jessica.doe@ludlow.co.uk','image2.jpg','Jessica Doe','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'paul.plum@gmail.com','image3.jpg','Professor Plum','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi'),(8,'pete.tom@egg.com','image2.jpg','Pete Tom','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','867def');
+INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`) VALUES (1,'steve.smith@empire.com','image.jpg','Steve Smith','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123abc'),(2,'jessica.doe@ludlow.co.uk','image2.jpg','Jessica Doe','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','456def'),(3,'paul.plum@gmail.com','image3.jpg','Professor Plum','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','789ghi'),(6,'competitions@innovateuk.gov.uk','image4.jpg','Comp Exec (Competitions)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123def'),(7,'finance@innovateuk.gov.uk','image5.jpg','Project Finance Analyst (Finance)','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123ghi'),(8,'pete.tom@egg.com','image2.jpg','Pete Tom','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','867def'),(9,'felix.wilson@gmail.com','image3.jpg','Felix Wilson','67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27','123qwe');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +211,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (1,4),(2,4),(3,3),(8,4);
+INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (1,4),(2,4),(3,3),(8,4),(1,4),(2,4),(3,3),(8,4),(9,3);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -223,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-08 11:39:37
+-- Dump completed on 2015-10-08 16:20:24
