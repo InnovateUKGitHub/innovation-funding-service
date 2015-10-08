@@ -37,7 +37,11 @@ public class ProcessRoleBuilder implements Builder<ProcessRole> {
     }
 
     public ProcessRoleBuilder withApplication(Builder<Application> application) {
-        return with(processRole -> processRole.setApplication(application.build()));
+        return withApplication(application.build());
+    }
+
+    public ProcessRoleBuilder withApplication(Application application) {
+        return with(processRole -> processRole.setApplication(application));
     }
 
     @Override

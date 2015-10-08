@@ -41,7 +41,11 @@ public class ResponseBuilder implements Builder<Response> {
     }
 
     public ResponseBuilder withApplication(Builder<Application> application) {
-        return with(response -> response.setApplication(application.build()));
+        return withApplication(application.build());
+    }
+
+    public ResponseBuilder withApplication(Application application) {
+        return with(response -> response.setApplication(application));
     }
 
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole> value) {
