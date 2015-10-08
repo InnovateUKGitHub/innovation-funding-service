@@ -31,7 +31,7 @@ TRUNCATE process;
 TRUNCATE response_assessment_linker;
 TRUNCATE assessment_assessments_linker;
 TRUNCATE assessment_response_assessments;
-
+TRUNCATE assessor_feedback;
 TRUNCATE user;
 TRUNCATE user_role;
 TRUNCATE user_application_role;
