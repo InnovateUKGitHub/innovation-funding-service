@@ -1,6 +1,8 @@
 package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationBuilder;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -101,23 +103,38 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
     }
 
     @Test
+    public void test_uncaughtExceptions_handled() {
+
+        long responseId = 1L;
+        when(responseRepositoryMock.findOne(responseId)).thenThrow(new RuntimeException());
+        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, 2L, empty(), empty());
+        assertTrue(serviceResult.isLeft());
+        assertTrue(serviceResult.getLeft().is(UNEXPECTED_ERROR));
+    }
+
+    @Test
     public void test_happyPath_assessmentFeedbackUpdated() {
 
         long responseId = 1L;
         long processRoleId = 2L;
         long applicationId = 3L;
 
+        Application application =
+                newApplication().
+                    withId(applicationId).
+                    build();
+
         ProcessRole processRole =
                 newProcessRole().
-                        withId(processRoleId).
-                        withRole(newRole().withType(ASSESSOR)).
-                        withApplication(newApplication().withId(applicationId)).
-                        build();
+                    withId(processRoleId).
+                    withRole(newRole().withType(ASSESSOR)).
+                    withApplication(application).
+                    build();
 
         Response response =
                 newResponse().
-                        withApplication(newApplication().withId(applicationId)).
-                        build();
+                    withApplication(application).
+                    build();
 
         when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);

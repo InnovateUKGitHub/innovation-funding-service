@@ -88,6 +88,9 @@
         <br/>
 
     <form id="submission_questions" th:action="@{/assessor/competitions/{cid}/applications/{aid}/complete(cid=${model.competition.id},aid=${model.application.id})}" method="POST">
+
+        <input type="hidden" name="overall-score" th:value="${model.totalScore}" />
+
         <h4 class="heading-medium">Do you believe that this application is suitable for funding?</h4>
         <div class="form-group">
             <select name="is-suitable-for-funding" class="form-control" id="suitable-for-funding" >

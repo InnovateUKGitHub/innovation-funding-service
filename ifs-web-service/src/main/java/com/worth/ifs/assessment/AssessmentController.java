@@ -277,10 +277,11 @@ public class AssessmentController extends AbstractApplicationController {
             String suitableForFundingValue = req.getParameter("is-suitable-for-funding");
             String suitableFeedback = req.getParameter("suitable-for-funding-feedback");
             String commentsToShare = req.getParameter("comments-to-share");
+            String overallScore = req.getParameter("overall-score");
 
             /** asserts the invitation response **/
             if ( assessmentSummaryIsValidToSave(suitableForFundingValue, suitableFeedback) )
-                assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare);
+                assessmentRestService.saveAssessmentSummary(userId, applicationId, suitableForFundingValue, suitableFeedback, commentsToShare, Double.valueOf(overallScore));
         }
 
         //gets the competition id to redirect

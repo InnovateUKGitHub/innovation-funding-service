@@ -30,7 +30,8 @@ public class RecommendAction implements Action<String, String> {
         if(assessment!=null) {
             assessment.setSummary(updatedAssessment.getRecommendedValue(),
                     updatedAssessment.getSuitableFeedback(),
-                    updatedAssessment.getComments());
+                    updatedAssessment.getComments(),
+                    updatedAssessment.getOverallScore());
 
             if(!assessment.getRecommendedValue().equals(RecommendedValue.EMPTY)) {
                 assessment.setProcessStatus(context.getTransition().getTarget().getId());
