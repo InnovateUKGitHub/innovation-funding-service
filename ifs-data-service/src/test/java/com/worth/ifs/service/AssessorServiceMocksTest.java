@@ -103,6 +103,16 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
     }
 
     @Test
+    public void test_uncaughtExceptions_handled() {
+
+        long responseId = 1L;
+        when(responseRepositoryMock.findOne(responseId)).thenThrow(new RuntimeException());
+        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, 2L, empty(), empty());
+        assertTrue(serviceResult.isLeft());
+        assertTrue(serviceResult.getLeft().is(UNEXPECTED_ERROR));
+    }
+
+    @Test
     public void test_happyPath_assessmentFeedbackUpdated() {
 
         long responseId = 1L;
