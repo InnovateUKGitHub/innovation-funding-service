@@ -71,7 +71,7 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
 
     }
 
-    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
+    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments, Double overallScore) {
 
         System.out.println("AssessmentRestImp > saveAssessmentSummary ");
 
@@ -80,6 +80,7 @@ public class AssessmentRestServiceImpl extends BaseRestServiceProvider implement
         node.put("assessorId", assessorId);
         node.put("applicationId", applicationId);
         node.put("suitableValue", suitableValue);
+        node.put("overallScore", overallScore);
 
         node.put("suitableFeedback", HtmlUtils.htmlEscape(suitableFeedback));
         System.out.println("AssessmentRestImp > saveAssessmentSummary before comment ");

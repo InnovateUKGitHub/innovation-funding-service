@@ -103,12 +103,13 @@ public class AssessmentController {
 
         String suitableValue = formData.get("suitableValue").asText();
         String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
+        String overallScore =  HtmlUtils.htmlUnescape(formData.get("overallScore").asText());
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
         Assessment assessment = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
         Assessment newAssessment = new Assessment();
-        newAssessment.setSummary(assessmentHandler.getRecommendedValueFromString(suitableValue), suitableFeedback, comments);
+        newAssessment.setSummary(assessmentHandler.getRecommendedValueFromString(suitableValue), suitableFeedback, comments, Double.parseDouble(overallScore));
         newAssessment.setProcessStatus(assessment.getProcessStatus());
 
         assessmentWorkflowEventHandler.recommend(applicationId, assessorId, newAssessment);

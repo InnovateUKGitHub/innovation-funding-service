@@ -119,19 +119,22 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         long processRoleId = 2L;
         long applicationId = 3L;
 
-        Application application = newApplication().
-                withId(applicationId).
-                build();
+        Application application =
+                newApplication().
+                    withId(applicationId).
+                    build();
 
-        ProcessRole processRole = newProcessRole().
-                withId(processRoleId).
-                withRole(newRole().withType(ASSESSOR)).
-                withApplication(application).
-                build();
+        ProcessRole processRole =
+                newProcessRole().
+                    withId(processRoleId).
+                    withRole(newRole().withType(ASSESSOR)).
+                    withApplication(application).
+                    build();
 
-        Response response = newResponse().
-                withApplication(application).
-                build();
+        Response response =
+                newResponse().
+                    withApplication(application).
+                    build();
 
         when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
