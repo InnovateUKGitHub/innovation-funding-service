@@ -55,17 +55,6 @@ public class Response {
 
     }
 
-    // copy constructor for builder code
-    Response(Response other) {
-        this.id = other.id;
-        this.updateDate = other.updateDate;
-        this.value = other.value;
-        this.updatedBy = other.updatedBy;
-        this.question = other.question;
-        this.application = other.application;
-        this.responseAssessmentFeedbacks = new ArrayList<>(other.responseAssessmentFeedbacks);
-    }
-
     public Long getId() {
         return id;
     }
