@@ -1,6 +1,7 @@
 package com.worth.ifs.application.finance;
 
 import com.worth.ifs.application.finance.cost.*;
+import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
@@ -15,6 +16,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * {@code CostItemMapper} maps cost items which are based on the representation for view to
+ * costs which can be handled by the rest service, which is modeled generically. Each of the
+ * different types of costs are mapped.
+ */
 public class CostItemMapper {
     private final Log log = LogFactory.getLog(getClass());
     Map<String, CostField> costFields = new HashMap<>();
@@ -52,6 +58,9 @@ public class CostItemMapper {
             case TRAVEL:
                 TravelCost travel = (TravelCost) costItem;
                 return new Cost(travel.getId(), travel.getItem(), "", travel.getQuantity(), travel.getCostPerItem(), null, null);
+            case FINANCE:
+                GrantClaim grantClaim = (GrantClaim) costItem;
+                return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), 0D, null,null);
         }
 
         throw new IllegalArgumentException("Not a valid CostType: " + costType);

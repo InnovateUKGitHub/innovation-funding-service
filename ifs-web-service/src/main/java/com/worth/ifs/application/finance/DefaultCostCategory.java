@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@code DefaultCostCategory} implementation for {@link CostCategory}.
+ * Default representation for costs and defaults to summing up the costs.
+ */
 public class DefaultCostCategory implements CostCategory {
     CostType costType;
     List<CostItem> costs = new ArrayList<>();

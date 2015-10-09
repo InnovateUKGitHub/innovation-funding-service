@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * {@code CostService} implements {@link CostService}
+ */
 @Service
 public class CostServiceImpl implements CostService {
     private final Log log = LogFactory.getLog(getClass());

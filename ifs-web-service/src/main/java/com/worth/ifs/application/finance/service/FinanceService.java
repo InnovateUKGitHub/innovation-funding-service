@@ -9,6 +9,10 @@ import com.worth.ifs.finance.domain.Cost;
 import java.util.EnumMap;
 import java.util.List;
 
+/**
+ * {@code FinanceService} handles the finances for each of the applications. These finances
+ * consists of costs.
+ */
 public interface FinanceService {
     public ApplicationFinance addApplicationFinance(Long applicationId, Long userId);
     public ApplicationFinance getApplicationFinance(Long applicationId, Long userId);

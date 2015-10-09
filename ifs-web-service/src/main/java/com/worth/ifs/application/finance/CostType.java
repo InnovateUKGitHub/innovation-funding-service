@@ -11,7 +11,8 @@ public enum CostType {
     SUBCONTRACTING_COSTS("subcontracting_costs"),
     TRAVEL("travel"),
     OTHER_COSTS("other_costs"),
-    YOUR_FINANCE("your_finance");
+    YOUR_FINANCE("your_finance"),
+    FINANCE("finance");
 
     private String type;
 

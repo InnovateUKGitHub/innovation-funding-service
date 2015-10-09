@@ -4,6 +4,8 @@ import com.worth.ifs.application.finance.*;
 import com.worth.ifs.application.finance.cost.CostItem;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
@@ -12,11 +14,21 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * {@code OrganisationFinance} keeps track of all the organisation's / application's specific
+ * finance data.
+ */
 public class OrganisationFinance {
+    private final Log log = LogFactory.getLog(getClass());
+
+    public static final String GRANT_CLAIM = "Grant Claim";
     Long applicationFinanceId = 0L;
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
     Organisation organisation;
+    Long grantClaimPercentageId;
+    Integer grantClaimPercentage;
     List<Cost> costs = new ArrayList<>();
 
     CostItemFactory costItemFactory = new CostItemFactory();
@@ -30,7 +42,8 @@ public class OrganisationFinance {
 
     public void initializeOrganisationFinances() {
         createCostCategories();
-        addCostsToCategories(applicationFinanceId);
+        addCostsToCategories();
+        setGrantClaimPercentage();
     }
 
     private void createCostCategories() {
@@ -49,8 +62,20 @@ public class OrganisationFinance {
         }
     }
 
-    private void addCostsToCategories(Long applicationFinanceId) {
+    private void addCostsToCategories() {
         costs.stream().forEach(c -> addCostToCategory(c));
+    }
+
+    private void setGrantClaimPercentage() {
+        Optional<Cost> grantClaim = costs
+                .stream()
+                .filter(c -> c.getDescription().equals(GRANT_CLAIM) && c.getQuestion().getQuestionType().getTitle().equals("finance"))
+                .findFirst();
+
+        if(grantClaim.isPresent()) {
+            this.grantClaimPercentage = grantClaim.get().getQuantity();
+            this.grantClaimPercentageId = grantClaim.get().getId();
+        }
     }
 
     /**
@@ -83,5 +108,13 @@ public class OrganisationFinance {
 
     public Long getApplicationFinanceId() {
         return applicationFinanceId;
+    }
+
+    public Integer getGrantClaimPercentage() {
+        return grantClaimPercentage;
+    }
+
+    public Long getGrantClaimPercentageId() {
+        return grantClaimPercentageId;
     }
 }

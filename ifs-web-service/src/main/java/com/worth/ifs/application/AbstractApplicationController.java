@@ -170,6 +170,10 @@ public abstract class AbstractApplicationController {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
+        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
+        model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
+
+
     }
 
     protected void addFinanceDetails(Model model, Application application) {
@@ -182,6 +186,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+        model.addAttribute("grantTotalPercentage", organisationFinanceOverview.getTotalGrantPercentage());
     }
 
     protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {

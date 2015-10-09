@@ -1,6 +1,6 @@
 package com.worth.ifs.application.model;
 /**
- * This enumerations defines the available UserRoles.
+ * This {@code UserRole} enumeration defines the available global user roles.
  */
 public enum UserRole {
     APPLICANT("applicant"),
