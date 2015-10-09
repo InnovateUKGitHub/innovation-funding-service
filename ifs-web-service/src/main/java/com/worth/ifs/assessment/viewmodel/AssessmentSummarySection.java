@@ -13,6 +13,8 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
+ * A view model object representing a Section within the Assessment Summary section of the Assessment Review page.
+ *
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSummarySection {

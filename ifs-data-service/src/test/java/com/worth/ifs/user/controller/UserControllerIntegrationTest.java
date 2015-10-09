@@ -13,6 +13,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
+ *
+ * Integration tests for {@link UserController}.
+ *
  * Created by dwatson on 02/10/15.
  */
 public class UserControllerIntegrationTest extends BaseControllerIntegrationTest<UserController> {

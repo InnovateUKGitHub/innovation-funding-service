@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This class is created to simplify creating or sending a JSON response.
+ * This class represents the response of a JSON call, and provides factory methods to create standard response.
+ * Optionally it also sets an appropriate HTTP status code to a given HttpResponse
+ *
+ * Created by dwatson on 01/10/15.
  */
 public class JsonStatusResponse {
 

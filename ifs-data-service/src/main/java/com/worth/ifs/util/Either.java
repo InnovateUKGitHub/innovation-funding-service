@@ -6,9 +6,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
+ * This class represents a return type that can have 2 possible return types, either a "left" value or a "right"
+ * value.  Typically in functional programming, an Either is used to represent success and failure cases, where
+ * the "left" type is the failure type and the "right" type is the success type.  Either producers can then be
+ * chained together using the {@link Either#map(Function, Function)} method so that the if a "left" value is
+ * encountered during the execution of the chain, the processing will "short circuit" and return the left response
+ * without evaluating any further Either producers in the chain.
+ *
  * Created by dwatson on 05/10/15.
  */
 public class Either<L, R> {
+
     public static <L, R> Either<L, R> left(L value) {
         return new Either<>(Optional.of(value), Optional.empty());
     }
@@ -25,13 +33,13 @@ public class Either<L, R> {
         right = r;
     }
 
-    public <T> T andThen(
+    public <T> T map(
             Function<? super L, ? extends T> lFunc,
             Function<? super R, ? extends T> rFunc) {
         return left.map(lFunc).orElseGet(() -> right.map(rFunc).get());
     }
 
-    public <T> Either<L, T> andThen(
+    public <T> Either<L, T> map(
             Function<? super R, Either<L, T>> rFunc) {
         return isLeft() ? left(left.get()) : rFunc.apply(right.get());
     }

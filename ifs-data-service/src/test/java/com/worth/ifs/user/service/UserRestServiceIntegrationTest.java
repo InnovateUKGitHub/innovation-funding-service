@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.Assert.*;
 
 /**
+ * Tests for {@link UserRestServiceImpl}.
+ *
  * Created by dwatson on 02/10/15.
  */
 public class UserRestServiceIntegrationTest extends BaseRestServiceIntegrationTest<UserRestService> {

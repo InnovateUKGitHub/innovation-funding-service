@@ -15,6 +15,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
+ * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
+ * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
+ * that the REST services use to exchange data with the "data" layer.
+ *
  * Created by dwatson on 02/10/15.
  */
 public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServiceProvider> extends BaseUnitTestMocksTest {

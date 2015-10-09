@@ -1,14 +1,14 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worth.ifs.ServiceLocator;
+import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.service.AssessorService;
+import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;

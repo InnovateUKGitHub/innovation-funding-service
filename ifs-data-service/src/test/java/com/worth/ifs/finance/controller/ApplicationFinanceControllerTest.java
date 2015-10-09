@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.controller;
 
-import com.worth.ifs.BaseControllerMocksTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationFinanceControllerTest extends BaseControllerMocksTest<ApplicationFinanceController> {
+public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<ApplicationFinanceController> {
 
 
     ApplicationFinance applicationFinance;
