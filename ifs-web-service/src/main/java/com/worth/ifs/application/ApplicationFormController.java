@@ -124,6 +124,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
+
 //    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
 //        Application application = applicationService.getById(applicationId);
 //        model.addAttribute("currentApplication", application);
@@ -134,7 +135,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 //
 //        addOrganisationDetails(model, application, Optional.of(userOrganisation));
 //        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
-//        addFinanceDetails(model, application, userId);
+//        addOrganisationFinanceDetails(model, application, userId);
+//        addFinanceDetails(model, application);
 //        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
 //        addUserDetails(model, application, userId);
 //
@@ -268,7 +270,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         try {
             User user = userAuthenticationService.getAuthenticatedUser(request);
-
+            log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
                 Application application = applicationService.getById(applicationId);
                 application.setName(value);
@@ -328,7 +330,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
         Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true);
-        addFinanceDetails(model, application, userId);
+        addOrganisationFinanceDetails(model, application, userId);
+        addFinanceDetails(model, application);
         return application;
     }
 }

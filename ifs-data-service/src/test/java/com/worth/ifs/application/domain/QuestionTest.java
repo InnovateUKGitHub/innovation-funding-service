@@ -19,6 +19,7 @@ public class QuestionTest {
     Competition competition;
     Section section;
     String name;
+    String number;
     String description;
     String guidanceQuestion;
     String guidanceAnswer;
@@ -34,6 +35,7 @@ public class QuestionTest {
         competition = new Competition();
         section = new Section();
         name = "testQuestionName";
+        number = "testQuestionNumber";
         description = "testQuestionDescription";
         guidanceQuestion = "testGuidanceQuestion";
         guidanceAnswer = "testGuidanceAnswer";
@@ -47,13 +49,14 @@ public class QuestionTest {
         priority = 1;
 
 
-        question = new Question(optionValues, id, competition, section, questionType, responses, name, description, guidanceQuestion, guidanceAnswer, wordCount, priority);
+        question = new Question(optionValues, id, competition, section, questionType, responses, name, number, description, guidanceQuestion, guidanceAnswer, wordCount, priority);
     }
 
     @Test
     public void questionShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(question.getId(), id);
         Assert.assertEquals(question.getName(), name);
+        Assert.assertEquals(question.getQuestionNumber(), number);
         Assert.assertEquals(question.getCompetition(), competition);
         Assert.assertEquals(question.getSection(), section);
         Assert.assertEquals(question.getDescription(), description);

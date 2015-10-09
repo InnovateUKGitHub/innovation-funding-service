@@ -2,6 +2,10 @@ package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+/**
+ * {@code CapitalUsage} implements {@link CostItem}
+ */
 public class CapitalUsage implements CostItem {
     Long id;
     Integer deprecation;

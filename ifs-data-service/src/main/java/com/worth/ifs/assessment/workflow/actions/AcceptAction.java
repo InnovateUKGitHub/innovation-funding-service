@@ -10,7 +10,8 @@ import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
 
 /**
- * The AcceptAction is used by the assessor.
+ * The AcceptAction is used by the assessor. It handles the accepting event
+ * for an application during assessment.
  * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
  */
 @Component

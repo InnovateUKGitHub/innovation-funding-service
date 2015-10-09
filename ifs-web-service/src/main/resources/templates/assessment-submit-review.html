@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle=${assessment.application.name}" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${model.application.name}" th:remove="tag" />
 </head>
 
 <body class="app-dashboard">
@@ -13,16 +13,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
-            daysLeft=${competition.getAssessmentDaysLeft()},
-            title = ${assessment.application.name},
+    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${model.competition.getAssessmentDaysLeftPercentage()},
+            daysLeft=${model.competition.getAssessmentDaysLeft()},
+            title = ${model.application.name},
             deadlineText= 'Days left to accept'" th:remove="tag" />
 
     <div>
         <br/>
-        <small><a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">&lt; Back to application</a></small>
+        <small><a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${model.competition.id},aid=${model.application.id})}">&lt; Back to application</a></small>
     </div>
-
 
 
     <div class="grid-row">
@@ -32,242 +31,34 @@
 
         <div class="collapsible">
 
-            <!--start item-->
-            <h2 data-subsection-header="9" class="section-status-finance complete">
-                <span>Scope (Gateway question)</span>
-            </h2>
-            <span style="" data-subsection-id="9" class="section-status complete place-in-header"><span data-binding-output="subsection-total-9">Complete</span></span>
+            <div th:each="section:${model.assessmentSummarySections}" th:remove="tag">
 
-            <div id="collapsible-1" aria-hidden="false">
-                <div class="grid-row">
+                <h2 th:attr="data-subsection-header=${section.id}" class="section-status-finance complete">
+                    <span th:text="${section.name}">Scope (Gateway question)</span>
+                </h2>
+
+                <span th:attr="data-subsection-id=${section.id}" class="section-status complete place-in-header"><span th:if="${section.assessmentComplete}">Complete</span></span>
+
+                <div class="grid-row" th:each="question:${section.questionsRequiringFeedback}">
                     <div class="column-three-quarters">
-                        <h4 class="heading-medium">How does this application align with the specific competition scope?</h4>
-                        <p>
+                        <h4 class="heading-medium" th:text="${question.name}">How does this application align with the specific competition scope?</h4>
+                        <p th:text="${question.feedback.feedbackText}" th:if="${question.feedback != null}">
                             Pre -Industry - The application is considered in scope as it both investigate a better user interface and also improved sensors
                         </p>
-                        <p><a href="/assessor/competitions/1/applications/1/section/2/">Return to this question in the application</a></p>
+                        <p th:if="${question.feedback == null}">
+                            No feedback has yet been provided.
+                        </p>
+                        <p><a th:href="@{/assessor/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}(competitionId=${model.competition.id},applicationId=${model.application.id},sectionId=${section.id})} + ${'#question-' + question.id}">Return to this question in the application</a></p>
                     </div>
                     <div class="column-quarter">
                         <p class="assessor-score">
-                            <span class="score">Yes</span>
+                            <span class="score" th:text="${question.feedback.feedbackValue}" th:if="${question.feedback != null}">Yes</span>
+                            <span class="score" th:if="${question.feedback == null}"></span>
                         </p>
                     </div>
                 </div>
-            </div>
-            <!-- ends item-->
-
-
-
-
-
-            <!--starts item-->
-            <h2 data-subsection-header="10" class="section-status-finance complete">
-                <span>Your business proposition (Q1 - Q4)</span>
-                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
-                        <span data-binding-output="subsection-total-10">Complete</span>
-                    </span>
-            </h2>
-
-            <div id="collapsible-2" aria-hidden="false">
-                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--01" id="js-accordion_panel--01" style="display: block;">
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">1. What is the business opportunity that this project addresses?</h4>
-                                <p>The applicant plans to test the feasibility of a system which will aid the instruction to ensure the most efficient and least stressful use.   This should enable use and create a viable business model for the applicant.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/3/#question-1"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">8</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">2. What is the size of the market opportunity that this project might open up?</h4>
-                                <p>The market discussed for the device and interface is clearly  defined. The aim to produce product presents a great opportunity.  The plans for IP and copyright protection appear weak for the apparent potential of this product. </p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/3/#question-2"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">7</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">3. How will the results of the project be exploited and disseminated?</h4>
-                                <p>The discussion on the route to market is very academic and lacks  business passion.  The hope business success will  result from a good idea is apparent from the answer provided  and sadly rarely occurs.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/3/#question-3"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">5</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">4. What economic, social and environmental benefits is the project expected to deliver to those inside and outside of the consortium, and over what timescale?</h4>
-                                <p>The applicant and clearly answered the social reason for the project but has not answered the economic or environmental.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/3/#question-4"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">4</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                </div>
-
 
             </div>
-            <!--ends item-->
-
-            <!--starts item-->
-            <h2 data-subsection-header="10" class="section-status-finance complete">
-                <span>Your approach to the project (Q5 - Q8)</span>
-                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
-                    <span data-binding-output="subsection-total-10">Complete</span>
-                </span>
-            </h2>
-
-            <div id="collapsible-3" aria-hidden="false">
-                <div class="column-full"><p>Your approach to the project - Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
-
-                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--02" id="js-accordion_panel--02" style="display: block;">
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">5. What technical approach will be adopted and how will the project be managed?</h4>
-                                <p>The applicant has provide a very lengthy discussion on the planned technical approach but has not related that to a detailed work package approach related Gantt chart.  The three line Gantt chart provide is not consider to be adequate.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/4/#question-5"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">6</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">6. What is innovative about this project?</h4>
-                                <p>The discussion on innovation is conducted through  the entire application and the proposal is clearly innovative and has potential.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/4/#question-6"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">8</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?</h4>
-                                <p>Sadly the promised risk analysis in appendix b is not sufficient.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/4/#question-7"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">1</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?</h4>
-                                <p>The details of the applicants and their organisations would appear to show  that they could produce the product planned.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/4/#question-8"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">8</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                </div>
-
-            </div>
-            <!--ends item-->
-
-            <!--starts item-->
-            <h2 data-subsection-header="10" class="section-status-finance complete">
-                <span>Funding (Q9 - Q10)</span>
-                <span style="" data-subsection-id="10" class="section-status complete place-in-header">
-                        <span data-binding-output="subsection-total-10">Complete</span>
-                    </span>
-            </h2>
-
-            <div id="collapsible-4" aria-hidden="false">
-                <div class="column-full"><p>Fundings - Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
-
-                <div class="js-accordion_panel" aria-hidden="false" aria-labelledby="js-accordion_control--03" id="js-accordion_panel--03" style="display: block;">
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">9. What is the financial commitment required for the project?</h4>
-                                <p>The cost for the feasibility of the project as presented and the figure given would appear realistic and reasonable. A more granular level of detail could have increased the marks awarded.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/5/#question-15"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">7</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                    <div class="accordion_item">
-                        <div class="grid-row">
-                            <div class="column-three-quarters">
-                                <h4 class="heading-medium">10. How does financial support from Innovate UK and its funding collaborators add value?</h4>
-                                <p>The applicant provide an adequate set of reason for needing public support. The whole proposal lacks a business passion and appears very academic.</p>
-                                <p><a th:href='${"/assessor/competitions/"+competition.id + "/applications/"+ assessment.application.id+ "/section/5/#question-16"}'>Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                                <p class="assessor-score">
-                                    Score given<br/>
-                                    <span class="score">6</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- .accordion_item -->
-                </div>
-
-            </div>
-            <!--ends item-->
-
-
-
-
-
-
-
-
-
 
         </div>
 
@@ -278,50 +69,35 @@
             <tbody>
             <tr>
                 <th>Question</th>
-                <td>Q1</td>
-                <td>Q2</td>
-                <td>Q3</td>
-                <td>Q4</td>
-                <td>Q5</td>
-                <td>Q6</td>
-                <td>Q7</td>
-                <td>Q8</td>
-                <td>Q9</td>
-                <td>Q10</td>
+                <td th:each="question:${model.scorableQuestions}" th:text="${question.questionNumber}">Q1</td>
             </tr>
             <tr>
                 <th>Score</th>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">7</td>
-                <td style="font-weight: 700;">5</td>
-                <td style="font-weight: 700;">4</td>
-                <td style="font-weight: 700;">6</td>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">1</td>
-                <td style="font-weight: 700;">8</td>
-                <td style="font-weight: 700;">7</td>
-                <td style="font-weight: 700;">6</td>
+                <td th:each="question:${model.scorableQuestions}" th:with="feedback=${model.getFeedbackForQuestion(question)}" th:text="${feedback?.assessmentValue}">Q1</td>
             </tr>
             </tbody>
         </table>
         <br/>
         <p style="text-align: right; font-weight: 700;">
-            Total: 60/100<br/>
-            60%
+            Total: <span th:text="${model.totalScore}" th:remove="tag">60</span>/<span th:text="${model.possibleScore}" th:remove="tag">100</span><br/>
+            <span th:text="${model.scorePercentage}" th:remove="tag">60</span>%
         </p>
 
         <hr style="border-top: 1px solid #ccc;"/>
 
         <br/>
 
-    <form id="submission_questions" th:action="@{/assessor/competitions/{cid}/applications/{aid}/complete(cid=${competition.id},aid=${assessment.application.id})}" method="POST">
+    <form id="submission_questions" th:action="@{/assessor/competitions/{cid}/applications/{aid}/complete(cid=${model.competition.id},aid=${model.application.id})}" method="POST">
+
+        <input type="hidden" name="overall-score" th:value="${model.totalScore}" />
+
         <h4 class="heading-medium">Do you believe that this application is suitable for funding?</h4>
         <div class="form-group">
             <select name="is-suitable-for-funding" class="form-control" id="suitable-for-funding" >
 
-                <option value="" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY }"></option>
-                <option value="yes" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES }">Yes</option>
-                <option value="no" th:selected="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO }">No</option>
+                <option value="" th:selected="${model.assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY }"></option>
+                <option value="yes" th:selected="${model.assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES }">Yes</option>
+                <option value="no" th:selected="${model.assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO }">No</option>
             </select>
         </div>
 
@@ -335,7 +111,7 @@
             </span>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="suitable-for-funding-feedback" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
-                          id="not-suitable-feedback" th:text="${assessment.getSuitableFeedback()}"
+                          id="not-suitable-feedback" th:text="${model.assessment.getSuitableFeedback()}"
                           th:attrappend="data-max_words=350" ></textarea>
             </div>
 
@@ -355,7 +131,7 @@
             <h4 class="heading-medium">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)</h4>
             <div class="form-control-wrap">
                 <textarea rows="7" cols="70" name="comments-to-share" class="form-control form-control-large form-control-1-1 form-control-with-character-counter count-area"
-                          id="summary-comments" th:text="${assessment.getComments()}"
+                          id="summary-comments" th:text="${model.assessment.getComments()}"
                           th:attrappend="data-max_words=350"></textarea>
             </div>
 

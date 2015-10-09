@@ -18,6 +18,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -57,18 +58,13 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
     }
 
     @Override
-    public Boolean saveQuestionResponseAssessorScore(Long assessorUserId, Long responseId, Integer score) {
-        return saveAssessorFeedback(assessorUserId, responseId, "score", score);
-    }
+    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&feedbackValue={feedbackValue}&feedbackText={feedbackText}";
 
-    @Override
-    public Boolean saveQuestionResponseAssessorConfirmationAnswer(Long assessorUserId, Long responseId, Boolean confirmation) {
-        return saveAssessorFeedback(assessorUserId, responseId, "confirmationAnswer", confirmation);
-    }
-
-    @Override
-    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, String feedback) {
-        return saveAssessorFeedback(assessorUserId, responseId, "feedbackText", feedback);
+        HttpEntity<String> entity = new HttpEntity<>(getJSONHeaders());
+        ResponseEntity<JsonStatusResponse> response = restTemplate.exchange(url, HttpMethod.PUT, entity, JsonStatusResponse.class, responseId, assessorUserId, feedbackValue.orElse(""), feedbackText.orElse(""));
+        return handleResponseStatus(response);
     }
 
     private Boolean handleResponseStatus(ResponseEntity<?> response) {
@@ -81,15 +77,5 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         }
 
         return false;
-    }
-
-
-    private Boolean saveAssessorFeedback(Long assessorUserId, Long responseId, String paramName, Object paramValue) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&" + paramName + "=" + (paramValue != null ? paramValue : "");
-
-        HttpEntity<String> entity = new HttpEntity<>(getJSONHeaders());
-        ResponseEntity<JsonStatusResponse> response = restTemplate.exchange(url, HttpMethod.PUT, entity, JsonStatusResponse.class, responseId, assessorUserId, paramValue);
-        return handleResponseStatus(response);
     }
 }

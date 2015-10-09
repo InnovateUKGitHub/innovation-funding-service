@@ -70,10 +70,11 @@ public class Assessment extends Process {
         recommendedValue = RecommendedValue.EMPTY;
     }
 
-    public void setSummary(RecommendedValue value, String feedback, String comments) {
+    public void setSummary(RecommendedValue value, String feedback, String comments, Double overallScore) {
         this.recommendedValue = value;
         this.suitableFeedback = feedback;
         this.comments = comments;
+        this.overallScore = overallScore;
     }
 
     public void submit() {

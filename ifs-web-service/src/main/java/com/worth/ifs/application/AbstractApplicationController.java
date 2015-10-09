@@ -13,6 +13,8 @@ import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -24,12 +26,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.util.IfsFunctions.ifPresent;
-
 /**
  * This object contains shared methods for all the Controllers related to the {@link Application} data.
  */
 public abstract class AbstractApplicationController {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     protected ResponseService responseService;
@@ -133,8 +134,12 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
-        List<Response> responses = responseService.getByApplication(application.getId());
+        List<Response> responses = getResponses(application);
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+    }
+
+    protected List<Response> getResponses(Application application) {
+        return responseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, Application application, Long userId) {
@@ -161,19 +166,27 @@ public abstract class AbstractApplicationController {
         model.addAttribute("assignedSections", assignedSections);
     }
 
-    protected void addFinanceDetails(Model model, Application application, Long userId) {
+    protected void addOrganisationFinanceDetails(Model model, Application application, Long userId) {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
+        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
+        model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
 
+
+    }
+
+    protected void addFinanceDetails(Model model, Application application) {
         Section section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
+        log.info("FINANCE DETAILS : " + section);
         model.addAttribute("financeSection", section);
 
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, application.getId());
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+        model.addAttribute("grantTotalPercentage", organisationFinanceOverview.getTotalGrantPercentage());
     }
 
     protected void addMappedSectionsDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
@@ -195,7 +208,7 @@ public abstract class AbstractApplicationController {
     }
     private void addSectionDetails(Model model, Application application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
-        model.addAttribute("currentSectionId", ifPresent(currentSection, s -> s.getId()).orElse(null));
+        model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
 
         userOrganisation.ifPresent(org -> {

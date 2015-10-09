@@ -5,6 +5,12 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static com.worth.ifs.application.domain.AssessorFeedback.createForResponseAndAssessor;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -21,20 +27,6 @@ public class Response {
     @Column(length=5000)
     private String value;
 
-    // TODO DW - for Alpha, storing the Assessor's score against a Response.  In Beta, the Assessor will
-    // probably be assessing ALL responses for a question at the same time, at which point a new table
-    // will be needed, like "question_response_set" or "consortium_response", that links a question to a
-    // set of responses and also allows storing of scores against it
-    private Integer assessmentScore;
-
-    @Column(length=5000) // TODO DW - actually in prototype, set to 350 characters - but setting higher
-    // for now as this column will probably move along with assessmentScore
-    private String assessmentFeedback;
-
-    // TODO DW - this "Yes / No" response to a question in the assessor's Application view will move along
-    // with assessmentScore and assessmentFeedback into a proper mechanism when in Beta
-    private Boolean assessmentConfirmation;
-
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
     private ProcessRole updatedBy;
@@ -46,6 +38,9 @@ public class Response {
     @ManyToOne
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
+
+    @OneToMany(mappedBy="response", cascade = CascadeType.ALL)
+    private List<AssessorFeedback> responseAssessmentFeedbacks = new ArrayList<>();
 
     public Response(Long id, LocalDateTime updateDate, String value, ProcessRole updatedBy, Question question, Application app) {
         this.id = id;
@@ -60,8 +55,23 @@ public class Response {
 
     }
 
+    // copy constructor for builder code
+    Response(Response other) {
+        this.id = other.id;
+        this.updateDate = other.updateDate;
+        this.value = other.value;
+        this.updatedBy = other.updatedBy;
+        this.question = other.question;
+        this.application = other.application;
+        this.responseAssessmentFeedbacks = new ArrayList<>(other.responseAssessmentFeedbacks);
+    }
+
     public Long getId() {
         return id;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getUpdateDate() {
@@ -111,27 +121,55 @@ public class Response {
         this.updatedBy = updatedBy;
     }
 
-    public Integer getAssessmentScore() { return assessmentScore; }
-
-    public String getAssessmentFeedback() {
-        return assessmentFeedback;
+    @JsonIgnore
+    public Application getApplication() {
+        return application;
     }
 
-    public Boolean getAssessmentConfirmation() {
-        return assessmentConfirmation;
+    public List<AssessorFeedback> getResponseAssessmentFeedbacks() {
+        return responseAssessmentFeedbacks;
     }
 
-    public void setAssessmentScore(Integer assessmentScore) {
-        this.assessmentScore = assessmentScore;
+    public Optional<AssessorFeedback> getResponseAssessmentForAssessor(ProcessRole assessor) {
+        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessorId().equals(assessor.getId())).findFirst();
     }
 
-    public void setAssessmentFeedback(String assessmentFeedback) {
-        this.assessmentFeedback = assessmentFeedback;
+    public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
+        Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
+        return existingFeedback.map(Function.identity()).orElseGet(() -> {
+            AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
+            responseAssessmentFeedbacks.add(feedback);
+            return feedback;
+        });
     }
 
-    public void setAssessmentConfirmation(Boolean assessmentConfirmation) {
-        this.assessmentConfirmation = assessmentConfirmation;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Response response = (Response) o;
+
+        if (id != null ? !id.equals(response.id) : response.id != null) return false;
+        if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
+        if (value != null ? !value.equals(response.value) : response.value != null) return false;
+        if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
+        if (question != null ? !question.equals(response.question) : response.question != null) return false;
+        if (application != null ? !application.equals(response.application) : response.application != null)
+            return false;
+        return !(responseAssessmentFeedbacks != null ? !responseAssessmentFeedbacks.equals(response.responseAssessmentFeedbacks) : response.responseAssessmentFeedbacks != null);
+
     }
 
-    public void setId(Long id) { this.id = id; }
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
+        result = 31 * result + (question != null ? question.hashCode() : 0);
+        result = 31 * result + (application != null ? application.hashCode() : 0);
+        result = 31 * result + (responseAssessmentFeedbacks != null ? responseAssessmentFeedbacks.hashCode() : 0);
+        return result;
+    }
 }

@@ -21,31 +21,27 @@ $(function() {
         };
     };
 
-    var handleAssessorFeedbackFieldChangeOnField = function(parameterName, field) {
+    var handleAssessorFeedbackFieldChangeOnField = function(field) {
+
         var formUrl = field.closest('form').attr('action');
         var feedbackContainer = field.closest('[data-response-id]');
-        var responseId = feedbackContainer.attr('data-response-id')
-            ;
+        var responseId = feedbackContainer.attr('data-response-id');
+
+        var feedbackText = feedbackContainer.find('[id ^= "assessor-question-feedback-text-"]').val();
+        var feedbackValue = feedbackContainer.find('[data-feedback-value]').val();
+
         $.ajax({
             type: "PUT",
-            url: formUrl + '/response/' + responseId + '?' + parameterName + '=' + field.val()
+            url: formUrl + '/response/' + responseId + '?feedbackText=' + feedbackText + '&feedbackValue=' + feedbackValue
         });
     };
 
-    var handleAssessorFeedbackFieldChange = function(parameterName) {
-        return function() {
-            var field = $(this);
-            return handleAssessorFeedbackFieldChangeOnField(parameterName, field);
-        };
+    var handleAssessorFeedbackUpdate = function() {
+        var field = $(this);
+        return handleAssessorFeedbackFieldChangeOnField(field);
     };
 
-    $('body').on('change', '[id ^= "assessor-question-score-"]', handleAssessorFeedbackFieldChange('score'));
-    $('body').on('change', '[id ^= "assessor-question-confirmation-"]', handleAssessorFeedbackFieldChange('confirmationAnswer'));
-    $('body').on('change', '[id ^= "assessor-question-feedback-"]', handleAssessorFeedbackFieldChange('feedbackText'));
+    $('body').on('change', '[id ^= "assessor-question-feedback-text-"],[data-feedback-value]', handleAssessorFeedbackUpdate);
 
-    var updateAssessorFeedbackTextarea = function(field) {
-        handleAssessorFeedbackFieldChangeOnField('feedbackText', field);
-    };
-
-    $('body').on('keyup', '[id ^= "assessor-question-feedback-"]', registerKeyupCallback(updateAssessorFeedbackTextarea, 500));
+    $('body').on('keyup', '[id ^= "assessor-question-feedback-"]', registerKeyupCallback(handleAssessorFeedbackFieldChangeOnField, 500));
 });

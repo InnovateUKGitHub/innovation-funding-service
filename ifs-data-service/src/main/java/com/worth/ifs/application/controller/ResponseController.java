@@ -1,16 +1,21 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.service.AssessorService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,12 +28,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
-import static com.worth.ifs.util.IfsFunctions.requestParameterPresent;
+import static com.worth.ifs.util.Either.right;
+import static com.worth.ifs.util.IfsWrapperFunctions.withProcessRoleReturnJsonResponse;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -39,6 +47,8 @@ public class ResponseController {
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
+    RoleRepository roleRepository;
+    @Autowired
     ProcessRoleRepository processRoleRepository;
     @Autowired
     UserRepository userRepository;
@@ -46,6 +56,11 @@ public class ResponseController {
     ResponseRepository responseRepository;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    AssessorService assessorService;
+
+    @Autowired
+    ServiceLocator serviceLocator;
 
     QuestionController questionController = new QuestionController();
 
@@ -124,10 +139,9 @@ public class ResponseController {
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
                                                     @RequestParam("assessorUserId") Long assessorUserId,
-                                                    @RequestParam("score") Optional<Integer> scoreParam,
-                                                    @RequestParam("confirmationAnswer") Optional<Boolean> confirmationAnswerParam,
-                                                    @RequestParam("feedbackText") Optional<String> feedbackTextParam,
-                                                    HttpServletRequest request
+                                                    @RequestParam("feedbackValue") Optional<String> feedbackValue,
+                                                    @RequestParam("feedbackText") Optional<String> feedbackText,
+                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse
 
                                                     ) {
 
@@ -135,11 +149,13 @@ public class ResponseController {
 
         Response response = responseRepository.findOne(responseId);
 
-        requestParameterPresent("score", request).ifPresent(b -> response.setAssessmentScore(scoreParam.orElse(null)));
-        requestParameterPresent("confirmationAnswer", request).ifPresent(b -> response.setAssessmentConfirmation(confirmationAnswerParam.orElse(null)));
-        requestParameterPresent("feedbackText", request).ifPresent(b -> response.setAssessmentFeedback(feedbackTextParam.orElse(null)));
+        Application application = response.getApplication();
 
-        responseRepository.save(response);
-        return JsonStatusResponse.ok();
+        Function<ProcessRole, Either<JsonStatusResponse, JsonStatusResponse>> updateResponseFeedback = assessor -> {
+            assessorService.updateAssessorFeedback(response.getId(), assessor.getId(), feedbackValue, feedbackText);
+            return right(JsonStatusResponse.ok());
+        };
+
+        return withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator).apply(updateResponseFeedback);
     }
 }

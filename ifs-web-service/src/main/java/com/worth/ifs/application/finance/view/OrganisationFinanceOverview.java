@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Objects;
 
 @Configurable
 public class OrganisationFinanceOverview {
@@ -68,5 +69,13 @@ public class OrganisationFinanceOverview {
 
     public Double getTotal() {
         return organisationFinances.stream().mapToDouble(of -> of.getTotal()).sum();
+    }
+
+    public Double getTotalGrantPercentage() {
+        return organisationFinances.stream()
+                .filter(of -> of!=null && of.getGrantClaimPercentage()!=null)
+                .mapToInt(of -> of.getGrantClaimPercentage())
+                .average()
+                .orElse(0D);
     }
 }

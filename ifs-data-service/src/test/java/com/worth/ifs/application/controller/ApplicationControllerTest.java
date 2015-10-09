@@ -62,12 +62,12 @@ public class ApplicationControllerTest extends BaseControllerMocksTest<Applicati
         when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
         when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
 
-        when(userAppRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
+        when(processRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole1);
             add(testProcessRole2);
         }});
 
-        when(userAppRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
+        when(processRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole3);
             add(testProcessRole4);
         }});

@@ -574,14 +574,14 @@ INFUND-202</td>
 </tr>
 <tr>
 <td class="name"><a name="keyword_the Applicant enters some text">the Applicant enters some text</a></td>
-<td>Clear Element Text</td>
+<td>#Clear Element Text</td>
 <td>id=11</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Input Text</td>
+<td>#input Text</td>
 <td>id=11</td>
 <td>Save test #123</td>
 <td></td>
@@ -637,13 +637,6 @@ INFUND-202</td>
 </tr>
 <tr>
 <td class="name"><a name="keyword_the text should be visible">the text should be visible</a></td>
-<td>Textarea Value Should Be</td>
-<td>id=11</td>
-<td>Save test #123</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Textarea Value Should Be</td>
 <td>id=12</td>
 <td>I am a robot</td>
@@ -820,28 +813,28 @@ INFUND-202</td>
 <tr>
 <td class="name"><a name="keyword_When the Applicant edits project summary">When the Applicant edits project summary</a></td>
 <td>Clear Element Text</td>
-<td>name=question[11]</td>
+<td>name=question[12]</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Wait Until Page Contains Element</td>
-<td>css=#question-11 .count-down</td>
+<td>css=#question-12 .count-down</td>
 <td>499</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input Text</td>
-<td>name=question[11]</td>
+<td>name=question[12]</td>
 <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Button</td>
-<td>css=#question-11 div.textarea-footer &gt; button[name="mark_as_complete"]</td>
+<td>css=#question-12 div.textarea-footer &gt; button[name="mark_as_complete"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -855,7 +848,7 @@ INFUND-202</td>
 <tr>
 <td class="name"><a name="keyword_the word count should be correct for the project summary">the word count should be correct for the project summary</a></td>
 <td>Element Should Contain</td>
-<td>css=#question-11 .count-down</td>
+<td>css=#question-12 .count-down</td>
 <td>469</td>
 <td></td>
 </tr>
@@ -987,6 +980,13 @@ INFUND-202</td>
 </tr>
 <tr>
 <td class="name"><a name="keyword_the Applicant edits 'Public description'">the Applicant edits 'Public description'</a></td>
+<td>Click Element</td>
+<td>css=#question-12 .buttonlink</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Clear Element Text</td>
 <td>name=question[12]</td>
 <td></td>

@@ -92,6 +92,30 @@ Status is displayed in the collapsible header area.
     </div>
 </div>
 ```
+
+###Rows inside collapsible container
+
+```
+<div class="collapsible">
+	<ul>
+		<li class="section marked-as-complete">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h4 class="heading-medium"><a href="#">Application details</a></h4>
+				</div>
+			</div>
+		</li>
+		<li class="section assigned-to-me">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h4 class="heading-medium"><a href="#">Project summary</a></h4>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+```
+
 */
 
 .collapsible { 

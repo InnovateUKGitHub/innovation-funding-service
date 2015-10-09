@@ -2,6 +2,9 @@ package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * {@code Materials} implements {@link CostItem}
+ */
 public class Materials implements CostItem {
 
     private Long id;

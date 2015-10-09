@@ -83,6 +83,7 @@ dependencies {
     compile("com.jayway.jsonpath:json-path")
     compile("org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1")
     compile("org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1")
+    compile('org.apache.commons:commons-lang3:3.4')
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 

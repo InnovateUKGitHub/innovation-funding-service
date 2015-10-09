@@ -2,6 +2,9 @@ package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * {@code TravelCost} implements {@link CostItem}
+ */
 public class TravelCost implements CostItem {
     private Long id;
     private Double costPerItem;

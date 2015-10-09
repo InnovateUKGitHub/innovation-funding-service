@@ -1,6 +1,6 @@
 /*
 
-## Assessor view - Applications for assessment
+##1. Assessor view - Applications for assessment
 Each row appears as a list item within 'boxed-list', the status column changes colour depending on whether it is submitted and recommended, or submitted and not recommended. The boxed-list also has an extra class of 'bulk-select', this allows room for the bulk select checkboxes to appear to the right of each row. 
 
 ```
@@ -82,7 +82,7 @@ Each row appears as a list item within 'boxed-list', the status column changes c
 ```
 
 
-## Assessor view - Submitted applications
+##2. Assessor view - Submitted applications
 The view is similar to the applications for assessment, but have a grey background
 
 ```
@@ -118,10 +118,22 @@ The view is similar to the applications for assessment, but have a grey backgrou
 	</div>
 </div>
 ```
+
+
+##3. Applicant dashboard - awaiting assessment
+
+```
+<div class="app-dashboard">
+	<div class="awaiting-assessment">
+	    Awaiting <br/> assessment
+	</div>
+</div>
+```
+
 */
 
 
-.app-dashboard {
+.app-dashboard { 
 
 	.column-assessment-details{
 		@include grid-column( 13/16 );
@@ -299,9 +311,14 @@ The view is similar to the applications for assessment, but have a grey backgrou
 		}
 	}
 
-	button[name="submit_assessments"]{
+	.button[name="submit_assessments"]{
 		margin: 15px 0 0 0;
+	}
 
+	.modal-confirm-submit{
+		.button[name="submit_assessments"]{
+			margin: 0;
+		}
 	}
 
 	.boxed-list .progress-container {
@@ -388,4 +405,4 @@ The view is similar to the applications for assessment, but have a grey backgrou
 		}
 	}
 
-}
+} 

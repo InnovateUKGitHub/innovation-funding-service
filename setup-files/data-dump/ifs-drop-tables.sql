@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS process;
 DROP TABLE IF EXISTS response_assessment_linker;
 DROP TABLE IF EXISTS assessment_assessments_linker;
 DROP TABLE IF EXISTS assessment_response_assessments;
-
+DROP TABLE IF EXISTS assessor_feedback;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS user_application_role;

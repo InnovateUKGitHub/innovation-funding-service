@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class contains methods to retrieve and store {@link Response} related data,
@@ -37,17 +38,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public Boolean saveQuestionResponseAssessorScore(Long assessorUserId, Long responseId, Integer score) {
-        return responseRestService.saveQuestionResponseAssessorScore(assessorUserId, responseId, score);
-    }
-
-    @Override
-    public Boolean saveQuestionResponseAssessorConfirmationAnswer(Long assessorUserId, Long responseId, Boolean confirmation) {
-        return responseRestService.saveQuestionResponseAssessorConfirmationAnswer(assessorUserId, responseId, confirmation);
-    }
-
-    @Override
-    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, String feedback) {
-        return responseRestService.saveQuestionResponseAssessorFeedback(assessorUserId, responseId, feedback);
+    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
+        return responseRestService.saveQuestionResponseAssessorFeedback(assessorUserId, responseId, feedbackValue, feedbackText);
     }
 }

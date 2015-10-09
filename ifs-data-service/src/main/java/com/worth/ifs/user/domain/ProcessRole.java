@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class ProcessRole {
     private Organisation organisation;
 
     @OneToMany(mappedBy="updatedBy",fetch = FetchType.LAZY)
-    private List<Response> responses;
+    private List<Response> responses = new ArrayList<>();
 
     public ProcessRole(){
 
@@ -45,6 +46,16 @@ public class ProcessRole {
         this.application = application;
         this.role = role;
         this.organisation = organisation;
+    }
+
+    // copy constructor for builder code
+    ProcessRole(ProcessRole other) {
+        this.id = other.id;
+        this.user = other.user;
+        this.application = other.application;
+        this.role = other.role;
+        this.organisation = other.organisation;
+        this.responses = new ArrayList<>(other.responses);
     }
 
     public Role getRole() {
@@ -74,5 +85,17 @@ public class ProcessRole {
 
     public void setResponses(List<Response> responses) {
         this.responses = responses;
+    }
+
+    void setRole(Role role) {
+        this.role = role;
+    }
+
+    void setApplication(Application application) {
+        this.application = application;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 }
