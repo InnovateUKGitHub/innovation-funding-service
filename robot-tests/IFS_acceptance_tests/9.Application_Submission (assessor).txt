@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-342
+Documentation     INFUND-248: As an assessor I want to submit my assessments one at a time or as a batch, so I can work in the way I feel most comfortable.
 Suite Setup       Login as user    &{assessor_credentials}
 Suite Teardown    User closes the browser
 Resource          GLOBAL_LIBRARIES.txt
@@ -14,7 +14,7 @@ ${competition_name}    Technology Inspired
 
 *** Test Cases ***
 Submitting an application shows a confirmation popup
-    [Documentation]     INFUND-342
+    [Documentation]    INFUND-342
     [Tags]    Assessor
     When Assessor clicks the competition
     When Select Application Checkbox    ${application_name}
@@ -22,6 +22,7 @@ Submitting an application shows a confirmation popup
     Then Cancel the confirmation popup
 
 Cancelling the confirmation leaves the Application in unchanged state
+    [Documentation]    INFUND-342
     [Tags]    Assessor
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
@@ -29,6 +30,7 @@ Cancelling the confirmation leaves the Application in unchanged state
     Then Application is not submitted
 
 Confirming the popup changes the Application state to submitted
+    [Documentation]    INFUND-342
     [Tags]    Assessor
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
