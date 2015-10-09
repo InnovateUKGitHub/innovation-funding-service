@@ -42,22 +42,12 @@ public class Question {
 
     private Integer priority;
 
-    // TODO DW - added for Alpha phase to determine which questions are scorable by the Assessor - in Beta probably need an
-    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
-    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
     @Column(nullable = false)
     private boolean needingAssessorScore = false;
 
-    // TODO DW - added for Alpha phase to determine which questions need feedback from the Assessor - in Beta probably need an
-    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
-    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
     @Column(nullable = false)
     private boolean needingAssessorFeedback = false;
 
-    // TODO DW - added for Alpha phase to determine which questions need Yes / No responses from assessor and the text - in Beta probably need an
-    // "assessment_type" table like the question_type table that allows better configuration of the types of responses the
-    // assessor can provide, thereby removing the need for these various "needingAssessor..." columns
-    // that, if present, will be asked of them with a Yes / No answer
     private String assessorConfirmationQuestion;
 
     @ManyToOne

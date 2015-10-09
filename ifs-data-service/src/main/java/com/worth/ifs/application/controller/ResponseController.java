@@ -141,11 +141,7 @@ public class ResponseController {
                                                     @RequestParam("assessorUserId") Long assessorUserId,
                                                     @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                     @RequestParam("feedbackText") Optional<String> feedbackText,
-                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse
-
-                                                    ) {
-
-        // TODO DW - permissions checking and failure cases based upon assessorUserId, db failures, assessment state machine integration etc...
+                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 
         Response response = responseRepository.findOne(responseId);
 
