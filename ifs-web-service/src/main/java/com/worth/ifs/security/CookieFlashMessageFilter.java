@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 @Configurable
 public class CookieFlashMessageFilter extends GenericFilterBean {
     private final Log log = LogFactory.getLog(getClass());
-    private static final String COOKIE_NAME = "flashMessage";
+    public static final String COOKIE_NAME = "flashMessage";
 
     /**
      * Cookie is set, just for after redirecting, so the lifetime should be short.

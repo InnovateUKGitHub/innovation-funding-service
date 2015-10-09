@@ -1,21 +1,29 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.security.UserAuthentication;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.HandlerMethod;
@@ -41,12 +49,18 @@ public class BaseUnitTest {
 
     public UserAuthentication loggedInUserAuthentication;
 
+    protected final Log log = LogFactory.getLog(getClass());
+
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
     public ResponseService responseService;
     @Mock
     public ApplicationService applicationService;
+    @Mock
+    public CompetitionsRestService competitionRestService;
+    @Mock
+    public AssessmentRestService assessmentRestService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -55,6 +69,8 @@ public class BaseUnitTest {
     public FinanceService financeService;
     @Mock
     public CostService costService;
+    @Mock
+    public CostRestService costRestService;
     @Mock
     public ApplicationRestService applicationRestService;
     @Mock
@@ -71,6 +87,13 @@ public class BaseUnitTest {
     public List<User> users;
     public List<Organisation> organisations;
     TreeSet<Organisation> organisationSet;
+    public List<Assessment> assessments;
+    public List<Assessment> submittedAssessments;
+    public ApplicationStatus submittedApplicationStatus;
+    public ApplicationStatus createdApplicationStatus;
+    public ApplicationStatus approvedApplicationStatus;
+    public ApplicationStatus rejectedApplicationStatus;
+    public ApplicationFinance applicationFinance;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -96,6 +119,11 @@ public class BaseUnitTest {
     public void loginDefaultUser(){
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(loggedInUser);
+    }
+    public void loginUser(User user){
+        UserAuthentication userAuthentication = new UserAuthentication(user);
+        when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(userAuthentication);
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
     }
 
     public void setupCompetition(){
@@ -138,6 +166,7 @@ public class BaseUnitTest {
         competition.setSections(sections);
         competition.setQuestions(questionList);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
 
     }
 
@@ -149,10 +178,15 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationWithRoles(){
-        com.worth.ifs.application.domain.Application app1 = new com.worth.ifs.application.domain.Application(1L, "Rovel Additive Manufacturing Process", new ApplicationStatus(1L, "created"));
-        com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", new ApplicationStatus(2L, "submitted"));
-        com.worth.ifs.application.domain.Application app3 = new com.worth.ifs.application.domain.Application(3L, "Mobile Phone Data for Logistics Analytics", new ApplicationStatus(3L, "approved"));
-        com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", new ApplicationStatus(4L, "rejected"));
+        createdApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.CREATED.getId(), ApplicationStatusConstants.CREATED.getName());
+        submittedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId(), ApplicationStatusConstants.SUBMITTED.getName());
+        approvedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
+        rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
+
+        com.worth.ifs.application.domain.Application app1 = new com.worth.ifs.application.domain.Application(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
+        com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", submittedApplicationStatus);
+        com.worth.ifs.application.domain.Application app3 = new com.worth.ifs.application.domain.Application(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
+        com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
 
@@ -199,8 +233,13 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(app1, loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(app1)).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(app2)).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(app3)).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(app4)).thenReturn(organisationSet);
         when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
-
+        when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
         //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
 
     }
@@ -225,9 +264,38 @@ public class BaseUnitTest {
 
     public void setupFinances() {
         Application application = applications.get(0);
-        ApplicationFinance applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
+        applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
         when(financeService.getApplicationFinances(application.getId())).thenReturn(Arrays.asList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
+    }
+
+    public void setupAssessment(){
+        Assessment assessment1 = new Assessment(assessor, applications.get(0));
+        assessment1.setId(1L);
+        Assessment assessment2 = new Assessment(assessor, applications.get(1));
+        assessment2.setId(2L);
+        Assessment assessment3 = new Assessment(assessor, applications.get(2));
+        assessment3.setId(3L);
+        assessment3.submit();
+
+        assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
+        assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
+        assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
+
+        submittedAssessments = Arrays.asList(assessment3);
+        assessments = Arrays.asList(assessment1, assessment2, assessment3);
+        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
+        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);
+        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(1).getId())).thenReturn(assessment2);
+        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(2).getId())).thenReturn(assessment3);
+
+        when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
+        when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
+        when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
+
+
+
+
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

@@ -1,7 +1,6 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
 import org.hamcrest.Matchers;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

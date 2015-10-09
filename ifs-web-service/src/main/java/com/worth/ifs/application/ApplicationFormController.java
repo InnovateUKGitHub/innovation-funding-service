@@ -11,7 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -20,7 +19,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,22 +124,22 @@ public class ApplicationFormController extends AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
-        Application application = applicationService.getById(applicationId);
-        model.addAttribute("currentApplication", application);
-        Competition competition = application.getCompetition();
-        model.addAttribute("currentCompetition", competition);
-
-        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
-
-        addOrganisationDetails(model, application, Optional.of(userOrganisation));
-        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
-        addFinanceDetails(model, application, userId);
-        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
-        addUserDetails(model, application, userId);
-
-        return application;
-    }
+//    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
+//        Application application = applicationService.getById(applicationId);
+//        model.addAttribute("currentApplication", application);
+//        Competition competition = application.getCompetition();
+//        model.addAttribute("currentCompetition", competition);
+//
+//        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
+//
+//        addOrganisationDetails(model, application, Optional.of(userOrganisation));
+//        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
+//        addFinanceDetails(model, application, userId);
+//        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
+//        addUserDetails(model, application, userId);
+//
+//        return application;
+//    }
 
     private void saveApplicationForm(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
@@ -201,16 +199,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (processRole == null) {
             return false;
         }
+        boolean success = false;
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
             questionService.markAsComplete(questionId, applicationId, processRole.getId());
-            return true;
-        } else if (params.containsKey("mark_as_incomplete")) {
+            success= true;
+        }
+        if (params.containsKey("mark_as_incomplete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
-            return true;
+            success= true;
         }
-        return false;
+        return success;
     }
 
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
@@ -263,7 +263,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
                              @RequestParam("value") String value,
                              @RequestParam("applicationId") Long applicationId,
-                             HttpServletRequest request) {
+                             HttpServletRequest request,
+                             HttpServletResponse response) {
 
         try {
             User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -310,7 +311,11 @@ public class ApplicationFormController extends AbstractApplicationController {
             return node;
 
         } catch (Exception e) {
-            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
+//            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
+            AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
+            response.setStatus(400);
+            log.info("Autosave failed with error: "+ ex.getErrorMessage());
+            return ex.createJsonResponse();
         }
     }
 

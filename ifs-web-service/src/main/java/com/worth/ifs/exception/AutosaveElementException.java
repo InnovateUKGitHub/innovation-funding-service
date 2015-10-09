@@ -49,10 +49,10 @@ public class AutosaveElementException extends RuntimeException {
     }
 
     private String errorMessage;
+
     private String inputIdentifier;
     private String value;
     private Long applicationId;
-
     public AutosaveElementException(String inputIdentifier, String value, Long applicationId, Throwable originalException) {
         super(originalException);
 
@@ -73,7 +73,7 @@ public class AutosaveElementException extends RuntimeException {
         return "Please enter a valid value.";
     }
 
-    ObjectNode createJsonResponse() {
+    public ObjectNode createJsonResponse() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", "false");
@@ -82,6 +82,10 @@ public class AutosaveElementException extends RuntimeException {
         node.put("value", value);
         node.put("applicationId", applicationId);
         return node;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
 
