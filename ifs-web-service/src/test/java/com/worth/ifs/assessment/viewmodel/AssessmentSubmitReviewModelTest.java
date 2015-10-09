@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.viewmodel;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import static com.worth.ifs.BuilderAmendFunctions.incrementingIds;
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 
 /**
@@ -31,6 +33,9 @@ public class AssessmentSubmitReviewModelTest {
 
         Application application = newApplication().
                 build();
+
+        Competition competition = newCompetition()
+                .build();
 
         List<Response> responses = newResponse().
                 withApplication(application).
