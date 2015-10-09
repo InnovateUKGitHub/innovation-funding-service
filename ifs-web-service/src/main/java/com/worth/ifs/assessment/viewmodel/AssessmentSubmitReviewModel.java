@@ -65,7 +65,7 @@ public class AssessmentSubmitReviewModel {
         this.application = assessment.getApplication();
         this.competition = assessment.getApplication().getCompetition();
 
-        questions = assessment.getApplication().getCompetition().getSections().stream().
+        questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
                 collect(toList());
 

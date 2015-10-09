@@ -27,15 +27,15 @@ public class BuilderAmendFunctions {
         return (i, t) -> setName(nameGenerationFunction.apply(i, t), t);
     }
 
-    private static <T> T setId(Long value, T instance) {
+    public static <T> T setId(Long value, T instance) {
         return setField("id", value, instance);
     }
 
-    private static <T> T setName(Object value, T instance) {
+    public static <T> T setName(Object value, T instance) {
         return setField("name", value, instance);
     }
 
-    private static <T> T setField(String fieldName, Object value, T instance) {
+    public static <T> T setField(String fieldName, Object value, T instance) {
         try {
             ReflectionTestUtils.invokeSetterMethod(instance, fieldName, value);
         } catch (Exception e) {

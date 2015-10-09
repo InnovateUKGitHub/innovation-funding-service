@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+
 /**
  * Created by dwatson on 09/10/15.
  */
@@ -32,5 +34,9 @@ public class AssessmentBuilder extends BaseBuilder<Assessment> {
     @Override
     protected Assessment createInitial() {
         return new Assessment();
+    }
+
+    public AssessmentBuilder withApplication(Application application) {
+        return with(a -> setField("application", application, a));
     }
 }
