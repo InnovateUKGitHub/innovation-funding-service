@@ -1,31 +1,37 @@
 package com.worth.ifs.user.domain;
 
+import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Builder;
+import com.worth.ifs.Builder;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ProcessRoleBuilder implements Builder<ProcessRole> {
+public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
 
-    private final ProcessRole current;
+    private ProcessRoleBuilder() {
+        super();
+    }
 
-    // for factory method and with() use
-    private ProcessRoleBuilder(ProcessRole value) {
-        this.current = value;
+    private ProcessRoleBuilder(List<Consumer<ProcessRole>> actions) {
+        super(actions);
     }
 
     public static ProcessRoleBuilder newProcessRole() {
-        return new ProcessRoleBuilder(new ProcessRole());
+        return new ProcessRoleBuilder();
     }
 
     @Override
-    public ProcessRoleBuilder with(Consumer<ProcessRole> amendFunction) {
-        ProcessRole newValue = new ProcessRole(current);
-        amendFunction.accept(newValue);
-        return new ProcessRoleBuilder(newValue);
+    protected ProcessRoleBuilder createNewBuilderWithActions(List<Consumer<ProcessRole>> actions) {
+        return new ProcessRoleBuilder(actions);
+    }
+
+    @Override
+    protected ProcessRole createInitial() {
+        return new ProcessRole();
     }
 
     public ProcessRoleBuilder withId(Long id) {
@@ -42,10 +48,5 @@ public class ProcessRoleBuilder implements Builder<ProcessRole> {
 
     public ProcessRoleBuilder withApplication(Application application) {
         return with(processRole -> processRole.setApplication(application));
-    }
-
-    @Override
-    public ProcessRole build() {
-        return current;
     }
 }

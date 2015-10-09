@@ -1,4 +1,4 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs;
 
 import java.util.function.Consumer;
 
@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  */
 public interface Builder<T> {
 
-    Builder<T> with(Consumer<T> amendFunction);
+    <R extends Builder<T>> R with(Consumer<T> amendFunction);
 
     T build();
 }

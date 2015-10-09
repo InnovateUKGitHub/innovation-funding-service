@@ -1,35 +1,39 @@
 package com.worth.ifs.application.domain;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.Builder;
 import com.worth.ifs.user.domain.ProcessRole;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ResponseBuilder implements Builder<Response> {
+public class ResponseBuilder extends BaseBuilder<Response> {
 
-    private final Response current;
+    private ResponseBuilder() {
+        super();
+    }
 
-    // for factory method and with() use
-    private ResponseBuilder(Response newValue) {
-        this.current = newValue;
+    private ResponseBuilder(List<Consumer<Response>> actions) {
+        super(actions);
     }
 
     public static ResponseBuilder newResponse() {
-        return new ResponseBuilder(new Response());
+        return new ResponseBuilder();
     }
 
     @Override
-    public ResponseBuilder with(Consumer<Response> amendFunction) {
-        Response newValue = new Response(current);
-        amendFunction.accept(newValue);
-        return new ResponseBuilder(newValue);
+    protected ResponseBuilder createNewBuilderWithActions(List<Consumer<Response>> actions) {
+        return new ResponseBuilder(actions);
     }
 
     @Override
-    public Response build() {
-        return current;
+    protected Response createInitial() {
+        return new Response();
     }
 
     public ResponseBuilder withId(Long id) {

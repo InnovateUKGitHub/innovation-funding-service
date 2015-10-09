@@ -1,37 +1,39 @@
 package com.worth.ifs.user.domain;
 
-import com.worth.ifs.application.domain.Builder;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.Builder;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class RoleBuilder implements Builder<Role> {
+public class RoleBuilder extends BaseBuilder<Role> {
 
-    private final Role current;
+    private RoleBuilder() {
+        super();
+    }
 
-    private RoleBuilder(Role value) {
-        this.current = value;
+    private RoleBuilder(List<Consumer<Role>> actions) {
+        super(actions);
     }
 
     public static RoleBuilder newRole() {
-        return new RoleBuilder(new Role());
+        return new RoleBuilder();
     }
 
     @Override
-    public RoleBuilder with(Consumer<Role> amendFunction) {
-        Role newValue = new Role(current);
-        amendFunction.accept(newValue);
-        return new RoleBuilder(newValue);
+    protected RoleBuilder createNewBuilderWithActions(List<Consumer<Role>> actions) {
+        return new RoleBuilder(actions);
+    }
+
+    @Override
+    protected Role createInitial() {
+        return new Role();
     }
 
     public RoleBuilder withType(UserRoleType type) {
         return with(role -> role.setName(type.getName()));
-    }
-
-    @Override
-    public Role build() {
-        return current;
     }
 }
