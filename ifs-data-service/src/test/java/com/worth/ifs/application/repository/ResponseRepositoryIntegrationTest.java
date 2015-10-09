@@ -7,6 +7,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by dwatson on 05/10/15.
  */
+@Ignore("ignored for alpha until a stable test database solution is in place")
 public class ResponseRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ResponseRepository> {
 
     @Autowired

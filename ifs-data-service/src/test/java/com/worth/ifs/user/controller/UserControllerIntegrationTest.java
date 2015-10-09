@@ -2,6 +2,7 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.user.domain.User;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertTrue;
  *
  * Created by dwatson on 02/10/15.
  */
+@Ignore("ignored for alpha until a stable test database solution is in place")
 public class UserControllerIntegrationTest extends BaseControllerIntegrationTest<UserController> {
 
     @Override
