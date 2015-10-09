@@ -77,6 +77,9 @@ dependencies {
     testCompile 'org.springframework:spring-test'
     testCompile 'org.mockito:mockito-core'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+
+    // Use this for including the test helpers and utilities from the data-service.
+    testCompile files('libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
 }
 
 

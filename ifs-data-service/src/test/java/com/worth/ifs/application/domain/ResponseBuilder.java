@@ -4,9 +4,8 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.user.domain.ProcessRole;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -18,8 +17,8 @@ public class ResponseBuilder extends BaseBuilder<Response> {
         super();
     }
 
-    private ResponseBuilder(List<Consumer<Response>> actions) {
-        super(actions);
+    private ResponseBuilder(List<Consumer<Response>> actions, List<BiConsumer<Integer, Response>> multiActions) {
+        super(actions, multiActions);
     }
 
     public static ResponseBuilder newResponse() {
@@ -27,8 +26,8 @@ public class ResponseBuilder extends BaseBuilder<Response> {
     }
 
     @Override
-    protected ResponseBuilder createNewBuilderWithActions(List<Consumer<Response>> actions) {
-        return new ResponseBuilder(actions);
+    protected ResponseBuilder createNewBuilderWithActions(List<Consumer<Response>> actions, List<BiConsumer<Integer, Response>> multiActions) {
+        return new ResponseBuilder(actions, multiActions);
     }
 
     @Override
@@ -54,5 +53,9 @@ public class ResponseBuilder extends BaseBuilder<Response> {
 
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole> value) {
         return with(response -> response.setUpdatedBy(value.build()));
+    }
+
+    public ResponseBuilder withQuestion(Builder<Question> question) {
+        return with(response -> response.setQuestion(question.build()));
     }
 }

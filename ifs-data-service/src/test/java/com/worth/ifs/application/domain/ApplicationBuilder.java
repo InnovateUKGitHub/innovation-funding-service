@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -15,8 +16,8 @@ public class ApplicationBuilder extends BaseBuilder<Application> {
         super();
     }
 
-    private ApplicationBuilder(List<Consumer<Application>> actions) {
-        super(actions);
+    private ApplicationBuilder(List<Consumer<Application>> actions, List<BiConsumer<Integer, Application>> multiActions) {
+        super(actions, multiActions);
     }
 
     public static ApplicationBuilder newApplication() {
@@ -24,8 +25,8 @@ public class ApplicationBuilder extends BaseBuilder<Application> {
     }
 
     @Override
-    protected ApplicationBuilder createNewBuilderWithActions(List<Consumer<Application>> actions) {
-        return new ApplicationBuilder(actions);
+    protected ApplicationBuilder createNewBuilderWithActions(List<Consumer<Application>> actions, List<BiConsumer<Integer, Application>> multiActions) {
+        return new ApplicationBuilder(actions, multiActions);
     }
 
     @Override

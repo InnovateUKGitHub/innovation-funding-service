@@ -3,8 +3,10 @@ package com.worth.ifs.user.domain;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.Builder;
+import com.worth.ifs.assessment.domain.Assessment;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -16,8 +18,8 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
         super();
     }
 
-    private ProcessRoleBuilder(List<Consumer<ProcessRole>> actions) {
-        super(actions);
+    private ProcessRoleBuilder(List<Consumer<ProcessRole>> actions, List<BiConsumer<Integer, ProcessRole>> multiActions) {
+        super(actions, multiActions);
     }
 
     public static ProcessRoleBuilder newProcessRole() {
@@ -25,8 +27,8 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
     }
 
     @Override
-    protected ProcessRoleBuilder createNewBuilderWithActions(List<Consumer<ProcessRole>> actions) {
-        return new ProcessRoleBuilder(actions);
+    protected ProcessRoleBuilder createNewBuilderWithActions(List<Consumer<ProcessRole>> actions, List<BiConsumer<Integer, ProcessRole>> multiActions) {
+        return new ProcessRoleBuilder(actions, multiActions);
     }
 
     @Override

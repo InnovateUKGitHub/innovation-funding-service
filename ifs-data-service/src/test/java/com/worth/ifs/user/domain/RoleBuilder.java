@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -15,8 +16,8 @@ public class RoleBuilder extends BaseBuilder<Role> {
         super();
     }
 
-    private RoleBuilder(List<Consumer<Role>> actions) {
-        super(actions);
+    private RoleBuilder(List<Consumer<Role>> actions, List<BiConsumer<Integer, Role>> multiActions) {
+        super(actions, multiActions);
     }
 
     public static RoleBuilder newRole() {
@@ -24,8 +25,8 @@ public class RoleBuilder extends BaseBuilder<Role> {
     }
 
     @Override
-    protected RoleBuilder createNewBuilderWithActions(List<Consumer<Role>> actions) {
-        return new RoleBuilder(actions);
+    protected RoleBuilder createNewBuilderWithActions(List<Consumer<Role>> actions, List<BiConsumer<Integer, Role>> multiActions) {
+        return new RoleBuilder(actions, multiActions);
     }
 
     @Override
