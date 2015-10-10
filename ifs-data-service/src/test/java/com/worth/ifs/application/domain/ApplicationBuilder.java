@@ -33,7 +33,7 @@ public class ApplicationBuilder extends BaseBuilder<Application> {
         return new Application();
     }
 
-    public ApplicationBuilder withId(Long id) {
-        return with(application -> application.setId(id));
+    public ApplicationBuilder withId(Long... ids) {
+        return with((id, application) -> application.setId(id), ids);
     }
 }

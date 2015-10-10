@@ -40,6 +40,10 @@ public abstract class BaseBuilder<T> implements Builder<T> {
         return (R) createNewBuilderWithActions(newActions);
     }
 
+    public <R extends Builder<T>, S> R with(BiConsumer<S, T> amendFunction, S... values) {
+        return with((i, t) -> amendFunction.accept(values[Math.min(values.length, i)], t));
+    }
+
     @Override
     public T build() {
         return build(1).get(0);
