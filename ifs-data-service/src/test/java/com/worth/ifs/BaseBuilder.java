@@ -1,8 +1,5 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.domain.Response;
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,32 +15,29 @@ import java.util.stream.IntStream;
  */
 public abstract class BaseBuilder<T> implements Builder<T> {
 
-    private final List<Consumer<T>> amendActions;
-    private final List<BiConsumer<Integer, T>> multiAmendActions;
+    private final List<BiConsumer<Integer, T>> amendActions;
 
     // for factory method and with() use
-    protected BaseBuilder(List<Consumer<T>> newActions, List<BiConsumer<Integer, T>> newMultiActions) {
+    protected BaseBuilder(List<BiConsumer<Integer, T>> newActions) {
         this.amendActions = new ArrayList<>(newActions);
-        this.multiAmendActions = new ArrayList<>(newMultiActions);
     }
 
     protected BaseBuilder() {
         this.amendActions = Collections.emptyList();
-        this.multiAmendActions = Collections.emptyList();
     }
 
     @Override
     public <R extends Builder<T>> R with(Consumer<T> amendFunction) {
-        List<Consumer<T>> newActions = new ArrayList<>(amendActions);
-        newActions.add(amendFunction);
-        return (R) createNewBuilderWithActions(newActions, multiAmendActions);
+        List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
+        newActions.add((i, t) -> amendFunction.accept(t));
+        return (R) createNewBuilderWithActions(newActions);
     }
 
     @Override
     public <R extends Builder<T>> R with(BiConsumer<Integer, T> multiAmendFunction) {
-        List<BiConsumer<Integer, T>> newActions = new ArrayList<>(multiAmendActions);
+        List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
         newActions.add(multiAmendFunction);
-        return (R) createNewBuilderWithActions(amendActions, newActions);
+        return (R) createNewBuilderWithActions(newActions);
     }
 
     @Override
@@ -56,13 +50,12 @@ public abstract class BaseBuilder<T> implements Builder<T> {
 
         return (List) IntStream.range(0, numberToBuild).mapToObj(i -> {
             T newElement = createInitial();
-            amendActions.forEach(a -> a.accept(newElement));
-            multiAmendActions.forEach(a -> a.accept(i, newElement));
+            amendActions.forEach(a -> a.accept(i, newElement));
             return newElement;
         }).collect(Collectors.toList());
     }
 
-    protected abstract BaseBuilder<T> createNewBuilderWithActions(List<Consumer<T>> actions, List<BiConsumer<Integer, T>> multiActions);
+    protected abstract BaseBuilder<T> createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);
 
     protected abstract T createInitial();
 }

@@ -6,7 +6,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 08/10/15.
@@ -17,8 +16,8 @@ public class ResponseBuilder extends BaseBuilder<Response> {
         super();
     }
 
-    private ResponseBuilder(List<Consumer<Response>> actions, List<BiConsumer<Integer, Response>> multiActions) {
-        super(actions, multiActions);
+    private ResponseBuilder(List<BiConsumer<Integer, Response>> amendActions) {
+        super(amendActions);
     }
 
     public static ResponseBuilder newResponse() {
@@ -26,8 +25,8 @@ public class ResponseBuilder extends BaseBuilder<Response> {
     }
 
     @Override
-    protected ResponseBuilder createNewBuilderWithActions(List<Consumer<Response>> actions, List<BiConsumer<Integer, Response>> multiActions) {
-        return new ResponseBuilder(actions, multiActions);
+    protected ResponseBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Response>> actions) {
+        return new ResponseBuilder(actions);
     }
 
     @Override

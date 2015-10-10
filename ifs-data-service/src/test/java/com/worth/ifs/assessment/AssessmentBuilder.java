@@ -15,8 +15,8 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
  */
 public class AssessmentBuilder extends BaseBuilder<Assessment> {
 
-    private AssessmentBuilder(List<Consumer<Assessment>> newActions, List<BiConsumer<Integer, Assessment>> multiActions) {
-        super(newActions, multiActions);
+    private AssessmentBuilder(List<BiConsumer<Integer, Assessment>> multiActions) {
+        super(multiActions);
     }
 
     private AssessmentBuilder() {
@@ -27,8 +27,8 @@ public class AssessmentBuilder extends BaseBuilder<Assessment> {
     }
 
     @Override
-    protected BaseBuilder<Assessment> createNewBuilderWithActions(List<Consumer<Assessment>> actions, List<BiConsumer<Integer, Assessment>> multiActions) {
-        return new AssessmentBuilder(actions, multiActions);
+    protected BaseBuilder<Assessment> createNewBuilderWithActions(List<BiConsumer<Integer, Assessment>> actions) {
+        return new AssessmentBuilder(actions);
     }
 
     @Override

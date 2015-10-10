@@ -11,8 +11,8 @@ import java.util.function.Consumer;
  */
 public class CompetitionBuilder extends BaseBuilder<Competition> {
 
-    private CompetitionBuilder(List<Consumer<Competition>> newActions, List<BiConsumer<Integer, Competition>> newMultiActions) {
-        super(newActions, newMultiActions);
+    private CompetitionBuilder(List<BiConsumer<Integer, Competition>> newMultiActions) {
+        super(newMultiActions);
     }
 
     private CompetitionBuilder() {
@@ -23,8 +23,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition> {
     }
 
     @Override
-    protected BaseBuilder<Competition> createNewBuilderWithActions(List<Consumer<Competition>> actions, List<BiConsumer<Integer, Competition>> multiActions) {
-        return new CompetitionBuilder(actions, multiActions);
+    protected BaseBuilder<Competition> createNewBuilderWithActions(List<BiConsumer<Integer, Competition>> actions) {
+        return new CompetitionBuilder(actions);
     }
 
     @Override
