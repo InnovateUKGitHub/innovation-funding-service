@@ -1,6 +1,6 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.BaseControllerMocksTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-public class UserControllerTest extends BaseControllerMocksTest<UserController> {
+public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
 
     @Override
     protected UserController supplyControllerUnderTest() {

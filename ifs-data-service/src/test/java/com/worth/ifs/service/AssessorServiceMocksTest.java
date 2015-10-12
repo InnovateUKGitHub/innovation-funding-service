@@ -2,11 +2,13 @@ package com.worth.ifs.service;
 
 import com.worth.ifs.BaseServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationBuilder;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.transactional.AssessorService;
+import com.worth.ifs.transactional.AssessorServiceImpl;
+import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
 
@@ -14,7 +16,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
-import static com.worth.ifs.service.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.domain.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.*;
@@ -24,6 +26,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Tests for {@link AssessorServiceImpl}
+ *
  * Created by dwatson on 07/10/15.
  */
 public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorService> {

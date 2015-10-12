@@ -1,6 +1,6 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.BaseControllerMocksTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationControllerTest extends BaseControllerMocksTest<ApplicationController> {
+public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {

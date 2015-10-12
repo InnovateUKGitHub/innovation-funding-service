@@ -3,6 +3,8 @@ package com.worth.ifs.assessment.viewmodel;
 import com.worth.ifs.application.domain.AssessorFeedback;
 
 /**
+ * A view model object representing an Assessor's feedback for a Response.
+ *
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSummarySectionQuestionFeedback {

@@ -1,4 +1,4 @@
-package com.worth.ifs.service;
+package com.worth.ifs.transactional;
 
 import java.util.List;
 
@@ -6,6 +6,11 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * This class represents a failure encountered during a service call and can additionally contain 0 or more error
+ * messages within it.
+ *
+ * Code that returns
+ *
  * Created by dwatson on 06/10/15.
  */
 public class ServiceFailure {

@@ -6,6 +6,8 @@ import com.worth.ifs.application.domain.Question;
 import java.util.Optional;
 
 /**
+ * A view model object representing a Question in the Assessment Summary section of the Assessment Review page.
+ *
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSummarySectionQuestion {

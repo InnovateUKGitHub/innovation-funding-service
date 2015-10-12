@@ -216,8 +216,6 @@ public abstract class AbstractApplicationController {
         });
     }
 
-    // TODO DW - the selectFirstSectionIfNoneCurrentlySelected feels a little hacky but is currently here to ensure that at least a single section is always
-    // selected for the Assessor views of the Application
     protected Optional<Section> getSection(List<Section> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         if (sectionId.isPresent()) {

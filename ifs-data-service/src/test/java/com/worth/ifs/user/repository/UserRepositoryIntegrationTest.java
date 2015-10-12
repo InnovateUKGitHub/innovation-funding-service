@@ -3,6 +3,7 @@ package com.worth.ifs.user.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Created by dwatson on 02/10/15.
  */
+@Ignore("ignored for alpha until a stable test database solution is in place")
 public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
 
     @Override

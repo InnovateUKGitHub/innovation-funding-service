@@ -31,14 +31,6 @@ public class Role {
     public Role() {
     }
 
-    // copy constructor for builder
-    Role(Role other) {
-        this.id = other.id;
-        this.name = other.name;
-        this.processRoles = new ArrayList<>(other.processRoles);
-        this.users = new ArrayList<>(other.users);
-    }
-
     protected Boolean canEqual(Object other) {
         return other instanceof Role;
     }

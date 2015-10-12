@@ -48,16 +48,6 @@ public class ProcessRole {
         this.organisation = organisation;
     }
 
-    // copy constructor for builder code
-    ProcessRole(ProcessRole other) {
-        this.id = other.id;
-        this.user = other.user;
-        this.application = other.application;
-        this.role = other.role;
-        this.organisation = other.organisation;
-        this.responses = new ArrayList<>(other.responses);
-    }
-
     public Role getRole() {
         return role;
     }

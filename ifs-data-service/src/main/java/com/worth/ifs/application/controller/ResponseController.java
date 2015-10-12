@@ -1,14 +1,14 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worth.ifs.ServiceLocator;
+import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.service.AssessorService;
+import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -141,11 +141,7 @@ public class ResponseController {
                                                     @RequestParam("assessorUserId") Long assessorUserId,
                                                     @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                     @RequestParam("feedbackText") Optional<String> feedbackText,
-                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse
-
-                                                    ) {
-
-        // TODO DW - permissions checking and failure cases based upon assessorUserId, db failures, assessment state machine integration etc...
+                                                    HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 
         Response response = responseRepository.findOne(responseId);
 

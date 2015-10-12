@@ -31,13 +31,9 @@ public class AssessorFeedback {
     @Column(name = "assessorId", insertable = false, updatable = false)
     private Long assessorId;
 
-    // TODO DW - for Alpha, storing the Assessor's score against a Response.  In Beta, the Assessor will
-    // probably be assessing ALL responses for a question at the same time, at which point a new table
-    // will be needed, like "question_response_set" or "consortium_response", that links a question to a
-    // set of responses and also allows storing of scores against it
     private String assessmentValue;
 
-    @Column(length=5000) // TODO DW - this column will probably move along with assessmentScore
+    @Column(length=5000)
     private String assessmentFeedback;
 
     private AssessorFeedback(Response response, ProcessRole assessor) {
@@ -79,7 +75,6 @@ public class AssessorFeedback {
         return response;
     }
 
-    // TODO DW - workaround for getting assessorId back to web layer over REST without sending assessor - fix with DTOs in beta
     public Long getAssessorId() {
         return assessor != null ? assessor.getId() : assessorId;
     }

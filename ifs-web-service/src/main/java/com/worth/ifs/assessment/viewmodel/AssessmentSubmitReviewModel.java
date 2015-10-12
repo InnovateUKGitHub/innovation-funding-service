@@ -19,6 +19,8 @@ import static java.util.Optional.empty;
 import static java.util.stream.Collectors.*;
 
 /**
+ * A view model backing the Assessment Submit Review page.
+ *
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSubmitReviewModel {

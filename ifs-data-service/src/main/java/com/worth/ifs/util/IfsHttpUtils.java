@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * A set of utilities for performing commonly used functions related to HTTP.
+ *
  * Created by dwatson on 01/10/15.
  */
-public class IfsFunctionUtils {
+public class IfsHttpUtils {
 
     /**
      * Checks to see whether or not the given request parameter is present and if so, returns a non-empty Optional upon which

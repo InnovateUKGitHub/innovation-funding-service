@@ -103,8 +103,6 @@ public class ApplicationController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
-        // TODO DW - quite a lot of rework here to get a hold of more single-section focused
-        // TODO DW - sectionId should be determined from the clicked button as per the questionId as grabbed below
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), true);
@@ -114,17 +112,13 @@ public class ApplicationController extends AbstractApplicationController {
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-//        List<Response> responses = responseService.getByApplication(applicationId);
-//        Response response = responseService.mapResponsesToQuestion(responses).get(questionId);
         List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
 
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 
-        // TODO DW - move into "addUserDetails"?
         model.addAttribute("currentUser", user);
-
         model.addAttribute("section", currentSection);
 
         return "application/single-section-details";
