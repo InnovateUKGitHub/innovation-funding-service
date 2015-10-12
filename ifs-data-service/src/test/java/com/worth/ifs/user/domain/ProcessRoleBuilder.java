@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+
 /**
  * Created by dwatson on 08/10/15.
  */
@@ -35,19 +37,23 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
         return new ProcessRole();
     }
 
-    public ProcessRoleBuilder withId(Long id) {
-        return with(processRole -> processRole.setId(id));
+    public ProcessRoleBuilder withId(Long... ids) {
+        return with((id, processRole) -> processRole.setId(id), ids);
     }
 
     public ProcessRoleBuilder withRole(Builder<Role> role) {
         return with(processRole -> processRole.setRole(role.build()));
     }
 
+    public ProcessRoleBuilder withRole(Role... roles) {
+        return with((role, processRole) -> processRole.setRole(role), roles);
+    }
+
     public ProcessRoleBuilder withApplication(Builder<Application> application) {
         return withApplication(application.build());
     }
 
-    public ProcessRoleBuilder withApplication(Application application) {
-        return with(processRole -> processRole.setApplication(application));
+    public ProcessRoleBuilder withApplication(Application... applications) {
+        return with((application, processRole) -> processRole.setApplication(application), applications);
     }
 }

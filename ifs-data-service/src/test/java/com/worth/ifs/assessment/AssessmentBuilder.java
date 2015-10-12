@@ -36,7 +36,7 @@ public class AssessmentBuilder extends BaseBuilder<Assessment> {
         return new Assessment();
     }
 
-    public AssessmentBuilder withApplication(Application application) {
-        return with(a -> setField("application", application, a));
+    public AssessmentBuilder withApplication(Application... applications) {
+        return with((application, assessment) -> setField("application", assessment, application), applications);
     }
 }
