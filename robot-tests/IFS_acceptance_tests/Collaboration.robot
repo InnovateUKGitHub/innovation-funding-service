@@ -1,10 +1,10 @@
 *** Settings ***
 Suite Setup       Login as user    &{collaborator1_credentials}
 Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.txt
-Resource          GLOBAL_VARIABLES.txt
-Resource          Login_actions.txt
-Resource          User_credentials.txt
+Resource          GLOBAL_LIBRARIES.robot
+Resource          GLOBAL_VARIABLES.robot
+Resource          Login_actions.robot
+Resource          USER_CREDENTIALS.robot
 
 *** Test Cases ***
 lead applicant makes a change to the question

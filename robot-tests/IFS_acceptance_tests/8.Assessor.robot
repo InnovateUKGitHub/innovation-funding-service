@@ -8,11 +8,11 @@ Documentation     -INFUND-225 As an assessor and I am signed in, I have an overv
 ...               INFUND-337
 Suite Setup       Login as user    &{assessor_credentials}
 Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.txt
-Resource          GLOBAL_VARIABLES.txt
-Resource          Login_actions.txt
-Resource          Assessor_actions.txt
-Resource          User_credentials.txt
+Resource          GLOBAL_LIBRARIES.robot
+Resource          GLOBAL_VARIABLES.robot
+Resource          Login_actions.robot
+Resource          Assessor_actions.robot
+Resource          USER_CREDENTIALS.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things

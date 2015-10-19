@@ -5,11 +5,11 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.txt
-Resource          GLOBAL_VARIABLES.txt
-Resource          Login_actions.txt
-Resource          User_credentials.txt
-Resource          Applicant_actions.txt
+Resource          GLOBAL_LIBRARIES.robot
+Resource          GLOBAL_VARIABLES.robot
+Resource          Login_actions.robot
+Resource          USER_CREDENTIALS.robot
+Resource          Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the assign button is visible in the overview page

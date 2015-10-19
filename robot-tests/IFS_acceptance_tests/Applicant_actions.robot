@@ -10,13 +10,13 @@ Applicant edits the Public description question
     Input Text    id=12    I am a robot
 
 Mark scope question 13 as editable
-    Click Element    css=#question-13 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Click Element    css=#question-13 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Mark question 11 as editable
-    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Click Element    css=#question-11 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Mark question 12 as editable
-    click Element    css=#question-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    click Element    css=#question-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Switch to the first browser
     Switch browser    1
