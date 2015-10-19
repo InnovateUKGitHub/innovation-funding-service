@@ -1,5 +1,5 @@
-*** Variables ***
-${SERVER}         http://localhost:8080
+**** Variables ****
+${SERVER}         http://ifs.test.worth.systems
 ${LOGIN_URL}      ${SERVER}/login
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SCOPE_SECTION_URL}    ${SERVER}/application-form/1/section/2/
