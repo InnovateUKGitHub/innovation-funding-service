@@ -1,5 +1,7 @@
 **** Variables ****
-${SERVER}         http://ifs.test.worth.systems
+${BROWSER}             Firefox
+${SERVER_BASE}         ifs.test.worth.systems
+${SERVER}			   http://${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/login
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SCOPE_SECTION_URL}    ${SERVER}/application-form/1/section/2/
