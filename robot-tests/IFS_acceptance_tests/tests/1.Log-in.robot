@@ -22,7 +22,6 @@ Log-out
 
 Invalid Login
     [Tags]    Applicant
-    [Setup]
     Given the user is not logged-in
     When the guest user inserts correct username
     And the guest user inserts wrong password
@@ -31,7 +30,6 @@ Invalid Login
 
 Valid login as Applicant
     [Tags]    Applicant
-    [Setup]
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${lead_applicant_credentials["email"]}
     And the user inserts password    ${lead_applicant_credentials["password"]}
@@ -41,7 +39,6 @@ Valid login as Applicant
     [Teardown]    Logout as user
 
 Valid login as Collaborator
-    [Setup]
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${collaborator1_credentials["email"]}
     And the user inserts password    ${collaborator1_credentials["password"]}
@@ -53,7 +50,6 @@ Valid login as Collaborator
 Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    Assessor
-    [Setup]
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${assessor_credentials["email"]}
     And the user inserts password    ${assessor_credentials["password"]}

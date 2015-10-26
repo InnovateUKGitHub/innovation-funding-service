@@ -7,7 +7,7 @@ Documentation     -INFUND-225 As an assessor and I am signed in, I have an overv
 ...
 ...               INFUND-337
 Test Setup       Login as user    &{assessor_credentials}
-Test Teardown    User closes the browser
+Test Teardown    TestTeardown User closes the browser
 Resource          ../GLOBAL_LIBRARIES.robot
 Resource          ../GLOBAL_VARIABLES.robot
 Resource          ../Login_actions.robot

@@ -5,7 +5,7 @@ Documentation     -INFUND-408: As an applicant, and I am on the application over
 ...
 ...
 Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    User closes the browser
+Test Teardown    TestTeardown User closes the browser
 Resource          ../GLOBAL_VARIABLES.robot
 Resource          ../GLOBAL_LIBRARIES.robot
 Resource          ../Login_actions.robot

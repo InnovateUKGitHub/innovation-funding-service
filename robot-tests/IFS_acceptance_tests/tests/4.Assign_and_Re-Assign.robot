@@ -3,8 +3,8 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...
 ...               -INFUND-265: As both lead applicant and collaborator I want to see the changes other participants have made since my last visit, so I can see progress made on the application form
 ...
-Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    User closes the browser
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
 Resource          ../GLOBAL_LIBRARIES.robot
 Resource          ../GLOBAL_VARIABLES.robot
 Resource          ../Login_actions.robot
@@ -80,7 +80,7 @@ the field of the question 11 should be disabled
     sleep    2
 
 the Collaborator is in the Application details section
-    open browser    ${SERVER}
+    The guest user opens the browser
     Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
     Click Element    css=#content > div > div:nth-child(1) > form > input
@@ -97,10 +97,9 @@ and the collaborator can see the 'assigned to you' in the overview page
 
 the question 11 should not be editable
     Element Should Be Disabled    id=11
-    Close Browser
 
 the second Collaborator is logged in
-    open browser    ${SERVER}
+    The guest user opens the browser
     Input Text    id=id_email    pete.tom@egg.com
     Input Password    id=id_password    test
     Click Element    css=#content > div > div:nth-child(1) > form > input
@@ -149,7 +148,6 @@ the lead applicant re-assign the question to him self
     Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
     Click Element    xpath=//div[@id="question-11"]//button[contains(text(),"${assignee_name}")]
     Element Should Be Enabled    id=11
-    Close Browser
 
 the Applicant opens again the application form
     Reload Page

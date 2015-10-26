@@ -9,7 +9,7 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
 Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    User closes the browser
+Test Teardown    TestTeardown User closes the browser
 Resource          ../GLOBAL_LIBRARIES.robot
 Resource          ../GLOBAL_VARIABLES.robot
 Resource          ../Login_actions.robot
@@ -39,7 +39,7 @@ Verify the navigation for the "Rovel additive..." form
     When the Applicant clicks the sections then the Applicant navigates to the correct sections
 
 Verify the last update metadata
-    [Documentation]    -INFUND-283
+    [Documentation]    INFUND-283
     Given the applicant is on the application overview page
     and opens the 'Your business proposition' section
     Then the last update date of question 1 is a date in the past
@@ -54,16 +54,15 @@ Verify the last update metadata
     and the last update date should be updated
 
 Verify that the word count is available
-    [Documentation]    -INFUND-198
+    [Documentation]    INFUND-198
     [Tags]    Applicant
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant clicks the Funding section
     Then the word count should be available in the text areas
 
 Verify that the word count works
-    [Documentation]    -INFUND-198
+    [Documentation]    INFUND-198
     [Tags]    Applicant
-    [Setup]
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant edits project summary
     Then the word count should be correct for the project summary

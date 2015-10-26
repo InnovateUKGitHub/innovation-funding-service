@@ -1,6 +1,6 @@
 *** Settings ***
 Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    User closes the browser
+Test Teardown    TestTeardown User closes the browser
 Resource          ../GLOBAL_LIBRARIES.robot
 Resource          ../GLOBAL_VARIABLES.robot
 Resource          ../Login_actions.robot
