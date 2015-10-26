@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation     -INFUND-46: As a lead applicant and I am on the application form on an open application, I can review & submit the application, so I can see an overview of the application and the status of each section.
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
-Resource          Applicant_actions.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
+Resource          ../Applicant_actions.robot
 
 *** Test Cases ***
 Verify all sections present in the summary page

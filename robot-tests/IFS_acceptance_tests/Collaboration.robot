@@ -34,4 +34,4 @@ the lead Applicant assigns the question 13 to the collaborator
 
 the success assignment message should show
     Wait Until Element Is Visible    css=body > div.event-alert > p > span
-    Capture Page Screenshot
+

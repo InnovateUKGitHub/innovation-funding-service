@@ -3,13 +3,13 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...
 ...               -INFUND-265: As both lead applicant and collaborator I want to see the changes other participants have made since my last visit, so I can see progress made on the application form
 ...
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
-Resource          Applicant_actions.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
+Resource          ../Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the assign button is visible in the overview page
@@ -73,7 +73,7 @@ When the Applicant assigns the question 11 to the collaborator
 the success message should show
     Wait Until Element Is Visible    css=#content > div.event-alert
     Element Should Contain    css=#content > div.event-alert    Question assigned successfully
-    Capture Page Screenshot
+
 
 the field of the question 11 should be disabled
     Element Should Be Disabled    id=11
@@ -138,7 +138,7 @@ the Applicant is in the overview page
 the collaborators should be visible in the overview page
     Click Element    css=#content > form > div > h2:nth-child(1) > button
     Page Should Contain Element    css=#collapsible-1 > ul > li:nth-child(3) > div > div.column-third > div > div > div.assign-button > button
-    Capture Page Screenshot
+
 
 the last update should show the collaborators name
     Element Should Contain    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-header > p > small    Last updated: Today by you

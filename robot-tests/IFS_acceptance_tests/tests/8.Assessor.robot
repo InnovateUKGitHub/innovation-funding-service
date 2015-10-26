@@ -6,13 +6,13 @@ Documentation     -INFUND-225 As an assessor and I am signed in, I have an overv
 ...               -INFUND-284- As an assessor I can log into the system to be redirected to my dashboard, so I can view my assessments
 ...
 ...               INFUND-337
-Suite Setup       Login as user    &{assessor_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          Assessor_actions.robot
-Resource          USER_CREDENTIALS.robot
+Test Setup       Login as user    &{assessor_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../Assessor_actions.robot
+Resource          ../USER_CREDENTIALS.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -175,7 +175,7 @@ Your Feedback textarea appears
 
 Competition's details page should be visible
     Page Should Contain    ${competition_details_page_title}
-    Capture Page Screenshot
+
 
 Details page should contain a list with the applications for assessment
     Page Should Contain Element    css=#content > div.my-applications > div.in-progress

@@ -8,13 +8,13 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
 ...
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
-Resource          Applicant_actions.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
+Resource          ../Applicant_actions.robot
 
 *** Test Cases ***
 Verify the Autosave for the "Rovel additive..." Application form
@@ -117,7 +117,7 @@ the applicant clicks the "What should I include in project summary?" question
 
 the guidance should be visible
     Element Should Be Visible    css=#details-content-0 p
-    Capture Page Screenshot
+
 
 When the Applicant clicks the sections then the Applicant navigates to the correct sections
     Click Element    link= Scope

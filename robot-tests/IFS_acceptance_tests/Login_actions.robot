@@ -3,6 +3,7 @@ ${REMOTE_URL}     ${EMPTY}
 ${DESIRED_CAPABILITIES}    ${EMPTY}
 ${SERVER_AUTH}    ${EMPTY}
 ${PROTOCOL}    http://
+${TEST_TAGS}    ${EMPTY}
 
 *** Keywords ***
 Login as user
@@ -28,6 +29,8 @@ The guest user opens the browser
 
 
 User closes the browser
+    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  ${SUITE_NAME} | ${TEST_NAME}    ${TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+
     Close all browsers
 
 Logout as user

@@ -1,10 +1,10 @@
 *** Settings ***
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
 
 *** Test Cases ***
 Verify the "Review and submit" button (overview page)

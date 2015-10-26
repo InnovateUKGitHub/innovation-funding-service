@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
-Resource          Applicant_actions.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
+Resource          ../Applicant_actions.robot
 
 *** variables ***
 ${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk

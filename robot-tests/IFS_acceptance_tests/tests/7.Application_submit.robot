@@ -3,13 +3,13 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown
-Resource          GLOBAL_LIBRARIES.robot
-Resource          GLOBAL_VARIABLES.robot
-Resource          Login_actions.robot
-Resource          USER_CREDENTIALS.robot
-Resource          Applicant_actions.robot
+Test Setup       Login as User    &{lead_applicant_credentials}
+Test Teardown    User closes the browser
+Resource          ../GLOBAL_LIBRARIES.robot
+Resource          ../GLOBAL_VARIABLES.robot
+Resource          ../Login_actions.robot
+Resource          ../USER_CREDENTIALS.robot
+Resource          ../Applicant_actions.robot
 
 *** Test Cases ***
 Verify the "Review and submit" button (overview page)
