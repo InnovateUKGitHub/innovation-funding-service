@@ -1,4 +1,4 @@
-cd ifs-data-service
+cd ../../ifs-data-service
 ./gradlew clean deployToTomcat client clientCopy
 cd -
 cd ifs-web-service
