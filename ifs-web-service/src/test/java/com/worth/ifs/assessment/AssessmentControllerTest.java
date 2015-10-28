@@ -250,6 +250,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         String feedback = "just because 345678";
         String isSuitable = "Yes, suitable for funding";
         String comments = "comment; x";
+        Double overallScore = 60.0;
         mockMvc.perform(
                 post("/assessor/competitions/{competitionId}/applications/{applicationId}/complete",
                         application.getCompetition().getId(),
@@ -263,7 +264,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/assessor/competitions/" + competition.getId() + "/applications"));
 
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments);
+        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments, overallScore);
     }
 
     private Assessment getAssessment(Application application) {
