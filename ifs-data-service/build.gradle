@@ -1,57 +1,22 @@
-group 'worth'
-version '1.0-SNAPSHOT'
-
 if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "dev-build.gradle"
 }
 
-
-
-buildscript {
-    ext {
-        springBootVersion = '1.2.5.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        maven { url "http://repo.spring.io/milestone" }
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE")
-        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-    }
-}
-
-
-apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'war'
-apply plugin: 'com.bluepapa32.watch'
-
-
 war {
     baseName = 'ifs-data-service'
     version = '0.0.1-SNAPSHOT'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven { url "https://repo.spring.io/milestone" }
-}
 configurations {
     providedRuntime
     clientCompile
 }
 
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
+}
 
 sourceSets {
     client {
@@ -68,31 +33,21 @@ bootRun {
 
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("org.springframework.boot:spring-boot-starter-data-rest")
-    compile("org.springframework.security:spring-security-crypto")
-    //compile("org.springframework.data:spring-data-rest-hal-browser") future release it's cool
-    compile("mysql:mysql-connector-java")
-    compile("org.springframework:spring-web")
-    compile("com.fasterxml.jackson.core:jackson-databind")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    compile("org.projectlombok:lombok:1.16.2")
-    compile("com.jayway.jsonpath:json-path-assert:2.0.0")
-    compile("org.springframework.hateoas:spring-hateoas")
-    compile("com.jayway.jsonpath:json-path")
-    compile("org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1")
-    compile("org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1")
-    compile('org.apache.commons:commons-lang3:3.4')
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-data-rest"
+    compile "org.springframework.security:spring-security-crypto"
+    //compile "org.springframework.data:spring-data-rest-hal-browser" future release it's cool
+    compile "mysql:mysql-connector-java"
+    compile "org.springframework:spring-web"
+    compile "org.projectlombok:lombok:1.16.2"
+    compile "com.jayway.jsonpath:json-path-assert:2.0.0"
+    compile "org.springframework.hateoas:spring-hateoas"
+    compile "com.jayway.jsonpath:json-path"
+    compile "org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1"
+    compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1"
+    compile 'org.apache.commons:commons-lang3:3.4'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-
-    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.springframework:spring-test'
-    testCompile 'org.mockito:mockito-core'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-
     compile fileTree(dir: "libs", include: "*.jar")
 }
 
@@ -110,26 +65,21 @@ task client(type: Jar) {
 task clientCopy(type: Copy){
     into "../ifs-web-service/libs"
     from "build/libs/"
-    include("ifs-data-service-api*")
+    include "ifs-data-service-api*"
 }
 
 artifacts {
     archives client
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
-}
-
 task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
-    rename ('(.*).war', 'ROOT.war')
+    rename '(.*).war', 'ROOT.war'
 }
 
 
 watch {
-
     java {
         files files('src/main/java')
         tasks 'client', 'clientCopy', 'deployToTomcat'
