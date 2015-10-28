@@ -138,6 +138,9 @@ public class BaseUnitTest {
         Question q01 = new Question(1L, competition, sections.get(0), "Application details");
         sections.get(0).setQuestions(Arrays.asList(q01));
 
+        Question q10 = new Question(10L, competition, sections.get(1), "How does your project align with the scope of this competition?");
+        sections.get(1).setQuestions(Arrays.asList(q10));
+
         Question q20 = new Question(20L, competition, sections.get(2), "1. What is the business opportunity that this project addresses?");
         Question q21 = new Question(21L, competition, sections.get(2), "2. What is the size of the market opportunity that this project might open up?");
         Question q22 = new Question(22L, competition, sections.get(2), "3. How will the results of the project be exploited and disseminated?");
@@ -189,6 +192,7 @@ public class BaseUnitTest {
         com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
+        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
 
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
         Organisation organisation2 = new Organisation(2L, "Ludlow");
@@ -202,6 +206,8 @@ public class BaseUnitTest {
         ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, app3, role1, organisation1);
         ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, app4, role1, organisation1);
         ProcessRole processRole5 = new ProcessRole(5L, users.get(1), app1, role2, organisation2);
+        ProcessRole processRole6 = new ProcessRole(6L, assessor, app2, assessorRole, organisation1);
+
 
         organisation1.setProcessRoles(Arrays.asList(processRole1, processRole2, processRole3, processRole4));
         organisation2.setProcessRoles(Arrays.asList(processRole5));
@@ -224,7 +230,8 @@ public class BaseUnitTest {
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
         when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(Arrays.asList(1L, 2L));
         when(sectionService.getInCompleted(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
-        when(processRoleService.findProcessRole(app1.getId(), loggedInUser.getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(loggedInUser.getId(), app1.getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app1.getId())).thenReturn(app1);
         when(applicationService.getById(app2.getId())).thenReturn(app2);
@@ -292,10 +299,6 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
-
-
-
-
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
