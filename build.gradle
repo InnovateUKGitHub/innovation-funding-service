@@ -55,3 +55,7 @@ buildscript {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
+
+task cleanDeploy {
+    println "Starting clean deploy"
+}

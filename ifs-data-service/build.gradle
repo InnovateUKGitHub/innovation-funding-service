@@ -96,3 +96,12 @@ processResources {
         expand project.properties
     }
 }
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    build.dependsOn clean
+    clientCopy.dependsOn build
+    deployToTomcat.dependsOn build
+    dependsOn clientCopy
+    dependsOn deployToTomcat
+}
