@@ -22,10 +22,12 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE")
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'org.flywaydb:flyway-core:3.2.1'
     }
 }
 
-
+apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
@@ -33,7 +35,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 apply plugin: 'com.bluepapa32.watch'
-
 
 war {
     baseName = 'ifs-data-service'
@@ -51,7 +52,6 @@ configurations {
     providedRuntime
     clientCompile
 }
-
 
 sourceSets {
     client {
@@ -84,6 +84,7 @@ dependencies {
     compile("org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1")
     compile("org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1")
     compile('org.apache.commons:commons-lang3:3.4')
+    compile "org.flywaydb:flyway-core:3.2.1"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 

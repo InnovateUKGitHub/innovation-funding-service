@@ -29,11 +29,11 @@ The guest user opens the browser
 
 
 TestTeardown User closes the browser
-    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  ${SUITE_NAME} | ${PREV_TEST_NAME}    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS' | ${PREV_TEST_NAME}    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
     Close all browsers
 
 User closes the browser
-    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  ${SUITE_NAME} | ${TEST_NAME}    ${TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS' | ${TEST_NAME}    ${TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
     Close all browsers
 
 Logout as user
