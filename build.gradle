@@ -49,6 +49,9 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'org.flywaydb:flyway-core:3.2.1'
+
     }
 }
 

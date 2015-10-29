@@ -4,6 +4,9 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+
+apply plugin: 'org.flywaydb.flyway'
+
 war {
     baseName = 'ifs-data-service'
     version = '0.0.1-SNAPSHOT'
@@ -30,7 +33,6 @@ sourceSets {
 bootRun {
     addResources = false
 }
-
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
