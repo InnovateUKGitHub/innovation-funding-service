@@ -27,40 +27,40 @@ Verify the test guidance in the "Your Finance section"
     And the Applicant clicks the "Labour costs guidance"
     Then the guidance text should be visible
 
-Verify the " Labour" calculations
-    [Documentation]    INFUND-192
-    [Tags]    Not ready
-    Given the applicant is in the "Your Finances" sub-section
-    When the Applicant fills the Labour costs
-    Then the calculations of the labour should be correct
+# Verify the " Labour" calculations
+#     [Documentation]    INFUND-192
+#     [Tags]    Not ready
+#     Given the applicant is in the "Your Finances" sub-section
+#     When the Applicant fills the Labour costs
+#     Then the calculations of the labour should be correct
 
-Verify the fields that should be read-only are not editable
-    [Documentation]    INFUND-192
-    [Tags]    not ready
-    Given the applicant is in the "Your Finances" sub-section
-    When the Applicant is in the Labour sub-section
-    Then the read-only fields are not editable
+# Verify the fields that should be read-only are not editable
+#     [Documentation]    INFUND-192
+#     [Tags]    not ready
+#     Given the applicant is in the "Your Finances" sub-section
+#     When the Applicant is in the Labour sub-section
+#     Then the read-only fields are not editable
 
-Verify the "Materials" calculations
-    [Documentation]    INFUND-192
-    [Tags]    Not ready
-    Given the applicant is in the "Your Finances" sub-section
-    When the Applicant fills the Materials fields
-    Then the calculations of the Materials should be correct
+# Verify the "Materials" calculations
+#     [Documentation]    INFUND-192
+#     [Tags]    Not ready
+#     Given the applicant is in the "Your Finances" sub-section
+#     When the Applicant fills the Materials fields
+#     Then the calculations of the Materials should be correct
 
-Verify the "Subcontracting costs" calculations
-    [Documentation]    INFUND-192
-    #Given the applicant is in the "Your Finances" sub-section
-    #When the applicant edits the Subcontracting costs section
-    #The total subcontracting costs should be 100
+# Verify the "Subcontracting costs" calculations
+#     [Documentation]    INFUND-192
+#     Given the applicant is in the "Your Finances" sub-section
+#     When the applicant edits the Subcontracting costs section
+#     The total subcontracting costs should be 100
 
-Verify the auto-save on the "Your Finance" section
-    [Documentation]    INFUND-192
-    [Tags]    Not Ready
-    #Given the user is in the Labor form
-    #When the Applicant edits the "The Gross Annual Salary"
-    #and the Applicant refreshes the page
-    #Then the new "Gross Annual" amount should be visible
+# Verify the auto-save on the "Your Finance" section
+    # [Documentation]    INFUND-192
+    # [Tags]    Not Ready
+    # Given the user is in the Labor form
+    # When the Applicant edits the "The Gross Annual Salary"
+    # and the Applicant refreshes the page
+    # Then the new "Gross Annual" amount should be visible
 
 *** Keywords ***
 the applicant is in the "Your Finances" sub-section
