@@ -1,0 +1,11 @@
+ext.tomcatWebAppsDir=""
+ext.activeProfile="example"
+
+ext.ifsDatasourceUrl=""
+ext.ifsDatasourceUsername=""
+ext.ifsDatasourcePassword=""
+ext.ifsDatasourceDriverClassName=""
+
+
+ext.serverPort=""
+ext.ifsDataServiceRestBaseURL=""
