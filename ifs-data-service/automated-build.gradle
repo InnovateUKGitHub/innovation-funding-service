@@ -1,4 +1,4 @@
-ext.tomcatWebAppsDir="/Users/nbijl/Projects/Innovation Funding Service/apache-tomcat-data/webapps"
+ext.tomcatWebAppsDir=""
 ext.activeProfile="automated"
 
 ext.ifsDatasourceUrl="/"
