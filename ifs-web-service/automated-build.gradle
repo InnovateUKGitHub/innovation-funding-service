@@ -1,4 +1,4 @@
-ext.activeProfile="example"
+ext.activeProfile="automated"
 ext.serverPort=""
 ext.tomcatWebAppsDir=""
 ext.ifsDataServiceRestBaseURL=""
