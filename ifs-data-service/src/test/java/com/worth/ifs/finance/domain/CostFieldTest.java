@@ -19,7 +19,7 @@ public class CostFieldTest {
     }
 
     @Test
-    public void sectionShouldReturnCorrectAttributeValues() throws Exception {
+    public void gettersShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costField.getId(), id);
         Assert.assertEquals(costField.getTitle(), title);
         Assert.assertEquals(costField.getType(), type);
