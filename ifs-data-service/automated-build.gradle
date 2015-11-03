@@ -1,11 +1,11 @@
 ext.tomcatWebAppsDir=""
-ext.activeProfile="example"
+ext.activeProfile="automated"
 
-ext.ifsDatasourceUrl=""
-ext.ifsDatasourceUsername=""
+ext.ifsDatasourceUrl="/"
+ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword=""
-ext.ifsDatasourceDriverClassName=""
+ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
 
 
-ext.serverPort=""
-ext.ifsDataServiceRestBaseURL=""
+ext.serverPort="8080"
+ext.ifsDataServiceRestBaseURL="http://localhost:8080"

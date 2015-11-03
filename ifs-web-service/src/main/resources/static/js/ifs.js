@@ -69,7 +69,7 @@ var IFS = {
 
           //close all other buttons on click, defined by the js-close-others class on the container element
           if(closeAll){
-              var container =  jQuery(this).closest('.collapsible')
+              var container =  jQuery(this).closest('.collapsible');
               container.find('[aria-expanded]').attr('aria-expanded','false');
               container.find('[aria-hidden]').attr('aria-hidden','true');
           }
@@ -120,7 +120,7 @@ var IFS = {
             wait: 500,
             highlight: false,
             captureLength: 1
-        }
+        };
 
         fields.typeWatch(options);
         fields.off('change').on('change', function(e) {
@@ -184,7 +184,7 @@ var IFS = {
         });
 
          $(window).bind('beforeunload', function(e){
-                if(formSubmit == false && jQuery('.form-serialize-js').serialize()!=$('.form-serialize-js').data('serializedFormState')){
+                if(formSubmit === false && jQuery('.form-serialize-js').serialize()!=$('.form-serialize-js').data('serializedFormState')){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";
                 }else{
                  e=null;
@@ -198,7 +198,7 @@ var IFS = {
             wait: 500,
             highlight: false,
             captureLength: 1
-        }
+        };
         jQuery(".word-count textarea").typeWatch( options );
         jQuery(".word-count textarea").each(function(){
             updateWordCount(this);
@@ -259,7 +259,7 @@ var IFS = {
                             modal.css({'margin-top':'-'+(height/2)+'px'});
                         },50);
                    }
-                })
+                });
             });
             IFS.modalCloseLink();
         }
@@ -283,12 +283,13 @@ var IFS = {
                    window.console.log(arguments[0],arguments[1],arguments[2]);
                    break;
                default:
+                    break;
            }
-            return
+            return false;
        }
        return false;
     }
-} 
+};
 
 jQuery(document).ready(function(){
   IFS.domReady();
