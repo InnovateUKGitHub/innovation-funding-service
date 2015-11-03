@@ -76,9 +76,9 @@ var IFSFinance = {
     doMath : function(element,calcFields){
         var operation = element.attr('data-calculation-operations').split(',');
         var values = [];
-        _.each(calcFields, function(field){
 
-            var input = $(field);
+        for (var i = 0; i < calcFields.length; i++) {
+            var input = $(calcFields[i]);
             var rawValue = input.attr("data-calculation-rawvalue");
 
             // TODO DW - would be better to force all fields to have a raw value at the start rather than these fallback cases
@@ -93,7 +93,7 @@ var IFSFinance = {
                     values.push(parseFloat(0));
                 }
             }
-        });
+        };
 
         if(values.length === 1) {
             var calculatedValue=values[0];
