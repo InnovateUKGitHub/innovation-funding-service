@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ApplicationBuilder extends BaseBuilder<Application> {
+public class ApplicationBuilder<ApplicationBuilder> extends BaseBuilder<Application, Y> {
 
     private ApplicationBuilder() {
         super();
