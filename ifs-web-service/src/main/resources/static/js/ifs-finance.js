@@ -5,10 +5,11 @@ var IFSFinance = {
         '-': function (x, y) { return x - y },
         '*': function (x, y) { return x * y },
         '/': function (x, y) {
-        if(y === 0) {
-            return 0;
+            if(y === 0) {
+                return 0;
+            }
+            return x / y;
         }
-        return x / y }
     },
     domReady : function(){
         if(IFS.isApplicationForm()){
@@ -180,9 +181,9 @@ $(function() {
 
         $.get(dynamicHref, function(data) {
             var htmlReplacement = $('<div>' + data + '</div>');
-            var tableSectionToUpdate = amendRowsLink.parents('[finance-subsection-table-container]');
-            var tableSectionId = tableSectionToUpdate.attr('finance-subsection-table-container');
-            var replacement = htmlReplacement.find('[finance-subsection-table-container=' + tableSectionId + ']');
+            var tableSectionToUpdate = amendRowsLink.parents('[data-finance-subsection-table-container]');
+            var tableSectionId = tableSectionToUpdate.attr('data-finance-subsection-table-container');
+            var replacement = htmlReplacement.find('[data-finance-subsection-table-container=' + tableSectionId + ']');
             tableSectionToUpdate.replaceWith(replacement);
             IFS.initAllAutosaveElements(replacement);
         })
@@ -208,8 +209,8 @@ $(function() {
         return false;
     };
 
-    $(document).on('click', '[finance-subsection-table-container] .add-another-row', addCostsRowHandler);
-    $(document).on('click', '[finance-subsection-table-container] .delete-row', removeCostsRowHandler);
+    $(document).on('click', '[data-finance-subsection-table-container] .add-another-row', addCostsRowHandler);
+    $(document).on('click', '[data-finance-subsection-table-container] .delete-row', removeCostsRowHandler);
 });
 
 //
