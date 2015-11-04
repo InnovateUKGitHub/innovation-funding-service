@@ -71,6 +71,22 @@ task clientCopy(type: Copy){
     include "ifs-data-service-api*"
 }
 
+task testCommonCode(type: Jar) {
+    baseName += '-tests'
+    from(sourceSets.test.output) {
+        // filter to only include certain class files (Ant glob pattern)
+        include "com/worth/ifs/Builder.class"
+        include "com/worth/ifs/BaseBuilder.class"
+        include "com/worth/ifs/**/*Builder.class"
+        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
+    }
+}
+task testCommonCodeCopy(type: Copy){
+    into "../ifs-web-service/libs"
+    from "build/libs/"
+    include("ifs-data-service-tests*")
+}
+
 artifacts {
     archives client
 }

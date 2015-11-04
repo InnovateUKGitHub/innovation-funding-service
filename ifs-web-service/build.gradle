@@ -31,6 +31,7 @@ dependencies {
 
     // Use this for including the api lib from the data-service.
     compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
+    testCompile files('libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
 }
 
 
