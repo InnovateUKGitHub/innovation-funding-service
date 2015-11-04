@@ -44,6 +44,10 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
     }
 
+    public <R> S withList(BiConsumer<R, T> amendFunction, List<R> values) {
+        return with((i, t) -> amendFunction.accept(values.get(Math.min(values.size() - 1, i)), t));
+    }
+
     @Override
     public T build() {
         return build(1).get(0);

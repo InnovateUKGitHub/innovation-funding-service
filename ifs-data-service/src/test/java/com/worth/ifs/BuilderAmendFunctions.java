@@ -2,6 +2,8 @@ package com.worth.ifs;
 
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -11,12 +13,23 @@ import java.util.function.Consumer;
  */
 public class BuilderAmendFunctions {
 
+    private static Map<Class, Long> nextId = new HashMap<>();
+
     public static <T> Consumer<T> id(Long id) {
         return t -> setId(id, t);
     }
 
     public static <T> BiConsumer<Integer, T> incrementingIds() {
         return incrementingIds(0);
+    }
+
+    public static <T> BiConsumer<Integer, T> uniqueIds() {
+        return (i, t) -> {
+            Class<?> clazz = t.getClass();
+            Long id = nextId.get(clazz) != null ? nextId.get(clazz) : 1L;
+            setId(id, t);
+            nextId.put(clazz, id + 1);
+        };
     }
 
     public static <T> BiConsumer<Integer, T> incrementingIds(int fromInclusive) {

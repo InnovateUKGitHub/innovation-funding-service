@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.incrementingIds;
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
@@ -35,33 +34,32 @@ public class AssessmentSubmitReviewModelTest {
 
 //        Assessment assessment, List<Response > responses, ProcessRole assessorProcessRole
 
-        Application application = newApplication().
-                build();
 
-        List<Question> questions = newQuestion().
-                with(incrementingIds()).
-                build(3);
+
+        List<Question> questions = newQuestion().build(3);
 
         List<Section> sections = newSection()
-                .with(incrementingIds())
-                .with((i, section) -> section.setQuestions(questions))
+                .withQuestions(questions)
                 .build(3);
 
         Competition competition = newCompetition()
                 .withSections(sections)
                 .build();
 
+        Application application = newApplication().
+                withCompetition(competition).
+                build();
+
         List<Response> responses = newResponse().
                 withApplication(application).
-                with(incrementingIds()).
+                withQuestions(questions).
                 build(3);
 
         Assessment assessment = newAssessment().
                 withApplication(application).
                 build();
 
-        ProcessRole assessorProcessRole = newProcessRole().
-                build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
 
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
 

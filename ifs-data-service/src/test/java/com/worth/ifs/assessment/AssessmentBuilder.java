@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 /**
  * Created by dwatson on 09/10/15.
@@ -18,11 +20,8 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         super(multiActions);
     }
 
-    private AssessmentBuilder() {
-    }
-
     public static AssessmentBuilder newAssessment() {
-        return new AssessmentBuilder();
+        return new AssessmentBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
