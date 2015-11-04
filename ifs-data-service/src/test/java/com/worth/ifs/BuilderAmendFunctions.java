@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
+
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
  * Created by dwatson on 09/10/15.
@@ -32,12 +35,24 @@ public class BuilderAmendFunctions {
         };
     }
 
+    public static <T> Consumer<T> idBasedNames(String prefix) {
+        return names(t -> prefix + getId(t));
+    }
+
     public static <T> BiConsumer<Integer, T> incrementingIds(int fromInclusive) {
         return (i, t) -> setId((long) i + fromInclusive, t);
     }
 
     public static <T> BiConsumer<Integer, T> names(BiFunction<Integer, T, String> nameGenerationFunction) {
         return (i, t) -> setName(nameGenerationFunction.apply(i, t), t);
+    }
+
+    public static <T> Consumer<T> names(Function<T, String> nameGenerationFunction) {
+        return t -> setName(nameGenerationFunction.apply(t), t);
+    }
+
+    public static <T> Long getId(T instance) {
+        return (Long) getField(instance, "id");
     }
 
     public static <T> T setId(Long value, T instance) {

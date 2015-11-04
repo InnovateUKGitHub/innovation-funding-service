@@ -5,6 +5,7 @@ import com.worth.ifs.BaseBuilder;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
@@ -26,6 +27,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
     public static QuestionBuilder newQuestion() {
         return new QuestionBuilder(emptyList())
                 .with(uniqueIds())
+                .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true);
     }
 

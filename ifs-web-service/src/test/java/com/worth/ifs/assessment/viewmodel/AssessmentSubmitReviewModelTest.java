@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
@@ -17,9 +19,9 @@ import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
+import static com.worth.ifs.util.IfsFunctions.forEach;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -68,14 +70,47 @@ public class AssessmentSubmitReviewModelTest {
 
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole);
 
+        //
+        // Test the top-level attributes
+        //
         assertNotNull(model);
         assertEquals(application, model.getApplication());
         assertEquals(assessment, model.getAssessment());
         assertEquals(competition, model.getCompetition());
-        assertEquals(combineLists(section1Questions, section2Questions, section3Questions), model.getQuestions());
 
-        assertEquals(3, model.getAssessmentSummarySections().size());
+        //
+        // test the questions and score sections
+        //
+        List<Question> allQuestions = combineLists(section1Questions, section2Questions, section3Questions);
+        assertEquals(allQuestions, model.getQuestions());
+        assertEquals(allQuestions, model.getScorableQuestions());
         assertEquals(90, model.getPossibleScore());
+        assertEquals(0, model.getScorePercentage());
+        assertEquals(0, model.getTotalScore());
+        allQuestions.forEach(question -> assertNull(model.getFeedbackForQuestion(question)));
+
+        //
+        // test the section details
+        //
+        assertNotNull(model.getAssessmentSummarySections());
+        assertEquals(3, model.getAssessmentSummarySections().size());
+
+        Function<Section, BiConsumer<Integer, AssessmentSummarySectionQuestion>> checkAgainstOriginalQuestion = originalSection -> (i, summaryQuestion) -> {
+            List<Question> originalQuestions = originalSection.getQuestions();
+            Question originalQuestion = originalQuestions.get(i);
+            assertEquals(originalQuestion.getId(), summaryQuestion.getId());
+            assertEquals(originalQuestion.getName(), summaryQuestion.getName());
+        };
+
+        BiConsumer<Integer, AssessmentSummarySection> checkAgainstOriginalSection = (i, summarySection) -> {
+            Section originalSection = sections.get(i);
+            assertEquals(originalSection.getId(), summarySection.getId());
+            assertEquals(originalSection.getName(), summarySection.getName());
+            assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
+            forEach(summarySection.getQuestionsRequiringFeedback(), checkAgainstOriginalQuestion.apply(originalSection));
+        };
+
+        forEach(model.getAssessmentSummarySections(), checkAgainstOriginalSection);
     }
 
 }
