@@ -6,6 +6,9 @@ import com.worth.ifs.application.domain.Section;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
+
 /**
  * Created by dwatson on 09/10/15.
  */
@@ -15,11 +18,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         super(newMultiActions);
     }
 
-    private CompetitionBuilder() {
-    }
-
     public static CompetitionBuilder newCompetition() {
-        return new CompetitionBuilder();
+        return new CompetitionBuilder(emptyList()).with(uniqueIds());
     }
 
     public CompetitionBuilder withSections(List<Section> sections) {

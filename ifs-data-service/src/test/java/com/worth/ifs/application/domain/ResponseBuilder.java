@@ -7,21 +7,20 @@ import com.worth.ifs.user.domain.ProcessRole;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
+
 /**
  * Created by dwatson on 08/10/15.
  */
 public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
-
-    private ResponseBuilder() {
-        super();
-    }
 
     private ResponseBuilder(List<BiConsumer<Integer, Response>> amendActions) {
         super(amendActions);
     }
 
     public static ResponseBuilder newResponse() {
-        return new ResponseBuilder();
+        return new ResponseBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
@@ -56,5 +55,9 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
 
     public ResponseBuilder withQuestion(Builder<Question, ?> question) {
         return with(response -> response.setQuestion(question.build()));
+    }
+
+    public ResponseBuilder withQuestions(List<Question> questions) {
+        return withList((question, response) -> response.setQuestion(question), questions);
     }
 }
