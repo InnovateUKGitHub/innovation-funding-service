@@ -1,15 +1,15 @@
 package com.worth.ifs.competition.domain;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Section;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 09/10/15.
  */
-public class CompetitionBuilder extends BaseBuilder<Competition> {
+public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
 
     private CompetitionBuilder(List<BiConsumer<Integer, Competition>> newMultiActions) {
         super(newMultiActions);
@@ -22,8 +22,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition> {
         return new CompetitionBuilder();
     }
 
+    public CompetitionBuilder withSections(List<Section> sections) {
+        return with(competition -> competition.setSections(sections));
+    }
+
     @Override
-    protected BaseBuilder<Competition> createNewBuilderWithActions(List<BiConsumer<Integer, Competition>> actions) {
+    protected CompetitionBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Competition>> actions) {
         return new CompetitionBuilder(actions);
     }
 

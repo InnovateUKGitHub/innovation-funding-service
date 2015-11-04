@@ -1,19 +1,16 @@
 package com.worth.ifs.user.domain;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.Builder;
+import com.worth.ifs.application.domain.Application;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
-import static com.worth.ifs.BuilderAmendFunctions.setField;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
+public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuilder> {
 
     private ProcessRoleBuilder() {
         super();
@@ -41,7 +38,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
         return with((id, processRole) -> processRole.setId(id), ids);
     }
 
-    public ProcessRoleBuilder withRole(Builder<Role> role) {
+    public ProcessRoleBuilder withRole(Builder<Role, ?> role) {
         return with(processRole -> processRole.setRole(role.build()));
     }
 
@@ -49,7 +46,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
         return with((role, processRole) -> processRole.setRole(role), roles);
     }
 
-    public ProcessRoleBuilder withApplication(Builder<Application> application) {
+    public ProcessRoleBuilder withApplication(Builder<Application, ?> application) {
         return withApplication(application.build());
     }
 

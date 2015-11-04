@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ResponseBuilder extends BaseBuilder<Response> {
+public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
 
     private ResponseBuilder() {
         super();
@@ -42,7 +42,7 @@ public class ResponseBuilder extends BaseBuilder<Response> {
         return with(response -> response.setValue(value));
     }
 
-    public ResponseBuilder withApplication(Builder<Application> application) {
+    public ResponseBuilder withApplication(Builder<Application, ?> application) {
         return withApplication(application.build());
     }
 
@@ -50,11 +50,11 @@ public class ResponseBuilder extends BaseBuilder<Response> {
         return with((application, response) -> response.setApplication(application), applications);
     }
 
-    public ResponseBuilder withUpdatedBy(Builder<ProcessRole> value) {
+    public ResponseBuilder withUpdatedBy(Builder<ProcessRole, ?> value) {
         return with(response -> response.setUpdatedBy(value.build()));
     }
 
-    public ResponseBuilder withQuestion(Builder<Question> question) {
+    public ResponseBuilder withQuestion(Builder<Question, ?> question) {
         return with(response -> response.setQuestion(question.build()));
     }
 }

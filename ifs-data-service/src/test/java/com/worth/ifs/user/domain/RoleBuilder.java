@@ -4,12 +4,11 @@ import com.worth.ifs.BaseBuilder;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class RoleBuilder extends BaseBuilder<Role> {
+public class RoleBuilder extends BaseBuilder<Role, RoleBuilder> {
 
     private RoleBuilder() {
         super();

@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  *
  * Created by dwatson on 09/10/15.
  */
-public abstract class BaseBuilder<T> implements Builder<T> {
+public abstract class BaseBuilder<T, S> implements Builder<T, S> {
 
     private final List<BiConsumer<Integer, T>> amendActions;
 
@@ -27,21 +27,21 @@ public abstract class BaseBuilder<T> implements Builder<T> {
     }
 
     @Override
-    public <R extends Builder<T>> R with(Consumer<T> amendFunction) {
+    public S with(Consumer<T> amendFunction) {
         List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
         newActions.add((i, t) -> amendFunction.accept(t));
-        return (R) createNewBuilderWithActions(newActions);
+        return createNewBuilderWithActions(newActions);
     }
 
     @Override
-    public <R extends Builder<T>> R with(BiConsumer<Integer, T> multiAmendFunction) {
+    public S with(BiConsumer<Integer, T> multiAmendFunction) {
         List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
         newActions.add(multiAmendFunction);
-        return (R) createNewBuilderWithActions(newActions);
+        return createNewBuilderWithActions(newActions);
     }
 
-    public <R extends Builder<T>, S> R with(BiConsumer<S, T> amendFunction, S... values) {
-        return with((i, t) -> amendFunction.accept(values[Math.min(values.length, i)], t));
+    public <R> S with(BiConsumer<R, T> amendFunction, R... values) {
+        return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
     }
 
     @Override
@@ -59,7 +59,7 @@ public abstract class BaseBuilder<T> implements Builder<T> {
         }).collect(Collectors.toList());
     }
 
-    protected abstract BaseBuilder<T> createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);
+    protected abstract S createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);
 
     protected abstract T createInitial();
 }

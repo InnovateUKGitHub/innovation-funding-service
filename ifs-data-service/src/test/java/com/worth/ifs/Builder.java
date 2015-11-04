@@ -7,11 +7,11 @@ import java.util.function.Consumer;
 /**
  * Created by dwatson on 07/10/15.
  */
-public interface Builder<T> {
+public interface Builder<T, S> {
 
-    <R extends Builder<T>> R with(Consumer<T> amendFunction);
+    S with(Consumer<T> amendFunction);
 
-    <R extends Builder<T>> R with(BiConsumer<Integer, T> amendFunction);
+    S with(BiConsumer<Integer, T> amendFunction);
 
     T build();
 

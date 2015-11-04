@@ -6,14 +6,13 @@ import com.worth.ifs.assessment.domain.Assessment;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 
 /**
  * Created by dwatson on 09/10/15.
  */
-public class AssessmentBuilder extends BaseBuilder<Assessment> {
+public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder> {
 
     private AssessmentBuilder(List<BiConsumer<Integer, Assessment>> multiActions) {
         super(multiActions);
@@ -27,7 +26,7 @@ public class AssessmentBuilder extends BaseBuilder<Assessment> {
     }
 
     @Override
-    protected BaseBuilder<Assessment> createNewBuilderWithActions(List<BiConsumer<Integer, Assessment>> actions) {
+    protected AssessmentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Assessment>> actions) {
         return new AssessmentBuilder(actions);
     }
 
@@ -37,6 +36,6 @@ public class AssessmentBuilder extends BaseBuilder<Assessment> {
     }
 
     public AssessmentBuilder withApplication(Application... applications) {
-        return with((application, assessment) -> setField("application", assessment, application), applications);
+        return with((application, assessment) -> setField("application", application, assessment), applications);
     }
 }
