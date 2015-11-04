@@ -30,6 +30,10 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
         return with(section -> section.setQuestions(questions));
     }
 
+    public SectionBuilder withQuestionSets(List<List<Question>> questionSets) {
+        return withList((questions, section) -> section.setQuestions(questions), questionSets);
+    }
+
     @Override
     protected Section createInitial() {
         return new Section();
