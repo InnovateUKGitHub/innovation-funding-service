@@ -46,6 +46,7 @@ public class BaseUnitTest {
     public MockMvc mockMvc;
     public User loggedInUser;
     public User assessor;
+    public User applicant;
 
     public UserAuthentication loggedInUserAuthentication;
 
@@ -83,6 +84,7 @@ public class BaseUnitTest {
     public List<com.worth.ifs.application.domain.Application> applications;
     public List<Section> sections;
     public Map<Long, Question> questions;
+    public List<Competition> competitions;
     public Competition competition;
     public List<User> users;
     public List<Organisation> organisations;
@@ -104,6 +106,7 @@ public class BaseUnitTest {
 
     public void setup(){
         loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
+        applicant = loggedInUser;
         User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
         assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
         users = Arrays.asList(loggedInUser, user2);
@@ -168,8 +171,12 @@ public class BaseUnitTest {
 
         competition.setSections(sections);
         competition.setQuestions(questionList);
+        competitions = new ArrayList<>();
+        competitions.add(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getAll()).thenReturn(competitions);
+
 
     }
 
@@ -285,6 +292,9 @@ public class BaseUnitTest {
         assessment3.setId(3L);
         assessment3.submit();
 
+        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(3);
+        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(1);
+
         assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
         assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
@@ -295,6 +305,9 @@ public class BaseUnitTest {
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(1).getId())).thenReturn(assessment2);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(2).getId())).thenReturn(assessment3);
+
+
+
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));

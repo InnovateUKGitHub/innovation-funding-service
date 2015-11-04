@@ -34,8 +34,8 @@ public class CostValueIdTest {
         CostValueId equalObject = new CostValueId(cost,costField);
         CostValueId inequalObject = new CostValueId(cost+1L,costField-1L);
         Object differentObject = new Object();
-        Assert.assertEquals(costValueId.equals(equalObject),true);
-        Assert.assertEquals(costValueId.equals(inequalObject),false);
-        Assert.assertEquals(costValueId.equals(differentObject),false);
+        Assert.assertEquals(costValueId, equalObject);
+        Assert.assertNotEquals(costValueId, inequalObject);
+        Assert.assertNotEquals(costValueId, differentObject);
     }
 }
