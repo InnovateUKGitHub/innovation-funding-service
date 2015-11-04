@@ -1,6 +1,14 @@
 $is-ie: true;
 $ie-version: 8;
 
+//govuk template
+$browser-minimum-versions : (
+	"ie": "8"
+);
+
+
+@import "compass/css3";
+
 @import "vendor/govuk_frontend_toolkit/govuk-toolkit"; 
 @import "vendor/govuk_template/govuk-template";
 @import "vendor/govuk_elements/govuk-elements";
