@@ -35,4 +35,5 @@ public class ApplicationFinanceTest {
         applicationFinance.setId(newId);
         Assert.assertEquals(applicationFinance.getId(), newId);
     }
+
 }
