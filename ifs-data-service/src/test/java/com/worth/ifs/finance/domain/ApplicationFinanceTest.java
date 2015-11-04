@@ -25,5 +25,14 @@ public class ApplicationFinanceTest {
     @Test
     public void applicationFinanceShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(applicationFinance.getId(), id);
+        Assert.assertEquals(applicationFinance.getOrganisation(), organisation);
+        Assert.assertEquals(applicationFinance.getApplication(), application);
+    }
+
+    @Test
+    public void applicationFinanceShouldReturnCorrectAttributeValuesAfterSetId() throws Exception {
+        Long newId = 2L;
+        applicationFinance.setId(newId);
+        Assert.assertEquals(applicationFinance.getId(), newId);
     }
 }
