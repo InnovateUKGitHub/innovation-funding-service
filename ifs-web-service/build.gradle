@@ -1,35 +1,8 @@
-group 'worth'
-version '1.0-SNAPSHOT'
-
 if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "dev-build.gradle"
 }
-
-buildscript {
-    ext {
-        springBootVersion = '1.2.5.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-//        classpath "com.github.robfletcher:compass-gradle-plugin:2.0.5"
-    }
-}
-
-
-apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
-apply plugin: 'war'
-apply plugin: 'com.bluepapa32.watch'
 
 war {
     baseName = 'ifs-web-service'
@@ -40,57 +13,32 @@ bootRun {
     addResources = false
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven { url "https://repo.spring.io/libs-snapshot" }
-
-
-}
 configurations {
     providedRuntime
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
-    compile("org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE")
-    compile("javax.servlet:javax.servlet-api:3.1.0")
-    compile("com.fasterxml.jackson.core:jackson-databind")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile("org.projectlombok:lombok:1.16.2")
-    compile("org.springframework.hateoas:spring-hateoas")
-    compile("com.jayway.jsonpath:json-path")
-    compile('org.apache.commons:commons-lang3:3.4')
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity3"
+    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.projectlombok:lombok:1.16.2"
+    compile "org.springframework.hateoas:spring-hateoas"
+    compile "com.jayway.jsonpath:json-path"
+    compile 'org.apache.commons:commons-lang3:3.4'
 
     // Use this for including the api lib from the data-service.
     compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
-
-    // Test Libraries
-    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.springframework:spring-test'
-    testCompile 'org.mockito:mockito-core'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-
-
-    // Use this for including the test helpers and utilities from the data-service.
     testCompile files('libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
 }
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
-}
 task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
-    rename ('(.*).war', 'ROOT.war')
+    rename '(.*).war', 'ROOT.war'
 }
 
 task copyResourcesInPlace(dependsOn: processResources, type: Copy) {
@@ -102,7 +50,7 @@ watch {
 
     java {
         files files('src/main/java')
-        tasks 'deployToTomcat'
+        tasks('deployToTomcat')
     }
 
     resources {
@@ -115,4 +63,14 @@ processResources {
     filesMatching("*.properties") {
         expand project.properties
     }
+    if (project.hasProperty("profile") && project.profile == "automated") {
+        exclude '**/application.properties'
+    }
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    build.dependsOn clean
+    deployToTomcat.dependsOn build
+    dependsOn deployToTomcat
 }

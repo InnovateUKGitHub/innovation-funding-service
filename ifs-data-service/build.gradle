@@ -122,6 +122,7 @@ processResources {
 task cleanDeploy() {
     build.mustRunAfter clean
     build.dependsOn clean
+    testCommonCode.dependsOn build
     clientCopy.dependsOn build
     deployToTomcat.dependsOn build
     dependsOn clientCopy
