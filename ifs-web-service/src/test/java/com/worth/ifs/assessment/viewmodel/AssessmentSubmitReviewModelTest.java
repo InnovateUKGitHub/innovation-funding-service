@@ -19,7 +19,7 @@ import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
-import static com.worth.ifs.util.IfsFunctions.forEach;
+import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -107,10 +107,10 @@ public class AssessmentSubmitReviewModelTest {
             assertEquals(originalSection.getId(), summarySection.getId());
             assertEquals(originalSection.getName(), summarySection.getName());
             assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
-            forEach(summarySection.getQuestionsRequiringFeedback(), checkAgainstOriginalQuestion.apply(originalSection));
+            forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), checkAgainstOriginalQuestion.apply(originalSection));
         };
 
-        forEach(model.getAssessmentSummarySections(), checkAgainstOriginalSection);
+        forEachWithIndex(model.getAssessmentSummarySections(), checkAgainstOriginalSection);
     }
 
 }

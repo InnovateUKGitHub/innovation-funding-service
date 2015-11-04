@@ -71,7 +71,7 @@ public class IfsFunctions {
      * @param consumer
      * @param <T>
      */
-    public static <T> void forEach(List<T> list, BiConsumer<Integer, T> consumer) {
+    public static <T> void forEachWithIndex(List<T> list, BiConsumer<Integer, T> consumer) {
         forEachConsumer(consumer).accept(list);
     }
 
@@ -95,7 +95,7 @@ public class IfsFunctions {
      * @param <T>
      * @return a Function that can then be applied to Lists to apply the function provided in order to produce a result
      */
-    public static <T, R> List<R> forEachProduce(List<T> list, BiFunction<Integer, T, R> function) {
+    public static <T, R> List<R> mapWithIndex(List<T> list, BiFunction<Integer, T, R> function) {
         return forEachFunction(function).apply(list);
     }
 
