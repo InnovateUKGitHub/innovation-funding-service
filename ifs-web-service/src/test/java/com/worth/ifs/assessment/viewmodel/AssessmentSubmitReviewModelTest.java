@@ -16,7 +16,10 @@ import static com.worth.ifs.application.domain.SectionBuilder.newSection;
 import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.util.IfsFunctions.combineLists;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -65,6 +68,11 @@ public class AssessmentSubmitReviewModelTest {
 
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole);
 
+        assertNotNull(model);
+        assertEquals(application, model.getApplication());
+        assertEquals(assessment, model.getAssessment());
+        assertEquals(competition, model.getCompetition());
+        assertEquals(combineLists(section1Questions, section2Questions, section3Questions), model.getQuestions());
     }
 
 }
