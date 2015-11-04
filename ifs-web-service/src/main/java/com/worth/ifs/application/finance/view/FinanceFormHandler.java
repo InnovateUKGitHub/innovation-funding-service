@@ -132,6 +132,7 @@ public class FinanceFormHandler {
                 break;
             case SUBCONTRACTING_COSTS:
                 costItem = getSubContractingCosts(id, costFields);
+                break;
             case FINANCE:
                 costItem = getClaimGrantPercentage(id, costFields);
         }
