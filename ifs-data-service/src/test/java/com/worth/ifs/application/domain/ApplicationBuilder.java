@@ -1,30 +1,29 @@
 package com.worth.ifs.application.domain;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.Builder;
+import com.worth.ifs.competition.domain.Competition;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ApplicationBuilder extends BaseBuilder<Application> {
+public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
-    private ApplicationBuilder() {
-        super();
-    }
-
-    private ApplicationBuilder(List<Consumer<Application>> actions) {
-        super(actions);
+    private ApplicationBuilder(List<BiConsumer<Integer, Application>> multiActions) {
+        super(multiActions);
     }
 
     public static ApplicationBuilder newApplication() {
-        return new ApplicationBuilder();
+        return new ApplicationBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
-    protected ApplicationBuilder createNewBuilderWithActions(List<Consumer<Application>> actions) {
+    protected ApplicationBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Application>> actions) {
         return new ApplicationBuilder(actions);
     }
 
@@ -33,7 +32,12 @@ public class ApplicationBuilder extends BaseBuilder<Application> {
         return new Application();
     }
 
-    public ApplicationBuilder withId(Long id) {
-        return with(application -> application.setId(id));
+    public ApplicationBuilder withId(Long... ids) {
+        return with((id, application) -> application.setId(id), ids);
     }
+
+    public ApplicationBuilder withCompetition(Competition competition) {
+        return with(application -> application.setCompetition(competition));
+    }
+
 }

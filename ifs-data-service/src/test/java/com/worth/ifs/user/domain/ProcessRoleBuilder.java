@@ -1,31 +1,30 @@
 package com.worth.ifs.user.domain;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.Builder;
+import com.worth.ifs.application.domain.Application;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 /**
  * Created by dwatson on 08/10/15.
  */
-public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
+public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuilder> {
 
-    private ProcessRoleBuilder() {
-        super();
-    }
-
-    private ProcessRoleBuilder(List<Consumer<ProcessRole>> actions) {
-        super(actions);
+    private ProcessRoleBuilder(List<BiConsumer<Integer, ProcessRole>> multiActions) {
+        super(multiActions);
     }
 
     public static ProcessRoleBuilder newProcessRole() {
-        return new ProcessRoleBuilder();
+        return new ProcessRoleBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
-    protected ProcessRoleBuilder createNewBuilderWithActions(List<Consumer<ProcessRole>> actions) {
+    protected ProcessRoleBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ProcessRole>> actions) {
         return new ProcessRoleBuilder(actions);
     }
 
@@ -34,19 +33,23 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole> {
         return new ProcessRole();
     }
 
-    public ProcessRoleBuilder withId(Long id) {
-        return with(processRole -> processRole.setId(id));
+    public ProcessRoleBuilder withId(Long... ids) {
+        return with((id, processRole) -> processRole.setId(id), ids);
     }
 
-    public ProcessRoleBuilder withRole(Builder<Role> role) {
+    public ProcessRoleBuilder withRole(Builder<Role, ?> role) {
         return with(processRole -> processRole.setRole(role.build()));
     }
 
-    public ProcessRoleBuilder withApplication(Builder<Application> application) {
+    public ProcessRoleBuilder withRole(Role... roles) {
+        return with((role, processRole) -> processRole.setRole(role), roles);
+    }
+
+    public ProcessRoleBuilder withApplication(Builder<Application, ?> application) {
         return withApplication(application.build());
     }
 
-    public ProcessRoleBuilder withApplication(Application application) {
-        return with(processRole -> processRole.setApplication(application));
+    public ProcessRoleBuilder withApplication(Application... applications) {
+        return with((application, processRole) -> processRole.setApplication(application), applications);
     }
 }

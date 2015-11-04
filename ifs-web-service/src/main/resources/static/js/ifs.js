@@ -141,33 +141,57 @@ var IFS = {
          };
 
          var formState = $('.form-serialize-js').serialize();
+         var formGroup = field.closest('.form-group');
+
+         var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+          var startAjaxTime= new Date().getTime();
+
+         if(formTextareaSaveInfo.length == 0){
+            formGroup.find('.textarea-footer').append('<span class="textarea-save-info" />');
+            formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+         }
+
          jQuery.ajax({
              type: 'POST',
              url: "/application-form/saveFormElement",
              data: jsonObj,
-             dataType: "json"
-         }).done(function(){
+             dataType: "json",
+             beforeSend: function() {
+                formTextareaSaveInfo.html('Saving...');
+            }
+         })
+         .done(function(data){
+            var doneAjaxTime = new Date().getTime();
 
             // set the form-saved-state
-            $('.form-serialize-js').data('serializedFormState',formState);
+            jQuery('.form-serialize-js').data('serializedFormState',formState);
              field.removeClass('error');
-             var formGroup = field.closest('.form-group');
              formGroup.removeClass('error');
-             formGroup.find('span.error-message').remove();
-
+              
+              //save message
+             if(data.success == 'true'){
+                if((doneAjaxTime-startAjaxTime) < 1500) {
+                    setTimeout(function(){
+                       formTextareaSaveInfo.html('Saved!');
+                    },1500);
+                } else {
+                    formTextareaSaveInfo.html('Saved!');
+                }
+             }
          }).fail(function(data) {
-
-             var formGroup = field.closest('.form-group');
+             var errorMessage = data.responseJSON.errorMessage;
              if (formGroup.length) {
+
                  formGroup.addClass('error');
-
-                 var label = formGroup.find('label').first();
-                 if (label.length) {
-                     label.find('span.error-message').remove();
-                     var errorMessage = data.responseJSON.errorMessage;
-                     label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                 if(formTextareaSaveInfo.length){
+                    formTextareaSaveInfo.html(errorMessage);
                  }
-
+                 else {
+                    var label = formGroup.find('label').first();
+                    if (label.length) {
+                      label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                    }  
+                 }
              } else {
                  field.addClass('error');
              }
@@ -194,47 +218,40 @@ var IFS = {
     },
     initWordCount : function(){
         var options = {
-            callback: function (value) { updateWordCount(this);  },
+            callback: function (value) { IFS.updateWordCount(this);  },
             wait: 500,
             highlight: false,
             captureLength: 1
         };
-        jQuery(".word-count textarea").typeWatch( options );
-        jQuery(".word-count textarea").each(function(){
-            updateWordCount(this);
+        var wordCount = jQuery(".word-count textarea");
+        wordCount.typeWatch( options );
+        wordCount.each(function(index, el){
+            IFS.updateWordCount(el);
         });
-
-        function updateWordCount(element){
-
-            var summation = function (countSoFar, nextCount) {
-                return countSoFar + nextCount;
-            };
-
-            var lineToWordCountFn = function (line) {
-                if (line.length === 0) {
-                    return 0;
-                }
-                var words = line.split(" ");
-                var wordCounts = words.map(function(word) {
-                    return word.length > 0 ? 1 : 0;
-                });
-                return wordCounts.reduce(summation);
-            };
-
-            var field = $(element);
-            var value = field.val();
-            var lines = value.split('\n');
-            var count = lines.map(lineToWordCountFn).reduce(summation);
-            var delta = field.attr('data-max_words') - count;
-
-            field.parents(".word-count").find(".count-down").html(delta);
-            if(delta < 0 ){
-                field.parents(".word-count").find(".count-down").removeClass("positive").addClass("negative");
-            }else{
-                field.parents(".word-count").find(".count-down").removeClass("negative").addClass("positive");
+    },
+    updateWordCount : function(textarea){
+          var field = $(textarea);
+          var value = field.val();
+          //regex = replace newlines with space \r\n, \n, \r 
+          var words = jQuery.trim(value.replace(/(\r\n|\n|\r)/gm," ")).split(' ');
+          var count = 0;
+          //for becuase of ie7 performance. 
+          for (var i = 0; i < words.length; i++) {
+            if(words[i].length > 0){
+              count++;
             }
-        }
+          };
 
+          var delta = field.attr('data-max_words') - count;
+          var countDownEl = field.parents(".word-count").find(".count-down");
+
+          countDownEl.html(delta);
+          if(delta < 0){
+              countDownEl.removeClass("positive").addClass("negative");
+          }else{
+              countDownEl.removeClass("negative").addClass("positive");
+          }
+      
     },
     closeAlertHide : function(){
         setTimeout(function(){

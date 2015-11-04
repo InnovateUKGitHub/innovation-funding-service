@@ -56,7 +56,6 @@ public class Assessment extends Process {
     @Type(type = "yes_no")
     private Boolean submitted;
 
-
     public Assessment() {
         if (responseAssessments == null)
             responseAssessments = new LinkedHashMap<>();

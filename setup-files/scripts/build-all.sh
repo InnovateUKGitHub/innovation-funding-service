@@ -1,5 +1,5 @@
 cd ../../ifs-data-service
-./gradlew clean deployToTomcat client clientCopy
+./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
 cd -
-cd ifs-web-service
+cd ../../ifs-web-service
 ./gradlew clean deployToTomcat

@@ -1,23 +1,24 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.domain.Response;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A base class from which concrete builders can extend
  *
  * Created by dwatson on 09/10/15.
  */
-public abstract class BaseBuilder<T> implements Builder<T> {
+public abstract class BaseBuilder<T, S> implements Builder<T, S> {
 
-    protected final List<Consumer<T>> amendActions;
+    private final List<BiConsumer<Integer, T>> amendActions;
 
     // for factory method and with() use
-    protected BaseBuilder(List<Consumer<T>> newActions) {
+    protected BaseBuilder(List<BiConsumer<Integer, T>> newActions) {
         this.amendActions = new ArrayList<>(newActions);
     }
 
@@ -26,20 +27,43 @@ public abstract class BaseBuilder<T> implements Builder<T> {
     }
 
     @Override
-    public <R extends Builder<T>> R with(Consumer<T> amendFunction) {
-        List<Consumer<T>> newActions = new ArrayList<>(amendActions);
-        newActions.add(amendFunction);
-        return (R) createNewBuilderWithActions(newActions);
+    public S with(Consumer<T> amendFunction) {
+        List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
+        newActions.add((i, t) -> amendFunction.accept(t));
+        return createNewBuilderWithActions(newActions);
+    }
+
+    @Override
+    public S with(BiConsumer<Integer, T> multiAmendFunction) {
+        List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
+        newActions.add(multiAmendFunction);
+        return createNewBuilderWithActions(newActions);
+    }
+
+    public <R> S with(BiConsumer<R, T> amendFunction, R... values) {
+        return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
+    }
+
+    public <R> S withList(BiConsumer<R, T> amendFunction, List<R> values) {
+        return with((i, t) -> amendFunction.accept(values.get(Math.min(values.size() - 1, i)), t));
     }
 
     @Override
     public T build() {
-        T toBuild = createInitial();
-        amendActions.forEach(a -> a.accept(toBuild));
-        return toBuild;
+        return build(1).get(0);
     }
 
-    protected abstract BaseBuilder<T> createNewBuilderWithActions(List<Consumer<T>> actions);
+    @Override
+    public List<T> build(int numberToBuild) {
+
+        return (List) IntStream.range(0, numberToBuild).mapToObj(i -> {
+            T newElement = createInitial();
+            amendActions.forEach(a -> a.accept(i, newElement));
+            return newElement;
+        }).collect(Collectors.toList());
+    }
+
+    protected abstract S createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);
 
     protected abstract T createInitial();
 }

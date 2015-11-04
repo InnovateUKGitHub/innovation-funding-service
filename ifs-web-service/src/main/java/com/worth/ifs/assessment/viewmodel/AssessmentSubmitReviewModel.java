@@ -65,7 +65,7 @@ public class AssessmentSubmitReviewModel {
         this.application = assessment.getApplication();
         this.competition = assessment.getApplication().getCompetition();
 
-        questions = assessment.getApplication().getCompetition().getSections().stream().
+        questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
                 collect(toList());
 
@@ -99,7 +99,11 @@ public class AssessmentSubmitReviewModel {
                 filter(Question::getNeedingAssessorScore).
                 collect(summingInt(q -> 10));
 
-        scorePercentage = (totalScore * 100) / possibleScore;
+        if (possibleScore == 0) {
+            scorePercentage = 0;
+        } else {
+            scorePercentage = (totalScore * 100) / possibleScore;
+        }
 
         List<Section> sections = competition.getSections();
 
