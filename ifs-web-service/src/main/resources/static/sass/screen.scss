@@ -1,4 +1,13 @@
 //govuk template
+$browser-minimum-versions : (
+	"chrome": null,
+	"firefox": null,
+	"ie": "9",
+	"safari": null,
+	"opera": null
+);
+
+@import "compass/css3";
 
 @import "vendor/govuk_frontend_toolkit/govuk-toolkit"; 
 @import "vendor/govuk_template/govuk-template";

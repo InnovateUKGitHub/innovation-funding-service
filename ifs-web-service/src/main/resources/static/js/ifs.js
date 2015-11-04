@@ -141,33 +141,57 @@ var IFS = {
          };
 
          var formState = $('.form-serialize-js').serialize();
+         var formGroup = field.closest('.form-group');
+
+         var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+          var startAjaxTime= new Date().getTime();
+
+         if(formTextareaSaveInfo.length == 0){
+            formGroup.find('.textarea-footer').append('<span class="textarea-save-info" />');
+            formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+         }
+
          jQuery.ajax({
              type: 'POST',
              url: "/application-form/saveFormElement",
              data: jsonObj,
-             dataType: "json"
-         }).done(function(){
+             dataType: "json",
+             beforeSend: function() {
+                formTextareaSaveInfo.html('Saving...');
+            }
+         })
+         .done(function(data){
+            var doneAjaxTime = new Date().getTime();
 
             // set the form-saved-state
-            $('.form-serialize-js').data('serializedFormState',formState);
+            jQuery('.form-serialize-js').data('serializedFormState',formState);
              field.removeClass('error');
-             var formGroup = field.closest('.form-group');
              formGroup.removeClass('error');
-             formGroup.find('span.error-message').remove();
-
+              
+              //save message
+             if(data.success == 'true'){
+                if((doneAjaxTime-startAjaxTime) < 1500) {
+                    setTimeout(function(){
+                       formTextareaSaveInfo.html('Saved!');
+                    },1500);
+                } else {
+                    formTextareaSaveInfo.html('Saved!');
+                }
+             }
          }).fail(function(data) {
-
-             var formGroup = field.closest('.form-group');
+             var errorMessage = data.responseJSON.errorMessage;
              if (formGroup.length) {
+
                  formGroup.addClass('error');
-
-                 var label = formGroup.find('label').first();
-                 if (label.length) {
-                     label.find('span.error-message').remove();
-                     var errorMessage = data.responseJSON.errorMessage;
-                     label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                 if(formTextareaSaveInfo.length){
+                    formTextareaSaveInfo.html(errorMessage);
                  }
-
+                 else {
+                    var label = formGroup.find('label').first();
+                    if (label.length) {
+                      label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                    }  
+                 }
              } else {
                  field.addClass('error');
              }
