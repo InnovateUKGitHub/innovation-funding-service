@@ -73,6 +73,9 @@ public class AssessmentSubmitReviewModelTest {
         assertEquals(assessment, model.getAssessment());
         assertEquals(competition, model.getCompetition());
         assertEquals(combineLists(section1Questions, section2Questions, section3Questions), model.getQuestions());
+
+        assertEquals(3, model.getAssessmentSummarySections().size());
+        assertEquals(90, model.getPossibleScore());
     }
 
 }
