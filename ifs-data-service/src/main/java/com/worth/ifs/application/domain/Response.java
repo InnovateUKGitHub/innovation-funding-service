@@ -144,10 +144,7 @@ public class Response {
         if (value != null ? !value.equals(response.value) : response.value != null) return false;
         if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
         if (question != null ? !question.equals(response.question) : response.question != null) return false;
-        if (application != null ? !application.equals(response.application) : response.application != null)
-            return false;
-        return !(responseAssessmentFeedbacks != null ? !responseAssessmentFeedbacks.equals(response.responseAssessmentFeedbacks) : response.responseAssessmentFeedbacks != null);
-
+        return application != null ? !application.equals(response.application) : response.application != null;
     }
 
     @Override
@@ -158,7 +155,6 @@ public class Response {
         result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
         result = 31 * result + (question != null ? question.hashCode() : 0);
         result = 31 * result + (application != null ? application.hashCode() : 0);
-        result = 31 * result + (responseAssessmentFeedbacks != null ? responseAssessmentFeedbacks.hashCode() : 0);
         return result;
     }
 }

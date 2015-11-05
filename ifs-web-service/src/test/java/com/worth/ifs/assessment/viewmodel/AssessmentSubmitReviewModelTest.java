@@ -6,12 +6,13 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.domain.AssessorFeedbackBuilder.newFeedback;
 import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.domain.SectionBuilder.newSection;
@@ -21,7 +22,8 @@ import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
 import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -30,17 +32,17 @@ import static org.junit.Assert.*;
  */
 public class AssessmentSubmitReviewModelTest {
 
-
     @Test
     public void test_newReviewModel() {
 
-        List<Question> section1Questions = newQuestion().build(3);
-        List<Question> section2Questions = newQuestion().build(3);
-        List<Question> section3Questions = newQuestion().build(3);
+        ProcessRole assessorProcessRole = newProcessRole().build();
+
+        List<Question> section1Questions = newQuestion().build(2);
+        List<Question> section2Questions = newQuestion().build(2);
 
         List<Section> sections = newSection()
-                .withQuestionSets(asList(section1Questions, section2Questions, section3Questions))
-                .build(3);
+                .withQuestionSets(asList(section1Questions, section2Questions))
+                .build(2);
 
         Competition competition = newCompetition()
                 .withSections(sections)
@@ -53,20 +55,25 @@ public class AssessmentSubmitReviewModelTest {
         ResponseBuilder responseBuilder = newResponse().
                 withApplication(application);
 
-        List<Response> section1Responses = responseBuilder.withQuestions(section1Questions).build(3);
-        List<Response> section2Responses = responseBuilder.withQuestions(section2Questions).build(3);
-        List<Response> section3Responses = responseBuilder.withQuestions(section3Questions).build(3);
+        AssessorFeedbackBuilder feedbackBuilder = newFeedback().withAssessor(assessorProcessRole);
+        List<AssessorFeedback> section1ResponseFeedback = feedbackBuilder.build(2);
+        List<AssessorFeedback> section2ResponseFeedback = feedbackBuilder.build(2);
+
+        List<Response> section1Responses = responseBuilder.
+                withQuestions(section1Questions).
+                withFeedback(section1ResponseFeedback).
+                build(2);
+
+        List<Response> section2Responses = responseBuilder.
+                withQuestions(section2Questions).
+                withFeedback(section2ResponseFeedback).
+                build(2);
 
         Assessment assessment = newAssessment().
                 withApplication(application).
                 build();
 
-        ProcessRole assessorProcessRole = newProcessRole().build();
-
-        List<Response> allResponses = new ArrayList<>();
-        allResponses.addAll(section1Responses);
-        allResponses.addAll(section2Responses);
-        allResponses.addAll(section3Responses);
+        List<Response> allResponses = combineLists(section1Responses, section2Responses);
 
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole);
 
@@ -81,36 +88,45 @@ public class AssessmentSubmitReviewModelTest {
         //
         // test the questions and score sections
         //
-        List<Question> allQuestions = combineLists(section1Questions, section2Questions, section3Questions);
+        List<Question> allQuestions = combineLists(section1Questions, section2Questions);
         assertEquals(allQuestions, model.getQuestions());
         assertEquals(allQuestions, model.getScorableQuestions());
-        assertEquals(90, model.getPossibleScore());
+        assertEquals(10 * 2 * 2, model.getPossibleScore());
         assertEquals(0, model.getScorePercentage());
         assertEquals(0, model.getTotalScore());
-        allQuestions.forEach(question -> assertNull(model.getFeedbackForQuestion(question)));
+        allQuestions.forEach(question -> assertNotNull(model.getFeedbackForQuestion(question)));
 
         //
         // test the section details
         //
+        Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
+        IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
+        IntStream.range(0, section2Questions.size()).forEach(i -> originalQuestionToFeedback.put(section2Questions.get(i), section2ResponseFeedback.get(i)));
+
         assertNotNull(model.getAssessmentSummarySections());
-        assertEquals(3, model.getAssessmentSummarySections().size());
+        assertEquals(2, model.getAssessmentSummarySections().size());
 
-        Function<Section, BiConsumer<Integer, AssessmentSummarySectionQuestion>> checkAgainstOriginalQuestion = originalSection -> (i, summaryQuestion) -> {
-            List<Question> originalQuestions = originalSection.getQuestions();
-            Question originalQuestion = originalQuestions.get(i);
-            assertEquals(originalQuestion.getId(), summaryQuestion.getId());
-            assertEquals(originalQuestion.getName(), summaryQuestion.getName());
-        };
+        forEachWithIndex(model.getAssessmentSummarySections(), (i, summarySection) -> {
 
-        BiConsumer<Integer, AssessmentSummarySection> checkAgainstOriginalSection = (i, summarySection) -> {
+            // check the original section details against the modelled section details
             Section originalSection = sections.get(i);
             assertEquals(originalSection.getId(), summarySection.getId());
             assertEquals(originalSection.getName(), summarySection.getName());
             assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
-            forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), checkAgainstOriginalQuestion.apply(originalSection));
-        };
 
-        forEachWithIndex(model.getAssessmentSummarySections(), checkAgainstOriginalSection);
+            // check the original questions and each relevant response for this assessor with the modelled question and
+            // feedback details
+            forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), (j, summaryQuestion) -> {
+
+                Question originalQuestion = originalSection.getQuestions().get(j);
+                assertEquals(originalQuestion.getId(), summaryQuestion.getId());
+                assertEquals(originalQuestion.getName(), summaryQuestion.getName());
+
+                AssessorFeedback originalFeedback = originalQuestionToFeedback.get(originalQuestion);
+                assertEquals(originalFeedback.getAssessmentFeedback(), summaryQuestion.getFeedback().getFeedbackText());
+                assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
+            });
+        });
     }
 
 }
