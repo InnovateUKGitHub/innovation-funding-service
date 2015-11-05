@@ -37,7 +37,9 @@
                     <span th:text="${section.name}">Scope (Gateway question)</span>
                 </h2>
 
-                <span th:attr="data-subsection-id=${section.id}" class="section-status complete place-in-header"><span th:if="${section.assessmentComplete}">Complete</span></span>
+                <span th:attr="data-subsection-id=${section.id}" th:class="'section-status place-in-header ' + ((${section.assessmentComplete}) ? 'complete' : 'incomplete')">
+                    <span th:text="((${section.assessmentComplete}) ? 'Complete' : 'Incomplete')">Complete</span>
+                </span>
 
                 <div class="grid-row" th:each="question:${section.questionsRequiringFeedback}">
                     <div class="column-three-quarters">
