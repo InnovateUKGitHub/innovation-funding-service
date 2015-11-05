@@ -26,7 +26,7 @@ public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, Asses
         return new AssessorFeedbackBuilder(emptyList()).
                 with(uniqueIds()).
                 withFeedback((i, feedback) -> "Feedback text " + getId(feedback)).
-                withAssessmentValue((i, feedback) -> "Feedback value " + getId(feedback));
+                withAssessmentValue((i, feedback) -> "" + getId(feedback));
     }
 
     @Override
@@ -56,6 +56,9 @@ public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, Asses
     }
 
     public AssessorFeedbackBuilder withAssessor(ProcessRole assessorProcessRole) {
-        return with(feedback -> setField("assessor", assessorProcessRole, feedback));
+        return with(feedback -> {
+            setField("assessor", assessorProcessRole, feedback);
+            setField("assessorId", assessorProcessRole.getId(), feedback);
+        });
     }
 }

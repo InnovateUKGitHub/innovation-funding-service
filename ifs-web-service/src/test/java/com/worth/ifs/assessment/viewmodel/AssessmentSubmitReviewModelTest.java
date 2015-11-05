@@ -37,6 +37,9 @@ public class AssessmentSubmitReviewModelTest {
     @Test
     public void test_newReviewModel() {
 
+        //
+        // Build the data
+        //
         ProcessRole assessorProcessRole = newProcessRole().build();
 
         List<Question> section1Questions = newQuestion().build(2);
@@ -77,15 +80,28 @@ public class AssessmentSubmitReviewModelTest {
 
         List<Response> allResponses = combineLists(section1Responses, section2Responses);
 
+        //
+        // Build the model
+        //
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole);
 
+        Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
+        IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
+        IntStream.range(0, section2Questions.size()).forEach(i -> originalQuestionToFeedback.put(section2Questions.get(i), section2ResponseFeedback.get(i)));
+
         //
-        // Test the top-level attributes
+        // Test the top-level model attributes
         //
         assertNotNull(model);
         assertEquals(application, model.getApplication());
         assertEquals(assessment, model.getAssessment());
         assertEquals(competition, model.getCompetition());
+
+        originalQuestionToFeedback.entrySet().forEach(entry -> {
+            Question question = entry.getKey();
+            AssessorFeedback feedback = entry.getValue();
+            assertEquals(feedback, model.getFeedbackForQuestion(question));
+        });
 
         //
         // test the questions and score sections
@@ -93,18 +109,14 @@ public class AssessmentSubmitReviewModelTest {
         List<Question> allQuestions = combineLists(section1Questions, section2Questions);
         assertEquals(allQuestions, model.getQuestions());
         assertEquals(allQuestions, model.getScorableQuestions());
+        assertEquals(1 + 2 + 3 + 4, model.getTotalScore());
         assertEquals(10 * 2 * 2, model.getPossibleScore());
-        assertEquals(0, model.getScorePercentage());
-        assertEquals(0, model.getTotalScore());
+        assertEquals(25, model.getScorePercentage());
         allQuestions.forEach(question -> assertNotNull(model.getFeedbackForQuestion(question)));
 
         //
         // test the section details
         //
-        Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
-        IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
-        IntStream.range(0, section2Questions.size()).forEach(i -> originalQuestionToFeedback.put(section2Questions.get(i), section2ResponseFeedback.get(i)));
-
         assertNotNull(model.getAssessmentSummarySections());
         assertEquals(2, model.getAssessmentSummarySections().size());
 
@@ -129,12 +141,6 @@ public class AssessmentSubmitReviewModelTest {
                 assertEquals(originalFeedback.getAssessmentFeedback(), summaryQuestion.getFeedback().getFeedbackText());
                 assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
             });
-        });
-
-        originalQuestionToFeedback.entrySet().forEach(entry -> {
-            Question question = entry.getKey();
-            AssessorFeedback feedback = entry.getValue();
-            assertEquals(feedback, model.getFeedbackForQuestion(question));
         });
     }
 
