@@ -22,6 +22,13 @@ public class ApplicationFinanceTest {
     }
 
     @Test
+    public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
+        new ApplicationFinance();
+        new ApplicationFinance(application, organisation);
+        new ApplicationFinance(1234132434L, application, organisation);
+    }
+
+    @Test
     public void applicationFinanceShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(applicationFinance.getId(), id);
         Assert.assertEquals(applicationFinance.getOrganisation(), organisation);

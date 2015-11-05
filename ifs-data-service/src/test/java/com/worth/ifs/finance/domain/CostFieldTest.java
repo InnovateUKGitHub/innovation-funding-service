@@ -19,6 +19,12 @@ public class CostFieldTest {
     }
 
     @Test
+    public void constructorsShouldCreateInstanceOnValidInput() throws Exception{
+        new CostField();
+        new CostField(1234L, "title", "Type");
+    }
+
+    @Test
     public void gettersShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costField.getId(), id);
         Assert.assertEquals(costField.getTitle(), title);
