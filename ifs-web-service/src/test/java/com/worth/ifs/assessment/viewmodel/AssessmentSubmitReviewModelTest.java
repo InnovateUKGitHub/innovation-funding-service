@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
+import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
@@ -24,9 +25,8 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
 import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static java.util.Collections.emptyList;
+import static org.junit.Assert.*;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -135,6 +135,7 @@ public class AssessmentSubmitReviewModelTest {
 
             // check the original questions and each relevant response for this assessor with the modelled question and
             // feedback details
+            assertEquals(2, summarySection.getQuestionsRequiringFeedback().size());
             forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), (j, summaryQuestion) -> {
 
                 Question originalQuestion = originalSection.getQuestions().get(j);
@@ -150,7 +151,7 @@ public class AssessmentSubmitReviewModelTest {
 
 
     @Test
-    public void test_newReviewModel_assessorsSeeOwnScoresOnly() {
+    public void test_assessorsSeeOwnScoresOnly() {
 
         //
         // Build the data
@@ -255,6 +256,96 @@ public class AssessmentSubmitReviewModelTest {
             assertNull(model.getFeedbackForQuestion(questions.get(0)));
             assertNull(model.getFeedbackForQuestion(questions.get(1)));
         }
+    }
+
+    @Test
+    public void test_onlyCertainSectionsIncludedInSummary() {
+
+        //
+        // Build the data
+        //
+        ProcessRole assessorProcessRole = newProcessRole().build();
+
+        SectionBuilder sectionBuilder = newSection().withDisplayInAssessmentApplicationSummary(false);
+
+        Section section1 = sectionBuilder.withQuestions(newQuestion().build(1)).build();
+        Section section2ToBeIncluded = sectionBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(newQuestion().build(1)).build();
+        Section section3 = sectionBuilder.withQuestions(newQuestion().build(1)).build();
+        List<Section> sections = asList(section1, section2ToBeIncluded, section3);
+
+        Competition competition = newCompetition().withSections(sections).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Assessment assessment = newAssessment().withApplication(application).build();
+
+        //
+        // Build the model
+        //
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), assessorProcessRole);
+
+        //
+        // test we only see the section marked to be included
+        //
+        assertEquals(1, model.getAssessmentSummarySections().size());
+        AssessmentSummarySection summarySection = model.getAssessmentSummarySections().get(0);
+        assertEquals(section2ToBeIncluded.getId(), summarySection.getId());
+        assertEquals(section2ToBeIncluded.getName(), summarySection.getName());
+        assertEquals(section2ToBeIncluded.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
+    }
+
+    // TODO DW - test questions that aren't scoreable
+
+    @Test
+    public void test_onlyScorableQuestionsIncluded() {
+
+        //
+        // Build the data
+        //
+        ProcessRole assessorProcessRole = newProcessRole().build();
+
+        Question scorableQuestion = newQuestion().build();
+        Question nonScorableQuestion = newQuestion().withNeedingAssessorScore(false).build();
+
+        List<Section> sections = newSection()
+                .withQuestions(asList(scorableQuestion, nonScorableQuestion))
+                .build(1);
+
+        Competition competition = newCompetition().withSections(sections).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Assessment assessment = newAssessment().withApplication(application).build();
+
+        List<AssessorFeedback> feedback = newFeedback().
+                withAssessor(assessorProcessRole).
+                withAssessmentValue((i, fb) -> (i + 1) + "").
+                build(1);
+
+        List<Response> responses = newResponse().withApplication(application).
+                withQuestions(asList(scorableQuestion)).withFeedback(feedback).build(1);
+
+        //
+        // Build the model
+        //
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
+
+        //
+        // Test the top-level model attributes
+        //
+        assertEquals(2, model.getQuestions().size());
+        assertEquals(1, model.getScorableQuestions().size());
+        assertEquals(1, model.getTotalScore());
+        assertEquals(10 * 1 * 1, model.getPossibleScore());
+        assertEquals(10, model.getScorePercentage());
+
+        //
+        // test the section details - in particular, test that only the scorable question is in the Section
+        //
+        assertNotNull(model.getAssessmentSummarySections());
+        assertEquals(1, model.getAssessmentSummarySections().size());
+
+        AssessmentSummarySection summarySection = model.getAssessmentSummarySections().get(0);
+        assertEquals(1, summarySection.getQuestionsRequiringFeedback().size());
+        AssessmentSummarySectionQuestion summaryQuestion = summarySection.getQuestionsRequiringFeedback().get(0);
+        assertEquals(scorableQuestion.getId(), summaryQuestion.getId());
+        assertEquals(scorableQuestion.getName(), summaryQuestion.getName());
     }
 
 }

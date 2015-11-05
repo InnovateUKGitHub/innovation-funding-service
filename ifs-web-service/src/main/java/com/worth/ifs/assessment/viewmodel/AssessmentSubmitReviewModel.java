@@ -71,11 +71,14 @@ public class AssessmentSubmitReviewModel {
 
         scorableQuestions = questions.stream().filter(Question::getNeedingAssessorScore).collect(toList());
 
-        Map<Question, Optional<Response>> questionsAndResponses = questions.stream().
+        List<Pair<Question, Optional<Response>>> questionsAndResponsePairs = questions.stream().
                 map(question -> Pair.of(question, responses.stream().
                         filter(response -> response.getQuestion().getId().equals(question.getId())).
                         findFirst())).
-                collect(pairsToMap());
+                collect(toList());
+
+        Map<Question, Optional<Response>> questionsAndResponses =
+                questionsAndResponsePairs.stream().collect(pairsToMap());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
