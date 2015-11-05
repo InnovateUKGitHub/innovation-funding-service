@@ -61,9 +61,15 @@
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsFinished}">
                     <div class="grid-row">
-                        <div class="column-two-thirds">
+                        <div class="column-assessment-details">
                             <h4 class="heading-medium" th:text="${application.name}"></h4>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
+                        </div>
+                        <div class="column-assessment-status navigation-right">
+                            <div th:class="((${application.applicationStatus.name} == 'approved') ? 'yes' : 'no') + ' application-status assessed'">
+                                <p th:if="${application.applicationStatus.name == 'rejected'}" th:text="Unsuccessful"></p>
+                                <p th:if="${application.applicationStatus.name == 'approved'}" th:text="Successful"> </p>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -71,7 +77,6 @@
         </div>
 
     </div>
-
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
