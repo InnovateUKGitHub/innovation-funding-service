@@ -115,6 +115,7 @@ public class AssessmentSubmitReviewModelTest {
             assertEquals(originalSection.getId(), summarySection.getId());
             assertEquals(originalSection.getName(), summarySection.getName());
             assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
+            assertEquals(true, summarySection.isAssessmentComplete());
 
             // check the original questions and each relevant response for this assessor with the modelled question and
             // feedback details
@@ -128,6 +129,12 @@ public class AssessmentSubmitReviewModelTest {
                 assertEquals(originalFeedback.getAssessmentFeedback(), summaryQuestion.getFeedback().getFeedbackText());
                 assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
             });
+        });
+
+        originalQuestionToFeedback.entrySet().forEach(entry -> {
+            Question question = entry.getKey();
+            AssessorFeedback feedback = entry.getValue();
+            assertEquals(feedback, model.getFeedbackForQuestion(question));
         });
     }
 

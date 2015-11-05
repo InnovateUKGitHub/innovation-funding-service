@@ -83,3 +83,5 @@ ifs-data-service.ipr
 ifs-data-service.iws
 ifs-web-service.ipr
 robot-tests/target
+
+classes/
