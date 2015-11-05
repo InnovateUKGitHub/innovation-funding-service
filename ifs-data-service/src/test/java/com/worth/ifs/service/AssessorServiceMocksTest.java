@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.domain.RoleBuilder.newRole;

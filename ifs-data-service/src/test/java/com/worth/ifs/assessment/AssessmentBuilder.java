@@ -11,9 +11,6 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 09/10/15.
- */
 public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder> {
 
     private AssessmentBuilder(List<BiConsumer<Integer, Assessment>> multiActions) {

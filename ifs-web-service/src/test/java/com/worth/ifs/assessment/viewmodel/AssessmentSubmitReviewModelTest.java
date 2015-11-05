@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
-import static com.worth.ifs.application.domain.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
@@ -50,7 +50,7 @@ public class AssessmentSubmitReviewModelTest {
                 withCompetition(competition).
                 build();
 
-        ResponseBuilder responseBuilder = newResponse().
+        com.worth.ifs.application.builder.ResponseBuilder responseBuilder = newResponse().
                 withApplication(application);
 
         List<Response> section1Responses = responseBuilder.withQuestions(section1Questions).build(3);
