@@ -14,25 +14,25 @@
 // which gives a min-height to the inline-block elements.
 
 
-@mixin inline-block($min-height: "") {
-  display: -moz-inline-stack;
-  display: inline-block;
+// @mixin inline-block($min-height: "") {
+//   display: -moz-inline-stack;
+//   display: inline-block;
 
-  @if $min-height != "" {
-    min-height: $min-height;
-  }
+//   @if $min-height != "" {
+//     min-height: $min-height;
+//   }
 
-  @include ie-lte(7) {
-    zoom: 1;
-    display: inline;
-  }
+//   @include ie-lte(7) {
+//     zoom: 1;
+//     display: inline;
+//   }
 
-  @include ie(6) {
-    @if $min-height != "" {
-      height: $min-height;
-    }
-  }
-}
+//   @include ie(6) {
+//     @if $min-height != "" {
+//       height: $min-height;
+//     }
+//   }
+// }
 
 
 // Contain floats usage:

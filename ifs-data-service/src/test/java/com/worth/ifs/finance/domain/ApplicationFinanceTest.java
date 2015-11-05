@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.domain;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,5 +24,15 @@ public class ApplicationFinanceTest {
     @Test
     public void applicationFinanceShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(applicationFinance.getId(), id);
+        Assert.assertEquals(applicationFinance.getOrganisation(), organisation);
+        Assert.assertEquals(applicationFinance.getApplication(), application);
     }
+
+    @Test
+    public void applicationFinanceShouldReturnCorrectAttributeValuesAfterSetId() throws Exception {
+        Long newId = 2L;
+        applicationFinance.setId(newId);
+        Assert.assertEquals(applicationFinance.getId(), newId);
+    }
+
 }

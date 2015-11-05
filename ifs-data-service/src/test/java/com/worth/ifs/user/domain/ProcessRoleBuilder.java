@@ -7,21 +7,20 @@ import com.worth.ifs.application.domain.Application;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
+
 /**
  * Created by dwatson on 08/10/15.
  */
 public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuilder> {
-
-    private ProcessRoleBuilder() {
-        super();
-    }
 
     private ProcessRoleBuilder(List<BiConsumer<Integer, ProcessRole>> multiActions) {
         super(multiActions);
     }
 
     public static ProcessRoleBuilder newProcessRole() {
-        return new ProcessRoleBuilder();
+        return new ProcessRoleBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override

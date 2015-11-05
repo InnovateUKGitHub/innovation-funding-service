@@ -154,23 +154,20 @@ table td{
 
 }
 
-.count-label {
+.count-label,
+.textarea-save-info {
     padding:2px 0;
     float:right;
     color: $grey-1;
-    
-    .negative{
-        color: $orange;
-        font-weight: 700;
-    }
-
-    .word-count-reached &{
-        .count-down{
-            color: $orange;
-            font-weight: 700;
-        }
-    }
-
+    clear:right;
+}
+.count-label .negative{
+    color: $orange;
+    font-weight: 700;
+}
+.count-label .word-count-reached .count-down{
+    color: $orange;
+    font-weight: 700;
 }
 
 .form-group{
