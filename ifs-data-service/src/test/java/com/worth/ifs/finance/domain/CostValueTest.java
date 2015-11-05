@@ -24,6 +24,13 @@ public class CostValueTest {
     }
 
     @Test
+    public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
+        new CostValue();
+        new CostValue(costField, value);
+        new CostValue(cost, costField, value);
+    }
+
+    @Test
     public void costValueShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costValue.getCost(), cost);
         Assert.assertEquals(costValue.getCostField(), costField);

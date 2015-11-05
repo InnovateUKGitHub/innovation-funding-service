@@ -19,6 +19,12 @@ public class CostValueIdTest {
     }
 
     @Test
+    public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
+        new CostValueId();
+        new CostValueId(1234L, 7938L);
+    }
+
+    @Test
     public void gettersShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costValueId.getCost(), cost);
         Assert.assertEquals(costValueId.getCostField(), costField);
