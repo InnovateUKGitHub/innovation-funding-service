@@ -14,11 +14,11 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
-import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.domain.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.*;
 import static java.util.Optional.empty;
 import static org.junit.Assert.*;

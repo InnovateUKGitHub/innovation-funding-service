@@ -1,7 +1,8 @@
-package com.worth.ifs.competition.domain;
+package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
 
 import java.util.List;
 import java.util.function.BiConsumer;
