@@ -77,15 +77,15 @@ public class ProcessRole {
         this.responses = responses;
     }
 
-    void setRole(Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    void setApplication(Application application) {
+    public void setApplication(Application application) {
         this.application = application;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

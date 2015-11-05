@@ -1,8 +1,10 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;

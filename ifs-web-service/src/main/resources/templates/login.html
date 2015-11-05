@@ -14,21 +14,21 @@
 
 
 
-<div th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+<section th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
 	<h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
 	  Your username/password combination doesn't seem to work
 	</h1>
 	<p>
 	  Please try again  
 	</p>
-</div>
+</section>
 
 
 
 <div class="grid-row">
-	<div class="column-half">
+	<section class="column-half">
         <form action="/login" th:object="${loginForm}" method="POST">
-			<h2 class="heading-large">Sign in</h2>
+			<h1 class="heading-large">Sign in</h1>
 			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
 				<label class="form-label" for="id_email">E-mail address</label>
 				<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
@@ -41,10 +41,9 @@
 
 			<input class="button" value="Sign in" type="submit" />
         </form>
-
-	</div>
-	<div class="column-half">
-	    <h2 class="heading-large">New to this service?</h2>
+	</section>
+	<section class="column-half">
+	    <h1 class="heading-large">New to this service?</h1>
 	    <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
 
 	    <p>Creating an account allows you to:</p>
@@ -54,7 +53,7 @@
 	        <li>View application feedback</li>
 	        <li>Setup successful project</li>
 	    </ul>
-	</div>
+	</section>
 
 </div>
 

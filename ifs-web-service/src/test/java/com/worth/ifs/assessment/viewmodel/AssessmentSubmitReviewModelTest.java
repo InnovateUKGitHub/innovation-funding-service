@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
@@ -11,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static com.worth.ifs.application.domain.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.domain.AssessorFeedbackBuilder.newFeedback;
 import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.domain.ResponseBuilder.newResponse;
-import static com.worth.ifs.application.domain.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.competition.domain.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.user.domain.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
 import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;

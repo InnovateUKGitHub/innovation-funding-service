@@ -1,6 +1,8 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,9 +12,6 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 03/11/15.
- */
 public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
     private SectionBuilder(List<BiConsumer<Integer, Section>> newMultiActions) {

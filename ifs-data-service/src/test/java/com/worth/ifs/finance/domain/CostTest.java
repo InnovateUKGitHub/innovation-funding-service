@@ -1,8 +1,6 @@
 package com.worth.ifs.finance.domain;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,11 +26,33 @@ public class CostTest {
     }
 
     @Test
-    public void labourShouldReturnCorrectAttributeValues() throws Exception {
+    public void costShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costItem.getId(), id);
         Assert.assertEquals(costItem.getItem(), item);
         Assert.assertEquals(costItem.getDescription(), description);
         Assert.assertEquals(costItem.getQuantity(), quantity);
         Assert.assertEquals(costItem.getCost(), cost);
+        //TODO: mock getCostValues()
+    }
+
+    @Test
+    public void costShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
+        String item2 = "cost item";
+        String description2 = "description of cost item";
+        Integer quantity2 = 10;
+        Double cost2 = 1000d;
+        Question question2 = new Question();
+
+        costItem.setItem(item2);
+        costItem.setDescription(description2);
+        costItem.setQuantity(quantity2);
+        costItem.setCost(cost2);
+        costItem.setQuestion(question2);
+
+        Assert.assertEquals(costItem.getItem(), item2);
+        Assert.assertEquals(costItem.getDescription(), description2);
+        Assert.assertEquals(costItem.getQuantity(), quantity2);
+        Assert.assertEquals(costItem.getCost(), cost2);
+        Assert.assertEquals(costItem.getQuestion(),question2);
     }
 }

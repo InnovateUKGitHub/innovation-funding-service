@@ -1,6 +1,7 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
 
 import java.util.List;
@@ -9,9 +10,6 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 08/10/15.
- */
 public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
     private ApplicationBuilder(List<BiConsumer<Integer, Application>> multiActions) {
@@ -39,5 +37,4 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withCompetition(Competition competition) {
         return with(application -> application.setCompetition(competition));
     }
-
 }

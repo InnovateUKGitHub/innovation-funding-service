@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment;
+package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
