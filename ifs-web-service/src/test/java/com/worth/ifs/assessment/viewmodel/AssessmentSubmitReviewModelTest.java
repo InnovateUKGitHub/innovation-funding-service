@@ -26,6 +26,7 @@ import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -60,7 +61,10 @@ public class AssessmentSubmitReviewModelTest {
         ResponseBuilder responseBuilder = newResponse().
                 withApplication(application);
 
-        AssessorFeedbackBuilder feedbackBuilder = newFeedback().withAssessor(assessorProcessRole);
+        AssessorFeedbackBuilder feedbackBuilder = newFeedback().
+                withAssessor(assessorProcessRole).
+                withAssessmentValue((i, feedback) -> (i + 1) + "");
+
         List<AssessorFeedback> section1ResponseFeedback = feedbackBuilder.build(2);
         List<AssessorFeedback> section2ResponseFeedback = feedbackBuilder.build(2);
 
@@ -109,9 +113,9 @@ public class AssessmentSubmitReviewModelTest {
         List<Question> allQuestions = combineLists(section1Questions, section2Questions);
         assertEquals(allQuestions, model.getQuestions());
         assertEquals(allQuestions, model.getScorableQuestions());
-        assertEquals(1 + 2 + 3 + 4, model.getTotalScore());
+        assertEquals(1 + 2 + 1 + 2, model.getTotalScore());
         assertEquals(10 * 2 * 2, model.getPossibleScore());
-        assertEquals(25, model.getScorePercentage());
+        assertEquals(15, model.getScorePercentage());
         allQuestions.forEach(question -> assertNotNull(model.getFeedbackForQuestion(question)));
 
         //
@@ -142,6 +146,115 @@ public class AssessmentSubmitReviewModelTest {
                 assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
             });
         });
+    }
+
+
+    @Test
+    public void test_newReviewModel_assessorsSeeOwnScoresOnly() {
+
+        //
+        // Build the data
+        //
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        ProcessRole differentAssessor = newProcessRole().build();
+
+        List<Question> questions = newQuestion().build(2);
+        Section section = newSection().withQuestions(questions).build();
+        Competition competition = newCompetition().withSections(asList(section)).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Assessment assessment = newAssessment().withApplication(application).build();
+
+        List<AssessorFeedback> feedback = newFeedback().
+                withAssessor(assessorProcessRole).
+                withAssessmentValue((i, fb) -> (i + 1) + "").
+                build(2);
+
+        List<Response> responses = newResponse().withApplication(application).
+                withQuestions(questions).withFeedback(feedback).build(2);
+
+        //
+        // Build the model from the first Assessor's point of view
+        //
+        {
+            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
+
+            //
+            // test the questions and score sections
+            //
+            assertEquals(1 + 2, model.getTotalScore());
+            assertEquals(10 * 2, model.getPossibleScore());
+            assertEquals(15, model.getScorePercentage());
+
+            //
+            // test the section details
+            //
+            assertEquals(1, model.getAssessmentSummarySections().size());
+            AssessmentSummarySection summarySection = model.getAssessmentSummarySections().get(0);
+
+            Section originalSection = section;
+
+            assertEquals(originalSection.getId(), summarySection.getId());
+            assertEquals(originalSection.getName(), summarySection.getName());
+            assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
+            assertEquals(true, summarySection.isAssessmentComplete());
+
+            // check the original questions and each relevant response for this assessor with the modelled question and
+            // feedback details
+            forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), (i, summaryQuestion) -> {
+
+                Question originalQuestion = originalSection.getQuestions().get(i);
+                assertEquals(originalQuestion.getId(), summaryQuestion.getId());
+                assertEquals(originalQuestion.getName(), summaryQuestion.getName());
+
+                AssessorFeedback originalFeedback = feedback.get(i);
+                assertEquals(originalFeedback.getAssessmentFeedback(), summaryQuestion.getFeedback().getFeedbackText());
+                assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
+            });
+
+            assertEquals(feedback.get(0), model.getFeedbackForQuestion(questions.get(0)));
+            assertEquals(feedback.get(1), model.getFeedbackForQuestion(questions.get(1)));
+        }
+
+        //
+        // and now test the same thing but from a different Assessor's point of view (one who didn't provide any
+        // feedback)
+        //
+        {
+            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, differentAssessor);
+
+            //
+            // test the questions and score sections
+            //
+            assertEquals(0, model.getTotalScore());
+            assertEquals(10 * 2, model.getPossibleScore());
+            assertEquals(0, model.getScorePercentage());
+
+            //
+            // test the section details
+            //
+            assertEquals(1, model.getAssessmentSummarySections().size());
+            AssessmentSummarySection summarySection = model.getAssessmentSummarySections().get(0);
+
+            Section originalSection = section;
+
+            assertEquals(originalSection.getId(), summarySection.getId());
+            assertEquals(originalSection.getName(), summarySection.getName());
+            assertEquals(originalSection.getQuestions().size(), summarySection.getQuestionsRequiringFeedback().size());
+            assertEquals(false, summarySection.isAssessmentComplete());
+
+            // check the original questions and each relevant response for this assessor with the modelled question and
+            // feedback details
+            forEachWithIndex(summarySection.getQuestionsRequiringFeedback(), (i, summaryQuestion) -> {
+
+                Question originalQuestion = originalSection.getQuestions().get(i);
+                assertEquals(originalQuestion.getId(), summaryQuestion.getId());
+                assertEquals(originalQuestion.getName(), summaryQuestion.getName());
+                assertEquals(null, summaryQuestion.getFeedback());
+            });
+
+            assertNull(model.getFeedbackForQuestion(questions.get(0)));
+            assertNull(model.getFeedbackForQuestion(questions.get(1)));
+        }
     }
 
 }
