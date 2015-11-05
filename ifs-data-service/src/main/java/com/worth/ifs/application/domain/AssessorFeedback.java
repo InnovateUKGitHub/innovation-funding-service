@@ -46,8 +46,7 @@ public class AssessorFeedback {
     }
 
     @SuppressWarnings("unused")
-    AssessorFeedback() {
-        // for ORM user
+    public AssessorFeedback() {
     }
 
     public Long getId() {

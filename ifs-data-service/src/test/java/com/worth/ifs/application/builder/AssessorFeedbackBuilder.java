@@ -1,6 +1,7 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import static com.worth.ifs.BuilderAmendFunctions.getId;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -54,6 +56,6 @@ public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, Asses
     }
 
     public AssessorFeedbackBuilder withAssessor(ProcessRole assessorProcessRole) {
-        return with(feedback -> feedback.setAssessor(assessorProcessRole));
+        return with(feedback -> setField("assessor", assessorProcessRole, feedback));
     }
 }

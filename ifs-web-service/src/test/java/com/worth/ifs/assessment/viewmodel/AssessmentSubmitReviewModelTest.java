@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
@@ -13,9 +14,9 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedback;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.application.domain.AssessorFeedbackBuilder.newFeedback;
-import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;

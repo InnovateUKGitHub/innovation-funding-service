@@ -1,6 +1,7 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Question;
 
 import java.util.List;
 import java.util.function.BiConsumer;
