@@ -12,7 +12,7 @@ var IFSFinance = {
         }
     },
     domReady : function(){
-        if(IFS.isApplicationForm()){
+        if(jQuery('body.app-form').size()==1){
             IFSFinance.initShowHideOtherCosts();
         }
     },
