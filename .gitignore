@@ -16,9 +16,11 @@ nbijl.xml
 .project
 bin/
 
-# additional application.properties locations to get in-eclipse deploys to tomcat servers working
+# additional application.properties locations to get in-eclipse and in-idea deploys to tomcat servers working
 ifs-data-service/src/main/resources/config/
 ifs-web-service/src/main/resources/config/
+ifs-data-service/idea-support/
+ifs-web-service/idea-support/
 
 
 # ignore properties
@@ -83,3 +85,6 @@ ifs-data-service.ipr
 ifs-data-service.iws
 ifs-web-service.ipr
 robot-tests/target
+
+classes/
+

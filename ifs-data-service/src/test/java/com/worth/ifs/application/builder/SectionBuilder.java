@@ -35,11 +35,11 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     }
 
     public SectionBuilder withQuestionSets(List<List<Question>> questionSets) {
-        return withList((questions, section) -> section.setQuestions(questions), questionSets);
+        return withList(questionSets, (questions, section) -> section.setQuestions(questions));
     }
 
-    public SectionBuilder withDisplayInAssessmentApplicationSummary(boolean display) {
-        return with(section -> setField("displayInAssessmentApplicationSummary", display, section));
+    public SectionBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
+        return with(section -> setField("displayInAssessmentApplicationSummary", displayInSummary, section));
     }
 
     @Override

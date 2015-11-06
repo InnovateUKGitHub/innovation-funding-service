@@ -44,7 +44,18 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
     }
 
-    public <R> S withList(BiConsumer<R, T> amendFunction, List<R> values) {
+    /**
+     * Given a List of values, this function will supply each item in the list to the BiConsumer provided, so that you
+     * can use each item in the List and supply it to each entity you're creating with this builder.  If you're creating
+     * 3 entities with this builder (builder.build(3)) and you supply a List with 3 items in it, item 1 will be provided
+     * to entity 1, item 2 to entity 2 etc
+     *
+     * @param values
+     * @param amendFunction
+     * @param <R>
+     * @return
+     */
+    public <R> S withList(List<R> values, BiConsumer<R, T> amendFunction) {
         return with((i, t) -> amendFunction.accept(values.get(Math.min(values.size() - 1, i)), t));
     }
 

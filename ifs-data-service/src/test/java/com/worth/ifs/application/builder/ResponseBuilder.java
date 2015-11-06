@@ -3,16 +3,16 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.ProcessRole;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
@@ -60,6 +60,19 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
     }
 
     public ResponseBuilder withQuestions(List<Question> questions) {
-        return withList((question, response) -> response.setQuestion(question), questions);
+        return withList(questions, (question, response) -> response.setQuestion(question));
+    }
+
+    public ResponseBuilder withFeedback(List<AssessorFeedback> feedbacks) {
+        return withList(feedbacks, (feedback, response) -> {
+            List<AssessorFeedback> existingFeedback = response.getResponseAssessmentFeedbacks();
+            List<AssessorFeedback> newFeedback = new ArrayList<>();
+            newFeedback.addAll(existingFeedback);
+            newFeedback.add(feedback);
+            setField("responseAssessmentFeedbacks", newFeedback, response);
+
+            // add an ORM-style back ref as Hibernate does
+            setField("response", response, feedback);
+        });
     }
 }

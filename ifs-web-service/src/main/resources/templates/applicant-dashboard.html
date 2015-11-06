@@ -19,15 +19,15 @@
 
     <div class="my-applications">
 
-        <div class="in-progress">
-            <h3 class="heading-large">In Progress</h3>
+        <section class="in-progress">
+            <h1 class="heading-large">In Progress</h1>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsInProcess}">
                     <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-half">
-                            <h4 class="heading-medium">
+                            <h2 class="heading-medium">
                                 <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
-                            </h4>
+                            </h2>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <p class="form-hint">Current progress: </p>
 
@@ -40,9 +40,9 @@
                     </div>
                     <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-two-thirds">
-                            <h4 class="heading-medium">
+                            <h2 class="heading-medium">
                                 <a th:href="@{/application/{id}/track(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
-                            </h4>
+                            </h2>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <strong class="greentext">Application submitted</strong>
                         </div>
@@ -54,27 +54,27 @@
                     </div>
                 </li>
             </ul>
-        </div>
+        </section>
 
-        <div class="previous-applications">
-            <h3 class="heading-large">Previous Applications</h3>
+        <section class="previous-applications">
+            <h1 class="heading-large">Previous Applications</h1>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsFinished}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
-                            <h4 class="heading-medium" th:text="${application.name}"></h4>
+                            <h2 class="heading-medium" th:text="${application.name}"></h2>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                         </div>
                         <div class="column-assessment-status navigation-right">
                             <div th:class="((${application.applicationStatus.name} == 'approved') ? 'yes' : 'no') + ' application-status assessed'">
-                                <p th:if="${application.applicationStatus.name == 'rejected'}" th:text="Unsuccessful"></p>
-                                <p th:if="${application.applicationStatus.name == 'approved'}" th:text="Successful"> </p>
+                                <h3 th:if="${application.applicationStatus.name == 'rejected'}" th:text="Unsuccessful" th:class="results-status"></h3>
+                                <h3 th:if="${application.applicationStatus.name == 'approved'}" th:text="Successful" th:class="results-status"></h3>
                             </div>
                         </div>
                     </div>
                 </li>
             </ul>
-        </div>
+        </section>
 
     </div>
 
