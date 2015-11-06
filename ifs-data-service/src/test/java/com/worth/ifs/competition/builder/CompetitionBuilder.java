@@ -10,9 +10,6 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 09/10/15.
- */
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
 
     private CompetitionBuilder(List<BiConsumer<Integer, Competition>> newMultiActions) {

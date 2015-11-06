@@ -12,10 +12,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.domain.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.IfsFunctions.combineLists;
@@ -25,8 +25,6 @@ import static org.junit.Assert.*;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
- *
- * Created by dwatson on 09/10/15.
  */
 public class AssessmentSubmitReviewModelTest {
 
