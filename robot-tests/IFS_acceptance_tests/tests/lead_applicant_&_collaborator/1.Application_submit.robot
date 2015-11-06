@@ -1,15 +1,17 @@
 *** Settings ***
-Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
+Documentation     This test has been put last (with the 1.) because the other application tests depend on the application not being submitted.
+...
+...               -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
 ...
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
-Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    TestTeardown User closes the browser
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../GLOBAL_VARIABLES.robot
-Resource          ../Login_actions.robot
-Resource          ../USER_CREDENTIALS.robot
-Resource          ../Applicant_actions.robot
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/USER_CREDENTIALS.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the "Review and submit" button (overview page)

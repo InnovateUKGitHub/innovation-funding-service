@@ -3,14 +3,13 @@ Documentation     -INFUND-399: As a client, I would like to demo the system with
 ...
 ...
 ...               -INFUND-171: As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
-...
 Suite Setup
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../GLOBAL_VARIABLES.robot
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../Login_actions.robot
-Resource          ../USER_CREDENTIALS.robot
-Resource          ../Applicant_actions.robot
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/USER_CREDENTIALS.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Log-out
