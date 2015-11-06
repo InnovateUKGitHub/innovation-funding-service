@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
 
-    <div class="message-alert">
+    <section class="message-alert">
 
         <h1 class="heading-medium">
             New request for assessment
@@ -26,24 +26,24 @@
           <li><strong><a href="#">Respond to assessment request</a></strong></li>
         </ul>
 
-    </div>
+    </section>
 
     <div class="my-applications">
 
         <div class="in-progress">
             
             <header class="page-header group no-pad">
-                <h3 class="heading-large">Competitions for Assessment (<span th:text="${competitionsForAssessment.size()}"/>)</h3>
+                <h1 class="heading-large">Competitions for Assessment (<span th:text="${competitionsForAssessment.size()}"/>)</h1>
             </header>
             
             <ul class="boxed-list">
                 <li th:each="competition : ${competitionsForAssessment}">
                     <div class="grid-row" >
                         <div class="column-half">
-                            <h4 class="heading-medium">
+                            <h2 class="heading-medium">
 
                                 <a th:href="@{/assessor/competitions/{id}/applications(id=${competition.getId()})}" th:text="${competition.name}">link for competition</a>
-                            </h4>
+                            </h2>
                             <p class="form-hint">Assessment progress:</p>
                             <p class="greentext"><strong><span th:text="${submittedAssessments[competition.id]}"/>/<span th:text="${totalAssignedAssessments[competition.id]}"/> Assessed</strong></p>
                         </div>
