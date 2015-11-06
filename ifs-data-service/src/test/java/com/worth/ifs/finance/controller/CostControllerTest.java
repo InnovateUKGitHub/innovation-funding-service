@@ -68,7 +68,14 @@ public class CostControllerTest {
                 .build();
     }
 
-    
+    @Test
+    public void updateShouldReturn400OnMissingBody() throws Exception {
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        verifyNoMoreInteractions(costRepository);
+    }
 
     @Test
     public void updateShouldReturnNotFoundOnEmptyId() throws Exception {
