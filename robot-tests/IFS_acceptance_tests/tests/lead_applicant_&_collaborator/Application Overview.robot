@@ -2,15 +2,13 @@
 Documentation     -INFUND-408: As an applicant, and I am on the application overview I do not need to see progress updates for certain questions such as appendix questions
 ...
 ...               -INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section.
-...
-...
-Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    TestTeardown User closes the browser
-Resource          ../GLOBAL_VARIABLES.robot
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../Login_actions.robot
-Resource          ../USER_CREDENTIALS.robot
-Resource          ../Applicant_actions.robot
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/USER_CREDENTIALS.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the Applicant can access the Overview page
@@ -50,7 +48,6 @@ the Applicant clicks the "Rovel Additive Manufacturing Process" application
 the Applicant should see the overview of the selected application
     Location Should Be    ${APPLICATION_OVERVIEW_URL}
 
-
 the Applicant is in the application overview page
     Applicant goes to the Overview page
 
@@ -61,7 +58,6 @@ the applicant should see six sections
     Page Should Contain Element    css=.section-overview > div:nth-of-type(4)
     Page Should Contain Element    css=.section-overview > div:nth-of-type(5)
     Page Should Contain Element    css=.section-overview > div:nth-of-type(6)
-
 
 the Applicant clicks the "Scope" section
     [Documentation]    1. click second section
@@ -89,7 +85,6 @@ the second section should be visible
 
 the "Scope" sub-section should be visible
     Element Should Be Visible    link=How does your project align with the scope of this competition?
-
 
 the Applicant clicks the "Yous approach" section
     Click Element    css=#content > form > div > h2:nth-child(7) > button
