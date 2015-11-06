@@ -62,14 +62,11 @@ public class CostController {
             Cost updatedCost = mapCost(id, newCost);
             Cost savedCost = costRepository.save(updatedCost);
 
-            for(CostValue costValue : newCost.getCostValues()) {
-                if(costValue.getValue()!=null) {
-                    CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
-                    costValue.setCost(savedCost);
-                    costValue.setCostField(costField);
-                    costValueRepository.save(costValue);
-                }
-            }
+            newCost.getCostValues()
+                .parallelStream()
+                .filter(costValue -> costValue.getValue()!=null)
+                .forEach(costValue -> updateCostValue(costValue, savedCost));
+
         } else {
             log.info("DOES NOT EXIST");
         }
@@ -91,6 +88,13 @@ public class CostController {
         }
 
         return currentCost;
+    }
+
+    private void updateCostValue(CostValue costValue, Cost savedCost){
+        CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
+        costValue.setCost(savedCost);
+        costValue.setCostField(costField);
+        costValueRepository.save(costValue);
     }
 
     @RequestMapping("/get/{applicationFinanceId}")
