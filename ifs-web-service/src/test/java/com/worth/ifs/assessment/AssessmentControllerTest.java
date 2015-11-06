@@ -126,10 +126,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", application.getCompetition()));
     }
-
-    @Test
-    public void testApplicationAssessmentDetails1() throws Exception {
-    }
+    
 
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
@@ -186,8 +183,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentSubmitReview))
-                .andExpect(model().attribute("competition", application.getCompetition()))
-                .andExpect(model().attribute("assessment", assessment));
+                .andExpect(model().attribute("competitionId", application.getCompetition().getId()))
+                .andExpect(model().attribute("applicationId", application.getId()));
     }
 
     @Test
