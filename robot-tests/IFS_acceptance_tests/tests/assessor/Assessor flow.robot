@@ -20,7 +20,7 @@ Resource          ../../resources/keywords/Assessor_actions.robot
 ${reject_application_name}    Security for the Internet of Things
 ${accept_application_name}    A new innovative solution
 ${competition_name}    Technology Inspired
-${deadline_month}    December deadline
+${deadline_month}    december deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
@@ -28,7 +28,7 @@ ${competition_details_page_title}    Competition Details
 @{competitions_assessment_progress_after}    1    3
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
-${accept_application_first_question_title}    How does this application align with the specific competition scope?
+${accept_application_first_question_title}    How does your project align with the scope of this competition?
 ${persistence_application_name}    A new innovative solution
 
 *** Test Cases ***
