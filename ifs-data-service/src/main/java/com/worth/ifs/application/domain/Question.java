@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.form.FormInput;
 
 import javax.persistence.*;
 import java.util.List;
@@ -47,6 +48,13 @@ public class Question {
 
     @Column(nullable = false)
     private boolean needingAssessorFeedback = false;
+
+    @OneToMany
+    @JoinTable(name="question_form_input",
+            joinColumns={@JoinColumn(name="question_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="form_input_id", referencedColumnName="id")})
+    @OrderColumn(name = "priority", nullable = false)
+    private List<FormInput> formInputs;
 
     private String assessorConfirmationQuestion;
 
