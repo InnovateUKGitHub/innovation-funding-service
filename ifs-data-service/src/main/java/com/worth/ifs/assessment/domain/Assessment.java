@@ -54,7 +54,7 @@ public class Assessment extends Process {
 
 
     @Type(type = "yes_no")
-    private Boolean submitted;
+    private Boolean submitted = false;
 
     public Assessment() {
         if (responseAssessments == null)

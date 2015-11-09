@@ -65,7 +65,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         this.setupAssessment();
     }
 
-    //@Test
+    @Test
     public void testCompetitionAssessmentDashboard() throws Exception {
         List<Assessment> nonSubmittedAssessments = assessments.stream().filter(assessment -> !assessment.isSubmitted()).collect(Collectors.toList());
 
