@@ -109,7 +109,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         Application application = applications.get(2);
         Assessment assessment = getAssessment(application);

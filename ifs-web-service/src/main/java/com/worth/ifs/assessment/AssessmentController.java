@@ -123,8 +123,9 @@ public class AssessmentController extends AbstractApplicationController {
         boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
 
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, assessment.getApplication().getId());
+        boolean invalidAssessor = assessment != null && (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName()));
 
-        if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
+        if (invalidAssessor) {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
