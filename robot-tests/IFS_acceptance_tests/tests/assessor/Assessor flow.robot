@@ -24,8 +24,8 @@ ${deadline_month}    december deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
-@{competitions_assessment_progress_before}    1    4
-@{competitions_assessment_progress_after}    1    3
+@{competitions_assessment_progress_before}    2    4
+@{competitions_assessment_progress_after}    2    3
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does your project align with the scope of this competition?
