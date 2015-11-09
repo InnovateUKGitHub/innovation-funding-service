@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,11 +110,16 @@ public class AssessmentController extends AbstractApplicationController {
                                                @PathVariable("responseId") final Long responseId,
                                                @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
-                                               HttpServletRequest request) {
+                                               HttpServletRequest request, HttpServletResponse response) {
 
         Long userId = getLoggedUser(request).getId();
-        responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
-        return JsonStatusResponse.ok();
+        Boolean success = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
+
+        if (success) {
+            return JsonStatusResponse.ok();
+        } else {
+            return JsonStatusResponse.badRequest("Unable to update feedback", response);
+        }
 
     }
 

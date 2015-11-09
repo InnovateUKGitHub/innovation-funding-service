@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -131,37 +132,41 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
+
+
+        when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
+                Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
+                .thenReturn(true);
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
                         , competition.getId(), application.getId(), "26")
                         .contentType(MediaType.APPLICATION_JSON)
-
-                        .param("score", "5")
-                        .param("confirmationAnswer", "true")
-                        .param("feedbackText", "SomeString  Text")
+                        .param("feedbackValue", "Some Feedback Value")
+                        .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    //@Test
+    @Test
     public void testUpdateQuestionAssessmentFeedbackInvalid() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
+
+        when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
+                Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
+                .thenReturn(false);
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
                         , competition.getId(), application.getId(), "26")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("score", "a5")
-                        .param("confirmationAnswer", "true")
-                        .param("feedbackText", "SomeString  Text")
+                        .param("feedbackValue", "Some Feedback Value")
+                        .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
