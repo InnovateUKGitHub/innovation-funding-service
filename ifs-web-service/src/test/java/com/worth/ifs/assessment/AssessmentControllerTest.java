@@ -80,6 +80,23 @@ public class AssessmentControllerTest extends BaseUnitTest {
     }
 
     @Test
+    public void testUserIsNotAssessorOnApplication() throws Exception {
+
+        this.loginUser(applicant);
+        Application application = applications.get(1);
+        Assessment assessment = getAssessment(application);
+
+        log.info("assessment status: " + assessment.getProcessStatus());
+        log.info("Application we use for assessment test: " + application.getId());
+
+        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
+                .andExpect(view().name(assessorDashboard))
+                .andExpect(model().attribute("competition", application.getCompetition()))
+                .andExpect(model().attributeDoesNotExist("assessment"));
+
+    }
+
+    @Test
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
         Application application = applications.get(1);
         Assessment assessment = getAssessment(application);
