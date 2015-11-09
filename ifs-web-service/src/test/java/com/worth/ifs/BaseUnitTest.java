@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -131,12 +132,12 @@ public class BaseUnitTest {
 
     public void setupCompetition(){
         competition = new Competition(1L, "Competition x", "Description afds", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(5));
-        sections.add(new Section(1L, competition, null, "Application details", null));
-        sections.add(new Section(2L, competition, null, "Scope (Gateway question)", null));
-        sections.add(new Section(3L, competition, null, "Business proposition (Q1 - Q4)", null));
-        sections.add(new Section(4L, competition, null, "Project approach (Q5 - Q8)", null));
-        sections.add(new Section(5L, competition, null, "Funding (Q9 - Q10)", null));
-        sections.add(new Section(6L, competition, null, "Finances", null));
+        sections.add(new Section(1L, competition, emptyList(), "Application details", null));
+        sections.add(new Section(2L, competition, emptyList(), "Scope (Gateway question)", null));
+        sections.add(new Section(3L, competition, emptyList(), "Business proposition (Q1 - Q4)", null));
+        sections.add(new Section(4L, competition, emptyList(), "Project approach (Q5 - Q8)", null));
+        sections.add(new Section(5L, competition, emptyList(), "Funding (Q9 - Q10)", null));
+        sections.add(new Section(6L, competition, emptyList(), "Finances", null));
 
         Question q01 = new Question(1L, competition, sections.get(0), "Application details");
         sections.get(0).setQuestions(Arrays.asList(q01));

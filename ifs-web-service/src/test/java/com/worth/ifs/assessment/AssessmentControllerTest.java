@@ -180,7 +180,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("assessment", assessment));
     }
 
-    // @Test
+    @Test
     public void testGetAssessmentSubmitReview() throws Exception {
         Application application = applications.get(1);
 
@@ -188,8 +188,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentSubmitReview))
-                .andExpect(model().attribute("competitionId", application.getCompetition().getId()))
-                .andExpect(model().attribute("applicationId", application.getId()));
+                .andExpect(model().attributeExists("model"));
     }
 
     @Test

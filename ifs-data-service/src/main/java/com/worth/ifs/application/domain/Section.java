@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class Section implements Comparable<Section> {
 
     @OneToMany(mappedBy="section")
     @OrderBy("priority ASC")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="parentSectionId", referencedColumnName="id")
