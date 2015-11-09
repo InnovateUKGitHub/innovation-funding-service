@@ -1,5 +1,71 @@
-<h1>Prototypes</h1>
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-dashboard">
 
-<ul>
-    <li>Example Prototype page <a href="/prototypes/example">here</a></li>
-</ul>
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header group">
+		<div class="hgroup">
+			<h1>Prototype index</h1>
+			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
+		</div>
+	</header>
+
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 1. Application journey completion</h1>
+			<section>
+				<h2 class="heading-medium">Application refinement</h2>
+				<ul class="list-bullet">
+					<li><a href="/prototypes/example">As an applicant I want to view all partners project finances to be able to assess and compare within the overall project costs</a></li>
+					<li><a href="#">As an applicant I want to view all organisations and individuals working on my application</a></li>
+					<li><a href="#">As a lead applicant I want to invite other collaborators during the application phase so that my full team can work on the application (even if undecided when application created)</a></li>
+					<li><a href="#">As an applicant I want to print/download my application so that I can review and work offline</a></li>
+					<li><a href="#">As a collaborator I want to complete my section of the form and mark this as done so that the lead applicant is able to track progress and submit when ready</a></li>
+					<li><a href="#">Plus style refinements - e.g. consistency of page headings, layout of forms, restructure of overview page, changing accordions etc.</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="heading-medium">Academic finances</h2>
+				<ul class="list-bullet">
+					<li><a href="#">As an academic contributer I need to document my financial requirements to provide to the relevant organisations</a></li>
+					<li><a href="#">As an academic contributer I need to provide these finances (J-ES) to Innovate UK to submit my grant claim</a></li>
+					<li><a href="#">As a partner I need visibilty of the academic finance contribution to my application so that I'm able to understand the total project costs</a></li>
+					<li><a href="#">As an assessor I want visibility of all academic partner contributions so that I can review the breakdown of the full project costs</a></li>
+					<li><a href="#">As a member of the project finance team at Innovate UK I need access to access academic finances as part of the due diligence phase to review these as part of the overall project costs</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -41,9 +41,14 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'ROOT.war'
 }
 
-task copyResourcesInPlace(dependsOn: processResources, type: Copy) {
-    into '$tomcatWebAppsDir/ROOT/WEB-INF/classes'
-    from 'build/resources/main'
+task copyTemplatesInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/templates"
+    from 'src/main/resources/templates'
+}
+
+task copyCssInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/css"
+    from 'src/main/resources/static/css'
 }
 
 watch {
@@ -53,9 +58,14 @@ watch {
         tasks('deployToTomcat')
     }
 
-    resources {
-        files files('src/main/resources')
-        tasks 'copyResourcesInPlace'
+    templates {
+        files files('src/main/resources/templates')
+        tasks 'copyTemplatesInPlace'
+    }
+
+    css {
+        files files('src/main/resources/static/css')
+        tasks 'copyCssInPlace'
     }
 }
 
