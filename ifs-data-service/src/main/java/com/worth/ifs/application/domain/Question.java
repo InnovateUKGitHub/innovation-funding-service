@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.form.FormInput;
+import com.worth.ifs.form.domain.FormInput;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +33,6 @@ public class Question {
     @Column(length=5000)
     private Integer wordCount;
 
-    @Column(length=5000)
-    private String optionValues;
-
     private Boolean markAsCompletedEnabled = false;
 
     private Boolean assignEnabled = true;
@@ -54,7 +52,7 @@ public class Question {
             joinColumns={@JoinColumn(name="question_id", referencedColumnName="id")},
             inverseJoinColumns={@JoinColumn(name="form_input_id", referencedColumnName="id")})
     @OrderColumn(name = "priority", nullable = false)
-    private List<FormInput> formInputs;
+    private List<FormInput> formInputs = new ArrayList<>();
 
     private String assessorConfirmationQuestion;
 
@@ -65,10 +63,6 @@ public class Question {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="sectionId", referencedColumnName="id")
     private Section section;
-
-    @ManyToOne
-    @JoinColumn(name="questionTypeId", referencedColumnName="id")
-    private QuestionType questionType;
 
     @OneToMany(mappedBy="question")
     private List<Response> responses;
@@ -91,31 +85,7 @@ public class Question {
 
     private String questionNumber;
 
-    public Question(String optionValues, Long id, Competition competition, Section section, QuestionType questionType, List<Response> responses, String name, String questionNumber, String description, String guidanceQuestion, String guidanceAnswer, Integer wordCount, Integer priority) {
-        this.optionValues = optionValues;
-        this.id = id;
-        this.competition = competition;
-        this.section = section;
-        this.questionType = questionType;
-        this.responses = responses;
-        this.name = name;
-        this.questionNumber = questionNumber;
-        this.description = description;
-        this.guidanceQuestion = guidanceQuestion;
-        this.guidanceAnswer = guidanceAnswer;
-        this.wordCount = wordCount;
-        this.priority = priority;
-    }
-
-    public Question(Long id, Competition competition, Section section, String name) {
-        this.id = id;
-        this.competition = competition;
-        this.section = section;
-        this.name = name;
-    }
-
     public Question() {
-
     }
 
     public String getName() {
@@ -134,12 +104,8 @@ public class Question {
         return id;
     }
 
-    public String getOptionValues() {
-        return optionValues;
-    }
-
     public Integer getWordCount() {
-        return (wordCount != null ? wordCount : Integer.valueOf(0)) ;
+        return wordCount != null ? wordCount : 0;
     }
 
     public String getGuidanceAnswer() {
@@ -171,10 +137,6 @@ public class Question {
     @JsonIgnore
     public Section getSection() {
         return section;
-    }
-
-    public QuestionType getQuestionType() {
-        return questionType;
     }
 
     public void setResponses(List<Response> responses) {
@@ -238,6 +200,10 @@ public class Question {
         return parentQuestion;
     }
 
+    public List<FormInput> getFormInputs() {
+        return formInputs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -256,8 +222,6 @@ public class Question {
         if (guidanceAnswer != null ? !guidanceAnswer.equals(question.guidanceAnswer) : question.guidanceAnswer != null)
             return false;
         if (wordCount != null ? !wordCount.equals(question.wordCount) : question.wordCount != null) return false;
-        if (optionValues != null ? !optionValues.equals(question.optionValues) : question.optionValues != null)
-            return false;
         if (markAsCompletedEnabled != null ? !markAsCompletedEnabled.equals(question.markAsCompletedEnabled) : question.markAsCompletedEnabled != null)
             return false;
         if (assignEnabled != null ? !assignEnabled.equals(question.assignEnabled) : question.assignEnabled != null)
@@ -270,8 +234,6 @@ public class Question {
         if (competition != null ? !competition.equals(question.competition) : question.competition != null)
             return false;
         if (section != null ? !section.equals(question.section) : question.section != null) return false;
-        if (questionType != null ? !questionType.equals(question.questionType) : question.questionType != null)
-            return false;
         if (responses != null ? !responses.equals(question.responses) : question.responses != null) return false;
         if (questionStatuses != null ? !questionStatuses.equals(question.questionStatuses) : question.questionStatuses != null)
             return false;
@@ -288,7 +250,6 @@ public class Question {
         result = 31 * result + (guidanceQuestion != null ? guidanceQuestion.hashCode() : 0);
         result = 31 * result + (guidanceAnswer != null ? guidanceAnswer.hashCode() : 0);
         result = 31 * result + (wordCount != null ? wordCount.hashCode() : 0);
-        result = 31 * result + (optionValues != null ? optionValues.hashCode() : 0);
         result = 31 * result + (markAsCompletedEnabled != null ? markAsCompletedEnabled.hashCode() : 0);
         result = 31 * result + (assignEnabled != null ? assignEnabled.hashCode() : 0);
         result = 31 * result + (multipleStatuses != null ? multipleStatuses.hashCode() : 0);
@@ -298,7 +259,6 @@ public class Question {
         result = 31 * result + (assessorConfirmationQuestion != null ? assessorConfirmationQuestion.hashCode() : 0);
         result = 31 * result + (competition != null ? competition.hashCode() : 0);
         result = 31 * result + (section != null ? section.hashCode() : 0);
-        result = 31 * result + (questionType != null ? questionType.hashCode() : 0);
         result = 31 * result + (responses != null ? responses.hashCode() : 0);
         result = 31 * result + (questionStatuses != null ? questionStatuses.hashCode() : 0);
         result = 31 * result + (costs != null ? costs.hashCode() : 0);

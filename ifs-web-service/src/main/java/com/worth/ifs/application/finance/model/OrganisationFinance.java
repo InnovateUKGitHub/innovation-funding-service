@@ -67,9 +67,10 @@ public class OrganisationFinance {
     }
 
     private void setGrantClaimPercentage() {
+
         Optional<Cost> grantClaim = costs
                 .stream()
-                .filter(c -> c.getDescription().equals(GRANT_CLAIM) && c.getQuestion().getQuestionType().getTitle().equals("finance"))
+                .filter(c -> c.getDescription().equals(GRANT_CLAIM) && c.getQuestion().getFormInputs().stream().anyMatch(input -> input.getFormInputType().getTitle().equals("finance")))
                 .findFirst();
 
         if(grantClaim.isPresent()) {

@@ -31,7 +31,11 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     }
 
     public SectionBuilder withQuestions(List<Question> questions) {
-        return with(section -> section.setQuestions(questions));
+        return with(section -> {
+            section.setQuestions(questions);
+            // add a back-ref
+            questions.forEach(question -> question.setSection(section));
+        });
     }
 
     public SectionBuilder withQuestionSets(List<List<Question>> questionSets) {

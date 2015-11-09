@@ -1,16 +1,18 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionType;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static java.util.Arrays.asList;
 
 public class QuestionTest {
     Question question;
@@ -23,33 +25,36 @@ public class QuestionTest {
     String description;
     String guidanceQuestion;
     String guidanceAnswer;
-    Integer wordCount;
-    String optionValues;
     List<Response> responses;
-    QuestionType questionType;
     Integer priority;
+    Integer wordCount;
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
-        competition = new Competition();
-        section = new Section();
+        competition = newCompetition().build();
         name = "testQuestionName";
         number = "testQuestionNumber";
         description = "testQuestionDescription";
         guidanceQuestion = "testGuidanceQuestion";
         guidanceAnswer = "testGuidanceAnswer";
-        wordCount = 100;
-        optionValues = "testOptionValues";
-        responses = new ArrayList<Response>();
-        responses.add(new Response());
-        responses.add(new Response());
-        responses.add(new Response());
-        questionType = new QuestionType();
         priority = 1;
+        wordCount = 5000;
 
+        question = newQuestion().
+                with(id(id)).
+                with(competition(competition)).
+                with(name(name)).
+                withQuestionNumber(number).
+                with(description(description)).
+                withGuidanceQuestion(guidanceQuestion).
+                withGuidanceAnswer(guidanceAnswer).
+                withPriority(priority).
+                withWordCount(wordCount).
+                build();
 
-        question = new Question(optionValues, id, competition, section, questionType, responses, name, number, description, guidanceQuestion, guidanceAnswer, wordCount, priority);
+        responses = newResponse().withQuestions(asList(question)).build(3);
+        section = newSection().withQuestions(asList(question)).build();
     }
 
     @Test
@@ -62,11 +67,9 @@ public class QuestionTest {
         Assert.assertEquals(question.getDescription(), description);
         Assert.assertEquals(question.getGuidanceQuestion(), guidanceQuestion);
         Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
-        Assert.assertEquals(question.getWordCount(), wordCount);
-        Assert.assertEquals(question.getOptionValues(), optionValues);
         Assert.assertEquals(question.getResponses(), responses);
-        Assert.assertEquals(question.getQuestionType(), questionType);
         Assert.assertEquals(question.getPriority(), priority);
+        Assert.assertEquals(question.getWordCount(), wordCount);
     }
 
 }

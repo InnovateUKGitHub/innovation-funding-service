@@ -60,7 +60,14 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
     }
 
     public ResponseBuilder withQuestions(List<Question> questions) {
-        return withList(questions, (question, response) -> response.setQuestion(question));
+        return withList(questions, (question, response) -> {
+            response.setQuestion(question);
+            // add a back-ref
+            List<Response> responses = question.getResponses();
+            List<Response> updated = responses != null ? new ArrayList<>(responses) : new ArrayList<>();
+            updated.add(response);
+            question.setResponses(updated);
+        });
     }
 
     public ResponseBuilder withFeedback(List<AssessorFeedback> feedbacks) {
