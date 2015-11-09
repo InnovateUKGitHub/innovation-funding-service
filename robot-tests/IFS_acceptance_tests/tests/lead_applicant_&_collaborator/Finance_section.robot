@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
-Test Setup       Login as User    &{lead_applicant_credentials}
-Test Teardown    TestTeardown User closes the browser
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../GLOBAL_VARIABLES.robot
-Resource          ../Login_actions.robot
-Resource          ../USER_CREDENTIALS.robot
-Resource          ../Applicant_actions.robot
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/USER_CREDENTIALS.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** variables ***
 ${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk
@@ -26,35 +26,30 @@ Verify the test guidance in the "Your Finance section"
     When the Applicant is in the Labour sub-section
     And the Applicant clicks the "Labour costs guidance"
     Then the guidance text should be visible
-
-# Verify the " Labour" calculations
-#     [Documentation]    INFUND-192
-#     [Tags]    Not ready
-#     Given the applicant is in the "Your Finances" sub-section
-#     When the Applicant fills the Labour costs
-#     Then the calculations of the labour should be correct
-
-# Verify the fields that should be read-only are not editable
-#     [Documentation]    INFUND-192
-#     [Tags]    not ready
-#     Given the applicant is in the "Your Finances" sub-section
-#     When the Applicant is in the Labour sub-section
-#     Then the read-only fields are not editable
-
-# Verify the "Materials" calculations
-#     [Documentation]    INFUND-192
-#     [Tags]    Not ready
-#     Given the applicant is in the "Your Finances" sub-section
-#     When the Applicant fills the Materials fields
-#     Then the calculations of the Materials should be correct
-
-# Verify the "Subcontracting costs" calculations
-#     [Documentation]    INFUND-192
-#     Given the applicant is in the "Your Finances" sub-section
-#     When the applicant edits the Subcontracting costs section
-#     The total subcontracting costs should be 100
-
-# Verify the auto-save on the "Your Finance" section
+    # Verify the " Labour" calculations
+    #    [Documentation]    INFUND-192
+    #    [Tags]    Not ready
+    #    Given the applicant is in the "Your Finances" sub-section
+    #    When the Applicant fills the Labour costs
+    #    Then the calculations of the labour should be correct
+    # Verify the fields that should be read-only are not editable
+    #    [Documentation]    INFUND-192
+    #    [Tags]    not ready
+    #    Given the applicant is in the "Your Finances" sub-section
+    #    When the Applicant is in the Labour sub-section
+    #    Then the read-only fields are not editable
+    # Verify the "Materials" calculations
+    #    [Documentation]    INFUND-192
+    #    [Tags]    Not ready
+    #    Given the applicant is in the "Your Finances" sub-section
+    #    When the Applicant fills the Materials fields
+    #    Then the calculations of the Materials should be correct
+    # Verify the "Subcontracting costs" calculations
+    #    [Documentation]    INFUND-192
+    #    Given the applicant is in the "Your Finances" sub-section
+    #    When the applicant edits the Subcontracting costs section
+    #    The total subcontracting costs should be 100
+    # Verify the auto-save on the "Your Finance" section
     # [Documentation]    INFUND-192
     # [Tags]    Not Ready
     # Given the user is in the Labor form
