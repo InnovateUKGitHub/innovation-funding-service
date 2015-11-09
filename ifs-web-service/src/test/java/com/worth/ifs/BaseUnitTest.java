@@ -215,9 +215,10 @@ public class BaseUnitTest {
         ProcessRole processRole5 = new ProcessRole(5L, users.get(1), app1, role2, organisation2);
         ProcessRole processRole6 = new ProcessRole(6L, assessor, app2, assessorRole, organisation1);
         ProcessRole processRole7 = new ProcessRole(7L, assessor, app3, assessorRole, organisation1);
+        ProcessRole processRole8 = new ProcessRole(8L, assessor, app1, assessorRole, organisation1);
 
 
-        organisation1.setProcessRoles(Arrays.asList(processRole1, processRole2, processRole3, processRole4, processRole7));
+        organisation1.setProcessRoles(Arrays.asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(Arrays.asList(processRole5));
 
         competition.addApplication(app1, app2, app3, app4);
@@ -227,7 +228,7 @@ public class BaseUnitTest {
         app2.setCompetition(competition);
         app2.setProcessRoles(Arrays.asList(processRole2));
         app3.setCompetition(competition);
-        app3.setProcessRoles(Arrays.asList(processRole3, processRole7));
+        app3.setProcessRoles(Arrays.asList(processRole3, processRole7, processRole8));
         app4.setCompetition(competition);
         app4.setProcessRoles(Arrays.asList(processRole4));
 
@@ -241,6 +242,7 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(loggedInUser.getId(), app1.getId())).thenReturn(processRole1);
         when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), app3.getId())).thenReturn(processRole7);
+        when(processRoleService.findProcessRole(assessor.getId(), app1.getId())).thenReturn(processRole8);
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app1.getId())).thenReturn(app1);
         when(applicationService.getById(app2.getId())).thenReturn(app2);

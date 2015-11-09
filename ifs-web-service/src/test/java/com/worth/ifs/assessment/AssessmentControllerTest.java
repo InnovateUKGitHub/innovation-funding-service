@@ -94,7 +94,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         Application application = applications.get(0);
         Assessment assessment = getAssessment(application);
