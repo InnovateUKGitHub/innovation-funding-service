@@ -243,7 +243,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).submitAssessments(assessor.getId(), assessmentSet);
     }
 
-    //@Test
+    @Test
     public void testAssessmentSummaryComplete() throws Exception {
         Application application = applications.get(1);
         Assessment assessment = getAssessment(application);
@@ -261,6 +261,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("is-suitable-for-funding", isSuitable)
                         .param("suitable-for-funding-feedback", feedback)
                         .param("comments-to-share", comments)
+                        .param("overall-score", overallScore + "")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/assessor/competitions/" + competition.getId() + "/applications"));
