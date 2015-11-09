@@ -10,6 +10,10 @@ gulp.task('js', function () {
       .pipe(jshint())
       .pipe(jshint.reporter('default'))
 	  .pipe(uglify())
-	  .pipe(concat('app.js'))
-      .pipe(gulp.dest('build'))
+	  .pipe(concat('ifs.min.js'))
+      .pipe(gulp.dest('js'))
+});
+
+gulp.task('watch', function () {
+   gulp.watch('js/ifs_modules/*.js', ['js']);
 });
