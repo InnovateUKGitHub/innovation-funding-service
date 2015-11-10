@@ -1,0 +1,14 @@
+.prototype-nav{
+	background: $mellow-red;
+	position: absolute;
+	//width: 100px;
+	font-weight: bold;
+	text-align: center;
+
+	a{
+		color: white;
+		font-size: 0.7em;
+		text-decoration: none;
+		padding: 0 5px;
+	}
+}
