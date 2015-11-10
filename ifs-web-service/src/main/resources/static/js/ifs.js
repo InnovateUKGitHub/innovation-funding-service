@@ -18,7 +18,8 @@ var IFS = {
     init : function(){
         ifs_modalLink.init();
         ifs_collapsible.init();
-    },
+        ifs_wordCount.init();
+    }, 
     finalize : function(){
         ifs_pieChart.init();
     }
@@ -26,9 +27,19 @@ var IFS = {
   'app-form' : {
     init : function(){
         ifs_unsavedChanges.init();
-        ifs_wordCount.init();
         ifs_autoSave.init();
+        ifs_finance.init();
+        ifs_financeRows.init();
     }
+  },
+  'app-details' : {
+    init : function(){ ifs_application_page.init(); }
+  },
+  'assessment-details' : {
+    init: function(){ ifs_assesment_feedback_page.init();}  
+  },
+  'assessment-submit-review' : {
+    init: function(){ ifs_assesment_submit_review_page.init();}  
   }
 };
 
