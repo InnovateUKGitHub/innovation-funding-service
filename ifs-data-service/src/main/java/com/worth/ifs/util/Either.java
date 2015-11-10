@@ -1,7 +1,6 @@
 package com.worth.ifs.util;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -9,7 +8,7 @@ import java.util.function.Supplier;
  * This class represents a return type that can have 2 possible return types, either a "left" value or a "right"
  * value.  Typically in functional programming, an Either is used to represent success and failure cases, where
  * the "left" type is the failure type and the "right" type is the success type.  Either producers can then be
- * chained together using the {@link Either#map(Function, Function)} method so that the if a "left" value is
+ * chained together using the {@link Either#mapLeftOrRight(Function, Function)} method so that the if a "left" value is
  * encountered during the execution of the chain, the processing will "short circuit" and return the left response
  * without evaluating any further Either producers in the chain.
  *
@@ -33,7 +32,7 @@ public class Either<L, R> {
         right = r;
     }
 
-    public <T> T map(
+    public <T> T mapLeftOrRight(
             Function<? super L, ? extends T> lFunc,
             Function<? super R, ? extends T> rFunc) {
         return left.map(lFunc).orElseGet(() -> right.map(rFunc).get());
@@ -42,19 +41,6 @@ public class Either<L, R> {
     public <T> Either<L, T> map(
             Function<? super R, Either<L, T>> rFunc) {
         return isLeft() ? left(left.get()) : rFunc.apply(right.get());
-    }
-
-    public <T> Either<T, R> mapLeft(Function<? super L, ? extends T> lFunc) {
-        return new Either<>(left.map(lFunc), right);
-    }
-
-    public <T> Either<L, T> mapRight(Function<? super R, ? extends T> rFunc) {
-        return new Either<>(left, right.map(rFunc));
-    }
-
-    public void apply(Consumer<? super L> lFunc, Consumer<? super R> rFunc) {
-        left.ifPresent(lFunc);
-        right.ifPresent(rFunc);
     }
 
     public boolean isLeft() {
@@ -86,16 +72,8 @@ public class Either<L, R> {
         return right.get();
     }
 
-    public static <L, R> Supplier<Either<L, R>> toLeft(L leftValue) {
-        return () -> left(leftValue);
-    }
-
     public static <L, R> Supplier<Either<L, R>> toSuppliedLeft(Supplier<L> leftValueSupplier) {
         return () -> left(leftValueSupplier.get());
-    }
-
-    public static <L, R> Supplier<Either<L, R>> toRight(R rightValue) {
-        return () -> right(rightValue);
     }
 
     public static <T> T getEither(Either<T, T> either) {
