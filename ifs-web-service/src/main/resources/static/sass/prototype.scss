@@ -1,0 +1,25 @@
+@import "compass/css3";
+
+@import "vendor/govuk_frontend_toolkit/govuk-toolkit"; 
+@import "vendor/govuk_template/govuk-template";
+@import "vendor/govuk_elements/govuk-elements"; 
+
+@import "worth";
+
+
+/* Prototype css for testing */
+
+.prototype-nav{
+	background: $mellow-red;
+	position: absolute;
+	//width: 100px;
+	font-weight: bold;
+	text-align: center;
+
+	a{
+		color: white;
+		font-size: 0.7em;
+		text-decoration: none;
+		padding: 0 5px;
+	}
+}
