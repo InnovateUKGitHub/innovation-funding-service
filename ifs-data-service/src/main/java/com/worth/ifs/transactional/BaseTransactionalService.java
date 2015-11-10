@@ -16,8 +16,8 @@ import java.util.function.Supplier;
 import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
-import static com.worth.ifs.util.EntityLookupCallbackFunctions.getProcessRoleById;
-import static com.worth.ifs.util.EntityLookupCallbackFunctions.getResponseById;
+import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
+import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have

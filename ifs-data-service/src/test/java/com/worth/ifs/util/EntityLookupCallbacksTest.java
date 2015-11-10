@@ -11,7 +11,7 @@ import java.util.function.Function;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
-import static com.worth.ifs.util.EntityLookupCallbackFunctions.withProcessRoleReturnJsonResponse;
+import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJsonResponse;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-public class EntityLookupCallbackFunctionsTest extends BaseUnitTestMocksTest {
+public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
 
     private Role role = newRole().withType(ASSESSOR).build();
     private long userId = 123L;

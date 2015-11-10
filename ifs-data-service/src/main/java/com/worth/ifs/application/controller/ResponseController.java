@@ -36,7 +36,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.util.Either.getLeftOrRight;
 import static com.worth.ifs.util.Either.right;
-import static com.worth.ifs.util.EntityLookupCallbackFunctions.withProcessRoleReturnJsonResponse;
+import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJsonResponse;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.

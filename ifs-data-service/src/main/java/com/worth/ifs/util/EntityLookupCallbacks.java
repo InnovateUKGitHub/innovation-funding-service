@@ -21,15 +21,13 @@ import static com.worth.ifs.util.Either.toSuppliedLeft;
 import static java.util.Optional.ofNullable;
 
 /**
- * Utility class to provide common use case wrappers that can be used to wrap more specific pieces of code in a common
- * envelope.  Optionally these wrappers can provide the wrapped piece of code with useful arguments.
- *
- * Created by dwatson on 05/10/15.
+ * Utility class to provide common use case wrappers that can be used to wrap callbacks that require either an entity or
+ * some failure message if that entity cannot be found.
  */
-public class EntityLookupCallbackFunctions {
+public class EntityLookupCallbacks {
 
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(EntityLookupCallbackFunctions.class);
+    private static final Log log = LogFactory.getLog(EntityLookupCallbacks.class);
 
     /**
      * Given a user, a specific Role type and an Application, ensure that the user does indeed have that Role on the Application
