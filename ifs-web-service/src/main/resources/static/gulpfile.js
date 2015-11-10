@@ -14,8 +14,7 @@ gulp.task('ifs-js', function () {
    return gulp.src([
    		'js/ifs_modules/*.js',
    		'js/ifs_pages/*.js',
-   		'js/ifs.js',
-   		'js/ifs-loader.js'
+   		'js/ifs.js'
    		])
       .pipe(jshint())
       .pipe(jshint.reporter('default'))
