@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class IfsFunctionsTest {
+public class CollectionFunctionsTest {
 
     @Test
     public void test_flattenLists() {
@@ -19,7 +19,7 @@ public class IfsFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(4, 5), asList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedFlatList, IfsFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
@@ -28,7 +28,7 @@ public class IfsFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), null, asList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, IfsFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class IfsFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(), asList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, IfsFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class IfsFunctionsTest {
         List<List<Integer>> deepList = asList(asList(), asList(), asList());
         List<Integer> expectedFlatList = asList();
 
-        assertEquals(expectedFlatList, IfsFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class IfsFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedCombinedList, IfsFunctions.combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class IfsFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
-        assertEquals(expectedCombinedList, IfsFunctions.combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class IfsFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
-        assertEquals(expectedCombinedList, IfsFunctions.combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class IfsFunctionsTest {
         final List<String> valuesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", "string 2", "string 3");
 
-        IfsFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
+        CollectionFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             valuesSeen.add(value);
         });
@@ -108,7 +108,7 @@ public class IfsFunctionsTest {
         final List<String> valuesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", null, "string 3");
 
-        IfsFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
+        CollectionFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             valuesSeen.add(value);
         });
@@ -124,7 +124,7 @@ public class IfsFunctionsTest {
         final List<String> valuesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList();
 
-        IfsFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
+        CollectionFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             valuesSeen.add(value);
         });
@@ -139,7 +139,7 @@ public class IfsFunctionsTest {
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", "string 2", "string 3");
 
-        List<String> newStrings = IfsFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
+        List<String> newStrings = CollectionFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             return value + " changed";
         });
@@ -155,7 +155,7 @@ public class IfsFunctionsTest {
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", null, "string 3");
 
-        List<String> newStrings = IfsFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
+        List<String> newStrings = CollectionFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             return value != null ? value + " changed" : null;
         });
@@ -171,7 +171,7 @@ public class IfsFunctionsTest {
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList();
 
-        List<String> newStrings = IfsFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
+        List<String> newStrings = CollectionFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             return value + " changed";
         });

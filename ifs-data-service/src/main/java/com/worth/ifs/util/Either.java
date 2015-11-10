@@ -76,7 +76,7 @@ public class Either<L, R> {
         return () -> left(leftValueSupplier.get());
     }
 
-    public static <T> T getEither(Either<T, T> either) {
+    public static <T> T getLeftOrRight(Either<T, T> either) {
         if (either.isLeft()) {
             return either.getLeft();
         }

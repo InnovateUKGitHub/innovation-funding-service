@@ -38,7 +38,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     public Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Long responseId, Long assessorProcessRoleId, Optional<String> feedbackValue, Optional<String> feedbackText) {
 
-        BiFunction<ProcessRole, Response, Either<ServiceFailure, ServiceSuccess>> process = (role, response) -> {
+        BiFunction<ProcessRole, Response, Either<ServiceFailure, ServiceSuccess>> updateFeedback = (role, response) -> {
             AssessorFeedback responseFeedback = response.getOrCreateResponseAssessorFeedback(role);
             responseFeedback.setAssessmentValue(feedbackValue.orElse(null));
             responseFeedback.setAssessmentFeedback(feedbackText.orElse(null));
@@ -51,7 +51,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 return getProcessRole(assessorProcessRoleId).map(processRole -> {
                     return validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).map(assessorRole -> {
                         return validateProcessRoleInApplication(response, processRole).map(roleInApplication -> {
-                            return process.apply(assessorRole, response);
+                            return updateFeedback.apply(assessorRole, response);
                         });
                     });
                 });
