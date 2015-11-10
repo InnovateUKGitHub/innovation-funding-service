@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,7 +66,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         this.setupAssessment();
     }
 
-    //@Test
+    @Test
     public void testCompetitionAssessmentDashboard() throws Exception {
         List<Assessment> nonSubmittedAssessments = assessments.stream().filter(assessment -> !assessment.isSubmitted()).collect(Collectors.toList());
 
@@ -75,6 +76,23 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("assessments", Matchers.hasSize(nonSubmittedAssessments.size())))
                 .andExpect(model().attribute("assessments", Matchers.hasItems(nonSubmittedAssessments.get(0), nonSubmittedAssessments.get(1))))
                 .andExpect(model().attribute("submittedAssessments", submittedAssessments));
+
+    }
+
+    @Test
+    public void testUserIsNotAssessorOnApplication() throws Exception {
+
+        this.loginUser(applicant);
+        Application application = applications.get(1);
+        Assessment assessment = getAssessment(application);
+
+        log.info("assessment status: " + assessment.getProcessStatus());
+        log.info("Application we use for assessment test: " + application.getId());
+
+        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
+                .andExpect(view().name(assessorDashboard))
+                .andExpect(model().attribute("competition", application.getCompetition()))
+                .andExpect(model().attributeDoesNotExist("assessment"));
 
     }
 
@@ -94,7 +112,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         Application application = applications.get(0);
         Assessment assessment = getAssessment(application);
@@ -109,7 +127,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         Application application = applications.get(2);
         Assessment assessment = getAssessment(application);
@@ -131,37 +149,41 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
+
+
+        when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
+                Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
+                .thenReturn(true);
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
                         , competition.getId(), application.getId(), "26")
                         .contentType(MediaType.APPLICATION_JSON)
-
-                        .param("score", "5")
-                        .param("confirmationAnswer", "true")
-                        .param("feedbackText", "SomeString  Text")
+                        .param("feedbackValue", "Some Feedback Value")
+                        .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    //@Test
+    @Test
     public void testUpdateQuestionAssessmentFeedbackInvalid() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
+
+        when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
+                Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
+                .thenReturn(false);
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
                         , competition.getId(), application.getId(), "26")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("score", "a5")
-                        .param("confirmationAnswer", "true")
-                        .param("feedbackText", "SomeString  Text")
+                        .param("feedbackValue", "Some Feedback Value")
+                        .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -175,7 +197,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("assessment", assessment));
     }
 
-    // @Test
+    @Test
     public void testGetAssessmentSubmitReview() throws Exception {
         Application application = applications.get(1);
 
@@ -183,8 +205,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentSubmitReview))
-                .andExpect(model().attribute("competitionId", application.getCompetition().getId()))
-                .andExpect(model().attribute("applicationId", application.getId()));
+                .andExpect(model().attributeExists("model"));
     }
 
     @Test
@@ -239,7 +260,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).submitAssessments(assessor.getId(), assessmentSet);
     }
 
-    //@Test
+    @Test
     public void testAssessmentSummaryComplete() throws Exception {
         Application application = applications.get(1);
         Assessment assessment = getAssessment(application);
@@ -257,6 +278,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("is-suitable-for-funding", isSuitable)
                         .param("suitable-for-funding-feedback", feedback)
                         .param("comments-to-share", comments)
+                        .param("overall-score", overallScore + "")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/assessor/competitions/" + competition.getId() + "/applications"));

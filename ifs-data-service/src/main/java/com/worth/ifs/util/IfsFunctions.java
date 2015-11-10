@@ -30,6 +30,7 @@ public class IfsFunctions {
      */
     public static <T> List<T> flattenLists(List<List<T>> lists) {
         return lists.stream()
+                .filter(l -> l != null)
                 .flatMap(l -> l.stream())
                 .collect(toList());
     }
@@ -46,7 +47,9 @@ public class IfsFunctions {
         List<T> combinedList = new ArrayList<>();
 
         for (List<T> list : lists) {
-            combinedList.addAll(list);
+            if (list != null && !list.isEmpty()) {
+                combinedList.addAll(list);
+            }
         }
 
         return combinedList;

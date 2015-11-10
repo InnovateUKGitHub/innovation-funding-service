@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,29 +110,42 @@ public class AssessmentController extends AbstractApplicationController {
                                                @PathVariable("responseId") final Long responseId,
                                                @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
-                                               HttpServletRequest request) {
+                                               HttpServletRequest request, HttpServletResponse response) {
 
         Long userId = getLoggedUser(request).getId();
-        responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
-        return JsonStatusResponse.ok();
+        Boolean success = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
+
+        if (success) {
+            return JsonStatusResponse.ok();
+        } else {
+            return JsonStatusResponse.badRequest("Unable to update feedback", response);
+        }
 
     }
 
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
+
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
-        boolean invalidAssessment = assessment == null || assessment.getProcessStatus().equals(AssessmentStates.REJECTED.getState());
-        boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
-
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, assessment.getApplication().getId());
-
-        if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
-            throw new IllegalStateException("User is not an Assessor on this application");
+        if (assessment == null) {
+            log.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
+            return showInvalidAssessmentView(model, competitionId, assessment);
         }
 
-        if (invalidAssessment)
+        boolean invalidAssessment = assessment.getProcessStatus().equals(AssessmentStates.REJECTED.getState());
+        if (invalidAssessment) {
             return showInvalidAssessmentView(model, competitionId, assessment);
-        else if (pendingApplication) {
+        }
+
+        boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
+        if (pendingApplication) {
             return showApplicationReviewView(model, competitionId, userId, assessment);
+        }
+
+        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, assessment.getApplication().getId());
+        boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
+        if (invalidAssessor) {
+            log.warn("User is not an Assessor on this application");
+            return showInvalidAssessmentView(model, competitionId, assessment);
         }
 
         return showReadOnlyApplicationFormView(model, assessment, sectionId, userId, assessorProcessRole);
