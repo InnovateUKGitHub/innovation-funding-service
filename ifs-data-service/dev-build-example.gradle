@@ -16,6 +16,6 @@ project.ext['flyway.password']=""
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
-ext.ifsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
-ext.ifsDatasourceUsername=""
-ext.ifsDatasourcePassword=""
+ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
+ext.testIfsDatasourceUsername=""
+ext.testIfsDatasourcePassword=""
