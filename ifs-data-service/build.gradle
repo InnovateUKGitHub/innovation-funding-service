@@ -119,6 +119,12 @@ processResources {
     }
 }
 
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
 task cleanDeploy() {
     build.mustRunAfter clean
     build.dependsOn clean

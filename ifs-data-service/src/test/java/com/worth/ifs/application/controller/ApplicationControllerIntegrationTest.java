@@ -9,7 +9,6 @@ import org.springframework.test.annotation.Rollback;
 
 import static org.junit.Assert.assertEquals;
 
-@Ignore("ignored for alpha until a stable test database solution is in place")
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
     @Override
