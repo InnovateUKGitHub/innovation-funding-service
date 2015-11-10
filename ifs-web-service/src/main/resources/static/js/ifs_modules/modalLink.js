@@ -1,3 +1,6 @@
+/* jshint strict: true, undef: true, unused: true */
+/* globals  jQuery : false, setTimeout : false*/
+
 //If there is javascript it becomes a modal, if there is not a links to the original page.
 var ifs_modalLink = (function(){
     "use strict";

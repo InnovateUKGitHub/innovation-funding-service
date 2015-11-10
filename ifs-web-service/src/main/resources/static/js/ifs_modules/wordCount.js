@@ -1,3 +1,6 @@
+/* jshint strict: true, undef: true, unused: true */
+/* globals  jQuery : false */
+
 var ifs_wordCount = (function(){
     "use strict";
     var s; 
@@ -9,7 +12,7 @@ var ifs_wordCount = (function(){
             s = this.settings; 
             
             var options = {
-                callback: function (value) { ifs_wordCount.updateWordCount(this);  },
+                callback: function () { ifs_wordCount.updateWordCount(this);  },
                 wait: 500,
                 highlight: false,
                 captureLength: 1
@@ -20,7 +23,7 @@ var ifs_wordCount = (function(){
             });
         },
         updateWordCount : function(textarea){
-              var field = $(textarea);
+              var field = jQuery(textarea);
               var value = field.val();
               //regex = replace newlines with space \r\n, \n, \r 
               var words = jQuery.trim(value.replace(/(\r\n|\n|\r)/gm," ")).split(' ');

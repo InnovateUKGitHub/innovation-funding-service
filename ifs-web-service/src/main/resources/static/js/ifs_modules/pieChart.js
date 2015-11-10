@@ -1,3 +1,6 @@
+/* jshint strict: true, undef: true, unused: true */
+/* globals  Modernizr : falase, jQuery : false, document : false*/
+
 //Based upon Lea verou's SVG pie, adjusted with jquery and modernizr for more legacy support
 //http://www.smashingmagazine.com/2015/07/designing-simple-pie-charts-with-css/
 

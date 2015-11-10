@@ -1,3 +1,6 @@
+/* jshint strict: true, undef: true, unused: true */
+/* globals  jQuery : false, setTimeout : false*/
+
 var ifs_autoSave = (function(){
     "use strict";
     var s; // private alias to settings 
@@ -15,7 +18,7 @@ var ifs_autoSave = (function(){
         },
         initAutosaveElements : function(fields){
             var options = {
-                callback: function (value) { ifs_autoSave.fieldChanged(this);  },
+                callback: function () { ifs_autoSave.fieldChanged(this);  },
                 wait: 500,
                 highlight: false,
                 captureLength: 1
@@ -28,7 +31,7 @@ var ifs_autoSave = (function(){
         },
         fieldChanged : function (element){
 
-            var field = $(element);
+            var field = jQuery(element);
             var fieldId = field.attr('id');
 
             var jsonObj = {
@@ -38,7 +41,7 @@ var ifs_autoSave = (function(){
                 applicationId: jQuery(".form-serialize-js #application_id").val()
              };
 
-             var formState = $('.form-serialize-js').serialize();
+             var formState = jQuery('.form-serialize-js').serialize();
              var formGroup = field.closest('.form-group');
 
              var formTextareaSaveInfo = formGroup.find('.textarea-save-info');

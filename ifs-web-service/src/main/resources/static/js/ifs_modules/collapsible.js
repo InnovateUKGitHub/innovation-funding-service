@@ -1,3 +1,6 @@
+/* jshint strict: true, undef: true, unused: true */
+/* globals jQuery : false, document : false*/
+
 //  Progressive collapsibles original code by @Heydonworks altered by Worth Systems
 //-----------------------------------------------------------------------------
 var ifs_collapsible = (function(){
@@ -23,7 +26,7 @@ var ifs_collapsible = (function(){
           });
 
           $scope.find(s.collapsibleEl).each(function(index,value) {
-              var inst = jQuery(this);
+              var inst = jQuery(value);
               ifs_collapsible.addCollapsibleBehaviourToElement(inst, index, maxId + 1);
           });
       },

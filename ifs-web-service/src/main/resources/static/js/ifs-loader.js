@@ -20,7 +20,7 @@ UTIL = (function(){
         });
         UTIL.fire('common','finalize');
       }
-  }
+  };
 
 })();
 
