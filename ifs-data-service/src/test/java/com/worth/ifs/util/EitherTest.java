@@ -81,4 +81,18 @@ public class EitherTest {
                 right.mapLeftOrRight(leftValue -> Either.left(leftValue + " altered"), rightValue -> Either.right(rightValue + 1)));
 
     }
+
+    @Test
+    public void test_getLeftOrRight_ifLeft() {
+
+        Either<String, String> left = Either.left("a left value");
+        assertEquals("a left value", Either.getLeftOrRight(left));
+    }
+
+    @Test
+    public void test_getLeftOrRight_ifRight() {
+
+        Either<String, String> right = Either.right("a right value");
+        assertEquals("a right value", Either.getLeftOrRight(right));
+    }
 }
