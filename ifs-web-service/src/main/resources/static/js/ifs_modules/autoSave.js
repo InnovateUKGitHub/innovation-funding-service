@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, setTimeout : false*/
+/* globals  jQuery : false, setTimeout : false, clearTimeout: false,window:false */
 
 var ifs_autoSave = (function(){
     "use strict";
@@ -7,35 +7,29 @@ var ifs_autoSave = (function(){
 
     return {
         settings : {
-            inputFields : jQuery('.form-serialize-js input').not('[type="button"],[readonly="readonly"]'),
-            textareas : jQuery('.form-serialize-js textarea').not('[readonly="readonly"]')
+            inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"])',
+            textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
+            typeTimeout : 500
         },
         init : function(){
             s = this.settings;
-            
-            var fields = s.inputFields.add(s.textareas);
-            this.initAutosaveElements(fields);
-        },
-        initAutosaveElements : function(fields){
-            var options = {
-                callback: function () { ifs_autoSave.fieldChanged(this);  },
-                wait: 500,
-                highlight: false,
-                captureLength: 1
-            };
+            var saveFields = s.inputs+','+s.textareas;
 
-            fields.typeWatch(options);
-            fields.off('change').on('change', function(e) {
+            jQuery('body').on('change', saveFields, function(e){ 
                 ifs_autoSave.fieldChanged(e.target);
+            });
+            //wait until the user stops typing 
+            jQuery('body').on('keyup', saveFields, function(e) { 
+                clearTimeout(window.ifs_autoSave_timer);
+                window.ifs_autoSave_timer = setTimeout(function(){ ifs_autoSave.fieldChanged(e.target); }, s.typeTimeout);
             });
         },
         fieldChanged : function (element){
-
             var field = jQuery(element);
             var fieldId = field.attr('id');
 
             var jsonObj = {
-                value: element.value,
+                value: field.val(),
                 questionId: fieldId,
                 fieldName: field.attr('name'),
                 applicationId: jQuery(".form-serialize-js #application_id").val()

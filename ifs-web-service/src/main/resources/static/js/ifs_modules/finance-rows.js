@@ -9,7 +9,6 @@ var ifs_financeRows = (function() {
         init: function(){
             jQuery(document).on('click', '[data-finance-subsection-table-container] .add-another-row', ifs_financeRows.addCostsRowHandler);
             jQuery(document).on('click', '[data-finance-subsection-table-container] .delete-row', ifs_financeRows.removeCostsRowHandler);
-
         },
         generateFragmentUrl : function(originalLink) {
             // Replace the non-javascript add and remove functionality with single fragment question HTML responses
