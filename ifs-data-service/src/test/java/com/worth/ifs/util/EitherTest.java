@@ -64,4 +64,35 @@ public class EitherTest {
         Either<String, Double> right = Either.right(15.6);
         assertEquals(Either.left("The mapped left value"), right.map(rightValue -> Either.left("The mapped left value")));
     }
+
+    @Test
+    public void test_mapOverLeftProjection_ifBothFunctionsSupplied() {
+
+        Either<String, Double> left = Either.left("original left value, left unmapped");
+        assertEquals(Either.left("original left value, left unmapped altered"),
+                left.mapLeftOrRight(leftValue -> Either.left(leftValue + " altered"), rightValue -> Either.right(rightValue + 1)));
+    }
+
+    @Test
+    public void test_mapOverRightProjection_ifBothFunctionsSupplied() {
+
+        Either<String, Double> right = Either.right(15.6);
+        assertEquals(Either.right(16.6),
+                right.mapLeftOrRight(leftValue -> Either.left(leftValue + " altered"), rightValue -> Either.right(rightValue + 1)));
+
+    }
+
+    @Test
+    public void test_getLeftOrRight_ifLeft() {
+
+        Either<String, String> left = Either.left("a left value");
+        assertEquals("a left value", Either.getLeftOrRight(left));
+    }
+
+    @Test
+    public void test_getLeftOrRight_ifRight() {
+
+        Either<String, String> right = Either.right("a right value");
+        assertEquals("a right value", Either.getLeftOrRight(right));
+    }
 }

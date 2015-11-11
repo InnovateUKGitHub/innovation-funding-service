@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
@@ -11,9 +12,6 @@ import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.user.domain.Organisation;
 import junit.framework.Assert;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,15 +29,14 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CostControllerTest {
-
     @Mock
     ApplicationFinanceRepository applicationFinanceRepository;
 
@@ -69,9 +66,49 @@ public class CostControllerTest {
     }
 
     @Test
-    public void updateShouldReturn400OnMissingBody() throws Exception {
+    public void addShouldCreateNewCost() throws Exception{
+        ApplicationFinance applicationFinance = new ApplicationFinance();
+        Question question = new Question();
+
+        when(applicationFinanceRepository.findOne(123L)).thenReturn(applicationFinance);
+        when(questionRepository.findOne(123L)).thenReturn(question);
+
+        mockMvc.perform(get("/cost/add/{applicationFinanceId}/{questionId}", "123", "123"))
+                .andExpect(status().isOk());
+
+        verify(costRepository, times(1)).save(any(Cost.class));
+        verifyNoMoreInteractions(costRepository);
+    }
+
+    @Test
+    public void updateShouldReturnBadRequestOnMissingBody() throws Exception {
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        verifyNoMoreInteractions(costRepository);
+    }
+
+    @Test
+    public void updateShouldReturnBadRequestOnWrongContentType() throws Exception {
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.APPLICATION_XML))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.TEXT_HTML))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.IMAGE_GIF))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/cost/update/{id}", "123")
+                .contentType(MediaType.TEXT_PLAIN))
                 .andExpect(status().isBadRequest());
 
         verifyNoMoreInteractions(costRepository);
@@ -83,6 +120,43 @@ public class CostControllerTest {
                 .andExpect(status().isNotFound());
 
         verifyNoMoreInteractions(costRepository);
+    }
+
+    @Test
+    public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
+        when(costRepository.exists(123L)).thenReturn(false);
+
+        MvcResult response = mockMvc.perform(get("/cost/update/{id}", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String content = response.getResponse().getContentAsString();
+
+        Assert.assertEquals(content, "");
+
+        verify(costRepository, times(1)).exists(123L);
+        verifyNoMoreInteractions(costRepository);
+    }
+
+    @Test
+    public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
+        Cost cost1 = new Cost("item1", "desc1", 2, 123.456, new ApplicationFinance(), new Question());
+        Cost cost2 = new Cost("item2", "desc2", 4, 123.456, new ApplicationFinance(), new Question());
+
+        when(costRepository.exists(123L)).thenReturn(true);
+        when(costRepository.findOne(123L)).thenReturn(cost1);
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        String jsonCost = mapper.writeValueAsString(cost2);
+
+
+        mockMvc.perform(get("/cost/update/{id}", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonCost))
+                .andExpect(status().isOk());
+
     }
 
     @Test

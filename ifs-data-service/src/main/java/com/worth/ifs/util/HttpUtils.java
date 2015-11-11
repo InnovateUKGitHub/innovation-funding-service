@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
  *
  * Created by dwatson on 01/10/15.
  */
-public class IfsHttpUtils {
+public class HttpUtils {
 
     /**
      * Checks to see whether or not the given request parameter is present and if so, returns a non-empty Optional upon which
