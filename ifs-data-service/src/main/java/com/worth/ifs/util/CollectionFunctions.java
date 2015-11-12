@@ -14,12 +14,12 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Utility class to provide useful reusable Functions throughout the codebase
+ * Utility class to provide useful reusable Functions around Collections throughout the codebase
  */
-public class IfsFunctions {
+public class CollectionFunctions {
 
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(IfsFunctions.class);
+    private static final Log log = LogFactory.getLog(CollectionFunctions.class);
 
     /**
      * Flatten the given 2-dimensional List into a 1-dimensional List
@@ -30,6 +30,7 @@ public class IfsFunctions {
      */
     public static <T> List<T> flattenLists(List<List<T>> lists) {
         return lists.stream()
+                .filter(l -> l != null)
                 .flatMap(l -> l.stream())
                 .collect(toList());
     }
@@ -46,7 +47,9 @@ public class IfsFunctions {
         List<T> combinedList = new ArrayList<>();
 
         for (List<T> list : lists) {
-            combinedList.addAll(list);
+            if (list != null && !list.isEmpty()) {
+                combinedList.addAll(list);
+            }
         }
 
         return combinedList;

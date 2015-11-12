@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header group">
+		<div class="hgroup">
+			<h1>Prototype index</h1>
+			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
+		</div>
+	</header>
+
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 1. Application journey completion</h1>
+			<section>
+				<h2 class="heading-medium">Application refinement</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-631</h3><a href="/prototypes/example"> As an applicant I want to view all partners project finances to be able to assess and compare within the overall project costs</a></li>
+					<li><h3>INFUND-632</h3><a href="/prototypes/example"> As an applicant I want to view all organisations and individuals working on my application</a></li>
+					<li><h3>INFUND-633</h3><a href="/prototypes/example"> As a lead applicant I want to invite other collaborators during the application phase so that my full team can work on the application (even if undecided when application created)</a></li>
+					<li><h3>INFUND-634</h3><a href="/prototypes/example"> As an applicant I want to print/download my application so that I can review and work offline</a></li>
+					<li><h3>INFUND-635</h3><a href="/prototypes/example"> As a collaborator I want to complete my section of the form and mark this as done so that the lead applicant is able to track progress and submit when ready</a></li>
+					<li><h3>INFUND-636</h3><a href="/prototypes/example"> Plus style refinements - e.g. consistency of page headings, layout of forms, restructure of overview page, changing accordions etc.</a></li> 
+				</ul>
+			</section>
+			<section>
+				<h2 class="heading-medium">Academic finances</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-637</h3><a href="/prototypes/example">As an academic contributer I need to document my financial requirements to provide to the relevant organisations</a></li>
+					<li><h3>INFUND-XXX</h3><a href="/prototypes/example">As an academic contributer I want to identify myself as an academic so that I'm presented with the relevant finance input fields</a></li>
+					<li><h3>INFUND-638</h3><a href="/prototypes/example">As an academic contributer I need to provide these finances (J-ES) to Innovate UK to submit my grant claim</a></li>
+					<li><h3>INFUND-639</h3><a href="/prototypes/example">As a partner I need visibilty of the academic finance contribution to my application so that I'm able to understand the total project costs</a></li>
+					<li><h3>INFUND-640</h3><a href="/prototypes/example">As an assessor I want visibility of all academic partner contributions so that I can review the breakdown of the full project costs</a></li>
+					<li><h3>INFUND-641</h3><a href="/prototypes/example">As a member of the project finance team at Innovate UK I need access to access academic finances as part of the due diligence phase to review these as part of the overall project costs</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="heading-medium">Registration / Create account</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-642</h3> <a href="/prototypes/example">As an applicant I want to create an account, so that I can apply into competitions</a></li>
+					<li><h3>INFUND-643</h3> <a href="/prototypes/example">As an applicant I want to create an account from the sign in page, so that I can create an account if I don’t have a log in</a></li>
+					<li><h3>INFUND-644</h3> <a href="/prototypes/example">As an applicant I want to fill out certain information, so that it is automatically attached to the application when I apply into a competition</a></li>
+					<li><h3>INFUND-645</h3> <a href="/prototypes/example">As an applicant I want to insert my organisation size as per EU definition, so that I am aligned with the eligibility criteria set for each competition</a></li>
+					<li><h3>INFUND-646</h3> <a href="/prototypes/example">As an applicant I want the option of entering my organisation address manually, so that I can enter any specific information not captured in the auto look up</a></li>
+					<li><h3>INFUND-647</h3> <a href="/prototypes/example">As an applicant I want to search for my organisation address using a postcode lookup, so that I don’t enter the address information with any mistakes</a></li>
+					<li><h3>INFUND-648</h3> <a href="/prototypes/example">As an applicant/collaborator/assessor I always want easy access to innovate uk contact information no matter what screen I’m on, so that I can contact the support team if I have an issue</a></li>
+					<li><h3>INFUND-649</h3> <a href="/prototypes/example">As the service delivery manager for IFS I want the applicant/collaborator/assessor to feedback any issues they have with a specific page, so that we can investigate and rectify as quickly as possible</a></li>
+					<li><h3>INFUND-675</h3> <a href="/prototypes/example">As an applicant I want to have an applicant profile where I can edit my company details so that I can update my details (e.g. phone number)</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="heading-medium">Create application / invite partners</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-650 </h3> <a href="/prototypes/example">As an applicant I want to create a new application so that I can submit an entry into a relevant competition</a></li>
+					<li><h3>INFUND-651 </h3> <a href="/prototypes/example">As a lead applicant I want to invite members of my own team so that they can contribute to the application</a></li>
+					<li><h3>INFUND-652 </h3> <a href="/prototypes/example">As a lead applicant I want to invite other individuals within other organisations so that they can contribute to the application</a></li>
+					<li><h3>INFUND-653 </h3> <a href="/prototypes/example">As an applicant I want access to all competition briefing materials as I create a new application so that I have all the information I need to begin my application</a></li>
+					<li><h3>INFUND-654 </h3> <a href="/prototypes/example">As an applicant I want the process of applying through IFS explained so that I understand what is required and how I should work with my consortium</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

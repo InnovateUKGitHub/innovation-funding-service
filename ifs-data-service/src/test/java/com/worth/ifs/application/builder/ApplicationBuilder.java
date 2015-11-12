@@ -2,11 +2,13 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -31,10 +33,14 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withId(Long... ids) {
-        return with((id, application) -> application.setId(id), ids);
+        return with((id, application) -> setField("id", id, application), ids);
     }
 
     public ApplicationBuilder withCompetition(Competition competition) {
         return with(application -> application.setCompetition(competition));
+    }
+
+    public ApplicationBuilder withApplicationState(ApplicationStatus... applicationStatus) {
+        return with((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
     }
 }

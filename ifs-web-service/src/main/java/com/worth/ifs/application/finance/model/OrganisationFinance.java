@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -90,8 +91,10 @@ public class OrganisationFinance {
         costCategory.addCost(costItem);
     }
 
-    public Double getTotal() {
-        return costCategories.entrySet().stream().mapToDouble(cat -> cat.getValue().getTotal()).sum();
+    public BigDecimal getTotal() {
+        return costCategories.entrySet().stream()
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
     }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {

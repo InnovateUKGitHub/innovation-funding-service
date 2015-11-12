@@ -17,7 +17,7 @@ textarea[readonly],
 textarea[disabled],
 input[readonly],
 input[disabled]{
-    color:$secondary-text-colour;
+    color:darken($secondary-text-colour, 5%);
     background: $grey-4;
 }
 
@@ -127,6 +127,10 @@ table td{
         border-right:  1px solid $border-colour;
         background: $grey-4 0 0 no-repeat;
         min-height:40px;
+
+        .form-hint{
+            color: darken($secondary-text-colour, 5%);
+        }
 
     } 
 

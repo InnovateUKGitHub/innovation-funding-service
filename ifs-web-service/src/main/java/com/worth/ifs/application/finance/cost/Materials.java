@@ -1,6 +1,7 @@
 package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * {@code Materials} implements {@link CostItem}
@@ -9,14 +10,14 @@ public class Materials implements CostItem {
 
     private Long id;
     private String item;
-    private Double cost;
+    private BigDecimal cost;
     private Integer quantity;
-    private Double total = 0D;
+    private BigDecimal total = new BigDecimal(0);
 
     public Materials() {
     }
 
-    public Materials(Long id, String item, Double cost, Integer quantity) {
+    public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
         this.id = id;
         this.item = item;
         this.cost = cost;
@@ -31,7 +32,7 @@ public class Materials implements CostItem {
         return item;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
@@ -39,11 +40,11 @@ public class Materials implements CostItem {
         return quantity;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         if(quantity!=null && cost!=null) {
-            total = quantity * cost;
+            total = cost.multiply(new BigDecimal(quantity));
         } else {
-            total = 0D;
+            total = new BigDecimal(0);
         }
         return total;
     }

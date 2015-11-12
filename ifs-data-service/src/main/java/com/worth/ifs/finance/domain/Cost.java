@@ -3,6 +3,7 @@ package com.worth.ifs.finance.domain;
 import com.worth.ifs.application.domain.Question;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Cost {
     String item;
     String description;
     Integer quantity;
-    Double cost;
+    BigDecimal cost;
 
     @OneToMany(mappedBy="cost")
     private List<CostValue> costValues = new ArrayList<CostValue>();
@@ -34,7 +35,7 @@ public class Cost {
     public Cost() {
     }
 
-    public Cost(String item, String description, Integer quantity, Double cost,
+    public Cost(String item, String description, Integer quantity, BigDecimal cost,
                 ApplicationFinance applicationFinance, Question question) {
         this.item = item;
         this.description = description;
@@ -44,7 +45,7 @@ public class Cost {
         this.question = question;
     }
 
-    public Cost(Long id, String item, String description, Integer quantity, Double cost,
+    public Cost(Long id, String item, String description, Integer quantity, BigDecimal cost,
                 ApplicationFinance applicationFinance, Question question) {
         this(item, description, quantity, cost, applicationFinance, question);
         this.id = id;
@@ -66,7 +67,7 @@ public class Cost {
         return quantity;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
@@ -94,7 +95,7 @@ public class Cost {
         this.quantity = quantity;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 
