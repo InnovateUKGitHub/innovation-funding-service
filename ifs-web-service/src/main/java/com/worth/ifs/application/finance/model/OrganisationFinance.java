@@ -6,10 +6,6 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -85,7 +81,7 @@ public class OrganisationFinance {
      * @param cost Cost to be added
      */
     private void addCostToCategory(Cost cost) {
-        CostType costType = CostType.fromString(cost.getQuestion().getQuestionType().getTitle());
+        CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
         CostItem costItem = costItemFactory.createCostItem(costType, cost);
         CostCategory costCategory = costCategories.get(costType);
         costCategory.addCost(costItem);

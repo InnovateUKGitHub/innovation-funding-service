@@ -6,6 +6,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -71,6 +72,10 @@ public class BuilderAmendFunctions {
 
     public static <T> Long getId(T instance) {
         return (Long) getField(instance, "id");
+    }
+
+    public static Optional<Competition> getCompetition(Object object) {
+        return Optional.ofNullable((Competition) getField(object, "competition"));
     }
 
     public static <T> T setId(Long value, T instance) {

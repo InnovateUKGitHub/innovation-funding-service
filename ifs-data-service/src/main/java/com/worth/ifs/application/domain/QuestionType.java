@@ -11,7 +11,6 @@ import java.util.List;
  * This is also used to choose a template in the web-service. Depending on the QuestionType we
  * can also implement extra behaviour like form / input validation.
  */
-@Entity
 public class QuestionType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
