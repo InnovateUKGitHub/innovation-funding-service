@@ -2,8 +2,10 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.transactional.ServiceLocator;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
@@ -38,6 +40,12 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ResponseRepository responseRepositoryMock;
+
+    @Mock
+    protected CompetitionsRepository competitionsRepositoryMock;
+
+    @Mock
+    protected OrganisationRepository organisationRepositoryMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -19,7 +20,7 @@ import java.util.List;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
- * This class connects to the {@link com.worth.ifs.application.controller.ApplicationController}
+ * This class connects to the {@link ApplicationController}
  * through a REST call.
  */
 @Service
@@ -103,6 +104,29 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
         ResponseEntity<Application[]> responseEntity = restTemplate.getForEntity(url, Application[].class);
         Application[] applications = responseEntity.getBody();
         return Arrays.asList(applications);
+    }
+
+    @Override
+    public Application createApplication(Long competitionId, String userToken, String applicationName) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataRestServiceURL + applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userToken;
+
+        Application application = new Application();
+        application.setName(applicationName);
+
+        HttpEntity<Application> applicationHttpEntity = new HttpEntity<>(application, getJSONHeaders());
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, applicationHttpEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("ApplicationRestRestService, save == ok : " + response.getBody());
+        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            //  bad credentials?
+            log.info("Unauthorized request.");
+        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+            log.info("Status code not_found .....");
+        }
+
+        return application;
     }
 
 

@@ -1,19 +1,29 @@
 package com.worth.ifs.application.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.competition.builder.CompetitionBuilder;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeaders;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,5 +113,44 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[1]id", is(2)))
                 .andExpect(jsonPath("[2]name", is("testApplication3Name")))
                 .andExpect(jsonPath("[2]id", is(3)));
+    }
+
+    @Test
+    public void applicationControllerCanCreateApplication() throws Exception {
+        Long competitionId = 1L;
+        String userToken = "123abc";
+        String applicationName = "testApplication";
+        String roleName = "leadapplicant";
+        Long organisationId = 1L;
+
+        Application application = new Application();
+        application.setName(applicationName);
+
+        Competition competition = new Competition();
+        Role role = new Role();
+        role.setName(roleName);
+        List<Role> roles = new ArrayList<Role>();
+        roles.add(role);
+        Organisation organisation = new Organisation();
+        User user = new User();
+        List<User> users = new ArrayList<User>();
+        users.add(user);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String applicationJsonString = mapper.writeValueAsString(application);
+
+        when(competitionsRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
+        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(userRepositoryMock.findByToken(userToken)).thenReturn(users);
+
+        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userToken, "json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(applicationJsonString))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
+                .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
+                .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
+                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()));
     }
 }
