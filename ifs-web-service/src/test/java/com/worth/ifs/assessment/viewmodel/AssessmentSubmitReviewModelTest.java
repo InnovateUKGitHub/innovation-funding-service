@@ -19,19 +19,17 @@ import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedb
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.assessment.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.util.IfsFunctions.combineLists;
-import static com.worth.ifs.util.IfsFunctions.forEachWithIndex;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
- *
- * Created by dwatson on 09/10/15.
  */
 public class AssessmentSubmitReviewModelTest {
 

@@ -1,2 +1,0 @@
-*** Variables ***
-${SERVER}         http://ifs.test.worth.systems    # TEST SERVER

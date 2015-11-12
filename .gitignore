@@ -23,6 +23,8 @@ ifs-data-service/idea-support/
 ifs-web-service/idea-support/
 
 
+
+
 # ignore properties
 **/*-build.gradle
 **/application-*.properties
@@ -87,4 +89,8 @@ ifs-web-service.ipr
 robot-tests/target
 
 classes/
+
+#Node modules, except styledocco as we've made changes in that one. 
+**/node_modules
+!**/node_modules/styledocco
 

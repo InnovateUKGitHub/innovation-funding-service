@@ -203,12 +203,24 @@ The view is similar to the applications for assessment, but have a grey backgrou
 		
 		@include media-down(mobile) {
 			min-height: auto;
+			margin: 10px -15px -15px -15px;
 		}
 
 		p{
 			margin: 0;
 			padding: 5px;
 			color: $secondary-text-colour;
+		}
+
+		.results-status{
+			font-weight: 700;
+			margin: 0;
+			padding: 45px 0;
+			color: $text-colour;
+
+			@include media-down(mobile) {
+				padding: 10px 0;
+			}
 		}
 
 		&.pending{
@@ -393,6 +405,8 @@ The view is similar to the applications for assessment, but have a grey backgrou
 
 	}
 
+} 
+
 	textarea{
 		&.form-control-large{
 			width: 100%;
@@ -404,5 +418,3 @@ The view is similar to the applications for assessment, but have a grey backgrou
 			max-width: 120px;
 		}
 	}
-
-} 

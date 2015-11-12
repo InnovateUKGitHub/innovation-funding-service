@@ -11,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
+import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
+import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have
@@ -86,8 +87,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected Either<ServiceFailure, Response> getResponse(Long responseId) {
-        return Optional.ofNullable(responseRepository.findOne(responseId)).map(BaseTransactionalService::successResponse)
-                .orElse(errorResponse(RESPONSE_NOT_FOUND));
+        return getResponseById(responseId, responseRepository, () -> error(RESPONSE_NOT_FOUND));
     };
 
     /**
@@ -97,8 +97,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
-        return Optional.ofNullable(processRoleRepository.findOne(processRoleId)).map(BaseTransactionalService::successResponse)
-                .orElse(errorResponse(PROCESS_ROLE_NOT_FOUND));
+        return getProcessRoleById(processRoleId, processRoleRepository, () -> error(PROCESS_ROLE_NOT_FOUND));
     };
 
     /**
@@ -120,7 +119,6 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error) {
-        return left(ServiceFailure.error(error));
+        return left(error(error));
     }
-
 }

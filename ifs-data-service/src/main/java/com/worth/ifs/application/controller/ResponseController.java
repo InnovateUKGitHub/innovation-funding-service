@@ -1,7 +1,6 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -9,6 +8,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.transactional.AssessorService;
+import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -33,10 +33,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
+import static com.worth.ifs.util.Either.getLeftOrRight;
 import static com.worth.ifs.util.Either.right;
-import static com.worth.ifs.util.IfsWrapperFunctions.withProcessRoleReturnJsonResponse;
+import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJsonResponse;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -147,11 +147,11 @@ public class ResponseController {
 
         Application application = response.getApplication();
 
-        Function<ProcessRole, Either<JsonStatusResponse, JsonStatusResponse>> updateResponseFeedback = assessor -> {
-            assessorService.updateAssessorFeedback(response.getId(), assessor.getId(), feedbackValue, feedbackText);
+        Either<JsonStatusResponse, JsonStatusResponse> result = withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator, assessorProcessRole -> {
+            assessorService.updateAssessorFeedback(response.getId(), assessorProcessRole.getId(), feedbackValue, feedbackText);
             return right(JsonStatusResponse.ok());
-        };
+        });
 
-        return withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator).apply(updateResponseFeedback);
+        return getLeftOrRight(result);
     }
 }

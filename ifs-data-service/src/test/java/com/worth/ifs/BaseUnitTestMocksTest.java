@@ -3,6 +3,7 @@ package com.worth.ifs;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
@@ -10,8 +11,6 @@ import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 /**
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
@@ -39,6 +38,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ResponseRepository responseRepositoryMock;
+
+    @InjectMocks
+    protected ServiceLocator serviceLocator = new ServiceLocator();
 
     @Before
     public void setUp() {
