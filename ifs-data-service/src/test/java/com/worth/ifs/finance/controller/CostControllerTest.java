@@ -73,8 +73,7 @@ public class CostControllerTest {
         when(applicationFinanceRepository.findOne(123L)).thenReturn(applicationFinance);
         when(questionRepository.findOne(123L)).thenReturn(question);
 
-        mockMvc.perform(get("/cost//add/{applicationFinanceId}/{questionId}", "123", "123")
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/cost/add/{applicationFinanceId}/{questionId}", "123", "123"))
                 .andExpect(status().isOk());
 
         verify(costRepository, times(1)).save(any(Cost.class));

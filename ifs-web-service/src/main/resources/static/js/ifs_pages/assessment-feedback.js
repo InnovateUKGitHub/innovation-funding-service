@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false, window : false*/
+/* globals jQuery : false, window : false, setTimeout : false*/
 
 var ifs_assesment_feedback_page = (function(){
     "use strict";
@@ -30,9 +30,37 @@ var ifs_assesment_feedback_page = (function(){
 	        var feedbackText = feedbackContainer.find('[id ^= "assessor-question-feedback-text-"]').val();
 	        var feedbackValue = feedbackContainer.find('[data-feedback-value]').val();
 
+	        //feedback
+	        var formGroup = field.closest('.form-group');
+	        var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+            var startAjaxTime= new Date().getTime();
+
+            if(formTextareaSaveInfo.length === 0){
+                formGroup.find('.textarea-footer').append('<span class="textarea-save-info" />');
+                formTextareaSaveInfo = formGroup.find('.textarea-save-info');
+            }
+
 	        jQuery.ajax({
 	            type: "PUT",
-	            url: formUrl + '/response/' + responseId + '?feedbackText=' + feedbackText + '&feedbackValue=' + feedbackValue
+	            url: formUrl + '/response/' + responseId + '?feedbackText=' + feedbackText + '&feedbackValue=' + feedbackValue,
+                beforeSend: function() {
+                    formTextareaSaveInfo.html('Saving...');
+                }
+	        }).
+	        done(function(data){
+                var doneAjaxTime = new Date().getTime();
+
+	        	if(data.message == 'ok'){
+                    if((doneAjaxTime-startAjaxTime) < 1500) {
+                        setTimeout(function(){
+                           formTextareaSaveInfo.html('Saved!');
+                        },1500);
+                    } else {
+                        formTextareaSaveInfo.html('Saved!');
+                    }	
+	        	} else {
+	        		formTextareaSaveInfo.html(data.message).css({'color':'red'});
+	        	}
 	        });
 	    },
 	    handleAssessorFeedbackUpdate : function() {
