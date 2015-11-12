@@ -1,13 +1,11 @@
 package com.worth.ifs.application.finance.cost;
 
-import com.worth.ifs.application.finance.CostType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.math.RoundingMode;
+
 
 /**
  * {@code LabourCost} implements {@link CostItem}
@@ -50,7 +48,7 @@ public class LabourCost implements CostItem {
         if(workingDaysPerYear.equals(0)) {
             return new BigDecimal(0);
         }
-        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear));
+        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear), 20, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
@@ -85,7 +83,7 @@ public class LabourCost implements CostItem {
     }
 
     private void calculateTotal() {
-        if(rate!=null && !rate.equals(Double.NaN) && labourDays!=null) {
+        if(rate!=null && labourDays!=null) {
             total = rate.multiply(new BigDecimal(labourDays));
         } else {
             total = new BigDecimal(0);
