@@ -39,6 +39,9 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
         // build the sections, and then apply any back refs if necessary
         List<Section> sections = super.build(numberToBuild);
+
+        sections.forEach(section -> section.getQuestions().forEach(question -> question.setSection(section)));
+
         sections.forEach(section -> getCompetition(section).ifPresent(competition -> {
 
             List<Section> existingCompetitionSections = competition.getSections();
@@ -56,8 +59,6 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
             section.getQuestions().forEach(question -> {
 
-                question.setSection(section);
-
                 if (!newQuestions.contains(question)) {
                     newQuestions.add(question);
                 }
@@ -66,6 +67,7 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
             newQuestions.addAll(section.getQuestions());
             setField("questions", newQuestions, competition);
         }));
+
         return sections;
     }
 
