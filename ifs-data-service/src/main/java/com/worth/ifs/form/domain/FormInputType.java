@@ -1,9 +1,9 @@
 package com.worth.ifs.form.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 
 /**
@@ -18,16 +18,12 @@ public class FormInputType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy="formInputType")
-    private List<FormInput> formInputs;
-
     private String title;
 
 
-    public FormInputType(Long id, String title, List<FormInput> formInputs) {
+    public FormInputType(Long id, String title) {
         this.id = id;
         this.title = title;
-        this.formInputs = formInputs;
     }
 
     public FormInputType() {
@@ -36,12 +32,6 @@ public class FormInputType {
 
     public Long getId() {
         return id;
-    }
-
-
-    @JsonIgnore
-    public List<FormInput> getFormInputs() {
-        return formInputs;
     }
 
     public String getTitle() {
