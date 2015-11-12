@@ -11,7 +11,7 @@ import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.user.domain.Organisation;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
