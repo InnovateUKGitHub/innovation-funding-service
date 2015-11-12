@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,16 +17,16 @@ public class LabourCost implements CostItem {
 
     private Long id;
     private String role;
-    private Double grossAnnualSalary;
+    private BigDecimal grossAnnualSalary;
     private Integer labourDays;
-    private Double rate;
+    private BigDecimal rate;
     private String description;
-    private Double total;
+    private BigDecimal total;
 
     public LabourCost() {
     }
 
-    public LabourCost(Long id, String role, Double grossAnnualSalary, Integer labourDays, String description) {
+    public LabourCost(Long id, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
         this.id = id;
         this.role = role;
         this.grossAnnualSalary = grossAnnualSalary;
@@ -41,18 +42,18 @@ public class LabourCost implements CostItem {
         return role;
     }
 
-    public Double getGrossAnnualSalary() {
+    public BigDecimal getGrossAnnualSalary() {
         return grossAnnualSalary;
     }
 
-    public Double getRatePerDay(Integer workingDaysPerYear) {
+    public BigDecimal getRatePerDay(Integer workingDaysPerYear) {
         if(workingDaysPerYear.equals(0)) {
-            return 0D;
+            return new BigDecimal(0);
         }
-        return grossAnnualSalary / workingDaysPerYear.doubleValue();
+        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear));
     }
 
-    public Double getRate(Integer workingDaysPerYear) {
+    public BigDecimal getRate(Integer workingDaysPerYear) {
 
         if(grossAnnualSalary!=null && workingDaysPerYear != null) {
             rate = getRatePerDay(workingDaysPerYear);
@@ -61,7 +62,7 @@ public class LabourCost implements CostItem {
         return rate;
     }
 
-    public Double getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
@@ -73,11 +74,11 @@ public class LabourCost implements CostItem {
         return description;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public Double getTotal(Integer workingDaysPerYear) {
+    public BigDecimal getTotal(Integer workingDaysPerYear) {
         getRate(workingDaysPerYear);
         calculateTotal();
         return total;
@@ -85,13 +86,13 @@ public class LabourCost implements CostItem {
 
     private void calculateTotal() {
         if(rate!=null && !rate.equals(Double.NaN) && labourDays!=null) {
-            total = rate * labourDays;
+            total = rate.multiply(new BigDecimal(labourDays));
         } else {
-            total = 0D;
+            total = new BigDecimal(0);
         }
     }
 
-    public void setGrossAnnualSalary(Double grossAnnualSalary) {
+    public void setGrossAnnualSalary(BigDecimal grossAnnualSalary) {
         this.grossAnnualSalary = grossAnnualSalary;
     }
 

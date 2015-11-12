@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance;
 import com.worth.ifs.application.finance.cost.CostItem;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class DefaultCostCategory implements CostCategory {
     CostType costType;
     List<CostItem> costs = new ArrayList<>();
-    Double total = 0.0d;
+    BigDecimal total = new BigDecimal(0);
 
     @Override
     public List<CostItem> getCosts() {
@@ -21,8 +22,10 @@ public class DefaultCostCategory implements CostCategory {
     }
 
     @Override
-    public Double getTotal() {
-        total = costs.stream().mapToDouble(c -> c.getTotal()).sum();
+    public BigDecimal getTotal() {
+        total = costs.stream()
+                .map(c -> c.getTotal())
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
         return total;
     }
 

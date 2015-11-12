@@ -1,13 +1,14 @@
 package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * {@code SubContractingCost} implements {@link CostItem}
  */
 public class SubContractingCost implements CostItem {
     private Long id;
-    private Double cost;
+    private BigDecimal cost;
     private String country;
     private String name;
     private String role;
@@ -15,7 +16,7 @@ public class SubContractingCost implements CostItem {
     public SubContractingCost() {
     }
 
-    public SubContractingCost(Long id, Double cost, String country, String name, String role) {
+    public SubContractingCost(Long id, BigDecimal cost, String country, String name, String role) {
         this.id = id;
         this.cost = cost;
         this.country = country;
@@ -27,7 +28,7 @@ public class SubContractingCost implements CostItem {
         return id;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
@@ -44,7 +45,7 @@ public class SubContractingCost implements CostItem {
     }
 
     @Override
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return cost;
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class LabourCostCategory implements CostCategory {
     private final Log log = LogFactory.getLog(getClass());
 
     List<CostItem> costs = new ArrayList<>();
-    Double total = 0D;
+    BigDecimal total = new BigDecimal(0);
 
     @Override
     public List<CostItem> getCosts() {
@@ -28,8 +29,10 @@ public class LabourCostCategory implements CostCategory {
     }
 
     @Override
-    public Double getTotal() {
-        total = costs.stream().mapToDouble(c -> ((LabourCost)c).getTotal(workingDaysPerYear.getLabourDays())).sum();
+    public BigDecimal getTotal() {
+        total = costs.stream()
+                .map(c -> ((LabourCost)c).getTotal(workingDaysPerYear.getLabourDays()))
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
         return total;
     }
 
