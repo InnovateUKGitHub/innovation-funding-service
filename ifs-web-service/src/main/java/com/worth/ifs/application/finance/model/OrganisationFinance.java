@@ -7,6 +7,7 @@ import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -87,8 +88,10 @@ public class OrganisationFinance {
         costCategory.addCost(costItem);
     }
 
-    public Double getTotal() {
-        return costCategories.entrySet().stream().mapToDouble(cat -> cat.getValue().getTotal()).sum();
+    public BigDecimal getTotal() {
+        return costCategories.entrySet().stream()
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
     }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {
