@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
@@ -34,6 +35,9 @@ public abstract class AbstractApplicationController {
 
     @Autowired
     protected ResponseService responseService;
+
+    @Autowired
+    protected FormInputResponseService formInputResponseService;
 
     @Autowired
     protected QuestionService questionService;
@@ -134,12 +138,16 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
-        List<Response> responses = getResponses(application);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+        List<FormInputResponse> responses = getFormInputResponses(application);
+        model.addAttribute("responses", formInputResponseService.mapResponsesToQuestion(responses));
     }
 
     protected List<Response> getResponses(Application application) {
         return responseService.getByApplication(application.getId());
+    }
+
+    protected List<FormInputResponse> getFormInputResponses(Application application) {
+        return formInputResponseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, Application application, Long userId) {
