@@ -72,6 +72,8 @@ var ifs_autoSave = (function(){
                     } else {
                         formTextareaSaveInfo.html('Saved!');
                     }
+                 }else{
+                    formTextareaSaveInfo.html(data.validation_errors);
                  }
              }).fail(function(data) {
                  var errorMessage = data.responseJSON.errorMessage;

@@ -33,8 +33,9 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public Boolean save(Long userId, Long applicationId, Long questionId, String value) {
-        return responseRestService.saveQuestionResponse(userId, applicationId, questionId, value);
+    public List<String> save(Long userId, Long applicationId, Long questionId, String value) {
+        List<String> validated = responseRestService.saveQuestionResponse(userId, applicationId, questionId, value);
+        return validated;
     }
 
     @Override

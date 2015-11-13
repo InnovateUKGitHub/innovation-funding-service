@@ -15,4 +15,5 @@ public interface QuestionRestService {
     public List<Question> findByCompetition(Long competitionId);
     public void updateNotification(Long questionStatusId, Boolean notify);
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);
+    public Question findById(Long questionId);
 }

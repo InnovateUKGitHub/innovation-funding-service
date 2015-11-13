@@ -10,6 +10,6 @@ import java.util.Optional;
  */
 public interface ResponseRestService {
     public List<Response> getResponsesByApplicationId(Long applicationId);
-    public Boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value);
+    public List<String> saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value);
     public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText);
 }

@@ -17,13 +17,13 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
+import com.worth.ifs.validator.ResponseValidator;
+import com.worth.ifs.validator.ValidatedResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -98,10 +98,11 @@ public class ResponseController {
         return response;
     }
 
-    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
-    public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody
+    List<String> saveQuestionResponse(@RequestBody JsonNode jsonObj, BindingResult result, HttpServletResponse servletResponse) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
 
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
@@ -120,7 +121,8 @@ public class ResponseController {
         Response response = this.getOrCreateResponse(applicationId, userId, questionId);
         if(response == null){
             log.error("FORBIDDEN TO SAVE");
-            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+            servletResponse.setStatus( HttpServletResponse.SC_FORBIDDEN  );
+            return null;
         }
 
         if(!response.getValue().equals(value)) {
@@ -129,12 +131,22 @@ public class ResponseController {
         }
         response.setValue(value);
 
-        responseRepository.save(response);
+        ResponseValidator responseValidator = new ResponseValidator();
+        responseValidator.validate(response, result);
 
-        log.warn("Single question saved!");
+        if(result.hasErrors()){
+            log.error("Error count: "+ result.getErrorCount());
+            List<ObjectError> errors = result.getAllErrors();
 
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        }else{
+            responseRepository.save(response);
+            log.warn("Single question saved!");
+        }
+        ValidatedResponse validatedResponse = new ValidatedResponse(result, response);
+        servletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+        return validatedResponse.getAllErrors();
     }
+
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,

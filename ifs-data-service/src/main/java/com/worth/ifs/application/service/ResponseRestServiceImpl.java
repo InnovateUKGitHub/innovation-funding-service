@@ -40,7 +40,7 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         return Arrays.asList(responses);
     }
 
-    public Boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
+    public List<String> saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
 
@@ -52,9 +52,19 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         node.put("value", HtmlUtils.htmlEscape(value));
 
         HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
+        ResponseEntity<String[]> responseEntity = restTemplate.postForEntity(url, entity, String[].class);
 
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        return handleResponseStatus(response);
+//        ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + responseRestURL + "/findResponsesByApplication/" + applicationId, Response[].class);
+//        ResponseEntity<ValidatedResponse> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, ValidatedResponse.class);
+
+        log.debug("got response entity");
+
+
+        List<String> validatedResponse = Arrays.asList(responseEntity.getBody());
+
+        //validatedResponse.setErrorCount(errorCount);
+//        validatedResponse.setResponse(response);
+        return validatedResponse;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.worth.ifs.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -220,8 +221,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         for(Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
                 String value = request.getParameter("question[" + question.getId() + "]");
-                Boolean saved = responseService.save(userId, applicationId, question.getId(), value);
-                if (!saved) {
+                List<String> validatedResponse = responseService.save(userId, applicationId, question.getId(), value);
+                if (validatedResponse.size() > 0) {
                     log.error("save failed. " + question.getId());
                 }
             }
@@ -303,8 +304,26 @@ public class ApplicationFormController extends AbstractApplicationController {
                     financeFormHandler.storeField(fieldName, value);
                 }
             } else {
+                log.debug("ELSE :  " + inputIdentifier);
                 Long questionId = Long.valueOf(inputIdentifier);
-                responseService.save(user.getId(), applicationId, questionId, value);
+
+
+                List<String> validatedResponse = responseService.save(user.getId(), applicationId, questionId, value);
+                if(validatedResponse.size() > 0){
+                    log.debug("Response not saved: " + validatedResponse.size());
+                    log.debug("Response errors: " + validatedResponse);
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("success", "false");
+                    ArrayNode validationErrors = node.putArray("validation_errors");
+                    validatedResponse.stream().forEach(v -> validationErrors.add(v));
+
+                    return node;
+
+                }else{
+                    log.debug("No errors found somehow...");
+                }
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -313,6 +332,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return node;
 
         } catch (Exception e) {
+            e.printStackTrace();
 //            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             response.setStatus(400);
@@ -320,6 +340,31 @@ public class ApplicationFormController extends AbstractApplicationController {
             return ex.createJsonResponse();
         }
     }
+
+//    private void validate(Validator v, Long questionId, String value) {
+//        log.info("Validator: "+ v.getId());
+//        log.info("Validator classname: "+ v.getClassName());
+//
+//        try {
+//            ResponseValidator responseValidator = new ResponseValidator();
+//            responseValidator.validate(response, result);
+//
+////            Class<?> clazz = Class.forName(v.getClassName());
+////            BaseValidator validator = (BaseValidator) clazz.getConstructor().newInstance();
+////            validator.validate(value, errors);
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     public void assignQuestion(Model model,
                                @PathVariable("applicationId") final Long applicationId,
