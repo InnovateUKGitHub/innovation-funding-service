@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Form label =========================== -->
+<!-- =========================== Form label =========================== -->
 <div th:fragment="form-label (name,id,bold)">
     <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
            th:if="${name}"
-           th:for="'question-'+${id}"
+           th:for="${id}"
+           th:text="${name}"
+            />
+</div>
+<!-- =========================== Form label hidden =========================== -->
+<div th:fragment="form-label-hidden (name,id)">
+    <label class="form-label visuallyhidden"
+           th:if="${name}"
+           th:for="${id}"
            th:text="${name}"
             />
 </div>
@@ -106,8 +114,10 @@
 <!-- ========================= Duration in months =========================== -->
 
 <div th:fragment="form-duration (id, months)">
+  <div class="form-group">
     <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${months})" th:remove="tag"/>
+  </div>
 </div>
 
 <div th:fragment="form-percentage (id, title, name, percentage)">

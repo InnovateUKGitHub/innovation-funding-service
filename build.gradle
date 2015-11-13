@@ -70,8 +70,6 @@ subprojects {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.login", "sonarqube-scanner"
-        property "sonar.password", "FayrukAtyatt2"
            // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         }
     }

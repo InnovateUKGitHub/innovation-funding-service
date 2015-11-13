@@ -127,6 +127,8 @@ processTestResources {
 
 
 
+
+    
 task cleanDeploy() {
     build.mustRunAfter clean
     build.dependsOn clean

@@ -48,7 +48,7 @@
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
         <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <input type="file"/>
+        <input type="file" th:id="${question.getId()}" />
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->
