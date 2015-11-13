@@ -87,3 +87,53 @@
 @import "pages/application-dashboard";
 @import "pages/application-track";  
 
+
+
+@font-face {
+	font-family: 'icons';
+	src:url('../fonts/icomoon.eot?py4jf1');
+	src:url('../fonts/icomoon.eot?py4jf1#iefix') format('embedded-opentype'),
+		url('../fonts/icomoon.ttf?py4jf1') format('truetype'),
+		url('../fonts/icomoon.woff?py4jf1') format('woff'),
+		url('../fonts/icomoon.svg?py4jf1#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class*="fa"] {
+	font-family: 'icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.fa-italic:before {
+	content: "\e906";
+}
+.fa-repeat:before {
+	content: "\e905";
+}
+.fa-undo:before {
+	content: "\e900";
+}
+.fa-list-ol:before {
+	content: "\e901";
+}
+.fa-list-ul:before {
+	content: "\e902";
+}
+.fa-underline:before {
+	content: "\e903";
+}
+.fa-bold:before {
+	content: "\e904";
+}
+
+
+

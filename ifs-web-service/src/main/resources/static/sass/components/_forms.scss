@@ -16,7 +16,8 @@
 textarea[readonly],
 textarea[disabled],
 input[readonly],
-input[disabled]{
+input[disabled],
+div.readonly{
     color:darken($secondary-text-colour, 5%);
     background: $grey-4;
 }
@@ -134,7 +135,9 @@ table td{
 
     } 
 
-    textarea {
+    textarea,
+    [contenteditable="true"],
+    .readonly {
         border-top:none;
         border-bottom:  1px solid $border-colour;
         border-left:  1px solid $border-colour;
@@ -146,7 +149,24 @@ table td{
         vertical-align: top;
         width:100%;
         @include box-sizing(border-box);
+        overflow:auto; //needed for resize [contenteditable] div
     }
+
+    [contenteditable="true"] {
+        b {
+            font-weight:bold;
+        }
+        i {
+            font-style:italic
+        }
+        ol {
+            @extend .list-number;
+        }
+        ul {
+            @extend .list-bullet;
+        }
+    }
+    
     .textarea-footer {
         font-size:16px;
         padding: 10px 0px;
@@ -188,10 +208,9 @@ select{
     }
 }
 
-.feedback{
-    .textarea-wrapped textarea{
+.feedback .textarea-wrapped textarea{
         border: 1px solid $border-colour;
-    }
+    
 }
 
     //    .form-group_header-status {
