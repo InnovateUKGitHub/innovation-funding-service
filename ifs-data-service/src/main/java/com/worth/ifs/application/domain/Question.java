@@ -1,8 +1,6 @@
 package com.worth.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInput;
@@ -72,16 +70,6 @@ public class Question {
 
     @OneToMany(mappedBy="question")
     private List<Cost> costs;
-
-    @ManyToOne
-    @JoinColumn(name="childQuestionId", referencedColumnName="id")
-    @JsonBackReference
-    private Question childQuestion;
-
-    @OneToOne(mappedBy="childQuestion")
-    @JsonManagedReference
-    @OrderBy("priority ASC")
-    private Question parentQuestion;
 
     private String questionNumber;
 
@@ -190,14 +178,6 @@ public class Question {
 
     public String getQuestionNumber() {
         return questionNumber;
-    }
-
-    public Question getChildQuestion() {
-        return childQuestion;
-    }
-
-    public Question getParentQuestion() {
-        return parentQuestion;
     }
 
     public List<FormInput> getFormInputs() {
