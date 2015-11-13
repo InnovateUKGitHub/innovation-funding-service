@@ -201,8 +201,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testGetAssessmentSubmitReview() throws Exception {
         Application application = applications.get(1);
 
-        Assessment assessment = getAssessment(application);
-
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentSubmitReview))
                 .andExpect(model().attributeExists("model"));
@@ -211,7 +209,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Test
     public void testInvitationAnswerReject() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
 
         String reason = "Decline because of 123";
         String observations = "Observations 12345678";
@@ -263,7 +260,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Test
     public void testAssessmentSummaryComplete() throws Exception {
         Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
 
         String feedback = "just because 345678";
         String isSuitable = "Yes, suitable for funding";

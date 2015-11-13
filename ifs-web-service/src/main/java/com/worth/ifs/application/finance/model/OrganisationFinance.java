@@ -6,11 +6,8 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -67,9 +64,10 @@ public class OrganisationFinance {
     }
 
     private void setGrantClaimPercentage() {
+
         Optional<Cost> grantClaim = costs
                 .stream()
-                .filter(c -> c.getDescription().equals(GRANT_CLAIM) && c.getQuestion().getQuestionType().getTitle().equals("finance"))
+                .filter(c -> c.getDescription().equals(GRANT_CLAIM) && c.getQuestion().getFormInputs().stream().anyMatch(input -> input.getFormInputType().getTitle().equals("finance")))
                 .findFirst();
 
         if(grantClaim.isPresent()) {
@@ -84,14 +82,16 @@ public class OrganisationFinance {
      * @param cost Cost to be added
      */
     private void addCostToCategory(Cost cost) {
-        CostType costType = CostType.fromString(cost.getQuestion().getQuestionType().getTitle());
+        CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
         CostItem costItem = costItemFactory.createCostItem(costType, cost);
         CostCategory costCategory = costCategories.get(costType);
         costCategory.addCost(costItem);
     }
 
-    public Double getTotal() {
-        return costCategories.entrySet().stream().mapToDouble(cat -> cat.getValue().getTotal()).sum();
+    public BigDecimal getTotal() {
+        return costCategories.entrySet().stream()
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
     }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {

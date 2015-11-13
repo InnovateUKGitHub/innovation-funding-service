@@ -11,7 +11,7 @@ import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.user.domain.Organisation;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
@@ -54,6 +55,8 @@ public class CostControllerTest {
 
     private MockMvc mockMvc;
 
+    private BigDecimal value;
+
     @InjectMocks
     private CostController costController;
 
@@ -63,6 +66,8 @@ public class CostControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(costController)
                 .build();
+
+        value = new BigDecimal(1000);
     }
 
     @Test
@@ -141,8 +146,8 @@ public class CostControllerTest {
 
     @Test
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
-        Cost cost1 = new Cost("item1", "desc1", 2, 123.456, new ApplicationFinance(), new Question());
-        Cost cost2 = new Cost("item2", "desc2", 4, 123.456, new ApplicationFinance(), new Question());
+        Cost cost1 = new Cost("item1", "desc1", 2, value, new ApplicationFinance(), new Question());
+        Cost cost2 = new Cost("item2", "desc2", 4, value, new ApplicationFinance(), new Question());
 
         when(costRepository.exists(123L)).thenReturn(true);
         when(costRepository.findOne(123L)).thenReturn(cost1);
@@ -183,9 +188,9 @@ public class CostControllerTest {
     public void findOneCostAPICallShouldReturnCostListOnKnownId() throws Exception {
         ApplicationFinance f = new ApplicationFinance(1L, new Application(), new Organisation());
 
-        Cost c1 = new Cost(1L, "item1", "desc1", 1, 1.1, f, new Question());
-        Cost c2 = new Cost(2L, "item2", "desc2", 1, 1.1, f, new Question());
-        Cost c3 = new Cost(3L, "item3", "desc3", 1, 1.1, f, new Question());
+        Cost c1 = new Cost(1L, "item1", "desc1", 1, value, f, new Question());
+        Cost c2 = new Cost(2L, "item2", "desc2", 1, value, f, new Question());
+        Cost c3 = new Cost(3L, "item3", "desc3", 1, value, f, new Question());
 
         when(costRepository.findByApplicationFinanceId(1L)).thenReturn(Arrays.asList(c1, c2, c3));
 
@@ -220,7 +225,7 @@ public class CostControllerTest {
 
     @Test
     public void findOneCostAPICallShouldReturnCostOnKnownId() throws Exception {
-        when(costRepository.findOne(1L)).thenReturn(new Cost(1L, "item", "desc", 1, 1.1,
+        when(costRepository.findOne(1L)).thenReturn(new Cost(1L, "item", "desc", 1, value,
                 new ApplicationFinance(), new Question()));
 
         mockMvc.perform(get("/cost/findById/{id}", "1"))

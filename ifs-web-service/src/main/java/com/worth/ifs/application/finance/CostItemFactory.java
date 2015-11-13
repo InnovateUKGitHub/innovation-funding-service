@@ -4,6 +4,8 @@ import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostValue;
 
+import java.math.BigDecimal;
+
 /**
  * Creates specific costs for each category and maps the cost to cost items, which
  * can be used in the view.
@@ -36,14 +38,14 @@ public class CostItemFactory {
 
     private CostItem createCapitalUsage(Cost cost) {
         String existing = "";
-        Double residualValue = 0d;
+        BigDecimal residualValue = new BigDecimal(0);
         Integer utilisation = 0;
 
         for(CostValue costValue : cost.getCostValues()) {
             if(costValue.getCostField().getTitle().equals(COST_FIELD_EXISTING)) {
                 existing = costValue.getValue();
             } else if(costValue.getCostField().getTitle().equals(COST_FIELD_RESIDUAL_VALUE)) {
-                residualValue = Double.valueOf(costValue.getValue());
+                residualValue = new BigDecimal(costValue.getValue());
             } else if(costValue.getCostField().getTitle().equals(COST_FIELD_UTILISATION)) {
                 utilisation = Integer.valueOf(costValue.getValue());
             }

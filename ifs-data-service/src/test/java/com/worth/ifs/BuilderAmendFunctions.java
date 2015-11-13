@@ -1,9 +1,12 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.competition.domain.Competition;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -20,6 +23,22 @@ public class BuilderAmendFunctions {
 
     public static <T> Consumer<T> id(Long id) {
         return t -> setId(id, t);
+    }
+
+    public static <T> Consumer<T> competition(Competition competition) {
+        return t -> setCompetition(competition, t);
+    }
+
+    public static <T> Consumer<T> application(Application application) {
+        return t -> setApplication(application, t);
+    }
+
+    public static <T> Consumer<T> name(String value) {
+        return t -> setName(value, t);
+    }
+
+    public static <T> Consumer<T> description(String value) {
+        return t -> setDescription(value, t);
     }
 
     public static <T> BiConsumer<Integer, T> incrementingIds() {
@@ -55,12 +74,28 @@ public class BuilderAmendFunctions {
         return (Long) getField(instance, "id");
     }
 
+    public static Optional<Competition> getCompetition(Object object) {
+        return Optional.ofNullable((Competition) getField(object, "competition"));
+    }
+
     public static <T> T setId(Long value, T instance) {
         return setField("id", value, instance);
     }
 
+    public static <T> T setApplication(Application value, T instance) {
+        return setField("application", value, instance);
+    }
+
+    public static <T> T setCompetition(Competition value, T instance) {
+        return setField("competition", value, instance);
+    }
+
     public static <T> T setName(Object value, T instance) {
         return setField("name", value, instance);
+    }
+
+    public static <T> T setDescription(Object value, T instance) {
+        return setField("description", value, instance);
     }
 
     public static <T> T setField(String fieldName, Object value, T instance) {
