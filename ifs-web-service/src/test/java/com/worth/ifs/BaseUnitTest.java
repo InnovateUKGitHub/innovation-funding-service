@@ -64,6 +64,8 @@ public class BaseUnitTest {
     @Mock
     public ResponseService responseService;
     @Mock
+    public FormInputResponseService formInputResponseService;
+    @Mock
     public ApplicationService applicationService;
     @Mock
     public CompetitionsRestService competitionRestService;

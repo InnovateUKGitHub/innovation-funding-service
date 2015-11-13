@@ -1,6 +1,7 @@
 package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,6 +32,10 @@ public class FormInput {
 
     @OneToMany(mappedBy="formInput")
     private List<FormInputResponse> responses;
+
+    @ManyToOne
+    @JoinColumn(name="competitionId", referencedColumnName="id")
+    private Competition competition;
 
     public FormInput() {
     }

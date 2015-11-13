@@ -32,7 +32,19 @@ public class FormInputResponse {
     @JoinColumn(name="formInputId", referencedColumnName="id")
     private FormInput formInput;
 
+    @ManyToOne
+    @JoinColumn(name="applicationId", referencedColumnName="id")
+    private Application application;
+
     public FormInputResponse() {
+    }
+
+    public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
+        this.updateDate = updateDate;
+        this.value = value;
+        this.updatedBy = updatedBy;
+        this.formInput = formInput;
+        this.application = application;
     }
 
     public Long getId() {

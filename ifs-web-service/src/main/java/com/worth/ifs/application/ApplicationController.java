@@ -53,6 +53,8 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
         List<Response> responses = responseService.getByApplication(applicationId);
+
+        // TODO DW 578 - responses to forminputresponses
         model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
