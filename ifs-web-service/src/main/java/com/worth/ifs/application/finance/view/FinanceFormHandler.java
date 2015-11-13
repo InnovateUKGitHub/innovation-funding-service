@@ -8,10 +8,9 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,7 +139,7 @@ public class FinanceFormHandler {
     }
 
     private CostItem getLabourCost(Long id, List<CostFormField> costFormFields) {
-        Double grossAnnualSalary = null;
+        BigDecimal grossAnnualSalary = null;
         String role = null;
         Integer labourDays = null;
         String description = null;
@@ -149,7 +148,7 @@ public class FinanceFormHandler {
             String fieldValue = costFormField.getValue();
             if (fieldValue != null) {
                 if (costFormField.getCostName().equals("grossAnnualSalary")) {
-                    grossAnnualSalary = getDoubleValue(fieldValue, 0D);
+                    grossAnnualSalary = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
                 } else if (costFormField.getCostName().equals("labourDays") ||
@@ -163,7 +162,7 @@ public class FinanceFormHandler {
 
     private CostItem getMaterials(Long id, List<CostFormField> costFormFields) {
         String item = null;
-        Double cost = null;
+        BigDecimal cost = null;
         Integer quantity = null;
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
@@ -171,7 +170,7 @@ public class FinanceFormHandler {
                 if (costFormField.getCostName().equals("item")) {
                     item = fieldValue;
                 } else if (costFormField.getCostName().equals("cost")) {
-                    cost = getDoubleValue(fieldValue, 0D);
+                    cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
                     quantity = getIntegerValue(fieldValue, 0);
                 }
@@ -181,7 +180,7 @@ public class FinanceFormHandler {
     }
 
     private CostItem getSubContractingCosts(Long id, List<CostFormField> costFormFields) {
-        Double cost = null;
+        BigDecimal cost = null;
         String country = null;
         String name = null;
         String role = null;
@@ -192,7 +191,7 @@ public class FinanceFormHandler {
                 if (costFormField.getCostName().equals("country")) {
                     country = fieldValue;
                 } else if (costFormField.getCostName().equals("cost")) {
-                    cost = getDoubleValue(fieldValue, 0D);
+                    cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("name")) {
                     name = fieldValue;
                 } else if (costFormField.getCostName().equals("role")) {
@@ -213,11 +212,11 @@ public class FinanceFormHandler {
         return new GrantClaim(id, grantClaimPercentage);
     }
 
-    private Double getDoubleValue(String value, Double defaultValue) {
+    private BigDecimal getBigDecimalValue(String value, Double defaultValue) {
         try {
-            return Double.valueOf(value);
+            return new BigDecimal(value);
         } catch(NumberFormatException nfe) {
-            return defaultValue;
+            return new BigDecimal(defaultValue);
         }
     }
 

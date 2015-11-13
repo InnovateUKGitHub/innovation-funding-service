@@ -17,6 +17,7 @@ import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -56,10 +57,12 @@ public class OrganisationFinanceOverview {
         return organisationFinances;
     }
 
-    public EnumMap<CostType, Double> getTotalPerType() {
-        EnumMap<CostType, Double> totalPerType = new EnumMap<CostType, Double>(CostType.class);
+    public EnumMap<CostType, BigDecimal> getTotalPerType() {
+        EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
-            Double typeTotal = organisationFinances.stream().mapToDouble(o -> o.getCostCategory(costType).getTotal()).sum();
+            BigDecimal typeTotal = organisationFinances.stream()
+                    .map(o -> o.getCostCategory(costType).getTotal())
+                    .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));;
             totalPerType.put(costType, typeTotal);
         }
 
@@ -67,8 +70,10 @@ public class OrganisationFinanceOverview {
     }
 
 
-    public Double getTotal() {
-        return organisationFinances.stream().mapToDouble(of -> of.getTotal()).sum();
+    public BigDecimal getTotal() {
+        return organisationFinances.stream()
+                .map(of -> of.getTotal())
+                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
     }
 
     public Double getTotalGrantPercentage() {

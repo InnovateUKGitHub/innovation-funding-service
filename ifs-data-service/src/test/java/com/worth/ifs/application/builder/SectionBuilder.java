@@ -4,13 +4,13 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
@@ -32,6 +32,43 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
     public SectionBuilder withQuestions(List<Question> questions) {
         return with(section -> section.setQuestions(questions));
+    }
+
+    @Override
+    public List<Section> build(int numberToBuild) {
+
+        // build the sections, and then apply any back refs if necessary
+        List<Section> sections = super.build(numberToBuild);
+
+        sections.forEach(section -> section.getQuestions().forEach(question -> question.setSection(section)));
+
+        sections.forEach(section -> getCompetition(section).ifPresent(competition -> {
+
+            List<Section> existingCompetitionSections = competition.getSections();
+
+            if (!existingCompetitionSections.contains(section)) {
+                existingCompetitionSections.add(section);
+            }
+
+            List<Question> competitionQuestions = (List<Question>) getField(competition, "questions");
+            List<Question> newQuestions = new ArrayList<>();
+
+            if (competitionQuestions != null) {
+                newQuestions.addAll(competitionQuestions);
+            }
+
+            section.getQuestions().forEach(question -> {
+
+                if (!newQuestions.contains(question)) {
+                    newQuestions.add(question);
+                }
+            });
+
+            newQuestions.addAll(section.getQuestions());
+            setField("questions", newQuestions, competition);
+        }));
+
+        return sections;
     }
 
     public SectionBuilder withQuestionSets(List<List<Question>> questionSets) {

@@ -1,5 +1,7 @@
 package com.worth.ifs.application.finance.cost;
 
+import java.math.BigDecimal;
+
 public class GrantClaim implements CostItem {
     private Long id;
     private Integer grantClaimPercentage;
@@ -15,8 +17,8 @@ public class GrantClaim implements CostItem {
     }
 
     @Override
-    public Double getTotal() {
-        return 0D;
+    public BigDecimal getTotal() {
+        return new BigDecimal(0);
     }
 
     public Integer getGrantClaimPercentage() {

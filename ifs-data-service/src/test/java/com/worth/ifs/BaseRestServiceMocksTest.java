@@ -1,18 +1,10 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,

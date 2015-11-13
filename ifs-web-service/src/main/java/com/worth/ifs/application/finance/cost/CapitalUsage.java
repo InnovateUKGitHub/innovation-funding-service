@@ -1,6 +1,7 @@
 package com.worth.ifs.application.finance.cost;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 
 /**
@@ -11,8 +12,8 @@ public class CapitalUsage implements CostItem {
     Integer deprecation;
     String description;
     String existing;
-    Double npv;
-    Double residualValue;
+    BigDecimal npv;
+    BigDecimal residualValue;
     Integer utilisation;
 
     public CapitalUsage() {
@@ -20,7 +21,7 @@ public class CapitalUsage implements CostItem {
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
-        Double npv, Double residualValue, Integer utilisation ) {
+                        BigDecimal npv, BigDecimal residualValue, Integer utilisation ) {
         this.id = id;
         this.deprecation = deprecation;
         this.description = description;
@@ -46,11 +47,11 @@ public class CapitalUsage implements CostItem {
         return existing;
     }
 
-    public Double getNpv() {
+    public BigDecimal getNpv() {
         return npv;
     }
 
-    public Double getResidualValue() {
+    public BigDecimal getResidualValue() {
         return residualValue;
     }
 
@@ -58,8 +59,8 @@ public class CapitalUsage implements CostItem {
         return utilisation;
     }
 
-    public Double getTotal() {
-        return npv - (residualValue * utilisation);
+    public BigDecimal getTotal() {
+        return npv.subtract(residualValue.multiply(new BigDecimal(utilisation)));
     }
 
 }

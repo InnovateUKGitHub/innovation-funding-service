@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class CostValueTest {
     CostValue costValue;
     Cost cost;
@@ -12,12 +14,14 @@ public class CostValueTest {
     String value;
     ApplicationFinance applicationFinance;
     Question question;
+    BigDecimal price;
 
     @Before
     public void setUp() throws Exception {
+        price  = new BigDecimal(1000);
         applicationFinance = new ApplicationFinance();
         question = new Question();
-        cost = new Cost(1L, "cost item", "cost description", 10, 1000d, applicationFinance, question);
+        cost = new Cost(1L, "cost item", "cost description", 10, price, applicationFinance, question);
         costField = new CostField(1L, "NVP", "String");
         value = "19000";
         costValue = new CostValue(cost, costField, value);
@@ -39,7 +43,7 @@ public class CostValueTest {
 
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
-        Cost newCost = new Cost(2L, "cost item", "cost description", 10, 1000d, applicationFinance, question);
+        Cost newCost = new Cost(2L, "cost item", "cost description", 10, price, applicationFinance, question);
         CostField newCostField = new CostField(2l,"title","type");
 
         costValue.setCost(newCost);

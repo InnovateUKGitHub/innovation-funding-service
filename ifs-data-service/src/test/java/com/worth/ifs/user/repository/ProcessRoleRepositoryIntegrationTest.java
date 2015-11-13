@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by dwatson on 05/10/15.
  */
-@Ignore("ignored for alpha until a stable test database solution is in place")
 public class ProcessRoleRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ProcessRoleRepository> {
 
     @Autowired
