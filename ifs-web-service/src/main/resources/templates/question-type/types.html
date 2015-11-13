@@ -40,8 +40,8 @@
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
-            <input type="file"/>
+            <div th:include="question-type/form-elements :: form-label-hidden (name=${'Upload File '+question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+            <input type="file" th:id="${question.getId()}" />
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->
@@ -141,7 +141,7 @@
                     <tbody>
                     <tr>
                         <th class="width-large">
-                            <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id='working_days', bold=false)" th:remove="tag" />
+                            <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id=${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}, bold=false)" th:remove="tag" />
                         </th>
                         <td>
                             <input type="number"
@@ -158,26 +158,29 @@
                     <table id="labour-costs-table">
                         <thead>
                         <tr>
-                            <th class="width-medium">Role within project</th>
-                            <th class="numeric">Gross Annual Salary</th>
-                            <th class="numeric">Rate (£/day)</th>
-                            <th class="numeric width-medium">Days to be spent by all staff at this grade</th>
+                            <th class="width-medium" id="labourRole" scope="col">Role within project</th>
+                            <th class="numeric" id="labourGrossSalary" scope="col">Gross Annual Salary</th>
+                            <th class="numeric" id="labourRate" scope="col">Rate (&pound;/day)</th>
+                            <th class="numeric width-medium" id="labourDays" scope="col">Days to be spent by all staff at this grade</th>
                         </tr>
                         </thead>
                         <tbody>
                         <div th:each="labourCost : ${costCategory.costs}" th:remove="tag">
                             <tr th:attr="data-cost-row=${labourCost.id}">
                                 <td>
-                                    <input type="text" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
+                                    <div th:include="question-type/form-elements :: form-label-hidden (name=${'Role within project'}, id=${'cost-labour-'+labourCost.id+'-labourRole'})" th:remove="tag" />
+                                    <input type="text" aria-labelledby="labourRole" aria-label="Role within project" th:name="${type +'-role-' + labourCost.id}"  th:id="${'cost-labour-'+labourCost.id+'-labourRole'}" th:value="${labourCost.getRole()}"/>
                                 </td>
                                 <td class="numeric">
-                                    <input type="number"
+                                    <div th:include="question-type/form-elements :: form-label-hidden (name=${'Gross Annual Salary'}, id=${'cost-labour-'+labourCost.id+'-labourGrossSalary'})" th:remove="tag" />
+                                    <input type="number" aria-labelledby="gross-annual-salary" aria-label="Gross Annual Salary"
                                            th:name="${type +'-grossAnnualSalary-' + labourCost.id}"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourGrossSalary'}"
                                            th:value="${#numbers.formatDecimal(labourCost.grossAnnualSalary,0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="text"
+                                    <div th:include="question-type/form-elements :: form-label-hidden (name=${'Rate (&pound;/day)'}, id=${'cost-labour-'+labourCost.id+'-labourRate'})" th:remove="tag" />
+                                    <input type="text" aria-labelledby="labourRate" aria-label="Rate (&pound;/day)"
                                            th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
@@ -186,7 +189,9 @@
                                            th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
                                 <td class="numeric">
-                                    <input type="number" class="width-small"
+                                    <div th:include="question-type/form-elements :: form-label-hidden (name=${'Days to be spent by all staff at this grade'}, id=${'cost-labour-'+labourCost.id+'-labourDays'})" th:remove="tag" />
+                                    <input type="number" aria-labelledby="labourDays" aria-label="Days to be spent by all staff at this grade" 
+                                           class="width-small"
                                            th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
@@ -194,16 +199,18 @@
                             </tr>
                             <tr th:attr="data-cost-row=${labourCost.id}">
                                 <td colspan="4" class="numeric">
-                                    Total costs
-                                    <input type="text"
-                                       th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
-                                       data-calculation-operations="/,*"
-                                       th:name="${type +'-total-' + labourCost.id}"
-                                       readonly="readonly"
-                                       th:class="${'width-small-medium'}"
-                                       th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
-                                       th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
-                                        <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                    <label>
+                                        Total costs
+                                        <input type="text"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
+                                           data-calculation-operations="/,*"
+                                           th:name="${type +'-total-' + labourCost.id}"
+                                           readonly="readonly"
+                                           th:class="${'width-small-medium'}"
+                                           th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
+                                           th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
+                                            <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                    </label>
                                 </td>
                             </tr>
                         </div>
@@ -318,10 +325,10 @@
                 <table id="material-costs-table">
                     <thead>
                     <tr>
-                        <th>Item</th>
-                        <th class="numeric">Quantity</th>
-                        <th class="numeric">Cost Per Item</th>
-                        <th class="numeric">Total</th>
+                        <th id="materialItem" scope="col">Item</th>
+                        <th class="numeric" id="materialQuantity" scope="col">Quantity</th>
+                        <th class="numeric" id="materialCostItem" scope="col">Cost Per Item</th>
+                        <th class="numeric" id="materialTotal" scope="col">Total</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -329,20 +336,24 @@
                     <div th:each="materialCost : ${costCategory.costs}" th:with="type=${question.questionType.title}">
                         <tr th:attr="data-cost-row=${materialCost.id}">
                             <td>
-                                <input type="text" th:name="${type +'-item-' + materialCost.id}"  th:id="${'cost-materials-'+materialCost.id+'-item'}" th:value="${materialCost.getItem()}"/>
+                                 <div th:include="question-type/form-elements :: form-label-hidden (name=${'Item'}, id=${'cost-materials-'+materialCost.id+'-item'})" th:remove="tag" />
+                                <input type="text" aria-labelledby="materialItem" aria-label="Item" th:name="${type +'-item-' + materialCost.id}"  th:id="${'cost-materials-'+materialCost.id+'-item'}" th:value="${materialCost.getItem()}"/>
                             </td>
                             <td>
-                                <input type="number" th:name="${type +'-quantity-' + materialCost.id}"
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Quantity'}, id=${'cost-materials-'+materialCost.id+'-quantity'})" th:remove="tag" />
+                                <input type="number" aria-labelledby="materialQuantity" aria-label="Quantity" th:name="${type +'-quantity-' + materialCost.id}"
                                        th:id="${'cost-materials-'+materialCost.id+'-quantity'}" th:value="${materialCost.getQuantity()}"/>
                             </td>
                             <td>
-                                <input type="number" th:name="${type +'-cost-' + materialCost.id}"
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Cost per Item'}, id=${'cost-materials-'+materialCost.id+'-cost'})" th:remove="tag" />
+                                <input type="number" aria-labelledby="materialCostItem" aria-label="Cost per Item" th:name="${type +'-cost-' + materialCost.id}"
                                        th:id="${'cost-materials-'+materialCost.id+'-cost'}"
                                        th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"
                                 />
                             </td>
                             <td>
-                                <input type="text" class="alignright" th:name="${type +'-total-' + materialCost.id}"
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Total'}, id=${'cost-materials-'+materialCost.id+'-materialTotal'})" th:remove="tag" />
+                                <input type="text" aria-labelledby="materialTotal" aria-label="Total" class="alignright" th:name="${type +'-total-' + materialCost.id}"
                                        th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
                                        th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
@@ -488,7 +499,7 @@
                         </div>
 
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
+                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-subcontractingCost'}">Cost</label>
                             <input type="number"
                                    th:name="${type +'-cost-' + subContractingCost.id}"
                                    class="form-control form-finances-subcontracting-cost"
@@ -533,10 +544,10 @@
                 <table id="travel-costs-table">
                     <thead>
                     <tr>
-                        <th>Purpose of journey or description of subsistence cost</th>
-                        <th class="numeric">Number of times</th>
-                        <th class="numeric">Cost each (£)</th>
-                        <th class="numeric">Total (£)</th>
+                        <th id="travelPurpose" scope="col">Purpose of journey or description of subsistence cost</th>
+                        <th id="travelNumTimes" scope="col" class="numeric">Number of times</th>
+                        <th id="travelCostEach" scope="col" class="numeric">Cost each (&pound;)</th>
+                        <th id="travelCostTotal" scope="col" class="numeric">Total (&pound;)</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -544,16 +555,20 @@
                     <div th:each="travelCost : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${travelCost.id}">
                             <td>
-                                <input type="text" name="travel-0-travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Purpose of journey or description of subsistence cost'}, id=${'id_travel-0-travelPurpose'})" th:remove="tag" />
+                                <input type="text" name="travel-0-travelPurpose" aria-labelledby="travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelNumTimes" class="form-control form-control-1-1 form-finances-travel-number" id="id_travel-0-travelNumTimes" th:value="${travelCost.getQuantity()}" />
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Number of times'}, id=${'id_travel-0-travelNumTimes'})" th:remove="tag" />
+                                <input type="number" name="travel-0-travelPurpose" aria-labelledby="travelNumTimes" class="form-control form-control-1-1 form-finances-travel-number" id="id_travel-0-travelNumTimes" th:value="${travelCost.getQuantity()}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Cost each (&pound;)'}, id=${'id_travel-0-travelCostEach'})" th:remove="tag" />
+                                <input type="number" name="travel-0-travelCostEach" aria-labelledby="travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
+                                <div th:include="question-type/form-elements :: form-label-hidden (name=${'Total (&pound;)'}, id=${'id_travel-0-travelCostTotal'})" th:remove="tag" />
+                                <input type="number" name="travel-0-travelCostTotal" aria-labelledby="travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
                             </td>
                             <td>
                                 <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
@@ -644,7 +659,7 @@
 
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${'otherCostsShowHideToggle'}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
@@ -655,34 +670,40 @@
             <table id="other-funding">
                 <thead>
                 <tr>
-                    <th scope="col">Source of Funding</th>
-                    <th scope="col">Date Applied for</th>
-                    <th scope="col" class="numeric">Amount Sought (£)</th>
-                    <th scope="col">Successful?</th>
-                    <th scope="col" class="numeric">Amount Secured or Still Sought</th>
-                    <th scope="col">Date of Decision</th>
+                    <th id="otherSourceFunding" scope="col">Source of Funding</th>
+                    <th id="otherDateApplied" scope="col">Date Applied for</th>
+                    <th id="otherAmountSought" scope="col" class="numeric">Amount Sought (&pound;)</th>
+                    <th id="otherSuccessful" scope="col">Successful?</th>
+                    <th id="otherAmountSecured" scope="col" class="numeric">Amount Secured or Still Sought</th>
+                    <th id="otherDateDecision" scope="col">Date of Decision</th>
                     <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Source of Funding'}, id=${'cost-other-1-source'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-source" aria-labelledby="otherSourceFunding" />
                     </td>
                     <td>
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Date Applied for'}, id=${'cost-other-1-date-applied'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-date-applied" aria-labelledby="otherDateApplied" />
                     </td>
                     <td class="numeric">
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Amount Sought (&pound;)'}, id=${'cost-other-1-amount-sought'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-amount-sought" aria-labelledby="otherAmountSought" />
                     </td>
                     <td>
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Amount Secured or Still Sought'}, id=${'cost-other-1-successful'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-successful" aria-labelledby="otherSuccessful" />
                     </td>
                     <td class="numeric">
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Amount Secured or Still Sought'}, id=${'cost-other-1-amount-secured'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-amount-secured" aria-labelledby="otherAmountSecured" />
                     </td>
                     <td>
-                        <input type="text"/>
+                        <div th:include="question-type/form-elements :: form-label-hidden (name=${'Date of Decision'}, id=${'cost-other-1-date-decision'})" th:remove="tag" />
+                        <input type="text" id="cost-other-1-date-decision" aria-labelledby="otherDateDecision" />
                     </td>
                     <td>
                         <a href="#">Remove</a>
