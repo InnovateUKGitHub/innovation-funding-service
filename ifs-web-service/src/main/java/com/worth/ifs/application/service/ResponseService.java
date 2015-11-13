@@ -1,8 +1,6 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.validator.ValidatedResponse;
-import org.springframework.validation.ObjectError;
 
 import java.util.HashMap;
 import java.util.List;

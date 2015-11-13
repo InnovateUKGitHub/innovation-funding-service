@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 import static junit.framework.TestCase.assertTrue;
@@ -89,7 +90,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         costId = Long.valueOf(1);
 
         // save actions should always succeed.
-        when(responseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(Boolean.TRUE);
+        when(responseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(new ArrayList<String>());
     }
 
     @Test

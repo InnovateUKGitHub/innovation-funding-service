@@ -2,7 +2,6 @@ package com.worth.ifs.validator;
 
 import com.worth.ifs.application.domain.Response;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.stream.Collectors;

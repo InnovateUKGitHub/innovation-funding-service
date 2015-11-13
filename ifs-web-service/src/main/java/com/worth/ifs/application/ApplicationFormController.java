@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -147,7 +148,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void saveApplicationForm(Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
-                                     HttpServletRequest request, HttpServletResponse response) {
+                                     HttpServletRequest request, HttpServletResponse response
+                                    ) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -155,7 +157,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
-        saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
+        Map<String, String> errors = new HashMap<>();
+        saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId, errors);
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
@@ -185,9 +188,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response){
+                                        HttpServletResponse response
+                                        ){
         Map<String, String[]> params = request.getParameterMap();
+
+
         saveApplicationForm(model, applicationId, sectionId, request, response);
+
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
@@ -216,7 +223,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
+    private Map<String, String> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId, Map<String, String> errors) {
         // saving questions from section
         for(Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
@@ -224,9 +231,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                 List<String> validatedResponse = responseService.save(userId, applicationId, question.getId(), value);
                 if (validatedResponse.size() > 0) {
                     log.error("save failed. " + question.getId());
+                    validatedResponse.stream().forEach(
+                            v -> errors.put("question-" + question.getId(), v)
+                    );
                 }
             }
         }
+        return errors;
     }
 
     private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {

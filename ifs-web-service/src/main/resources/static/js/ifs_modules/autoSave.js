@@ -67,13 +67,16 @@ var ifs_autoSave = (function(){
                  if(data.success == 'true'){
                     if((doneAjaxTime-startAjaxTime) < 1500) {
                         setTimeout(function(){
+                            formGroup.removeClass('error');
                            formTextareaSaveInfo.html('Saved!');
                         },1500);
                     } else {
+                        formGroup.removeClass('error');
                         formTextareaSaveInfo.html('Saved!');
                     }
                  }else{
                     formTextareaSaveInfo.html(data.validation_errors);
+                    formGroup.addClass('error');
                  }
              }).fail(function(data) {
                  var errorMessage = data.responseJSON.errorMessage;

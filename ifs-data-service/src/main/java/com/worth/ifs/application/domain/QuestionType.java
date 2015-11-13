@@ -1,7 +1,6 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.validator.domain.Validator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,12 +19,6 @@ public class QuestionType {
 
     @OneToMany(mappedBy="questionType")
     private List<Question> questions;
-
-    @ManyToMany
-    @JoinTable(name = "question_type_validator",
-            joinColumns = @JoinColumn(name = "question_type_id"),
-            inverseJoinColumns = @JoinColumn(name = "validator_id"))
-    private List<Validator> validators;
 
     private String title;
 
@@ -54,11 +47,4 @@ public class QuestionType {
         return title;
     }
 
-    public List<Validator> getValidators() {
-        return validators;
-    }
-
-    public void setValidators(List<Validator> validators) {
-        this.validators = validators;
-    }
 }
