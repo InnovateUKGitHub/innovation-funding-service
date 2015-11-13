@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
@@ -145,11 +146,11 @@ public class ApplicationFormController extends AbstractApplicationController {
 //        return application;
 //    }
 
-    private void saveApplicationForm(Model model,
-                                     @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId,
-                                     HttpServletRequest request, HttpServletResponse response
-                                    ) {
+    private Map<String, String> saveApplicationForm(Model model,
+                                                    @PathVariable("applicationId") final Long applicationId,
+                                                    @PathVariable("sectionId") final Long sectionId,
+                                                    HttpServletRequest request, HttpServletResponse response
+    ) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -157,8 +158,12 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
-        Map<String, String> errors = new HashMap<>();
-        saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId, errors);
+        Map<String, String> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
+
+
+        errors.forEach((k,v) -> {
+            log.info("Error on submit: " + k + " - " + v);
+        });
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
@@ -176,7 +181,13 @@ public class ApplicationFormController extends AbstractApplicationController {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+//        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
+
+        // question id / response object
+//        Map<Long, Response> invalidReponses;
+//        model.addAttribute("responses", invalidReponses);
+
+        return errors;
     }
 
     /**
@@ -193,7 +204,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
 
 
-        saveApplicationForm(model, applicationId, sectionId, request, response);
+        Map<String, String> errors = saveApplicationForm(model, applicationId, sectionId, request, response);
 
 
         if (params.containsKey("assign_question")) {
@@ -201,7 +212,13 @@ public class ApplicationFormController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+        if(errors.size() > 0){
+            log.info("show form again");
+            return "application-form";
+        }else{
+            log.info("redirect to form");
+            return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+        }
     }
 
     private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
@@ -223,15 +240,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    private Map<String, String> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId, Map<String, String> errors) {
+    private Map<String, String> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         // saving questions from section
+        Map<String, String> errors = new HashMap<>();
         for(Question question : questions) {
             if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
                 String value = request.getParameter("question[" + question.getId() + "]");
                 List<String> validatedResponse = responseService.save(userId, applicationId, question.getId(), value);
                 if (validatedResponse.size() > 0) {
                     log.error("save failed. " + question.getId());
-                    validatedResponse.stream().forEach(
+                    validatedResponse.stream().peek(
+                            v -> log.info("v: " + v)
+                    ).forEach(
                             v -> errors.put("question-" + question.getId(), v)
                     );
                 }
