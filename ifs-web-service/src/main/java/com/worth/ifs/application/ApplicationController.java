@@ -1,7 +1,11 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -52,10 +56,8 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}/summary")
     public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
-        List<Response> responses = responseService.getByApplication(applicationId);
-
-        // TODO DW 578 - responses to forminputresponses
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+        List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
+        model.addAttribute("responses", formInputResponseService.mapResponsesToQuestion(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);

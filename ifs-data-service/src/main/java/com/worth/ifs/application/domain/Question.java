@@ -28,9 +28,6 @@ public class Question {
     @Column(length=5000)
     private String guidanceAnswer;
 
-    @Column(length=5000)
-    private Integer wordCount;
-
     private Boolean markAsCompletedEnabled = false;
 
     private Boolean assignEnabled = true;
@@ -90,10 +87,6 @@ public class Question {
 
     public Long getId() {
         return id;
-    }
-
-    public Integer getWordCount() {
-        return wordCount != null ? wordCount : 0;
     }
 
     public String getGuidanceAnswer() {
@@ -201,7 +194,6 @@ public class Question {
             return false;
         if (guidanceAnswer != null ? !guidanceAnswer.equals(question.guidanceAnswer) : question.guidanceAnswer != null)
             return false;
-        if (wordCount != null ? !wordCount.equals(question.wordCount) : question.wordCount != null) return false;
         if (markAsCompletedEnabled != null ? !markAsCompletedEnabled.equals(question.markAsCompletedEnabled) : question.markAsCompletedEnabled != null)
             return false;
         if (assignEnabled != null ? !assignEnabled.equals(question.assignEnabled) : question.assignEnabled != null)
@@ -229,7 +221,6 @@ public class Question {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (guidanceQuestion != null ? guidanceQuestion.hashCode() : 0);
         result = 31 * result + (guidanceAnswer != null ? guidanceAnswer.hashCode() : 0);
-        result = 31 * result + (wordCount != null ? wordCount.hashCode() : 0);
         result = 31 * result + (markAsCompletedEnabled != null ? markAsCompletedEnabled.hashCode() : 0);
         result = 31 * result + (assignEnabled != null ? assignEnabled.hashCode() : 0);
         result = 31 * result + (multipleStatuses != null ? multipleStatuses.hashCode() : 0);

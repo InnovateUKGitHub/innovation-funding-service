@@ -14,7 +14,9 @@
     <!-- ==============General readonly header, paragraph and assessor feedback blocks ============= -->
 
     <div th:fragment="question-label-and-paragraph (section, question, responses, bold)">
+        <!-- TODO DW 578 - need to iterate over forminputs -->
         <div th:include="question-type/types-assessment-details :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
+        <!-- TODO DW 578 - response needs to come from forminputresponse -->
         <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
     </div>
 

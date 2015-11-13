@@ -3,6 +3,7 @@
 <body>
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, section, currentApplication)" th:remove="tag">
+    <!-- TODO DW 578 - response needs to come from forminputresponse -->
     <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
         th:each="question : ${section.getQuestions()}"
         th:if="${!#strings.isEmpty(question.getName())}"

@@ -23,9 +23,6 @@ public class FormInput {
     @Column(length=5000)
     private Integer wordCount;
 
-    @Column(length=5000)
-    private String optionValues;
-
     @ManyToOne
     @JoinColumn(name="formInputTypeId", referencedColumnName="id")
     private FormInputType formInputType;
@@ -42,10 +39,6 @@ public class FormInput {
 
     public Long getId() {
         return id;
-    }
-
-    public String getOptionValues() {
-        return optionValues;
     }
 
     public Integer getWordCount() {

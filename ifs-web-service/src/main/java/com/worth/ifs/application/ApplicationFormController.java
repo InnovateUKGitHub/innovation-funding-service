@@ -154,6 +154,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
+
+        // TODO DW 578 - save form input responses instead
         saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
         // save application details if they are in the request
@@ -215,17 +217,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
+    // TODO DW 578 - save form input responses instead
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
-        // saving questions from section
-        for(Question question : questions) {
-            if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
-                String value = request.getParameter("question[" + question.getId() + "]");
-                Boolean saved = responseService.save(userId, applicationId, question.getId(), value);
+        questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
+
+            if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                String value = request.getParameter("formInput[" + question.getId() + "]");
+                Boolean saved = formInputResponseService.save(userId, applicationId, question.getId(), value);
                 if (!saved) {
                     log.error("save failed. " + question.getId());
                 }
             }
-        }
+        }));
     }
 
     private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
@@ -262,7 +265,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
+    JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                              @RequestParam("value") String value,
                              @RequestParam("applicationId") Long applicationId,
                              HttpServletRequest request,
@@ -303,8 +306,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                     financeFormHandler.storeField(fieldName, value);
                 }
             } else {
-                Long questionId = Long.valueOf(inputIdentifier);
-                responseService.save(user.getId(), applicationId, questionId, value);
+                Long formInputId = Long.valueOf(inputIdentifier);
+                formInputResponseService.save(user.getId(), applicationId, formInputId, value);
             }
 
             ObjectMapper mapper = new ObjectMapper();

@@ -53,6 +53,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     private Application application;
     private Long sectionId;
     private Long questionId;
+    private Long formInputId;
     private Long costId;
 
     private static ResultMatcher matchUrl(final String expectedString) {
@@ -86,10 +87,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         application = applications.get(0);
         sectionId = Long.valueOf(1);
         questionId = Long.valueOf(1);
+        formInputId = Long.valueOf(111);
         costId = Long.valueOf(1);
 
         // save actions should always succeed.
-        when(responseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(Boolean.TRUE);
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(Boolean.TRUE);
     }
 
     @Test
@@ -198,18 +200,18 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElement() throws Exception {
-        String value = "Question "+questionId+" Response";
+        String value = "Form Input "+formInputId+" Response";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", questionId.toString())
-                        .param("fieldName", "question["+questionId+"]")
+                        .param("formInputId", formInputId.toString())
+                        .param("fieldName", "formInput["+formInputId+"]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
-        Mockito.inOrder(responseService).verify(responseService, calls(1)).save(loggedInUser.getId(), application.getId(), questionId, value);
+        Mockito.inOrder(formInputResponseService).verify(formInputResponseService, calls(1)).save(loggedInUser.getId(), application.getId(), formInputId, value);
     }
 
     @Test
@@ -219,8 +221,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", String.valueOf(questionId))
-                        .param("fieldName", "question["+questionId+"]")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput["+questionId+"]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -241,8 +243,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", String.valueOf(questionId))
-                        .param("fieldName", "question["+questionId+"]")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput["+questionId+"]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -262,8 +264,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", String.valueOf(questionId))
-                        .param("fieldName", "question["+questionId+"]")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput[" + questionId + "]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isBadRequest())
@@ -282,7 +284,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", String.valueOf(questionId))
+                        .param("formInputId", questionId)
                         .param("fieldName", "subcontracting_costs-cost-13")
                         .param("value", value)
                         .param("applicationId", "1")
@@ -302,8 +304,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", String.valueOf(questionId))
-                        .param("fieldName", "question["+questionId+"]")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput["+questionId+"]")
                         .param("value", value)
                         .param("applicationId", "1")
         ).andExpect(status().isOk())
@@ -328,8 +330,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", questionId)
-                        .param("fieldName", "question[" + questionId + "]")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput[" + questionId + "]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +353,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", questionId)
+                        .param("formInputId", questionId)
                         .param("fieldName", "question[" + questionId + "]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
@@ -375,7 +377,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("questionId", questionId)
+                        .param("formInputId", questionId)
                         .param("fieldName", "question[" + questionId + "]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())

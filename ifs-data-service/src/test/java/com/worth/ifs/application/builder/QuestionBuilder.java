@@ -28,7 +28,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true)
-                .withWordCount(3000)
                 .withPriority(0)
                 .withQuestionNumber("1")
                 .withGuidanceQuestion("Some Guidance Question Text")
@@ -53,10 +52,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withPriority(int priority) {
         return with(question -> setField("priority", priority, question));
-    }
-
-    public QuestionBuilder withWordCount(int wordCount) {
-        return with(question -> setField("wordCount", wordCount, question));
     }
 
     @Override

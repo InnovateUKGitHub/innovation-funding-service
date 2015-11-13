@@ -2,11 +2,12 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class SectionController {
     ApplicationRepository applicationRepository;
     @Autowired
     ResponseRepository responseRepository;
+    @Autowired
+    FormInputResponseRepository formInputResponseRepository;
     @Autowired
     SectionRepository sectionRepository;
     @Autowired
@@ -70,16 +73,14 @@ public class SectionController {
 
             List<Question> questions = section.getQuestions();
             for (Question question : questions) {
-                if (question.getWordCount() != null && question.getWordCount() > 0) {
-                    // there is a maxWordCount.
-                    Response response = responseRepository.findByApplicationIdAndQuestionId(applicationId, question.getId());
-                    if (response != null && response.getWordCountLeft() < 0) {
-                        // gone over the limit !
-                        sectionIncomplete = true;
-                        break;
-                    } else {
-                        sectionIncomplete = false;
-                    }
+                if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
+
+                    // if there is a maxWordCount, ensure that no responses have gone over the limit
+                    sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
+                        FormInputResponse response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
+                        return response != null && response.getWordCountLeft() < 0;
+                    });
+
                 } else {
                     // no wordcount.
                     sectionIncomplete = false;

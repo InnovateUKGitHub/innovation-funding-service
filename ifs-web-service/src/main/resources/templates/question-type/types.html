@@ -4,17 +4,21 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
+        <!-- TODO DW 578 - id needs to come from forminput -->
+
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses?.get(question.getId())?.getValue()})" th:remove="tag" />
+        <!-- TODO DW 578 - response needs to come from forminputresponse -->
+        <div th:include="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(question.getId())?.getValue()})" th:remove="tag" />
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group2" th:id="${formInputIndex}">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+    <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}">
+        <!-- TODO DW 578 - id needs to come from forminput -->
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
@@ -30,9 +34,11 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date" class="form-group">
+        <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-dateinput (id=${question.getId()}, day='', month='', year='')" th:remove="tag" />
     </div>
 
@@ -40,6 +46,7 @@
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <input type="file"/>
     </div>
@@ -47,9 +54,12 @@
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage" class="form-group">
+        <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=false)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <!-- TODO DW 578 - id needs to come from forminput -->
+        <!-- TODO DW 578 - response needs to come from forminputresponse -->
         <div th:include="question-type/form-elements :: form-number-extra-small (id=${question.getId()}, response=${responses?.get(question.getId())?.getValue()})" th:remove="tag" />
         <span>%</span>
     </div>
@@ -655,6 +665,7 @@
 
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding">
+        <!-- TODO DW 578 - id needs to come from forminput -->
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />

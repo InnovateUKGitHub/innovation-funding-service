@@ -56,8 +56,9 @@
 
             <h1 class="heading-large" th:if="${currentSection.getName() == 'Finances' }">Funding rules for this competition</h1>
 
-            <!-- TODO DW 578 - responses need to be form input responses -->
             <div th:each="question : ${currentSection.getQuestions()}" th:remove="tag">
+
+                <!-- TODO DW 578 - id of below field needs to use form input id -->
                 <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:attr="data-question-id=${question.getId()},data-form-input-id=${formInput.getId()}" th:id="'question-'+${question.getId()}"
                      th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                     <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />

@@ -24,9 +24,6 @@ public class Response {
 
     private LocalDateTime updateDate;
 
-    @Column(length=5000)
-    private String value;
-
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
     private ProcessRole updatedBy;
@@ -42,10 +39,9 @@ public class Response {
     @OneToMany(mappedBy="response", cascade = CascadeType.ALL)
     private List<AssessorFeedback> responseAssessmentFeedbacks = new ArrayList<>();
 
-    public Response(Long id, LocalDateTime updateDate, String value, ProcessRole updatedBy, Question question, Application app) {
+    public Response(Long id, LocalDateTime updateDate, ProcessRole updatedBy, Question question, Application app) {
         this.id = id;
         this.updateDate = updateDate;
-        this.value = value;
         this.question = question;
         this.application = app;
         this.updatedBy = updatedBy;
@@ -67,27 +63,8 @@ public class Response {
         return updateDate;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    @JsonIgnore
-    public Integer getWordCount(){
-        return Integer.valueOf(this.value.split("\\s+").length);
-    }
-
-    @JsonIgnore
-    public Integer getWordCountLeft(){
-        return Integer.valueOf(question.getWordCount() - this.getWordCount());
-    }
-
-
     public Question getQuestion() {
         return question;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public void setUpdateDate(LocalDateTime updateDate) {
@@ -141,7 +118,6 @@ public class Response {
 
         if (id != null ? !id.equals(response.id) : response.id != null) return false;
         if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
-        if (value != null ? !value.equals(response.value) : response.value != null) return false;
         if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
         return application != null ? !application.equals(response.application) : response.application != null;
     }
@@ -150,7 +126,6 @@ public class Response {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
         result = 31 * result + (application != null ? application.hashCode() : 0);
         return result;

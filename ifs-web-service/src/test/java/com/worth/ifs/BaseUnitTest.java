@@ -296,8 +296,8 @@ public class BaseUnitTest {
         Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), application);
+        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), application);
 
         List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
