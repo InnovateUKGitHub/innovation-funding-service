@@ -11,7 +11,9 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * {@code DefaultCostCategoryTest} test for {@Link DefaultCostCategory}
+ */
 public class DefaultCostCategoryTest {
 
     DefaultCostCategory defaultCostCategory;

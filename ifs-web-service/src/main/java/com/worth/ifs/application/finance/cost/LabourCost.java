@@ -1,8 +1,5 @@
 package com.worth.ifs.application.finance.cost;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -11,8 +8,6 @@ import java.math.RoundingMode;
  * {@code LabourCost} implements {@link CostItem}
  */
 public class LabourCost implements CostItem {
-    private final Log log = LogFactory.getLog(getClass());
-
     private Long id;
     private String role;
     private BigDecimal grossAnnualSalary;
@@ -48,7 +43,7 @@ public class LabourCost implements CostItem {
         if(workingDaysPerYear.equals(0)) {
             return new BigDecimal(0);
         }
-        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear), 20, RoundingMode.HALF_EVEN);
+        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear), 5, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
