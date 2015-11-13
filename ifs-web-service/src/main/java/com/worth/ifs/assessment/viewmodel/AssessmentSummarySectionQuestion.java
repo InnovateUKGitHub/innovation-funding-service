@@ -22,6 +22,7 @@ public class AssessmentSummarySectionQuestion {
         this.feedback = feedback;
     }
 
+    // TODO DW 578 - view model needs to use form inputs for questions and responses
     public AssessmentSummarySectionQuestion(Question question, Optional<AssessorFeedback> feedback) {
         this(question.getId(), question.getName(), feedback.map(AssessmentSummarySectionQuestionFeedback::new).orElse(null));
     }
