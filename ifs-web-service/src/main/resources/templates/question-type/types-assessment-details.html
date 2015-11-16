@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+    <div th:fragment="question (question)">
+        <div th:each="formInput, status : ${question.getFormInputs()}" th:remove="tag">
+            <div th:replace="question-type/types-assessment-details :: ${formInput.getFormInputType().getTitle()}" th:if="${formInput.isIncludedInApplicationSummary()}" />
+        </div>
+        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${currentSection}, question=${question}, questionResponse=${questionResponses.get(question.getId())})" th:remove="tag" />
+    </div>
+
+
     <!-- ==============General readonly header and paragraph pairs ============= -->
 
     <div th:fragment="label-and-paragraph (label, text, id, bold)">
@@ -10,27 +18,23 @@
         </div>
     </div>
 
+    <!-- ==============General readonly header and paragraph pairs based on section and question ============= -->
 
-    <!-- ==============General readonly header, paragraph and assessor feedback blocks ============= -->
-
-    <div th:fragment="question-label-and-paragraph (section, question, responses, bold)">
-        <!-- TODO DW 578 - need to iterate over forminputs -->
-        <div th:include="question-type/types-assessment-details :: label-and-paragraph (label=${question.getName()}, text=${responses.get(question.getId()) != null ? responses.get(question.getId()).getValue() : ''}, id=${question.getId()}, bold=true)" th:remove="tag"></div>
-        <!-- TODO DW 578 - response needs to come from forminputresponse -->
-        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
+    <div th:fragment="question-label-and-paragraph (section, formInput, responses, bold)">
+        <div th:include="question-type/types-assessment-details :: label-and-paragraph (label=${formInput.getDescription()}, text=${responses.get(formInput.getId()) != null ? responses.get(formInput.getId()).getValue() : ''}, id=${formInput.getId()}, bold=true)" th:remove="tag"></div>
     </div>
 
 
     <!-- ==============Assessor feedback block ============= -->
 
-    <div th:fragment="assessor-feedback (section, question, response)">
+    <div th:fragment="assessor-feedback (section, question, questionResponse)">
 
-        <div th:if="${response != null}" th:with="questionId=${question.getId()}, assessmentFeedback=${response.getResponseAssessmentForAssessor(processRole).orElse(null)}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${response.id}">
+        <div th:if="${questionResponse != null}" th:with="questionId=${question.getId()}, assessmentFeedback=${questionResponse.getResponseAssessmentForAssessor(processRole).orElse(null)}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${questionResponse.id}">
 
             <div th:if="${question.needingAssessorScore}" th:remove="tag">
                 <h2 class="heading-small">Question Score</h2>
 
-                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
+                <select th:name="'assessor-question-score-' + ${question.getId()}" th:id="'assessor-question-score-' + ${question.getId()}" class="form-control width-small" th:attr="data-feedback-value=${questionResponse.id}">
                     <option value="" th:selected="${assessmentFeedback?.assessmentValue == null}"></option>
                     <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}" th:selected="${assessmentFeedback?.assessmentValue == i.toString()}">1</option>
                 </select> / 10
@@ -40,7 +44,7 @@
 
                 <h2 th:text="${question.assessorConfirmationQuestion}" class="heading-small">A Confirmation Question</h2>
 
-                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small" th:attr="data-feedback-value=${response.id}">
+                <select th:name="'assessor-question-confirmation-' + ${questionId}" th:id="'assessor-question-confirmation-' + ${questionId}" class="form-control width-small" th:attr="data-feedback-value=${questionResponse.id}">
                     <option value="" th:selected="${assessmentFeedback?.assessmentValue == null}"></option>
                     <option value="Yes" th:selected="${assessmentFeedback?.assessmentValue == 'Yes'}">Yes</option>
                     <option value="No" th:selected="${assessmentFeedback?.assessmentValue == 'No'}">No</option>
@@ -65,14 +69,14 @@
     <!-- ===========================Readonly textinput with Assessor feedback =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, formInput=${formInput}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
     <!-- ===========================Readonly textarea with Assessor feedback =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
     <div th:fragment="textarea" class="form-group">
-        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, question=${question}, responses=${responses}, bold=true)" th:remove="tag"></div>
+        <div th:include="question-type/types-assessment-details :: question-label-and-paragraph (section=${section}, formInput=${formInput}, responses=${responses}, bold=true)" th:remove="tag"></div>
     </div>
 
 
@@ -80,7 +84,6 @@
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-label (name='Appendix', id=${question.getId()}, bold=true)" th:remove="tag" />
         <a href="#">Appendix document (2.4mb PDF)</a>
-        <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${section}, question=${question}, response=${response})" th:remove="tag" />
     </div>
 
     <!-- ===========================Readonly application_details block for Assessor view =========================== -->
