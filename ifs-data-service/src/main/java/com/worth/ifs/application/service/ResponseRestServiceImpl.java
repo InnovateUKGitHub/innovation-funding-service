@@ -48,7 +48,7 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
     }
 
     private Boolean handleResponseStatus(ResponseEntity<?> response) {
-        if (response.getStatusCode() == HttpStatus.ACCEPTED) {
+        if (response.getStatusCode() == HttpStatus.ACCEPTED || response.getStatusCode() == HttpStatus.OK) {
             return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             // nono... bad credentials
