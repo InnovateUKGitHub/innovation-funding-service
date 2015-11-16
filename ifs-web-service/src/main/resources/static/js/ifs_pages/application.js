@@ -31,8 +31,8 @@ var ifs_application_page = (function(){
                 // TODO DW - shouldn't have to pass the sectionId via a request parameter - it should instead be made available by the "name" and "value" params on the clicked button, as per the questionId
                 url: '?singleFragment=true&sectionId=' + sectionId,
                 data: form.serialize() + '&' + button.attr('name') + '=' + button.attr('value'),
-                success: function(){
-                    handleFormPost();
+                success: function(data) {
+                    handleFormPost(data);
                 }
             });
             e.preventDefault();

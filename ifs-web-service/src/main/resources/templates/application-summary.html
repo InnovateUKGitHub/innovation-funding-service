@@ -34,10 +34,9 @@
                     ' '+ ((${completedSections.contains(section.getId())}) ? 'section-complete':'')+
                     ' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
 
-                <!-- TODO DW 578 - responses need to be form input responses -->
                 <div th:each="question : ${section.getQuestions()}">
-                    <div class="question" th:each="formInput : ${question.getFormInputs()}" th:if='${question.getName() != ""}' th:with="readonly=true, response=(${responses.get(question.getId())})" th:id="'question-'+${question.getId()}" >
-                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' th:with="$question=(${question}), $currentApplication=(${currentApplication}), $response=(${response}), $section=(${section}), $readonly=${readonly}" />
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
         </div>

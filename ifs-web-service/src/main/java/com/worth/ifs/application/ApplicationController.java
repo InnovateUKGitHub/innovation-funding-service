@@ -1,7 +1,11 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -52,10 +56,8 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}/summary")
     public String applicationSummary(Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
-        List<Response> responses = responseService.getByApplication(applicationId);
-
-        // TODO DW 578 - responses to forminputresponses
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+        List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
+        model.addAttribute("responses", formInputResponseService.mapResponsesToQuestion(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
@@ -92,11 +94,28 @@ public class ApplicationController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
+    public String assignQuestionAndReturnSectionFragmentIndividualSection(Model model,
+                                                         @PathVariable("applicationId") final Long applicationId,
+                                                         @RequestParam("sectionId") final Long sectionId,
+                                                         HttpServletRequest request, HttpServletResponse response){
+
+        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response);
+    }
+
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
+     */
+    @RequestMapping(value = "/{applicationId}", params = {"singleFragment=true"}, method = RequestMethod.POST)
     public String assignQuestionAndReturnSectionFragment(Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
                                                          @RequestParam("sectionId") final Long sectionId,
                                                          HttpServletRequest request, HttpServletResponse response){
 
+        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response);
+    }
+
+    private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response) {
         doAssignQuestion(applicationId, request, response);
 
         // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
@@ -121,7 +140,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("questionAssignee", questionAssignee);
 
         model.addAttribute("currentUser", user);
-        model.addAttribute("section", currentSection);
+        model.addAttribute("section", currentSection.get());
 
         return "application/single-section-details";
     }

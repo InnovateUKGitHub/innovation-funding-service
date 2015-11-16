@@ -39,10 +39,6 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
         return with(response -> id(id));
     }
 
-    public ResponseBuilder withValue(String value) {
-        return with(response -> response.setValue(value));
-    }
-
     public ResponseBuilder withApplication(Builder<Application, ?> application) {
         return withApplication(application.build());
     }

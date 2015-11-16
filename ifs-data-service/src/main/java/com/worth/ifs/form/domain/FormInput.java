@@ -23,9 +23,6 @@ public class FormInput {
     @Column(length=5000)
     private Integer wordCount;
 
-    @Column(length=5000)
-    private String optionValues;
-
     @ManyToOne
     @JoinColumn(name="formInputTypeId", referencedColumnName="id")
     private FormInputType formInputType;
@@ -37,15 +34,13 @@ public class FormInput {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    private Boolean includedInApplicationSummary = false;
+
     public FormInput() {
     }
 
     public Long getId() {
         return id;
-    }
-
-    public String getOptionValues() {
-        return optionValues;
     }
 
     public Integer getWordCount() {
@@ -63,5 +58,9 @@ public class FormInput {
 
     public void setResponses(List<FormInputResponse> responses) {
         this.responses = responses;
+    }
+
+    public Boolean isIncludedInApplicationSummary() {
+        return includedInApplicationSummary;
     }
 }

@@ -95,19 +95,17 @@ public class FormInputResponseController {
 
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
-        Long questionId = jsonObj.get("questionId").asLong();
+        Long formInputId = jsonObj.get("formInputId").asLong();
         String value = jsonObj.get("value").asText("");
         value = HtmlUtils.htmlUnescape(value);
 
-        log.info("Save response: " + applicationId + "/" + questionId + "/" + userId);
+        log.info("Save response: " + applicationId + "/" + formInputId + "/" + userId);
 
         User user = userRepository.findOne(userId);
         Application application = applicationRepository.findOne(applicationId);
-        FormInput question = questionRepository.findOne(questionId);
-
         List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
 
-        FormInputResponse response = this.getOrCreateResponse(applicationId, userId, questionId);
+        FormInputResponse response = this.getOrCreateResponse(applicationId, userId, formInputId);
         if (response == null) {
             log.error("FORBIDDEN TO SAVE");
             return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);

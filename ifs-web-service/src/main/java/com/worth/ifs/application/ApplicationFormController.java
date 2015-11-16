@@ -2,7 +2,6 @@ package com.worth.ifs.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -21,14 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,21 +42,21 @@ public class ApplicationFormController extends AbstractApplicationController {
     CostService costService;
 
     @RequestMapping("/{applicationId}")
-    public String applicationForm(ApplicationForm applicationForm, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationForm(Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, applicationForm);
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model);
         return "application-form";
     }
 
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
-    public String applicationFormWithOpenSection(ApplicationForm applicationForm, Model model,
+    public String applicationFormWithOpenSection(Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         Application app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, applicationForm);
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
 
         return "application-form";
     }
@@ -90,19 +86,19 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
-    public String addAnotherWithFragmentResponse(ApplicationForm applicationForm, Model model,
+    public String addAnotherWithFragmentResponse(Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @PathVariable("questionId") final Long questionId,
                                                  @PathVariable("renderQuestionId") final Long renderQuestionId,
                                                  HttpServletRequest request) {
         addCost(applicationId, questionId, request);
-        return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request, applicationForm);
+        return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request);
     }
 
-    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm applicationForm) {
+    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, applicationForm);
+        Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
@@ -147,12 +143,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 //        return application;
 //    }
 
-    private Map<String, String> saveApplicationForm(Model model,
-                                                    @PathVariable("applicationId") final Long applicationId,
-                                                    @PathVariable("sectionId") final Long sectionId,
-                                                    HttpServletRequest request, HttpServletResponse response,
-                                                    ApplicationForm applicationForm
-    ) {
+    private void saveApplicationForm(Model model,
+                                     @PathVariable("applicationId") final Long applicationId,
+                                     @PathVariable("sectionId") final Long sectionId,
+                                     HttpServletRequest request, HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -160,12 +154,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
-        Map<String, String> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
-
-        errors.forEach((k,v) -> {
-            log.info("Error on submit: " + k + " - " + v);
-        });
+        saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
@@ -183,13 +173,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
         financeFormHandler.handle(request);
 
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, applicationForm);
-
-        // question id / response object
-//        Map<Long, Response> invalidReponses;
-//        model.addAttribute("responses", invalidReponses);
-
-        return errors;
+        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model);
     }
 
     /**
@@ -197,45 +181,20 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String applicationFormSubmit(@Valid @ModelAttribute("applicationForm") ApplicationForm applicationForm, BindingResult bindingResult, Model model,
+    public String applicationFormSubmit(Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response
-                                        ){
+                                        HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-
-        applicationForm.getValues().forEach((k,v) ->
-                log.info("Key: " + k + " Value: " + v)
-        );
-        bindingResult.getAllErrors().stream().peek(e -> log.info("Error: "+ e.getDefaultMessage()));
-
-        Map<String, String> errors = saveApplicationForm(model, applicationId, sectionId, request, response, applicationForm);
-        errors.forEach((k,v) -> log.info("Remote validation: "+ k + " v: "+ v));
-
-        log.info("Adding errorrs");
-        bindingResult.reject("values[1]", "Rejected, because i can!");
-
-        bindingResult.rejectValue("values[1]", "ErrorCode123", "Default message reject value.");
-        bindingResult.rejectValue("values[13]", "ErrorCode123", "Default message reject value.");
-
-        applicationForm.bindingResult = bindingResult;
-        applicationForm.objectErrors = bindingResult.getAllErrors();
-
+        saveApplicationForm(model, applicationId, sectionId, request, response);
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if(bindingResult.hasErrors()){
-            log.info("show form again");
-//            model = model.mergeAttributes(bindingResult.getModel());
-            return "application-form";
-        }else{
-            log.info("redirect to form");
-            return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
-        }
+        return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
     }
 
     private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
@@ -257,24 +216,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    private Map<String, String> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
-        // saving questions from section
-        Map<String, String> errors = new HashMap<>();
-        for(Question question : questions) {
-            if(request.getParameterMap().containsKey("question[" + question.getId() + "]")) {
-                String value = request.getParameter("question[" + question.getId() + "]");
-                List<String> validatedResponse = responseService.save(userId, applicationId, question.getId(), value);
-                if (validatedResponse.size() > 0) {
+    private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
+        questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
+
+            if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                String value = request.getParameter("formInput[" + question.getId() + "]");
+                Boolean saved = formInputResponseService.save(userId, applicationId, question.getId(), value);
+                if (!saved) {
                     log.error("save failed. " + question.getId());
-                    validatedResponse.stream().peek(
-                            v -> log.info("v: " + v)
-                    ).forEach(
-                            v -> errors.put("question-" + question.getId(), v)
-                    );
                 }
             }
-        }
-        return errors;
+        }));
     }
 
     private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
@@ -311,7 +263,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonNode saveFormElement(@RequestParam("questionId") String inputIdentifier,
+    JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                              @RequestParam("value") String value,
                              @RequestParam("applicationId") Long applicationId,
                              HttpServletRequest request,
@@ -352,26 +304,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                     financeFormHandler.storeField(fieldName, value);
                 }
             } else {
-                log.debug("ELSE :  " + inputIdentifier);
-                Long questionId = Long.valueOf(inputIdentifier);
-
-
-                List<String> validatedResponse = responseService.save(user.getId(), applicationId, questionId, value);
-                if(validatedResponse.size() > 0){
-                    log.debug("Response not saved: " + validatedResponse.size());
-                    log.debug("Response errors: " + validatedResponse);
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    ObjectNode node = mapper.createObjectNode();
-                    node.put("success", "false");
-                    ArrayNode validationErrors = node.putArray("validation_errors");
-                    validatedResponse.stream().forEach(v -> validationErrors.add(v));
-
-                    return node;
-
-                }else{
-                    log.debug("No errors found somehow...");
-                }
+                Long formInputId = Long.valueOf(inputIdentifier);
+                formInputResponseService.save(user.getId(), applicationId, formInputId, value);
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -380,7 +314,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             return node;
 
         } catch (Exception e) {
-            e.printStackTrace();
 //            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             response.setStatus(400);
@@ -389,31 +322,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-//    private void validate(Validator v, Long questionId, String value) {
-//        log.info("Validator: "+ v.getId());
-//        log.info("Validator classname: "+ v.getClassName());
-//
-//        try {
-//            ResponseValidator responseValidator = new ResponseValidator();
-//            responseValidator.validate(response, result);
-//
-////            Class<?> clazz = Class.forName(v.getClassName());
-////            BaseValidator validator = (BaseValidator) clazz.getConstructor().newInstance();
-////            validator.validate(value, errors);
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
     public void assignQuestion(Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("sectionId") final Long sectionId,
@@ -421,8 +329,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         assignQuestion(request, applicationId);
     }
 
-    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm applicationForm) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true, applicationForm);
+    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model) {
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true);
         addOrganisationFinanceDetails(model, application, userId);
         addFinanceDetails(model, application);
         return application;

@@ -27,7 +27,6 @@ public class QuestionTest {
     String guidanceAnswer;
     List<Response> responses;
     Integer priority;
-    Integer wordCount;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +38,6 @@ public class QuestionTest {
         guidanceQuestion = "testGuidanceQuestion";
         guidanceAnswer = "testGuidanceAnswer";
         priority = 1;
-        wordCount = 5000;
 
         question = newQuestion().
                 with(id(id)).
@@ -50,7 +48,6 @@ public class QuestionTest {
                 withGuidanceQuestion(guidanceQuestion).
                 withGuidanceAnswer(guidanceAnswer).
                 withPriority(priority).
-                withWordCount(wordCount).
                 build();
 
         responses = newResponse().withQuestions(asList(question)).build(3);
@@ -69,7 +66,6 @@ public class QuestionTest {
         Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
         Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getPriority(), priority);
-        Assert.assertEquals(question.getWordCount(), wordCount);
     }
 
 }

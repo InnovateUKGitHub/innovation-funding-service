@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -17,15 +16,10 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
-import com.worth.ifs.validator.ResponseValidator;
-import com.worth.ifs.validator.ValidatedResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,61 +86,11 @@ public class ResponseController {
 
         Response response = responseRepository.findByApplicationAndQuestion(application, question);
         if(response == null){
-            response = new Response(null, LocalDateTime.now(), "", userAppRoles.get(0), question, application);
+            response = new Response(null, LocalDateTime.now(), userAppRoles.get(0), question, application);
         }
 
         return response;
     }
-
-    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody
-    List<String> saveQuestionResponse(@RequestBody JsonNode jsonObj, BindingResult result, HttpServletResponse servletResponse) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Long userId = jsonObj.get("userId").asLong();
-        Long applicationId = jsonObj.get("applicationId").asLong();
-        Long questionId = jsonObj.get("questionId").asLong();
-        String value = jsonObj.get("value").asText("");
-        value = HtmlUtils.htmlUnescape(value);
-
-        log.info("Save response: "+applicationId+"/"+questionId+"/"+userId);
-
-        User user = userRepository.findOne(userId);
-        Application application = applicationRepository.findOne(applicationId);
-        Question question = questionRepository.findOne(questionId);
-
-        List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
-
-        Response response = this.getOrCreateResponse(applicationId, userId, questionId);
-        if(response == null){
-            log.error("FORBIDDEN TO SAVE");
-            servletResponse.setStatus( HttpServletResponse.SC_FORBIDDEN  );
-            return null;
-        }
-
-        if(!response.getValue().equals(value)) {
-            response.setUpdateDate(LocalDateTime.now());
-            response.setUpdatedBy(userAppRoles.get(0));
-        }
-        response.setValue(value);
-
-        ResponseValidator responseValidator = new ResponseValidator();
-        responseValidator.validate(response, result);
-
-        if(result.hasErrors()){
-            log.error("Error count: "+ result.getErrorCount());
-            List<ObjectError> errors = result.getAllErrors();
-
-        }else{
-            responseRepository.save(response);
-            log.warn("Single question saved!");
-        }
-        ValidatedResponse validatedResponse = new ValidatedResponse(result, response);
-        servletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
-        return validatedResponse.getAllErrors();
-    }
-
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,

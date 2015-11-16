@@ -27,18 +27,20 @@
 
 <div class="grid-row">
 	<section class="column-half">
+		<h1 class="heading-large">Sign in</h1>
         <form action="/login" th:object="${loginForm}" method="POST">
-			<h1 class="heading-large">Sign in</h1>
-			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-				<label class="form-label" for="id_email">E-mail address</label>
-				<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
-			</div><!-- .form-group -->
+        	<fieldset>
+        		<legend class="visuallyhidden">Sign in</legend>
+				<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
+					<label class="form-label" for="id_email">E-mail address</label>
+					<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
+				</div><!-- .form-group -->
 
-			<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-				<label class="form-label" for="id_password">Password</label>
-				<input class="form-control form-control-3-4" type="password" th:field="*{password}" id="id_password" />
-			</div><!-- .form-group -->
-
+				<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
+					<label class="form-label" for="id_password">Password</label>
+					<input class="form-control form-control-3-4" type="password" th:field="*{password}" id="id_password" />
+				</div><!-- .form-group -->
+			</fieldset>
 			<input class="button" value="Sign in" type="submit" />
         </form>
 	</section>

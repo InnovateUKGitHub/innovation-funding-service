@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Form label =========================== -->
+<!-- =========================== Form label =========================== -->
 <div th:fragment="form-label (name,id,bold)">
     <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
            th:if="${name}"
-           th:for="'question-'+${id}"
+           th:for="${id}"
+           th:text="${name}"
+            />
+</div>
+<!-- =========================== Form label hidden =========================== -->
+<div th:fragment="form-label-hidden (name,id)">
+    <label class="form-label visuallyhidden"
+           th:if="${name}"
+           th:for="${id}"
            th:text="${name}"
             />
 </div>
@@ -34,8 +42,8 @@
            th:readonly="${readonly}"
            type="text"
            th:id="${id}"
-           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:field="*{values[__${id}__]}"
+           th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -46,8 +54,8 @@
            th:readonly="${readonly}"
            type="text"
            th:id="${id}"
-           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:field="*{values[__${id}__]}"
+           th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -58,8 +66,8 @@
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
-           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:field="*{values[__${id}__]}"
+           th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -71,8 +79,8 @@
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
-           th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:field="*{values[__${id}__]}"
+           th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -106,8 +114,10 @@
 <!-- ========================= Duration in months =========================== -->
 
 <div th:fragment="form-duration (id, months)">
+  <div class="form-group">
     <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${months})" th:remove="tag"/>
+  </div>
 </div>
 
 <div th:fragment="form-percentage (id, title, name, percentage)">
@@ -116,16 +126,14 @@
 </div>
 <!-- ========================= textarea  =========================== -->
 
-<div th:fragment="form-textarea (id, name,readonly)">
-    <!--th:text="${value}"-->
+<div th:fragment="form-textarea (id, name, value,readonly)">
 		<textarea
                 th:id="${id}"
-                th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-                th:field="*{values[__${id}__]}"
+                th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+                th:text="${value}"
                 th:readonly="${readonly}"
                 th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
                 th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
-                th:errorclass="fieldError"
                 >
 		</textarea>
 </div>
@@ -142,7 +150,7 @@
         </div>
 
         <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
     </div>
 </div>
@@ -156,30 +164,26 @@
                             )
                        )
                        + ' ' +
-                       (${question.getWordCount() == 0} ? '' : 'word-count')
+                       (${formInput.getWordCount() == 0} ? '' : 'word-count')
                    )
                   "
 
-         th:with="currentUser=${#authentication.getDetails()}, validationId='values['+${question.getId()}+']' ">
-        <div th:unless="${readonly}" class="textarea-header"  th:id="${validationId}" >
+         th:with="currentUser=${#authentication.getDetails()}">
+        <div th:unless="${readonly}" class="textarea-header">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
-
-        <!--<ul th:class="${validationId}" th:if="${#fields.hasErrors('values[13]')}">-->
-            <!--<li th:each="err : ${#fields.errors('values[13]'}" th:text="${err}" />-->
-        <!--</ul>-->
-        <p class="label label-danger" th:errors="*{__${validationId}__}">Incorrect LP</p>
         <div th:include="question-type/form-elements :: form-textarea (
-		 					id=${question.getId()},
-		 					wordCount=${question.getWordCount()},
+		 					id=${formInput.getId()},
+		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
+		 					wordCount=${formInput.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
 		 					    markedAsComplete?.contains(question.id)} or
 		 					    ${(currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId() and  questionAssignee?.getAssignee()!=null) or
 		 					    (questionAssignee?.getAssignee()==null and !userIsLeadApplicant)},
-		 					name='question['+${question.getId()}+']'
-		 					)" th:remove="tag">
+                                name='formInput['+${formInput.getId()}+']'
+                                )" th:remove="tag">
         </div>
 
         <div class="textarea-footer">
@@ -193,7 +197,7 @@
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${question.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
     </div>
 </div>

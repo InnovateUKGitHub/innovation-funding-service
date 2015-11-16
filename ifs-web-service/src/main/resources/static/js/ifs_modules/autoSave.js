@@ -30,7 +30,7 @@ var ifs_autoSave = (function(){
 
             var jsonObj = {
                 value: field.val(),
-                questionId: fieldId,
+                formInputId: fieldId,
                 fieldName: field.attr('name'),
                 applicationId: jQuery(".form-serialize-js #application_id").val()
              };

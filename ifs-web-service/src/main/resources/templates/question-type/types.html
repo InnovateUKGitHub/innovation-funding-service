@@ -4,17 +4,17 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-textinput (id=${question.getId()}, response=${responses?.get(question.getId())?.getValue()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group2" th:id="${formInputIndex}">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+    <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}">
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
@@ -30,27 +30,27 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-dateinput (id=${question.getId()}, day='', month='', year='')" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <input type="file"/>
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <input type="file" th:id="${formInput.getId()}" />
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=false)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=false)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-number-extra-small (id=${question.getId()}, response=${responses?.get(question.getId())?.getValue()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
         <span>%</span>
     </div>
 
@@ -113,10 +113,8 @@
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <!-- TODO DW 578 - responses need to be form input responses -->
-                    <div th:remove="tag" th:each="formInput : ${question.getFormInputs()}">
-                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')"
-                             th:with="$question=(${question}), $responses=(${responses}), $currentApplication=(${currentApplication}), $currentSection=(${subSection})" />
+                    <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
                     </div>
                 </div>
             </div>
@@ -137,7 +135,6 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour (complete)">
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}"
              th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group" th:if="${costCategory!=null}">
@@ -243,7 +240,6 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="grid-row">
                 <strong class="column-half">
@@ -318,7 +314,6 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials">
         <p th:text="${question.getDescription()}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-group">
                 <table id="material-costs-table">
@@ -332,7 +327,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO DW 578 - responses need to be form input responses -->
                     <div th:each="materialCost : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
                         <tr th:attr="data-cost-row=${materialCost.id}">
                             <td>
@@ -394,17 +388,14 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
                         <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
-                        <input type="textarea" id="" class="form-control form-finances-capital-usage-item"
+                        <input type="textarea" id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item"
                                   name="capitalusage-0-capitalUsageItem" cols="40" rows="3" th:value="${capitalUsage.getDescription()}" />
                         <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-
-
                     </div>
 
                     <div class="form-group">
@@ -468,7 +459,6 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-row">
                 <div th:each="subContractingCost : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
@@ -537,7 +527,6 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-group">
                 <table id="travel-costs-table">
@@ -600,7 +589,6 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <!-- TODO DW 578 - responses need to be form input responses -->
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-group">
                 <table id="other-costs-table">
@@ -655,7 +643,7 @@
 
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getId()}, bold=true)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getFormInputs().get(0).getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
@@ -732,7 +720,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO DW 578 - responses need to be form input responses -->
                     <tr th:each="financeSubSection : ${financeSection.ChildSections}" th:with="question=${financeSubSection.questions.get(0)},formInputType=${question.getFormInputs().get(0).getFormInputType()}">
                         <th th:text="${financeSubSection.name}"></th>
                         <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}"
