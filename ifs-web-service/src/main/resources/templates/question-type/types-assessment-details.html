@@ -3,7 +3,7 @@
 
     <div th:fragment="question (question)">
         <div th:each="formInput, status : ${question.getFormInputs()}" th:remove="tag">
-            <div th:replace="question-type/types-assessment-details :: ${formInput.getFormInputType().getTitle()}" th:if="${formInput.isIncludedInApplicationSummary()}" />
+            <div th:replace="question-type/types-assessment-details :: ${formInput.getFormInputType().getTitle()}" />
         </div>
         <div th:include="question-type/types-assessment-details :: assessor-feedback (section=${currentSection}, question=${question}, questionResponse=${questionResponses.get(question.getId())})" th:remove="tag" />
     </div>
@@ -58,7 +58,8 @@
                         inputName=${'assessor-question-feedback-' + questionId},
                         hint='Please justify your score by writing two or three sentences which will be returned to the applicant as feedback',
                         maxWords=350,
-                        value=${assessmentFeedback?.assessmentFeedback})" th:with="textareaRows=3, textareaCols=60" th:remove="tag"></div>
+                        formInputIndex=0,
+                        value=${assessmentFeedback?.assessmentFeedback})" th:with="textareaRows=3, textareaCols=60, response=${assessmentFeedback}" th:remove="tag"></div>
                     </div>
             </div>
 
