@@ -34,6 +34,8 @@ public class FormInput {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    private Boolean includedInApplicationSummary = false;
+
     public FormInput() {
     }
 
@@ -56,5 +58,9 @@ public class FormInput {
 
     public void setResponses(List<FormInputResponse> responses) {
         this.responses = responses;
+    }
+
+    public Boolean isIncludedInApplicationSummary() {
+        return includedInApplicationSummary;
     }
 }

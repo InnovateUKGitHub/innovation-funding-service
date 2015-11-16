@@ -174,9 +174,8 @@
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
-        <!-- TODO DW 578 - id should be from forminput -->
         <div th:include="question-type/form-elements :: form-textarea (
-		 					id=${question.getId()},
+		 					id=${formInput.getId()},
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${formInput.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and

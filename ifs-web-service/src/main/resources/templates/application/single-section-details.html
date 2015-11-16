@@ -3,7 +3,10 @@
 <body>
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, section, currentApplication)" th:remove="tag">
+    <!-- TODO DW 578 - this needs form input inner loop -->
     <!-- TODO DW 578 - response needs to come from forminputresponse -->
+    <!-- TODO DW 578 - id needs to come from forminput -->
+    <!-- TODO DW 578 - empty string check needs to come from forminput.isIncludedInApplicationSummary -->
     <li th:class="'section '+(${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
         th:each="question : ${section.getQuestions()}"
         th:if="${!#strings.isEmpty(question.getName())}"

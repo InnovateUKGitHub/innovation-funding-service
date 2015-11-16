@@ -58,8 +58,7 @@
 
             <div th:each="question : ${currentSection.getQuestions()}" th:remove="tag">
 
-                <!-- TODO DW 578 - id of below field needs to use form input id -->
-                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:attr="data-question-id=${question.getId()},data-form-input-id=${formInput.getId()}" th:id="'question-'+${question.getId()}"
+                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:attr="data-question-id=${question.getId()}" th:id="'form-input-'+${formInput.getId()}"
                      th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                     <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
                 </div>

@@ -61,7 +61,7 @@
                 <!-- TODO DW 578 - id needs to be using forminput instead -->
                 <!-- TODO DW 578 - questionType needs to go! -->
                 <!-- TODO DW 578 - response needs to come from forminputresponse -->
-                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'question-'+${question.getId()}" th:with="readonly=true, section=${currentSection}, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
+                <div class="question" th:each="question : ${currentSection.getQuestions()}" th:attr="data-question-id=${question.getId()}" th:id="'form-input-'+${question.getId()}" th:with="readonly=true, section=${currentSection}, response=(${responses.get(question.getId())})"> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())}) /*-->
                     <div th:replace="question-type/types-assessment-details :: ${question.getQuestionType().getTitle()}" /> <!--*/ TODO DW - removed ,questionAssignee=(${questionAssignees.get(question.getId())})  AND  using types-assessment-details template file /*-->
                 </div>
 

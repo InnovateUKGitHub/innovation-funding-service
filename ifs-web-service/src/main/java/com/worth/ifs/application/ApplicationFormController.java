@@ -155,7 +155,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
 
-        // TODO DW 578 - save form input responses instead
         saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
         // save application details if they are in the request
@@ -217,7 +216,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    // TODO DW 578 - save form input responses instead
     private void saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
 
