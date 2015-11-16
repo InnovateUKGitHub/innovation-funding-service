@@ -17,7 +17,7 @@ var ifs_assesment_submit_review_page = (function(){
               var optionSelected = jQuery( "#suitable-for-funding option:selected" ).val();
               var targetElement = jQuery("#recommendation-feedback-group");
               
-              optionSelected == "no" ? targetElement.show() : targetElement.hide();
+              optionSelected = "no" ? targetElement.show() : targetElement.hide();
               jQuery("#not-suitable-feedback").prop('required', optionSelected == "no" );
             }).trigger( "change" );
         },

@@ -94,11 +94,28 @@ public class ApplicationController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
+    public String assignQuestionAndReturnSectionFragmentIndividualSection(Model model,
+                                                         @PathVariable("applicationId") final Long applicationId,
+                                                         @RequestParam("sectionId") final Long sectionId,
+                                                         HttpServletRequest request, HttpServletResponse response){
+
+        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response);
+    }
+
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
+     */
+    @RequestMapping(value = "/{applicationId}", params = {"singleFragment=true"}, method = RequestMethod.POST)
     public String assignQuestionAndReturnSectionFragment(Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
                                                          @RequestParam("sectionId") final Long sectionId,
                                                          HttpServletRequest request, HttpServletResponse response){
 
+        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response);
+    }
+
+    private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response) {
         doAssignQuestion(applicationId, request, response);
 
         // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
@@ -123,7 +140,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("questionAssignee", questionAssignee);
 
         model.addAttribute("currentUser", user);
-        model.addAttribute("section", currentSection);
+        model.addAttribute("section", currentSection.get());
 
         return "application/single-section-details";
     }
