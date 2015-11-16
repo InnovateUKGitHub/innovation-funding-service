@@ -35,7 +35,7 @@
            type="text"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:value="${response}"
+           th:field="*{values[__${id}__]}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -47,7 +47,7 @@
            type="text"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:value="${response}"
+           th:field="*{values[__${id}__]}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -59,7 +59,7 @@
            type="number"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:value="${response}"
+           th:field="*{values[__${id}__]}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -72,7 +72,7 @@
            type="number"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-           th:value="${response}"
+           th:field="*{values[__${id}__]}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -116,14 +116,16 @@
 </div>
 <!-- ========================= textarea  =========================== -->
 
-<div th:fragment="form-textarea (id, name, value,readonly)">
+<div th:fragment="form-textarea (id, name,readonly)">
+    <!--th:text="${value}"-->
 		<textarea
                 th:id="${id}"
                 th:name="${name != null} ? ${name} : 'question['+${id}+']'"
-                th:text="${value}"
+                th:field="*{values[__${id}__]}"
                 th:readonly="${readonly}"
                 th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
                 th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+                th:errorclass="fieldError"
                 >
 		</textarea>
 </div>
@@ -158,15 +160,19 @@
                    )
                   "
 
-         th:with="currentUser=${#authentication.getDetails()}">
-        <div th:unless="${readonly}" class="textarea-header">
+         th:with="currentUser=${#authentication.getDetails()}, validationId='values['+${question.getId()}+']' ">
+        <div th:unless="${readonly}" class="textarea-header"  th:id="${validationId}" >
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
+
+        <!--<ul th:class="${validationId}" th:if="${#fields.hasErrors('values[13]')}">-->
+            <!--<li th:each="err : ${#fields.errors('values[13]'}" th:text="${err}" />-->
+        <!--</ul>-->
+        <p class="label label-danger" th:errors="*{__${validationId}__}">Incorrect LP</p>
         <div th:include="question-type/form-elements :: form-textarea (
 		 					id=${question.getId()},
-		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${question.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
 		 					    markedAsComplete?.contains(question.id)} or

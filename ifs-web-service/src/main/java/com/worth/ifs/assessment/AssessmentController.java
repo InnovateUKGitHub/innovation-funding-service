@@ -152,7 +152,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
-        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true);
+        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true, null);
         model.addAttribute("processRole", assessorProcessRole);
         addFinanceDetails(model, assessment.getApplication());
         return assessmentDetails;

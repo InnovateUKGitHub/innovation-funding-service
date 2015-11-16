@@ -103,7 +103,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, ApplicationForm applicationForm) {
 
         Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
@@ -114,7 +114,7 @@ public abstract class AbstractApplicationController {
         Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
 
         addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation, userId);
+        addQuestionsDetails(model, application, applicationForm);
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
 
@@ -137,9 +137,20 @@ public abstract class AbstractApplicationController {
         });
     }
 
-    protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
+    protected void addQuestionsDetails(Model model, Application application, ApplicationForm applicationForm) {
         List<FormInputResponse> responses = getFormInputResponses(application);
-        model.addAttribute("responses", formInputResponseService.mapResponsesToQuestion(responses));
+        HashMap<Long, FormInputResponse> mappedResponses = formInputResponseService.mapResponsesToQuestion(responses);
+        model.addAttribute("responses",mappedResponses);
+
+        if(applicationForm == null){
+            applicationForm = new ApplicationForm();
+        }
+        Map<String, String> values = applicationForm.getValues();
+        mappedResponses.forEach((k, v) ->
+             values.put(k.toString(), v.getValue())
+        );
+        applicationForm.setValues(values);
+        model.addAttribute("applicationForm",applicationForm);
     }
 
     protected List<Response> getResponses(Application application) {
