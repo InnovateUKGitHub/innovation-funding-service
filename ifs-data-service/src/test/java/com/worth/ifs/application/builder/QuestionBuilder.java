@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
@@ -52,6 +53,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withPriority(int priority) {
         return with(question -> setField("priority", priority, question));
+    }
+
+    public QuestionBuilder withPriority(Function<Integer, Integer> prioritySetter) {
+        return with((i, question) -> setField("priority", prioritySetter.apply(i), question));
     }
 
     @Override
