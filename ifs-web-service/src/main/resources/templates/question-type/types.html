@@ -113,8 +113,8 @@
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
                 <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <div th:remove="tag" th:each="formInput : ${question.getFormInputs()}">
-                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" />
+                    <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
                     </div>
                 </div>
             </div>
