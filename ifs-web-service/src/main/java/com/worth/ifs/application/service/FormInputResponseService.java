@@ -12,5 +12,5 @@ import java.util.List;
 public interface FormInputResponseService {
     public List<FormInputResponse> getByApplication(Long applicationId);
     public HashMap<Long, FormInputResponse> mapResponsesToQuestion(List<FormInputResponse> responses);
-    public Boolean save(Long userId, Long applicationId, Long formInputId, String value);
+    public List<String> save(Long userId, Long applicationId, Long formInputId, String value);
 }

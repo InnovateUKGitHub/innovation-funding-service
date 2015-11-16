@@ -12,19 +12,19 @@ import java.util.Map;
  * http://stackoverflow.com/a/4511716
  */
 public class ApplicationForm {
-    private Map<String, String> values;
+    private Map<String, String> formInput;
     public List<ObjectError> objectErrors;
     public BindingResult bindingResult;
 
     public ApplicationForm() {
-        this.values = new HashMap<>();
+        this.formInput = new HashMap<>();
     }
 
-    public Map<String, String> getValues() {
-        return values;
+    public Map<String, String> getFormInput() {
+        return formInput;
     }
 
-    public void setValues(Map<String, String> values) {
-        this.values = values;
+    public void setFormInput(Map<String, String> values) {
+        this.formInput = values;
     }
 }

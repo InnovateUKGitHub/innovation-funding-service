@@ -105,7 +105,8 @@ public abstract class AbstractApplicationController {
      */
     protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, ApplicationForm applicationForm) {
 
-        Application application = applicationService.getById(applicationId);
+
+            Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
 
         model.addAttribute("currentApplication", application);
@@ -145,11 +146,11 @@ public abstract class AbstractApplicationController {
         if(applicationForm == null){
             applicationForm = new ApplicationForm();
         }
-        Map<String, String> values = applicationForm.getValues();
+        Map<String, String> values = applicationForm.getFormInput();
         mappedResponses.forEach((k, v) ->
              values.put(k.toString(), v.getValue())
         );
-        applicationForm.setValues(values);
+        applicationForm.setFormInput(values);
         model.addAttribute("applicationForm",applicationForm);
     }
 

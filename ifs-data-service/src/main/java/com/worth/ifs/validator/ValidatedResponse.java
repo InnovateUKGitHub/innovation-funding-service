@@ -1,30 +1,30 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.form.domain.FormInputResponse;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ValidatedResponse {
-    private Response response;
+    private FormInputResponse response;
     private List<String> allErrors;
     private int errorCount;
 
     public ValidatedResponse() {
     }
 
-    public ValidatedResponse(BindingResult result, Response response) {
+    public ValidatedResponse(BindingResult result, FormInputResponse response) {
         errorCount = result.getErrorCount();
         allErrors = result.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
         this.response = response;
     }
 
-    public Response getResponse() {
+    public FormInputResponse getResponse() {
         return response;
     }
 
-    public void setResponse(Response response) {
+    public void setResponse(FormInputResponse response) {
         this.response = response;
     }
 

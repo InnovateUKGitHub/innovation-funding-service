@@ -33,7 +33,7 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     }
 
     @Override
-    public Boolean save(Long userId, Long applicationId, Long formInputId, String value) {
+    public List<String> save(Long userId, Long applicationId, Long formInputId, String value) {
         return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value);
     }
 }

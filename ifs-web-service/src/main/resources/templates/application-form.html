@@ -39,18 +39,17 @@
     <div class="column-two-thirds">
         
         <form action="#"  method="post" th:object="${applicationForm}" class="form-serialize-js">
-
-            <h2>Errors</h2>
-            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                <h3>I have errors</h3>
-                <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <h1 class="heading-medium error-summary-heading">
+                    Message to alert the user to a problem goes here
+                </h1>
+                <p>
+                    Optional description of the error(s) and how to correct them
+                </p>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
             </div>
-            <div th:errors="*"></div>
-            <div th:errors="all"></div>
-            <div th:errors="global"></div>
-            <div th:errors="*{*}"></div>
-            <div th:errors="*{all}"></div>
-            <div th:errors="${applicationForm.objectErrors.*}">...</div>
 
 
             <div th:each="sectionEntry : ${sections}"  th:remove="tag">

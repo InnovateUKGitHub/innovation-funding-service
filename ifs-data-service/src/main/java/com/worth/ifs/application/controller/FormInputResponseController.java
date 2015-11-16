@@ -14,16 +14,18 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.validator.ResponseValidator;
+import com.worth.ifs.validator.ValidatedResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +91,7 @@ public class FormInputResponseController {
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
-    public ResponseEntity<String> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
+    public List<String> saveQuestionResponse(@RequestBody JsonNode jsonObj, BindingResult bindingResult, HttpServletResponse servletResponse) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -108,20 +110,30 @@ public class FormInputResponseController {
         FormInputResponse response = this.getOrCreateResponse(applicationId, userId, formInputId);
         if (response == null) {
             log.error("FORBIDDEN TO SAVE");
-            return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+            servletResponse.setStatus( HttpServletResponse.SC_FORBIDDEN  );
+            return null;
         }
 
         if (!response.getValue().equals(value)) {
             response.setUpdateDate(LocalDateTime.now());
             response.setUpdatedBy(userAppRoles.get(0));
         }
+
         response.setValue(value);
 
-        responseRepository.save(response);
+        ResponseValidator responseValidator = new ResponseValidator();
+        responseValidator.validate(response, bindingResult);
 
-        log.warn("Single question saved!");
-
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        if(bindingResult.hasErrors()){
+            log.warn("Got validation errors: ");
+            bindingResult.getAllErrors().stream().forEach(e -> log.warn("Validation: "+ e.getDefaultMessage()));
+        }else{
+            responseRepository.save(response);
+            log.info("Single question saved!");
+        }
+        ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
+        servletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+        return validatedResponse.getAllErrors();
     }
 
 }
