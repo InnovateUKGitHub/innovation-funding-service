@@ -29,7 +29,9 @@
 
     <div th:fragment="assessor-feedback (section, question, questionResponse)">
 
-        <div th:if="${questionResponse != null}" th:with="questionId=${question.getId()}, assessmentFeedback=${questionResponse.getResponseAssessmentForAssessor(processRole).orElse(null)}" th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${questionResponse.id}">
+        <div th:if="${questionResponse != null}"
+             th:with="questionId=${question.getId()}, assessmentFeedback=${questionResponse.getResponseAssessmentForAssessor(processRole).orElse(null)}"
+             th:attr="data-section-id=${section.id},data-question-id=${questionId},data-response-id=${questionResponse.id}">
 
             <div th:if="${question.needingAssessorScore}" th:remove="tag">
                 <h2 class="heading-small">Question Score</h2>
