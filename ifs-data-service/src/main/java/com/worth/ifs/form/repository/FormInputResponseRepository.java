@@ -1,4 +1,4 @@
-package com.worth.ifs.application.repository;
+package com.worth.ifs.form.repository;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.form.domain.FormInput;

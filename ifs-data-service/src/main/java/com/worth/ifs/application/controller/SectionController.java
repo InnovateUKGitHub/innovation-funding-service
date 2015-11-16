@@ -4,7 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.FormInputResponseRepository;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.form.domain.FormInputResponse;
