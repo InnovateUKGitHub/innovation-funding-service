@@ -21,6 +21,10 @@ public class BuilderAmendFunctions {
 
     private static Map<Class, Long> nextId = new HashMap<>();
 
+    public static void clearUniqueIds() {
+        nextId = new HashMap<>();
+    }
+
     public static <T> Consumer<T> id(Long id) {
         return t -> setId(id, t);
     }
