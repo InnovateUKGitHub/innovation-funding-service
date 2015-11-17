@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestServiceProvider im
         return Arrays.asList(responses);
     }
 
-    public Boolean saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
+    public List<String> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
 
@@ -52,8 +51,12 @@ public class FormInputResponseRestServiceImpl extends BaseRestServiceProvider im
 
         HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        return handleResponseStatus(response);
+        ResponseEntity<String[]> responseEntity = restTemplate.postForEntity(url, entity, String[].class);
+        List<String> validatedResponse = Arrays.asList(responseEntity.getBody());
+
+        validatedResponse.stream().forEach(e -> log.info("FormInputResponse validation error;"+ e));
+
+        return validatedResponse;
     }
 
     private Boolean handleResponseStatus(ResponseEntity<?> response) {

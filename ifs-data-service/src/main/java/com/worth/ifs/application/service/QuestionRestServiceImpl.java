@@ -61,4 +61,12 @@ public class QuestionRestServiceImpl extends BaseRestServiceProvider implements 
         Long[] questionIds = responseEntity.getBody();
         return new HashSet<Long>(Arrays.asList(questionIds));
     }
+
+    @Override
+    public Question findById(Long questionId) {
+        RestTemplate restTemplate = new RestTemplate();
+        Question question = restTemplate.getForObject(dataRestServiceURL + questionRestURL + "/id/" + questionId, Question.class);
+        return question;
+    }
+
 }

@@ -94,3 +94,4 @@ classes/
 **/node_modules
 !**/node_modules/styledocco
 
+ifs-web-service.iws
