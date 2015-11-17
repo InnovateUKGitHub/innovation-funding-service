@@ -34,7 +34,7 @@ public abstract class BaseRestServiceProvider {
      * @return
      */
     protected  <T> T restGet(String path, Class c) {
-        ResponseEntity<T> responseEntity = new RestTemplate().getForEntity(dataRestServiceURL + path , c);
+        ResponseEntity<T> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + path , c);
         return responseEntity.getBody();
     }
     /**
@@ -47,7 +47,7 @@ public abstract class BaseRestServiceProvider {
      */
     protected  <T> T restPost(String message, String path, Class c) {
         HttpEntity<String> entity = new HttpEntity<>(message, getJSONHeaders());
-        ResponseEntity<T> response = new RestTemplate().exchange(dataRestServiceURL + path, HttpMethod.POST, entity, c);
+        ResponseEntity<T> response = getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.POST, entity, c);
         return response.getBody();
     }
 

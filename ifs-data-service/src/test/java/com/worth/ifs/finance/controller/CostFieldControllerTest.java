@@ -1,13 +1,7 @@
 package com.worth.ifs.finance.controller;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

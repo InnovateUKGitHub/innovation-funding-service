@@ -8,7 +8,9 @@ allprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-}
+
+    }
+
 
 subprojects {
     apply plugin: 'spring-boot'
@@ -18,49 +20,66 @@ subprojects {
     apply plugin: "jacoco"
 
 
-    dependencies {
-        compile "org.springframework.boot:spring-boot-starter-web"
-        compile "com.fasterxml.jackson.core:jackson-databind"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        dependencies {
+            compile "org.springframework.boot:spring-boot-starter-web"
+            compile "com.fasterxml.jackson.core:jackson-databind"
+            compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
-        // Test Libraries
-        testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework:spring-test'
-        testCompile 'org.mockito:mockito-core'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+            // Test Libraries
+            testCompile group: 'org.hamcrest', name: 'hamcrest-core'
+            testCompile group: 'junit', name: 'junit', version: '4.12'
+            testCompile 'org.springframework:spring-test'
+            testCompile 'org.mockito:mockito-core'
+            testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+        }
+
+        repositories {
+            mavenCentral()
+            maven { url "https://repo.spring.io/milestone" }
+        }
     }
 
-    repositories {
-        mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
-    }
-}
+    buildscript {
 
-buildscript {
-    ext {
-        springBootVersion = '1.2.5.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-        maven { url "http://repo.spring.io/milestone" }
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
-        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
-        classpath 'org.flywaydb:flyway-core:3.2.1'
+        ext {
+            springBootVersion = '1.2.5.RELEASE'
+        }
+        repositories {
+            mavenCentral()
+            jcenter()
+            maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
+            maven { url "http://repo.spring.io/milestone" }
+            maven { url "https://plugins.gradle.org/m2/" }
+        }
 
+        dependencies {
+            classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+            classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
+            classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
+            classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+            classpath 'org.flywaydb:flyway-core:3.2.1'
+            classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
+        }
+
+        }
+
+
+    apply plugin: "org.sonarqube"
+
+    sonarqube {
+    properties {
+        property "sonar.projectName", "IFS_Project"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
+           // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        }
     }
-}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
-}
 
-task cleanDeploy {
-    println "Starting clean deploy"
-}
+    task wrapper(type: Wrapper) {
+        gradleVersion = '2.5'
+    }
+
+    task cleanDeploy {
+        println "Starting clean deploy"
+    }
+

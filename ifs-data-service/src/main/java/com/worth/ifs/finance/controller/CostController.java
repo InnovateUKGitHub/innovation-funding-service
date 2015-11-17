@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class CostController {
             @PathVariable("questionId") final Long questionId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
         Question question = questionRepository.findOne(questionId);
-        Cost cost = new Cost("", "", 0, 0d, applicationFinance, question);
+        Cost cost = new Cost("", "", 0, new BigDecimal(0), applicationFinance, question);
         costRepository.save(cost);
     }
 

@@ -6,7 +6,7 @@ Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/USER_CREDENTIALS.robot
+Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/Applicant_actions.robot
 
@@ -81,7 +81,7 @@ the Collaborator is in the Application details section
     The guest user opens the browser
     Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
-    Click Element    css=#content > div > div:nth-child(1) > form > input
+    Click Element    css=#content > div > section:nth-child(1) > form > input
     Applicant goes to the Application form
 
 the Collaborator gets the assigned notification
@@ -100,7 +100,7 @@ the second Collaborator is logged in
     The guest user opens the browser
     Input Text    id=id_email    pete.tom@egg.com
     Input Password    id=id_password    test
-    Click Element    css=#content > div > div:nth-child(1) > form > input
+    Click Element    css=#content > div > section:nth-child(1) > form > input
 
 the applicant clicks the assign to Lead applicant
     Switch to the first browser    1
