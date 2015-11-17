@@ -156,7 +156,7 @@
         </div>
 
         <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
     </div>
 </div>

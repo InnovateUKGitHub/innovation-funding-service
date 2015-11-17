@@ -21,6 +21,10 @@ public class BuilderAmendFunctions {
 
     private static Map<Class, Long> nextId = new HashMap<>();
 
+    public static void clearUniqueIds() {
+        nextId = new HashMap<>();
+    }
+
     public static <T> Consumer<T> id(Long id) {
         return t -> setId(id, t);
     }
@@ -58,6 +62,10 @@ public class BuilderAmendFunctions {
         return names(t -> prefix + getId(t));
     }
 
+    public static <T> Consumer<T> idBasedDescriptions(String prefix) {
+        return descriptions(t -> prefix + getId(t));
+    }
+
     public static <T> BiConsumer<Integer, T> incrementingIds(int fromInclusive) {
         return (i, t) -> setId((long) i + fromInclusive, t);
     }
@@ -68,6 +76,10 @@ public class BuilderAmendFunctions {
 
     public static <T> Consumer<T> names(Function<T, String> nameGenerationFunction) {
         return t -> setName(nameGenerationFunction.apply(t), t);
+    }
+
+    public static <T> Consumer<T> descriptions(Function<T, String> nameGenerationFunction) {
+        return t -> setDescription(nameGenerationFunction.apply(t), t);
     }
 
     public static <T> Long getId(T instance) {
@@ -105,5 +117,13 @@ public class BuilderAmendFunctions {
             ReflectionTestUtils.setField(instance, fieldName, value);
         }
         return instance;
+    }
+
+    public static Function<Integer, Integer> zeroBasedIndexes() {
+        return Function.identity();
+    }
+
+    public static Function<Integer, Integer> oneBasedIndexes() {
+        return index -> index + 1;
     }
 }

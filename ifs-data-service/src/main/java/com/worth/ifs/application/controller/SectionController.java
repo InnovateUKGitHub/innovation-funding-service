@@ -4,7 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.FormInputResponseRepository;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -77,8 +77,8 @@ public class SectionController {
 
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
                     sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
-                        FormInputResponse response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
-                        return response != null && response.getWordCountLeft() < 0;
+                        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
+                        return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
                     });
 
                 } else {

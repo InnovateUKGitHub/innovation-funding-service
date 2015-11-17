@@ -34,6 +34,8 @@ public class FormInput {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    private String description;
+
     private Boolean includedInApplicationSummary = false;
 
     public FormInput() {
@@ -62,5 +64,9 @@ public class FormInput {
 
     public Boolean isIncludedInApplicationSummary() {
         return includedInApplicationSummary;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
