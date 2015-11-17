@@ -10,10 +10,9 @@ jQuery(document).ready(function() {
       jQuery('.editor').hallo({
         plugins: {
           'halloformat': {},
-          'hallolists': {},
-          'halloreundo': {}
+          'hallolists': {}
         },
-        toolbar: 'halloToolbarInstant'
+        toolbar: 'halloToolbarFixed'
       });
   };
 
@@ -33,7 +32,6 @@ jQuery(document).ready(function() {
 
   // Method that converts the HTML contents to Markdown
   var showSource = function(content,el) {
-    console.log(el);
     var markdown = markdownize(content);
     if (jQuery(el).get(0).value == markdown) {
       return;

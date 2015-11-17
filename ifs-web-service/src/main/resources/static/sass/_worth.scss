@@ -134,6 +134,29 @@
 .fa-bold:before {
 	content: "\e904";
 }
+.hallotoolbar {
+	@include border-radius(10px);
+	background:#fff;
+	border:1px solid $border-colour;
+
+	.ui-buttonset:first-child button.ui-corner-left{
+			@include border-radius(10px 0 0 10px);
+	}
+	.ui-buttonset:last-child button.ui-corner-right{
+			@include border-radius(0 10px 10px 0);
+	}
+
+	button {
+		border:none;
+		background:#fff;
+		padding:10px;
+
+	}
+	button.ui-state-active {
+		color:#fff;
+		background: #000;
+	}
+}
 
 
 

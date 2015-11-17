@@ -152,18 +152,27 @@ table td{
         overflow:auto; //needed for resize [contenteditable] div
     }
 
+
     [contenteditable="true"] {
+        padding-top:60px;
+
         b {
             font-weight:bold;
+            font-style:inherit;
         }
         i {
-            font-style:italic
+            font-style:italic;
+            font-weight:inherit;
         }
         ol {
             @extend .list-number;
         }
         ul {
             @extend .list-bullet;
+        }
+        li p {
+            padding: 0;
+            margin: 0;
         }
     }
     
@@ -176,6 +185,10 @@ table td{
         padding: 0 10px 0 0;
     }
 
+}
+.hallotoolbar {
+    width:auto!important;
+    margin:50px 10px 0 10px;
 }
 
 .count-label,

@@ -707,7 +707,7 @@
         editable: null,
         toolbar: null,
         affix: true,
-        affixTopOffset: 2
+        affixTopOffset: -50
       },
       _create: function() {
         var el, widthToAdd,
