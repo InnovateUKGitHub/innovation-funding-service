@@ -27,4 +27,7 @@ public class ApplicationForm {
     public void setFormInput(Map<String, String> values) {
         this.formInput = values;
     }
+    public void addFormInput(String key, String value){
+        this.formInput.put(key, value);
+    }
 }
