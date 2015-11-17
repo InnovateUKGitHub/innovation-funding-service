@@ -65,6 +65,7 @@
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
             <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
             <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
@@ -73,6 +74,7 @@
         <div class="form-group">
 
             <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
 
             Project start date
             <br/>

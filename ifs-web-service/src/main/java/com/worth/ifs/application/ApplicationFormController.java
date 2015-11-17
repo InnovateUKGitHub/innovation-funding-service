@@ -2,6 +2,7 @@ package com.worth.ifs.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -27,10 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -292,6 +290,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                              HttpServletResponse response) {
 
         try {
+            List<String> errors = new ArrayList<>();
+
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
@@ -327,20 +327,43 @@ public class ApplicationFormController extends AbstractApplicationController {
                 }
             } else {
                 Long formInputId = Long.valueOf(inputIdentifier);
-                formInputResponseService.save(user.getId(), applicationId, formInputId, value);
+                errors = formInputResponseService.save(user.getId(), applicationId, formInputId, value);
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("success", "true");
-            return node;
+
+            if(errors.size() > 0){
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("success", "false");
+                ArrayNode errorsNode = mapper.createArrayNode();
+                errors.stream().forEach(e -> errorsNode.add(e));
+                node.set("validation_errors", errorsNode);
+                return node;
+            }else{
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("success", "true");
+                return node;
+            }
+
+
 
         } catch (Exception e) {
 //            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            response.setStatus(400);
-            log.info("Autosave failed with error: "+ ex.getErrorMessage());
-            return ex.createJsonResponse();
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("success", "false");
+            ArrayNode errorsNode = mapper.createArrayNode();
+            errorsNode.add(ex.getErrorMessage());
+            node.set("validation_errors", errorsNode);
+            return node;
+
+//            AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
+//            response.setStatus(400);
+//            log.info("Autosave failed with error: "+ ex.getErrorMessage());
+//            return ex.createJsonResponse();
         }
     }
 

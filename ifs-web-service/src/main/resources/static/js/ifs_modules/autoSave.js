@@ -33,13 +33,14 @@ var ifs_autoSave = (function(){
                 formInputId: fieldId,
                 fieldName: field.attr('name'),
                 applicationId: jQuery(".form-serialize-js #application_id").val()
-             };
+            };
 
              var formState = jQuery('.form-serialize-js').serialize();
              var formGroup = field.closest('.form-group');
+             var validationMessages = formGroup.find(".validation-messages");
 
              var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
-              var startAjaxTime= new Date().getTime();
+             var startAjaxTime= new Date().getTime();
 
              if(formTextareaSaveInfo.length === 0){
                 formGroup.find('.textarea-footer').append('<span class="textarea-save-info" />');
@@ -67,18 +68,24 @@ var ifs_autoSave = (function(){
                  if(data.success == 'true'){
                     if((doneAjaxTime-startAjaxTime) < 1500) {
                         setTimeout(function(){
-                            formGroup.removeClass('error');
+                            ifs_autoSave.removeValidationError(formGroup);
                            formTextareaSaveInfo.html('Saved!');
                         },1500);
                     } else {
-                        formGroup.removeClass('error');
+                        ifs_autoSave.removeValidationError(formGroup);
                         formTextareaSaveInfo.html('Saved!');
                     }
                  }else{
-                    formTextareaSaveInfo.html(data.validation_errors);
+                    formTextareaSaveInfo.html("Invalid input, not saved.");
+                    ifs_autoSave.removeValidationError(formGroup);
+                    jQuery.each(data.validation_errors, function(index, value){
+                        validationMessages.append('<span class="error-message">' + value + '</span>');
+                    });
                     formGroup.addClass('error');
                  }
              }).fail(function(data) {
+                 ifs_autoSave.removeValidationError(formGroup);
+
                  var errorMessage = data.responseJSON.errorMessage;
                  if (formGroup.length) {
                      formGroup.addClass('error');
@@ -88,13 +95,17 @@ var ifs_autoSave = (function(){
                      else {
                         var label = formGroup.find('label').first();
                         if (label.length) {
-                          label.append('<span class="error-message" id="error-message-' + fieldId + '">' + errorMessage + '</span>');
+                          validationMessages.append('<span class="error-message">' + errorMessage + '</span>');
                         }  
                      }
                  } else {
                      field.addClass('error');
                  }
              });
+        },
+        removeValidationError: function (formGroup){
+            formGroup.removeClass('error');
+            formGroup.find('.error-message').remove();
         }
     };
 })();

@@ -105,8 +105,7 @@ public abstract class AbstractApplicationController {
      */
     protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, ApplicationForm applicationForm) {
 
-
-            Application application = applicationService.getById(applicationId);
+        Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
 
         model.addAttribute("currentApplication", application);
@@ -118,6 +117,15 @@ public abstract class AbstractApplicationController {
         addQuestionsDetails(model, application, applicationForm);
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
+
+        // Add the details from the application itself.
+        Map<String, String> formInputs = applicationForm.getFormInput();
+        formInputs.put("application_details-title", application.getName());
+        formInputs.put("application_details-duration", application.getDurationInMonths().toString());
+        formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
+        formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
+        formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
+        applicationForm.setFormInput(formInputs);
 
         userOrganisation.ifPresent(org -> {
             addAssigneableDetails(model, application, org, userId);

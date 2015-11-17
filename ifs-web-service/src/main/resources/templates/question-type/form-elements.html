@@ -9,19 +9,19 @@
            th:text="${name}"
             />
 </div>
-
-<div th:fragment="form-validation-messages (id)">
-    <div th:with="validationId='formInput['+${id}+']'" th:remove="tag" >
-        <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
-    </div>
-</div>
 <!-- =========================== Form label hidden =========================== -->
 <div th:fragment="form-label-hidden (name,id)">
     <label class="form-label visuallyhidden"
-           th:if="${name}"
-           th:for="${id}"
-           th:text="${name}"
-            />
+    th:if="${name}"
+    th:for="${id}"
+    th:text="${name}"
+    />
+</div>
+<!-- =========================== Form validation messages =========================== -->
+<div th:fragment="form-validation-messages (id)">
+    <div class="validation-messages" th:with="validationId='formInput['+${id}+']'" >
+        <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
+    </div>
 </div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
