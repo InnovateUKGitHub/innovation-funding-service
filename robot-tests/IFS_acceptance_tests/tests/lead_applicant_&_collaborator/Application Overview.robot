@@ -50,12 +50,14 @@ Verify the applicant can see the days left to submit
 Verify the "Progress bar" is 0% when the application is empty
     [Documentation]    INFUND-32
     When the Applicant is in the application overview page
-    The Progress bar should be 0%
+    The Progress bar should be 0% in the overview page
+    and the progress bar on the My appications page should be 0%
 
 Verify the "Progress bar" is 14% when the applicant marks as complete one question from each section
     [Documentation]    INFUND-32
     When the applicant completes one question from every section
-    Then the Progress bar should be 14%
+    Then the Progress bar should be 14% in the overview page
+    and the progress bar on the my applications page should be 14%
 
 *** Keywords ***
 the user is logged in as Applicant
@@ -116,7 +118,7 @@ the uploads should not be visible
 The "Days left to submit" should be visible
     Element Should Be Visible    css=#content > div.sub-header > div > div > div.pie-overlay > div
 
-The Progress bar should be 0%
+The Progress bar should be 0% in the overview page
     Element Text Should Be    css=#content > div.grid-row > div.column-half.competition-details > div > div > div.progress    0%
 
 the applicant completes one question from every section
@@ -139,6 +141,14 @@ the applicant completes one question from every section
     Click Element    css=#question-20 > div.collapsible > h2:nth-child(1) > button
     Click Element    css=#collapsible-1 > div:nth-child(2) > div > button
 
-the Progress bar should be 14%
+the Progress bar should be 14% in the overview page
     go to    ${APPLICATION_OVERVIEW_URL}
     Element Text Should Be    css=#content > div.grid-row > div.column-half.competition-details > div > div > div.progress    14%
+
+the progress bar on the My appications page should be 0%
+    go to    ${DASHBOARD_URL}
+    Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    0%
+
+the progress bar on the my applications page should be 14%
+    go to    ${DASHBOARD_URL}
+    Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    14%
