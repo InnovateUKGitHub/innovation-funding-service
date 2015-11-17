@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class is used to setup and submit the form input values. On submit the values are converted into an ApplicationForm object.
+ * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
  * http://stackoverflow.com/a/4511716
  */
-public class ApplicationForm {
+public class Form {
     private Map<String, String> formInput;
     public List<ObjectError> objectErrors;
     public BindingResult bindingResult;
 
-    public ApplicationForm() {
+    public Form() {
         this.formInput = new HashMap<>();
         this.objectErrors = new ArrayList<>();
     }

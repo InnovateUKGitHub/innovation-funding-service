@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.Form;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
@@ -20,11 +21,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,21 +89,27 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}", method = RequestMethod.GET)
-    public String applicationAssessmentDetails(Model model, @PathVariable("competitionId") final Long competitionId,
+    public String applicationAssessmentDetails(@ModelAttribute("form") @Valid Form form, BindingResult bindingResult, Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
+        form.bindingResult = bindingResult;
+        form.objectErrors = bindingResult.getAllErrors();
+        model.addAttribute("form", form);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.empty(), userId);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
-    public String applicationAssessmentDetails(Model model, @PathVariable("competitionId") final Long competitionId,
+    public String applicationAssessmentDetails(@ModelAttribute("form") @Valid Form form, BindingResult bindingResult, Model model, @PathVariable("competitionId") final Long competitionId,
                                                @PathVariable("applicationId") final Long applicationId,
                                                @PathVariable("sectionId") final Long sectionId,
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
+        form.bindingResult = bindingResult;
+        form.objectErrors = bindingResult.getAllErrors();
+        model.addAttribute("form", form);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId);
     }
 
