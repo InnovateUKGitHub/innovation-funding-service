@@ -269,12 +269,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("fieldName", "formInput[" + questionId + "]")
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
-        ).andExpect(status().isBadRequest())
+        ).andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"errorMessage\":\"Please enter a valid value.\",\"inputIdentifier\":\""+questionId+"\",\"value\":\""+value+"\",\"applicationId\":"+application.getId().toString()+"}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value.\"]}";
         Assert.assertEquals(content, jsonExpectedContent);
     }
 
@@ -337,11 +337,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest()).andReturn();
+        ).andExpect(status().isOk()).andReturn();
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"errorMessage\":\"Please enter a valid date.\",\"inputIdentifier\":\""+questionId+"\",\"value\":\""+value+"\",\"applicationId\":"+application.getId().toString()+"}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
         Assert.assertEquals(content, jsonExpectedContent);
     }
 
@@ -360,12 +360,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest()).andReturn();
+        ).andExpect(status().isOk()).andReturn();
 
         String content = result.getResponse().getContentAsString();
         log.info("Response : "+ content);
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"errorMessage\":\"Please enter a valid date.\",\"inputIdentifier\":\""+questionId+"\",\"value\":\""+value+"\",\"applicationId\":"+application.getId()+"}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
         Assert.assertEquals(content, jsonExpectedContent);
     }
 

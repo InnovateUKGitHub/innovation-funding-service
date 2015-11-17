@@ -118,13 +118,18 @@ public abstract class AbstractApplicationController {
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
 
+        if(applicationForm == null){
+            applicationForm = new ApplicationForm();
+        }
         // Add the details from the application itself.
         Map<String, String> formInputs = applicationForm.getFormInput();
         formInputs.put("application_details-title", application.getName());
-        formInputs.put("application_details-duration", application.getDurationInMonths().toString());
-        formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
-        formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
-        formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
+        formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
+        if(application.getStartDate() != null){
+            formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
+            formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
+            formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
+        }
         applicationForm.setFormInput(formInputs);
 
         userOrganisation.ifPresent(org -> {
@@ -156,10 +161,10 @@ public abstract class AbstractApplicationController {
         }
         Map<String, String> values = applicationForm.getFormInput();
         mappedResponses.forEach((k, v) ->
-             values.put(k.toString(), v.getValue())
+                        values.put(k.toString(), v.getValue())
         );
         applicationForm.setFormInput(values);
-        model.addAttribute("applicationForm",applicationForm);
+        model.addAttribute("applicationForm", applicationForm);
     }
 
     protected List<Response> getResponses(Application application) {
