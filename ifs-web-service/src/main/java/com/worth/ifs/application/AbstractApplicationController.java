@@ -103,7 +103,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, ApplicationForm applicationForm) {
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form) {
 
         Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
@@ -114,15 +114,15 @@ public abstract class AbstractApplicationController {
         Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
 
         addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, applicationForm);
+        addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
 
-        if(applicationForm == null){
-            applicationForm = new ApplicationForm();
+        if(form == null){
+            form = new Form();
         }
         // Add the details from the application itself.
-        Map<String, String> formInputs = applicationForm.getFormInput();
+        Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
         if(application.getStartDate() != null){
@@ -130,7 +130,7 @@ public abstract class AbstractApplicationController {
             formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
-        applicationForm.setFormInput(formInputs);
+        form.setFormInput(formInputs);
 
         userOrganisation.ifPresent(org -> {
             addAssigneableDetails(model, application, org, userId);
@@ -151,20 +151,20 @@ public abstract class AbstractApplicationController {
         });
     }
 
-    protected void addQuestionsDetails(Model model, Application application, ApplicationForm applicationForm) {
+    protected void addQuestionsDetails(Model model, Application application, Form form) {
         List<FormInputResponse> responses = getFormInputResponses(application);
         HashMap<Long, FormInputResponse> mappedResponses = formInputResponseService.mapResponsesToQuestion(responses);
         model.addAttribute("responses",mappedResponses);
 
-        if(applicationForm == null){
-            applicationForm = new ApplicationForm();
+        if(form == null){
+            form = new Form();
         }
-        Map<String, String> values = applicationForm.getFormInput();
+        Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
                         values.put(k.toString(), v.getValue())
         );
-        applicationForm.setFormInput(values);
-        model.addAttribute("applicationForm", applicationForm);
+        form.setFormInput(values);
+        model.addAttribute("form", form);
     }
 
     protected List<Response> getResponses(Application application) {
