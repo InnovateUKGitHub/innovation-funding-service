@@ -11,6 +11,7 @@ import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
@@ -85,7 +86,10 @@ public class FormInputResponseController {
             return null;
         }
 
-        Optional<ProcessRole> applicantProcessRole = userAppRoles.stream().filter(processRole -> processRole.getRole().getName().equals(APPLICANT.getName())).findFirst();
+        Optional<ProcessRole> applicantProcessRole = userAppRoles.stream()
+                .peek(r -> log.info("Role :" + r.getRole().getName()))
+                .filter(processRole -> processRole.getRole().getName().equals(APPLICANT.getName()) || processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())
+                ).findFirst();
 
         Optional<FormInputResponse> response = applicantProcessRole.map(role -> {
             FormInputResponse existingResponse = responseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), userAppRoles.get(0).getId(), formInput.getId());
