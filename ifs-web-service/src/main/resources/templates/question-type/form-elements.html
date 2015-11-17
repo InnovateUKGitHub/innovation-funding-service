@@ -73,7 +73,7 @@
            type="number"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-           th:field="*{formInput[__${id}__]}"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
@@ -86,7 +86,7 @@
            type="number"
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-           th:field="*{formInput[__${id}__]}"
+           th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
