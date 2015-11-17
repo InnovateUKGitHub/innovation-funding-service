@@ -1,7 +1,5 @@
 package com.worth.ifs.form.repository;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -16,7 +14,7 @@ import java.util.List;
  */
 public interface FormInputResponseRepository extends PagingAndSortingRepository<FormInputResponse, Long> {
     List<FormInputResponse> findByUpdatedBy(@Param("updatedBy") ProcessRole updatedBy);
-    FormInputResponse findByApplicationAndFormInput(@Param("application") Application application, @Param("formInput") FormInput formInput);
-    FormInputResponse findByApplicationIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("formInputId") Long formInputId);
+    List<FormInputResponse> findByApplicationIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("formInputId") Long formInputId);
+    FormInputResponse findByApplicationIdAndUpdatedByIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("updatedById") Long updatedById, @Param("formInputId") Long formInputId);
     List<FormInputResponse> findAll();
 }

@@ -3,10 +3,10 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.form.repository.FormInputRepository;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -27,6 +27,9 @@ import org.springframework.web.util.HtmlUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -80,12 +83,17 @@ public class FormInputResponseController {
             return null;
         }
 
-        FormInputResponse response = responseRepository.findByApplicationAndFormInput(application, formInput);
-        if (response == null) {
-            response = new FormInputResponse(LocalDateTime.now(), "", userAppRoles.get(0), formInput, application);
-        }
+        Optional<ProcessRole> applicantProcessRole = userAppRoles.stream().filter(processRole -> processRole.getRole().getName().equals(APPLICANT.getName())).findFirst();
 
-        return response;
+        Optional<FormInputResponse> response = applicantProcessRole.map(role -> {
+            FormInputResponse existingResponse = responseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), userAppRoles.get(0).getId(), formInput.getId());
+            return existingResponse != null ? existingResponse : new FormInputResponse(LocalDateTime.now(), "", role, formInput, application);
+        });
+
+        return response.orElseGet(() -> {
+            log.error("No Applicant Process Role on user when trying to create a FormInputResponse");
+            return null;
+        });
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)

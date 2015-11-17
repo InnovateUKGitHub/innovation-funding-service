@@ -77,8 +77,8 @@ public class SectionController {
 
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
                     sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
-                        FormInputResponse response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
-                        return response != null && response.getWordCountLeft() < 0;
+                        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
+                        return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
                     });
 
                 } else {

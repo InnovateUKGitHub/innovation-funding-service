@@ -1,9 +1,9 @@
 package com.worth.ifs.form.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.form.domain.FormInputResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,12 +11,17 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
- * Repository Integration tests for Form Inputs.
+ * Repository Integration tests for Form Input Responses.
  */
 public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FormInputResponseRepository> {
+
+    @Autowired
+    private FormInputRepository formInputRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private FormInputResponseRepository repository;
@@ -40,6 +45,14 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(2015, response.getUpdateDate().getYear());
         assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
         assertEquals("1. What is the business opportunity that your project addresses?", response.getFormInput().getDescription());
+    }
+
+    @Ignore
+    @Test
+    public void test_findByApplicationIdAndFormInputId() {
+
+        List<FormInputResponse> responses = repository.findByApplicationIdAndFormInputId(1L, 1L);
+        assertEquals(2, responses.size());
     }
 
     @Test
