@@ -21,7 +21,7 @@ public class FormInputType {
     @JoinTable(name="form_type_form_validator",
             joinColumns={@JoinColumn(name="form_input_type_id")},
             inverseJoinColumns={@JoinColumn(name="form_validator_id")})
-    List<FormValidator> formValidators;
+    private List<FormValidator> formValidators;
 
     public FormInputType(Long id, String title) {
         this.id = id;
