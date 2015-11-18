@@ -60,7 +60,7 @@ public class SectionServiceImpl implements SectionService {
     public void removeSectionsQuestionsWithType(Section section, String name) {
         section.getChildSections().stream().
                 forEach(s -> s.setQuestions(s.getQuestions().stream().
-                        filter(q -> q != null && q.getQuestionType() != null && !q.getQuestionType().getTitle().equals(name)).
+                        filter(q -> q != null && !q.getFormInputs().stream().anyMatch(input -> input.getFormInputType().getTitle().equals(name))).
                         collect(Collectors.toList())));
     }
 

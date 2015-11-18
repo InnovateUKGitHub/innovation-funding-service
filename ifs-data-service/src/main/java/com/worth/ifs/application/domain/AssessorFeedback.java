@@ -82,6 +82,16 @@ public class AssessorFeedback {
         this.assessor = assessor;
     }
 
+    @JsonIgnore
+    public Integer getWordCount(){
+        return assessmentFeedback != null ? assessmentFeedback.split("\\s+").length : 0;
+    }
+
+    @JsonIgnore
+    public Integer getWordCountLeft(){
+        return 350 - this.getWordCount();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

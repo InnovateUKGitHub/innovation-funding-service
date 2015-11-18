@@ -77,4 +77,9 @@ public class QuestionServiceImpl implements QuestionService {
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }
+
+    @Override
+    public Question findById(Long questionId) {
+        return questionRestService.findById(questionId);
+    }
 }

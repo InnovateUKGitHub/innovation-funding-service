@@ -1,5 +1,7 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.builder.QuestionBuilder;
+import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
@@ -39,7 +41,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
+import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -57,6 +63,8 @@ public class BaseUnitTest {
     public UserAuthenticationService userAuthenticationService;
     @Mock
     public ResponseService responseService;
+    @Mock
+    public FormInputResponseService formInputResponseService;
     @Mock
     public ApplicationService applicationService;
     @Mock
@@ -110,7 +118,7 @@ public class BaseUnitTest {
         applicant = loggedInUser;
         User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
         assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
-        users = Arrays.asList(loggedInUser, user2);
+        users = asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
 
@@ -131,32 +139,56 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
-        competition = new Competition(1L, "Competition x", "Description afds", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(5));
-        sections.add(new Section(1L, competition, emptyList(), "Application details", null));
-        sections.add(new Section(2L, competition, emptyList(), "Scope (Gateway question)", null));
-        sections.add(new Section(3L, competition, emptyList(), "Business proposition (Q1 - Q4)", null));
-        sections.add(new Section(4L, competition, emptyList(), "Project approach (Q5 - Q8)", null));
-        sections.add(new Section(5L, competition, emptyList(), "Funding (Q9 - Q10)", null));
-        sections.add(new Section(6L, competition, emptyList(), "Finances", null));
 
-        Question q01 = new Question(1L, competition, sections.get(0), "Application details");
-        sections.get(0).setQuestions(Arrays.asList(q01));
+        competition = newCompetition().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
+                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
+                build();
 
-        Question q10 = new Question(10L, competition, sections.get(1), "How does your project align with the scope of this competition?");
-        sections.get(1).setQuestions(Arrays.asList(q10));
+        QuestionBuilder questionBuilder = newQuestion().with(competition(competition));
+        SectionBuilder sectionBuilder = newSection().with(competition(competition));
 
-        Question q20 = new Question(20L, competition, sections.get(2), "1. What is the business opportunity that this project addresses?");
-        Question q21 = new Question(21L, competition, sections.get(2), "2. What is the size of the market opportunity that this project might open up?");
-        Question q22 = new Question(22L, competition, sections.get(2), "3. How will the results of the project be exploited and disseminated?");
-        Question q23 = new Question(23L, competition, sections.get(2), "4. What economic, social and environmental benefits is the project expected to deliver?");
-        sections.get(2).setQuestions(Arrays.asList(q20, q21, q22, q23));
+        Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).build();
 
-        Question q30 = new Question(30L, competition, sections.get(3), "5. What technical approach will be adopted and how will the project be managed?");
-        Question q31 = new Question(31L, competition, sections.get(3), "6. What is innovative about this project?");
-        Question q32 = new Question(32L, competition, sections.get(3), "7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?");
-        Question q33 = new Question(33L, competition, sections.get(3), "8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?");
-        sections.get(3).setQuestions(Arrays.asList(q30, q31, q32, q33));
+        Section section1 = sectionBuilder.
+                with(id(1L)).
+                with(name("Application details")).
+                withQuestions(asList(q01)).
+                build();
 
+        Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).build();
+
+        Section section2 = sectionBuilder.
+                with(id(2L)).
+                with(name("Scope (Gateway question)")).
+                withQuestions(asList(q10)).
+                build();
+
+        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).build();
+        Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).build();
+        Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).build();
+        Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).build();
+
+        Section section3 = sectionBuilder.
+                with(id(3L)).
+                with(name("Business proposition (Q1 - Q4)")).
+                withQuestions(asList(q20, q21, q22, q23)).
+                build();
+
+        Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).build();
+        Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).build();
+        Question q32 = questionBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).build();
+        Question q33 = questionBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).build();
+
+        Section section4 = sectionBuilder.
+                with(id(4L)).
+                with(name("Project approach (Q5 - Q8)")).
+                withQuestions(asList(q30, q31, q32, q33)).
+                build();
+
+        Section section5 = sectionBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
+        Section section6 = sectionBuilder.with(id(6L)).with(name("Finances")).build();
+
+        sections = asList(section1, section2, section3, section4, section5, section6);
 
         ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {
@@ -170,22 +202,17 @@ public class BaseUnitTest {
             }
         }
 
-        competition.setSections(sections);
-        competition.setQuestions(questionList);
-        competitions = new ArrayList<>();
-        competitions.add(competition);
+        competitions = asList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
         when(competitionRestService.getAll()).thenReturn(competitions);
-
-
     }
 
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
-        loggedInUser.setRoles(Arrays.asList(applicantRole));
-        assessor.setRoles(Arrays.asList(assessorRole));
+        loggedInUser.setRoles(asList(applicantRole));
+        assessor.setRoles(asList(assessorRole));
     }
 
     public void setupApplicationWithRoles(){
@@ -204,7 +231,7 @@ public class BaseUnitTest {
 
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
         Organisation organisation2 = new Organisation(2L, "Ludlow");
-        organisations = Arrays.asList(organisation1, organisation2);
+        organisations = asList(organisation1, organisation2);
         Comparator<Organisation> compareById = Comparator.comparingLong(Organisation::getId);
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
@@ -219,27 +246,27 @@ public class BaseUnitTest {
         ProcessRole processRole8 = new ProcessRole(8L, assessor, app1, assessorRole, organisation1);
 
 
-        organisation1.setProcessRoles(Arrays.asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
-        organisation2.setProcessRoles(Arrays.asList(processRole5));
+        organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
+        organisation2.setProcessRoles(asList(processRole5));
 
         competition.addApplication(app1, app2, app3, app4);
 
         app1.setCompetition(competition);
-        app1.setProcessRoles(Arrays.asList(processRole1, processRole5));
+        app1.setProcessRoles(asList(processRole1, processRole5));
         app2.setCompetition(competition);
-        app2.setProcessRoles(Arrays.asList(processRole2));
+        app2.setProcessRoles(asList(processRole2));
         app3.setCompetition(competition);
-        app3.setProcessRoles(Arrays.asList(processRole3, processRole7, processRole8));
+        app3.setProcessRoles(asList(processRole3, processRole7, processRole8));
         app4.setCompetition(competition);
-        app4.setProcessRoles(Arrays.asList(processRole4));
+        app4.setProcessRoles(asList(processRole4));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(1).addUserApplicationRole(processRole5);
-        applications = Arrays.asList(app1, app2, app3, app4);
+        applications = asList(app1, app2, app3, app4);
 
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
-        when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(Arrays.asList(1L, 2L));
-        when(sectionService.getInCompleted(app1.getId())).thenReturn(Arrays.asList(3L, 4L));
+        when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
+        when(sectionService.getInCompleted(app1.getId())).thenReturn(asList(3L, 4L));
         when(processRoleService.findProcessRole(loggedInUser.getId(), app1.getId())).thenReturn(processRole1);
         when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), app3.getId())).thenReturn(processRole7);
@@ -269,14 +296,14 @@ public class BaseUnitTest {
         Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDateTime.now(), "value 1", userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), application);
+        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), application);
 
-        List<Response> responses = Arrays.asList(response, response2);
+        List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
 
-        questions.get(20L).setResponses(Arrays.asList(response));
-        questions.get(21L).setResponses(Arrays.asList(response2));
+        questions.get(20L).setResponses(asList(response));
+        questions.get(21L).setResponses(asList(response2));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
     }
@@ -284,7 +311,7 @@ public class BaseUnitTest {
     public void setupFinances() {
         Application application = applications.get(0);
         applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
-        when(financeService.getApplicationFinances(application.getId())).thenReturn(Arrays.asList(applicationFinance));
+        when(financeService.getApplicationFinances(application.getId())).thenReturn(asList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
     }
 
@@ -304,8 +331,8 @@ public class BaseUnitTest {
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
         assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
 
-        submittedAssessments = Arrays.asList(assessment3);
-        assessments = Arrays.asList(assessment1, assessment2, assessment3);
+        submittedAssessments = asList(assessment3);
+        assessments = asList(assessment1, assessment2, assessment3);
         when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(1).getId())).thenReturn(assessment2);

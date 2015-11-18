@@ -41,6 +41,11 @@ public class QuestionController {
     @Autowired
     ApplicationRepository applicationRepository;
 
+    @RequestMapping("/id/{id}")
+    public Question getQuestionById(@PathVariable("id") final Long id) {
+        return questionRepository.findOne(id);
+    }
+
     @RequestMapping(value="/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public void markAsComplete(@PathVariable("questionId") final Long questionId,
                                @PathVariable("applicationId") final Long applicationId,

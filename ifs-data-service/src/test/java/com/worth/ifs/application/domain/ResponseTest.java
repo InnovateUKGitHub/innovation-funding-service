@@ -13,7 +13,6 @@ public class ResponseTest {
     Long id;
     Question question;
     ProcessRole updatedBy;
-    String value;
     LocalDateTime date;
 
     @Before
@@ -21,18 +20,16 @@ public class ResponseTest {
         id = 0L;
         question = new Question();
         updatedBy = new ProcessRole();
-        value  = "testResponseValue";
         date = LocalDateTime.now();
         Application application = new Application();
 
-        response = new Response(id, date, value, updatedBy, question, application);
+        response = new Response(id, date, updatedBy, question, application);
     }
 
     @Test
     public void questionShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(response.getId(), id);
         Assert.assertEquals(response.getUpdateDate(), date);
-        Assert.assertEquals(response.getValue(), value);
         Assert.assertEquals(response.getUpdatedBy(), updatedBy);
         Assert.assertEquals(response.getQuestion(), question);
     }
