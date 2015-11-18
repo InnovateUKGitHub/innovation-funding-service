@@ -150,7 +150,7 @@ public class FormInputResponseController {
     }
 
     private BindingResult validateResponse(FormInputResponse response){
-        Set<FormValidator> validators = response.getFormInput().getFormInputType().getFormValidators();
+        Set<FormValidator> validators = response.getFormInput().getFormValidators();
 
         DataBinder binder = new DataBinder(response);
         validators.forEach(

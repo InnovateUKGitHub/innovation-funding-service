@@ -18,16 +18,10 @@ public class FormInputType {
     private Long id;
     private String title;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST})
-    @JoinTable(name="form_type_form_validator",
-            joinColumns={@JoinColumn(name="form_input_type_id")},
-            inverseJoinColumns={@JoinColumn(name="form_validator_id")})
-    private Set<FormValidator> formValidators;
 
     public FormInputType(Long id, String title) {
         this.id = id;
         this.title = title;
-        formValidators = new LinkedHashSet<>();
     }
 
     public FormInputType() {
@@ -40,17 +34,5 @@ public class FormInputType {
 
     public String getTitle() {
         return title;
-    }
-
-    public Set<FormValidator> getFormValidators() {
-        return formValidators;
-    }
-
-    public void setFormValidators(Set<FormValidator> formValidators) {
-        this.formValidators = formValidators;
-    }
-
-    public void addFormValidator(FormValidator formValidator) {
-        this.formValidators.add(formValidator);
     }
 }
