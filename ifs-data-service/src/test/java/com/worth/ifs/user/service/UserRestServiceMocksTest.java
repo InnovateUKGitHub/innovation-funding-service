@@ -12,9 +12,7 @@ import java.util.function.Consumer;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by dwatson on 02/10/15.
- */
+
 public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/users";
