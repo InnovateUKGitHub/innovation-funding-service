@@ -13,3 +13,10 @@ ext.ifsDataServiceRestBaseURL="http://localhost:8080"
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
+
+project.ext['flyway.url']='jdbc:mysql://localhost:3306?characterEncoding=utf8'
+project.ext['flyway.schemas']='ifs'
+project.ext['flyway.user']='ifs'
+project.ext['flyway.password']="ifs"
+project.ext['flyway.placeholderPrefix']='_${'
+project.ext['flyway.placeholderSuffix']='}'

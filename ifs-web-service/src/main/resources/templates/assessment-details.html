@@ -39,7 +39,7 @@
 
         <div class="column-two-thirds">
 
-            <form action="${urlPrefix}"  method="post" th:object="${form}">
+            <form th:action="${urlPrefix}"  method="post" th:object="${form}">
                 <div th:each="sectionEntry : ${sections}"  th:remove="tag">
                     <div th:if="(${sectionEntry.key} == ${currentSectionId})" class="page-header no-pad">
                         <h1 class="heading-xlarge" th:text="${sectionEntry.value.getName()}"></h1>
