@@ -71,6 +71,19 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
+        return restPostWithEntity(path, postEntity, c).getBody();
+    }
+
+
+    /**
+     * restPost is a generic method that performs a RESTful POST request.
+     *
+     * @param path - the unified name resource of the request to be made
+     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param <T>
+     * @return
+     */
+    protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> c) {
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getJSONHeaders();
 
@@ -78,9 +91,8 @@ public abstract class BaseRestService {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
 
-        HttpEntity<Object> entity = new HttpEntity<>(postEntity, getJSONHeaders());
-        ResponseEntity<T> response = restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
-        return response.getBody();
+        HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
+        return restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
     }
 
     public static HttpHeaders getJSONHeaders() {

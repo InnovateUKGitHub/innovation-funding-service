@@ -7,12 +7,9 @@ import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -42,15 +39,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public void saveApplication(Application application) {
-        log.info("ApplicationRestRestService.saveApplication " + application.getId());
 
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationRestURL + "/saveApplicationDetails/" + application.getId();
+        log.debug("ApplicationRestRestService.saveApplication " + application.getId());
 
-        HttpEntity<Application> entity = new HttpEntity<>(application, getJSONHeaders());
-        log.info("ApplicationRestRestService.saveApplication send it!");
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
-                , String.class);
+        ResponseEntity<String> response =
+                restPostWithEntity(applicationRestURL + "/saveApplicationDetails/" + application.getId(), application, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("ApplicationRestRestService, save == ok : " + response.getBody());
