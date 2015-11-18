@@ -6,6 +6,8 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -70,9 +72,8 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     @Test
     public void test_findByApplicationIdAndUpdateByAndFormInputId() {
 
-        long processRoleId = 1L;
-
         // test that we can find processrole "1"'s response to form input "1" for certain applications
+        long processRoleId = 1L;
         assertNotNull(repository.findByApplicationIdAndUpdatedByIdAndFormInputId(1L, processRoleId, 1L));
         assertNull(repository.findByApplicationIdAndUpdatedByIdAndFormInputId(2L, processRoleId, 1L));
         assertNull(repository.findByApplicationIdAndUpdatedByIdAndFormInputId(3L, processRoleId, 1L));
@@ -101,6 +102,29 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
         assertEquals("1. What is the business opportunity that your project addresses?", response.getFormInput().getDescription());
     }
+
+    @Test
+    public void test_findByUpdateBy() {
+
+        // test that we can find processrole "1"'s responses to any applications
+        long processRoleId = 1L;
+        List<FormInputResponse> responses = repository.findByUpdatedById(processRoleId);
+        assertEquals(16, responses.size());
+
+        // check the details of one of the retrieved FormInputResponses
+        FormInputResponse response = responses.get(0);
+        assertEquals(Long.valueOf(1), response.getId());
+        assertTrue(response.getValue().startsWith("Within the Industry"));
+        assertEquals(Integer.valueOf(49), response.getWordCount());
+        assertEquals(Integer.valueOf(500 - 49), response.getWordCountLeft());
+        assertEquals(18, response.getUpdateDate().getDayOfMonth());
+        assertEquals(9, response.getUpdateDate().getMonthValue());
+        assertEquals(2015, response.getUpdateDate().getYear());
+        assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
+        assertEquals("1. What is the business opportunity that your project addresses?", response.getFormInput().getDescription());
+
+    }
+
 
     @Test
     public void test_findOne_nonExistentInput() {

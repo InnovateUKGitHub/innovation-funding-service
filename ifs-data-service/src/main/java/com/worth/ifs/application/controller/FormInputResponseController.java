@@ -71,7 +71,7 @@ public class FormInputResponseController {
 
         List<FormInputResponse> responses = new ArrayList<>();
         for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
+            responses.addAll(responseRepository.findByUpdatedById(userAppRole.getId()));
         }
         return responses;
     }
