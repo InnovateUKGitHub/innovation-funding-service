@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
@@ -34,6 +35,9 @@ public abstract class AbstractApplicationController {
 
     @Autowired
     protected ResponseService responseService;
+
+    @Autowired
+    protected FormInputResponseService formInputResponseService;
 
     @Autowired
     protected QuestionService questionService;
@@ -99,7 +103,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form) {
 
         Application application = applicationService.getById(applicationId);
         Competition competition = application.getCompetition();
@@ -110,9 +114,23 @@ public abstract class AbstractApplicationController {
         Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
 
         addOrganisationDetails(model, application, userOrganisation);
-        addQuestionsDetails(model, application, userOrganisation, userId);
+        addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
+
+        if(form == null){
+            form = new Form();
+        }
+        // Add the details from the application itself.
+        Map<String, String> formInputs = form.getFormInput();
+        formInputs.put("application_details-title", application.getName());
+        formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
+        if(application.getStartDate() != null){
+            formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
+            formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
+            formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
+        }
+        form.setFormInput(formInputs);
 
         userOrganisation.ifPresent(org -> {
             addAssigneableDetails(model, application, org, userId);
@@ -133,13 +151,28 @@ public abstract class AbstractApplicationController {
         });
     }
 
-    protected void addQuestionsDetails(Model model, Application application, Optional<Organisation> userOrganisation, Long userId) {
-        List<Response> responses = getResponses(application);
-        model.addAttribute("responses", responseService.mapResponsesToQuestion(responses));
+    protected void addQuestionsDetails(Model model, Application application, Form form) {
+        List<FormInputResponse> responses = getFormInputResponses(application);
+        HashMap<Long, FormInputResponse> mappedResponses = formInputResponseService.mapResponsesToQuestion(responses);
+        model.addAttribute("responses",mappedResponses);
+
+        if(form == null){
+            form = new Form();
+        }
+        Map<String, String> values = form.getFormInput();
+        mappedResponses.forEach((k, v) ->
+                        values.put(k.toString(), v.getValue())
+        );
+        form.setFormInput(values);
+        model.addAttribute("form", form);
     }
 
     protected List<Response> getResponses(Application application) {
         return responseService.getByApplication(application.getId());
+    }
+
+    protected List<FormInputResponse> getFormInputResponses(Application application) {
+        return formInputResponseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, Application application, Long userId) {

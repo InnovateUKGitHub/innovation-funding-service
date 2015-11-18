@@ -237,6 +237,7 @@ Assigned to me
 	}
 
 	&.marked-as-complete textarea[readonly],
+	&.marked-as-complete .readonly,
 	&.marked-as-complete .textarea-header {
 		border-width:2px;
         border-color: $button-colour;

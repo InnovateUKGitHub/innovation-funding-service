@@ -83,4 +83,5 @@ task cleanDeploy() {
     build.dependsOn clean
     deployToTomcat.dependsOn build
     dependsOn deployToTomcat
+
 }

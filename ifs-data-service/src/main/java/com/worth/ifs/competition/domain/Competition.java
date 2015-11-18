@@ -24,14 +24,14 @@ public class Competition {
     private Long id;
 
     @OneToMany(mappedBy="competition")
-    private List<Application> applications;
+    private List<Application> applications = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
     @OrderBy("priority ASC")
-    private List<Section> sections;
+    private List<Section> sections = new ArrayList<>();
 
     private String name;
 

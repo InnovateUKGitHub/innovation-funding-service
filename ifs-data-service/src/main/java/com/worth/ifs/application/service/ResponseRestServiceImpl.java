@@ -1,7 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,23 +37,6 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
         return Arrays.asList(responses);
     }
 
-    public Boolean saveQuestionResponse(Long userId, Long applicationId, Long questionId, String value) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("userId", userId);
-        node.put("applicationId", applicationId);
-        node.put("questionId", questionId);
-        node.put("value", HtmlUtils.htmlEscape(value));
-
-        HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        return handleResponseStatus(response);
-    }
-
     @Override
     public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
         RestTemplate restTemplate = new RestTemplate();
@@ -68,7 +48,7 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
     }
 
     private Boolean handleResponseStatus(ResponseEntity<?> response) {
-        if (response.getStatusCode() == HttpStatus.ACCEPTED) {
+        if (response.getStatusCode() == HttpStatus.ACCEPTED || response.getStatusCode() == HttpStatus.OK) {
             return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             // nono... bad credentials
