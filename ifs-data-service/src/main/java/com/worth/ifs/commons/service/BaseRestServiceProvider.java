@@ -2,6 +2,7 @@ package com.worth.ifs.commons.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public abstract class BaseRestServiceProvider {
      * @return
      */
     protected  <T> T restPost(String message, String path, Class c) {
+        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials() + "";
         HttpEntity<String> entity = new HttpEntity<>(message, getJSONHeaders());
         ResponseEntity<T> response = getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.POST, entity, c);
         return response.getBody();

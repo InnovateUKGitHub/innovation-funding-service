@@ -43,15 +43,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // allow anonymous resource requests
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
                 .antMatchers("/user/email/*/password/*").permitAll()
+                .antMatchers("/user/token/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().deleteCookies("IFS_AUTH_TOKEN")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .and()
+                .and()
                 .exceptionHandling()
                 .and()
                 .headers().cacheControl()
-            .and()
+                .and()
                 .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
