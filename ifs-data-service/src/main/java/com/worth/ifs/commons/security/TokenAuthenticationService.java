@@ -20,11 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public class TokenAuthenticationService implements UserAuthenticationService {
     private final Log log = LogFactory.getLog(getClass());
-    private static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
+    public static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
     private static final int ONE_DAY = 60 * 60 * 24;
 
     @Autowired
     UserRestService userRestService;
+
+    @Autowired
+    private TokenSupplier tokenSupplier;
 
     /**
      * Authenticate the user by email address and password
@@ -51,7 +54,7 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     }
 
     public Authentication getAuthentication(HttpServletRequest request) {
-        final String token = getToken(request);
+        final String token = tokenSupplier.getToken(request);
         if (token != null) {
             // call rest service to obtain user by token
             try {
@@ -65,23 +68,6 @@ public class TokenAuthenticationService implements UserAuthenticationService {
         }
         return null;
     }
-
-    /**
-     * Retrieve the token from the browser cookie, such that it can be
-     * used for further requests
-     */
-    protected String getToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if(cookies!=null) {
-            for(Cookie cookie: cookies) {
-                if(cookie.getName().equals(AUTH_TOKEN)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return "";
-    }
-
 
     /**
      * For every request a token needs to be added, which is used for authentication

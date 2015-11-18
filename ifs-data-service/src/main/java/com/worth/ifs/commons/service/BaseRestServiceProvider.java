@@ -8,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+
 /**
  * BaseRestServiceProvider provides a base for all Service classes.
  */
@@ -35,7 +37,16 @@ public abstract class BaseRestServiceProvider {
      * @return
      */
     protected  <T> T restGet(String path, Class c) {
-        ResponseEntity<T> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + path , c);
+
+        RestTemplate restTemplate = getRestTemplate();
+        HttpHeaders headers = getJSONHeaders();
+
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        }
+
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        ResponseEntity<T> responseEntity = restTemplate.exchange(dataRestServiceURL + path , HttpMethod.GET, entity, c);
         return responseEntity.getBody();
     }
     /**

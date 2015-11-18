@@ -14,8 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
@@ -37,10 +38,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
 
     @Override
     public List<Application> getApplicationsByUserId(Long userId) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Application[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + applicationRestURL + "/findByUser/" + userId, Application[].class);
-        Application[] applications = responseEntity.getBody();
-        return Arrays.asList(applications);
+        return asList(restGet(applicationRestURL + "/findByUser/" + userId, Application[].class));
     }
 
     public void saveApplication(Application application) {
@@ -89,10 +87,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
             log.error("No application and/org organisation id!!");
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationRestURL + "/getProgressPercentageByApplicationId/{applicationId}";
-
-        ObjectNode jsonResponse = restTemplate.getForObject(url, ObjectNode.class, applicationId);
+        ObjectNode jsonResponse = restGet(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
         return jsonResponse.get("completedPercentage").asDouble();
     }
 
@@ -102,7 +97,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
         String url = dataRestServiceURL + applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role;
         ResponseEntity<Application[]> responseEntity = restTemplate.getForEntity(url, Application[].class);
         Application[] applications = responseEntity.getBody();
-        return Arrays.asList(applications);
+        return asList(applications);
     }
 
 

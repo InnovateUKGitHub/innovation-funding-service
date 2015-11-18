@@ -1,6 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
+import com.worth.ifs.commons.security.TokenAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,6 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 
 /**
  * Every request is stateless and is checked if the user has access to requested resource.
@@ -46,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/token/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().deleteCookies("IFS_AUTH_TOKEN")
+                .logout().deleteCookies(AUTH_TOKEN)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .and()
                 .exceptionHandling()

@@ -1,6 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
+import com.worth.ifs.commons.security.TokenAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
             .and()
-                .logout().deleteCookies("IFS_AUTH_TOKEN")
+                .logout().deleteCookies(TokenAuthenticationService.AUTH_TOKEN)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()
