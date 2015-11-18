@@ -107,9 +107,9 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
     }
 
     @Override
-    public Application createApplication(Long competitionId, String userToken, String applicationName) {
+    public Application createApplication(Long competitionId, Long organisationId, Long userId, String applicationName) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userToken;
+        String url = dataRestServiceURL + applicationRestURL + "/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId;
 
         Application application = new Application();
         application.setName(applicationName);
@@ -128,6 +128,5 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
 
         return application;
     }
-
 
 }

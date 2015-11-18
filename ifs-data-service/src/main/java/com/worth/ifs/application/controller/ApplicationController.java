@@ -198,14 +198,14 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userToken}", method = RequestMethod.POST)
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{organisationId}/{userId}", method = RequestMethod.POST)
     public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("userToken") final String userToken,
+            @PathVariable("organisationId") final Long organisationId,
+            @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
 
-        List<User> users = userRepository.findByToken(userToken);
-        User user = users.get(0);
+        User user = userRepository.findOne(userId);
 
         String applicationName = jsonObj.get("name").textValue();
         Application application = new Application();
@@ -213,7 +213,9 @@ public class ApplicationController {
         LocalDate currentDate = LocalDate.now();
         application.setStartDate(currentDate);
 
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(ApplicationStatusConstants.CREATED.getName());
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
         ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
         application.setApplicationStatus(applicationStatus);
@@ -222,11 +224,11 @@ public class ApplicationController {
         List<Role> roles = roleRepository.findByName("leadapplicant");
         Role role = roles.get(0);
 
-        Competition competition = competitionRepository.findOne(1L);
-        Organisation organisation = organisationRepository.findOne(1L);
+        Competition competition = competitionRepository.findOne(competitionId);
+        Organisation organisation = organisationRepository.findOne(organisationId);
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
 
-        List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
+        List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
 
         application.setProcessRoles(processRoles);
@@ -237,10 +239,4 @@ public class ApplicationController {
 
         return application;
     }
-    @RequestMapping("/initiateTest")
-    public void initiateTest() {
-        ApplicationRestServiceImpl applicationRestService = new ApplicationRestServiceImpl();
-        applicationRestService.createApplication(1L, "123abc", "testapplicationname4");
-    }
-
 }

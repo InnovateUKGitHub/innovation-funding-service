@@ -13,7 +13,7 @@ public interface ApplicationRestService {
     public List<Application> getApplicationsByUserId(Long userId);
     public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
     public void saveApplication(Application application);
-    public Application createApplication(Long competitionId, String userId, String applicationName);
+    public Application createApplication(Long competitionId, Long organisationId, Long userId, String applicationName);
     public void updateApplicationStatus(Long applicationId, Long statusId);
     public Double getCompleteQuestionsPercentage(Long applicationId);
 }

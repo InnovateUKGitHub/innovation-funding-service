@@ -2,7 +2,9 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
@@ -118,7 +120,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void applicationControllerCanCreateApplication() throws Exception {
         Long competitionId = 1L;
-        String userToken = "123abc";
+        Long userId = 1L;
         String applicationName = "testApplication";
         String roleName = "leadapplicant";
         Long organisationId = 1L;
@@ -133,18 +135,22 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         roles.add(role);
         Organisation organisation = new Organisation();
         User user = new User();
-        List<User> users = new ArrayList<User>();
-        users.add(user);
+
+        ApplicationStatus applicationStatus = new ApplicationStatus();
+        applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());
+        List<ApplicationStatus> applicationStatuses = new ArrayList<ApplicationStatus>();
+        applicationStatuses.add(applicationStatus);
 
         ObjectMapper mapper = new ObjectMapper();
         String applicationJsonString = mapper.writeValueAsString(application);
 
+        when(applicationStatusRepositoryMock.findByName(ApplicationStatusConstants.CREATED.getName())).thenReturn(applicationStatuses);
         when(competitionsRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
-        when(userRepositoryMock.findByToken(userToken)).thenReturn(users);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userToken, "json")
+        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId, "json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
