@@ -19,7 +19,7 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Verify the Autosave for the "Rovel additive..." Application form
     [Documentation]    INFUND-189
-    [Tags]    not ready
+    [Tags]
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant enters some text
     and the Applicant refreshes the page
