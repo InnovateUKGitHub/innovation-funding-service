@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.CostField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class CostFieldRestServiceImpl extends BaseRestServiceProvider implements CostFieldRestService {
+public class CostFieldRestServiceImpl extends BaseRestService implements CostFieldRestService {
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 

@@ -3,7 +3,7 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +20,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class FormInputResponseRestServiceImpl extends BaseRestServiceProvider implements FormInputResponseRestService {
+public class FormInputResponseRestServiceImpl extends BaseRestService implements FormInputResponseRestService {
     @Value("${ifs.data.service.rest.forminputresponse}")
     String responseRestURL;
 

@@ -3,15 +3,11 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseRestServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import java.util.function.Consumer;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeaders;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;

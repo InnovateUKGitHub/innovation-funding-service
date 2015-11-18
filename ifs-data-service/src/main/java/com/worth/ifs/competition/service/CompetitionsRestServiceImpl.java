@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +19,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class CompetitionsRestServiceImpl extends BaseRestServiceProvider implements CompetitionsRestService {
+public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
     @Value("${ifs.data.service.rest.competition}")
     String competitionsRestURL;
 

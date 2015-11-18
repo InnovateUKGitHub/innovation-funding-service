@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class UserRestServiceImpl extends BaseRestServiceProvider implements UserRestService {
+public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
     private String userRestURL;
     private String processRoleRestURL;

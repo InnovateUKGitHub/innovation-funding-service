@@ -2,7 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ import static java.util.Arrays.asList;
  * through a REST call.
  */
 @Service
-public class ApplicationRestServiceImpl extends BaseRestServiceProvider implements ApplicationRestService {
+public class ApplicationRestServiceImpl extends BaseRestService implements ApplicationRestService {
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
 

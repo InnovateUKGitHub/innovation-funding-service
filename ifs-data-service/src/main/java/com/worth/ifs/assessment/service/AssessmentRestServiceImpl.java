@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -19,7 +19,7 @@ import java.util.Set;
  * through a REST call.
  */
 @Service
-public class AssessmentRestServiceImpl extends BaseRestServiceProvider implements AssessmentRestService {
+public class AssessmentRestServiceImpl extends BaseRestService implements AssessmentRestService {
 
     @Value("${ifs.data.service.rest.assessment}")
     String assessmentRestURL;

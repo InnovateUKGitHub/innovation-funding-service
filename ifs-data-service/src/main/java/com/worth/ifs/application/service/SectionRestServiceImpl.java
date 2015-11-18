@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class SectionRestServiceImpl extends BaseRestServiceProvider implements SectionRestService {
+public class SectionRestServiceImpl extends BaseRestService implements SectionRestService {
     @Value("${ifs.data.service.rest.section}")
     String sectionRestURL;
 

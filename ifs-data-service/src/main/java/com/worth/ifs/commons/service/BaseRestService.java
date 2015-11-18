@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 
 /**
- * BaseRestServiceProvider provides a base for all Service classes.
+ * BaseRestService provides a base for all Service classes.
  */
-public abstract class BaseRestServiceProvider {
+public abstract class BaseRestService {
 
     protected String dataRestServiceURL;
 

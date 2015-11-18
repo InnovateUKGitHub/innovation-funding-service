@@ -1,6 +1,6 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import org.mockito.Mock;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.function.Consumer;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeaders;
+import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
 
 /**
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
@@ -21,7 +21,7 @@ import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeade
  *
  * Created by dwatson on 02/10/15.
  */
-public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServiceProvider> extends BaseUnitTestMocksTest {
+public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
 
     @Mock
     protected RestTemplate mockRestTemplate;

@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -17,7 +17,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class ApplicationFinanceRestServiceImpl extends BaseRestServiceProvider implements ApplicationFinanceRestService {
+public class ApplicationFinanceRestServiceImpl extends BaseRestService implements ApplicationFinanceRestService {
     @Value("${ifs.data.service.rest.applicationfinance}")
     String applicationFinanceRestURL;
 

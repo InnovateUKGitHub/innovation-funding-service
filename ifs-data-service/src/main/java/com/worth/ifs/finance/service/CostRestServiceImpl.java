@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.Cost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +20,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class CostRestServiceImpl extends BaseRestServiceProvider implements CostRestService {
+public class CostRestServiceImpl extends BaseRestService implements CostRestService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Value("${ifs.data.service.rest.cost}")

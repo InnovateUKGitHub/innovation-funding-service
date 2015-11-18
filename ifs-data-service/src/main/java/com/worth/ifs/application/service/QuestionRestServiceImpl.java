@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Set;
  * through a REST call.
  */
 @Service
-public class QuestionRestServiceImpl extends BaseRestServiceProvider implements  QuestionRestService {
+public class QuestionRestServiceImpl extends BaseRestService implements  QuestionRestService {
     @Value("${ifs.data.service.rest.question}")
     String questionRestURL;
 
