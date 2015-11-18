@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create Application'"  th:remove="tag"></div>
+</head>
+<body class="app-details">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <h1 class="heading-xlarge">Create application</h1>
+
+    <form action="#" method="post" class="application-overview">
+        <div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
+            <label class="form-label" for="application_name">Application name:</label>
+            <input class="form-control form-control-3-4" type="text" id="application_name" name="application_name" />
+            <input class="form-control form-control-3-4" type="text" name="competition_id" />
+            <input class="form-control form-control-3-4" type="text" name="organisation_id" />
+        </div>
+        <input type="submit" value="Create application"/>
+    </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
