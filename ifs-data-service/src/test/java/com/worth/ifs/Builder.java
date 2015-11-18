@@ -16,4 +16,6 @@ public interface Builder<T, S> {
     T build();
 
     List<T> build(int numberToBuild);
+
+    T[] buildArray(int numberToBuild, Class<T> clazz);
 }
