@@ -2,9 +2,17 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.service.BaseRestServiceProvider;
 import org.mockito.Mock;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Consumer;
+
+import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeaders;
 
 /**
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
@@ -24,6 +32,8 @@ public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServi
 
     protected static final String dataServicesUrl = "http://localhost/tests/dataServices";
 
+    private static final String VALID_AUTH_TOKEN = "VALID_AUTH_TOKEN";
+
     @Override
     public void setUp() {
 
@@ -33,5 +43,20 @@ public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServi
             s.setDataRestServiceUrl(dataServicesUrl);
             s.setRestTemplateSupplier(() -> mockRestTemplate);
         });
+
+        SecurityContextImpl securityContext = new SecurityContextImpl();
+        securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+    protected HttpEntity<String> httpEntityForRestGet() {
+        HttpHeaders headers = getJSONHeaders();
+        headers.set(AUTH_TOKEN, VALID_AUTH_TOKEN);
+        return new HttpEntity<>("", headers);
+    }
+
+    protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
+        HttpHeaders headers = getJSONHeaders();
+        return new HttpEntity<>("", headers);
     }
 }

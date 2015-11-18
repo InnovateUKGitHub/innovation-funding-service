@@ -24,16 +24,15 @@ import static java.util.Arrays.asList;
  * through a REST call.
  */
 @Service
-public class ApplicationRestServiceImpl  extends BaseRestServiceProvider implements ApplicationRestService {
+public class ApplicationRestServiceImpl extends BaseRestServiceProvider implements ApplicationRestService {
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
 
     private final Log log = LogFactory.getLog(getClass());
 
+    @Override
     public Application getApplicationById(Long applicationId) {
-        RestTemplate restTemplate = new RestTemplate();
-        Application application = restTemplate.getForObject(dataRestServiceURL + applicationRestURL + "/id/" + applicationId, Application.class);
-        return application;
+        return restGet(applicationRestURL + "/id/" + applicationId, Application.class);
     }
 
     @Override
@@ -41,6 +40,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
         return asList(restGet(applicationRestURL + "/findByUser/" + userId, Application[].class));
     }
 
+    @Override
     public void saveApplication(Application application) {
         log.info("ApplicationRestRestService.saveApplication " + application.getId());
 
@@ -63,14 +63,11 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
 
     }
 
+    @Override
     public void updateApplicationStatus(Long applicationId, Long statusId) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}";
+        ResponseEntity<String> response = restGetEntity(applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}", String.class);
 
-        HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
-
-        log.info("ApplicationRestRestService.updateApplicationStatus send it!");
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, statusId);
+        log.debug("ApplicationRestRestService.updateApplicationStatus sending for applicationId " + applicationId);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("ApplicationRestRestService, save == ok : " + response.getBody());
@@ -82,6 +79,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
         }
     }
 
+    @Override
     public Double getCompleteQuestionsPercentage(Long applicationId) {
         if (applicationId == null) {
             log.error("No application and/org organisation id!!");
@@ -93,11 +91,7 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
 
     @Override
     public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role;
-        ResponseEntity<Application[]> responseEntity = restTemplate.getForEntity(url, Application[].class);
-        Application[] applications = responseEntity.getBody();
-        return asList(applications);
+        return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, Application[].class));
     }
 
 

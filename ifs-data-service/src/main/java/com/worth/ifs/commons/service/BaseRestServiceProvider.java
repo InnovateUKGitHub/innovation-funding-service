@@ -37,6 +37,19 @@ public abstract class BaseRestServiceProvider {
      * @return
      */
     protected  <T> T restGet(String path, Class c) {
+        ResponseEntity<T> responseEntity = restGetEntity(path, c);
+        return responseEntity.getBody();
+    }
+
+    /**
+     * restGet is a generic method that performs a RESTful GET request.
+     *
+     * @param path - the unified name resource of the request to be made
+     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param <T>
+     * @return
+     */
+    protected  <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
 
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getJSONHeaders();
@@ -46,9 +59,9 @@ public abstract class BaseRestServiceProvider {
         }
 
         HttpEntity<String> entity = new HttpEntity<>("", headers);
-        ResponseEntity<T> responseEntity = restTemplate.exchange(dataRestServiceURL + path , HttpMethod.GET, entity, c);
-        return responseEntity.getBody();
+        return restTemplate.exchange(dataRestServiceURL + path , HttpMethod.GET, entity, c);
     }
+
     /**
      * restPost is a generic method that performs a RESTful POST request.
      *
