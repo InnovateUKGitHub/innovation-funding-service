@@ -38,6 +38,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-rest"
     compile "org.springframework.security:spring-security-crypto"
+    compile "org.springframework.boot:spring-boot-starter-security"
     //compile "org.springframework.data:spring-data-rest-hal-browser" future release it's cool
     compile "mysql:mysql-connector-java"
     compile "org.springframework:spring-web"
@@ -63,6 +64,7 @@ task client(type: Jar) {
         include "com/worth/ifs/*/constant/**"
         include "com/worth/ifs/*/resource/**"
         include "com/worth/ifs/util/**"
+        include "com/worth/ifs/commons/security/**"
     }
 }
 task clientCopy(type: Copy){

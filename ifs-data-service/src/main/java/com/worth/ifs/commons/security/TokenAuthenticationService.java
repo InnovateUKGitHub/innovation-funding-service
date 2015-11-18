@@ -1,4 +1,4 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.service.UserRestService;

@@ -42,20 +42,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow anonymous resource requests
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/user/email/*/password/*").permitAll()
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .logout().deleteCookies("IFS_AUTH_TOKEN")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint("/login"))
-            .and()
+                .and()
                 .headers().cacheControl()
             .and()
-                    // Custom Token based authentication based on the header previously given to the client
                 .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
     }
 
     private CsrfTokenRepository csrfTokenRepository() {

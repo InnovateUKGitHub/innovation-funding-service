@@ -1,4 +1,4 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
