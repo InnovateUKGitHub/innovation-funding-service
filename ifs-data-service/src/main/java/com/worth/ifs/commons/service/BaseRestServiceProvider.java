@@ -36,7 +36,7 @@ public abstract class BaseRestServiceProvider {
      * @param <T>
      * @return
      */
-    protected  <T> T restGet(String path, Class c) {
+    protected  <T> T restGet(String path, Class<T> c) {
 
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getJSONHeaders();
@@ -46,21 +46,21 @@ public abstract class BaseRestServiceProvider {
         }
 
         HttpEntity<String> entity = new HttpEntity<>("", headers);
-        ResponseEntity<T> responseEntity = restTemplate.exchange(dataRestServiceURL + path , HttpMethod.GET, entity, c);
+        ResponseEntity<T> responseEntity = restTemplate.exchange(dataRestServiceURL + path, HttpMethod.GET, entity, c);
         return responseEntity.getBody();
     }
-    /**
-     * restPost is a generic method that performs a RESTful POST request.
-     *
-     * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
-     * @param <T>
-     * @return
-     */
-    protected  <T> T restPost(String message, String path, Class c) {
-        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials() + "";
-        HttpEntity<String> entity = new HttpEntity<>(message, getJSONHeaders());
-        ResponseEntity<T> response = getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.POST, entity, c);
+
+
+    protected  <T> T restPost(String path, Object postEntity, Class<T> c) {
+        RestTemplate restTemplate = getRestTemplate();
+        HttpHeaders headers = getJSONHeaders();
+
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        }
+
+        HttpEntity<Object> entity = new HttpEntity<>(postEntity, getJSONHeaders());
+        ResponseEntity<T> response = restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
         return response.getBody();
     }
 

@@ -8,11 +8,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.Arrays;
@@ -32,40 +28,19 @@ public class FormInputResponseRestServiceImpl extends BaseRestServiceProvider im
 
 
     public List<FormInputResponse> getResponsesByApplicationId(Long applicationId) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<FormInputResponse[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + responseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class);
-        FormInputResponse[] responses = responseEntity.getBody();
-        return Arrays.asList(responses);
+        List<FormInputResponse> responses = Arrays.asList(restGet(responseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
+        return responses;
     }
 
     public List<String> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/";
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("userId", userId);
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
-
-        HttpEntity<String> entity = new HttpEntity<String>(node.toString(), getJSONHeaders());
-
-        ResponseEntity<String[]> responseEntity = restTemplate.postForEntity(url, entity, String[].class);
-        List<String> validatedResponse = Arrays.asList(responseEntity.getBody());
-
+        List<String> validatedResponse = Arrays.asList(restPost(responseRestURL + "/saveQuestionResponse/", node, String[].class));
         return validatedResponse;
     }
 
-    private Boolean handleResponseStatus(ResponseEntity<?> response) {
-        if (response.getStatusCode() == HttpStatus.ACCEPTED) {
-            return true;
-        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            // nono... bad credentials
-            log.info("Unauthorized.....");
-            return false;
-        }
-
-        return false;
-    }
 }
