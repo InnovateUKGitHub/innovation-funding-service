@@ -36,7 +36,7 @@ public abstract class BaseRestServiceProvider {
      * @param <T>
      * @return
      */
-    protected  <T> T restGet(String path, Class c) {
+    protected <T> T restGet(String path, Class<T> c) {
         ResponseEntity<T> responseEntity = restGetEntity(path, c);
         return responseEntity.getBody();
     }
@@ -49,7 +49,7 @@ public abstract class BaseRestServiceProvider {
      * @param <T>
      * @return
      */
-    protected  <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
+    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
 
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getJSONHeaders();
@@ -70,10 +70,16 @@ public abstract class BaseRestServiceProvider {
      * @param <T>
      * @return
      */
-    protected  <T> T restPost(String message, String path, Class c) {
-        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials() + "";
-        HttpEntity<String> entity = new HttpEntity<>(message, getJSONHeaders());
-        ResponseEntity<T> response = getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.POST, entity, c);
+    protected <T> T restPost(String path, Object postEntity, Class<T> c) {
+        RestTemplate restTemplate = getRestTemplate();
+        HttpHeaders headers = getJSONHeaders();
+
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        }
+
+        HttpEntity<Object> entity = new HttpEntity<>(postEntity, getJSONHeaders());
+        ResponseEntity<T> response = restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
         return response.getBody();
     }
 
