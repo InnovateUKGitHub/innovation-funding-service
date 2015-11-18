@@ -108,4 +108,16 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
         // now run the method under test
         service.saveApplication(applicationToUpdate);
     }
+
+    @Test
+    public void test_updateApplicationStatus() {
+
+        String expectedUrl = dataServicesUrl + applicationRestURL + "/updateApplicationStatus?applicationId=123&statusId=456";
+
+        ResponseEntity<String> response = new ResponseEntity<>("", OK);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), String.class)).thenReturn(response);
+
+        // now run the method under test
+        service.updateApplicationStatus(123L, 456L);
+    }
 }

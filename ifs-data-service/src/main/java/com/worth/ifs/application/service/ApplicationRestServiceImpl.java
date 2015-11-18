@@ -58,7 +58,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public void updateApplicationStatus(Long applicationId, Long statusId) {
-        ResponseEntity<String> response = restGetEntity(applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}", String.class);
+
+        ResponseEntity<String> response =
+                restGetEntity(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&statusId=" + statusId, String.class);
 
         log.debug("ApplicationRestRestService.updateApplicationStatus sending for applicationId " + applicationId);
 
