@@ -2,26 +2,18 @@ package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.finance.model.OrganisationFinance;
-import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.finance.service.CostRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.SpringApplicationContextLoader;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Objects;
 
 @Configurable
 public class OrganisationFinanceOverview {
@@ -62,7 +54,7 @@ public class OrganisationFinanceOverview {
         for(CostType costType : CostType.values()) {
             BigDecimal typeTotal = organisationFinances.stream()
                     .map(o -> o.getCostCategory(costType).getTotal())
-                    .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));;
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);;
             totalPerType.put(costType, typeTotal);
         }
 
@@ -73,7 +65,7 @@ public class OrganisationFinanceOverview {
     public BigDecimal getTotal() {
         return organisationFinances.stream()
                 .map(of -> of.getTotal())
-                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Double getTotalGrantPercentage() {
