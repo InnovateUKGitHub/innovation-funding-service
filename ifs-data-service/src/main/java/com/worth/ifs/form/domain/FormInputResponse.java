@@ -19,10 +19,19 @@ public class FormInputResponse {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     private LocalDateTime updateDate;
 
     @Column(length=5000)
     private String value;
+
 
     @ManyToOne
     @JoinColumn(name="updatedById", referencedColumnName="id")
