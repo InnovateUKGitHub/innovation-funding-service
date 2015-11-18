@@ -8,3 +8,31 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
+Verify the validation error when the text area is empty
+
+Verify the validation error for an invalid date (day)
+    Given Applicant goes to the Application form
+    When the applicant inserts an invalid day
+    Then the applicant should get a validation error
+
+Verify the validation error for an invalid date (month)
+    Given Applicant goes to the Application form
+    Given that the applicant inserts an invalid month
+    Then the applicant should get a validation error
+
+*** Keywords ***
+the applicant is application form
+    go to    ${APPLICATION_URL}
+
+the applicant inserts more than 500 words in the first question
+    Input Text    id=11    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8
+
+the applicant should see a validation error
+    Page Should Contain Element
+
+the applicant inserts an invalid day
+    Clear Element Text    id="application_details-startdate_day"
+
+that the applicant inserts an invalid month
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    13
