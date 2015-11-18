@@ -8,6 +8,8 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -17,6 +19,7 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -48,7 +54,7 @@ public class ApplicationController {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping("/id/{id}")
+    @RequestMapping("/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
         return repository.findOne(id);
     }
@@ -60,14 +66,24 @@ public class ApplicationController {
     }
 
     @RequestMapping("/findByUser/{userId}")
-    public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
+    public Resources<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
-        List<Application> apps = new ArrayList<>();
-        for (ProcessRole role : roles) {
-            apps.add(role.getApplication());
-        }
-        return apps;
+        List<ProcessRole> roles = userAppRoleRepository.findByUser(user);
+        ApplicationResourceAssembler assembler = new ApplicationResourceAssembler();
+
+        List<ApplicationResource> apps = roles.stream()
+            .map(ProcessRole::getApplication)
+            .map(assembler::toResource)
+            .collect(Collectors.toList());
+
+        Resources<ApplicationResource> resources = new Resources<>(apps);
+        resources.add(
+            linkTo(
+                methodOn(ApplicationController.class).findByUserId(userId)
+            ).withSelfRel()
+        );
+
+        return resources;
     }
 
     /**
