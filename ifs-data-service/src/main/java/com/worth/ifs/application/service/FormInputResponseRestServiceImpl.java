@@ -54,8 +54,6 @@ public class FormInputResponseRestServiceImpl extends BaseRestServiceProvider im
         ResponseEntity<String[]> responseEntity = restTemplate.postForEntity(url, entity, String[].class);
         List<String> validatedResponse = Arrays.asList(responseEntity.getBody());
 
-        validatedResponse.stream().forEach(e -> log.info("FormInputResponse validation error;"+ e));
-
         return validatedResponse;
     }
 
