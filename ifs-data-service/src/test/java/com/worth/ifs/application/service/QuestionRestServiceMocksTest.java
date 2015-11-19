@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
@@ -24,11 +23,11 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceMocksTest<Quest
 
     private static final String questionRestURL = "/question";
 
+
     @Override
-    protected QuestionRestServiceImpl registerRestServiceUnderTest(Consumer<QuestionRestServiceImpl> registrar) {
+    protected QuestionRestServiceImpl registerRestServiceUnderTest() {
         QuestionRestServiceImpl questionRestService = new QuestionRestServiceImpl();
         questionRestService.questionRestURL = questionRestURL;
-        registrar.accept(questionRestService);
         return questionRestService;
     }
 
