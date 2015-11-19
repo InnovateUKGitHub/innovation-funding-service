@@ -7,6 +7,8 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -45,7 +47,10 @@ public class FormInputResponse {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+
+
     public FormInputResponse() {
+
     }
 
     public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {

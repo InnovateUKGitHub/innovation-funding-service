@@ -49,7 +49,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
             log.info("ApplicationRestRestService, save == ok : " + response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             //  bad credentials?
-            log.info("Unauthorized request.");
+            log.info("Unauthorized save request.");
         } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
             log.info("Status code not_found .....");
         }

@@ -54,9 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .and()
-                .headers().cacheControl()
-                .and()
-                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers().cacheControl();
     }
 
     private CsrfTokenRepository csrfTokenRepository() {

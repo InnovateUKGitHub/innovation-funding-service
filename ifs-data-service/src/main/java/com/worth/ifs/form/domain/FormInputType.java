@@ -1,7 +1,8 @@
 package com.worth.ifs.form.domain;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 /**
@@ -17,11 +18,6 @@ public class FormInputType {
     private Long id;
     private String title;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST})
-    @JoinTable(name="form_type_form_validator",
-            joinColumns={@JoinColumn(name="form_input_type_id")},
-            inverseJoinColumns={@JoinColumn(name="form_validator_id")})
-    List<FormValidator> formValidators;
 
     public FormInputType(Long id, String title) {
         this.id = id;
@@ -38,13 +34,5 @@ public class FormInputType {
 
     public String getTitle() {
         return title;
-    }
-
-    public List<FormValidator> getFormValidators() {
-        return formValidators;
-    }
-
-    public void setFormValidators(List<FormValidator> formValidators) {
-        this.formValidators = formValidators;
     }
 }

@@ -5,11 +5,7 @@ import com.worth.ifs.finance.domain.Cost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -29,8 +25,7 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
 
     @Override
     public void add(Long applicationFinanceId, Long questionId) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(dataRestServiceURL + costRestURL + "/add/"+applicationFinanceId + "/" + questionId, applicationFinanceId, questionId);
+        restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId);
     }
 
     @Override
@@ -40,26 +35,16 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
 
     @Override
     public void update(Cost cost) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + costRestURL + "/update/" +cost.getId();
-
-        //set your entity to send
-        HttpEntity<Cost> entity = new HttpEntity<>(cost, getJSONHeaders());
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity
-                , String.class);
+        restPut(costRestURL + "/update/" + cost.getId(), cost);
     }
 
     @Override
     public void delete(Long costId) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(dataRestServiceURL + costRestURL + "/delete/"+costId);
+        restDelete(costRestURL + "/delete/"+costId);
     }
 
     @Override
     public Cost findById(Long id) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Cost> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/findById/"+id, Cost.class);
-        return responseEntity.getBody();
+        return restGet(costRestURL + "/findById/" + id, Cost.class);
     }
 }

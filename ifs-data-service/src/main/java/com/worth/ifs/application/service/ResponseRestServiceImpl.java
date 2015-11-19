@@ -37,7 +37,7 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
                 "/assessorFeedback?assessorUserId=" + assessorUserId +
                 "&feedbackValue=" + feedbackValue.orElse("") +
                 "&feedbackText=" + feedbackText.orElse("");
-        
+
         ResponseEntity<JsonStatusResponse> response = restPutEntity(url, JsonStatusResponse.class);
         return handleResponseStatus(response);
     }

@@ -295,13 +295,22 @@ public class ApplicationFormController extends AbstractApplicationController {
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
-                Application application = applicationService.getById(applicationId);
-                application.setName(value);
-                applicationService.save(application);
+                if(StringUtils.isEmpty(value)){
+                    errors.add("Please enter the full title of the project.");
+                }else{
+                    Application application = applicationService.getById(applicationId);
+                    application.setName(value);
+                    applicationService.save(application);
+                }
             } else if (inputIdentifier.equals("application_details-duration")) {
-                Application application = applicationService.getById(applicationId);
-                application.setDurationInMonths(Long.valueOf(value));
-                applicationService.save(application);
+                Long durationInMonth = Long.valueOf(value);
+                if(durationInMonth == null || durationInMonth < 1L){
+                    errors.add("Please enter a valid duration.");
+                }else{
+                    Application application = applicationService.getById(applicationId);
+                    application.setDurationInMonths(durationInMonth);
+                    applicationService.save(application);
+                }
             } else if (inputIdentifier.startsWith("application_details-startdate")) {
                 Application application = applicationService.getById(applicationId);
                 LocalDate startDate = application.getStartDate();
@@ -315,6 +324,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                     startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
                 } else if (inputIdentifier.endsWith("_year")) {
                     startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+                }
+                if(startDate.isBefore(LocalDate.now())){
+                    errors.add("Please enter a future date.");
                 }
                 application.setStartDate(startDate);
                 applicationService.save(application);

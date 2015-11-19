@@ -73,6 +73,14 @@ public abstract class BaseRestService {
         return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(""), c);
     }
 
+    protected void restPut(String path, Object entity) {
+        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(entity), Void.class);
+    }
+
+    protected void restDelete(String path) {
+        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.DELETE, jsonEntity(""), Void.class);
+    }
+
 
     /**
      * restPost is a generic method that performs a RESTful POST request.

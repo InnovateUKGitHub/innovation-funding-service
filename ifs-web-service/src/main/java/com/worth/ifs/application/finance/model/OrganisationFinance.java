@@ -91,7 +91,7 @@ public class OrganisationFinance {
     public BigDecimal getTotal() {
         return costCategories.entrySet().stream()
                 .map(cat -> cat.getValue().getTotal())
-                .reduce(new BigDecimal(0), (num, accumulator) -> accumulator.add(num));
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {

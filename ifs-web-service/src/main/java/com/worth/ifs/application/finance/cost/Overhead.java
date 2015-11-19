@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.cost;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 /**
@@ -28,7 +27,7 @@ public class Overhead implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        return new BigDecimal(0);
+        return BigDecimal.ZERO;
     }
 
     @Override

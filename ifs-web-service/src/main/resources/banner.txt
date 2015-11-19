@@ -13,4 +13,4 @@
 
 
   Innovation Funding Service
-        Alpha Release
+        Beta Release

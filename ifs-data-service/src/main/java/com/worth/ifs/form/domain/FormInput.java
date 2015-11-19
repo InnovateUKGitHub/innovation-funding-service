@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Assessment Feedback etc).
@@ -34,11 +36,20 @@ public class FormInput {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @JoinTable(name="form_input_validator",
+            joinColumns={@JoinColumn(name="form_input_id")},
+            inverseJoinColumns={@JoinColumn(name="form_validator_id")})
+    private Set<FormValidator> inputValidators;
+
+
+
     private String description;
 
     private Boolean includedInApplicationSummary = false;
 
     public FormInput() {
+        inputValidators = new LinkedHashSet<>();
     }
 
     public Long getId() {
@@ -68,5 +79,18 @@ public class FormInput {
 
     public String getDescription() {
         return description;
+    }
+
+    @JsonIgnore
+    public Set<FormValidator> getFormValidators() {
+        return inputValidators;
+    }
+
+    public void setFormValidators(Set<FormValidator> inputValidators) {
+        this.inputValidators = inputValidators;
+    }
+
+    public void addFormValidator(FormValidator inputValidator) {
+        this.inputValidators.add(inputValidator);
     }
 }

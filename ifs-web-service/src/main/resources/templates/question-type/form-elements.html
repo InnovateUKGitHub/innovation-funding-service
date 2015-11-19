@@ -122,6 +122,7 @@
 <div th:fragment="form-duration (id, months)">
   <div class="form-group">
     <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
+      <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag" />
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${months})" th:remove="tag"/>
   </div>
 </div>

@@ -41,7 +41,7 @@ public class DefaultCostCategoryTest {
         costs.add(costItemFactory.createCostItem(CostType.SUBCONTRACTING_COSTS, cost3));
         costs.add(null);
 
-        total = new BigDecimal(0);
+        total = BigDecimal.ZERO;
 
         defaultCostCategory = new DefaultCostCategory();
     }

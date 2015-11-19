@@ -53,7 +53,7 @@ public class CostItemMapper {
                 return new Cost(otherCost.getId(), "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
             case OVERHEADS:
                 Overhead overhead = (Overhead) costItem;
-                return new Cost(overhead.getId(), overhead.getAcceptRate(), "", overhead.getCustomRate(), new BigDecimal(0), null, null);
+                return new Cost(overhead.getId(), overhead.getAcceptRate(), "", overhead.getCustomRate(), BigDecimal.ZERO, null, null);
             case SUBCONTRACTING_COSTS:
                 return mapSubContractingCost(costItem);
             case TRAVEL:
@@ -61,7 +61,7 @@ public class CostItemMapper {
                 return new Cost(travel.getId(), travel.getItem(), "", travel.getQuantity(), travel.getCostPerItem(), null, null);
             case FINANCE:
                 GrantClaim grantClaim = (GrantClaim) costItem;
-                return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), new BigDecimal(0), null,null);
+                return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
         }
 
         throw new IllegalArgumentException("Not a valid CostType: " + costType);

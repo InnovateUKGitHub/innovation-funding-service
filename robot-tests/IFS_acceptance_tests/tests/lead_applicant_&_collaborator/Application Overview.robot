@@ -10,9 +10,9 @@ Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
 Verify that the Applicant can access the Overview page
@@ -45,13 +45,14 @@ Verify that only the main questions show and not the file uploads
 Verify the applicant can see the days left to submit
     [Documentation]    -INFUND-37
     When the Applicant is in the application overview page
-    The "Days left to submit" should be visible
+    The "Days left to submit" should be visible in the overview page
+    The "days left to submit" should be correct in the overview page
 
 Verify the "Progress bar" is 0% when the application is empty
     [Documentation]    INFUND-32
     When the Applicant is in the application overview page
     The Progress bar should be 0% in the overview page
-    and the progress bar on the My appications page should be 0%
+    and the progress bar on the My applications page should be 0%
 
 Verify the "Progress bar" is 14% when the applicant marks as complete one question from each section
     [Documentation]    INFUND-32
@@ -115,7 +116,7 @@ the uploads should not be visible
     Element Should Not Be Visible    css=#question-17 > div > input[type="file"]
     Element Should Not Be Visible    css=#question-18 > div > input[type="file"]
 
-The "Days left to submit" should be visible
+The "Days left to submit" should be visible in the overview page
     Element Should Be Visible    css=#content > div.sub-header > div > div > div.pie-overlay > div
 
 The Progress bar should be 0% in the overview page
@@ -145,10 +146,13 @@ the Progress bar should be 14% in the overview page
     go to    ${APPLICATION_OVERVIEW_URL}
     Element Text Should Be    css=#content > div.grid-row > div.column-half.competition-details > div > div > div.progress    14%
 
-the progress bar on the My appications page should be 0%
+the progress bar on the My applications page should be 0%
     go to    ${DASHBOARD_URL}
     Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    0%
 
 the progress bar on the my applications page should be 14%
     go to    ${DASHBOARD_URL}
     Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    14%
+
+The "days left to submit" should be correct in the overview page
+    Element Text Should Be    css=#content > div.sub-header > div > div > div.pie-overlay > div    0

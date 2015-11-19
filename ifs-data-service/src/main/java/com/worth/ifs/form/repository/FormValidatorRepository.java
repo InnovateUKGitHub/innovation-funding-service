@@ -1,6 +1,5 @@
 package com.worth.ifs.form.repository;
 
-import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormValidator;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +13,5 @@ import java.util.List;
  */
 public interface FormValidatorRepository extends PagingAndSortingRepository<FormValidator, Long> {
     List<FormValidator> findAll();
-    List<FormValidator> findById(@Param("id") Long id);
+    FormValidator findById(@Param("id") Long id);
 }

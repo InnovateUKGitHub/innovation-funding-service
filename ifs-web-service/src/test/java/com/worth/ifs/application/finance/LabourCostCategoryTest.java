@@ -45,7 +45,7 @@ public class LabourCostCategoryTest {
         costs.add(costItemFactory.createCostItem(CostType.LABOUR, cost1));
         costs.add(costItemFactory.createCostItem(CostType.LABOUR, cost2));
 
-        total = new BigDecimal(0);
+        total = BigDecimal.ZERO;
 
         labourCostCategory = new LabourCostCategory();
     }
