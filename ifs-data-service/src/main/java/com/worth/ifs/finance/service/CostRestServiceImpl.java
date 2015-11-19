@@ -27,15 +27,18 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     @Value("${ifs.data.service.rest.cost}")
     String costRestURL;
 
+    @Override
     public void add(Long applicationFinanceId, Long questionId) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(dataRestServiceURL + costRestURL + "/add/"+applicationFinanceId + "/" + questionId, applicationFinanceId, questionId);
     }
 
+    @Override
     public List<Cost> getCosts(Long applicationFinanceId) {
         return asList(restGet(costRestURL + "/get/"+applicationFinanceId, Cost[].class));
     }
 
+    @Override
     public void update(Cost cost) {
         RestTemplate restTemplate = new RestTemplate();
         String url = dataRestServiceURL + costRestURL + "/update/" +cost.getId();
@@ -47,11 +50,13 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
                 , String.class);
     }
 
+    @Override
     public void delete(Long costId) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete(dataRestServiceURL + costRestURL + "/delete/"+costId);
     }
 
+    @Override
     public Cost findById(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Cost> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/findById/"+id, Cost.class);
