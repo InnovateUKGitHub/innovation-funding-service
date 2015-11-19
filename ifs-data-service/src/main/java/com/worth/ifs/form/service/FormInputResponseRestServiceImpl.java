@@ -1,4 +1,4 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.form.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,13 +22,13 @@ import java.util.List;
 @Service
 public class FormInputResponseRestServiceImpl extends BaseRestService implements FormInputResponseRestService {
     @Value("${ifs.data.service.rest.forminputresponse}")
-    String responseRestURL;
+    String formInputResponseRestURL;
 
     private final Log log = LogFactory.getLog(getClass());
 
 
     public List<FormInputResponse> getResponsesByApplicationId(Long applicationId) {
-        List<FormInputResponse> responses = Arrays.asList(restGet(responseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
+        List<FormInputResponse> responses = Arrays.asList(restGet(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
         return responses;
     }
 
@@ -39,7 +39,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
-        List<String> validatedResponse = Arrays.asList(restPost(responseRestURL + "/saveQuestionResponse/", node, String[].class));
+        List<String> validatedResponse = Arrays.asList(restPost(formInputResponseRestURL + "/saveQuestionResponse/", node, String[].class));
         return validatedResponse;
     }
 

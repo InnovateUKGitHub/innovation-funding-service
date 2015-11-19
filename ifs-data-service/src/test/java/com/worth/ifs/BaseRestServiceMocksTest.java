@@ -49,14 +49,22 @@ public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServi
         SecurityContextHolder.setContext(securityContext);
     }
 
-    protected HttpEntity<String> httpEntityForRestGet() {
+    protected <T> HttpEntity<T> httpEntityForRestCall(T body) {
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, VALID_AUTH_TOKEN);
-        return new HttpEntity<>("", headers);
+        return new HttpEntity<>(body, headers);
+    }
+
+    protected <T> HttpEntity<T> httpEntityForRestCallWithoutAuthToken(T body) {
+        HttpHeaders headers = getJSONHeaders();
+        return new HttpEntity<>(body, headers);
+    }
+
+    protected HttpEntity<String> httpEntityForRestCall() {
+        return httpEntityForRestCall("");
     }
 
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
-        HttpHeaders headers = getJSONHeaders();
-        return new HttpEntity<>("", headers);
+        return httpEntityForRestCallWithoutAuthToken("");
     }
 }
