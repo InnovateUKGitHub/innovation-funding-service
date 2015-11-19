@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.finance.builder.CostBuilder.newCost;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -56,5 +58,31 @@ public class CostRestServiceMocksTest extends BaseRestServiceMocksTest<CostRestS
         Cost cost = service.findById(123L);
         assertNotNull(cost);
         assertEquals(returnedResponse, cost);
+    }
+
+    @Test
+    public void test_add_byApplicationFinanceIdAndQuestionId() {
+
+        String expectedUrl = dataServicesUrl + costRestURL + "/add/123/456";
+        service.add(123L, 456L);
+        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+    }
+
+    @Test
+    public void test_delete_byCostId() {
+        String expectedUrl = dataServicesUrl + costRestURL + "/delete/123";
+        service.delete(123L);
+        verify(mockRestTemplate).exchange(expectedUrl, DELETE, httpEntityForRestCall(), Void.class);
+    }
+
+    @Test
+    public void test_update_byCost() {
+
+        Cost costToUpdate = newCost().with(id(123L)).build();
+
+        String expectedUrl = dataServicesUrl + costRestURL + "/update/123";
+
+        service.update(costToUpdate);
+        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(costToUpdate), Void.class);
     }
 }
