@@ -40,12 +40,28 @@
 
     .assign-container{
     	
-    	font-size: 16px;
+    	font-size: 14px;
 
     	.assign-team{
     		//position: static;
     		margin-top: 0;
     		margin-bottom: 10px;
     	}
+
+    	li{
+    		border: none;
+    	}
     }
+
+    .marked-as-complete {
+		@extend %mark-done-right;
+		background-position: right top;
+		background-size: 30px;
+	}
+
+	.assigned-to-me {
+		@extend %mark-assigned-right;
+		background-position: right top;
+		background-size: 30px;
+	}
 }
