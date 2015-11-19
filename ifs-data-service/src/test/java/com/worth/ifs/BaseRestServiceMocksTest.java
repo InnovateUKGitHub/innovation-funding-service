@@ -9,8 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.function.Consumer;
-
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
 
@@ -28,7 +26,7 @@ public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServi
 
     protected ServiceType service;
 
-    protected abstract ServiceType registerRestServiceUnderTest(Consumer<ServiceType> registrar);
+    protected abstract ServiceType registerRestServiceUnderTest();
 
     protected static final String dataServicesUrl = "http://localhost/tests/dataServices";
 
@@ -39,10 +37,9 @@ public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestServi
 
         super.setUp();
 
-        service = registerRestServiceUnderTest(s -> {
-            s.setDataRestServiceUrl(dataServicesUrl);
-            s.setRestTemplateSupplier(() -> mockRestTemplate);
-        });
+        service = registerRestServiceUnderTest();
+        service.setDataRestServiceUrl(dataServicesUrl);
+        service.setRestTemplateSupplier(() -> mockRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));

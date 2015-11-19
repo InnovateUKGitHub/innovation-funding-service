@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.junit.Assert.assertNotNull;
@@ -22,10 +21,9 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceMocksT
     private static final String formInputResponseRestURL = "/forminputresponses";
 
     @Override
-    protected FormInputResponseRestServiceImpl registerRestServiceUnderTest(Consumer<FormInputResponseRestServiceImpl> registrar) {
+    protected FormInputResponseRestServiceImpl registerRestServiceUnderTest() {
         FormInputResponseRestServiceImpl formInputResponseService = new FormInputResponseRestServiceImpl();
         formInputResponseService.formInputResponseRestURL = formInputResponseRestURL;
-        registrar.accept(formInputResponseService);
         return formInputResponseService;
     }
 

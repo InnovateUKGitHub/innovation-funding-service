@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
@@ -25,10 +24,9 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
     private static final String applicationRestURL = "/applications";
 
     @Override
-    protected ApplicationRestServiceImpl registerRestServiceUnderTest(Consumer<ApplicationRestServiceImpl> registrar) {
+    protected ApplicationRestServiceImpl registerRestServiceUnderTest() {
         ApplicationRestServiceImpl applicationRestService = new ApplicationRestServiceImpl();
         applicationRestService.applicationRestURL = applicationRestURL;
-        registrar.accept(applicationRestService);
         return applicationRestService;
     }
 
