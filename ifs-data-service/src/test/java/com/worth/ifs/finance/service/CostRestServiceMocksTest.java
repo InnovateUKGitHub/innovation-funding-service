@@ -37,10 +37,24 @@ public class CostRestServiceMocksTest extends BaseRestServiceMocksTest<CostRestS
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Cost[].class)).thenReturn(returnedEntity);
 
-        List<Cost> costFields = service.getCosts(123L);
-        assertNotNull(costFields);
-        assertEquals(returnedResponse[0], costFields.get(0));
-        assertEquals(returnedResponse[1], costFields.get(1));
-        assertEquals(returnedResponse[2], costFields.get(2));
+        List<Cost> costs = service.getCosts(123L);
+        assertNotNull(costs);
+        assertEquals(returnedResponse[0], costs.get(0));
+        assertEquals(returnedResponse[1], costs.get(1));
+        assertEquals(returnedResponse[2], costs.get(2));
+    }
+
+    @Test
+    public void test_findById() {
+
+        String expectedUrl = dataServicesUrl + costRestURL + "/findById/123";
+        Cost returnedResponse = newCost().build();
+        ResponseEntity<Cost> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Cost.class)).thenReturn(returnedEntity);
+
+        Cost cost = service.findById(123L);
+        assertNotNull(cost);
+        assertEquals(returnedResponse, cost);
     }
 }

@@ -58,8 +58,6 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
 
     @Override
     public Cost findById(Long id) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Cost> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/findById/"+id, Cost.class);
-        return responseEntity.getBody();
+        return restGet(costRestURL + "/findById/" + id, Cost.class);
     }
 }
