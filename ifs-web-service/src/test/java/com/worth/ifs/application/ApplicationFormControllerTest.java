@@ -193,7 +193,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 2L, "Question 2 Response")).thenReturn(asList("Error!"));
+        when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
@@ -203,6 +203,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "formInput[1]", "Please enter some text"))
                 .andReturn();
     }
 
