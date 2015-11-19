@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -26,10 +25,9 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<Ass
     private static String assessmentRestURL = "/assessments";
 
     @Override
-    protected AssessmentRestServiceImpl registerRestServiceUnderTest(Consumer<AssessmentRestServiceImpl> registrar) {
+    protected AssessmentRestServiceImpl registerRestServiceUnderTest() {
         AssessmentRestServiceImpl assessmentRestService = new AssessmentRestServiceImpl();
         assessmentRestService.assessmentRestURL = assessmentRestURL;
-        registrar.accept(assessmentRestService);
         return assessmentRestService;
     }
 

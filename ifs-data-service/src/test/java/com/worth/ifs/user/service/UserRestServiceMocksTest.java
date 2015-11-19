@@ -7,9 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -21,11 +20,10 @@ public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestS
     private static final String processRolesUrl = "/processroles";
 
     @Override
-    protected UserRestServiceImpl registerRestServiceUnderTest(Consumer<UserRestServiceImpl> registrar) {
+    protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
         userRestService.setUserRestUrl(usersUrl);
         userRestService.setProcessRoleRestUrl(processRolesUrl);
-        registrar.accept(userRestService);
         return userRestService;
     }
 
