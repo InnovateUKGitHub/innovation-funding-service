@@ -81,6 +81,7 @@ public class FormInput {
         return description;
     }
 
+    @JsonIgnore
     public Set<FormValidator> getFormValidators() {
         return inputValidators;
     }
