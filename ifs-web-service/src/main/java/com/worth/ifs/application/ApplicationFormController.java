@@ -147,10 +147,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 //        return application;
 //    }
 
-    private Map<Long,String> saveApplicationForm(Form form, Model model,
-                                     @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId,
-                                     HttpServletRequest request, HttpServletResponse response) {
+    private Map<Long, List<String>> saveApplicationForm(Form form, Model model,
+                                                        @PathVariable("applicationId") final Long applicationId,
+                                                        @PathVariable("sectionId") final Long sectionId,
+                                                        HttpServletRequest request, HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -159,14 +159,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         // get the section that we want, so we can use this on to store the correct questions.
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
 
-        Map<Long, String> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
+        Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.info("key " + key));
 
         setApplicationDetails(application, params);
-        boolean marked = markQuestion(request, params, applicationId, user.getId());
+        boolean marked = markQuestion(request, params, applicationId, user.getId(), errors);
 
         applicationService.save(application);
         // if a question is marked as complete, don't show the field saved message.
@@ -194,10 +194,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         HttpServletRequest request,
                                         HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-        Map<Long, String> errors = saveApplicationForm(form, model, applicationId, sectionId, request, response);
+        Map<Long, List<String>> errors = saveApplicationForm(form, model, applicationId, sectionId, request, response);
 
         errors.forEach((k,v) -> log.info("Remote validation: "+ k + " v: "+ v));
-        errors.forEach((k,v) -> bindingResult.rejectValue("formInput["+k+"]", v, v));
+        errors.forEach((k,errorList) -> {
+            errorList.forEach(error -> {
+                bindingResult.rejectValue("formInput[" + k + "]", error, error);
+            });
+        });
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
@@ -216,7 +220,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId) {
+    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId, Map<Long, List<String>> errors) {
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
         if (processRole == null) {
             return false;
@@ -224,19 +228,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         boolean success = false;
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
-            questionService.markAsComplete(questionId, applicationId, processRole.getId());
-            success= true;
+
+            if(errors.containsKey(questionId) && errors.get(questionId).size() > 0){
+                List<String> fieldErrors = errors.get(questionId);
+                fieldErrors.add("Please enter valid data before marking a question as complete.");
+            }else{
+                questionService.markAsComplete(questionId, applicationId, processRole.getId());
+                success= true;
+            }
         }
         if (params.containsKey("mark_as_incomplete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
             success= true;
+
         }
         return success;
     }
 
-    private Map<Long, String> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
-        Map<Long, String> errorMap = new HashMap<>();
+    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
+        Map<Long, List<String>> errorMap = new HashMap<>();
         questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
 
             if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
@@ -244,7 +255,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 List<String> errors = formInputResponseService.save(userId, applicationId, question.getId(), value);
                 if (errors.size() != 0) {
                     log.error("save failed. " + question.getId());
-                    errors.forEach(e -> errorMap.put(question.getId(), e));
+                    errorMap.put(question.getId(), new ArrayList<>(errors));
                 }
             }
         }));
