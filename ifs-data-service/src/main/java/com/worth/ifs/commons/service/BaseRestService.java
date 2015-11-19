@@ -88,7 +88,6 @@ public abstract class BaseRestService {
 
         HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
         return restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
->>>>>>> bc74083fd973ab69df248f9d16087472add2bc45
     }
 
     public static HttpHeaders getJSONHeaders() {
