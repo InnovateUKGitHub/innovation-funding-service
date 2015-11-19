@@ -52,7 +52,7 @@ public class CostController {
             @PathVariable("questionId") final Long questionId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
         Question question = questionRepository.findOne(questionId);
-        Cost cost = new Cost("", "", 0, new BigDecimal(0), applicationFinance, question);
+        Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
         costRepository.save(cost);
     }
 
@@ -64,7 +64,7 @@ public class CostController {
             Cost savedCost = costRepository.save(updatedCost);
 
             newCost.getCostValues()
-                .parallelStream()
+                .stream()
                 .filter(costValue -> costValue.getValue()!=null)
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
 

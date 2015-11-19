@@ -18,7 +18,7 @@ public class GrantClaim implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        return new BigDecimal(0);
+        return BigDecimal.ZERO;
     }
 
     public Integer getGrantClaimPercentage() {

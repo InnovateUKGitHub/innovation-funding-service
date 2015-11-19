@@ -1,21 +1,15 @@
 package com.worth.ifs.dashboard;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.service.AssessmentRestService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
-import com.worth.ifs.security.UserAuthenticationService;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 

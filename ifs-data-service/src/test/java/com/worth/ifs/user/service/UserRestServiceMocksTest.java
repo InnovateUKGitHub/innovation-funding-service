@@ -7,25 +7,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpMethod.GET;
 
-/**
- * Created by dwatson on 02/10/15.
- */
+
 public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/users";
     private static final String processRolesUrl = "/processroles";
 
     @Override
-    protected UserRestServiceImpl registerRestServiceUnderTest(Consumer<UserRestServiceImpl> registrar) {
+    protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
         userRestService.setUserRestUrl(usersUrl);
         userRestService.setProcessRoleRestUrl(processRolesUrl);
-        registrar.accept(userRestService);
         return userRestService;
     }
 
@@ -39,7 +36,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestS
 
         User[] userList = new User[] { user1, user2 };
         ResponseEntity<User[]> responseEntity = new ResponseEntity<User[]>(userList, HttpStatus.OK);
-        when(mockRestTemplate.getForEntity(dataServicesUrl + usersUrl + "/findAll/", User[].class)).thenReturn(responseEntity);
+        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findAll/", GET, httpEntityForRestCall(), User[].class)).thenReturn(responseEntity);
 
         List<User> users = service.findAll();
         assertEquals(2, users.size());

@@ -1,14 +1,13 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.CostField;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * CostFieldRestServiceImpl is a utility for CRUD operations on {@link CostField}.
@@ -16,14 +15,11 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class CostFieldRestServiceImpl extends BaseRestServiceProvider implements CostFieldRestService {
+public class CostFieldRestServiceImpl extends BaseRestService implements CostFieldRestService {
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 
     public List<CostField> getCostFields() {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<CostField[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costFieldRestURL + "/findAll/", CostField[].class);
-        CostField[] costFields = responseEntity.getBody();
-        return Arrays.asList(costFields);
+        return asList(restGet(costFieldRestURL + "/findAll/", CostField[].class));
     }
 }

@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class UserRestServiceImpl extends BaseRestServiceProvider implements UserRestService {
+public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
     private String userRestURL;
     private String processRoleRestURL;
@@ -36,7 +36,7 @@ public class UserRestServiceImpl extends BaseRestServiceProvider implements User
         if(StringUtils.isEmpty(token))
             return null;
 
-        User user = getRestTemplate().getForObject(dataRestServiceURL + userRestURL + "/token/" + token, User.class);
+        User user = restGet(userRestURL + "/token/" + token, User.class);
         return user;
     }
 
@@ -44,7 +44,7 @@ public class UserRestServiceImpl extends BaseRestServiceProvider implements User
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
             return null;
 
-        User user = getRestTemplate().getForObject(dataRestServiceURL + userRestURL + "/email/" + email + "/password/" + password, User.class);
+        User user = restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
         return user;
     }
 
@@ -52,41 +52,41 @@ public class UserRestServiceImpl extends BaseRestServiceProvider implements User
         if(id == null || id.equals(0L))
             return null;
 
-        User user = getRestTemplate().getForObject(dataRestServiceURL + userRestURL + "/id/" + id, User.class);
+        User user = restGet(userRestURL + "/id/" + id, User.class);
         return user;
     }
 
     public List<User> findAll() {
-        ResponseEntity<User[]> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + userRestURL + "/findAll/", User[].class);
+        ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAll/", User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
-        ProcessRole processRole = getRestTemplate().getForObject(dataRestServiceURL + processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
+        ProcessRole processRole = restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
         return processRole;
     }
 
     public List<ProcessRole> findProcessRole(Long applicationId) {
-        ResponseEntity<ProcessRole[]> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
+        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRole = responseEntity.getBody();
         return Arrays.asList(processRole);
     }
 
     public List<User> findAssignableUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + userRestURL + "/findAssignableUsers/" + applicationId, User[].class);
+        ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAssignableUsers/" + applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId){
-        ResponseEntity<ProcessRole[]> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
+        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRoles =responseEntity.getBody();
         return Arrays.asList(processRoles);
     }
 
     public List<User> findRelatedUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = getRestTemplate().getForEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
+        ResponseEntity<User[]> responseEntity = restGetEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }

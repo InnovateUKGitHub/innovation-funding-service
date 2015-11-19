@@ -41,7 +41,7 @@ public class LabourCost implements CostItem {
 
     public BigDecimal getRatePerDay(Integer workingDaysPerYear) {
         if(workingDaysPerYear.equals(0)) {
-            return new BigDecimal(0);
+            return BigDecimal.ZERO;
         }
         return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear), 5, RoundingMode.HALF_EVEN);
     }
@@ -81,7 +81,7 @@ public class LabourCost implements CostItem {
         if(rate!=null && labourDays!=null) {
             total = rate.multiply(new BigDecimal(labourDays));
         } else {
-            total = new BigDecimal(0);
+            total = BigDecimal.ZERO;
         }
     }
 
