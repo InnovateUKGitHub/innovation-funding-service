@@ -11,8 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * CostRestServiceImpl is a utility for CRUD operations on {@link Cost}.
@@ -32,10 +33,7 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     }
 
     public List<Cost> getCosts(Long applicationFinanceId) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Cost[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + costRestURL + "/get/"+applicationFinanceId, Cost[].class);
-        Cost[] costs = responseEntity.getBody();
-        return Arrays.asList(costs);
+        return asList(restGet(costRestURL + "/get/"+applicationFinanceId, Cost[].class));
     }
 
     public void update(Cost cost) {
