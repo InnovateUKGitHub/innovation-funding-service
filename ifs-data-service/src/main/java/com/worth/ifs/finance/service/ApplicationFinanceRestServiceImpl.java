@@ -25,8 +25,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
         if(applicationId == null || organisationId == null){
             return null;
         }
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(dataRestServiceURL + applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
+        return restGet(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
     }
 
     public List<ApplicationFinance> getApplicationFinances(Long applicationId) {

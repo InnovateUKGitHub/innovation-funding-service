@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpMethod.GET;
 
 /**
  * Created by dwatson on 02/10/15.
@@ -37,7 +38,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestS
 
         User[] userList = new User[] { user1, user2 };
         ResponseEntity<User[]> responseEntity = new ResponseEntity<User[]>(userList, HttpStatus.OK);
-        when(mockRestTemplate.getForEntity(dataServicesUrl + usersUrl + "/findAll/", User[].class)).thenReturn(responseEntity);
+        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findAll/", GET, httpEntityForRestCall(), User[].class)).thenReturn(responseEntity);
 
         List<User> users = service.findAll();
         assertEquals(2, users.size());
