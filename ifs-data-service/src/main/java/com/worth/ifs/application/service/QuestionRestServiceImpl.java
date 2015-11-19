@@ -44,7 +44,7 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
     @Override
     public void updateNotification(Long questionStatusId, Boolean notify) {
         RestTemplate restTemplate = new RestTemplate();
-        restPut(dataRestServiceURL + questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify);
+        restPut(questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify);
     }
 
     @Override
