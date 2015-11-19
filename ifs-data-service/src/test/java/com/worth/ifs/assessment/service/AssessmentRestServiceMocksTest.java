@@ -3,15 +3,18 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.BaseRestServiceMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -22,10 +25,9 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<Ass
     private static String assessmentRestURL = "/assessments";
 
     @Override
-    protected AssessmentRestServiceImpl registerRestServiceUnderTest(Consumer<AssessmentRestServiceImpl> registrar) {
+    protected AssessmentRestServiceImpl registerRestServiceUnderTest() {
         AssessmentRestServiceImpl assessmentRestService = new AssessmentRestServiceImpl();
         assessmentRestService.assessmentRestURL = assessmentRestURL;
-        registrar.accept(assessmentRestService);
         return assessmentRestService;
     }
 
@@ -37,7 +39,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<Ass
 
         List<Assessment> assessments = newAssessment().build(3);
         ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[]{}), HttpStatus.OK);
-        when(mockRestTemplate.getForEntity(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456", Assessment[].class)).thenReturn(mockResponse);
+        when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(HttpMethod.GET), any(HttpEntity.class), eq(Assessment[].class))).thenReturn(mockResponse);
 
         List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);
         assertEquals(3, results.size());

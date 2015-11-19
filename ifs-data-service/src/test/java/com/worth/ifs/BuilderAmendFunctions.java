@@ -15,7 +15,7 @@ import java.util.function.Function;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
- * Created by dwatson on 09/10/15.
+ * A set of functions that can be used by Builders to set fields.
  */
 public class BuilderAmendFunctions {
 
@@ -66,6 +66,18 @@ public class BuilderAmendFunctions {
         return descriptions(t -> prefix + getId(t));
     }
 
+    public static <T> Consumer<T> idBasedValues(String prefix) {
+        return values(t -> prefix + getId(t));
+    }
+
+    public static <T> Consumer<T> idBasedTitles(String prefix) {
+        return titles(t -> prefix + getId(t));
+    }
+
+    public static <T> Consumer<T> idBasedTypes(String prefix) {
+        return types(t -> prefix + getId(t));
+    }
+
     public static <T> BiConsumer<Integer, T> incrementingIds(int fromInclusive) {
         return (i, t) -> setId((long) i + fromInclusive, t);
     }
@@ -80,6 +92,18 @@ public class BuilderAmendFunctions {
 
     public static <T> Consumer<T> descriptions(Function<T, String> nameGenerationFunction) {
         return t -> setDescription(nameGenerationFunction.apply(t), t);
+    }
+
+    public static <T> Consumer<T> values(Function<T, String> nameGenerationFunction) {
+        return t -> setValue(nameGenerationFunction.apply(t), t);
+    }
+
+    public static <T> Consumer<T> titles(Function<T, String> nameGenerationFunction) {
+        return t -> setTitle(nameGenerationFunction.apply(t), t);
+    }
+
+    public static <T> Consumer<T> types(Function<T, String> nameGenerationFunction) {
+        return t -> setType(nameGenerationFunction.apply(t), t);
     }
 
     public static <T> Long getId(T instance) {
@@ -108,6 +132,18 @@ public class BuilderAmendFunctions {
 
     public static <T> T setDescription(Object value, T instance) {
         return setField("description", value, instance);
+    }
+
+    public static <T> T setValue(Object value, T instance) {
+        return setField("value", value, instance);
+    }
+
+    public static <T> T setTitle(Object value, T instance) {
+        return setField("title", value, instance);
+    }
+
+    public static <T> T setType(Object value, T instance) {
+        return setField("type", value, instance);
     }
 
     public static <T> T setField(String fieldName, Object value, T instance) {

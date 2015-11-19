@@ -1,17 +1,14 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +20,7 @@ import java.util.Optional;
  * through a REST call.
  */
 @Service
-public class ResponseRestServiceImpl extends BaseRestServiceProvider implements ResponseRestService {
+public class ResponseRestServiceImpl extends BaseRestService implements ResponseRestService {
     @Value("${ifs.data.service.rest.response}")
     String responseRestURL;
 
@@ -31,19 +28,17 @@ public class ResponseRestServiceImpl extends BaseRestServiceProvider implements 
 
 
     public List<Response> getResponsesByApplicationId(Long applicationId) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + responseRestURL + "/findResponsesByApplication/" + applicationId, Response[].class);
-        Response[] responses = responseEntity.getBody();
-        return Arrays.asList(responses);
+        return Arrays.asList(restGet(responseRestURL + "/findResponsesByApplication/" + applicationId, Response[].class));
     }
 
     @Override
     public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + responseRestURL + "/saveQuestionResponse/{responseId}/assessorFeedback?assessorUserId={assessorUserId}&feedbackValue={feedbackValue}&feedbackText={feedbackText}";
+        String url = responseRestURL + "/saveQuestionResponse/" + responseId +
+                "/assessorFeedback?assessorUserId=" + assessorUserId +
+                "&feedbackValue=" + feedbackValue.orElse("") +
+                "&feedbackText=" + feedbackText.orElse("");
 
-        HttpEntity<String> entity = new HttpEntity<>(getJSONHeaders());
-        ResponseEntity<JsonStatusResponse> response = restTemplate.exchange(url, HttpMethod.PUT, entity, JsonStatusResponse.class, responseId, assessorUserId, feedbackValue.orElse(""), feedbackText.orElse(""));
+        ResponseEntity<JsonStatusResponse> response = restPutEntity(url, JsonStatusResponse.class);
         return handleResponseStatus(response);
     }
 
