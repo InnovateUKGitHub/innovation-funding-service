@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -28,8 +29,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
 
     public List<FormInputResponse> getResponsesByApplicationId(Long applicationId) {
-        List<FormInputResponse> responses = Arrays.asList(restGet(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
-        return responses;
+        return asList(restGet(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
     }
 
     public List<String> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
@@ -39,8 +39,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
-        List<String> validatedResponse = Arrays.asList(restPost(formInputResponseRestURL + "/saveQuestionResponse/", node, String[].class));
-        return validatedResponse;
+        return asList(restPost(formInputResponseRestURL + "/saveQuestionResponse/", node, String[].class));
     }
 
 }
