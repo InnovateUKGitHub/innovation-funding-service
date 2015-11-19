@@ -50,16 +50,7 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-
-        RestTemplate restTemplate = getRestTemplate();
-        HttpHeaders headers = getJSONHeaders();
-
-        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
-        }
-
-        HttpEntity<String> entity = new HttpEntity<>("", headers);
-        return restTemplate.exchange(dataRestServiceURL + path , HttpMethod.GET, entity, c);
+        return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     /**
@@ -71,16 +62,11 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
-        RestTemplate restTemplate = getRestTemplate();
-        HttpHeaders headers = getJSONHeaders();
+        return getRestTemplate().postForEntity(dataRestServiceURL + path, jsonEntity(postEntity), c).getBody();
+    }
 
-        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
-        }
-
-        HttpEntity<Object> entity = new HttpEntity<>(postEntity, getJSONHeaders());
-        ResponseEntity<T> response = restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
-        return response.getBody();
+    protected void restPut(String path) {
+        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(""), Void.class);
     }
 
     public static HttpHeaders getJSONHeaders() {
@@ -89,6 +75,14 @@ public abstract class BaseRestService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         return headers;
+    }
+
+    protected <T> HttpEntity<T> jsonEntity(T entity){
+        HttpHeaders headers = getJSONHeaders();
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        }
+        return new HttpEntity<>(entity, headers);
     }
 
     protected RestTemplate getRestTemplate() {

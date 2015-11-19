@@ -1,14 +1,10 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.service.UserRestService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -19,22 +15,22 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Service
 public class TokenAuthenticationService implements UserAuthenticationService {
-    private final Log log = LogFactory.getLog(getClass());
+
     public static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
     private static final int ONE_DAY = 60 * 60 * 24;
 
     @Autowired
-    UserRestService userRestService;
+    private TokenSupplier tokenSupplier;
 
     @Autowired
-    private TokenSupplier tokenSupplier;
+    private CredentialsValidator credentialsValidator;
+
 
     /**
      * Authenticate the user by email address and password
      */
     public User authenticate(String emailAddress, String password) {
-        User user = userRestService.retrieveUserByEmailAndPassword(emailAddress, password);
-
+        User user = credentialsValidator.retrieveUserByEmailAndPassword(emailAddress, password);
         if ( user != null ) {
             return user;
         } else {
@@ -55,18 +51,8 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     public Authentication getAuthentication(HttpServletRequest request) {
         final String token = tokenSupplier.getToken(request);
-        if (token != null) {
-            // call rest service to obtain user by token
-            try {
-                User user = userRestService.retrieveUserByToken(token);
-                if (user != null) {
-                    return new UserAuthentication(user);
-                }
-            } catch(HttpClientErrorException e) {
-                log.error(e);
-            }
-        }
-        return null;
+        User user = credentialsValidator.retrieveUserByToken(token);
+        return user != null ? new UserAuthentication(user) : null;
     }
 
     /**

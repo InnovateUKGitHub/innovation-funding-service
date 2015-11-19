@@ -36,7 +36,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(token))
             return null;
 
-        User user = getRestTemplate().getForObject(dataRestServiceURL + userRestURL + "/token/" + token, User.class);
+        User user = restGet(userRestURL + "/token/" + token, User.class);
         return user;
     }
 
@@ -44,7 +44,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
             return null;
 
-        User user = getRestTemplate().getForObject(dataRestServiceURL + userRestURL + "/email/" + email + "/password/" + password, User.class);
+        User user = restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
         return user;
     }
 

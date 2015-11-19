@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- *
- */
+
 @Component
 public class HttpHeaderTokenSupplier implements TokenSupplier {
 
