@@ -38,7 +38,7 @@ public class CostItemFactory {
 
     private CostItem createCapitalUsage(Cost cost) {
         String existing = "";
-        BigDecimal residualValue = new BigDecimal(0);
+        BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
         for(CostValue costValue : cost.getCostValues()) {

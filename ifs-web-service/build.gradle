@@ -20,7 +20,7 @@ configurations {
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity3"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"

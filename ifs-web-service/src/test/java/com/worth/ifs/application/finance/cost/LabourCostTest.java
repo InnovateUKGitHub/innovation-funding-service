@@ -29,7 +29,7 @@ public class LabourCostTest {
         labourDays = 100;
         rate = new BigDecimal(1000);
         description = "description";
-        total = new BigDecimal(0);
+        total = BigDecimal.ZERO;
         labourCost = new LabourCost(id, role, grossAnnualSalary, labourDays, description);
         rate = labourCost.getRate(labourDays);
         total = labourCost.getTotal(labourDays);

@@ -12,9 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 
-/**
- * Created by dwatson on 02/10/15.
- */
+
 public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/users";
