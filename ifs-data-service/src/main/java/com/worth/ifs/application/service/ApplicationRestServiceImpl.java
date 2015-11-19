@@ -70,17 +70,15 @@ public class ApplicationRestServiceImpl  extends BaseRestServiceProvider impleme
         String url = dataRestServiceURL + applicationRestURL + "/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}";
 
         HttpEntity<String> entity = new HttpEntity<>("", getJSONHeaders());
-
-        log.info("ApplicationRestRestService.updateApplicationStatus send it!");
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, applicationId, statusId);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationRestRestService, save == ok : " + response.getBody());
+            log.debug("ApplicationRestRestService, save == ok : " + response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             //  bad credentials?
-            log.info("Unauthorized request.");
+            log.info("Unauthorized save request.");
         } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            log.info("Status code not_found .....");
+            log.debug("Status code not_found .....");
         }
     }
 

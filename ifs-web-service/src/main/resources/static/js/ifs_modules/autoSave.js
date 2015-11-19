@@ -37,8 +37,7 @@ var ifs_autoSave = (function(){
 
              var formState = jQuery('.form-serialize-js').serialize();
              var formGroup = field.closest('.form-group');
-             var validationMessages = formGroup.find(".validation-messages");
-
+             var validationMessages = formGroup.find(".validation-messages").first();
              var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
              var startAjaxTime= new Date().getTime();
 
