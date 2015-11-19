@@ -12,6 +12,7 @@
     	//overflow: auto;
     	margin: 2px 0 2px 0;
     	//border-left: 5px solid red;
+    	min-height: 30px;
 
     	&:after{
 			height: 0;
@@ -26,7 +27,7 @@
 		}
 
 		.column-third{
-			padding: 8px 0 0 20px;
+			padding: 12px 0 0 20px;
 		}
     }
 
@@ -38,6 +39,9 @@
     }
 
     .assign-container{
+    	
+    	font-size: 16px;
+
     	.assign-team{
     		//position: static;
     		margin-top: 0;
