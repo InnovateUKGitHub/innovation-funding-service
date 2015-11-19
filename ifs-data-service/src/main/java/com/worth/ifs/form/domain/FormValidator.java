@@ -1,5 +1,6 @@
 package com.worth.ifs.form.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.Validator;
 
 import javax.persistence.Entity;
@@ -52,9 +53,13 @@ public class FormValidator {
     public void setClazzName(String clazzName) {
         this.clazzName = clazzName;
     }
-    public void setClass(Class clazz) {
+
+    @JsonIgnore
+    public void setClazz(Class clazz) {
         this.clazzName = clazz.getName();
     }
+
+    @JsonIgnore
     public Class<Validator> getClazz() throws ClassNotFoundException {
         return (Class<Validator>) Class.forName(this.clazzName);
     }
