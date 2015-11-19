@@ -5,12 +5,11 @@ import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * OrganisationRestServiceImpl is a utility for CRUD operations on {@link Organisation}.
@@ -25,10 +24,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     private final Log log = LogFactory.getLog(getClass());
 
     public List<Organisation> getOrganisationsByApplicationId(Long applicationId) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Organisation[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + organisationRestURL + "/findByApplicationId/" + applicationId, Organisation[].class);
-        Organisation[] organisations = responseEntity.getBody();
-        return Arrays.asList(organisations);
+        return asList(restGet(organisationRestURL + "/findByApplicationId/" + applicationId, Organisation[].class));
     }
 
 }
