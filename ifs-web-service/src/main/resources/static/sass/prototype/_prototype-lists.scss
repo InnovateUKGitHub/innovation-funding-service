@@ -1,0 +1,47 @@
+.list-overview{
+	
+	margin-left: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li{
+    	border-bottom: 1px solid $border-colour;
+    }
+
+    .grid-row{
+    	//overflow: auto;
+    	margin: 2px 0 2px 0;
+    	//border-left: 5px solid red;
+
+    	&:after{
+			height: 0;
+		}
+
+		h3{
+			padding: 10px 0px 10px 0px;
+
+			&.heading-small{
+				margin: 0;
+			}
+		}
+
+		.column-third{
+			padding: 8px 0 0 20px;
+		}
+    }
+
+    .assigned-to-me{
+    	.grid-row{
+    		//border-left: 5px solid $light-blue; 
+    		//@extend %icon-assigned;
+    	}
+    }
+
+    .assign-container{
+    	.assign-team{
+    		//position: static;
+    		margin-top: 0;
+    		margin-bottom: 10px;
+    	}
+    }
+}
