@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
+
     @Autowired
     CompetitionsRestService competitionsRestService;
 

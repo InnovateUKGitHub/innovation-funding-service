@@ -1,4 +1,4 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

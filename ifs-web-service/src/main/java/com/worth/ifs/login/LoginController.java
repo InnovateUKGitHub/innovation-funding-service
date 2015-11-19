@@ -1,6 +1,6 @@
 package com.worth.ifs.login;
 
-import com.worth.ifs.security.UserAuthenticationService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

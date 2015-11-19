@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +23,7 @@ import java.util.Optional;
  * through a REST call.
  */
 @Service
-public class ResponseRestServiceImpl extends BaseRestServiceProvider implements ResponseRestService {
+public class ResponseRestServiceImpl extends BaseRestService implements ResponseRestService {
     @Value("${ifs.data.service.rest.response}")
     String responseRestURL;
 

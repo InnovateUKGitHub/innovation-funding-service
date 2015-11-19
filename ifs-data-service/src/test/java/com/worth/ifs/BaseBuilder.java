@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +73,12 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
             amendActions.forEach(a -> a.accept(i, newElement));
             return newElement;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public T[] buildArray(int numberToBuild, Class<T> clazz) {
+        build(numberToBuild);
+        return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
     }
 
     protected abstract S createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);
