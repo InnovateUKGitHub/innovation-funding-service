@@ -45,6 +45,7 @@ import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -147,7 +148,9 @@ public class BaseUnitTest {
         QuestionBuilder questionBuilder = newQuestion().with(competition(competition));
         SectionBuilder sectionBuilder = newSection().with(competition(competition));
 
-        Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).build();
+        Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).build(3)).
+                build();
 
         Section section1 = sectionBuilder.
                 with(id(1L)).
@@ -155,7 +158,8 @@ public class BaseUnitTest {
                 withQuestions(asList(q01)).
                 build();
 
-        Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).build();
+        Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
+                build();
 
         Section section2 = sectionBuilder.
                 with(id(2L)).
@@ -163,7 +167,9 @@ public class BaseUnitTest {
                 withQuestions(asList(q10)).
                 build();
 
-        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).build();
+        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
+                build();
+
         Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).build();
         Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).build();
         Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).build();

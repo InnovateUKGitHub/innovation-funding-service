@@ -240,8 +240,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
 
             if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
-                String value = request.getParameter("formInput[" + question.getId() + "]");
-                List<String> errors = formInputResponseService.save(userId, applicationId, question.getId(), value);
+                String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
                 if (errors.size() != 0) {
                     log.error("save failed. " + question.getId());
                     errors.forEach(e -> errorMap.put(question.getId(), e));
