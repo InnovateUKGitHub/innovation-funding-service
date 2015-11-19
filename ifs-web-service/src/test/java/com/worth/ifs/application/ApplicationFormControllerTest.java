@@ -191,23 +191,40 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Ignore
     @Test
     public void testApplicationFormSubmitValidationErrors() throws Exception {
+        //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("formInput[2]", "Question 2 Response")
-                        .param("formInput[3]", "Question 3 Response")
                         .param("submit-section", "Save")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
                 .andReturn();
     }
 
     @Ignore
     @Test
     public void testSaveQuestionResponse(){
+        // test the ApplicationFormController.saveQuestionResponse method.
         // still has to be tested, but we need questions with formInput objects for this.
+    }
+
+    @Ignore
+    @Test
+    public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
+        // Question should not be marked as complete, since the input is not valid.
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                        .param("formInput[1]", "")
+                        .param("mark_as_complete", "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andReturn();
     }
 
 
