@@ -24,3 +24,15 @@ Switch to the first browser
 Applicant is in the 'Your Finance' sub-section
     Go To    ${FINANCES}
     Click Element    Link=Your finances
+
+Applicant goes to the scope section
+    go to    ${SCOPE_SECTION_URL}
+
+Applicant goes to the Your business proposition section
+    Go to     ${YOUR_BUSINESS_URL}
+
+Applicant goes to the "Your approach..." section
+    Go to     ${PROJECT_URL}
+
+Applicant goes to the "Funding" section
+    Go to    ${FUNDING_URL}
