@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.ServiceLocator;
@@ -42,6 +43,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ResponseRepository responseRepositoryMock;
+
+    @Mock
+    protected ApplicationResourceAssembler applicationResourceAssembler;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

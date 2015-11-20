@@ -2,9 +2,11 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * to manage {@link ProcessRole} related data.
  */
 @RestController
+@ExposesResourceFor(ProcessRoleResource.class)
 @RequestMapping("/processrole")
 public class ProcessRoleController {
     private final Log log = LogFactory.getLog(getClass());

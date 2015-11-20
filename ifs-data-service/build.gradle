@@ -39,7 +39,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-rest"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
-    //compile "org.springframework.data:spring-data-rest-hal-browser" future release it's cool
+    compile "org.springframework.data:spring-data-rest-hal-browser"
     compile "mysql:mysql-connector-java"
     compile "org.springframework:spring-web"
     compile "org.projectlombok:lombok:1.16.2"

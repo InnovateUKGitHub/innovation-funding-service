@@ -12,8 +12,10 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.*;
+
 @Configuration
-@EnableHypermediaSupport(type = { EnableHypermediaSupport.HypermediaType.HAL })
+@EnableHypermediaSupport(type = HAL)
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     Log log = LogFactory.getLog(Application.class);

@@ -19,6 +19,7 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,17 +32,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
+@ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
-    @Autowired
-    ApplicationRepository repository;
+
     @Autowired
     ProcessRoleRepository userAppRoleRepository;
     @Autowired
@@ -50,40 +48,41 @@ public class ApplicationController {
     UserRepository userRepository;
     @Autowired
     QuestionController questionController;
+    @Autowired
+    ApplicationRepository applicationRepository;
 
+    ApplicationResourceAssembler applicationResourceAssembler;
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping("/{id}")
-    public Application getApplicationById(@PathVariable("id") final Long id) {
-        return repository.findOne(id);
+    @Autowired
+    public ApplicationController(ApplicationResourceAssembler applicationResourceAssembler) {
+        this.applicationResourceAssembler = applicationResourceAssembler;
     }
 
-    @RequestMapping("/findAll")
-     public List<Application> findAll() {
-        List<Application> applications = repository.findAll();
-        return applications;
+    @RequestMapping("/{id}")
+    public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
+        Application application = applicationRepository.findOne(id);
+        return applicationResourceAssembler.toResource(application);
+    }
+
+    @RequestMapping("/")
+     public Resources<ApplicationResource> findAll() {
+        List<Application> applications = applicationRepository.findAll();
+        Resources<ApplicationResource> resources = applicationResourceAssembler.toEmbeddedList(applications);
+        return resources;
     }
 
     @RequestMapping("/findByUser/{userId}")
     public Resources<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = userAppRoleRepository.findByUser(user);
-        ApplicationResourceAssembler assembler = new ApplicationResourceAssembler();
 
-        List<ApplicationResource> apps = roles.stream()
+        List<Application> apps = roles.stream()
             .map(ProcessRole::getApplication)
-            .map(assembler::toResource)
             .collect(Collectors.toList());
 
-        Resources<ApplicationResource> resources = new Resources<>(apps);
-        resources.add(
-            linkTo(
-                methodOn(ApplicationController.class).findByUserId(userId)
-            ).withSelfRel()
-        );
-
-        return resources;
+        return applicationResourceAssembler.toEmbeddedList(apps);
     }
 
     /**
@@ -94,14 +93,14 @@ public class ApplicationController {
     public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
                                                          @RequestBody Application application) {
 
-        Application applicationDb = repository.findOne(id);
+        Application applicationDb = applicationRepository.findOne(id);
         HttpStatus status;
 
         if (applicationDb != null) {
             applicationDb.setName(application.getName());
             applicationDb.setDurationInMonths(application.getDurationInMonths());
             applicationDb.setStartDate(application.getStartDate());
-            repository.save(applicationDb);
+            applicationRepository.save(applicationDb);
 
             status = HttpStatus.OK;
 
@@ -118,7 +117,7 @@ public class ApplicationController {
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        Application application = repository.findOne(applicationId);
+        Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
                 .flatMap((s) -> s.getQuestions().stream())
@@ -160,10 +159,10 @@ public class ApplicationController {
     public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId){
 
-        Application application = repository.findOne(id);
+        Application application = applicationRepository.findOne(id);
         ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
         application.setApplicationStatus(applicationStatus);
-        repository.save(application);
+        applicationRepository.save(application);
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -182,7 +181,7 @@ public class ApplicationController {
         User user = userRepository.findOne(userId);
 
         List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
-        List<Application> allApps= repository.findAll();
+        List<Application> allApps= applicationRepository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {
             if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)  ) {
