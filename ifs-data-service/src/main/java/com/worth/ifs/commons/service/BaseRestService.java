@@ -66,7 +66,19 @@ public abstract class BaseRestService {
     }
 
     protected void restPut(String path) {
-        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(""), Void.class);
+        restPutEntity(path, Void.class);
+    }
+
+    protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
+        return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(""), c);
+    }
+
+    protected void restPut(String path, Object entity) {
+        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(entity), Void.class);
+    }
+
+    protected void restDelete(String path) {
+        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.DELETE, jsonEntity(""), Void.class);
     }
 
 

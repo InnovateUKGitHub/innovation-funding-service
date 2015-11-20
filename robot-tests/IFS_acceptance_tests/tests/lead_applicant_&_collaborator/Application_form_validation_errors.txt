@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
@@ -9,30 +10,167 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the validation error when the text area is empty
+    [Documentation]    -INFUND-43
+    Given Applicant goes to the Application form
+    When the applicant clears the text area of the first question
+    Then the applicant should get a validation error
 
 Verify the validation error for an invalid date (day)
+    [Documentation]    -INFUND-43
     Given Applicant goes to the Application form
-    When the applicant inserts an invalid day
-    Then the applicant should get a validation error
+    When the applicant inserts "32" in the day field
+    Then the applicant should get a validation error "Please enter a valid date"
+    and when the applicant inserts "0" in the day field
+    Then the applicant should get a validation error "Please enter a valid date"
+    and when the applicant inserts "-1" in the day field
+    Then the applicant should get a validation error "Please enter a valid date"
+    and when the day field is empty
+    Then the applicant should get a validation error "Please enter a valid value"
+    and when the applicant inserts 01 in the day
+    Then the applicant should not see the validation error any more
 
 Verify the validation error for an invalid date (month)
+    [Documentation]    -INFUND-43
     Given Applicant goes to the Application form
-    Given that the applicant inserts an invalid month
-    Then the applicant should get a validation error
+    When the applicant inserts "0" in the month field
+    Then the applicant should get a validation error "Please enter a valid date"
+    and when the applicant inserts "13" in the month field
+    Then the applicant should get a validation error "Please enter a valid date"
+    And when the applicant inserts "-1" in the month field
+    Then the applicant should get a validation error "Please enter a valid date"
+    and then when the month field is empty
+    Then the applicant should get a validation error "Please enter a valid value"
+    And when the applicant inserts "01" in the month field
+    Then the applicant should not see the validation error any more
+
+Verify the validation error for an invalid date (Year)
+    [Documentation]    -INFUND-43
+    Given Applicant goes to the Application form
+    When the applicant inserts an invalid date "18-11-2015"
+    Then the applicant should get a validation error "Please enter a valid date"
+    and then when the Year field is empty
+    Then the applicant should get a validation error "Please enter a valid value"
+    And when the applicant inserts "2016" in the Year field(valid date)
+    Then the applicant should not see the validation error any more
+
+Verify the validation error for the duration field
+    [Documentation]    -INFUND-43
+    Given Applicant goes to the application form
+    When the applicant inserts "0" in the duration field
+    Then the applicant should get a validation error for the duration
+    And when the applicant inserts "-1" in the duration field
+    Then the applicant should get a validation error for the duration
+    And when the applicant leaves the duration field empty
+    The applicant should get a validation error for the duration
+    And when the Applicant inserts 01 in the duration field
+    The Applicant should not see any more the error for the duration
+
+Verify the validation error when the Project title field is empty
+    [Documentation]    -INFUND-43
+    Given Applicant goes to the application form
+    When the applicant clears the application title field
+    The applicant should get a validation error for the title field
 
 *** Keywords ***
-the applicant is application form
+the applicant is in the application form
     go to    ${APPLICATION_URL}
 
 the applicant inserts more than 500 words in the first question
     Input Text    id=11    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8
 
-the applicant should see a validation error
-    Page Should Contain Element
+the applicant inserts "32" in the day field
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    32
 
-the applicant inserts an invalid day
-    Clear Element Text    id="application_details-startdate_day"
+when the applicant inserts "0" in the day field
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    0
 
-that the applicant inserts an invalid month
+the applicant inserts "0" in the month field
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    0
+
+the applicant should get a validation error "Please enter a valid date"
+    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
+    Wait Until Element Contains    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid date.
+
+when the day field is empty
+    Clear Element Text    id=application_details-startdate_day
+
+when the applicant inserts 01 in the day
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    01
+
+the applicant should not see the validation error any more
+    Wait Until Element Is Not Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
+
+when the applicant inserts "13" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    13
+
+then when the month field is empty
+    Clear Element Text    id=application_details-startdate_month
+
+when the applicant inserts "01" in the month field
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    01
+
+the applicant inserts an invalid date "18-11-2015"
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    18
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    11
+    Clear Element Text    id=application_details-startdate_year
+    Input Text    id=application_details-startdate_year    2015
+
+when the applicant inserts "2016" in the Year field(valid date)
+    Clear Element Text    id=application_details-startdate_year
+    Input Text    id=application_details-startdate_year    2016
+
+then when the Year field is empty
+    Clear Element Text    id=application_details-startdate_year
+
+the applicant should get a validation error "Please enter a valid value"
+    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
+    Element Should Contain    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid value.
+
+when the applicant inserts "-1" in the day field
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    -1
+
+when the applicant inserts "-1" in the month field
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    -1
+
+the applicant clears the text area of the first question
+    Clear Element Text    css=#\30 > div.textarea-wrapped.word-count > div.editor.isModified
+
+the applicant should get a validation error
+    Wait Until Element Is Visible    css=#\30 > div.validation-messages > span
+
+the applicant inserts "0" in the duration field
+    Clear Element Text    id=application_details-duration
+    Input Text    id=application_details-duration    0
+
+the applicant should get a validation error for the duration
+    Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
+
+when the applicant inserts "-1" in the duration field
+    Clear Element Text    id=application_details-duration
+    Input Text    id=application_details-duration    -1
+
+when the applicant leaves the duration field empty
+    Clear Element Text    id=application_details-duration
+
+when the Applicant inserts 01 in the duration field
+    Clear Element Text    id=application_details-duration
+    Input Text    id=application_details-duration    01
+
+The Applicant should not see any more the error for the duration
+    Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
+
+the applicant clears the application title field
+    Clear Element Text    id=application_details-title
+
+The applicant should get a validation error for the title field
+    Wait Until Element Is Visible    css=#\30 > div.validation-messages > span

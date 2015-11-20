@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,7 +42,6 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
 
     @Override
     public void updateNotification(Long questionStatusId, Boolean notify) {
-        RestTemplate restTemplate = new RestTemplate();
         restPut(questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify);
     }
 

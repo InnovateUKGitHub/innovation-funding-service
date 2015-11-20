@@ -10,6 +10,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,11 +29,13 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -92,6 +95,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         costId = Long.valueOf(1);
 
         // save actions should always succeed.
+        ArrayList<String> validationErrors = new ArrayList<>();
+        validationErrors.add("Please enter some text 123");
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(new ArrayList<>());
     }
 
@@ -164,14 +170,14 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
-                        .param("question[1]", "Question 1 Response")
-                        .param("question[2]", "Question 2 Response")
-                        .param("question[3]", "Question 3 Response")
-                        .param("question[application_details-startdate][year]", "2015")
-                        .param("question[application_details-startdate][day]", "15")
-                        .param("question[application_details-startdate][month]", "11")
-                        .param("question[application_details-title]", "New Application Title")
-                        .param("question[application_details-duration]", "12")
+                        .param("formInput[1]", "Question 1 Response")
+                        .param("formInput[2]", "Question 2 Response")
+                        .param("formInput[3]", "Question 3 Response")
+                        .param("formInput[application_details-startdate_year]", "2015")
+                        .param("formInput[application_details-startdate_day]", "15")
+                        .param("formInput[application_details-startdate_month]", "11")
+                        .param("formInput[application_details-title]", "New Application Title")
+                        .param("formInput[application_details-duration]", "12")
                         .param("mark_as_complete", "12")
                         .param("mark_as_incomplete", "13")
                         .param("submit-section", "Save")
@@ -181,13 +187,56 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "applicationSaved"))
                 .andReturn();
     }
+
+    @Test
+    public void testApplicationFormSubmitValidationErrors() throws Exception {
+        //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
+        Long userId = loggedInUser.getId();
+
+        when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                        .param("formInput[1]", "")
+                        .param("formInput[2]", "Question 2 Response")
+                        .param("submit-section", "Save")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "formInput[1]", "Please enter some text"))
+                .andReturn();
+    }
+
+    @Ignore
+    @Test
+    public void testSaveQuestionResponse(){
+        // test the ApplicationFormController.saveQuestionResponse method.
+        // still has to be tested, but we need questions with formInput objects for this.
+    }
+
+    @Ignore
+    @Test
+    public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
+        // Question should not be marked as complete, since the input is not valid.
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                        .param("formInput[1]", "")
+                        .param("mark_as_complete", "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andReturn();
+    }
+
+
     @Test
     public void testApplicationFormSubmitAssignQuestion() throws Exception {
         MvcResult result = mockMvc.perform(
                 post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
-                        .param("question[1]", "Question 1 Response")
-                        .param("question[2]", "Question 2 Response")
-                        .param("question[3]", "Question 3 Response")
+                        .param("formInput[1]", "Question 1 Response")
+                        .param("formInput[2]", "Question 2 Response")
+                        .param("formInput[3]", "Question 3 Response")
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())

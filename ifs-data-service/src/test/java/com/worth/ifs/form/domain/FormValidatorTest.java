@@ -26,7 +26,7 @@ public class FormValidatorTest {
 
         FormValidator formValidator = new FormValidator();
         formValidator.setTitle(title);
-        formValidator.setClass(clazz);
+        formValidator.setClazz(clazz);
 
         Assert.assertEquals(formValidator.getTitle(), title);
         Assert.assertEquals(formValidator.getClazz(), clazz);

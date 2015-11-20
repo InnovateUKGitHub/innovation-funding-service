@@ -23,11 +23,11 @@ public class FormInputTest {
 
         FormValidator emailValidator = new FormValidator();
         emailValidator.setTitle(validatorTitle);
-        emailValidator.setClass(clazz);
+        emailValidator.setClazz(clazz);
 
         FormValidator notEmptyValidator = new FormValidator();
         notEmptyValidator.setTitle(validatorTitle);
-        notEmptyValidator.setClass(NotEmptyValidator.class);
+        notEmptyValidator.setClazz(NotEmptyValidator.class);
 
         formInputType.addFormValidator(emailValidator);
         formInputType.addFormValidator(emailValidator);
@@ -49,11 +49,11 @@ public class FormInputTest {
 
         FormValidator emailValidator = new FormValidator();
         emailValidator.setTitle(validatorTitle);
-        emailValidator.setClass(clazz);
+        emailValidator.setClazz(clazz);
 
         FormValidator notEmptyValidator = new FormValidator();
         notEmptyValidator.setTitle(validatorTitle);
-        notEmptyValidator.setClass(NotEmptyValidator.class);
+        notEmptyValidator.setClazz(NotEmptyValidator.class);
 
         HashSet validators = new HashSet();
         validators.add(emailValidator);
