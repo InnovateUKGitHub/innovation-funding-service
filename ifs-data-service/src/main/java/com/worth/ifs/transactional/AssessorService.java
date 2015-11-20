@@ -1,8 +1,8 @@
 package com.worth.ifs.transactional;
 
+import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.util.Either;
-
-import java.util.Optional;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.
@@ -15,12 +15,10 @@ public interface AssessorService {
      * Update the Assessor's feedback to a given Response, creating a new AssessorFeedback if one does not yet
      * exist for this Assessor
      *
-     * @param responseId
-     * @param assessorProcessRoleId
-     * @param feedbackValue
-     * @param feedbackText
+     * @param feedback
      * @return
      */
-    Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Long responseId, Long assessorProcessRoleId, Optional<String> feedbackValue, Optional<String> feedbackText);
+    @PreAuthorize("hasPermission(#feedback, 'UPDATE')")
+    Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback);
 
 }

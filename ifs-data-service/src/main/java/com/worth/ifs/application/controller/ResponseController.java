@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -104,7 +105,7 @@ public class ResponseController {
         Application application = response.getApplication();
 
         Either<JsonStatusResponse, JsonStatusResponse> result = withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator, assessorProcessRole -> {
-            assessorService.updateAssessorFeedback(response.getId(), assessorProcessRole.getId(), feedbackValue, feedbackText);
+            assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(assessorProcessRole.getId()).setValue(feedbackValue).setText(feedbackText));
             return right(JsonStatusResponse.ok());
         });
 

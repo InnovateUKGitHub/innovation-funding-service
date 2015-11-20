@@ -2,7 +2,6 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.user.domain.User;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
