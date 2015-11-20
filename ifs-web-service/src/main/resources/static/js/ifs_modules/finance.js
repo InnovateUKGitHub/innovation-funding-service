@@ -18,7 +18,6 @@ var ifs_finance = (function(){
             },
             init : function(){
                 ifs_finance.bindCalculationActionToFields(); // Bind calculations
-                 ifs_finance.initShowHideOtherCosts();
             },
             bindCalculationActionToFields : function(){
 
@@ -58,24 +57,6 @@ var ifs_finance = (function(){
                     });
 
                 });
-            },
-            initShowHideOtherCosts : function() {
-                ifs_finance.triggerOtherCostsForm(jQuery('#otherCostsShowHideToggle'));
-                ifs_finance.bindShowHideOtherCostsSelectTrigger();
-            },
-            bindShowHideOtherCostsSelectTrigger : function() {
-                jQuery('#otherCostsShowHideToggle').change(function() {
-                    var self = this;
-                    ifs_finance.triggerOtherCostsForm(self);
-                });
-            },
-            triggerOtherCostsForm : function(element) {
-                if(jQuery(element).val()==="No") {
-                    jQuery('#otherCostsForm').hide();
-                }
-                else {
-                    jQuery('#otherCostsForm').show();
-                }
             },
             doMath : function(element,calcFields){
                 var operation = element.attr('data-calculation-operations').split(',');
