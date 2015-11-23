@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class FeedbackRules {
 
 
-    @PermissionRule("Read")
+    @PermissionRule("READ")
     public boolean hasPermission1(Feedback dto, User user){
         return true;
     }
 
-    @PermissionRule("Write")
+    @PermissionRule("UPDATE")
     public boolean hasPermission2(Feedback dto, User user){
         return false;
     }
