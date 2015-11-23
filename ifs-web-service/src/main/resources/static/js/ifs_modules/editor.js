@@ -1,5 +1,5 @@
-/* jshint strict: true, undef: true, unused: true, md: false, Showdown: false, document : false*/
-/* globals  jQuery : false */
+/* jshint strict: true, undef: true, unused: true */
+/* globals  jQuery : false, md: false, Showdown: false, document : false */
 
 //wysiwyg editor for textareas
 //Dependencies to load first : hallo.min.js

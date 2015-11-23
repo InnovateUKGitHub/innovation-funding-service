@@ -2,44 +2,65 @@
 /* globals  jQuery : false, setTimeout : false*/
 
 //If there is javascript it becomes a modal, if there is not a links to the original page.
-var ifs_modalLink = (function(){
+var ifs_modal = (function(){
     "use strict";
     var s; // private alias to settings 
 
     return {
         settings : {
-            element: jQuery('[data-js-modal]')
+            element: '[data-js-modal]'
         },
         init : function(){
-            s = this.settings; 
-            if(s.element.length) {
-                s.element.each(function() {
-                    ifs_modalLink.modalAttach();
-                });
-                this.modalCloseLink();
+            s = this.settings;
+            if(jQuery(s.element).length) {
+                ifs_modal.initModals();
+                ifs_modal.modalCloseLink();
             }
         },
-        modalAttach : function(){
-            var link = jQuery(this);
-            link.on('click',function(e){
-              var modal = jQuery('.'+link.attr('data-js-modal'));
-               if(modal.length){
+        initModals : function(){
+            jQuery('body').on('click',s.element,function(e){
+                e.preventDefault();
+                var target = jQuery(this).attr('data-js-modal');
+                target = jQuery('.'+target);
+
+                if(target.length){
                     e.preventDefault();
-                    jQuery('.modal-overlay').removeClass('hidden');
-                    modal.attr('aria-hidden','false');
-                   
+
+                    ifs_modal.disableTabPage();
+                    target.add('.modal-overlay').attr('aria-hidden','false');
                     //vertical center,old browser support so no fancy css stuff :(
                     setTimeout(function(){
-                        var height = modal.outerHeight();
-                        modal.css({'margin-top':'-'+(height/2)+'px'});
+                        var height = target.outerHeight();
+                        target.css({'margin-top':'-'+(height/2)+'px'});
                     },50);
-               }
+                }
+            });
+        },
+        disableTabPage : function(){
+            jQuery(":tabbable").each(function(){
+                var el = jQuery(this);
+               
+                if(el.closest('[role="dialog"]').length === 0){
+                    var tabindex = 0;
+                    if(el.prop('tabindex')){
+                        tabindex = el.prop('tabindex');
+                    }
+                    el.prop('tabindex','-1').attr('data-original-tabindex',tabindex);
+                }
+            });
+        },
+        enableTabPage : function(){
+            jQuery('[data-original-tabindex]').each(function(){
+                var el = jQuery(this);
+                var orignalTabindex = el.attr('data-original-tabindex');
+                el.prop('tabindex',orignalTabindex).removeAttr('data-original-tabindex');
             });
         },
         modalCloseLink : function(){
             jQuery('body').on('click','.js-close',function(){
-                jQuery('.modal-overlay').addClass('hidden');
-                jQuery('[role="dialog"]').attr('aria-hidden','true');
+                ifs_modal.enableTabPage();
+                jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden','true');
+
             });
         }   
     };
