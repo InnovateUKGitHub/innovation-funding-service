@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.form.FormInputResponseService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -153,7 +154,7 @@ public abstract class AbstractApplicationController {
 
     protected void addQuestionsDetails(Model model, Application application, Form form) {
         List<FormInputResponse> responses = getFormInputResponses(application);
-        HashMap<Long, FormInputResponse> mappedResponses = formInputResponseService.mapResponsesToQuestion(responses);
+        Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
 
         if(form == null){

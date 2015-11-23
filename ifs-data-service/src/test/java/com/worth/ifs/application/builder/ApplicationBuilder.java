@@ -33,7 +33,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withId(Long... ids) {
-        return with((id, application) -> setField("id", id, application), ids);
+        return withArray((id, application) -> setField("id", id, application), ids);
     }
 
     public ApplicationBuilder withCompetition(Competition competition) {
@@ -41,6 +41,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withApplicationState(ApplicationStatus... applicationStatus) {
-        return with((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
     }
 }

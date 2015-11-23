@@ -179,4 +179,30 @@ public class CollectionFunctionsTest {
         assertEquals(asList(), indicesSeen);
         assertEquals(asList(), newStrings);
     }
+
+    @Test
+    public void test_reverse() {
+
+        List<String> originalList = asList("string 1", "another string 2", "string 3");
+        List<String> reversed = CollectionFunctions.reverse(originalList);
+        assertEquals(asList("string 3", "another string 2", "string 1"), reversed);
+    }
+
+    @Test
+    public void test_reverse_nullElements() {
+
+        List<String> originalList = asList(null, null, "string 3");
+        List<String> reversed = CollectionFunctions.reverse(originalList);
+        assertEquals(asList("string 3", null, null), reversed);
+    }
+
+    @Test
+    public void test_reverse_nullSafe() {
+        assertEquals(new ArrayList<>(), CollectionFunctions.reverse(null));
+    }
+
+    @Test
+    public void test_reverse_empty() {
+        assertEquals(new ArrayList<>(), CollectionFunctions.reverse(new ArrayList<>()));
+    }
 }

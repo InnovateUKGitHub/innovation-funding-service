@@ -349,7 +349,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElementApplicationStartDate() throws Exception {
-        String value = "22";
+        String value = "30";
         String questionId = "application_details-startdate_day";
 
         MvcResult result = mockMvc.perform(
@@ -364,7 +364,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
 
     }

@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -102,4 +103,17 @@ public class CollectionFunctions {
         return forEachFunction(function).apply(list);
     }
 
+    /**
+     * Returns a new List with the original list's contents reversed.  Leaves the original list intact.  Returns
+     * an empty list if a null or empty list is supplied.
+     *
+     * @param original
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> reverse(List<T> original) {
+        List<T> reversed = original != null ? new ArrayList<>(original) : new ArrayList<>();
+        Collections.reverse(reversed);
+        return reversed;
+    }
 }

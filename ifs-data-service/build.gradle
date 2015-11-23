@@ -131,14 +131,14 @@ processTestResources {
 
 
     
-task cleanDeploy() {
-    build.mustRunAfter clean
-    build.dependsOn clean
-    clientCopy.dependsOn build
-    testCommonCode.dependsOn build
-    testCommonCodeCopy.dependsOn testCommonCode
-    deployToTomcat.dependsOn build
-    dependsOn clientCopy
-    dependsOn testCommonCodeCopy
-    dependsOn deployToTomcat
-}
+//task cleanDeploy() {
+//    build.mustRunAfter clean
+//    build.dependsOn clean
+//    clientCopy.dependsOn build
+//    testCommonCode.dependsOn build
+//    testCommonCodeCopy.dependsOn testCommonCode
+//    deployToTomcat.dependsOn build
+//    dependsOn clientCopy
+//    dependsOn testCommonCodeCopy
+//    dependsOn deployToTomcat
+//}

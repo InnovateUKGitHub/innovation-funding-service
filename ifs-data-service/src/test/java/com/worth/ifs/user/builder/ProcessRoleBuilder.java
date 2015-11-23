@@ -36,7 +36,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     public ProcessRoleBuilder withId(Long... ids) {
-        return with((id, processRole) -> processRole.setId(id), ids);
+        return withArray((id, processRole) -> processRole.setId(id), ids);
     }
 
     public ProcessRoleBuilder withRole(Builder<Role, ?> role) {
@@ -44,7 +44,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     public ProcessRoleBuilder withRole(Role... roles) {
-        return with((role, processRole) -> processRole.setRole(role), roles);
+        return withArray((role, processRole) -> processRole.setRole(role), roles);
     }
 
     public ProcessRoleBuilder withApplication(Builder<Application, ?> application) {
@@ -52,6 +52,6 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     public ProcessRoleBuilder withApplication(Application... applications) {
-        return with((application, processRole) -> processRole.setApplication(application), applications);
+        return withArray((application, processRole) -> processRole.setApplication(application), applications);
     }
 }
