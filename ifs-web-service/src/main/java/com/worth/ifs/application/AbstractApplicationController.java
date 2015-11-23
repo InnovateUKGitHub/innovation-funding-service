@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.form.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.commons.security.UserAuthenticationService;
