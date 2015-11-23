@@ -3,6 +3,8 @@ package com.worth.ifs.security;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.PermissionEvaluator;
@@ -27,6 +29,8 @@ import static java.util.stream.Collectors.toMap;
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
+    private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -42,6 +46,14 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         Map<Class<?>, List<Pair<Object, Method>>> collectedRulesMethods = dtoClassToMethods(allRulesMethods);
         // TODO RP - validation stage to check that no one has done anything silly with method signatures?
         rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
+
+        if (LOG.isDebugEnabled()) {
+            rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
+                Method permissionMethod = pair.getRight();
+                PermissionRule permissionAnnotation = permissionMethod.getAnnotation(PermissionRule.class);
+                LOG.debug("Registered PermissionRule: " + permissionAnnotation.description());
+            })));
+        }
     }
 
     @PostConstruct
