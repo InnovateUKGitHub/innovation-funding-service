@@ -654,11 +654,22 @@
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getFormInputs().get(0).getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <select id="otherCostsShowHideToggle" class="form-control form-control-1-8">
-            <option selected="selected">No</option>
-            <option>Yes</option>
-        </select>
-        <div id="otherCostsForm" class="form-group">
+       
+
+    <fieldset class="inline" id="${question.getId()}">
+      <div class="form-group">
+        <label class="block-label" data-target="otherCostsForm" for="radio-indent-1">
+          <input id="${question.getId()}-yes" name="radio-indent-group" value="Yes" type="radio" />
+          Yes
+        </label>
+
+        <label class="block-label" for="radio-indent-2">
+          <input id="${question.getId()}-no" name="radio-indent-group" value="No" type="radio" />
+          No
+        </label>
+
+      </div>
+        <div class="form-group panel-indent js-hidden" id="otherCostsForm">
             <table id="other-funding">
                 <thead>
                 <tr>
@@ -698,9 +709,16 @@
                 </tbody>
             </table>
             <p style="text-align: right;">
+        
                 <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
             </p>
         </div>
+    </fieldset>
+        
+
+
+
+
     </div>
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <div th:fragment="financial_summary" th:if="${financeTotalPerType}">

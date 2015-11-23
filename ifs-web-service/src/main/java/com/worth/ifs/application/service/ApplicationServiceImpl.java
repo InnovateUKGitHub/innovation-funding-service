@@ -45,12 +45,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     public Map<Long, Integer> getProgress(Long userId) {
         List<Application> applications = applicationRestService.getApplicationsByUserId(userId);
         Map<Long, Integer> applicationProgress = new HashMap<>();
-        for (Application application : applications) {
+        applications.forEach(application -> {
             if(application.getApplicationStatus().getName().equals("created")){
                 Double progress = applicationRestService.getCompleteQuestionsPercentage(application.getId());
                 applicationProgress.put(application.getId(), progress.intValue());
             }
-        }
+        });
         return applicationProgress;
     }
 

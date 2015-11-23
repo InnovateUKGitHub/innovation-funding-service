@@ -98,11 +98,11 @@ public class CostControllerTest {
     public void updateShouldReturnBadRequestOnWrongContentType() throws Exception {
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_XML))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnsupportedMediaType());
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnsupportedMediaType());
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -110,11 +110,11 @@ public class CostControllerTest {
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.IMAGE_GIF))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnsupportedMediaType());
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.TEXT_PLAIN))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnsupportedMediaType());
 
         verifyNoMoreInteractions(costRepository);
     }

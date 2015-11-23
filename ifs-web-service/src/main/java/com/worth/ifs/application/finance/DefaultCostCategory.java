@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class DefaultCostCategory implements CostCategory {
     List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = new BigDecimal(0);
+    BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<CostItem> getCosts() {

@@ -2,7 +2,9 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.form.domain.FormInput;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -57,6 +59,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withPriority(Function<Integer, Integer> prioritySetter) {
         return with((i, question) -> setField("priority", prioritySetter.apply(i), question));
+    }
+
+    public QuestionBuilder withFormInputs(List<FormInput> formInputs) {
+        return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
     }
 
     @Override

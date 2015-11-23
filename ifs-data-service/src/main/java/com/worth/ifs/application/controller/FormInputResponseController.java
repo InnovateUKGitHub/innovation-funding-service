@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 
@@ -71,7 +72,7 @@ public class FormInputResponseController {
 
         List<FormInputResponse> responses = new ArrayList<>();
         for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
+            responses.addAll(responseRepository.findByUpdatedById(userAppRole.getId()));
         }
         return responses;
     }
@@ -123,7 +124,7 @@ public class FormInputResponseController {
         FormInputResponse response = this.getOrCreateResponse(applicationId, userId, formInputId);
         if (response == null) {
             log.error("FORBIDDEN TO SAVE");
-            servletResponse.setStatus( HttpServletResponse.SC_FORBIDDEN  );
+            servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
 
@@ -136,10 +137,10 @@ public class FormInputResponseController {
 
         BindingResult bindingResult = this.validateResponse(response);
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             log.debug("Got validation errors: ");
-            bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: "+ e.getDefaultMessage()));
-        }else{
+            bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
+        } else {
             responseRepository.save(response);
             log.debug("Single question saved!");
         }
@@ -148,10 +149,12 @@ public class FormInputResponseController {
         return validatedResponse.getAllErrors();
     }
 
-    private BindingResult validateResponse(FormInputResponse response){
-        List<FormValidator> validators = response.getFormInput().getFormInputType().getFormValidators();
+    private BindingResult validateResponse(FormInputResponse response) {
+        Set<FormValidator> validators = response.getFormInput().getFormValidators();
 
         DataBinder binder = new DataBinder(response);
+
+        // Get validators from the FormInput, and add to binder.
         validators.forEach(
                 v ->
                 {

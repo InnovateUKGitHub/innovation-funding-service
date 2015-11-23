@@ -1,15 +1,13 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.service.BaseRestServiceProvider;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * ApplicationFinanceRestServiceImpl is a utility for CRUD operations on {@link ApplicationFinance}.
@@ -17,38 +15,33 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class ApplicationFinanceRestServiceImpl extends BaseRestServiceProvider implements ApplicationFinanceRestService {
+public class ApplicationFinanceRestServiceImpl extends BaseRestService implements ApplicationFinanceRestService {
     @Value("${ifs.data.service.rest.applicationfinance}")
     String applicationFinanceRestURL;
 
+    @Override
     public ApplicationFinance getApplicationFinance(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null){
             return null;
         }
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(dataRestServiceURL + applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
+        return restGet(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
     }
 
+    @Override
     public List<ApplicationFinance> getApplicationFinances(Long applicationId) {
         if(applicationId == null) {
             return null;
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ApplicationFinance[]> responseEntity = restTemplate.getForEntity(dataRestServiceURL + applicationFinanceRestURL + "/findByApplication/" + applicationId, ApplicationFinance[].class);
-        ApplicationFinance[] applicationFinances =  responseEntity.getBody();
-        return Arrays.asList(applicationFinances);
+        return asList(restGet(applicationFinanceRestURL + "/findByApplication/" + applicationId, ApplicationFinance[].class));
     }
 
+    @Override
     public ApplicationFinance addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null) {
             return null;
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-        String url = dataRestServiceURL + applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId;
-
-        ResponseEntity<ApplicationFinance> responseEntity = restTemplate.exchange(url, HttpMethod.POST, null, ApplicationFinance.class);
-        return responseEntity.getBody();
+        return restPost(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinance.class);
     }
 }

@@ -1,6 +1,6 @@
 package com.worth.ifs.interceptors;
 
-import com.worth.ifs.security.UserAuthenticationService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

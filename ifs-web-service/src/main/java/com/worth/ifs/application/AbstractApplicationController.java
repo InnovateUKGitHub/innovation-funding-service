@@ -10,7 +10,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.security.UserAuthenticationService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;

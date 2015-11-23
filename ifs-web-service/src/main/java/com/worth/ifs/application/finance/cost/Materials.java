@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.cost;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +11,7 @@ public class Materials implements CostItem {
     private String item;
     private BigDecimal cost;
     private Integer quantity;
-    private BigDecimal total = new BigDecimal(0);
+    private BigDecimal total = BigDecimal.ZERO;
 
     public Materials() {
     }
@@ -44,7 +43,7 @@ public class Materials implements CostItem {
         if(quantity!=null && cost!=null) {
             total = cost.multiply(new BigDecimal(quantity));
         } else {
-            total = new BigDecimal(0);
+            total = BigDecimal.ZERO;
         }
         return total;
     }
