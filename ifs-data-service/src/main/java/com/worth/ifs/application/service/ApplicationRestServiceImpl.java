@@ -94,13 +94,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public Application createApplication(Long competitionId, Long organisationId, Long userId, String applicationName) {
+    public Application createApplication(Long competitionId, Long userId, String applicationName) {
         Application application = new Application();
         application.setName(applicationName);
 
-        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId;
-        ResponseEntity<Application> creationResponse =restPut(url, application, Application.class);
-        creationResponse.getStatusCode();
+        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
+        ResponseEntity<Application> creationResponse = restPut(url, application, Application.class);
 
         Application newApplication = creationResponse.getBody();
 

@@ -199,10 +199,9 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{organisationId}/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
     public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("organisationId") final Long organisationId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
 
@@ -225,9 +224,10 @@ public class ApplicationController {
         List<Role> roles = roleRepository.findByName("leadapplicant");
         Role role = roles.get(0);
 
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+
         Competition competition = competitionRepository.findOne(competitionId);
-        Organisation organisation = organisationRepository.findOne(organisationId);
-        ProcessRole processRole = new ProcessRole(user, application, role, organisation);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);

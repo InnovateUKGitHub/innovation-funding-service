@@ -129,8 +129,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         role.setName(roleName);
         List<Role> roles = new ArrayList<Role>();
         roles.add(role);
-        Organisation organisation = new Organisation();
+        Organisation organisation = new Organisation(1L , "testOrganisation");
         User user = new User();
+
+        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
+        List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
+        processRoles.add(processRole);
+        user.addUserApplicationRole(processRole);
 
         ApplicationStatus applicationStatus = new ApplicationStatus();
         applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());
@@ -140,13 +145,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ObjectMapper mapper = new ObjectMapper();
         String applicationJsonString = mapper.writeValueAsString(application);
 
+
         when(applicationStatusRepositoryMock.findByName(ApplicationStatusConstants.CREATED.getName())).thenReturn(applicationStatuses);
         when(competitionsRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId, "json")
+        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())

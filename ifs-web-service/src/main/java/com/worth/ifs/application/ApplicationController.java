@@ -101,10 +101,9 @@ public class ApplicationController extends AbstractApplicationController {
                                     @RequestParam(value = "application_name", required = true) String applicationName,
                                     HttpServletRequest request){
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        Long organisationId = 1L;
 
         if(applicationName.length() > 0) {
-            Application application = applicationService.createApplication(competitionId, organisationId, userId, applicationName);
+            Application application = applicationService.createApplication(competitionId, userId, applicationName);
             return "redirect:/application/"+application.getId();
         }
         else {

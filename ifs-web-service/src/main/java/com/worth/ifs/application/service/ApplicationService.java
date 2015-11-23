@@ -13,7 +13,7 @@ public interface ApplicationService {
     public List<Application> getInProgress(Long userId);
     public List<Application> getFinished(Long userId);
     public void updateStatus(Long applicationId, Long statusId);
-    public Application createApplication(Long competitionId, Long organisationId, Long userId, String applicationName);
+    public Application createApplication(Long competitionId, Long userId, String applicationName);
     public int getCompleteQuestionsPercentage(Long applicationId);
     public void save(Application application);
     Map<Long, Integer> getProgress(Long userId);
