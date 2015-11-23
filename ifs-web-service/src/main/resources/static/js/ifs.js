@@ -16,13 +16,14 @@
 var IFS = {
   common : {
     init : function(){
-        ifs_modalLink.init();
         ifs_collapsible.init();
         ifs_wordCount.init();
         ifs_editor.init();
+
     }, 
     finalize : function(){
         ifs_pieChart.init();
+        ifs_modal.init();
     }
   },
   'app-form' : {

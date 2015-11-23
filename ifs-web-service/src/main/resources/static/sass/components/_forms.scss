@@ -18,7 +18,7 @@ textarea[disabled],
 input[readonly],
 input[disabled],
 div.readonly{
-    color:darken($secondary-text-colour, 5%);
+    color: $black;
     background: $grey-4;
 }
 
@@ -135,7 +135,7 @@ table td{
         min-height:40px;
 
         .form-hint{
-            color: darken($secondary-text-colour, 5%);
+            color: $black;
         }
 
     } 

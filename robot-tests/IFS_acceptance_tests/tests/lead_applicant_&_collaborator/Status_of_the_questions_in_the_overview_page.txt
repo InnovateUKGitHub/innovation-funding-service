@@ -12,24 +12,24 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 Verify the questions status for the "Application details" section
     [Documentation]    INFUND-39
     Given Applicant goes to the Application form
-    When the Applicant edits question 11
-    and the applicant assigns question 11 to Jessica Doe    Jessica Doe
-    Then the "last update" date should be correct for the question 11
-    and the "assign to" should be correct for the question 11
+    When the Applicant edits the "Project summary" question
+    and the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
+    Then the "last update" date should be correct for the "Project summary" question
+    and the "assign to" should be correct for the "Project summary" question
 
 Verify the question status for the "Scope" section
     [Documentation]    INFUND-39
     Given Applicant goes to the Scope section
-    When the Applicant edits question 13
-    and the applicant assigns question 13 to Jessica Doe    Jessica Doe
-    Then the "last update" date should be correct for the question 13
-    and the "assign to" should be correct for the question 13
+    When the Applicant edits the "Scope" question
+    and the applicant assigns the "Scope" question to Jessica Doe    Jessica Doe
+    Then the "last update" date should be correct for the "Scope" question
+    and the "assign to" should be correct for the "Scope" question
 
 Verify the question status for the "Your business proposition" section
     [Documentation]    INFUND-39
     Given Applicant goes to the Your business proposition section
-    When the Applicant edits question 1
-    and the applicant assigns question 1 to Jessica Doe    Jessica Doe
+    When the Applicant edits the question 1
+    and the applicant assigns the question 1 to Jessica Doe    Jessica Doe
     Then the "last update" date should be correct for the question 1
     and the "assign to" should be correct for the question 1
 
@@ -44,59 +44,66 @@ Verify the question status for the "Your approach to the project" section
 Verify the question status for the "Funding" section
     [Documentation]    INFUND-39
     Given Applicant goes to the "Funding" section
-    When the Applicant edits question 15
-    and the applicant assigns question 15 to Jessica Doe    Jessica Doe
-    Then the "last update" date should be correct for the question 15
-    and the "assign to" should be correct for the question 15
+    When the Applicant edits question 9
+    and the applicant assigns question 9 to Jessica Doe    Jessica Doe
+    Then the "last update" date should be correct for the question 9
+    and the "assign to" should be correct for the question 9
+
+Verify the blue flag when the question is assigned to the applicant
+    [Documentation]    INFUND-39
+    Given Applicant goes to the application form
+    When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
+    Then the applicant should see a blue flag in the Application details section(overview page)
+    And the applicant should see a blue flag in the Public description (overview page)
 
 *** Keywords ***
-the Applicant edits question 11
+the Applicant edits the "Project summary" question
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     Sleep    2s
 
-the applicant assigns question 11 to Jessica Doe
+the applicant assigns the "Project Summary" question to Jessica Doe
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-11 .assign-button button
     Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
 
-the "last update" date should be correct for the question 11
+the "last update" date should be correct for the "Project summary" question
     Go To    ${APPLICATION_OVERVIEW_URL}
     Click Button    css=#section-1 > button
     Page Should Contain Element    css=#form-input-11 > div > div.column-two-thirds > p > small
     Element Should Contain    css=#form-input-11 > div > div.column-two-thirds > p > small    Last updated: Today by you
 
-the "assign to" should be correct for the question 11
+the "assign to" should be correct for the "Project summary" question
     Page Should Contain Element    css=#form-input-11 > div > div.column-third > div
     Element Should Contain    css=#form-input-11 > div > div.column-third > div    Jessica Doe
 
-the Applicant edits question 13
+the Applicant edits the "Scope" question
     Clear Element Text    css=#form-input-13 .editor
     Input Text    css=#form-input-13 .editor    test text 123
 
-the applicant assigns question 13 to Jessica Doe
+the applicant assigns the "Scope" question to Jessica Doe
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-13 .assign-button button
     Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
 
-the "last update" date should be correct for the question 13
+the "last update" date should be correct for the "Scope" question
     Go To    ${APPLICATION_OVERVIEW_URL}
     click button    css=#section-2 > button
     Page Should Contain Element    css=#form-input-13 > div > div.column-two-thirds > p > small
     Element Should Contain    css=#form-input-13 > div > div.column-two-thirds > p > small    Last updated: Today by you
 
-the "assign to" should be correct for the question 13
+the "assign to" should be correct for the "Scope" question
     Page Should Contain Element    css=#form-input-13 > div > div.column-third > div
     Element Should Contain    css=#form-input-13 > div > div.column-third > div    Jessica Doe
 
-the Applicant edits question 1
+the Applicant edits the question 1
     Clear Element Text    css=#form-input-1 .editor
     Input Text    css=#form-input-1 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     Sleep    2s
 
-the applicant assigns question 1 to Jessica Doe
+the applicant assigns the question 1 to Jessica Doe
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-1 .assign-button button
     Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
@@ -132,23 +139,36 @@ the "assign to" should be correct for the question 5
     Page Should Contain Element    css=#form-input-5 > div > div.column-third > div
     Element Should Contain    css=#form-input-5 > div > div.column-third > div    Jessica Doe
 
-the Applicant edits question 15
+the Applicant edits question 9
     Clear Element Text    css=#form-input-15 .editor
     Input Text    css=#form-input-15 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     Sleep    2s
 
-the applicant assigns question 15 to Jessica Doe
+the applicant assigns question 9 to Jessica Doe
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-15 .assign-button button
     Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
 
-the "last update" date should be correct for the question 15
+the "last update" date should be correct for the question 9
     Go To    ${APPLICATION_OVERVIEW_URL}
     Click Button    css=#section-5 > button
     Page Should Contain Element    css=#form-input-15 > div > div.column-two-thirds > p > small
     Element Should Contain    css=#form-input-15 > div > div.column-two-thirds > p > small    Last updated: Today by you
 
-the "assign to" should be correct for the question 15
+the "assign to" should be correct for the question 9
     Page Should Contain Element    css=#form-input-15 > div > div.column-third > div
     Element Should Contain    css=#form-input-15 > div > div.column-third > div    Jessica Doe
+
+the applicant assigns the "Project summary" question to "Steve Smith"
+    [Arguments]    ${assignee_name}
+    Click Element    css=#form-input-11 .assign-button button
+    Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
+
+the applicant should see a blue flag in the Application details section(overview page)
+    Applicant goes to the overview page
+    Element Should Be Visible    css=#section-1 .assigned
+
+the applicant should see a blue flag in the Public description (overview page)
+    Click Element    css=#section-1
+    Element Should Be Visible    css=#form-input-11.assigned-to-me
