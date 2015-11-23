@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
                 .antMatchers("/user/email/*/password/*").permitAll()
                 .antMatchers("/user/token/*").permitAll()
+                .antMatchers("/browser/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().deleteCookies(AUTH_TOKEN)

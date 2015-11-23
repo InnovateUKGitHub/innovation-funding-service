@@ -6,7 +6,9 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.restdocs.RestDocumentation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -35,7 +38,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/id/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication1Name")))
-                .andExpect(jsonPath("id", is(1)));
+                .andExpect(jsonPath("id", is(1)))
+                .andDo(document("get-application"));
         mockMvc.perform(get("/application/id/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication2Name")))
