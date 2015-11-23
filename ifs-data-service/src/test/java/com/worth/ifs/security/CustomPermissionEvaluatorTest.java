@@ -306,6 +306,24 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         }
     }
 
+    @Test
+    public void test_hasPermission_withPermissionEntityLookup() {
+
+        permissionEvaluator.generateRules();
+        permissionEvaluator.generateLookupStrategies();
+
+        // assert that the permissions and lookups are being applied correctly
+        {
+            assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "java.lang.String", "Read"));
+            assertTrue(permissionEvaluator.hasPermission(new UserAuthentication(readOnlyUser), 123L, "java.lang.String", "Read"));
+            assertTrue(permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), 123L, "java.lang.String", "Read"));
+
+            assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "java.lang.String", "Write"));
+            assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(readOnlyUser), 123L, "java.lang.String", "Write"));
+            assertTrue(permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), 123L, "java.lang.String", "Write"));
+        }
+    }
+
     private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> getRulesMap() {
         return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");
     }
