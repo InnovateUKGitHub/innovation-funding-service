@@ -442,6 +442,54 @@
 
 (function() {
   (function(jQuery) {
+    var rangyMessage;
+    rangyMessage = 'The hallocleanhtml plugin requires the selection save and\
+    restore module from Rangy';
+    return jQuery.widget('IKS.hallocleanhtml', {
+      _create: function() {
+        var editor,
+          _this = this;
+        if (jQuery.htmlClean === void 0) {
+          throw new Error('The hallocleanhtml plugin requires jQuery.htmlClean');
+          return;
+        }
+        editor = this.element;
+        return editor.bind('paste', this, function(event) {
+          var lastContent, lastRange, widget;
+          if (rangy.saveSelection === void 0) {
+            throw new Error(rangyMessage);
+            return;
+          }
+          widget = event.data;
+          widget.options.editable.getSelection().deleteContents();
+          lastRange = rangy.saveSelection();
+          lastContent = editor.html();
+          editor.html('');
+          return setTimeout(function() {
+            var cleanPasted, error, pasted, range;
+            pasted = editor.html();
+            cleanPasted = jQuery.htmlClean(pasted, _this.options);
+            editor.html(lastContent);
+            rangy.restoreSelection(lastRange);
+            if (cleanPasted !== '') {
+              try {
+                return document.execCommand('insertHTML', false, cleanPasted);
+              } catch (_error) {
+                error = _error;
+                range = widget.options.editable.getSelection();
+                return range.insertNode(range.createContextualFragment(cleanPasted));
+              }
+            }
+          }, 4);
+        });
+      }
+    });
+  })(jQuery);
+
+}).call(this);
+
+(function() {
+  (function(jQuery) {
     return jQuery.widget("IKS.halloformat", {
       options: {
         editable: null,
@@ -523,43 +571,6 @@
         if (this.options.lists.unordered) {
           buttonize("Unordered", "UL");
         }
-        buttonset.hallobuttonset();
-        return toolbar.append(buttonset);
-      }
-    });
-  })(jQuery);
-
-}).call(this);
-
-(function() {
-  (function(jQuery) {
-    return jQuery.widget("IKS.halloreundo", {
-      options: {
-        editable: null,
-        toolbar: null,
-        uuid: '',
-        buttonCssClass: null
-      },
-      populateToolbar: function(toolbar) {
-        var buttonize, buttonset,
-          _this = this;
-        buttonset = jQuery("<span class=\"" + this.widgetName + "\"></span>");
-        buttonize = function(cmd, label) {
-          var buttonElement;
-          buttonElement = jQuery('<span></span>');
-          buttonElement.hallobutton({
-            uuid: _this.options.uuid,
-            editable: _this.options.editable,
-            label: label,
-            icon: cmd === 'undo' ? 'fa-undo' : 'fa-repeat',
-            command: cmd,
-            queryState: false,
-            cssClass: _this.options.buttonCssClass
-          });
-          return buttonset.append(buttonElement);
-        };
-        buttonize("undo", "Undo");
-        buttonize("redo", "Redo");
         buttonset.hallobuttonset();
         return toolbar.append(buttonset);
       }
@@ -707,7 +718,7 @@
         editable: null,
         toolbar: null,
         affix: true,
-        affixTopOffset: -50
+        affixTopOffset: 2
       },
       _create: function() {
         var el, widthToAdd,

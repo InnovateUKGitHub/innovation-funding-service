@@ -56,15 +56,6 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         return restPost(assessmentRestURL +"/respondToAssessmentInvitation/", node, Boolean.class);
     }
 
-    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds ) {
-        //builds the node with the response form fields data
-        ObjectNode node =  new ObjectMapper().createObjectNode();
-        node.put("assessorId", assessorId);
-        ArrayNode assessmentsToSubmit =  new ObjectMapper().valueToTree(assessmentIds);
-        node.putArray("assessmentsToSubmit").addAll(assessmentsToSubmit);
-        return restPost(assessmentRestURL +"/submitAssessments/", node,  Boolean.class);
-    }
-
     public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments, Double overallScore) {
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
@@ -75,6 +66,15 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         node.put("suitableFeedback", HtmlUtils.htmlEscape(suitableFeedback));
         node.put("comments",  HtmlUtils.htmlEscape(comments));
         return restPost(assessmentRestURL +"/saveAssessmentSummary/", node, Boolean.class);
+    }
+
+    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds ) {
+        //builds the node with the response form fields data
+        ObjectNode node =  new ObjectMapper().createObjectNode();
+        node.put("assessorId", assessorId);
+        ArrayNode assessmentsToSubmit = new ObjectMapper().valueToTree(assessmentIds);
+        node.putArray("assessmentsToSubmit").addAll(assessmentsToSubmit);
+        return restPost(assessmentRestURL +"/submitAssessments/", node,  Boolean.class);
     }
 
     @Override

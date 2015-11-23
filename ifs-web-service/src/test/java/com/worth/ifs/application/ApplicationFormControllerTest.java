@@ -2,7 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.exception.ErrorController;
@@ -27,15 +26,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
 
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -188,33 +188,45 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andReturn();
     }
 
-    @Ignore
     @Test
     public void testApplicationFormSubmitValidationErrors() throws Exception {
+        //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
         Long userId = loggedInUser.getId();
+
+        when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("formInput[2]", "Question 2 Response")
-                        .param("formInput[3]", "Question 3 Response")
-                        .param("formInput[application_details-startdate][year]", "2015")
-                        .param("formInput[application_details-startdate][day]", "15")
-                        .param("formInput[application_details-startdate][month]", "11")
-                        .param("formInput[application_details-title]", "New Application Title")
-                        .param("formInput[application_details-duration]", "12")
-                        .param("mark_as_complete", "12")
-                        .param("mark_as_incomplete", "13")
                         .param("submit-section", "Save")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "formInput[1]", "Please enter some text"))
                 .andReturn();
     }
 
     @Ignore
     @Test
     public void testSaveQuestionResponse(){
+        // test the ApplicationFormController.saveQuestionResponse method.
         // still has to be tested, but we need questions with formInput objects for this.
+    }
+
+    @Ignore
+    @Test
+    public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
+        // Question should not be marked as complete, since the input is not valid.
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                        .param("formInput[1]", "")
+                        .param("mark_as_complete", "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andReturn();
     }
 
 
@@ -337,7 +349,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElementApplicationStartDate() throws Exception {
-        String value = "22";
+        String value = "30";
         String questionId = "application_details-startdate_day";
 
         MvcResult result = mockMvc.perform(
@@ -352,7 +364,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
 
     }

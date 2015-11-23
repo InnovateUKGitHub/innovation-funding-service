@@ -1,0 +1,75 @@
+.list-overview{
+	
+	margin-left: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li{
+    	border-bottom: 1px solid $border-colour;
+
+        &:first-child{
+           border-top: 1px solid $border-colour; 
+        }
+    }
+
+    .grid-row{
+    	//overflow: auto;
+    	//margin: 2px 0 2px 0;
+    	//border-left: 5px solid red;
+    	min-height: 30px;
+
+    	&:after{
+			height: 0;
+		}
+
+		h3{
+			padding: 10px 0px 10px 0px;
+
+			&.heading-small{
+				margin: 0;
+			}
+		}
+
+		.column-third{
+			padding: 12px 0 0 20px;
+		}
+    }
+
+    .assigned-to-me{
+    	.grid-row{
+    		//border-left: 5px solid $light-blue; 
+    		//@extend %icon-assigned;
+    	}
+    }
+
+    .assign-container{
+    	
+    	font-size: 14px;
+
+    	.assign-team{
+    		//position: static;
+    		margin-top: 0;
+    		margin-bottom: 10px;
+    	}
+
+    	li{
+    		border: none;
+    	}
+    }
+
+    .marked-as-complete {
+		@extend %mark-done-right;
+		background-position: right top;
+		background-size: 30px;
+	}
+
+	.assigned-to-me {
+		@extend %mark-assigned-right;
+		background-position: right top;
+		background-size: 30px;
+	}
+}
+
+.application-overview{
+    margin-bottom: 30px;
+}

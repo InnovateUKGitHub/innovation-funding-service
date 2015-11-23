@@ -13,20 +13,23 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
+import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.service.CostRestService;
-import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mockito.Mock; 
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
@@ -38,14 +41,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -93,6 +98,7 @@ public class BaseUnitTest {
     public List<com.worth.ifs.application.domain.Application> applications;
     public List<Section> sections;
     public Map<Long, Question> questions;
+    public Map<Long, FormInputResponse> formInputsToFormInputResponses;
     public List<Competition> competitions;
     public Competition competition;
     public List<User> users;
@@ -147,7 +153,9 @@ public class BaseUnitTest {
         QuestionBuilder questionBuilder = newQuestion().with(competition(competition));
         SectionBuilder sectionBuilder = newSection().with(competition(competition));
 
-        Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).build();
+        Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).build(3)).
+                build();
 
         Section section1 = sectionBuilder.
                 with(id(1L)).
@@ -155,7 +163,8 @@ public class BaseUnitTest {
                 withQuestions(asList(q01)).
                 build();
 
-        Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).build();
+        Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
+                build();
 
         Section section2 = sectionBuilder.
                 with(id(2L)).
@@ -163,7 +172,9 @@ public class BaseUnitTest {
                 withQuestions(asList(q10)).
                 build();
 
-        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).build();
+        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
+                build();
+
         Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).build();
         Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).build();
         Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).build();
@@ -195,8 +206,8 @@ public class BaseUnitTest {
             List<Question> sectionQuestions = section.getQuestions();
             if(sectionQuestions != null){
                 Map<Long, Question> questionsMap =
-                        sectionQuestions.stream().collect(Collectors.toMap(Question::getId,
-                                Function.identity()));
+                        sectionQuestions.stream().collect(toMap(Question::getId,
+                                identity()));
                 questionList.addAll(sectionQuestions);
                 questions.putAll(questionsMap);
             }
@@ -306,6 +317,14 @@ public class BaseUnitTest {
         questions.get(21L).setResponses(asList(response2));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
+
+        List<FormInput> formInputs = questions.get(01L).getFormInputs();
+        List<FormInputResponse> formInputResponses = newFormInputResponse().withFormInputs(formInputs).
+                with(idBasedValues("Value ")).build(formInputs.size());
+
+        when(formInputResponseService.getByApplication(application.getId())).thenReturn(formInputResponses);
+        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponse -> formInputResponse.getFormInput().getId(), identity()));
+        when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }
 
     public void setupFinances() {

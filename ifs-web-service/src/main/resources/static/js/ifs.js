@@ -19,6 +19,7 @@ var IFS = {
         ifs_modalLink.init();
         ifs_collapsible.init();
         ifs_wordCount.init();
+        ifs_editor.init();
     }, 
     finalize : function(){
         ifs_pieChart.init();

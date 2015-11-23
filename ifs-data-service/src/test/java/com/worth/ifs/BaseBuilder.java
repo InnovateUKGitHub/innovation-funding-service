@@ -41,7 +41,7 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return createNewBuilderWithActions(newActions);
     }
 
-    public <R> S with(BiConsumer<R, T> amendFunction, R... values) {
+    public <R> S withArray(BiConsumer<R, T> amendFunction, R[] values) {
         return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
     }
 
