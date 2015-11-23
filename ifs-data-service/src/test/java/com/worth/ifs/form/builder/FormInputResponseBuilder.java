@@ -1,6 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.idBasedValues;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
@@ -29,6 +31,14 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
         return new FormInputResponseBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedValues("Value "));
+    }
+
+    public FormInputResponseBuilder withFormInputs(FormInput... owningFormInputs) {
+        return withFormInputs(asList(owningFormInputs));
+    }
+
+    public FormInputResponseBuilder withFormInputs(List<FormInput> owningFormInputs) {
+        return withList(owningFormInputs, (formInput, formInputResponse) -> formInputResponse.setFormInput(formInput));
     }
 
     @Override

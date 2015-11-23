@@ -44,7 +44,7 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
     }
 
     public ResponseBuilder withApplication(Application... applications) {
-        return with((application, response) -> response.setApplication(application), applications);
+        return withArray((application, response) -> response.setApplication(application), applications);
     }
 
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole, ?> value) {

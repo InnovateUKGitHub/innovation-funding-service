@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="app-overview app-form">
+<body class="app-overview">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-	<div action="#" method="post" class="application-overview">
+	<form action="#" method="post" class="application-overview">
 
 		<h2 class="heading-medium">Details</h2>
 		<ul class="list-overview">
@@ -200,7 +200,7 @@
 			</li>
 		</ul>
 
-	</div>
+	</form>
 
 	<div class="alignright-button">
         <a role="button" tabindex="0" class="button" href="/application/1/summary">Review &amp; submit</a>
