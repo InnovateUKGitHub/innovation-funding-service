@@ -13,12 +13,6 @@
 	}
 }
 
-.app-form{
-	.button{
-		@include button($panel-colour);
-	}
-}
-
 .sub-header{
 	a{
 		font-weight: normal;
