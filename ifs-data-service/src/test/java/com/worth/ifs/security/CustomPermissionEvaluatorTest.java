@@ -95,24 +95,51 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         }
     };
 
+    private Object userAuthenticationParameterRulesBeans = new Object() {
+        @PermissionRule("Read")
+        public boolean hasPermission1(Long dto, UserAuthentication user) {
+            return false;
+        }
+
+        @PermissionRule("Write")
+        public boolean hasPermission2(Long dto, UserAuthentication user) {
+            return true;
+        }
+    };
+
+    private Object invalidParameterRulesBeans = new Object() {
+        @PermissionRule("Read")
+        public boolean hasPermission1(Long dto, Double invalidSecondParameter) {
+            return false;
+        }
+    };
+
     private Object permissionEntityLookupBeans1 = new Object() {
 
-        @PermissionEntityLookupStrategy("String")
+        @PermissionEntityLookupStrategy
         public String lookupString(Long id) {
-            return "A string " + id;
+            return id != Long.MAX_VALUE ? "A string " + id : null;
         }
     };
 
     private Object permissionEntityLookupBeans2 = new Object() {
 
-        @PermissionEntityLookupStrategy("Long")
+        @PermissionEntityLookupStrategy
         public Long lookupLong(Long id) {
-            return 100 + id;
+            return id != Long.MAX_VALUE ? 100 + id : null;
         }
 
-        @PermissionEntityLookupStrategy("Long")
-        public Integer lookupInteger(Integer id) {
-            return 200 + id;
+        @PermissionEntityLookupStrategy
+        public Integer lookupInteger(Long id) {
+            return id != Long.MAX_VALUE ? (int) (200 + id) : null;
+        }
+    };
+
+    private Object duplicatePermissionEntityLookupBeans3 = new Object() {
+
+        @PermissionEntityLookupStrategy
+        public Long lookupLong(Long id) {
+            return id != Long.MAX_VALUE ? 100 + id : null;
         }
     };
 
@@ -260,6 +287,39 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void test_hasPermission_withUserAuthenticationParameter() {
+
+        List<Object> allPermissionBeans = asList(userAuthenticationParameterRulesBeans);
+        Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
+        when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
+
+        permissionEvaluator.generateRules();
+
+        // assert that the permissions are being applied correctly
+        {
+            assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "Read"));
+            assertTrue(permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "Write"));
+        }
+    }
+
+    @Test
+    public void test_hasPermission_invalidSecondParameter() {
+
+        List<Object> allPermissionBeans = asList(invalidParameterRulesBeans);
+        Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
+        when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
+
+        permissionEvaluator.generateRules();
+
+        try {
+            permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "Read");
+            fail("Should've thrown an exception as the 2nd parameter was not a User or an Authentication subclass");
+        } catch (IllegalArgumentException e) {
+            // expected bahaviour
+        }
+    }
+
+    @Test
     public void test_simpleFindLookupStrategies() {
         // Method under test
         List<Pair<Object, Method>> lookupStrategies = permissionEvaluator.findLookupStrategies(asList(permissionEntityLookupBeans1));
@@ -302,7 +362,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         // test the lookup strategies against Integers
         {
             Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Integer.class);
-            assertEquals(206, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 6));
+            assertEquals(206, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 6L));
         }
     }
 
@@ -321,6 +381,64 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
             assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "java.lang.String", "Write"));
             assertFalse(permissionEvaluator.hasPermission(new UserAuthentication(readOnlyUser), 123L, "java.lang.String", "Write"));
             assertTrue(permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), 123L, "java.lang.String", "Write"));
+        }
+    }
+
+    @Test
+    public void test_hasPermission_withPermissionEntityLookup_noLookupStrategyFound() {
+
+        permissionEvaluator.generateRules();
+        permissionEvaluator.generateLookupStrategies();
+
+        try {
+            permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), 123L, "java.lang.Double", "Read");
+            fail("Should've failed as there are no lookup mechanisms for Doubles");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void test_hasPermission_withPermissionEntityLookup_moreThanOneLookupStrategyFound() {
+
+        List<Object> allPermissionLookupBeans = asList(permissionEntityLookupBeans1, permissionEntityLookupBeans2, duplicatePermissionEntityLookupBeans3);
+        Map<String, Object> allPermissionLookupBeansToMap = allPermissionLookupBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
+        when(applicationContextMock.getBeansWithAnnotation(PermissionEntityLookupStrategies.class)).thenReturn(allPermissionLookupBeansToMap);
+
+        try {
+            permissionEvaluator.generateLookupStrategies();
+            fail("Should've failed as there are more than one lookup mechanism for Longs");
+
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void test_hasPermission_withPermissionEntityLookup_noEntityFoundWhenLookedUp() {
+
+        permissionEvaluator.generateRules();
+        permissionEvaluator.generateLookupStrategies();
+
+        try {
+            permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), Long.MAX_VALUE, "java.lang.Long", "Read");
+            fail("Should've failed as no entity could be looked up");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void test_hasPermission_nonExistentClass() {
+
+        permissionEvaluator.generateRules();
+        permissionEvaluator.generateLookupStrategies();
+
+        try {
+            permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), 123L, "does.not.Exist", "Read");
+            fail("Should've failed as there is no such class as does.not.Exist");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
         }
     }
 

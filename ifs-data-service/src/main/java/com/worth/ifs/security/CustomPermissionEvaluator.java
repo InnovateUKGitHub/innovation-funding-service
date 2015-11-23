@@ -149,24 +149,29 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             throw new IllegalArgumentException("Could not successfully call permission entity lookup method", e);
         }
 
+        if (permissionEntity == null) {
+            throw new IllegalArgumentException("Could not find entity of type " + targetType + " with id " + targetId);
+        }
+
         return hasPermission(authentication, permissionEntity, permission);
     }
 
     private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
+
+        final Object finalAuthentication;
+
+        Class<?> secondParameter = methodAndBean.getRight().getParameterTypes()[1];
+
+        if (secondParameter.equals(User.class) && authentication instanceof UserAuthentication) {
+            finalAuthentication = ((UserAuthentication) authentication).getDetails();
+        } else if (Authentication.class.isAssignableFrom(secondParameter)) {
+            finalAuthentication = authentication;
+        } else {
+            throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated methods should be " +
+                    "either a User or an org.springframework.security.core.Authentication implementation");
+        }
+
         try {
-            final Object finalAuthentication;
-
-            Class<?> secondParameter = methodAndBean.getRight().getParameterTypes()[1];
-
-            if (secondParameter.equals(User.class) && authentication instanceof UserAuthentication) {
-                finalAuthentication = ((UserAuthentication) authentication).getDetails();
-            } else if (secondParameter.isAssignableFrom(Authentication.class)) {
-                finalAuthentication = authentication;
-            } else {
-                throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated methods should be " +
-                        "either a User or an org.springframework.security.core.Authentication implementation");
-            }
-
             return (Boolean) methodAndBean.getRight().invoke(methodAndBean.getLeft(), dto, finalAuthentication);
         } catch (Exception e) {
             throw new RuntimeException(e);
