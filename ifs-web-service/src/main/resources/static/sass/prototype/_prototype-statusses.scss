@@ -1,0 +1,10 @@
+
+.collapsible { 
+	
+	h2{
+		&.section-complete:before{
+			top: 13px;
+		}
+	}
+
+}

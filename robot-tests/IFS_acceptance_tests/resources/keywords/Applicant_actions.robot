@@ -29,10 +29,10 @@ Applicant goes to the scope section
     go to    ${SCOPE_SECTION_URL}
 
 Applicant goes to the Your business proposition section
-    Go to     ${YOUR_BUSINESS_URL}
+    Go to    ${YOUR_BUSINESS_URL}
 
 Applicant goes to the "Your approach..." section
-    Go to     ${PROJECT_URL}
+    Go to    ${PROJECT_URL}
 
 Applicant goes to the "Funding" section
     Go to    ${FUNDING_URL}

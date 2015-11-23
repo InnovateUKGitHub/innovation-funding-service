@@ -1,0 +1,43 @@
+
+.collapsible {
+
+	h2{
+		border-top: 1px solid $border-colour; 
+
+		&:last-child{
+           border-top: 1px solid $border-colour; 
+        }
+	}
+
+	h2 button {
+		background: white;
+		margin-bottom: 0;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		
+		&[aria-expanded] {
+			&:after{
+				top: 15px;
+			}
+		}
+	}
+
+	h2 + [aria-hidden="false"] {
+ 		padding: 0 0 15px 0;
+	}
+
+	.question{
+		margin: 0 20px 20px 20px;
+	}
+
+	.textarea-wrapped .readonly{
+		border-top: 1px solid $border-colour;
+	}
+}
+
+.no-js .collapsible > h2 {
+	background: white;
+	margin-bottom: 0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
