@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +58,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationSummary(Form form, BindingResult bindingResult, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
         List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
-        model.addAttribute("responses", formInputResponseService.mapResponsesToQuestion(responses));
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);

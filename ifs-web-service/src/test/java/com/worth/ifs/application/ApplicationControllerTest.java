@@ -67,7 +67,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                 .andExpect(model().attribute("incompletedSections", Arrays.asList(3L, 4L)))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
     @Test
@@ -83,7 +84,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
     public void testNotExistingApplicationDetails() throws Exception {
@@ -120,7 +122,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 //        Matchers.hasItems()
     }
 
@@ -133,7 +136,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
             mockMvc.perform(get("/application/1/confirm-submit"))
                     .andExpect(view().name("application-confirm-submit"))
-                    .andExpect(model().attribute("currentApplication", app));
+                    .andExpect(model().attribute("currentApplication", app))
+                    .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 
     }
 

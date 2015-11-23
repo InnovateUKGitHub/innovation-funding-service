@@ -80,8 +80,8 @@ processResources {
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    build.dependsOn clean
-    deployToTomcat.dependsOn build
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
     dependsOn deployToTomcat
-
 }
