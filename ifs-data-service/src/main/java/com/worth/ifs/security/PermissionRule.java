@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PermissionRule {
     String value();
+    String description() default "(no description)";
 }
