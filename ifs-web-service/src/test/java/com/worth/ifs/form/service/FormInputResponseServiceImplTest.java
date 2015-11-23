@@ -1,9 +1,8 @@
-package com.worth.ifs.form;
+package com.worth.ifs.form.service;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.service.FormInputResponseRestService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- *
+ * Testing FormInputResponseServiceImpl and its interactions with its mock rest service.
  */
 public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
 

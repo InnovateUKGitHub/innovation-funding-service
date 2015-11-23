@@ -1,4 +1,4 @@
-package com.worth.ifs.form;
+package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.form.domain.FormInputResponse;
