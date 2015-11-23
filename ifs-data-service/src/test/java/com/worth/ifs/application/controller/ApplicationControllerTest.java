@@ -5,27 +5,23 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.commons.service.BaseRestServiceProvider.getJSONHeaders;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -150,7 +146,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId, "json")
+        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + organisationId + "/" + userId, "json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
