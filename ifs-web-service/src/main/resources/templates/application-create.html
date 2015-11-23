@@ -14,14 +14,22 @@
 
     <h1 class="heading-xlarge">Create application</h1>
 
+
+    <div class="error-summary" th:if="${applicationNameEmpty}">
+        <h1 class="heading-medium error-summary-heading">
+            No application name was entered.
+        </h1>
+        <p>
+            An application name has to be entered before a new application can be created.
+        </p>
+    </div>
+
     <form action="#" method="post" class="application-overview">
         <div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-            <label class="form-label" for="application_name">Application name:</label>
+            <label class="form-label" for="application_name">Application name</label>
             <input class="form-control form-control-3-4" type="text" id="application_name" name="application_name" />
-            <input class="form-control form-control-3-4" type="text" name="competition_id" />
-            <input class="form-control form-control-3-4" type="text" name="organisation_id" />
         </div>
-        <input type="submit" value="Create application"/>
+        <input class="button" type="submit" value="Create application"/>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
