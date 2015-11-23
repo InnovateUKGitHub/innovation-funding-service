@@ -199,7 +199,7 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{organisationId}/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{organisationId}/{userId}", method = RequestMethod.PUT)
     public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("organisationId") final Long organisationId,
@@ -240,4 +240,5 @@ public class ApplicationController {
 
         return application;
     }
+
 }
