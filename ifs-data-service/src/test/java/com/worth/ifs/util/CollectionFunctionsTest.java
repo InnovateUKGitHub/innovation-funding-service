@@ -215,7 +215,9 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_nullElement() {
-        assertNull(CollectionFunctions.getOnlyElement(asList(null)));
+        List<Object> nullElementList = new ArrayList<>();
+        nullElementList.add(null);
+        assertNull(CollectionFunctions.getOnlyElement(nullElementList));
     }
 
     @Test
