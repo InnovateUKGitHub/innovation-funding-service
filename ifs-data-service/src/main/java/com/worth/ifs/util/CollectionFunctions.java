@@ -116,4 +116,23 @@ public class CollectionFunctions {
         Collections.reverse(reversed);
         return reversed;
     }
+
+    /**
+     * Return the one and only element in the given list, otherwise throw an IllegalArgumentException
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T getOnlyElement(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("No elements were available in list " + list + ", so cannot return only element");
+        }
+
+        if (list.size() > 1) {
+            throw new IllegalArgumentException("More than one element was available in list " + list + ", so cannot return only element");
+        }
+
+        return list.get(0);
+    }
 }

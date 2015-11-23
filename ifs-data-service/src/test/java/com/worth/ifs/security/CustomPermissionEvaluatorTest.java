@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +95,27 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         }
     };
 
+    private Object permissionEntityLookupBeans1 = new Object() {
+
+        @PermissionEntityLookupStrategy("String")
+        public String lookupString(Long id) {
+            return "A string " + id;
+        }
+    };
+
+    private Object permissionEntityLookupBeans2 = new Object() {
+
+        @PermissionEntityLookupStrategy("Long")
+        public Long lookupLong(Long id) {
+            return 100 + id;
+        }
+
+        @PermissionEntityLookupStrategy("Long")
+        public Integer lookupInteger(Integer id) {
+            return 200 + id;
+        }
+    };
+
     @Before
     public void setup() {
         super.setUp();
@@ -101,7 +123,11 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         List<Object> allPermissionBeans = asList(rulesBeans1, rulesBeans2, rulesBeans3);
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
 
+        List<Object> allPermissionLookupBeans = asList(permissionEntityLookupBeans1, permissionEntityLookupBeans2);
+        Map<String, Object> allPermissionLookupBeansToMap = allPermissionLookupBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
+
         when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
+        when(applicationContextMock.getBeansWithAnnotation(PermissionEntityLookupStrategies.class)).thenReturn(allPermissionLookupBeansToMap);
     }
 
 
@@ -173,7 +199,6 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         assertNotNull(dtoClassToPermissionToMethods.get(String.class).get("Write"));
         assertEquals(1, dtoClassToPermissionToMethods.get(String.class).get("Write").size());
 
-
         assertNotNull(dtoClassToPermissionToMethods.get(Integer.class));
         assertEquals(1, dtoClassToPermissionToMethods.get(Integer.class).size());
         assertNotNull(dtoClassToPermissionToMethods.get(Integer.class).get("Read"));
@@ -185,7 +210,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         permissionEvaluator.generateRules();
 
-        Map<Class<?>, Map<String, List<Method>>> rulesMap = getRulesMap();
+        Map<Class<?>, Map<String, List<Pair<Object, Method>>>> rulesMap = getRulesMap();
 
         // test that we have picked up and set the values for Strings, Integers and Longs
         {
@@ -196,23 +221,23 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         // test the rules against Strings
         {
-            Map<String, List<Method>> rulesByAction = rulesMap.get(String.class);
+            Map<String, List<Pair<Object, Method>>> rulesByAction = rulesMap.get(String.class);
             assertEquals(2, rulesByAction.size());
             assertThat(rulesByAction.keySet(), containsInAnyOrder("Read", "Write"));
 
-            List<Method> readStringRules = rulesByAction.get("Read");
-            List<Method> writeStringRules = rulesByAction.get("Write");
+            List<Pair<Object, Method>> readStringRules = rulesByAction.get("Read");
+            List<Pair<Object, Method>> writeStringRules = rulesByAction.get("Write");
             assertEquals(3, readStringRules.size());
             assertEquals(1, writeStringRules.size());
         }
 
         // test the rules against Integers
         {
-            Map<String, List<Method>> rulesByAction = rulesMap.get(Integer.class);
+            Map<String, List<Pair<Object, Method>>> rulesByAction = rulesMap.get(Integer.class);
             assertEquals(1, rulesByAction.size());
             assertThat(rulesByAction.keySet(), containsInAnyOrder("Read"));
 
-            List<Method> readStringRules = rulesByAction.get("Read");
+            List<Pair<Object, Method>> readStringRules = rulesByAction.get("Read");
             assertEquals(1, readStringRules.size());
         }
     }
@@ -234,8 +259,59 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         }
     }
 
-    private Map<Class<?>, Map<String, List<Method>>> getRulesMap() {
-        return (Map<Class<?>, Map<String, List<Method>>>) getField(permissionEvaluator, "rulesMap");
+    @Test
+    public void test_simpleFindLookupStrategies() {
+        // Method under test
+        List<Pair<Object, Method>> lookupStrategies = permissionEvaluator.findLookupStrategies(asList(permissionEntityLookupBeans1));
+        assertEquals(1, lookupStrategies.size());
+    }
+
+    @Test
+    public void test_complexFindLookupStrategies() {
+        // Method under test
+        List<Pair<Object, Method>> lookupStrategies = permissionEvaluator.findLookupStrategies(asList(permissionEntityLookupBeans1, permissionEntityLookupBeans2));
+        assertEquals(3, lookupStrategies.size());
+    }
+
+    @Test
+    public void test_generateLookupStrategies() throws InvocationTargetException, IllegalAccessException {
+
+        permissionEvaluator.generateLookupStrategies();
+
+        Map<Class<?>, Pair<Object, Method>> permissionLookupStrategyMap = getPermissionLookupStrategyMap();
+
+        // test that we have picked up and set the values for Strings, Integers and Longs
+        {
+            assertNotNull(permissionLookupStrategyMap);
+            assertEquals(3, permissionLookupStrategyMap.size());
+            assertThat(permissionLookupStrategyMap.keySet(), containsInAnyOrder(Integer.class, String.class, Long.class));
+        }
+
+        // test the lookup strategies against Strings
+        {
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(String.class);
+            assertEquals("A string 123", lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 123L));
+        }
+
+        // test the lookup strategies against Longs
+        {
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Long.class);
+            assertEquals(105L, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 5L));
+        }
+
+        // test the lookup strategies against Integers
+        {
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Integer.class);
+            assertEquals(206, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 6));
+        }
+    }
+
+    private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> getRulesMap() {
+        return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");
+    }
+
+    private Map<Class<?>, Pair<Object, Method>> getPermissionLookupStrategyMap() {
+        return (Map<Class<?>, Pair<Object, Method>>) getField(permissionEvaluator, "lookupStrategyMap");
     }
 
 }
