@@ -61,7 +61,7 @@ Verify the validation error for the duration field
     And when the applicant inserts "-1" in the duration field
     Then the applicant should get a validation error for the duration
     And when the applicant leaves the duration field empty
-    The applicant should get a validation error for the duration
+    Then the applicant should get a validation error for the duration
     And when the Applicant inserts 01 in the duration field
     The Applicant should not see any more the error for the duration
 
@@ -74,9 +74,6 @@ Verify the validation error when the text area is empty
 *** Keywords ***
 the applicant is in the application form
     go to    ${APPLICATION_URL}
-
-the applicant inserts more than 500 words in the first question
-    Input Text    id=11    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 100 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8
 
 the applicant inserts "32" in the day field
     Clear Element Text    id=application_details-startdate_day
@@ -98,6 +95,7 @@ when the applicant inserts 01 in the day
     Input Text    id=application_details-startdate_day    01
 
 the applicant should not see the validation error any more
+    sleep     1s
     Focus    css=.app-submit-btn
     Wait Until Element Is Not Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
 
@@ -142,11 +140,10 @@ when the applicant inserts "-1" in the month field
 the applicant clears the text area of the first question
     Clear Element Text    css=#form-input-11 .editor
     Focus    css=.app-submit-btn
-    Sleep    1s
+    Click Element    css=.bold_button
 
 the applicant should get a validation error
-    Focus    css=.app-submit-btn
-    Sleep    2s
+    #Focus    css=.app-submit-btn
     Wait Until Element Is Visible    css=#form-input-11 .error-message
 
 the applicant inserts "0" in the duration field
@@ -154,7 +151,7 @@ the applicant inserts "0" in the duration field
     Input Text    id=application_details-duration    0
 
 the applicant should get a validation error for the duration
-    Focus    css=.app-submit-btn
+    #Focus    css=.app-submit-btn
     Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
 
 when the applicant inserts "-1" in the duration field

@@ -1,15 +1,19 @@
 package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ import static java.util.Arrays.asList;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
- * This class connects to the {@link com.worth.ifs.application.controller.ApplicationController}
+ * This class connects to the {@link ApplicationController}
  * through a REST call.
  */
 @Service
@@ -89,5 +93,17 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, Application[].class));
     }
 
+    @Override
+    public Application createApplication(Long competitionId, Long userId, String applicationName) {
+        Application application = new Application();
+        application.setName(applicationName);
+
+        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
+        ResponseEntity<Application> creationResponse = restPut(url, application, Application.class);
+
+        Application newApplication = creationResponse.getBody();
+
+        return newApplication;
+    }
 
 }

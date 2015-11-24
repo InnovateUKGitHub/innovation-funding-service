@@ -48,6 +48,13 @@ public class ProcessRole {
         this.organisation = organisation;
     }
 
+    public ProcessRole(User user, Application application, Role role, Organisation organisation) {
+        this.user = user;
+        this.application = application;
+        this.role = role;
+        this.organisation = organisation;
+    }
+
     public Role getRole() {
         return role;
     }
