@@ -2,20 +2,31 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Application;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
     @Override
     @Autowired
     protected void setControllerUnderTest(ApplicationController controller) {
         this.controller = controller;
+    }
+
+    private MockHttpServletRequest request;
+
+    @Before
+    public void setUp() {
+        request = new MockHttpServletRequest();
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
     }
 
     @Test

@@ -16,6 +16,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.http.MediaType;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +39,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController(null);
+    }
+
+    private MockHttpServletRequest request;
+
+    @Before
+    public void setUpForHateoas() {
+        request = new MockHttpServletRequest();
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
     }
 
     @Test
