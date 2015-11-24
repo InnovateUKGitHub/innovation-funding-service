@@ -10,7 +10,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -203,21 +202,20 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
+                .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrorCode("form", "formInput[1]", "Please enter some text"))
                 .andReturn();
     }
 
-    @Ignore
-    @Test
-    public void testSaveQuestionResponse(){
-        // test the ApplicationFormController.saveQuestionResponse method.
-        // still has to be tested, but we need questions with formInput objects for this.
-    }
 
-    @Ignore
     @Test
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
+
+        ArrayList<String> validationErrors = new ArrayList<>();
+        validationErrors.add("Please enter some text");
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
+
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(
@@ -226,9 +224,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("mark_as_complete", "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
+                .andExpect(model().attributeErrorCount("form", 2)) // one for empty  input field, one for mark-as-complete
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
                 .andReturn();
     }
-
 
     @Test
     public void testApplicationFormSubmitAssignQuestion() throws Exception {
