@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.user.domain.User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
@@ -27,6 +28,10 @@ public class BuilderAmendFunctions {
 
     public static <T> Consumer<T> id(Long id) {
         return t -> setId(id, t);
+    }
+
+    public static <T> Consumer<T> user(User user) {
+        return t -> setUser(user, t);
     }
 
     public static <T> Consumer<T> competition(Competition competition) {
@@ -126,8 +131,12 @@ public class BuilderAmendFunctions {
         return setField("competition", value, instance);
     }
 
-    public static <T> T setName(Object value, T instance) {
+    public static <T> T setName(String value, T instance) {
         return setField("name", value, instance);
+    }
+
+    public static <T> T setUser(User value, T instance) {
+        return setField("user", value, instance);
     }
 
     public static <T> T setDescription(Object value, T instance) {
