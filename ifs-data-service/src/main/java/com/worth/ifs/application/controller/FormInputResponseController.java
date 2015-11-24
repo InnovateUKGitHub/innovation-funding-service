@@ -8,7 +8,6 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.transactional.AssessorService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -55,8 +54,7 @@ public class FormInputResponseController {
     FormInputResponseRepository responseRepository;
     @Autowired
     FormInputRepository questionRepository;
-    @Autowired
-    AssessorService assessorService;
+
 
     @Autowired
     ServiceLocator serviceLocator;

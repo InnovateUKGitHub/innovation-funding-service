@@ -1,33 +1,31 @@
-package com.worth.ifs.service;
+package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.transactional.AssessorService;
-import com.worth.ifs.transactional.AssessorServiceImpl;
+import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link AssessorServiceImpl}
- *
+ * <p>
  * Created by dwatson on 07/10/15.
  */
 public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorService> {
@@ -42,7 +40,13 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
 
         long responseId = 1L;
         when(responseRepositoryMock.findOne(responseId)).thenReturn(null);
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, 2L, empty(), empty());
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(2L)
+                        .setValue(empty())
+                        .setText(empty()));
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(RESPONSE_NOT_FOUND));
     }
@@ -56,7 +60,13 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         when(responseRepositoryMock.findOne(responseId)).thenReturn(newResponse().build());
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(processRoleId)
+                        .setValue(empty())
+                        .setText(empty()));
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_NOT_FOUND));
     }
@@ -74,7 +84,13 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
         when(responseRepositoryMock.findOne(responseId)).thenReturn(newResponse().build());
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(incorrectTypeProcessRole);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(processRoleId)
+                        .setValue(empty())
+                        .setText(empty()));
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_TYPE));
     }
@@ -89,19 +105,25 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
 
         ProcessRole incorrectApplicationProcessRole =
                 newProcessRole().
-                    withRole(newRole().withType(ASSESSOR)).
-                    withApplication(newApplication().withId(incorrectApplicationId)).
-                    build();
+                        withRole(newRole().withType(ASSESSOR)).
+                        withApplication(newApplication().withId(incorrectApplicationId)).
+                        build();
 
         Response response =
                 newResponse().
-                    withApplication(newApplication().withId(correctApplicationId)).
-                    build();
+                        withApplication(newApplication().withId(correctApplicationId)).
+                        build();
 
         when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(incorrectApplicationProcessRole);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, empty(), empty());
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(processRoleId)
+                        .setValue(empty())
+                        .setText(empty()));
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_APPLICATION));
     }
@@ -111,7 +133,13 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
 
         long responseId = 1L;
         when(responseRepositoryMock.findOne(responseId)).thenThrow(new RuntimeException());
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, 2L, empty(), empty());
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(2L)
+                        .setValue(empty())
+                        .setText(empty()));
         assertTrue(serviceResult.isLeft());
         assertTrue(serviceResult.getLeft().is(UNEXPECTED_ERROR));
     }
@@ -125,26 +153,32 @@ public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorServi
 
         Application application =
                 newApplication().
-                    withId(applicationId).
-                    build();
+                        withId(applicationId).
+                        build();
 
         ProcessRole processRole =
                 newProcessRole().
-                    withId(processRoleId).
-                    withRole(newRole().withType(ASSESSOR)).
-                    withApplication(application).
-                    build();
+                        withId(processRoleId).
+                        withRole(newRole().withType(ASSESSOR)).
+                        withApplication(application).
+                        build();
 
         Response response =
                 newResponse().
-                    withApplication(application).
-                    build();
+                        withApplication(application).
+                        build();
 
         when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
         when(responseRepositoryMock.save(response)).thenReturn(response);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult = service.updateAssessorFeedback(responseId, processRoleId, Optional.of("newFeedbackValue"), Optional.of("newFeedbackText"));
+        Either<ServiceFailure, ServiceSuccess> serviceResult
+                = service.updateAssessorFeedback(
+                new Feedback()
+                        .setResponseId(responseId)
+                        .setAssessorProcessRoleId(processRoleId)
+                        .setValue(of("newFeedbackValue"))
+                        .setText(of("newFeedbackText")));
         assertTrue(serviceResult.isRight());
 
         AssessorFeedback feedback = response.getResponseAssessmentForAssessor(processRole).orElse(null);

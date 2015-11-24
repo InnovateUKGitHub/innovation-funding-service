@@ -48,6 +48,13 @@ public class ProcessRole {
         this.organisation = organisation;
     }
 
+    public ProcessRole(User user, Application application, Role role, Organisation organisation) {
+        this.user = user;
+        this.application = application;
+        this.role = role;
+        this.organisation = organisation;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -87,5 +94,31 @@ public class ProcessRole {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessRole that = (ProcessRole) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (application != null ? !application.equals(that.application) : that.application != null) return false;
+        if (role != null ? !role.equals(that.role) : that.role != null) return false;
+        if (organisation != null ? !organisation.equals(that.organisation) : that.organisation != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (application != null ? application.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (organisation != null ? organisation.hashCode() : 0);
+        return result;
     }
 }

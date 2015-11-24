@@ -90,6 +90,31 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
         return "application-track";
     }
+    @RequestMapping("/create/{competitionId}")
+    public String applicationCreatePage(Model model, @PathVariable("competitionId") final Long competitionId, HttpServletRequest request){
+        return "application-create";
+    }
+
+    @RequestMapping(value = "/create/{competitionId}", method = RequestMethod.POST)
+    public String applicationCreate(Model model,
+                                    @PathVariable("competitionId") final Long competitionId,
+                                    @RequestParam(value = "application_name", required = true) String applicationName,
+                                    HttpServletRequest request){
+        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
+
+        if(applicationName.length() > 0) {
+            Application application = applicationService.createApplication(competitionId, userId, applicationName);
+            return "redirect:/application/"+application.getId();
+        }
+        else {
+            model.addAttribute("applicationNameEmpty", true);
+            return "application-create";
+        }
+    }
+    @RequestMapping(value = "/create-confirm-competition")
+    public String competitionCreateApplication(Model model, HttpServletRequest request){
+        return "application-create-confirm-competition";
+    }
 
     /**
      * This method is for the post request when the users clicks the input[type=submit] button.
@@ -146,6 +171,8 @@ public class ApplicationController extends AbstractApplicationController {
 
         return "application/single-section-details";
     }
+
+
 
     /**
      * Assign a question to a user
