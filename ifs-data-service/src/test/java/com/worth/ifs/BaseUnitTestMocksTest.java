@@ -49,6 +49,8 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ApplicationResourceAssembler applicationResourceAssembler;
+
+    @Mock
     protected CompetitionsRepository competitionsRepositoryMock;
 
     @Mock
