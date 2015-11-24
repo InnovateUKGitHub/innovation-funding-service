@@ -91,7 +91,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
-        // TODO RP - can this be done with java 8 collectors
         Map<Class<?>, List<Pair<Object, Method>>> map = new HashMap<>();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ArrayList<>());
@@ -101,7 +100,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     Map<Class<?>, List<Pair<Object, Method>>> returnTypeToMethods(List<Pair<Object, Method>> allRuleMethods) {
-        // TODO DW - can this be done with java 8 collectors
         Map<Class<?>, List<Pair<Object, Method>>> map = new HashMap<>();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ArrayList<>());
