@@ -1,18 +1,23 @@
 package com.worth.ifs.application.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.application.service.ApplicationRestServiceImpl;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,34 +41,40 @@ import java.util.stream.Collectors;
 @RequestMapping("/application")
 public class ApplicationController {
     @Autowired
-    ApplicationRepository repository;
+    ApplicationRepository applicationRepository;
     @Autowired
-    ProcessRoleRepository userAppRoleRepository;
+    ProcessRoleRepository processRoleRepository;
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
     QuestionController questionController;
+    @Autowired
+    RoleRepository roleRepository;
+    @Autowired
+    OrganisationRepository organisationRepository;
+    @Autowired
+    CompetitionsRepository competitionRepository;
 
 
     private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/id/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
-        return repository.findOne(id);
+        return applicationRepository.findOne(id);
     }
 
     @RequestMapping("/findAll")
      public List<Application> findAll() {
-        List<Application> applications = repository.findAll();
+        List<Application> applications = applicationRepository.findAll();
         return applications;
     }
 
     @RequestMapping("/findByUser/{userId}")
     public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
+        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
             apps.add(role.getApplication());
@@ -78,14 +90,14 @@ public class ApplicationController {
     public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
                                                          @RequestBody Application application) {
 
-        Application applicationDb = repository.findOne(id);
+        Application applicationDb = applicationRepository.findOne(id);
         HttpStatus status;
 
         if (applicationDb != null) {
             applicationDb.setName(application.getName());
             applicationDb.setDurationInMonths(application.getDurationInMonths());
             applicationDb.setStartDate(application.getStartDate());
-            repository.save(applicationDb);
+            applicationRepository.save(applicationDb);
 
             status = HttpStatus.OK;
 
@@ -102,7 +114,7 @@ public class ApplicationController {
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        Application application = repository.findOne(applicationId);
+        Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
                 .flatMap((s) -> s.getQuestions().stream())
@@ -144,10 +156,10 @@ public class ApplicationController {
     public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId){
 
-        Application application = repository.findOne(id);
+        Application application = applicationRepository.findOne(id);
         ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
         application.setApplicationStatus(applicationStatus);
-        repository.save(application);
+        applicationRepository.save(application);
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -165,8 +177,8 @@ public class ApplicationController {
                                                                      @PathVariable("role") final UserRoleType role) {
         User user = userRepository.findOne(userId);
 
-        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
-        List<Application> allApps= repository.findAll();
+        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
+        List<Application> allApps= applicationRepository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {
             if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)  ) {
@@ -187,5 +199,46 @@ public class ApplicationController {
         return contains;
     }
 
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
+    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
+            @PathVariable("competitionId") final Long competitionId,
+            @PathVariable("userId") final Long userId,
+            @RequestBody JsonNode jsonObj) {
+
+        User user = userRepository.findOne(userId);
+
+        String applicationName = jsonObj.get("name").textValue();
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = LocalDate.now();
+        application.setStartDate(currentDate);
+
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
+
+        List<Role> roles = roleRepository.findByName("leadapplicant");
+        Role role = roles.get(0);
+
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+
+        Competition competition = competitionRepository.findOne(competitionId);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
+
+        applicationRepository.save(application);
+        processRoleRepository.save(processRole);
+
+        return application;
+    }
 
 }
