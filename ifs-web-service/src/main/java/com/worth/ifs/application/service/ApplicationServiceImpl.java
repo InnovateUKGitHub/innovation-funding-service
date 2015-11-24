@@ -72,6 +72,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
+        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).intValue();
+    }
+
+    @Override
     public void save(Application application) {
         applicationRestService.saveApplication(application);
     }

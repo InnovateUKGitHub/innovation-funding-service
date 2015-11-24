@@ -278,7 +278,11 @@ public class BaseUnitTest {
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
         when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
         when(sectionService.getInCompleted(app1.getId())).thenReturn(asList(3L, 4L));
-        when(processRoleService.findProcessRole(loggedInUser.getId(), app1.getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(applicant.getId(), app1.getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(applicant.getId(), app2.getId())).thenReturn(processRole2);
+        when(processRoleService.findProcessRole(applicant.getId(), app3.getId())).thenReturn(processRole3);
+        when(processRoleService.findProcessRole(applicant.getId(), app4.getId())).thenReturn(processRole4);
+        when(processRoleService.findProcessRole(users.get(1).getId(), app1.getId())).thenReturn(processRole5);
         when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), app3.getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), app1.getId())).thenReturn(processRole8);

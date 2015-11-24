@@ -17,4 +17,5 @@ public interface ApplicationService {
     public int getCompleteQuestionsPercentage(Long applicationId);
     public void save(Application application);
     Map<Long, Integer> getProgress(Long userId);
+    public int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
 }
