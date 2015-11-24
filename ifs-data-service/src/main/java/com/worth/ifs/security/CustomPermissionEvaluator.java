@@ -37,7 +37,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> rulesMap;
     private Map<Class<?>, Pair<Object, Method>> lookupStrategyMap;
 
-
     @PostConstruct
     void generateRules() {
 
@@ -58,7 +57,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @PostConstruct
     void generateLookupStrategies() {
-
         Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
         List<Pair<Object, Method>> allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
         Map<Class<?>, List<Pair<Object, Method>>> collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
@@ -166,6 +164,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return hasPermission(authentication, permissionEntity, permission);
     }
 
+
+
     private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
 
         final Object finalAuthentication;
@@ -188,5 +188,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
     }
 
+    public List<String> getPermissions(final Authentication authentication, final Object targetDomainObject) {
+        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyMap()).keySet().stream().filter(
+                permission -> hasPermission(authentication, targetDomainObject, permission)
+        ).collect(toList());
+    }
 }
 

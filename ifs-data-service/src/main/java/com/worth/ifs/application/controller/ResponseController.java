@@ -8,6 +8,7 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -20,6 +21,7 @@ import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,8 @@ public class ResponseController {
     QuestionRepository questionRepository;
     @Autowired
     AssessorService assessorService;
+    @Autowired
+    CustomPermissionEvaluator permissionEvaluator;
 
     @Autowired
     ServiceLocator serviceLocator;
@@ -93,6 +97,8 @@ public class ResponseController {
         return response;
     }
 
+
+
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
                                                     @RequestParam("assessorUserId") Long assessorUserId,
@@ -104,11 +110,18 @@ public class ResponseController {
 
         Application application = response.getApplication();
 
+
         Either<JsonStatusResponse, JsonStatusResponse> result = withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator, assessorProcessRole -> {
             assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(assessorProcessRole.getId()).setValue(feedbackValue).setText(feedbackText));
             return right(JsonStatusResponse.ok());
         });
 
+
         return getLeftOrRight(result);
+    }
+
+    @RequestMapping(value= "/permissions", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody List<String> permissions(@RequestBody Feedback feedback){
+        return permissionEvaluator.getPermissions(SecurityContextHolder.getContext().getAuthentication(), feedback);
     }
 }
