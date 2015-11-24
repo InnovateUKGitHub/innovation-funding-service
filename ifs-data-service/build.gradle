@@ -4,8 +4,8 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
-
 apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'org.asciidoctor.convert'
 
 war {
     baseName = 'ifs-data-service'
@@ -34,6 +34,17 @@ bootRun {
     addResources = false
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+jar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-rest"
@@ -53,6 +64,18 @@ dependencies {
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
+
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE"
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    attributes 'snippets': snippetsDir
+    inputs.dir snippetsDir
+    dependsOn test
 }
 
 task client(type: Jar) {
@@ -127,18 +150,16 @@ processTestResources {
     }
 }
 
-
-
-
-    
 task cleanDeploy() {
     build.mustRunAfter clean
-    build.dependsOn clean
-    clientCopy.dependsOn build
-    testCommonCode.dependsOn build
-    testCommonCodeCopy.dependsOn testCommonCode
-    deployToTomcat.dependsOn build
+    clientCopy.mustRunAfter client
+    testCommonCode.mustRunAfter build
+    testCommonCodeCopy.mustRunAfter testCommonCode
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
     dependsOn clientCopy
+    dependsOn testCommonCode
     dependsOn testCommonCodeCopy
     dependsOn deployToTomcat
 }

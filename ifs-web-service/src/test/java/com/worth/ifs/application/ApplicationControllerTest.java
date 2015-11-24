@@ -3,6 +3,8 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +21,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -67,7 +71,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                 .andExpect(model().attribute("incompletedSections", Arrays.asList(3L, 4L)))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()));
+                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
     @Test
@@ -83,7 +88,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
     public void testNotExistingApplicationDetails() throws Exception {
@@ -120,7 +126,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))));
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 //        Matchers.hasItems()
     }
 
@@ -133,7 +140,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
             mockMvc.perform(get("/application/1/confirm-submit"))
                     .andExpect(view().name("application-confirm-submit"))
-                    .andExpect(model().attribute("currentApplication", app));
+                    .andExpect(model().attribute("currentApplication", app))
+                    .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 
     }
 
@@ -154,5 +162,52 @@ public class ApplicationControllerTest extends BaseUnitTest {
         //        Application updatedApplication = (Application) result.getModelAndView().getModel().get("currentApplication");
         //        String name = updatedApplication.getApplicationStatus().getName();
         //        assertEquals(name, "submitted");
+    }
+
+    @Test
+    public void testApplicationCreateView() throws Exception {
+        MvcResult result = mockMvc.perform(get("/application/create/1"))
+                .andExpect(view().name("application-create"))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationCreateWithoutApplicationName() throws Exception {
+        Application application = new Application();
+        application.setName("application");
+
+        User user = new User(1L, "testname", null, null, null, null, null);
+
+
+        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
+        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
+        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", ""))
+                .andExpect(view().name("application-create"))
+                .andExpect(model().attribute("applicationNameEmpty", true))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationCreateWithApplicationName() throws Exception {
+        Application application = new Application();
+        application.setName("application");
+        application.setId(1L);
+
+        User user = new User(1L, "testname", null, null, null, null, null);
+
+
+        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
+        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
+        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
+                .andExpect(view().name("redirect:/application/"+application.getId()))
+                .andExpect(model().attributeDoesNotExist("applicationNameEmpty"))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationCreateConfirmCompetitionView() throws Exception {
+        MvcResult result = mockMvc.perform(get("/application/create-confirm-competition"))
+                .andExpect(view().name("application-create-confirm-competition"))
+                .andReturn();
     }
 }

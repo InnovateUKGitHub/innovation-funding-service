@@ -7,6 +7,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -178,5 +180,73 @@ public class CollectionFunctionsTest {
 
         assertEquals(asList(), indicesSeen);
         assertEquals(asList(), newStrings);
+    }
+
+    @Test
+    public void test_reverse() {
+
+        List<String> originalList = asList("string 1", "another string 2", "string 3");
+        List<String> reversed = CollectionFunctions.reverse(originalList);
+        assertEquals(asList("string 3", "another string 2", "string 1"), reversed);
+    }
+
+    @Test
+    public void test_reverse_nullElements() {
+
+        List<String> originalList = asList(null, null, "string 3");
+        List<String> reversed = CollectionFunctions.reverse(originalList);
+        assertEquals(asList("string 3", null, null), reversed);
+    }
+
+    @Test
+    public void test_reverse_nullSafe() {
+        assertEquals(new ArrayList<>(), CollectionFunctions.reverse(null));
+    }
+
+    @Test
+    public void test_reverse_empty() {
+        assertEquals(new ArrayList<>(), CollectionFunctions.reverse(new ArrayList<>()));
+    }
+
+    @Test
+    public void test_getOnlyElement() {
+        assertEquals("hi there", CollectionFunctions.getOnlyElement(asList("hi there")));
+    }
+
+    @Test
+    public void test_nullElement() {
+        List<Object> nullElementList = new ArrayList<>();
+        nullElementList.add(null);
+        assertNull(CollectionFunctions.getOnlyElement(nullElementList));
+    }
+
+    @Test
+    public void test_getOnlyElement_tooManyElements() {
+        try {
+            CollectionFunctions.getOnlyElement(asList("hi there", "goodbye!"));
+            fail("Should have thrown an IllegalArgumentException as there were too many elements");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void test_getOnlyElement_notEnoughElements() {
+        try {
+            CollectionFunctions.getOnlyElement(asList());
+            fail("Should have thrown an IllegalArgumentException as there weren't enough elements");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void test_getOnlyElement_notEnoughElements_nullList() {
+        try {
+            CollectionFunctions.getOnlyElement(null);
+            fail("Should have thrown an IllegalArgumentException as there weren't enough elements (null list)");
+        } catch (IllegalArgumentException e) {
+            // expected behaviour
+        }
     }
 }

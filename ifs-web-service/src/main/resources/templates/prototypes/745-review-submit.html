@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-summary">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup" style="padding-top: 20px;">
+		<p class="subtitle no-margin">A novel solution to an old problem</p>
+		<h1 class="heading-xlarge no-margin-top">Application Summary</h1>
+	</div>
+
+	<p class="subtitle extra-margin">
+        Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
+    </p>
+
+    <h2 class="heading-medium">Details</h2>
+
+	<div class="collapsible section-overview">
+        
+       	<h2 class=" ">Application details</h2>
+
+		<div id="collapsible-1" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					Application details content
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">Project summary</h2>
+
+		<div id="collapsible-2" aria-hidden="false">
+			<div class="question" >
+				<div class="form-group">
+					Project summary
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">Public description</h2>
+
+		<div id="collapsible-3" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					Public description
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">Scope</h2>
+
+		<div id="collapsible-4" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					Scope
+				</div>
+			</div>
+    	</div>
+
+
+    </div>
+
+    <h2 class="heading-medium">Application questions</h2>
+
+	<div class="collapsible section-overview">
+		
+		<h2>1. Business opportunity</h2>
+
+		<div id="collapsible-5" aria-hidden="false">
+					
+			<div class="question" id="question-1">
+			    <div class="form-group">
+			        
+			        <label class="form-label form-label-bold" for="question-1">What is the business opportunity that your project addresses?</label>
+			        
+			        <div class="textarea-wrapped ">
+			            
+			            
+			            <textarea data-max_words="500" id="1" name="question[1]" readonly="readonly">test123</textarea>
+			            <div class="textarea-footer">
+			                
+			                <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
+			                
+			                <!-- if  readonly we show the edit form button-->
+			                
+			                <a tabindex="0" class="button-secondary" href="/application-form/1/section/3/#question-1">Edit</a>
+			                <a href="#" class="button">Mark as complete</a>
+			                
+			                <span class="count-label">
+			                    <span class="count-message">Words remaining:</span>
+			                    <span class="count-down positive" aria-live="polite">499</span>
+			                </span>
+			                
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+    	</div>
+
+
+    	<h2>2. Potential market</h2>
+
+    	<div id="collapsible-6" aria-hidden="false">
+
+			<div class="question" id="question-1">
+			    <div class="form-group">
+			        
+			        <label class="form-label form-label-bold" for="question-2">What is the size of the potential market for your project?</label>
+			        
+			        <div class="textarea-wrapped ">
+			            
+			            
+			            <textarea data-max_words="500" id="1" name="question[1]" readonly="readonly">test123</textarea>
+			            <div class="textarea-footer">
+			                
+			                <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
+			                
+			                <!-- if  readonly we show the edit form button-->
+			                
+			                <a tabindex="0" class="button-secondary" href="/application-form/1/section/3/#question-1">Edit</a>
+			                <a href="#" class="button">Mark as complete</a>
+			                
+			                <span class="count-label">
+			                    <span class="count-message">Words remaining:</span>
+			                    <span class="count-down positive" aria-live="polite">499</span>
+			                </span>
+			                
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+    	</div>
+
+
+    	<h2 class="section-complete">3. Project exploitation</h2>
+
+    	<div id="collapsible-7" aria-hidden="false">
+			<div class="question" id="question-1">
+			    <div class="form-group">
+			        
+			        <label class="form-label form-label-bold" for="question-3">How will you exploit and market your project?</label>
+			        
+			        <div class="textarea-wrapped ">
+			            
+			            
+			            <textarea data-max_words="500" id="1" name="question[1]" readonly="readonly">test123</textarea>
+			            <div class="textarea-footer">
+			                
+			                <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
+			                
+			                <!-- if  readonly we show the edit form button-->
+			                
+			                <a tabindex="0" class="button-secondary" href="/application-form/1/section/3/#question-1">Edit</a>
+			                
+			                <span class="count-label">
+			                    <span class="count-message">Words remaining:</span>
+			                    <span class="count-down positive" aria-live="polite">499</span>
+			                </span>
+			                
+			            </div>
+			        </div>
+			    </div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">4. Economic benefit</h2>
+
+    	<div id="collapsible-8" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					4. Economic benefit
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">5. Technical approach</h2>
+
+    	<div id="collapsible-9" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					5. Technical approach
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>6. Innovation</h2>
+
+    	<div id="collapsible-10" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					6. Innovation
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>7. Risks</h2>
+
+    	<div id="collapsible-11" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					7. Risks
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">8. Project time</h2>
+
+    	<div id="collapsible-12" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					8. Project time
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">9. Funding</h2>
+
+    	<div id="collapsible-13" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					9. Funding
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2 class="section-complete">10. Adding value</h2>
+
+    	<div id="collapsible-13" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					10. Adding value
+				</div>
+			</div>
+    	</div>
+
+	</div>
+
+	<h2 class="heading-medium">Finances</h2>
+
+	<div class="collapsible section-overview">
+
+		<h2 class="section-complete">Finances</h2>
+
+    	<div id="collapsible-14" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					Your finances
+				</div>
+			</div>
+    	</div>
+    	
+    	<h2>Project financial summary</h2>
+
+    	<div id="collapsible-15" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					Financial summary
+				</div>
+			</div>
+    	</div>
+
+	</div>
+
+	<hr />
+
+	<div>
+        <span class="icon icon-information"></span>
+        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
+    </div>
+
+    <div class="alignright-button">
+        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" href="#">Submit application</a>
+        
+    </div>
+
+
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

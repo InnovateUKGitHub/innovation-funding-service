@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -22,7 +23,7 @@ import static org.springframework.http.HttpMethod.GET;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
- * This class connects to the {@link com.worth.ifs.application.controller.ApplicationController}
+ * This class connects to the {@link ApplicationController}
  * through a REST call.
  */
 @Service
@@ -99,5 +100,17 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, Application[].class));
     }
 
+    @Override
+    public Application createApplication(Long competitionId, Long userId, String applicationName) {
+        Application application = new Application();
+        application.setName(applicationName);
+
+        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
+        ResponseEntity<Application> creationResponse = restPut(url, application, Application.class);
+
+        Application newApplication = creationResponse.getBody();
+
+        return newApplication;
+    }
 
 }

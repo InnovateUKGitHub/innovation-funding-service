@@ -1,7 +1,10 @@
 package com.worth.ifs.application.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
@@ -14,10 +17,17 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resources;
@@ -27,6 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +52,9 @@ import java.util.stream.Collectors;
 public class ApplicationController {
 
     @Autowired
-    ProcessRoleRepository userAppRoleRepository;
+    ApplicationRepository applicationRepository;
+    @Autowired
+    ProcessRoleRepository processRoleRepository;
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
     @Autowired
@@ -49,7 +62,11 @@ public class ApplicationController {
     @Autowired
     QuestionController questionController;
     @Autowired
-    ApplicationRepository applicationRepository;
+    RoleRepository roleRepository;
+    @Autowired
+    OrganisationRepository organisationRepository;
+    @Autowired
+    CompetitionsRepository competitionRepository;
 
     ApplicationResourceAssembler applicationResourceAssembler;
 
@@ -76,7 +93,8 @@ public class ApplicationController {
     @RequestMapping("/findByUser/{userId}")
     public Resources<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-        List<ProcessRole> roles = userAppRoleRepository.findByUser(user);
+
+        List<ProcessRole> roles = processRoleRepository.findByUser(user);
 
         List<Application> apps = roles.stream()
             .map(ProcessRole::getApplication)
@@ -180,7 +198,8 @@ public class ApplicationController {
                                                                      @PathVariable("role") final UserRoleType role) {
         User user = userRepository.findOne(userId);
 
-        List<ProcessRole> roles =  userAppRoleRepository.findByUser(user);
+        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
+
         List<Application> allApps= applicationRepository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {
@@ -202,5 +221,46 @@ public class ApplicationController {
         return contains;
     }
 
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
+    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
+            @PathVariable("competitionId") final Long competitionId,
+            @PathVariable("userId") final Long userId,
+            @RequestBody JsonNode jsonObj) {
+
+        User user = userRepository.findOne(userId);
+
+        String applicationName = jsonObj.get("name").textValue();
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = LocalDate.now();
+        application.setStartDate(currentDate);
+
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
+
+        List<Role> roles = roleRepository.findByName("leadapplicant");
+        Role role = roles.get(0);
+
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+
+        Competition competition = competitionRepository.findOne(competitionId);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
+
+        applicationRepository.save(application);
+        processRoleRepository.save(processRole);
+
+        return application;
+    }
 
 }

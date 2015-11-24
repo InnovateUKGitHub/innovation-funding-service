@@ -6,11 +6,15 @@
 
     li{
     	border-bottom: 1px solid $border-colour;
+
+        &:first-child{
+           border-top: 1px solid $border-colour; 
+        }
     }
 
     .grid-row{
     	//overflow: auto;
-    	margin: 2px 0 2px 0;
+    	//margin: 2px 0 2px 0;
     	//border-left: 5px solid red;
     	min-height: 30px;
 
@@ -19,7 +23,7 @@
 		}
 
 		h3{
-			padding: 10px 0px 10px 0px;
+			padding: 10px 0px 10px 20px;
 
 			&.heading-small{
 				margin: 0;
@@ -64,4 +68,8 @@
 		background-position: right top;
 		background-size: 30px;
 	}
+}
+
+.application-overview{
+    margin-bottom: 30px;
 }

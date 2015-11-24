@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -13,9 +14,12 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpMethod.PUT;
 
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
@@ -119,5 +123,21 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
 
         // now run the method under test
         service.updateApplicationStatus(123L, 456L);
+    }
+
+    @Test
+    public void test_createApplication() {
+        String expectedUrl = dataServicesUrl + applicationRestURL + "/createApplicationByName/123/456";
+
+        Application application = new Application();
+        application.setName("testApplicationName123");
+
+        ResponseEntity<Application> response = new ResponseEntity<>(application, OK);
+
+        when(mockRestTemplate.exchange(eq(expectedUrl), eq(PUT), isA(HttpEntity.class), eq(Application.class))).thenReturn(response);
+
+        // now run the method under test
+        Application returnedResponse = service.createApplication(123L, 456L, "testApplicationName123");
+        returnedResponse.getName().equals(application.getName());
     }
 }

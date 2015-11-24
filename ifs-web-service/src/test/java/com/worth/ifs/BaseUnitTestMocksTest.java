@@ -2,8 +2,6 @@ package com.worth.ifs;
 
 
 import org.junit.Before;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -17,7 +15,11 @@ public abstract class BaseUnitTestMocksTest {
 
     @Before
     public void setUp() {
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
+
+        // start with fresh ids when using builders
+        BuilderAmendFunctions.clearUniqueIds();
     }
 }

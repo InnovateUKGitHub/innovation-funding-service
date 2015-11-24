@@ -56,6 +56,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public Application createApplication(Long competitionId, Long userId, String applicationName) {
+        Application application = applicationRestService.createApplication(competitionId, userId, applicationName);
+
+        return application;
+    }
+
+    @Override
     public void updateStatus(Long applicationId, Long statusId) {
         applicationRestService.updateApplicationStatus(applicationId, statusId);
     }
