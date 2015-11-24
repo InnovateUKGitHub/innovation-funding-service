@@ -2,7 +2,6 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Application;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
