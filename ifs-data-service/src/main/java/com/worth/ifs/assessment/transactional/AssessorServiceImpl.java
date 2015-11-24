@@ -1,8 +1,11 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
@@ -12,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_APPLICATION;
-import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_TYPE;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_APPLICATION;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_TYPE;
 import static com.worth.ifs.util.Either.right;
 
 /**

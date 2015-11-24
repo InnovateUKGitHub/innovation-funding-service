@@ -1,12 +1,10 @@
-package com.worth.ifs.service;
+package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.transactional.AssessorService;
-import com.worth.ifs.transactional.AssessorServiceImpl;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -15,7 +13,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;

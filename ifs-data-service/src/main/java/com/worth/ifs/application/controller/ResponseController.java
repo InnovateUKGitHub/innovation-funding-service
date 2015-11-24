@@ -7,7 +7,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.transactional.AssessorService;
+import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
