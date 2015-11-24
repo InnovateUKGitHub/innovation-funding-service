@@ -33,7 +33,7 @@ public class User {
     @OneToMany(mappedBy="user")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="user_role",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
             inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName = "id")})
@@ -123,10 +123,7 @@ public class User {
         if (imageUrl != null ? !imageUrl.equals(user.imageUrl) : user.imageUrl != null) return false;
         if (token != null ? !token.equals(user.token) : user.token != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (processRoles != null ? !processRoles.equals(user.processRoles) : user.processRoles != null) return false;
-        return !(roles != null ? !roles.equals(user.roles) : user.roles != null);
-
+        return !(password != null ? !password.equals(user.password) : user.password != null);
     }
 
     @Override
@@ -137,8 +134,6 @@ public class User {
         result = 31 * result + (token != null ? token.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (processRoles != null ? processRoles.hashCode() : 0);
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
 }

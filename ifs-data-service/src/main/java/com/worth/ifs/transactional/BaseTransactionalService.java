@@ -13,7 +13,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
