@@ -15,7 +15,6 @@ import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -61,9 +60,10 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
             new Class[]{PreAuthorize.class,
                     PreFilter.class,
                     PostAuthorize.class,
-                    PostAuthorize.class});
+                    PostAuthorize.class,
+                    NotSecured.class
+            });
 
-    @Ignore("TODO declare an unsecured annotation and apply to fix the build.")
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
         Collection<Object> services = unwrapProxies(servicesToTest());
