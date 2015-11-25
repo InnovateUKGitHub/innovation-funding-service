@@ -2,7 +2,6 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
@@ -108,19 +107,46 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         {
             originalLookupStrategyMap = (DtoClassToLookupMethod) getField(permissionEvaluator, "lookupStrategyMap");
 
-            Pair<LookupClassToMock, DtoClassToLookupMethods> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
+            Pair<LookupClassToMock, DtoClassToLookupMethod> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
 
-            // mockPermissionEntityLookupStrategies = mockedOut.getLeft();
+            mockPermissionEntityLookupStrategies = mockedOut.getLeft();
 
-            // setField(permissionEvaluator, "lookupStrategyMap", mockedOut.getRight());
+            setField(permissionEvaluator, "lookupStrategyMap", mockedOut.getRight());
         }
 
 
         setLoggedInUser(newUser().build());
     }
 
-    protected Pair<LookupClassToMock, DtoClassToLookupMethods> generateMockedOutLookupMap(DtoClassToLookupMethod originalLookupStrategyMap) {
-        return null;
+
+    protected Pair<LookupClassToMock, DtoClassToLookupMethod> generateMockedOutLookupMap(DtoClassToLookupMethod originalLookupStrategyMap) {
+        LookupClassToMock mockLookupBeans = new LookupClassToMock();
+        DtoClassToLookupMethod newMockLookupMap = new DtoClassToLookupMethod();
+
+        for (Map.Entry<Class<?>, Pair<Object, Method>> entry : originalLookupStrategyMap.entrySet()) {
+            Class<?> originalDtoClass = entry.getKey();
+            Pair<Object, Method> originalLookupBeansAndMethod = entry.getValue();
+            Object originalLookupBeans = originalLookupBeansAndMethod.getLeft();
+            Method originalLookupMethod = originalLookupBeansAndMethod.getRight();
+
+            if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) {
+                mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass()));
+            }
+            Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass());
+
+            String methodName = originalLookupMethod.getName();
+            Class<?>[] methodParameters = originalLookupMethod.getParameterTypes();
+            final Method mockLookupMethod;
+
+            try {
+                mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("Unable to look up same method on mock", e);
+            }
+            newMockLookupMap.put(originalDtoClass, Pair.of(mockLookupBean, mockLookupMethod));
+        }
+
+        return Pair.of(mockLookupBeans, newMockLookupMap);
     }
 
 

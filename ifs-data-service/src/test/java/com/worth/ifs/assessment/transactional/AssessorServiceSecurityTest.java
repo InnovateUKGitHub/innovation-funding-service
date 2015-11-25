@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.dto.Feedback.Id;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.transactional.ServiceFailure;
@@ -10,6 +11,8 @@ import com.worth.ifs.util.Either;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
+
+import java.util.Optional;
 
 import static com.worth.ifs.util.Either.right;
 import static org.junit.Assert.assertEquals;
@@ -29,21 +32,39 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     public void setup() {
         super.setup();
         feedbackRules = getMockPermissionRulesBean(FeedbackRules.class);
-        // TODO feedbackLookup = getMockPermissionRulesBean(FeedbackRules.class);
+        feedbackLookup = getMockPermissionEntityLookupStrategiesBean(FeedbackLookup.class);
     }
-
-
 
     @Test
     public void test_readAssessorFeedback_allowedBecauseUserIsAssessorOnAssessment() {
-
-        Feedback feedback = new Feedback();
-        when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
+        Id id = new Id();
+        Feedback feedback = new Feedback().setId(id);
+        when(feedbackLookup.getFeedback(id)).thenReturn(feedback);
+        when(feedbackRules.assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getMessage());
+        assertEquals("Security tested!", service.getFeedback(id).getRight().getValue().get());
 
-        verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
+        verify(feedbackRules).assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser());
+        verify(feedbackLookup).getFeedback(id);
+    }
+
+
+    @Test
+    public void test_readAssessorFeedback_deniedBecauseUserIsNotAssessorOnAssessment() {
+        Id id = new Id();
+        Feedback feedback = new Feedback().setId(id);
+        when(feedbackLookup.getFeedback(id)).thenReturn(feedback);
+        when(feedbackRules.assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(false);
+
+        try {
+            service.getFeedback(id);
+            fail("Should have thrown an AccessDeniedException");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+
+        verify(feedbackRules).assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser());
     }
 
 
@@ -88,7 +109,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
 
         @Override
         public Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id) {
-            return right(new Feedback());
+            return right(new Feedback().setValue(Optional.of("Security tested!")));
         }
     }
 
