@@ -4,10 +4,13 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * ApplicationController exposes Application data and operations through a REST API.
+ * SectionController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/section")
@@ -120,6 +120,13 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
+            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR")){
+                if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
+                    sectionIsComplete = false;
+                }
+                break;
+            }
+
             if(!question.isMarkAsCompletedEnabled())
                 continue;
 
@@ -133,4 +140,32 @@ public class SectionController {
         return sectionIsComplete;
     }
 
+    public boolean childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+        boolean allSectionsWithSubsectionsAreComplete = true;
+
+        Application application = applicationRepository.findOne(applicationId);
+        List<Section> sections = parentSection.getChildSections();
+        sections.forEach(s -> excludedSection.getId().equals(s.getId()));
+        sections.removeIf(s -> s.getId().equals(excludedSection.getId()));
+
+        //A HashSet is used here to end up with distinct organisations
+        HashSet<Organisation> uniqueOrganisationsList = new HashSet<>();
+        List<ProcessRole> processRoles = application.getProcessRoles();
+        processRoles.forEach((p) ->uniqueOrganisationsList.add(p.getOrganisation()));
+
+        for (Section section : sections) {
+            //Only check the sections that have subsections
+            if(section.hasChildSections()) {
+                //Check if section is complete for all organisations that participate in the application
+                for(Organisation uniqueOrganisation : uniqueOrganisationsList) {
+                    if (!this.isSectionComplete(section, applicationId, uniqueOrganisation.getId())) {
+                        allSectionsWithSubsectionsAreComplete=false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return allSectionsWithSubsectionsAreComplete;
+    }
 }
