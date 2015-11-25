@@ -42,10 +42,6 @@ public class ProcessRoleResource extends ResourceWithEmbeddeds {
         return user;
     }
 
-    public Application getApplication() {
-        return application;
-    }
-
     public Role getRole() {
         return role;
     }

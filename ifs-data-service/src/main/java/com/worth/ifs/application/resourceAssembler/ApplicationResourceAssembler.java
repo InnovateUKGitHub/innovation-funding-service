@@ -3,24 +3,30 @@ package com.worth.ifs.application.resourceAssembler;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.resource.EmbeddableResourceAssemblerSupport;
+import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resourceAssembler.ProcessRoleResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.RelProvider;
+import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 @Service
-public class ApplicationResourceAssembler extends EmbeddableResourceAssemblerSupport<Application, ApplicationResource, ApplicationController> {
+public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Application, ApplicationResource> {
+
+    private Class<ApplicationController> controllerClass = ApplicationController.class;
 
     @Autowired
     private ProcessRoleResourceAssembler processRoleResourceAssembler;
 
-    @Autowired
-    public ApplicationResourceAssembler(final EntityLinks entityLinks, final RelProvider relProvider) {
-        super(entityLinks, relProvider, ApplicationController.class, ApplicationResource.class);
+    public ApplicationResourceAssembler() {
+        super(ApplicationController.class, ApplicationResource.class);
     }
 
     @Override
@@ -34,9 +40,9 @@ public class ApplicationResourceAssembler extends EmbeddableResourceAssemblerSup
         return resource;
     }
 
-    @Override
-    public Link linkToSingleResource(Application application) {
-        return entityLinks.linkToSingleResource(ApplicationResource.class, application.getId());
+    public ExtendedLink linkToSingleResource(Application application) {
+        Link link = linkTo(methodOn(controllerClass).getApplicationById(application.getId())).withSelfRel();
+        return new ExtendedLink(link).withTitle(application.getName());
     }
 
     @Override
@@ -49,5 +55,10 @@ public class ApplicationResourceAssembler extends EmbeddableResourceAssemblerSup
             application.getApplicationStatus(),
             application.getCompetition()
         );
+    }
+
+    public Resources<ApplicationResource> toEmbeddedList(Iterable<Application> entities) {
+        final List<ApplicationResource> resources = toResources(entities);
+        return new Resources<>(resources, linkTo(controllerClass).withSelfRel());
     }
 }

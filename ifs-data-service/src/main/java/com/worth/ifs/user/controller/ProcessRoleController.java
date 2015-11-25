@@ -3,6 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resourceAssembler.ProcessRoleResourceAssembler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,19 @@ public class ProcessRoleController {
 
     @Autowired
     ProcessRoleRepository processRoleRepository;
+
+    ProcessRoleResourceAssembler processRoleResourceAssembler;
+
+    @Autowired
+    public ProcessRoleController(ProcessRoleResourceAssembler processRoleResourceAssembler) {
+        this.processRoleResourceAssembler = processRoleResourceAssembler;
+    }
+
+    @RequestMapping("/{id}")
+    public ProcessRoleResource findOne(@PathVariable("id") final Long id) {
+        ProcessRole processRole = processRoleRepository.findOne(id);
+        return processRoleResourceAssembler.toResource(processRole);
+    }
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
     public ProcessRole findByUserApplication(@PathVariable("userId") final Long userId,

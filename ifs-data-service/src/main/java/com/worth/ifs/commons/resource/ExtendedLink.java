@@ -13,11 +13,6 @@ public class ExtendedLink extends Link {
     @XmlAttribute
     private String name = "";
 
-    @XmlAttribute
-    private String docs = "";
-
-
-
     public ExtendedLink(String href) {
         super(href);
     }
@@ -34,23 +29,23 @@ public class ExtendedLink extends Link {
         this(link.getHref(), link.getRel());
     }
 
-    public ExtendedLink(String href, String rel, String title, String name, String docs) {
+    public ExtendedLink(String href, String rel, String title, String name) {
         this(href, rel);
         this.title = title;
         this.name = name;
-        this.docs = docs;
+    }
+
+    @Override
+    public ExtendedLink withRel(String rel){
+        return new ExtendedLink(this.getHref(),rel, title, name);
     }
 
     public ExtendedLink withTitle(String title){
-        return new ExtendedLink(this.getHref(),this.getRel(), title, name, docs);
+        return new ExtendedLink(this.getHref(),this.getRel(), title, name);
     }
 
     public ExtendedLink withName(String name){
-        return new ExtendedLink(this.getHref(),this.getRel(), title, name, docs);
-    }
-
-    public ExtendedLink withDocs(String docs){
-        return new ExtendedLink(this.getHref(),this.getRel(), title, name, docs);
+        return new ExtendedLink(this.getHref(),this.getRel(), title, name);
     }
 
     public String getTitle(){
@@ -59,9 +54,5 @@ public class ExtendedLink extends Link {
 
     public String getName(){
         return name;
-    }
-
-    public String getDocs(){
-        return docs;
     }
 }

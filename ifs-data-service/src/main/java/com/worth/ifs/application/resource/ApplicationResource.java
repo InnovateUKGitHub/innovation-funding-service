@@ -59,10 +59,6 @@ public class ApplicationResource extends ResourceWithEmbeddeds {
         return durationInMonths;
     }
 
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
-    }
-
     public ApplicationStatus getApplicationStatus() {
         return applicationStatus;
     }
