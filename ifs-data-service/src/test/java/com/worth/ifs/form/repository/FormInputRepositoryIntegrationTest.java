@@ -3,14 +3,8 @@ package com.worth.ifs.form.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 

@@ -4,14 +4,12 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by dwatson on 05/10/15.

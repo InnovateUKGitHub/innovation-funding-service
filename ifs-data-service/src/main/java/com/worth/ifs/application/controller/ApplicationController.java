@@ -3,18 +3,18 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -22,12 +22,15 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
  * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
+@ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
     @Autowired
@@ -56,21 +60,26 @@ public class ApplicationController {
     @Autowired
     CompetitionsRepository competitionRepository;
 
-    @Autowired
-    private ApplicationService applicationService;
-
+    private ApplicationResourceAssembler applicationResourceAssembler;
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping("/id/{id}")
-    public Application getApplicationById(@PathVariable("id") final Long id) {
-        return applicationRepository.findOne(id);
+    @Autowired
+    public ApplicationController(ApplicationResourceAssembler applicationResourceAssembler) {
+        this.applicationResourceAssembler = applicationResourceAssembler;
     }
 
-    @RequestMapping("/findAll")
-     public List<Application> findAll() {
+    @RequestMapping("/{id}")
+        public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
+            Application application = applicationRepository.findOne(id);
+            return applicationResourceAssembler.toResource(application);
+        }
+
+    @RequestMapping("/")
+    public Resources<ApplicationResource> findAll() {
         List<Application> applications = applicationRepository.findAll();
-        return applications;
+        Resources<ApplicationResource> resources = applicationResourceAssembler.toEmbeddedList(applications);
+        return resources;
     }
 
     @RequestMapping("/findByUser/{userId}")
@@ -208,8 +217,40 @@ public class ApplicationController {
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
 
+        User user = userRepository.findOne(userId);
+
         String applicationName = jsonObj.get("name").textValue();
-        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId);
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = LocalDate.now();
+        application.setStartDate(currentDate);
+
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
+
+        List<Role> roles = roleRepository.findByName("leadapplicant");
+        Role role = roles.get(0);
+
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+
+        Competition competition = competitionRepository.findOne(competitionId);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
+
+        applicationRepository.save(application);
+        processRoleRepository.save(processRole);
+
+        return application;
     }
 
 }
