@@ -3,7 +3,6 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
@@ -11,12 +10,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.user.domain.*;
@@ -24,13 +17,9 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,10 +36,8 @@ import java.util.stream.Collectors;
  * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
-@ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
-
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
@@ -68,39 +55,29 @@ public class ApplicationController {
     @Autowired
     CompetitionsRepository competitionRepository;
 
-    ApplicationResourceAssembler applicationResourceAssembler;
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @Autowired
-    public ApplicationController(ApplicationResourceAssembler applicationResourceAssembler) {
-        this.applicationResourceAssembler = applicationResourceAssembler;
+    @RequestMapping("/id/{id}")
+    public Application getApplicationById(@PathVariable("id") final Long id) {
+        return applicationRepository.findOne(id);
     }
 
-    @RequestMapping("/{id}")
-    public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
-        Application application = applicationRepository.findOne(id);
-        return applicationResourceAssembler.toResource(application);
-    }
-
-    @RequestMapping("/")
-     public Resources<ApplicationResource> findAll() {
+    @RequestMapping("/findAll")
+     public List<Application> findAll() {
         List<Application> applications = applicationRepository.findAll();
-        Resources<ApplicationResource> resources = applicationResourceAssembler.toEmbeddedList(applications);
-        return resources;
+        return applications;
     }
 
     @RequestMapping("/findByUser/{userId}")
-    public Resources<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
+    public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-
-        List<ProcessRole> roles = processRoleRepository.findByUser(user);
-
-        List<Application> apps = roles.stream()
-            .map(ProcessRole::getApplication)
-            .collect(Collectors.toList());
-
-        return applicationResourceAssembler.toEmbeddedList(apps);
+        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
+        List<Application> apps = new ArrayList<>();
+        for (ProcessRole role : roles) {
+            apps.add(role.getApplication());
+        }
+        return apps;
     }
 
     /**
@@ -132,6 +109,7 @@ public class ApplicationController {
 
         return new ResponseEntity<>(headers, status);
     }
+
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
@@ -199,7 +177,6 @@ public class ApplicationController {
         User user = userRepository.findOne(userId);
 
         List<ProcessRole> roles =  processRoleRepository.findByUser(user);
-
         List<Application> allApps= applicationRepository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {

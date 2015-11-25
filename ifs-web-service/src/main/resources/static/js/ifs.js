@@ -24,6 +24,7 @@ var IFS = {
     finalize : function(){
         ifs_pieChart.init();
         ifs_modal.init();
+        ifs_closeCss.init();
     }
   },
   'app-form' : {

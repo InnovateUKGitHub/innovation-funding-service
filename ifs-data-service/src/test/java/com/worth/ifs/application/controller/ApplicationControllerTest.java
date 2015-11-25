@@ -7,16 +7,13 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import org.junit.Before;
-import org.junit.Ignore;
+import com.worth.ifs.user.domain.ProcessRole;
+import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.restdocs.RestDocumentation;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,30 +21,24 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
-@Ignore
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController(null);
-    }
-
-    private MockHttpServletRequest request;
-
-    @Before
-    public void setUpForHateoas() {
-        request = new MockHttpServletRequest();
-        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
-        RequestContextHolder.setRequestAttributes(requestAttributes);
+        return new ApplicationController();
     }
 
     @Test
-    @Ignore
     public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
@@ -55,18 +46,26 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/1"))
+        mockMvc.perform(get("/application/id/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication1Name")))
-                .andExpect(jsonPath("id", is(1)));
-        mockMvc.perform(get("/application/2"))
+                .andExpect(jsonPath("id", is(1)))
+                .andDo(document("application/get-application",
+                        responseFields(
+                                fieldWithPath("id").description("Id of the application"),
+                                fieldWithPath("name").description("Name of the application"),
+                                fieldWithPath("startDate").description("Estimated timescales: project start date"),
+                                fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
+                                fieldWithPath("processRoles").description("Process Roles"),
+                                fieldWithPath("applicationStatus").description("Application Status Id"),
+                                fieldWithPath("competition").description("Competition"))));
+        mockMvc.perform(get("/application/id/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication2Name")))
                 .andExpect(jsonPath("id", is(2)));
     }
 
     @Test
-    @Ignore
     public void applicationControllerShouldReturnApplicationByUserId() throws Exception {
         User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "test/image/url/2", "testToken456def", null);
         User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null);
@@ -101,7 +100,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[0]name", is("testApplication1Name")))
                 .andExpect(jsonPath("[0]id", is(1)))
                 .andExpect(jsonPath("[1]name", is("testApplication2Name")))
-                .andExpect(jsonPath("[1]id", is(2)));
+                .andExpect(jsonPath("[1]id", is(2)))
+                .andDo(document("application/find-user-applications"));
         mockMvc.perform(get("/application/findByUser/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]name", is("testApplication2Name")))
@@ -111,7 +111,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    @Ignore
     public void applicationControllerShouldReturnAllApplications() throws Exception {
 
         List<Application> applications = new ArrayList<Application>();
@@ -120,14 +119,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         applications.add(new Application(null, "testApplication3Name", null, null, 3L));
 
         when(applicationRepositoryMock.findAll()).thenReturn(applications);
-        mockMvc.perform(get("/application/"))
+        mockMvc.perform(get("/application/findAll"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("_embedded.applications[0].name", is("testApplication1Name")))
-                .andExpect(jsonPath("_embedded.applications[0].id", is(1)))
-                .andExpect(jsonPath("_embedded.applications[1].name", is("testApplication2Name")))
-                .andExpect(jsonPath("_embedded.applications[1].id", is(2)))
-                .andExpect(jsonPath("_embedded.applications[2].name", is("testApplication3Name")))
-                .andExpect(jsonPath("_embedded.applications[2].id", is(3)));
+                .andExpect(jsonPath("[0]name", is("testApplication1Name")))
+                .andExpect(jsonPath("[0]id", is(1)))
+                .andExpect(jsonPath("[1]name", is("testApplication2Name")))
+                .andExpect(jsonPath("[1]id", is(2)))
+                .andExpect(jsonPath("[2]name", is("testApplication3Name")))
+                .andExpect(jsonPath("[2]id", is(3)))
+                .andDo(document("application/find-all-applications"));
     }
 
     @Test
@@ -175,6 +175,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()));
+                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
+                .andDo(document("application/create-application"));
     }
 }
