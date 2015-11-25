@@ -102,7 +102,9 @@ public class ApplicationController extends AbstractApplicationController {
                                     HttpServletRequest request){
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
 
-        if(applicationName.length() > 0) {
+        String applicationNameWithoutWhiteSpace= applicationName.replaceAll("\\s","");
+
+        if(applicationNameWithoutWhiteSpace.length() > 0) {
             Application application = applicationService.createApplication(competitionId, userId, applicationName);
             return "redirect:/application/"+application.getId();
         }
