@@ -9,6 +9,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Transactional and secured service focused around the processing of Applications
  */
+@Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
 
     @Override
