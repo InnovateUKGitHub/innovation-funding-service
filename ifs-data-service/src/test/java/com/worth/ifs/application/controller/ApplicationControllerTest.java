@@ -7,12 +7,11 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.ProcessRole;
-import org.junit.Rule;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.restdocs.RestDocumentation;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
@@ -21,15 +20,13 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -130,6 +127,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andDo(document("application/find-all-applications"));
     }
 
+    @Ignore("refactoring test to put into ApplicationService as part of INFUND-659")
     @Test
     public void applicationControllerCanCreateApplication() throws Exception {
         Long competitionId = 1L;
