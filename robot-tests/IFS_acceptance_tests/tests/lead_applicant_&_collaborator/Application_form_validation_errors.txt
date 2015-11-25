@@ -68,7 +68,7 @@ Verify the validation error for the duration field
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
     Given Applicant goes to the Application form
-    When the applicant clears the text area of the first question
+    When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error
 
 *** Keywords ***
@@ -137,7 +137,7 @@ when the applicant inserts "-1" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    -1
 
-the applicant clears the text area of the first question
+the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Focus    css=.app-submit-btn
     Click Element    css=.bold_button

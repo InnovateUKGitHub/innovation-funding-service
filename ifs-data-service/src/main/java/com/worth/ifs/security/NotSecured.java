@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface PermissionEntityLookupStrategies {
-    String value() default "(no description)";
+@Target(ElementType.METHOD)
+public @interface NotSecured {
+    String reason();
 }

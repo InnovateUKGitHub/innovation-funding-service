@@ -8,6 +8,8 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -20,6 +22,7 @@ import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +56,8 @@ public class ResponseController {
     QuestionRepository questionRepository;
     @Autowired
     AssessorService assessorService;
+    @Autowired
+    CustomPermissionEvaluator permissionEvaluator;
 
     @Autowired
     ServiceLocator serviceLocator;
@@ -93,6 +98,8 @@ public class ResponseController {
         return response;
     }
 
+
+
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
                                                     @RequestParam("assessorUserId") Long assessorUserId,
@@ -110,5 +117,26 @@ public class ResponseController {
         });
 
         return getLeftOrRight(result);
+    }
+
+    @RequestMapping(value= "/assessorFeedback/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody Feedback getFeedback(@PathVariable("responseId") Long responseId,
+                                               @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
+        Either<ServiceFailure, Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
+        // TODO how do we return a generic envelope to be consumed? failure is currently simply returning null.
+        return feedback.mapLeftOrRight(l -> null, r -> r);
+    }
+
+
+    @RequestMapping(value= "assessorFeedback/permissions/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<String> permissions(@PathVariable("responseId") Long responseId,
+                                                  @PathVariable("assessorProcessRoleId") Long assessorUserId){
+        return permissionEvaluator.getPermissions(SecurityContextHolder.getContext().getAuthentication(),
+                new Feedback.Id().setAssessorProcessRoleId(assessorUserId).setResponseId(responseId));
+    }
+
+    @RequestMapping(value= "assessorFeedback/permissions", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody List<String> permissions(@RequestBody Feedback feedback){
+        return permissionEvaluator.getPermissions(SecurityContextHolder.getContext().getAuthentication(), feedback);
     }
 }

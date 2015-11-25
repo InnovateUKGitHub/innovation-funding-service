@@ -22,6 +22,7 @@ subprojects {
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
 
         // Test Libraries
         testCompile group: 'org.hamcrest', name: 'hamcrest-core'
