@@ -5,6 +5,9 @@
 		&.section-complete:before{
 			top: 13px;
 		}
+		&.section-incomplete:before{
+			top: 13px; 
+		}
 	}
 
 }
