@@ -22,7 +22,7 @@ import java.util.List;
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
 
     @Override
-    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(String applicationName, Long competitionId, Long userId) {
+    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
 
         User user = userRepository.findOne(userId);
 

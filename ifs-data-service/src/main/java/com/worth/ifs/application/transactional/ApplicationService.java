@@ -9,5 +9,5 @@ import com.worth.ifs.security.NotSecured;
 public interface ApplicationService {
 
     @NotSecured(reason="TODO")
-    Application createApplicationByApplicationNameForUserTokenAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
+    Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 }

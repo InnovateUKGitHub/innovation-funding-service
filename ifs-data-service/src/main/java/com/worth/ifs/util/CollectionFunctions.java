@@ -135,4 +135,17 @@ public class CollectionFunctions {
 
         return list.get(0);
     }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
+        return list.stream().map(mappingFn).collect(toList());
+    }
 }
