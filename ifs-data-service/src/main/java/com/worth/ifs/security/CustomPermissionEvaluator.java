@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.Map.Entry;
 
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
@@ -41,8 +42,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
         ListOfMethods allRulesMethods = findRules(permissionRuleBeans);
+
+        List<Pair<Object, Method>> failed = failedPermissionMethodSignatures(allRulesMethods);
+        if (!failed.isEmpty()) {
+            String error = "Permissions methods: " + Arrays.toString(failed.toArray()) + " have an incorrect signature";
+            LOG.error(error);
+            throw new IllegalStateException(error); // Fail fast
+        }
+
         DtoClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
-        // TODO RP - validation stage to check that no one has done anything silly with method signatures?
         rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
@@ -58,12 +66,51 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     void generateLookupStrategies() {
         Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
         ListOfMethods allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
+
+        List<Pair<Object, Method>> failed = failedLookupMethodSignatures(allLookupStrategyMethods);
+        if (!failed.isEmpty()) {
+            String error = "Lookup methods: " + Arrays.toString(failed.toArray()) + " have an incorrect signature";
+            LOG.error(error);
+            throw new IllegalStateException(error); // Fail fast
+        }
+
         DtoClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
-        // TODO DW - validation stage as per RP's todo above in generateRules()?
-        lookupStrategyMap  = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
+        lookupStrategyMap = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
                 map(entry -> Pair.of(entry.getKey(), getOnlyElement(entry.getValue()))).
                 collect(toMap(Pair::getLeft, Pair::getRight)));
     }
+
+    List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfMethods collectedRulesMethods) {
+        return collectedRulesMethods.stream().filter(
+                beanAndMethod -> {
+                    Method method = beanAndMethod.getRight();
+                    if (method.getParameterTypes().length == 2) {
+                        Class<?> secondParameterClass = method.getParameterTypes()[1];
+                        if (Authentication.class.isAssignableFrom(secondParameterClass) ||
+                                User.class.isAssignableFrom(secondParameterClass)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+        ).collect(toList());
+    }
+
+    List<Pair<Object, Method>> failedLookupMethodSignatures(ListOfMethods collectedLookupMethods) {
+        return collectedLookupMethods.stream().filter(
+                beanAndMethod -> {
+                    Method method = beanAndMethod.getRight();
+                    if (method.getParameterTypes().length == 1) {
+                        Class<?> firstParameterClass = method.getParameterTypes()[0];
+                        if (Serializable.class.isAssignableFrom(firstParameterClass)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+        ).collect(toList());
+    }
+
 
     ListOfMethods findRules(Collection<Object> ruleContainingBeans) {
         return findAnnotatedMethods(ruleContainingBeans, PermissionRule.class);
@@ -108,7 +155,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(DtoClassToPermissionsMethods dtoClassToMethods) {
         DtoClassToPermissionsToPermissionsMethods map = new DtoClassToPermissionsToPermissionsMethods();
-        for (Map.Entry<Class<?>, ListOfMethods> entry : dtoClassToMethods.entrySet()) {
+        for (Entry<Class<?>, ListOfMethods> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 String permission = methodAndBean.getRight().getAnnotationsByType(PermissionRule.class)[0].value();
                 map.putIfAbsent(entry.getKey(), new PermissionsToPermissionsMethods());
@@ -132,7 +179,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         );
     }
 
-    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission){
+    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
         Pair<Object, Method> lookupMethod = lookupStrategyMap.get(targetType);
 
         if (lookupMethod == null || lookupMethod.getRight() == null) {
@@ -196,39 +243,60 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
         return rulesMap.getOrDefault(dtoClazz, emptyPermissions()).keySet().stream().filter(
-                permission -> hasPermission(authentication,key,dtoClazz, permission)
+                permission -> hasPermission(authentication, key, dtoClazz, permission)
         ).collect(toList());
     }
 
-    private static ListOfMethods emptyMethods(){
+    private static ListOfMethods emptyMethods() {
         return new ListOfMethods();
     }
 
 
-    private static PermissionsToPermissionsMethods emptyPermissions(){
+    private static PermissionsToPermissionsMethods emptyPermissions() {
         return new PermissionsToPermissionsMethods();
     }
 
 
-    public static class ListOfMethods extends ArrayList<Pair<Object, Method>>{
-        public static ListOfMethods from(List<Pair<Object, Method>> list){
+    public static class ListOfMethods extends ArrayList<Pair<Object, Method>> {
+        public static ListOfMethods from(List<Pair<Object, Method>> list) {
             ListOfMethods listOfMethods = new ListOfMethods();
             listOfMethods.addAll(list);
             return listOfMethods;
         }
-    };
-    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfMethods>{};
-    public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods>{};
-    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods>{};
-    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods>{};
-    public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>>{
-        public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map){
+    }
+
+    ;
+
+    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>> {
+        public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map) {
             DtoClassToLookupMethod dtoClassToLookupMethod = new DtoClassToLookupMethod();
             dtoClassToLookupMethod.putAll(map);
             return dtoClassToLookupMethod;
         }
 
-    };
+    }
+
+    ;
 
 
 }

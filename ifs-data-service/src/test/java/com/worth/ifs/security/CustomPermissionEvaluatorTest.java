@@ -309,12 +309,10 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
         when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
 
-        permissionEvaluator.generateRules();
-
         try {
-            permissionEvaluator.hasPermission(new UserAuthentication(noRightsUser), 123L, "Read");
+            permissionEvaluator.generateRules();
             fail("Should've thrown an exception as the 2nd parameter was not a User or an Authentication subclass");
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
             // expected bahaviour
         }
     }

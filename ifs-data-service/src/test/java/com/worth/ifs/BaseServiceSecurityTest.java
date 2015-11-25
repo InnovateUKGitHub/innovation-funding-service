@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.mock;
@@ -123,7 +124,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         LookupClassToMock mockLookupBeans = new LookupClassToMock();
         DtoClassToLookupMethod newMockLookupMap = new DtoClassToLookupMethod();
 
-        for (Map.Entry<Class<?>, Pair<Object, Method>> entry : originalLookupStrategyMap.entrySet()) {
+        for (Entry<Class<?>, Pair<Object, Method>> entry : originalLookupStrategyMap.entrySet()) {
             Class<?> originalDtoClass = entry.getKey();
             Pair<Object, Method> originalLookupBeansAndMethod = entry.getValue();
             Object originalLookupBeans = originalLookupBeansAndMethod.getLeft();
@@ -194,14 +195,14 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
 
         DtoClassToPermissionsToPermissionsMethods newMockRulesMap = new DtoClassToPermissionsToPermissionsMethods();
 
-        for (Map.Entry<Class<?>, PermissionsToPermissionsMethods> entry : originalRulesMap.entrySet()) {
+        for (Entry<Class<?>, PermissionsToPermissionsMethods> entry : originalRulesMap.entrySet()) {
 
             Class<?> originalDtoClass = entry.getKey();
             PermissionsToPermissionsMethods originalPermissionBeansAndMethodsByPermission = entry.getValue();
 
             PermissionsToPermissionsMethods newMockPermissionBeansAndMethodsByPermission = new PermissionsToPermissionsMethods();
 
-            for (Map.Entry<String, ListOfMethods> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
+            for (Entry<String, ListOfMethods> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
 
                 String originalPermission = originalPermissionBeansAndMethods.getKey();
                 ListOfMethods originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
@@ -241,14 +242,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
 
     }
 
-    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {
-    }
-
-    ;
-
-    public static class LookupClassToMock extends HashMap<Class<?>, Object> {
-    }
-
-    ;
+    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {};
+    public static class LookupClassToMock extends HashMap<Class<?>, Object> {};
 
 }
