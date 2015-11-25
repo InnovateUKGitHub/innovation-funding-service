@@ -30,4 +30,7 @@ ol.boxed-list {
 		margin-top: 10px;
 		border:1px solid $border-colour;
 	}
+	li.assigned-to-me {
+		background: url("../images/field/field-assigned-right.png") right top no-repeat;
+	}
 }
