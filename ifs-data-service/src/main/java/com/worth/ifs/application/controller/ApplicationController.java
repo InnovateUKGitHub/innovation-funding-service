@@ -209,7 +209,7 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String applicationName = jsonObj.get("name").textValue();
-        return applicationService.createApplicationByApplicationNameForUserTokenAndCompetitionId(applicationName, competitionId, userId);
+        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId);
     }
 
 }

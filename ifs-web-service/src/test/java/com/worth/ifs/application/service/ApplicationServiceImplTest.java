@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,13 +33,11 @@ public class ApplicationServiceImplTest extends BaseServiceMocksTest<Application
     public void setUp() {
         super.setUp();
 
-        ApplicationStatus created = new ApplicationStatus(1L, "created");
-        ApplicationStatus submitted = new ApplicationStatus(2L, "submitted");
-        ApplicationStatus something = new ApplicationStatus(3L, "something");
-        ApplicationStatus finished = new ApplicationStatus(4L, "finished");
-        ApplicationStatus approved = new ApplicationStatus(5L, "approved");
-        ApplicationStatus rejected = new ApplicationStatus(6L, "rejected");
-        applications = newApplication().withApplicationState(created, submitted, something, finished, approved, rejected).build(6);
+        ApplicationStatus[] statuses = newApplicationStatus().
+                withName("created", "submitted", "something", "finished", "approved", "rejected").
+                buildArray(6, ApplicationStatus.class);
+
+        applications = newApplication().withApplicationStatus(statuses).build(6);
 
         userId = 1L;
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(applications);

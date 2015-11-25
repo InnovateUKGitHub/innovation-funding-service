@@ -7,5 +7,5 @@ import com.worth.ifs.application.domain.Application;
  */
 public interface ApplicationService {
 
-    Application createApplicationByApplicationNameForUserTokenAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
+    Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 }
