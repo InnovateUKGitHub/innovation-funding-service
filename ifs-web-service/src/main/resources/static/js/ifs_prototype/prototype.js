@@ -24,13 +24,13 @@ var html = '<li>\
                                 <input type="e-mail" placeholder="name@name.com" name="mail-item-1" id="mail-item-1" value="" />\
                             </td>\
                             <td class="alignright remove"> \
-                                <a class="delete-row" data-cost-row="12" href="javascript:void()">Remove</a>\
+                                <a class="delete-row" data-cost-row="12" href="javascript:void(0)">Remove</a>\
                             </td>\
                         </tr>\
                     </tbody>\
                 </table>\
                 <p class="alignright">\
-                    <a class="add-another-row" href="javascript:void(0)">Add contributor</a>\
+                    <a class="add-another-row" href="javascript:void(0)">Add Person</a>\
                 </p>';
 
 		jQuery('.boxed-list li:nth-last-child(2)').after(html);
@@ -52,7 +52,7 @@ var html = '<li>\
 	});
 
 	jQuery('body').on('keyup','.js-organisation-name',function(e){
-			if(jQuery(this).val() > 0){
+			if(jQuery(this).val().length > 0){
 				jQuery(this).closest('li').find('h2 span').html('"'+jQuery(this).val()+'"');
 			}
 			else {
@@ -61,7 +61,7 @@ var html = '<li>\
 	});
 
 	jQuery('body').on('click','.delete-row',function(){
-			if(jQuery(this).closest('table').find('tr') == 1){
+			if(jQuery(this).closest('table').find('tr').length == 2){
 				jQuery(this).closest('li').remove();
 			}
 			else {

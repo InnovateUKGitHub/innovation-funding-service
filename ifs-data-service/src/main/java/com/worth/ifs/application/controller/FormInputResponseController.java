@@ -51,9 +51,9 @@ public class FormInputResponseController {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    FormInputResponseRepository responseRepository;
+    FormInputResponseRepository formInputResponseRepository;
     @Autowired
-    FormInputRepository questionRepository;
+    FormInputRepository formInputRepository;
 
 
     @Autowired
@@ -70,14 +70,14 @@ public class FormInputResponseController {
 
         List<FormInputResponse> responses = new ArrayList<>();
         for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedById(userAppRole.getId()));
+            responses.addAll(formInputResponseRepository.findByUpdatedById(userAppRole.getId()));
         }
         return responses;
     }
 
     private FormInputResponse getOrCreateResponse(Long applicationId, Long userId, Long formInputId) {
         Application application = applicationRepository.findOne(applicationId);
-        FormInput formInput = questionRepository.findOne(formInputId);
+        FormInput formInput = formInputRepository.findOne(formInputId);
         User user = userRepository.findOne(userId);
 
         List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
@@ -92,7 +92,7 @@ public class FormInputResponseController {
                 ).findFirst();
 
         Optional<FormInputResponse> response = applicantProcessRole.map(role -> {
-            FormInputResponse existingResponse = responseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), userAppRoles.get(0).getId(), formInput.getId());
+            FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), userAppRoles.get(0).getId(), formInput.getId());
             return existingResponse != null ? existingResponse : new FormInputResponse(LocalDateTime.now(), "", role, formInput, application);
         });
 
@@ -139,11 +139,11 @@ public class FormInputResponseController {
             log.debug("Got validation errors: ");
             bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
         } else {
-            responseRepository.save(response);
+            formInputResponseRepository.save(response);
             log.debug("Single question saved!");
         }
         ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
-        servletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+        servletResponse.setStatus(HttpServletResponse.SC_OK);
         return validatedResponse.getAllErrors();
     }
 

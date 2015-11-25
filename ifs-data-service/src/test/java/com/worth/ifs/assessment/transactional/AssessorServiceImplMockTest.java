@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * <p>
  * Created by dwatson on 07/10/15.
  */
-public class AssessorServiceMocksTest extends BaseServiceMocksTest<AssessorService> {
+public class AssessorServiceImplMockTest extends BaseServiceMocksTest<AssessorService> {
 
     @Override
     protected AssessorService supplyServiceUnderTest() {

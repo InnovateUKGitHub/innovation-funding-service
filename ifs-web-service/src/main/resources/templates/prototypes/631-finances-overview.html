@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+            <div class="hgroup" style="padding-top: 20px">
+				<p class="subtitle no-margin">A novel solution to an old problem</p>
+				<h1 class="heading-xlarge no-margin-top">Application overview</h1>
+			</div>
+        </div>
+        <div class="column-third competition-details">
+            <h3 class="heading-medium">Application progress:</h3>
+            
+		    <div class="progress-container medium no-margin-left no-margin-right">
+		        <div class="progress-indicator">
+		            <div class="start">0%</div>
+		            <div class="progress" style="width:9%">
+		                <div>9%</div>
+		            </div>
+		            <div class="end">100%</div>
+		        </div>
+		    </div>
+        </div>
+    </div>
+	
+	<h2 class="heading-medium">Assign a member of your team responsible for submitting for your organisation</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Assign a member of your team responsible for submitting for your organisation</legend>
+			
+			<div class="form-block">
+				<label class="block-label" for="radio-1">
+					<input id="radio-1" type="radio" name="radio-group" value="Charles Barron" />
+					Charles Barron
+				</label>
+				<label class="block-label" for="radio-2">
+					<input id="radio-2" type="radio" name="radio-group" value="Mark Malone" />
+					Mark Malone
+				</label>
+				<label class="block-label" for="radio-3">
+					<input id="radio-3" type="radio" name="radio-group" value="Ryann Blessed" />
+					Ryan Blessed
+				</label>
+			</div>
+
+		</fieldset>
+			
+		<button class="button button-large extra-margin" name="create-account" type="submit">Assign</button>
+	</form>
+
+	<ul class="pagination">
+	    <li class="next">
+	        <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
+	            <span class="pagination-label">Next</span>
+	            <span class="pagination-part-title">Finances overview</span>
+	        </a>
+	    </li>
+	</ul>
+
+	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
