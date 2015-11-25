@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<FormInputResponseController> {
-    
+
     @Override
     protected FormInputResponseController supplyControllerUnderTest() {
         return new FormInputResponseController();
@@ -62,7 +62,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         FormInput formInput = newFormInput().with(id(789L)).build();
 
         when(formInputRepository.findOne(789L)).thenReturn(formInput);
-        when(userRepository.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
         when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(asList(applicantProcessRole));
 

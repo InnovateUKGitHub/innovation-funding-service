@@ -63,9 +63,6 @@ public abstract class BaseUnitTestMocksTest {
     @Mock
     protected ApplicationService applicationService;
 
-    @Mock
-    protected UserRepository userRepository;
-
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();
 
