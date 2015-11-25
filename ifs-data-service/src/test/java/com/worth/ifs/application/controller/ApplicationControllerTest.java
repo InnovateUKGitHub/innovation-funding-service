@@ -11,8 +11,9 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -32,16 +33,17 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
-    private MockHttpServletRequest request;
+    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     private ApplicationResourceAssembler applicationResourceAssembler;
+
+    private MockHttpServletRequest request;
 
     @Before
     public void setUpForHateoas() {
@@ -57,7 +59,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    @Ignore
     public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
@@ -67,21 +68,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         mockMvc.perform(get("/application/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is("testApplication1Name")))
-                .andExpect(jsonPath("id", is(1)))
+                .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
                         responseFields(
-                                fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoles").description("Process Roles"),
+                                fieldWithPath("links").description("HATEOAS style links"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competition").description("Competition"))));
         mockMvc.perform(get("/application/2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is("testApplication2Name")))
-                .andExpect(jsonPath("id", is(2)));
+                .andExpect(jsonPath("$.name", is("testApplication2Name")));
     }
 
     @Test
@@ -129,21 +127,19 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[1]id", is(3)));
     }
 
-    @Ignore
     @Test
     public void applicationControllerShouldReturnAllApplications() throws Exception {
 
         List<Application> applications = newApplication().build(3);
         when(applicationRepositoryMock.findAll()).thenReturn(applications);
 
+        String expected = new ObjectMapper().writeValueAsString(new ApplicationResourceAssembler().toEmbeddedList(applications));
+        //ugly hack to ensure correct URI's in response
+        expected = expected.replaceAll("localhost", "localhost:8090");
+
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]name", is("Application 1")))
-                .andExpect(jsonPath("[0]id", is(1)))
-                .andExpect(jsonPath("[1]name", is("Application 2")))
-                .andExpect(jsonPath("[1]id", is(2)))
-                .andExpect(jsonPath("[2]name", is("Application 3")))
-                .andExpect(jsonPath("[2]id", is(3)))
+                .andExpect(content().string(is(expected)))
                 .andDo(document("application/find-all-applications"));
     }
 

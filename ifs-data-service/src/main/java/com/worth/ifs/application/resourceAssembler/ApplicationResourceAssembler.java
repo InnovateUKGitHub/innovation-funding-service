@@ -33,8 +33,12 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     public ApplicationResource toResource(Application application) {
         final ApplicationResource resource = createResourceWithId(application.getId(), application);
         // Add (multiple) links to processRoles
-        for(ProcessRole role : application.getProcessRoles()) {
-            resource.add( processRoleResourceAssembler.linkToSingleResource(role).withRel("roles") );
+        try{
+            for (ProcessRole role : application.getProcessRoles()) {
+                resource.add(processRoleResourceAssembler.linkToSingleResource(role).withRel("roles"));
+            }
+        }catch(NullPointerException e){
+            //no roles found
         }
 
         return resource;
