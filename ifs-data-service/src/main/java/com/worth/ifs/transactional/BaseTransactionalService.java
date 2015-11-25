@@ -1,9 +1,14 @@
 package com.worth.ifs.transactional;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +49,21 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Autowired
+    protected ApplicationStatusRepository applicationStatusRepository;
+
+    @Autowired
+    protected RoleRepository roleRepository;
+
+    @Autowired
+    protected CompetitionsRepository competitionRepository;
+
+    @Autowired
+    protected ApplicationRepository applicationRepository;
 
     /**
      * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
