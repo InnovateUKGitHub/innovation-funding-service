@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -11,6 +12,7 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
@@ -26,6 +28,9 @@ import static com.worth.ifs.util.Either.right;
  */
 @Service
 public class AssessorServiceImpl extends BaseTransactionalService implements AssessorService {
+
+    @Autowired
+    FeedbackLookup feedbackLookup;
 
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(AssessorServiceImpl.class);
@@ -59,6 +64,14 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                     });
                 });
             });
+        });
+    }
+
+    @Override
+    public Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id) {
+        return handlingErrors(() -> {
+            Feedback feedback = feedbackLookup.findFeedback(id);
+            return right(feedback);
         });
     }
 

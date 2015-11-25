@@ -23,4 +23,8 @@ public interface AssessorService {
     @PreAuthorize("hasPermission(#feedback, 'UPDATE')")
     Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback);
 
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.dto.Feedback', 'READ')")
+    Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id);
+
+
 }

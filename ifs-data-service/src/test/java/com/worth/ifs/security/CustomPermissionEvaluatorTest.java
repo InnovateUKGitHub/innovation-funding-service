@@ -13,6 +13,8 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -173,8 +175,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_simpledDtoClassToMethods()
-    {
+    public void test_simpledDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans1));
         // Method under test
         Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
@@ -183,8 +184,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_complexDtoClassToMethods()
-    {
+    public void test_complexDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans2));
         // Method under test
         Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
@@ -194,8 +194,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_simpleDtoClassToPermissionToMethods()
-    {
+    public void test_simpleDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans1));
         Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
@@ -209,8 +208,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_complexDtoClassToPermissionToMethods()
-    {
+    public void test_complexDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans2));
         Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
@@ -441,6 +439,35 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
             // expected behaviour
         }
     }
+
+
+    @Test
+    public void test_getPermissions() {
+        permissionEvaluator.generateRules();
+        permissionEvaluator.generateLookupStrategies();
+        assertEquals(
+                "There should only be a Read permission on Integers",
+                Arrays.asList("Read"),
+                permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), Integer.valueOf(123)));
+        assertEquals(
+                "There should only be a Read and Write permission on String",
+                Arrays.asList(new String[]{"Read", "Write"}),
+                permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), "A String"));
+        assertEquals(
+                "There should only be a Read and Write permission on String",
+                Arrays.asList(new String[]{"Read"}),
+                permissionEvaluator.getPermissions(new UserAuthentication(readOnlyUser), "A String"));
+        assertEquals(
+                "A user can have no permissions",
+                new ArrayList<>(),
+                permissionEvaluator.getPermissions(new UserAuthentication(new User()), "A String"));
+        assertEquals(
+                "A domain object can have no permissions",
+                new ArrayList<>(),
+                permissionEvaluator.getPermissions(new UserAuthentication(new User()), Float.valueOf(1.0f)));
+
+    }
+
 
     private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> getRulesMap() {
         return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");

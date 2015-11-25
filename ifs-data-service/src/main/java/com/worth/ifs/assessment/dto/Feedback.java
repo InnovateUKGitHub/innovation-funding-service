@@ -1,29 +1,35 @@
 package com.worth.ifs.assessment.dto;
 
 
+import java.io.Serializable;
 import java.util.Optional;
 
 public class Feedback {
-    private Long responseId;
-    private Long assessorProcessRoleId;
+    private Id id = new Id();
     private Optional<String> value;
     private Optional<String> text;
 
+
+    public Feedback setId(Id id) {
+        this.id = id;
+        return this;
+    }
+
     public Long getResponseId() {
-        return responseId;
+        return id.getResponseId();
     }
 
     public Feedback setResponseId(Long responseId) {
-        this.responseId = responseId;
+        id.setResponseId(responseId);
         return this;
     }
 
     public Long getAssessorProcessRoleId() {
-        return assessorProcessRoleId;
+        return id.getAssessorProcessRoleId();
     }
 
     public Feedback setAssessorProcessRoleId(Long assessorProcessRoleId) {
-        this.assessorProcessRoleId = assessorProcessRoleId;
+        id.setAssessorProcessRoleId(assessorProcessRoleId);
         return this;
     }
 
@@ -43,5 +49,28 @@ public class Feedback {
     public Feedback setText(Optional<String> text) {
         this.text = text;
         return this;
+    }
+
+    public static class Id implements Serializable {
+        private Long responseId;
+        private Long assessorProcessRoleId;
+
+        public Long getResponseId() {
+            return responseId;
+        }
+
+        public Id setResponseId(Long responseId) {
+            this.responseId = responseId;
+            return this;
+        }
+
+        public Long getAssessorProcessRoleId() {
+            return assessorProcessRoleId;
+        }
+
+        public Id setAssessorProcessRoleId(Long assessorProcessRoleId) {
+            this.assessorProcessRoleId = assessorProcessRoleId;
+            return this;
+        }
     }
 }

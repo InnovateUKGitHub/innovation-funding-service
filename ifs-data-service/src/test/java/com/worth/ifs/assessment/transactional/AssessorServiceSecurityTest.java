@@ -67,6 +67,11 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         public Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback) {
             return right(new ServiceSuccess("Security tested!"));
         }
+
+        @Override
+        public Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id) {
+            return right(new Feedback());
+        }
     }
 
     @Override
