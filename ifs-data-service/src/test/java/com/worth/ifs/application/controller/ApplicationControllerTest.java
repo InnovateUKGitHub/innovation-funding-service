@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,9 +22,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -51,7 +52,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController(null);
+        ApplicationController applicationController = new ApplicationController(new ApplicationResourceAssembler());
+        return applicationController;
     }
 
     @Test
@@ -127,23 +129,20 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[1]id", is(3)));
     }
 
-    @Test
     @Ignore
+    @Test
     public void applicationControllerShouldReturnAllApplications() throws Exception {
 
-        List<Application> applications = new ArrayList<Application>();
-        applications.add(new Application(null, "testApplication1Name", null, null, 1L));
-        applications.add(new Application(null, "testApplication2Name", null, null, 2L));
-        applications.add(new Application(null, "testApplication3Name", null, null, 3L));
-
+        List<Application> applications = newApplication().build(3);
         when(applicationRepositoryMock.findAll()).thenReturn(applications);
-        mockMvc.perform(get("/application/"))
+
+        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]name", is("testApplication1Name")))
+                .andExpect(jsonPath("[0]name", is("Application 1")))
                 .andExpect(jsonPath("[0]id", is(1)))
-                .andExpect(jsonPath("[1]name", is("testApplication2Name")))
+                .andExpect(jsonPath("[1]name", is("Application 2")))
                 .andExpect(jsonPath("[1]id", is(2)))
-                .andExpect(jsonPath("[2]name", is("testApplication3Name")))
+                .andExpect(jsonPath("[2]name", is("Application 3")))
                 .andExpect(jsonPath("[2]id", is(3)))
                 .andDo(document("application/find-all-applications"));
     }
@@ -186,7 +185,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
         mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
