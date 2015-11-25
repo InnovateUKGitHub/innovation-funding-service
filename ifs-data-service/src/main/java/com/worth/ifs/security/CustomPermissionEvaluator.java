@@ -35,7 +35,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private DtoClassToPermissionsToPermissionsMethods rulesMap;
 
 
-    private Map<Class<?>, Pair<Object, Method>> lookupStrategyMap;
+    private DtoClassToLookupMethod lookupStrategyMap;
 
     @PostConstruct
     void generateRules() {
@@ -60,9 +60,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ListOfMethods allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
         DtoClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
         // TODO DW - validation stage as per RP's todo above in generateRules()?
-        lookupStrategyMap = collectedPermissionLookupMethods.entrySet().stream().
+        lookupStrategyMap  = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
                 map(entry -> Pair.of(entry.getKey(), getOnlyElement(entry.getValue()))).
-                collect(toMap(Pair::getLeft, Pair::getRight));
+                collect(toMap(Pair::getLeft, Pair::getRight)));
     }
 
     ListOfMethods findRules(Collection<Object> ruleContainingBeans) {
@@ -221,5 +221,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods>{};
     public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods>{};
     public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods>{};
+    public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>>{
+        public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map){
+            DtoClassToLookupMethod dtoClassToLookupMethod = new DtoClassToLookupMethod();
+            dtoClassToLookupMethod.putAll(map);
+            return dtoClassToLookupMethod;
+        }
+
+    };
+
+
 }
 

@@ -2,9 +2,11 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
@@ -16,7 +18,8 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.mock;
@@ -42,7 +45,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
     private Map<Class<?>, Object> mockPermissionEntityLookupStrategies;
 
     private DtoClassToPermissionsToPermissionsMethods originalRulesMap;
-    private Map<Class<?>, Pair<Object, Method>> originalLookupStrategyMap;
+    private DtoClassToLookupMethod originalLookupStrategyMap;
 
     /**
      * @return the service class under test.  Note that in order for Spring Security to be able to read parameter-name
@@ -93,47 +96,43 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         // Mockito mocks
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
 
-        originalRulesMap =
-                (DtoClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
+        {
+            originalRulesMap = (DtoClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
 
-        Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> mockedOut = generateMockedOutRulesMap(originalRulesMap);
+            Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> mockedOut = generateMockedOutRulesMap(originalRulesMap);
 
-        mockPermissionRulesBeans = mockedOut.getLeft();
-        Map<Class<?>, PermissionsToPermissionsMethods> newMockRulesMap = mockedOut.getRight();
+            mockPermissionRulesBeans = mockedOut.getLeft();
 
-        setField(permissionEvaluator, "rulesMap", newMockRulesMap);
+            setField(permissionEvaluator, "rulesMap", mockedOut.getRight());
+        }
+        {
+            originalLookupStrategyMap = (DtoClassToLookupMethod) getField(permissionEvaluator, "lookupStrategyMap");
 
-        // TODO comment
-        originalLookupStrategyMap = (Map<Class<?>, Pair<Object, Method>>) getField(permissionEvaluator, "lookupStrategyMap");
+            Pair<LookupClassToMock, DtoClassToLookupMethods> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
 
+            // mockPermissionEntityLookupStrategies = mockedOut.getLeft();
 
-//        Pair<Map<Class<?>, Object>, //
-//                Map<Class<?>,
-//                        Map<String, List<Pair<Object, Method>>>>> mockedOut
-//                = generateMockedOutLookupStrategyMap(originalLookupStrategyMap);
+            // setField(permissionEvaluator, "lookupStrategyMap", mockedOut.getRight());
+        }
+
 
         setLoggedInUser(newUser().build());
     }
 
-    // TODO comment
-    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {};
-
-
-
-
-
-    protected void generateMockedOutLookupStrategyMap(Map<Class<?>, Pair<Object, Method>> originalLookupStrategyMap) {
-
+    protected Pair<LookupClassToMock, DtoClassToLookupMethods> generateMockedOutLookupMap(DtoClassToLookupMethod originalLookupStrategyMap) {
+        return null;
     }
 
+
     /**
-     * Revert the temporary bean definintions used for testing, and replace the original rulesMap on the custom permission evaluator
+     * Revert the temporary bean definintions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
      */
     @After
     public void teardown() {
         applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
         setField(permissionEvaluator, "rulesMap", originalRulesMap);
+        setField(permissionEvaluator, "lookupStrategyMap", originalLookupStrategyMap);
     }
 
     /**
@@ -212,5 +211,18 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         }
 
         return Pair.of(mockPermissionRulesBeans, newMockRulesMap);
+
+
     }
+
+    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {
+    }
+
+    ;
+
+    public static class LookupClassToMock extends HashMap<Class<?>, Object> {
+    }
+
+    ;
+
 }
