@@ -172,7 +172,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationCreateWithoutApplicationName() throws Exception {
+     public void testApplicationCreateWithoutApplicationName() throws Exception {
         Application application = new Application();
         application.setName("application");
 
@@ -182,6 +182,22 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
         MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", ""))
+                .andExpect(view().name("application-create"))
+                .andExpect(model().attribute("applicationNameEmpty", true))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationCreateWithWhitespaceAsApplicationName() throws Exception {
+        Application application = new Application();
+        application.setName("application");
+
+        User user = new User(1L, "testname", null, null, null, null, null);
+
+
+        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
+        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
+        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "     "))
                 .andExpect(view().name("application-create"))
                 .andExpect(model().attribute("applicationNameEmpty", true))
                 .andReturn();

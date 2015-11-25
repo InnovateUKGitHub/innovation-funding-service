@@ -1,10 +1,6 @@
 package com.worth.ifs;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * This is the base class for top-level integration tests.  Subclasses of this class will have access to a running embedded Tomcat

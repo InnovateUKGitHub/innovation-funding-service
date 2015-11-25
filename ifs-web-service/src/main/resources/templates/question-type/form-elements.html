@@ -75,6 +75,7 @@
            th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
            th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+
             />
 </div>
 
@@ -88,6 +89,8 @@
            th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
            th:value="${response}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+           th:min="${min}"
+           th:max="${max}"
             />
 </div>
 
@@ -129,7 +132,7 @@
 
 <div th:fragment="form-percentage (id, title, name, percentage)">
     <div th:include="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" th:remove="tag"/>
-    <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${percentage}, name=${name})" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, response=${percentage}, name=${name}, min=0, max=100)" th:remove="tag"/>
 </div>
 <!-- ========================= textarea  =========================== -->
 

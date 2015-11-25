@@ -8,12 +8,9 @@ import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -43,7 +40,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public void saveApplication(Application application) {
-
         log.debug("ApplicationRestRestService.saveApplication " + application.getId());
 
         ResponseEntity<String> response =
@@ -91,6 +87,14 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
         return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, Application[].class));
+    }
+
+    @Override
+    public Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
+//        http://localhost:8090/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=1&assigneeId=9
+
+        String count = restGet("/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=" + applicationId + "&assigneeId=" + assigneeId, String.class);
+        return Integer.valueOf(count);
     }
 
     @Override
