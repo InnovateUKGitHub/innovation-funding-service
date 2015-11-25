@@ -4,9 +4,21 @@
 	h2{
 		&.section-complete:before{
 			top: 13px;
+			@include media-down(mobile) {
+				content: "";
+				right: 40px;
+				min-height: 20px;
+				min-width: 20px;
+			}
 		}
 		&.section-incomplete:before{
-			top: 13px; 
+			top: 13px;
+			@include media-down(mobile) {
+				content: "";
+				right: 40px;
+				min-height: 20px;
+				min-width: 20px;
+			}
 		}
 	}
 
