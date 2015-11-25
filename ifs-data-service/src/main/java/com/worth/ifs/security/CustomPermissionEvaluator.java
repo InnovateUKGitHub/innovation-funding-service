@@ -108,7 +108,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
 
     Map<Class<?>, Map<String, List<Pair<Object, Method>>>> dtoClassToPermissionToMethods(Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods) {
-        // TODO RP - can this be done with java 8 collectors
         Map<Class<?>, Map<String, List<Pair<Object, Method>>>> map = new HashMap<>();
         for (Map.Entry<Class<?>, List<Pair<Object, Method>>> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
@@ -132,17 +131,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         );
     }
 
-    @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-
-        final Class<?> clazz;
-        try {
-            clazz = Class.forName(targetType);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
-        }
-
-        Pair<Object, Method> lookupMethod = lookupStrategyMap.get(clazz);
+    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission){
+        Pair<Object, Method> lookupMethod = lookupStrategyMap.get(targetType);
 
         if (lookupMethod == null || lookupMethod.getRight() == null) {
             throw new IllegalArgumentException("Could not find lookup mechanism for type " + targetType + ".  Should be a method annotated " +
@@ -164,7 +154,16 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return hasPermission(authentication, permissionEntity, permission);
     }
 
-
+    @Override
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+        final Class<?> clazz;
+        try {
+            clazz = Class.forName(targetType);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
+        }
+        return hasPermission(authentication, targetId, clazz, permission);
+    }
 
     private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
 
@@ -188,9 +187,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
     }
 
-    public List<String> getPermissions(final Authentication authentication, final Object targetDomainObject) {
+    public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
         return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyMap()).keySet().stream().filter(
                 permission -> hasPermission(authentication, targetDomainObject, permission)
+        ).collect(toList());
+    }
+
+    public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
+        return rulesMap.getOrDefault(dtoClazz, emptyMap()).keySet().stream().filter(
+                permission -> hasPermission(authentication,key,dtoClazz, permission)
         ).collect(toList());
     }
 }

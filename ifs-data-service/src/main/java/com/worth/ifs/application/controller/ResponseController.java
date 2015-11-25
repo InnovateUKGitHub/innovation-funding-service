@@ -9,6 +9,7 @@ import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -110,17 +111,31 @@ public class ResponseController {
 
         Application application = response.getApplication();
 
-
         Either<JsonStatusResponse, JsonStatusResponse> result = withProcessRoleReturnJsonResponse(assessorUserId, UserRoleType.ASSESSOR, application.getId(), httpResponse, serviceLocator, assessorProcessRole -> {
             assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(assessorProcessRole.getId()).setValue(feedbackValue).setText(feedbackText));
             return right(JsonStatusResponse.ok());
         });
 
-
         return getLeftOrRight(result);
     }
 
-    @RequestMapping(value= "/permissions", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value= "/assessorFeedback/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody Feedback getFeedback(@PathVariable("responseId") Long responseId,
+                                               @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
+        Either<ServiceFailure, Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
+        // TODO how do we return a generic envelope to be consumed? failure is currently simply returning null.
+        return feedback.mapLeftOrRight(l -> null, r -> r);
+    }
+
+
+    @RequestMapping(value= "assessorFeedback/permissions/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<String> permissions(@PathVariable("responseId") Long responseId,
+                                                  @PathVariable("assessorProcessRoleId") Long assessorUserId){
+        return permissionEvaluator.getPermissions(SecurityContextHolder.getContext().getAuthentication(),
+                new Feedback.Id().setAssessorProcessRoleId(assessorUserId).setResponseId(responseId));
+    }
+
+    @RequestMapping(value= "assessorFeedback/permissions", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody List<String> permissions(@RequestBody Feedback feedback){
         return permissionEvaluator.getPermissions(SecurityContextHolder.getContext().getAuthentication(), feedback);
     }
