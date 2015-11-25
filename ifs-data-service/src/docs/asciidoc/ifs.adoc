@@ -1,7 +1,7 @@
 = IFS API Guide
 :icons: font
 :toc: left
-:toclevels: 4
+:toclevels: 2
 :source-highlighter: highlightjs
 :sectlinks:
 
@@ -64,13 +64,12 @@ todo:: response
 
 [[application]]
 == Application
+include::application.adoc[]
 
-=== Get Application
-Request:
-include::{snippets}/get-application/http-request.adoc[]
+[[assessment]]
+== Assessment
+include::assessment.adoc[]
 
-Response:
-include::{snippets}/get-application/http-response.adoc[]
-
-Curl Example:
-include::{snippets}/get-application/curl-request.adoc[]
+[[user]]
+== User
+include::user.adoc[]

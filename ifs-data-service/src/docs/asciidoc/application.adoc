@@ -1,0 +1,45 @@
+=== Retrieve application
+==== Request
+include::{snippets}/application/get-application/http-request.adoc[]
+
+==== Response
+include::{snippets}/application/get-application/http-response.adoc[]
+
+include::{snippets}/application/get-application/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/get-application/curl-request.adoc[]
+
+=== Retrieve user's applications
+==== Request
+include::{snippets}/application/find-user-applications/http-request.adoc[]
+
+==== Response
+include::{snippets}/application/find-user-applications/http-response.adoc[]
+
+include::{snippets}/application/find-user-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/find-user-applications/curl-request.adoc[]
+
+=== Retrieve all applications
+==== Request
+include::{snippets}/find-all-applications/http-request.adoc[]
+
+==== Response
+include::{snippets}/application/find-all-applications/http-response.adoc[]
+
+include::{snippets}/application/find-all-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/find-all-applications/curl-request.adoc[]
+
+=== Create application
+==== Request
+include::{snippets}/application/create-application/http-request.adoc[]
+
+==== Response
+include::{snippets}/application/create-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/create-application/curl-request.adoc[]

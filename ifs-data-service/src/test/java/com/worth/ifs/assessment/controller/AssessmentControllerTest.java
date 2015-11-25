@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -45,7 +46,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]id", is(123)));
+                .andExpect(jsonPath("[0]id", is(123)))
+                .andDo(document("assessment/find-competition-assessment"));
     }
 
     @Test
@@ -58,7 +60,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentByApplication/1/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is(456)));
+                .andExpect(jsonPath("id", is(456)))
+                .andDo(document("assessment/find-application-user-assessment"));;
     }
 
     @Test
@@ -67,7 +70,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("3"));
+                .andExpect(content().string("3"))
+                .andDo(document("assessment/total-assigned-assessments"));;
     }
 
     @Test
@@ -76,7 +80,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         mockMvc.perform(get(applicationControllerPath+"/totalSubmittedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("35"));
+                .andExpect(content().string("35"))
+                .andDo(document("assessment/total-submitted-assessments"));;
     }
 
     @Test

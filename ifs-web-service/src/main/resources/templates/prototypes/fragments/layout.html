@@ -27,82 +27,61 @@
     </div>
 </div>
 
-<!-- ==============Assign questions in application summary  ====================== --> 
+<!-- ==============Assign questions in application summary  ====================== -->
 
 <div th:fragment="prototype-assign-question">
-	<div class="column-third assign-container">
-		<details>
-	    	<summary><span class="summary">Assigned to: <strong>You</strong> </span></summary>
-	    	<div class="assign-team">
-	    		<h3>Reassign question</h3>
-	      		<ul class="list-bullet">
+	<div class="column-third assign-container collapsible">
+        <div class="assign-button">
+            Assigned to: <strong>You</strong>
+        </div>
+
+        <div class="assign-team">
+            <h3>Reassign question</h3>
+            <ul class="list-bullet">
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_5">Jessica Doe</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
                     
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_1">Steve Smith</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
                     
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_9">Pete Tom</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    
                 </li>
             </ul>
-	    	</div>
-	  	</details> 
-  	</div>
+        </div>
+    </div>
 </div>
 
-<!-- ==============Reassign your question in application summary  ====================== --> 
-
-<div th:fragment="prototype-reassign-your-question">
-	<div class="column-third assign-container">
-		<details>
-	    	<summary><span class="summary">Assigned to: <strong>You</strong></span></summary>
-	    	<div class="assign-team">
-	    		<h3>Reassign question</h3>
-	      		<ul class="list-bullet">
-                <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_5">Jessica Doe</button>
-                    
-                </li>
-                <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_1">Steve Smith</button>
-                    
-                </li>
-                <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_9">Pete Tom</button>
-                </li>
-            </ul>
-	    	</div>
-	  	</details> 
-  	</div>
-</div>
 
 <!-- ==============Reassign question in application summary  ====================== --> 
 
 <div th:fragment="prototype-reassign-question">
-	<div class="column-third assign-container">
-		<details>
-	    	<summary><span class="summary">Assigned to: <strong>Jessica Doe</strong> </span></summary>
-	    	<div class="assign-team">
-	    		<h3 class="heading-xsmall">Reassign question</h3>
-	      		<ul class="list-bullet">
+	<div class="column-third assign-container collapsible">
+        <div class="assign-button">
+            Assigned to: <strong>Jessica Doe</strong>
+        </div>
+
+        <div class="assign-team">
+            <h3>Reassign question</h3>
+            <ul class="list-bullet">
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_5">Jessica Doe</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
                     
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_1">Steve Smith</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
                     
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-11" value="11_9">Pete Tom</button>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    
                 </li>
             </ul>
-	    	</div>
-	  	</details> 
-  	</div>
+        </div>
+    </div>
 </div>
 
 <!-- ========== Javscripts that are loaded exlcusively in the prototype ========= --> 
