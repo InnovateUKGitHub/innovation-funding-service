@@ -1,0 +1,39 @@
+=== Retrieve competition assessments
+==== Request
+include::{snippets}/assessment/find-competition-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-competition-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-competition-assessment/curl-request.adoc[]
+
+=== Retrieve assessment for application by assessor
+==== Request
+include::{snippets}/assessment/find-application-user-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-application-user-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-application-user-assessment/curl-request.adoc[]
+
+=== Retrieve total assigned assessments for competition
+==== Request
+include::{snippets}/assessment/total-assigned-assessments/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/total-assigned-assessments/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/total-assigned-assessments/curl-request.adoc[]
+
+=== Retrieve total submitted assessments for competition
+==== Request
+include::{snippets}/assessment/total-submitted-assessments/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/total-submitted-assessments/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/total-submitted-assessments/curl-request.adoc[]

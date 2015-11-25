@@ -1,0 +1,29 @@
+=== Retrieve all users
+==== Request
+include::{snippets}/user/get-all-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/user/get-all-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-all-users/curl-request.adoc[]
+
+=== Retrieve user
+==== Request
+include::{snippets}/user/get-user/http-request.adoc[]
+
+==== Response
+include::{snippets}/user/get-user/find-user-applications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-user/curl-request.adoc[]
+
+=== Retrieve user by token
+==== Request
+include::{snippets}/user/get-user-by-token/http-request.adoc[]
+
+==== Response
+include::{snippets}/user/get-user-by-token/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-user-by-token/curl-request.adoc[]

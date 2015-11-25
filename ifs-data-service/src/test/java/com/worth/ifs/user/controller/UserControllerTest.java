@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userRepositoryMock.findAll()).thenReturn(users);
         mockMvc.perform(get("/user/findAll/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]id",        is((Number)testUser1.getId().intValue())))
+                .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("[0]name",      is(testUser1.getName())))
                 .andExpect(jsonPath("[0]imageUrl",  is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("[0]token",     is(testUser1.getToken())))
@@ -48,7 +49,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("[2]id",        is((Number)testUser3.getId().intValue())))
                 .andExpect(jsonPath("[2]name",      is(testUser3.getName())))
                 .andExpect(jsonPath("[2]imageUrl",  is(testUser3.getImageUrl())))
-                .andExpect(jsonPath("[2]token",     is(testUser3.getToken())));
+                .andExpect(jsonPath("[2]token",     is(testUser3.getToken())))
+                .andDo(document("user/get-all-users"));
     }
 
     @Test
@@ -58,10 +60,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userRepositoryMock.findOne(testUser1.getId())).thenReturn(testUser1);
         mockMvc.perform(get("/user/id/"+testUser1.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id",        is((Number)testUser1.getId().intValue())))
+                .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("token", is(testUser1.getToken())));
+                .andExpect(jsonPath("token", is(testUser1.getToken())))
+                .andDo(document("user/get-user"));;
     }
 
     @Test
@@ -74,10 +77,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         mockMvc.perform(get("/user/token/"+testUser1.getToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id",        is((Number)testUser1.getId().intValue())))
+                .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("token", is(testUser1.getToken())));
+                .andExpect(jsonPath("token", is(testUser1.getToken())))
+                .andDo(document("user/get-user-by-token"));;
 
     }
 }

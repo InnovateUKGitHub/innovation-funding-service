@@ -21,6 +21,9 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -47,7 +50,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication1Name")))
                 .andExpect(jsonPath("id", is(1)))
-                .andDo(document("get-application"));
+                .andDo(document("application/get-application",
+                        responseFields(
+                                fieldWithPath("id").description("Id of the application"),
+                                fieldWithPath("name").description("Name of the application"),
+                                fieldWithPath("startDate").description("Estimated timescales: project start date"),
+                                fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
+                                fieldWithPath("processRoles").description("Process Roles"),
+                                fieldWithPath("applicationStatus").description("Application Status Id"),
+                                fieldWithPath("competition").description("Competition"))));
         mockMvc.perform(get("/application/id/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is("testApplication2Name")))
@@ -89,7 +100,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[0]name", is("testApplication1Name")))
                 .andExpect(jsonPath("[0]id", is(1)))
                 .andExpect(jsonPath("[1]name", is("testApplication2Name")))
-                .andExpect(jsonPath("[1]id", is(2)));
+                .andExpect(jsonPath("[1]id", is(2)))
+                .andDo(document("application/find-user-applications"));
         mockMvc.perform(get("/application/findByUser/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]name", is("testApplication2Name")))
@@ -114,7 +126,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[1]name", is("testApplication2Name")))
                 .andExpect(jsonPath("[1]id", is(2)))
                 .andExpect(jsonPath("[2]name", is("testApplication3Name")))
-                .andExpect(jsonPath("[2]id", is(3)));
+                .andExpect(jsonPath("[2]id", is(3)))
+                .andDo(document("application/find-all-applications"));
     }
 
     @Test
@@ -162,6 +175,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()));
+                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
+                .andDo(document("application/create-application"));
     }
 }
