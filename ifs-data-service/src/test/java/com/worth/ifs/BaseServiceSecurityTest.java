@@ -2,6 +2,9 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
@@ -13,10 +16,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.mock;
@@ -27,7 +27,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
  * A base class for testing services with Spring Security integrated into them.  PermissionRules-annotated beans are
  * made available as mocks so that we can test the effects of calling service methods against the PermissionRule methods
  * that are available.
- *
+ * <p>
  * Subclasses of this base class are therefore able to test the security annotations of their various methods by verifying
  * that individual PermissionRule methods are being called (on their owning mocks)
  */
@@ -39,20 +39,22 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
     protected T service;
 
     private Map<Class<?>, Object> mockPermissionRulesBeans;
+    private Map<Class<?>, Object> mockPermissionEntityLookupStrategies;
 
-    private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> originalRulesMap;
+    private DtoClassToPermissionsToPermissionsMethods originalRulesMap;
+    private Map<Class<?>, Pair<Object, Method>> originalLookupStrategyMap;
 
     /**
      * @return the service class under test.  Note that in order for Spring Security to be able to read parameter-name
      * information from expressions like @PreAuthorize("hasPermission(#feedback, 'UPDATE')"), we cannot provide a
      * Mockito mock of type T, as Spring Security is unable to infer which parameter is called "feedback", in this example.
-     *
+     * <p>
      * Therefore we need to just create a very simple implementation of T.
      */
     protected abstract Class<? extends T> getServiceClass();
 
     /**
-     * Look up a Mockito mock for a given PermissionRules-annotated bean class
+     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionRules} annotated bean class
      *
      * @param clazz
      * @param <T>
@@ -60,6 +62,18 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
      */
     protected <T> T getMockPermissionRulesBean(Class<T> clazz) {
         return (T) mockPermissionRulesBeans.get(clazz);
+    }
+
+
+    /**
+     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionEntityLookupStrategies} annotated bean class
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    protected <T> T getMockPermissionEntityLookupStrategiesBean(Class<T> clazz) {
+        return (T) mockPermissionEntityLookupStrategies.get(clazz);
     }
 
     /**
@@ -80,16 +94,36 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
 
         originalRulesMap =
-                (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");
+                (DtoClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
 
-        Pair<Map<Class<?>, Object>, Map<Class<?>, Map<String, List<Pair<Object, Method>>>>> mockedOut = generateMockedOutRulesMap(originalRulesMap);
+        Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> mockedOut = generateMockedOutRulesMap(originalRulesMap);
 
         mockPermissionRulesBeans = mockedOut.getLeft();
-        Map<Class<?>, Map<String, List<Pair<Object, Method>>>> newMockRulesMap = mockedOut.getRight();
+        Map<Class<?>, PermissionsToPermissionsMethods> newMockRulesMap = mockedOut.getRight();
 
         setField(permissionEvaluator, "rulesMap", newMockRulesMap);
 
+        // TODO comment
+        originalLookupStrategyMap = (Map<Class<?>, Pair<Object, Method>>) getField(permissionEvaluator, "lookupStrategyMap");
+
+
+//        Pair<Map<Class<?>, Object>, //
+//                Map<Class<?>,
+//                        Map<String, List<Pair<Object, Method>>>>> mockedOut
+//                = generateMockedOutLookupStrategyMap(originalLookupStrategyMap);
+
         setLoggedInUser(newUser().build());
+    }
+
+    // TODO comment
+    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {};
+
+
+
+
+
+    protected void generateMockedOutLookupStrategyMap(Map<Class<?>, Pair<Object, Method>> originalLookupStrategyMap) {
+
     }
 
     /**
@@ -121,32 +155,32 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
     /**
      * Given the rulesMap from the CustomPermissionEvaluator, this method replaces all of the original @PermissionRules-annotated beans
      * with Mockito mocks, and all of the @PermissionRule-annotated methods on those beans with the equivalent methods from the mocks.
-     *
+     * <p>
      * This method then returns all of the mocks that it has created (so for each original @PermissionRules class, there will be an
      * equivalent mock) and the new rulesMap containing the mock replacements.
      *
      * @param originalRulesMap
      * @return
      */
-    private Pair<Map<Class<?>, Object>, Map<Class<?>, Map<String, List<Pair<Object, Method>>>>> generateMockedOutRulesMap(
-            Map<Class<?>, Map<String, List<Pair<Object, Method>>>> originalRulesMap) {
+    private Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> generateMockedOutRulesMap(
+            DtoClassToPermissionsToPermissionsMethods originalRulesMap) {
 
-        Map<Class<?>, Object> mockPermissionRulesBeans = new HashMap<>();
+        PermissionRulesClassToMock mockPermissionRulesBeans = new PermissionRulesClassToMock();
 
-        Map<Class<?>, Map<String, List<Pair<Object, Method>>>> newMockRulesMap = new HashMap<>();
+        DtoClassToPermissionsToPermissionsMethods newMockRulesMap = new DtoClassToPermissionsToPermissionsMethods();
 
-        for (Map.Entry<Class<?>, Map<String, List<Pair<Object, Method>>>> entry : originalRulesMap.entrySet()) {
+        for (Map.Entry<Class<?>, PermissionsToPermissionsMethods> entry : originalRulesMap.entrySet()) {
 
             Class<?> originalDtoClass = entry.getKey();
-            Map<String, List<Pair<Object, Method>>> originalPermissionBeansAndMethodsByPermission = entry.getValue();
+            PermissionsToPermissionsMethods originalPermissionBeansAndMethodsByPermission = entry.getValue();
 
-            Map<String, List<Pair<Object, Method>>> newMockPermissionBeansAndMethodsByPermission = new HashMap<>();
+            PermissionsToPermissionsMethods newMockPermissionBeansAndMethodsByPermission = new PermissionsToPermissionsMethods();
 
-            for (Map.Entry<String, List<Pair<Object, Method>>> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
+            for (Map.Entry<String, ListOfMethods> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
 
                 String originalPermission = originalPermissionBeansAndMethods.getKey();
-                List<Pair<Object, Method>> originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
-                List<Pair<Object, Method>> newMockListOfPermissionMethods = new ArrayList<>();
+                ListOfMethods originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
+                ListOfMethods newMockListOfPermissionMethods = new ListOfMethods();
 
                 for (Pair<Object, Method> beanAndPermissionMethods : originalListOfPermissionMethods) {
 

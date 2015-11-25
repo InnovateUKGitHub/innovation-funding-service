@@ -24,17 +24,19 @@ public class FeedbackLookup {
     private ProcessRoleRepository processRoleRepository;
 
     @PermissionEntityLookupStrategy
-    public Feedback findFeedback(Id id) {
-        Response response = responseRepository.findOne(id.getResponseId());
-        if (response != null) {
-            return response.getResponseAssessmentForAssessor(processRoleRepository.findOne(id.getAssessorProcessRoleId())).map(
-                    assessorFeedback -> {
-                        return new Feedback()
-                                .setId(id)
-                                .setText(ofNullable(assessorFeedback.getAssessmentFeedback()))
-                                .setValue(ofNullable(assessorFeedback.getAssessmentValue()));
-                    }
-            ).orElse(null);
+    public Feedback getFeedback(Id id) {
+        if (id.getResponseId() != null && id.getAssessorProcessRoleId() != null) {
+            Response response = responseRepository.findOne(id.getResponseId());
+            if (response != null) {
+                return response.getResponseAssessmentForAssessor(processRoleRepository.findOne(id.getAssessorProcessRoleId())).map(
+                        assessorFeedback -> {
+                            return new Feedback()
+                                    .setId(id)
+                                    .setText(ofNullable(assessorFeedback.getAssessmentFeedback()))
+                                    .setValue(ofNullable(assessorFeedback.getAssessmentValue()));
+                        }
+                ).orElse(null);
+            }
         }
         return null;
     }

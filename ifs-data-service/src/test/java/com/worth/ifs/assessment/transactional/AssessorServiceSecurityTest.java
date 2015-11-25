@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -22,12 +23,29 @@ import static org.mockito.Mockito.when;
 public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<AssessorService> {
 
     private FeedbackRules feedbackRules;
+    private FeedbackLookup feedbackLookup;
 
     @Before
     public void setup() {
         super.setup();
         feedbackRules = getMockPermissionRulesBean(FeedbackRules.class);
+        // TODO feedbackLookup = getMockPermissionRulesBean(FeedbackRules.class);
     }
+
+
+
+    @Test
+    public void test_readAssessorFeedback_allowedBecauseUserIsAssessorOnAssessment() {
+
+        Feedback feedback = new Feedback();
+        when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
+
+        // call the method under test
+        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getMessage());
+
+        verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
+    }
+
 
     @Test
     public void test_updateAssessorFeedback_allowedBecauseUserIsAssessorOnAssessment() {
