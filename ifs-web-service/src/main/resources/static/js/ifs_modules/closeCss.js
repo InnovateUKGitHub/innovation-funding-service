@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, setTimeout : false, ifs_closeCss  */
+/* globals  jQuery : false, setTimeout : false */
 
 //simple javscript, waits x amount of seconds and removes a Css Class
 //Animation and styling is done with css
@@ -16,11 +16,14 @@
         },
         init : function(){
         	s = this.settings;
-        	var el = jQuery('.'+s.isOpenCssClass);
+        	ifs_closeCss.removeCssClass(s.isOpenCssClass,s.timeOpen);
+        },
+       	removeCssClass : function(cssClass,seconds){
+        	var el = jQuery('.'+cssClass);
         	if(el.length){
 		        setTimeout(function(){
-	            	el.removeClass(s.isOpenCssClass);
-	        	},s.timeOpen);
+	            	el.removeClass(cssClass);
+	        	},seconds);
         	}
         }
 	};

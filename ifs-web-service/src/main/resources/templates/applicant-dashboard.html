@@ -22,7 +22,7 @@
         <section class="in-progress">
             <h1 class="heading-large">In Progress</h1>
             <ul class="boxed-list">
-                <li th:each="application : ${applicationsInProcess}">
+                <li th:each="application : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(application.id) ? 'assigned-to-me' : '' }">
                     <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-half">
                             <h2 class="heading-medium">
@@ -30,7 +30,6 @@
                             </h2>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <p class="form-hint">Current progress: </p>
-
                             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
                         </div>
                         <div class="column-half">

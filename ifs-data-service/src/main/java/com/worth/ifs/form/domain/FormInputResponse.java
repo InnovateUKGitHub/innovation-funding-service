@@ -7,8 +7,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
