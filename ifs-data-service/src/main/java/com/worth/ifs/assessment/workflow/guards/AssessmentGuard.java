@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.guards;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
@@ -18,7 +18,7 @@ public class AssessmentGuard implements Guard<String, String> {
         Object applicationId = context.getMessageHeader("applicationId");
         Object assessorId = context.getMessageHeader("assessorId");
 
-        if(assessmentObject!=null && assessmentObject instanceof Assessment &&
+        if(assessmentObject!=null && assessmentObject instanceof Recommendation &&
                 applicationId != null && applicationId instanceof Long &&
                 assessorId != null && assessorId instanceof Long) {
             return true;

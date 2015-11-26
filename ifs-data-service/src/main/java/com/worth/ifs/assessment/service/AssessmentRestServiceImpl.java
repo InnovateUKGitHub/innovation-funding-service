@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentRestServiceImpl is a utility for CRUD operations on {@link Assessment}.
+ * AssessmentRestServiceImpl is a utility for CRUD operations on {@link Recommendation}.
  * This class connects to the {@link com.worth.ifs.assessment.controller.AssessmentController}
  * through a REST call.
  */
@@ -25,12 +25,12 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     String assessmentRestURL;
 
 
-    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return Arrays.asList(restGet(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
+    public List<Recommendation> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return Arrays.asList(restGet(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Recommendation[].class));
     }
 
-    public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
-        return restGet(assessmentRestURL +"/findAssessmentByApplication/" + assessorId + "/" + applicationId, Assessment.class);
+    public Recommendation getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
+        return restGet(assessmentRestURL +"/findAssessmentByApplication/" + assessorId + "/" + applicationId, Recommendation.class);
     }
 
 
@@ -78,13 +78,13 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
-        restPost(assessmentRestURL + "/acceptAssessmentInvitation/" + applicationId + "/" + assessorId, assessment, String.class);
+    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Recommendation recommendation) {
+        restPost(assessmentRestURL + "/acceptAssessmentInvitation/" + applicationId + "/" + assessorId, recommendation, String.class);
     }
 
     @Override
-    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
-        restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + applicationId + "/" + assessorId, assessment, String.class);
+    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Recommendation recommendation) {
+        restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + applicationId + "/" + assessorId, recommendation, String.class);
     }
 
 }

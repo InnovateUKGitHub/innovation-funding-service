@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.assessment.domain.AssessmentEvents;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,38 +27,38 @@ public class AssessmentWorkflowEventHandler {
         this.stateHandler.addPersistStateChangeListener(listener);
     }
 
-    public void acceptInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+    public void acceptInvitation(Long applicationId, Long assessorId, Recommendation recommendation) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentEvents.ACCEPT.getEvent())
-                .setHeader("assessment", assessment)
+                .setHeader("recommendation", recommendation)
                 .setHeader("applicationId", applicationId)
                 .setHeader("assessorId", assessorId)
-                .build(), assessment.getProcessStatus());
+                .build(), recommendation.getProcessStatus());
     }
 
-    public void rejectInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+    public void rejectInvitation(Long applicationId, Long assessorId, Recommendation recommendation) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentEvents.REJECT.getEvent())
-                .setHeader("assessment", assessment)
+                .setHeader("recommendation", recommendation)
                 .setHeader("applicationId", applicationId)
                 .setHeader("assessorId", assessorId)
-                .build(), assessment.getProcessStatus());
+                .build(), recommendation.getProcessStatus());
     }
 
-    public void recommend(Long applicationId, Long assessorId, Assessment assessment) {
+    public void recommend(Long applicationId, Long assessorId, Recommendation recommendation) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentEvents.RECOMMEND.getEvent())
-                .setHeader("assessment", assessment)
+                .setHeader("recommendation", recommendation)
                 .setHeader("applicationId", applicationId)
                 .setHeader("assessorId", assessorId)
-                .build(), assessment.getProcessStatus());
+                .build(), recommendation.getProcessStatus());
     }
 
-    public void submit(Assessment assessment) {
+    public void submit(Recommendation recommendation) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentEvents.SUBMIT.getEvent())
-                .setHeader("assessment", assessment)
-                .build(), assessment.getProcessStatus());
+                .setHeader("recommendation", recommendation)
+                .build(), recommendation.getProcessStatus());
     }
 
     private class LocalStateChangeListener implements PersistStateChangeListener {

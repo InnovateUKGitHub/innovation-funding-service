@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceMocksTest;
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<AssessmentRestServiceImpl> {
+public class RecommendationRestServiceMocksTest extends BaseRestServiceMocksTest<AssessmentRestServiceImpl> {
 
     private static String assessmentRestURL = "/assessments";
 
@@ -43,37 +43,37 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<Ass
         long assessorId = 123L;
         long competitionId = 456L;
 
-        List<Assessment> assessments = newAssessment().build(3);
-        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[]{}), OK);
-        when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(GET), any(HttpEntity.class), eq(Assessment[].class))).thenReturn(mockResponse);
+        List<Recommendation> recommendations = newAssessment().build(3);
+        ResponseEntity<Recommendation[]> mockResponse = new ResponseEntity<>(recommendations.toArray(new Recommendation[]{}), OK);
+        when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(GET), any(HttpEntity.class), eq(Recommendation[].class))).thenReturn(mockResponse);
 
-        List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);
+        List<Recommendation> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);
         assertEquals(3, results.size());
-        forEachWithIndex(results, (i, result) -> assertEquals(assessments.get(i), result));
+        forEachWithIndex(results, (i, result) -> assertEquals(recommendations.get(i), result));
     }
 
     @Test
     public void test_acceptAssessmentInvitation() {
 
         String expectedUrl = dataServicesUrl + assessmentRestURL + "/acceptAssessmentInvitation/123/456";
-        Assessment assessment = newAssessment().build();
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(assessment), String.class)).thenReturn(new ResponseEntity<>("Good job!", OK));
+        Recommendation recommendation = newAssessment().build();
+        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(recommendation), String.class)).thenReturn(new ResponseEntity<>("Good job!", OK));
 
-        service.acceptAssessmentInvitation(123L, 456L, assessment);
+        service.acceptAssessmentInvitation(123L, 456L, recommendation);
 
-        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(assessment), String.class);
+        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(recommendation), String.class);
     }
 
     @Test
     public void test_getOneByAssessorAndApplication() {
 
         String expectedUrl = dataServicesUrl + assessmentRestURL + "/findAssessmentByApplication/123/456";
-        Assessment assessment = newAssessment().build();
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Assessment.class)).thenReturn(new ResponseEntity<>(assessment, OK));
+        Recommendation recommendation = newAssessment().build();
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Recommendation.class)).thenReturn(new ResponseEntity<>(recommendation, OK));
 
-        Assessment response = service.getOneByAssessorAndApplication(123L, 456L);
+        Recommendation response = service.getOneByAssessorAndApplication(123L, 456L);
         assertNotNull(response);
-        assertEquals(assessment, response);
+        assertEquals(recommendation, response);
     }
 
     @Test
@@ -92,12 +92,12 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<Ass
     public void test_rejectAssessmentInvitation() {
 
         String expectedUrl = dataServicesUrl + assessmentRestURL + "/rejectAssessmentInvitation/123/456";
-        Assessment assessmentToUpdate = newAssessment().build();
+        Recommendation recommendationToUpdate = newAssessment().build();
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(assessmentToUpdate), String.class)).thenReturn(new ResponseEntity<>("", OK));
+        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(recommendationToUpdate), String.class)).thenReturn(new ResponseEntity<>("", OK));
 
-        service.rejectAssessmentInvitation(123L, 456L, assessmentToUpdate);
-        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(assessmentToUpdate), String.class);
+        service.rejectAssessmentInvitation(123L, 456L, recommendationToUpdate);
+        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(recommendationToUpdate), String.class);
     }
 
     @Test

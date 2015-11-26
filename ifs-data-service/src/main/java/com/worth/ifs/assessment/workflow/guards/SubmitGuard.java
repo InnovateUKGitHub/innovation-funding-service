@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.guards;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.statemachine.StateContext;
@@ -15,10 +15,10 @@ public class SubmitGuard implements Guard<String, String> {
 
     @Override
     public boolean evaluate(StateContext<String, String> context) {
-        Assessment assessment = (Assessment) context.getMessageHeader("assessment");
-        if(assessment==null)
+        Recommendation recommendation = (Recommendation) context.getMessageHeader("recommendation");
+        if(recommendation ==null)
             return false;
 
-        return (assessment.hasAssessmentStarted() && !assessment.isSubmitted());
+        return (recommendation.hasAssessmentStarted() && !recommendation.isSubmitted());
     }
 }

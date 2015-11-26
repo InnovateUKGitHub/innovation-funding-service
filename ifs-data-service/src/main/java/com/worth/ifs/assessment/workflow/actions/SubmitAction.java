@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.actions;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,9 +21,9 @@ public class SubmitAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
-        updatedAssessment.submit();
-        updatedAssessment.setProcessStatus(context.getTransition().getTarget().getId());
-        assessmentRepository.save(updatedAssessment);
+        Recommendation updatedRecommendation = (Recommendation) context.getMessageHeader("assessment");
+        updatedRecommendation.submit();
+        updatedRecommendation.setProcessStatus(context.getTransition().getTarget().getId());
+        assessmentRepository.save(updatedRecommendation);
     }
 }

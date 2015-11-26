@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.actions;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.apache.commons.logging.Log;
@@ -22,21 +22,21 @@ public class RecommendAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
+        Recommendation updatedRecommendation = (Recommendation) context.getMessageHeader("recommendation");
         Long applicationId = (Long) context.getMessageHeader("applicationId");
         Long assessorId = (Long) context.getMessageHeader("assessorId");
-        Assessment assessment = assessmentRepository.findOneByAssessorAndApplication(assessorId, applicationId);
+        Recommendation recommendation = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
 
-        if(assessment!=null) {
-            assessment.setSummary(updatedAssessment.getRecommendedValue(),
-                    updatedAssessment.getSuitableFeedback(),
-                    updatedAssessment.getComments(),
-                    updatedAssessment.getOverallScore());
+        if(recommendation !=null) {
+            recommendation.setSummary(updatedRecommendation.getRecommendedValue(),
+                    updatedRecommendation.getSuitableFeedback(),
+                    updatedRecommendation.getComments(),
+                    updatedRecommendation.getOverallScore());
 
-            if(!assessment.getRecommendedValue().equals(RecommendedValue.EMPTY)) {
-                assessment.setProcessStatus(context.getTransition().getTarget().getId());
+            if(!recommendation.getRecommendedValue().equals(RecommendedValue.EMPTY)) {
+                recommendation.setProcessStatus(context.getTransition().getTarget().getId());
             }
-            assessmentRepository.save(assessment);
+            assessmentRepository.save(recommendation);
         }
     }
 }

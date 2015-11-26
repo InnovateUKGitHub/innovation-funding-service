@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.actions;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
@@ -23,16 +23,16 @@ public class RejectAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
+        Recommendation updatedRecommendation = (Recommendation) context.getMessageHeader("recommendation");
         Long applicationId = (Long) context.getMessageHeader("applicationId");
         Long assessorId = (Long) context.getMessageHeader("assessorId");
 
-        Assessment assessment = assessmentRepository.findOneByAssessorAndApplication(assessorId, applicationId);
-        if (assessment != null) {
-            assessment.setProcessStatus(context.getTransition().getTarget().getId());
-            assessment.setDecisionReason(updatedAssessment.getDecisionReason());
-            assessment.setObservations(updatedAssessment.getObservations());
-            assessmentRepository.save(assessment);
+        Recommendation recommendation = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
+        if (recommendation != null) {
+            recommendation.setProcessStatus(context.getTransition().getTarget().getId());
+            recommendation.setDecisionReason(updatedRecommendation.getDecisionReason());
+            recommendation.setObservations(updatedRecommendation.getObservations());
+            assessmentRepository.save(recommendation);
         }
     }
 }

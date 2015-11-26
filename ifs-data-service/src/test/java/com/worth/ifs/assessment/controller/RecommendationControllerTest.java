@@ -1,18 +1,14 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.assessment.domain.Recommendation;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AssessmentControllerTest extends BaseControllerMockMVCTest {
+public class RecommendationControllerTest extends BaseControllerMockMVCTest {
 
     private static String applicationControllerPath = "/assessment";
 
@@ -35,33 +31,33 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testFindAssessmentsByCompetition() throws Exception {
-        Assessment assessment= new Assessment();
+        Recommendation recommendation = new Recommendation();
 
-        List<Assessment> assessments = new ArrayList<Assessment>();
-        assessments.add(assessment);
+        List<Recommendation> recommendations = new ArrayList<Recommendation>();
+        recommendations.add(recommendation);
 
-        assessment.setId(123L);
+        recommendation.setId(123L);
 
-        when(assessmentHandler.getAllByCompetitionAndAssessor(1L, 1L)).thenReturn(assessments);
+        when(assessmentHandler.getAllByCompetitionAndAssessor(1L, 1L)).thenReturn(recommendations);
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(123)))
-                .andDo(document("assessment/find-competition-assessment"));
+                .andDo(document("recommendation/find-competition-recommendation"));
     }
 
     @Test
     public void testGetAssessmentByUserAndApplication() throws Exception {
-        Assessment assessment= new Assessment();
+        Recommendation recommendation = new Recommendation();
 
-        assessment.setId(456L);
+        recommendation.setId(456L);
 
-        when(assessmentHandler.getOneByAssessorAndApplication(1L, 1L)).thenReturn(assessment);
+        when(assessmentHandler.getOneByAssessorAndApplication(1L, 1L)).thenReturn(recommendation);
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentByApplication/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(456)))
-                .andDo(document("assessment/find-application-user-assessment"));;
+                .andDo(document("recommendation/find-application-user-recommendation"));;
     }
 
     @Test

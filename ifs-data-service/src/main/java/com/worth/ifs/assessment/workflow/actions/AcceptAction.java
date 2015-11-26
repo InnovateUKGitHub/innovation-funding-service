@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.actions;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.Recommendation;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,14 +23,14 @@ public class AcceptAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
+        Recommendation updatedRecommendation = (Recommendation) context.getMessageHeader("recommendation");
         Long applicationId = (Long) context.getMessageHeader("applicationId");
         Long assessorId = (Long) context.getMessageHeader("assessorId");
-        Assessment assessment = assessmentRepository.findOneByAssessorAndApplication(assessorId, applicationId);
+        Recommendation recommendation = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
 
-        if(assessment!=null) {
-            assessment.setProcessStatus(context.getTransition().getTarget().getId());
-            assessmentRepository.save(assessment);
+        if(recommendation !=null) {
+            recommendation.setProcessStatus(context.getTransition().getTarget().getId());
+            assessmentRepository.save(recommendation);
         }
     }
 }

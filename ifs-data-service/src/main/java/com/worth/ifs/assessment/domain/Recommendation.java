@@ -14,13 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Assessment defines database relations and a model to use client side and server side.
+ * Recommendation defines database relations and a model to use client side and server side.
  */
 @Entity
-@Table(name = "Assessment", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
+@Table(name = "Recommendation", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
 @Polymorphism(type= PolymorphismType.EXPLICIT)
 @PrimaryKeyJoinColumn(name="process_id", referencedColumnName="id")
-public class Assessment extends Process {
+public class Recommendation {
 
 
     @ManyToOne
@@ -31,41 +31,27 @@ public class Assessment extends Process {
     @JoinColumn(name = "application", referencedColumnName = "id")
     private Application application;
 
-    //@OneToMany
-    @Transient
-    private Map<Long, ResponseAssessment> responseAssessments;
-
-
-    /* ****** TEMPORARY ******* */
-
     @Column(name="temp_totalScore")
     private Double overallScore;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="temp_RecommendedValue")
+    @Column
     private RecommendedValue recommendedValue;
 
-    @Column(name="recommendation_feedback")
+    @Column
     private String suitableFeedback;
     @Column(name="comments")
     private String comments;
 
-    /* ****** END TEMPORARY ******* */
-
-
     @Type(type = "yes_no")
     private Boolean submitted = false;
 
-    public Assessment() {
-        if (responseAssessments == null)
-            responseAssessments = new LinkedHashMap<>();
+    public Recommendation() {
     }
 
-    public Assessment(User assessor, Application application) {
-        super(ProcessEvent.ASSESSMENT.name(), AssessmentStates.PENDING.name());
+    public Recommendation(User assessor, Application application) {
         this.assessor = assessor;
         this.application = application;
-        responseAssessments = new HashMap<>();
         recommendedValue = RecommendedValue.EMPTY;
     }
 
@@ -80,19 +66,9 @@ public class Assessment extends Process {
         submitted = true;
     }
 
-    @Override
-    public String getProcessStatus() {
-        return status;
-    }
-
-    public Map<Long, ResponseAssessment> getResponseAssessments() {
-        return responseAssessments;
-    }
-
     public Boolean hasAssessmentStarted() {
         return  ! recommendedValue.equals(RecommendedValue.EMPTY) ;
     }
-
 
     public RecommendedValue getRecommendedValue() {
         return recommendedValue;
@@ -104,25 +80,9 @@ public class Assessment extends Process {
     public String getComments() {
         return comments;
     }
-    /******* TEMPORARY ********/
 
     public Double getOverallScore() {
-        // nItems cant be 0 - math indetermination
-        //Integer nItems = Math.max(1, responseAssessments.size());
-        //Double.valueOf(getTotalScore() / nItems);
         return overallScore;
-    }
-
-//    private Integer getTotalScore() {
-//        return responseAssessments.values().stream().mapToInt(i -> i.getScore()).sum();
-//    }
-
-    public void addResponseAssessment(ResponseAssessment responseAssessment) {
-        this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);
-    }
-
-    public boolean hasAssessments() {
-        return this.responseAssessments != null && this.responseAssessments.size() > 0;
     }
 
     public Boolean isSubmitted() {
