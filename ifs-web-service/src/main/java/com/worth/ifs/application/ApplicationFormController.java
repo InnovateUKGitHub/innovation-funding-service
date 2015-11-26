@@ -90,7 +90,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
-    public String addAnotherWithFragmentResponse(Form form, Model model,
+    public String addAnotherWithFragmentResponse(@Valid Form form, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @PathVariable("questionId") final Long questionId,
@@ -110,7 +110,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
-    public String addAnother(Model model,
+    public String addAnother(Form form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
