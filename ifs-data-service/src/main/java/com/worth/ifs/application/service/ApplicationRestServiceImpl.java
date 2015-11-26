@@ -11,13 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,12 +33,10 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
     @Override
     public Application getApplicationById(Long applicationId) {
         ParameterizedTypeReference<ApplicationResource> responseType = new ParameterizedTypeReference<ApplicationResource>() {};
-        ResponseEntity<ApplicationResource> applicationResourceEntities = restTemplate.exchange(URI.create(dataRestServiceURL + applicationRestURL + "/" + applicationId), HttpMethod.GET, null, responseType);
+        ResponseEntity<ApplicationResource> applicationResourceEntities = restGetParameterizedType(dataRestServiceURL + applicationRestURL + "/" + applicationId, responseType);
         ApplicationResource applicationResource =applicationResourceEntities.getBody();
         return applicationResource.toApplication();
 
@@ -50,7 +45,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public List<Application> getApplicationsByUserId(Long userId) {
         ParameterizedTypeReference<Resources<ApplicationResource>> responseType = new ParameterizedTypeReference<Resources<ApplicationResource>>() {};
-        ResponseEntity<Resources<ApplicationResource>> applicationResourceEntities = restTemplate.exchange(dataRestServiceURL + applicationRestURL + "/findByUser/" + userId, HttpMethod.GET, null, responseType);
+        ResponseEntity<Resources<ApplicationResource>> applicationResourceEntities = restGetParameterizedType(dataRestServiceURL + applicationRestURL + "/findByUser/" + userId, responseType);
         Resources<ApplicationResource> applicationResources =applicationResourceEntities.getBody();
 
         Collection<ApplicationResource> resources = applicationResources.getContent();

@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceMocksTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -17,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
@@ -69,10 +74,19 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
 
     @Test
     public void test_getApplicationsByUserId() {
-        String expectedUrl = /*/"http://bla" /*/dataServicesUrl + applicationRestURL + "/findByUser/123"/**/;
+        String expectedUrl = dataServicesUrl + applicationRestURL + "/findByUser/123";
         Application[] returnedApplications = newApplication().buildArray(3, Application.class);
-        ResponseEntity<Application[]> response = new ResponseEntity<>(returnedApplications, OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Application[].class)).thenReturn(response);
+        Resources<ApplicationResource> applicationResources = mock(Resources.class);
+        List<ApplicationResource> resources = new ArrayList<>();
+        for (Application application: returnedApplications){
+            ApplicationResource resource = mock(ApplicationResource.class);
+            when(resource.toApplication()).thenReturn(application);
+            resources.add(resource);
+        }
+        when (applicationResources.getContent()).thenReturn(resources);
+
+        ParameterizedTypeReference<Resources<ApplicationResource>> parameterizedTypeRef = new ParameterizedTypeReference<Resources<ApplicationResource>>() {};
+        when(mockRestTemplate.exchange(URI.create(expectedUrl), GET, httpEntityForRestCall(), parameterizedTypeRef)).thenReturn(new ResponseEntity<>(applicationResources, OK));
 
         // now run the method under test
         List<Application> applications = service.getApplicationsByUserId(123L);
