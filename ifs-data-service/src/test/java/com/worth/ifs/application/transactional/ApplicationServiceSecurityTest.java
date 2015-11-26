@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Testing the security annotations on the ApplicationService
+ * Testing the security annotations on the ApplicationService interface
  */
-public class ApplicationServiceImplSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
+public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
 
     @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
@@ -77,6 +77,10 @@ public class ApplicationServiceImplSecurityTest extends BaseServiceSecurityTest<
         return TestApplicationService.class;
     }
 
+    /**
+     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
+     * methods, which is lost when using mocks)
+     */
     private static class TestApplicationService implements ApplicationService {
 
         @Override
