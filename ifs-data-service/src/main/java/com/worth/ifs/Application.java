@@ -12,7 +12,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.*;
+import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
 
 @Configuration
 @EnableHypermediaSupport(type = HAL)

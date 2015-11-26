@@ -1,5 +1,5 @@
+ext.serverPort="8085"
+ext.tomcatWebAppsDir="/Users/worthsystems/servers/ifs/apache-tomcat-web/webapps"
+ext.ifsDataServiceRestBaseURL="http://127.0.0.1:8090"
 ext.activeProfile="automated"
-ext.serverPort=""
-ext.tomcatWebAppsDir=""
-ext.ifsDataServiceRestBaseURL=""
 ext.thymeleafCacheEnabled="false"

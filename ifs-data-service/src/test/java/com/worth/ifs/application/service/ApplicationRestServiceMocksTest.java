@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -18,8 +19,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
@@ -35,20 +36,20 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
         return applicationRestService;
     }
 
-    /*@Test
-    @Ignore
+/*
+    @Test
     public void test_getApplicationById() {
         ParameterizedTypeReference<ApplicationResource> responseType = new ParameterizedTypeReference<ApplicationResource>() {};
         String expectedUrl = dataServicesUrl + applicationRestURL + "/" + 1;
-        ResponseEntity<ApplicationResource> response = new ResponseEntity<>(, OK);
+        ResponseEntity<ApplicationResource> response = new ResponseEntity<ApplicationResource>(new ApplicationResource(), OK);
         when(mockRestTemplate.exchange(expectedUrl, GET, null, responseType)).thenReturn(response);
 
         // now run the method under test
         Application application = service.getApplicationById(1L);
         assertNotNull(application);
         assertTrue(application == response.getBody().toApplication());
-    }*/
-
+    }
+*/
     @Test
     public void test_getApplicationsByCompetitionIdAndUserId() {
 
@@ -68,8 +69,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
 
     @Test
     public void test_getApplicationsByUserId() {
-
-        String expectedUrl = dataServicesUrl + applicationRestURL + "/findByUser/123";
+        String expectedUrl = /*/"http://bla" /*/dataServicesUrl + applicationRestURL + "/findByUser/123"/**/;
         Application[] returnedApplications = newApplication().buildArray(3, Application.class);
         ResponseEntity<Application[]> response = new ResponseEntity<>(returnedApplications, OK);
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Application[].class)).thenReturn(response);
@@ -91,7 +91,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
         ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
 
         ResponseEntity<ObjectNode> response = new ResponseEntity<>(returnedDetails, OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(response);
+        when(mockRestTemplate.exchange(URI.create(expectedUrl), GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(response);
 
         // now run the method under test
         Double percentage = service.getCompleteQuestionsPercentage(123L);
