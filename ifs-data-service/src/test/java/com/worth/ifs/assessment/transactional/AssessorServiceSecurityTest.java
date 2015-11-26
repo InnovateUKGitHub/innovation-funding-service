@@ -57,6 +57,23 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
     }
 
+    @Test
+    public void test_updateAssessorFeedback_nullUserIsPassedToPermissionRuleMethods() {
+
+        setLoggedInUser(null);
+        Feedback feedback = new Feedback();
+        when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, null)).thenReturn(false);
+
+        try {
+            service.updateAssessorFeedback(feedback);
+            fail("Should have thrown an AccessDeniedException");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+
+        verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, null);
+    }
+
     /**
      * Dummy AssessmentService implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)

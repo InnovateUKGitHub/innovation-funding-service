@@ -32,6 +32,18 @@ public class ApplicationServiceImplSecurityTest extends BaseServiceSecurityTest<
     }
 
     @Test
+    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotLoggedIn() {
+
+        setLoggedInUser(null);
+        try {
+            service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+            fail("Should not have been able to create an Application without first logging in");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
 
         try {
