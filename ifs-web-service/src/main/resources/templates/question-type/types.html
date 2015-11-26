@@ -306,32 +306,9 @@
                            th:value="'£ 0'"/>
                 </div>
             </div>
-            <!--<div id="customRate" class="panel-indent js-hidden" th:unless="${costCategory.costs!=null and costCategory.costs.size() > 0}">-->
-                <!--<div class="form-group">-->
-                    <!--<label class="form-label" for="id_overheads-customRate">Overhead rate</label>-->
-                    <!--<input type="text"-->
-                           <!--name="cost-overheads-customRate-1"-->
-                           <!--data-calculation-input="overhead-rate"-->
-                           <!--class="form-control form-control-1-8"-->
-                           <!--id="id_overheads-customRate"-->
-                           <!--th:value="'20'" /> %-->
-                <!--</div>-->
-
-                <!--<div class="form-group">-->
-                    <!--<label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>-->
-                    <!--<input type="text" name="overheads-calculatedRate" class="form-control" readonly="" id="id_overheads-calculatedRate"-->
-                           <!--data-binding-input="subsection-total-9"-->
-                           <!--data-calculation-operations=""-->
-                           <!--data-calculation-input="overhead-calculated"-->
-                           <!--th:value="'£ 0'"/>-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total overhead costs
-                    <!--data-calculation-field="[id=cost-labour-total-field]"-->
-                    <!--data-calculation-operations="+"-->
-
                     <input type="text" name="overheads-totalCosts" class="form-control form-control-1-4 alignright" readonly="" id="id_overheads-totalCosts"
                            data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                            data-calculation-operations="*"
