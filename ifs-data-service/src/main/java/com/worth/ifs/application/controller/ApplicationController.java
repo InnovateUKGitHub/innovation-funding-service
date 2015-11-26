@@ -88,6 +88,10 @@ public class ApplicationController {
         List<ProcessRole> roles =  processRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
+            log.debug("+++++++++++++++++++++");
+            log.debug(role.getApplication().getName());
+            log.debug(role.getApplication().getId());
+            log.debug("+++++++++++++++++++++");
             apps.add(role.getApplication());
         }
         return apps;
