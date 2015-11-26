@@ -32,8 +32,6 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        log.debug(user.getName());
-        log.debug(user.getRoles());
         return user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toCollection(ArrayList::new));
