@@ -302,6 +302,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         try {
             List<String> errors = new ArrayList<>();
+            String fieldName = request.getParameter("fieldName");
+
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
@@ -341,12 +343,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                 }
                 application.setStartDate(startDate);
                 applicationService.save(application);
-            } else if (inputIdentifier.startsWith("cost-")) {
-                String fieldName = request.getParameter("fieldName");
+            } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
                 FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
                 if (fieldName != null && value != null) {
-                    log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
-                    financeFormHandler.storeField(fieldName, value);
+                    String cleanedFieldName = fieldName;
+                    if(fieldName.startsWith("cost-")){
+                        cleanedFieldName = fieldName.replace("cost-", "");
+                    }
+                    log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
+                    financeFormHandler.storeField(cleanedFieldName, value);
                 }
             } else {
                 Long formInputId = Long.valueOf(inputIdentifier);
@@ -373,6 +378,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         } catch (Exception e) {
 //            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
+            log.error("Exception on autosave: ");
+            log.error(e.getMessage());
+            e.printStackTrace();
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
 
             ObjectMapper mapper = new ObjectMapper();

@@ -114,8 +114,10 @@ public class FinanceFormHandler {
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
         if (keyParts.length > 2) {
-            Long id = Long.valueOf(keyParts[2]);
             return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
+        }else if(keyParts.length == 2){
+            log.info("id == null");
+            return new CostFormField(costTypeKey, value, null, keyParts[1], keyParts[0]);
         }
         return null;
     }
@@ -134,8 +136,30 @@ public class FinanceFormHandler {
                 break;
             case FINANCE:
                 costItem = getClaimGrantPercentage(id, costFields);
+                break;
+            case OVERHEADS:
+                costItem = getOverheadsCosts(id, costFields);
+                break;
+            default:
+                log.error("getCostItem, unsupported type: "+ costType);
+                break;
         }
         return costItem;
+    }
+
+    private CostItem getOverheadsCosts(Long id, List<CostFormField> costFields) {
+        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        Integer customRate = null;
+        String acceptRate = null;
+
+        for(CostFormField costFormField : costFields) {
+            if (costFormField.getCostName().equals("acceptRate")) {
+                acceptRate = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("customRate")) {
+                customRate = Integer.valueOf(costFormField.getValue());
+            }
+        }
+        return new Overhead(id, acceptRate, customRate);
     }
 
     private CostItem getLabourCost(Long id, List<CostFormField> costFormFields) {

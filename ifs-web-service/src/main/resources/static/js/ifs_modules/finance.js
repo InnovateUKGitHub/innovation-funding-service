@@ -117,7 +117,7 @@ var ifs_finance = (function(){
                 var absTotal = Math.abs(total);
                 var parsedFloat = parseFloat(absTotal, 10);
                 var toFixed = parsedFloat.toFixed();
-                var replaced = toFixed.replace(/(\d)(?=(\d{3})+\b)/g, "jQuery1,");
+                var replaced = toFixed.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
                 return '£ ' + replaced.toString();
             },
             mirrorInputs : function(){
