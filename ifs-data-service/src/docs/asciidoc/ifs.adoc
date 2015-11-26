@@ -57,10 +57,18 @@ use of HTTP status codes.
 == Headers
 
 Every request must contain a valid token to call the API:
-todo:: request token example
+|===
+| Name | Description | Example
+
+| IFS_AUTH_TOKEN | Authentication token | curl --header "IFS_AUTH_TOKEN:testToken123" 'http://localhost:8090/application/findByUser/1' -i
+|===
 
 Every response has the following header(s):
-todo:: response
+|===
+| Name | Description
+
+| Content-Type | The Content-Type of the payload, e.g. application/json;charset=UTF-8
+|===
 
 [[application]]
 == Application
