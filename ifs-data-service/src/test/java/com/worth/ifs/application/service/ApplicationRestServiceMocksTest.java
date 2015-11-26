@@ -105,7 +105,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
         ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
 
         ResponseEntity<ObjectNode> response = new ResponseEntity<>(returnedDetails, OK);
-        when(mockRestTemplate.exchange(URI.create(expectedUrl), GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(response);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(response);
 
         // now run the method under test
         Double percentage = service.getCompleteQuestionsPercentage(123L);
