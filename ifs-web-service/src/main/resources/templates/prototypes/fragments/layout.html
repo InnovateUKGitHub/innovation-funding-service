@@ -84,6 +84,45 @@
     </div>
 </div>
 
+
+<!-- ========Assigned questions in application summary - collaborator view======= -->
+
+<div th:fragment="prototype-question-collaborator-assigned-to-me">
+    <div class="column-third assign-container">
+        <div>
+            Assigned to you
+        </div>
+    </div>
+</div>
+
+
+<!-- ========Assigned questions in application summary - collaborator view======= -->
+
+<div th:fragment="prototype-question-collaborator-assigned-to-lead">
+    <div class="column-third assign-container">
+        <div>
+            Assigned to John Smith
+        </div>
+    </div>
+</div>
+
+
+<!-- ================== Application progress snippet  =========================== --> 
+
+<div th:fragment="prototype-application-progress">
+    <h3 class="heading-medium no-margin">Application progress:</h3>
+                
+    <div class="progress-container medium no-margin-left no-margin-right">
+        <div class="progress-indicator">
+            <div class="start">0%</div>
+            <div class="progress" style="width:9%">
+                <div>9%</div>
+            </div>
+            <div class="end">100%</div>
+        </div>
+    </div>
+</div>
+
 <!-- ========== Javscripts that are loaded exlcusively in the prototype ========= --> 
 
 <div th:fragment="prototype-js">
