@@ -70,7 +70,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     public Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id) {
         return handlingErrors(() -> {
-            Feedback feedback = feedbackLookup.findFeedback(id);
+            Feedback feedback = feedbackLookup.getFeedback(id);
             return right(feedback);
         });
     }

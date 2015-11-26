@@ -32,6 +32,9 @@
 
 		.column-third{
 			padding: 12px 0 0 20px;
+            @include media-down(mobile) {
+                padding: 0 0 10px 35px;
+            }
 		}
     }
 

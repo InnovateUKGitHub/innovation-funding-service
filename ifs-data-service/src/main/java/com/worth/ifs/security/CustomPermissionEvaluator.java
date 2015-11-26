@@ -17,11 +17,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.Map.Entry;
 
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -34,16 +33,24 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> rulesMap;
-    private Map<Class<?>, Pair<Object, Method>> lookupStrategyMap;
+    private DtoClassToPermissionsToPermissionsMethods rulesMap;
+
+
+    private DtoClassToLookupMethod lookupStrategyMap;
 
     @PostConstruct
     void generateRules() {
-
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
-        List<Pair<Object, Method>> allRulesMethods = findRules(permissionRuleBeans);
-        Map<Class<?>, List<Pair<Object, Method>>> collectedRulesMethods = dtoClassToMethods(allRulesMethods);
-        // TODO RP - validation stage to check that no one has done anything silly with method signatures?
+        ListOfMethods allRulesMethods = findRules(permissionRuleBeans);
+
+        List<Pair<Object, Method>> failed = failedPermissionMethodSignatures(allRulesMethods);
+        if (!failed.isEmpty()) {
+            String error = "Permissions methods: " + Arrays.toString(failed.toArray()) + " have an incorrect signature";
+            LOG.error(error);
+            throw new IllegalStateException(error); // Fail fast
+        }
+
+        DtoClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
         rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
@@ -58,62 +65,101 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @PostConstruct
     void generateLookupStrategies() {
         Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
-        List<Pair<Object, Method>> allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
-        Map<Class<?>, List<Pair<Object, Method>>> collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
-        // TODO DW - validation stage as per RP's todo above in generateRules()?
-        lookupStrategyMap = collectedPermissionLookupMethods.entrySet().stream().
+        ListOfMethods allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
+
+        List<Pair<Object, Method>> failed = failedLookupMethodSignatures(allLookupStrategyMethods);
+        if (!failed.isEmpty()) {
+            String error = "Lookup methods: " + Arrays.toString(failed.toArray()) + " have an incorrect signature";
+            LOG.error(error);
+            throw new IllegalStateException(error); // Fail fast
+        }
+
+        DtoClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
+        lookupStrategyMap = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
                 map(entry -> Pair.of(entry.getKey(), getOnlyElement(entry.getValue()))).
-                collect(toMap(Pair::getLeft, Pair::getRight));
+                collect(toMap(Pair::getLeft, Pair::getRight)));
     }
 
-    List<Pair<Object, Method>> findRules(Collection<Object> ruleContainingBeans) {
+    List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfMethods collectedRulesMethods) {
+        return collectedRulesMethods.stream().filter(
+                beanAndMethod -> {
+                    Method method = beanAndMethod.getRight();
+                    if (method.getParameterTypes().length == 2) {
+                        Class<?> secondParameterClass = method.getParameterTypes()[1];
+                        if (Authentication.class.isAssignableFrom(secondParameterClass) ||
+                                User.class.isAssignableFrom(secondParameterClass)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+        ).collect(toList());
+    }
+
+    List<Pair<Object, Method>> failedLookupMethodSignatures(ListOfMethods collectedLookupMethods) {
+        return collectedLookupMethods.stream().filter(
+                beanAndMethod -> {
+                    Method method = beanAndMethod.getRight();
+                    if (method.getParameterTypes().length == 1) {
+                        Class<?> firstParameterClass = method.getParameterTypes()[0];
+                        if (Serializable.class.isAssignableFrom(firstParameterClass)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+        ).collect(toList());
+    }
+
+
+    ListOfMethods findRules(Collection<Object> ruleContainingBeans) {
         return findAnnotatedMethods(ruleContainingBeans, PermissionRule.class);
     }
 
-    List<Pair<Object, Method>> findLookupStrategies(Collection<Object> permissionEntityLookupBeans) {
+    ListOfMethods findLookupStrategies(Collection<Object> permissionEntityLookupBeans) {
         return findAnnotatedMethods(permissionEntityLookupBeans, PermissionEntityLookupStrategy.class);
     }
 
-    List<Pair<Object, Method>> findAnnotatedMethods(Collection<Object> owningBeans, Class<? extends Annotation> annotation) {
+    ListOfMethods findAnnotatedMethods(Collection<Object> owningBeans, Class<? extends Annotation> annotation) {
         List<Pair<Object, List<Method>>> beansAndPermissionMethods = owningBeans.stream().
                 map(rulesClassInstance -> Pair.of(rulesClassInstance, asList(rulesClassInstance.getClass().getMethods()))).
                 map(beanAndAllMethods -> {
                     List<Method> permissionsRuleMethods = beanAndAllMethods.getRight().stream().filter(method -> method.getAnnotationsByType(annotation).length > 0).collect(toList());
                     return Pair.of(beanAndAllMethods.getLeft(), permissionsRuleMethods);
                 }).collect(toList());
-
-        return beansAndPermissionMethods.stream().flatMap(beanAndPermissionMethods -> {
+        return ListOfMethods.from(beansAndPermissionMethods.stream().flatMap(beanAndPermissionMethods -> {
             Object bean = beanAndPermissionMethods.getLeft();
             return beanAndPermissionMethods.getRight().stream().map(method -> Pair.of(bean, method));
-        }).collect(toList());
+        }).collect(toList()));
+
     }
 
-    Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
-        Map<Class<?>, List<Pair<Object, Method>>> map = new HashMap<>();
+    DtoClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
+        DtoClassToPermissionsMethods map = new DtoClassToPermissionsMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
-            map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ArrayList<>());
+            map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfMethods());
             map.get(methodAndBean.getRight().getParameterTypes()[0]).add(methodAndBean);
         }
         return map;
     }
 
-    Map<Class<?>, List<Pair<Object, Method>>> returnTypeToMethods(List<Pair<Object, Method>> allRuleMethods) {
-        Map<Class<?>, List<Pair<Object, Method>>> map = new HashMap<>();
+    DtoClassToLookupMethods returnTypeToMethods(ListOfMethods allRuleMethods) {
+        DtoClassToLookupMethods map = new DtoClassToLookupMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
-            map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ArrayList<>());
+            map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ListOfMethods());
             map.get(methodAndBean.getRight().getReturnType()).add(methodAndBean);
         }
         return map;
     }
 
 
-    Map<Class<?>, Map<String, List<Pair<Object, Method>>>> dtoClassToPermissionToMethods(Map<Class<?>, List<Pair<Object, Method>>> dtoClassToMethods) {
-        Map<Class<?>, Map<String, List<Pair<Object, Method>>>> map = new HashMap<>();
-        for (Map.Entry<Class<?>, List<Pair<Object, Method>>> entry : dtoClassToMethods.entrySet()) {
+    DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(DtoClassToPermissionsMethods dtoClassToMethods) {
+        DtoClassToPermissionsToPermissionsMethods map = new DtoClassToPermissionsToPermissionsMethods();
+        for (Entry<Class<?>, ListOfMethods> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 String permission = methodAndBean.getRight().getAnnotationsByType(PermissionRule.class)[0].value();
-                map.putIfAbsent(entry.getKey(), new HashMap<>());
-                map.get(entry.getKey()).putIfAbsent(permission, new ArrayList<>());
+                map.putIfAbsent(entry.getKey(), new PermissionsToPermissionsMethods());
+                map.get(entry.getKey()).putIfAbsent(permission, new ListOfMethods());
                 map.get(entry.getKey()).get(permission).add(methodAndBean);
             }
         }
@@ -123,7 +169,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(final Authentication authentication, final Object targetDomainObject, final Object permission) {
         Class<?> dtoClass = targetDomainObject.getClass();
-        List<Pair<Object, Method>> methodsToCheck = rulesMap.getOrDefault(dtoClass, emptyMap()).getOrDefault(permission, emptyList());
+        ListOfMethods methodsToCheck =
+                rulesMap.getOrDefault(dtoClass, emptyPermissions())
+                        .getOrDefault(permission, emptyMethods());
         return methodsToCheck.stream().map(
                 methodAndBean -> callHasPermissionMethod(methodAndBean, targetDomainObject, authentication)
         ).reduce(
@@ -131,7 +179,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         );
     }
 
-    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission){
+    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
         Pair<Object, Method> lookupMethod = lookupStrategyMap.get(targetType);
 
         if (lookupMethod == null || lookupMethod.getRight() == null) {
@@ -188,15 +236,68 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
-        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyMap()).keySet().stream().filter(
+        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyPermissions()).keySet().stream().filter(
                 permission -> hasPermission(authentication, targetDomainObject, permission)
         ).collect(toList());
     }
 
     public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
-        return rulesMap.getOrDefault(dtoClazz, emptyMap()).keySet().stream().filter(
-                permission -> hasPermission(authentication,key,dtoClazz, permission)
+        return rulesMap.getOrDefault(dtoClazz, emptyPermissions()).keySet().stream().filter(
+                permission -> hasPermission(authentication, key, dtoClazz, permission)
         ).collect(toList());
     }
+
+    private static ListOfMethods emptyMethods() {
+        return new ListOfMethods();
+    }
+
+
+    private static PermissionsToPermissionsMethods emptyPermissions() {
+        return new PermissionsToPermissionsMethods();
+    }
+
+
+    public static class ListOfMethods extends ArrayList<Pair<Object, Method>> {
+        public static ListOfMethods from(List<Pair<Object, Method>> list) {
+            ListOfMethods listOfMethods = new ListOfMethods();
+            listOfMethods.addAll(list);
+            return listOfMethods;
+        }
+    }
+
+    ;
+
+    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods> {
+    }
+
+    ;
+
+    public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>> {
+        public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map) {
+            DtoClassToLookupMethod dtoClassToLookupMethod = new DtoClassToLookupMethod();
+            dtoClassToLookupMethod.putAll(map);
+            return dtoClassToLookupMethod;
+        }
+
+    }
+
+    ;
+
+
 }
 
