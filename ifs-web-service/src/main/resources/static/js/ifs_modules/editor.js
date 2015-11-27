@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, md: false, showdown: false, document : false */
+/* globals  jQuery : false, md: false, showdown: false */
 
 //wysiwyg editor for textareas
 //Dependencies to load first : hallo.min.js
@@ -14,7 +14,7 @@ var ifs_editor = (function(){
             textareas : '.textarea-wrapped textarea',
             htmlOptions : {
                 format: false,
-                allowedTags: ['p','em','strong','ol','ul','li','br','b']
+                allowedTags: ['p','em','strong','ol','ul','li','br','b','div']
             }
         },
         init : function(){
@@ -99,7 +99,6 @@ var ifs_editor = (function(){
 
         //     if(formatBlockSupported){
         //         jQuery('.editor').on( "keypress", function(event){
-        //             console.log(event);
         //              if(event.keyCode == '13') {
         //                 document.execCommand('formatBlock', false, 'p');
         //              }

@@ -26,8 +26,8 @@ var ifs_wordCount = (function(){
 
               //regex = replace newlines with space \r\n, \n, \r 
               value = value.replace(/(\r\n|\n|\r)/gm," ");
-              //remove spaces and lists ('* ','1. ','2. ') from markdown as it influences word count
-              value = value.replace(/([[0-9]+\.\ |\*\ |\r\n|\n|\r)/gm,"")
+              //remove markdown lists ('* ','1. ','2. ') from markdown as it influences word count
+              value = value.replace(/([[0-9]+\.\ |\*\ )/gm,"");
 
               var words = jQuery.trim(value).split(' ');
               var count = 0;
