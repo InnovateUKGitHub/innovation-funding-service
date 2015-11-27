@@ -18,6 +18,7 @@ jQuery(document).ready(function(){
 	});
 
     jQuery('.boxed-list li > input').trigger('keyup');
+
     
     function addPartner(){
         var html =  '<li>\
