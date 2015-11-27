@@ -28,7 +28,7 @@ var ifs_editor = (function(){
 
             ifs_editor.initEditors();
             ifs_editor.bindEditors();
-            ifs_editor.contentEditableEnterFix();
+           // ifs_editor.contentEditableEnterFix();
         },
         prepareEditor : function(textarea){
             var el = jQuery(textarea);
@@ -92,16 +92,20 @@ var ifs_editor = (function(){
             }
             return html;
         },
-        contentEditableEnterFix : function(){
-            var formatBlockSupported = document.queryCommandSupported("formatBlock");
-            if(formatBlockSupported){
-                jQuery('.editor').on( "keypress", function(event){
-                     if(event.keyCode == '13') {
-                        document.execCommand('formatBlock', false, 'p');
-                     }
-                });
-            }
-        }
+        // contentEditableEnterFix : function(){
+        //    // for having good html we only agree upon <p>test</p> and not p<br/> 
+        //    // however <br/> is default behaviour in FF, Chrome with contenteditble sections
+        //     var formatBlockSupported = document.queryCommandSupported("formatBlock");
+
+        //     if(formatBlockSupported){
+        //         jQuery('.editor').on( "keypress", function(event){
+        //             console.log(event);
+        //              if(event.keyCode == '13') {
+        //                 document.execCommand('formatBlock', false, 'p');
+        //              }
+        //         });
+        //     }
+        // }
 
 
     };
