@@ -114,11 +114,10 @@ var ifs_finance = (function(){
             },
 
             formatCurrency: function(total) {
-                var absTotal = Math.abs(total);
-                var parsedFloat = parseFloat(absTotal, 10);
-                var toFixed = parsedFloat.toFixed();
-                var replaced = toFixed.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
-                return '£ ' + replaced.toString();
+                total = parseFloat(total, 10);
+                total = total.toFixed();
+                total = total.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
+                return '£ ' + total.toString();
             },
             mirrorInputs : function(){
                 // Bind input and output fields together to mirror values of the "input" fields in the "outputs"
