@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Create your account</h1>
+
+	<p class="form-hint icon-info-small-blue">Before creating your account you need to enter the details for the organisation that you will be working for if the application is successful</p>
+	
+	<h2 class="heading-medium">Organisation details</h2>
+
+	<div class="panel-indent">
+		<p>Your have been assigned by the lead applicant to the following company <br />
+		<strong>Nomensa</strong></p>
+	</div>
+	
+	<h2 class="heading-medium">Please select your organisation type</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Please select your organisation type</legend>
+			<div class="form-block">
+				<label class="block-label" for="radio-1">
+					<input id="radio-1" type="radio" name="radio-group" value="Business" onClick="location.href='/prototypes/642-create-acc-business';"/>
+					Business
+				</label>
+				<label class="block-label" for="radio-2">
+					<input id="radio-2" type="radio" name="radio-group" value="Research" onClick="location.href='/prototypes/642-create-acc-research';"/>
+					Research
+				</label>
+				<label class="block-label" for="radio-3">
+					<input id="radio-3" type="radio" name="radio-group" value="Academic" onClick="location.href='/prototypes/642-create-acc-academic';"/>
+					Academic
+				</label>
+			</div>
+			
+		</fieldset>
+		<button class="button button-large extra-margin" name="select-company-type" type="submit">Select company type</button>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

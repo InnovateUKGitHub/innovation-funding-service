@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Create your account</h1>
+
+	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
+	
+	<h2 class="heading-medium">Business organisation</h2>
+
+	<div class="panel-indent">
+		<p>Your have been assigned by the lead applicant to the following company <br />
+		<strong>Nomensa</strong></p>
+	</div>
+	
+	<h2 class="heading-medium">Business organisation</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Business organisation</legend>
+
+			<div class="form-group">
+				<label class="form-label" for="first-name">
+					<span class="form-label-bold">Find your organisation on Companies House
+					<span class="form-hint">Enter your company name or registration number</span>
+					</span>
+				</label>
+				<input class="form-control" id="org-name" name="org-name" type="text" value="" />
+				<button type="submit" id="org-search" class="button">Search</button>
+			</div>
+
+			<ul id="results" class="results-list panel-indent" style="display: none;">
+				<li class="type-company">
+				<h3>
+					<a href="/prototypes/642-org-selected-from-companies-house" title="View company"> NOMENSA LTD
+					</a>
+				</h3>
+				<p class="meta crumbtrail"> <strong>04214477</strong> - Incorporated on 10 May 2001 </p>
+		        <p>King William House, 13 Queen Square, Bristol, BS1 4NT</p>
+			</li>
+
+			<li class="type-company">
+				<h3>
+					<a href="#" title="View company"> <strong>NOMEN</strong> UK LTD.
+					</a>
+				</h3>
+				<p class="meta crumbtrail"> <strong>03130339</strong> - Dissolved on  1 April 2014 </p>
+		        <p>23, Star Hill, Rochester, Kent, ME1 1XF</p>
+			</li>
+
+			<li class="type-company">
+				<h3>
+					<a href="#"> <strong>NOMEN</strong> ENTERPRISES LIMITED
+					</a>
+				</h3>
+				<p class="meta crumbtrail"> <strong>06285018</strong> - Dissolved on 13 October 2009 </p>
+		        <p>1 Colman Way, Redhill, RH1 2BB</p>
+			</li>
+
+		</ul>
+
+		</fieldset>
+		<a href="#" id="manual-company-trigger">Not on companies House?</a>
+			
+		<div id="manual-company-input" class="extra-margin" style="display: none">
+			<fieldset>
+				<legend class="visuallyhidden">Organisation details</legend>
+				<div class="form-group">
+					<label class="form-label" for="organisation-name">
+						<span class="form-label-bold">Organisation name</span>
+					</label>
+					<input class="form-control" id="organisation-name" name="organisation-name" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode-check">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+					<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				</div>
+				<div class="form-group" id="select-address-block" style="display: none">
+					<label class="form-label" for="title">
+						<span class="form-label-bold">Select your address</span>
+					</label>
+					<select class="form-control" id="select-address" name="select-address">
+						<option value="">BS1 4NT, Peter Brett Associates, 10, Queen Square, Bristol </option>
+						<option value="">BS1 4NT, Sybase (UK) Ltd, 10, Queen Square, Bristol  </option>
+						<option value="">BS1 4NT, Hydrock, 11-12, Queen Square, Bristol </option>
+						<option value="">BS1 4NT, Nomensa Ltd, King William House, 13, Queen Square, Bristol </option>
+					</select>
+				</div>
+				<a href="#" id="enter-address-manually">Enter address manually</a>
+			</fieldset>
+			<fieldset id="address-details" class="extra-margin" style="display: none;">
+				<legend class="visuallyhidden">Address details</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" />
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<h2 class="heading-medium">Organisation size</h2>
+				<legend class="visuallyhidden">Organisation size</legend>
+				<p class="form-hint">More information on defining your company size is available from the <a href="#" rel="external">EU Definition</a></p>
+				<div class="form-block">
+					<label class="block-label" for="radio-1">
+						<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+						Micro
+					</label>
+					<label class="block-label" for="radio-2">
+						<input id="radio-2" type="radio" name="radio-group" value="Small"/>
+						Small
+					</label>
+					<label class="block-label" for="radio-3">
+						<input id="radio-3" type="radio" name="radio-group" value="Medium"/>
+						Medium
+					</label>
+					<label class="block-label" for="radio-4">
+						<input id="radio-4" type="radio" name="radio-group" value="Large"/>
+						Large
+					</label>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<h2 class="heading-small">Why are you not currently registered with company house?</h2>
+				<legend class="visuallyhidden">Why are you not currently registered with company house?</legend>
+				<div class="form-block">
+					<label class="block-label" for="radio-5">
+						<input id="radio-5" type="radio" name="radio-group" value="We are a new company, and have not registered yet"/>
+						We are a new company, and have not registered yet
+					</label>
+					<label class="block-label" for="radio-6">
+						<input id="radio-6" type="radio" name="radio-group" value="We have not needed to register before"/>
+						We have not needed to register before
+					</label>
+					<label class="block-label" for="radio-7">
+						<input id="radio-7" type="radio" name="radio-group" value="We are in the process of registering"/>
+						We are in the process of registering
+					</label>
+				</div>
+			</fieldset>
+
+			<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-org-selected-manually">Next</button>
+		</div>
+		
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	jQuery('#org-name').on('keydown',function(e){ 
+		if (this.value.length>0){
+			jQuery("#results").show();
+			jQuery("#manual-company-input").hide();
+        }else{
+        	jQuery("#results").hide();
+        }
+
+	});
+
+	jQuery('#manual-company-trigger').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#manual-company-input").show();
+		jQuery("#results").hide();
+
+	});
+
+	jQuery('#postcode-lookup').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#select-address-block").show();
+
+	});
+
+	jQuery('#select-address').on('change',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#street").val("King William House");
+		jQuery("#street-2").val("13 Queens Square");
+		jQuery("#town").val("Bristol");
+		jQuery("#postcode").val("BS1 4NT");
+
+	});
+
+	jQuery('#enter-address-manually').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#select-address-block").hide();
+	});
+</script>
+</body>
+</html>
