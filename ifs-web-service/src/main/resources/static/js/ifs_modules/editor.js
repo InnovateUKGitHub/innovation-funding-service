@@ -14,7 +14,7 @@ var ifs_editor = (function(){
             textareas : '.textarea-wrapped textarea',
             htmlOptions : {
                 format: false,
-                allowedTags: ['p','em','strong','ol','ul','li','br','b']
+                allowedTags: ['p','em','strong','ol','ul','li','br','b','div']
             }
         },
         init : function(){
