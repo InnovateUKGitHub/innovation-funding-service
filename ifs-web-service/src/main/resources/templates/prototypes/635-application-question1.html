@@ -90,37 +90,40 @@
 					<span class="count-down positive" aria-live="polite">446</span>
 				</small>
 			</span>
-			
-		</div>
 
-		<div class="assign-container collapsible">
-			<div class="assign-button">
-				Assign question
+			<div class="extra-margin">
+
+				<div class="assign-container collapsible">
+					<div class="assign-button">
+						Assign question
+					</div>
+
+					<div class="assign-team">
+						<ul class="list-bullet">
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+								
+							</li>
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+								
+							</li>
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-1" value="1">Mark as complete
+		</button>
+
 			</div>
 
-			<div class="assign-team">
-				<ul class="list-bullet">
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-						
-					</li>
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-						
-					</li>
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-						
-					</li>
-				</ul>
-			</div>
 		</div>
 
-		<!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
-		<div class="alignright-button extra-margin">
-			<button type="submit" name="mark_as_complete" class="button" formaction="#question-1" value="1">Mark as complete
-			</button>
-		</div>
+		
 		
 		<!-- if  readonly we show the edit form button-->
 	</div>

@@ -67,14 +67,14 @@
 				</ul>
 			</div>
 		</details>
-		<div class="textarea-wrapped assigned-to-me word-count">
+		<div class="textarea-wrapped word-count">
 			<div class="textarea-header" id="formInput[1]">
 				<div class="assignee  assigned-to-me ">
 			        This question is assigned to
-			        <strong>you</strong>
+			        <strong>Jesssica Doe</strong>
 			    </div>
 			</div>
-			<div class="editor" contenteditable="true">
+			<div class="readonly" contenteditable="false">
 				<p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead.  A tool to reduce that amount by a significant proportion would be taken up by the entire industry.  </p>
 				<p>At this time no other solutions are available or near market giving us the leading edge on market share.  </p>
 				<p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
@@ -99,39 +99,35 @@
 					<span class="count-down positive" aria-live="polite">446</span>
 				</small>
 			</span>
-			
-		</div>
 
-		<div class="assign-container collapsible">
-			<div class="assign-button">
-				Assign question
+			<div class="extra-margin">
+
+				<div class="assign-container collapsible">
+					<div class="assign-button">
+						Assign question
+					</div>
+
+					<div class="assign-team">
+						<ul class="list-bullet">
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+								
+							</li>
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+								
+							</li>
+							<li>
+								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="assign-team">
-				<ul class="list-bullet">
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-						
-					</li>
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-						
-					</li>
-					<li>
-						<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-						
-					</li>
-				</ul>
-			</div>
 		</div>
-
-		<!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
-		<div class="alignright-button extra-margin">
-			<button type="submit" name="mark_as_complete" class="button" formaction="#question-1" value="1">Mark as complete
-			</button>
-		</div>
-		
-		<!-- if  readonly we show the edit form button-->
 
 	</div>
 
