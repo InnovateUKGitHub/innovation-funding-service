@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import org.hamcrest.Matchers;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
-public class ApplicationServiceImplTest extends BaseServiceMocksTest<ApplicationService> {
+public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
     @Mock
     ApplicationRestService applicationRestService;

@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Section;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
  */
-public class SectionRestServiceMocksTest extends BaseRestServiceMocksTest<SectionRestServiceImpl> {
+public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<SectionRestServiceImpl> {
 
     private static final String sectionRestUrl = "/section";
 

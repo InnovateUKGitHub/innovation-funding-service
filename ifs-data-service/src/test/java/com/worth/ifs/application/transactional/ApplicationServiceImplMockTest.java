@@ -1,6 +1,6 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link ApplicationServiceImpl}
  */
-public class ApplicationServiceImplMockTest extends BaseServiceMocksTest<ApplicationService> {
+public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
 
     @Override
     protected ApplicationService supplyServiceUnderTest() {

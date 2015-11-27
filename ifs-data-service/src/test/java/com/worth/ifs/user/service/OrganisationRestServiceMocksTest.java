@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 
 
-public class OrganisationRestServiceMocksTest extends BaseRestServiceMocksTest<OrganisationRestServiceImpl> {
+public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<OrganisationRestServiceImpl> {
 
     private static final String organisationsUrl = "/organisation";
 
