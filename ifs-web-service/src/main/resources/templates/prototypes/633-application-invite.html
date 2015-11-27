@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+    <style> .message-alert {
+        background: #e4eff6 url("../images/message-star.png") no-repeat scroll 25px 25px;
+    } </style>
+</head>
+<body class="app-dashboard">
+
+    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+    <div th:include="fragments/layout :: body-start" th:remove="tag" />
+    <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+    <main id="content">
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+<!--     <div class="message-alert">
+        <h2 class="heading-small">You are the lead applicant</h2>
+        <p>
+        You are the lead applicant for this application, meaning 
+         you have the ability to invite contributors,<br/>
+        assigning questions, coordinating partners and submitting the application.
+        </p>
+    </div>
+-->
+<h1 class="heading-large">Manage Contributors</h1>
+<p>From this page you are able to invite contributors to your application.</p>
+
+
+
+<ul class="boxed-list">
+    <li>
+        <h2 class="heading-medium">Lead Organisation "ACME Ltd."</h2>
+        <p>The lead organisation will be the lead partner throughout the application and project.
+            Add members of your own organisation to contribute to this application.
+        </p>  
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>&nbsp;</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-1" value="Rob Waite (lead)"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-1" value="robwaite@acmeltd.co.uk"  />
+                    </td>
+                    <td class="alignright remove"> 
+                        <!-- <a class="delete-row" data-cost-row="12" href="#">Remove</a> -->
+                        That's you!
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-2" value="Roger Axe"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-2" value="rogeraxe@acme.org.uk"  />
+                    </td>
+                    <td class="alignright remove"> 
+                        <!-- <a class="delete-row" data-cost-row="12" href="#">Remove</a> -->
+                        <small>(Pending)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-3" value="Steven Smiths"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-3" value="ssmiths@acme.org.uk"  />
+                    </td>
+                    <td class="alignright remove"> 
+                    </td>
+                </tr>            
+            </tbody>
+        </table>
+        <p class="alignright">
+            <a class="add-another-row" href="javascript:void(0);">Add person</a>
+        </p>
+    </li>
+
+<!--         <h2 class="heading-medium">Worth Systems</h2>
+    <ul class="list-bullet">
+        <li><a href="mailto:efurcic@worth.systems">Elvis Furcic</a> <small>(pending)</small></li>
+        <li><a href="mailto:chris@worth.systems">Christopher Johnson</a></li>
+    </ul>
+    <h2 class="heading-medium">IO systems</h2>
+    <ul class="list-bullet">
+        <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small></li>
+    </ul> -->
+    <li>
+        <h2 class="heading-medium">Partner Organisation <span></span></h2>
+        <p>The lead organisation will be the lead partner throughout the application and project.Add members of your own organisation to contribute to this application.</p>
+        <label class="form-label" for="full-name-f1">Organisation name</label>
+        <input readonly="readonly" class="form-control js-organisation-name" placeholder="Your partner company Ltd." value="Worth Systems" id="full-name-f1" type="text" />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Elvis Furcic"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="efurcic@worth.systems" />
+                    </td>
+                    <td class="alignright remove"> 
+                        <small>(Pending)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Christopher Johnson"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="chris@worth.systems" />
+                    </td>
+                    <td class="alignright remove"> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="alignright">
+            <a class="add-another-row" href="javascript:void(0)">Add Person</a>
+        </p>
+    </li>
+        <li>
+        <h2 class="heading-medium">Partner Organisation <span></span></h2>
+        <p>The lead organisation will be the lead partner throughout the application and project.Add members of your own organisation to contribute to this application.</p>
+        <label class="form-label" for="full-name-f1">Organisation name</label>
+        <input readonly="readonly" class="form-control js-organisation-name" placeholder="Your partner company Ltd." value="IO Systems" id="full-name-f1" type="text" />
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="John Dull"  />
+                    </td>
+                    <td>
+                        <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="John@io.systems" />
+                    </td>
+                    <td class="alignright remove"> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="alignright">
+            <a class="add-another-row" href="javascript:void(0)">Add Person</a>
+        </p>
+    </li>
+    <li style="background:#f8f8f8">
+       <a href="javascript:void(0);" class="js-add-partner">Add partner organisation</a>
+       <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
+   </li>
+</ul>
+<div class="alignright-button" style="padding:10px 0;">
+  <a href="650-create-application2.html" class="button" role="button" >Invite new contributers</a>
+</div>
+<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

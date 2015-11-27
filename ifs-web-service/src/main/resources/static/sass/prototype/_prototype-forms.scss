@@ -1,0 +1,30 @@
+.textarea-wrapped {
+    position: relative;
+
+    .textarea-header {
+        padding: 20px 0 5px 10px;
+        text-align:left;
+    }
+
+    &.assigned-to-me{
+		border: 2px solid $link-colour;
+		 .textarea-header {
+			padding-left: 60px;
+		}
+	}
+
+	&.marked-as-complete{
+		 .textarea-header {
+			padding-left: 60px;
+		}
+	}
+}
+
+.textarea-footer{
+	button{
+		vertical-align: top;
+	}
+	.assign-button{
+		padding-top: 6px;
+	}
+}
