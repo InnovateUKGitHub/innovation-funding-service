@@ -175,7 +175,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-        financeFormHandler.handle(request);
+        if(financeFormHandler.handle(request)){
+            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
 
         addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
 

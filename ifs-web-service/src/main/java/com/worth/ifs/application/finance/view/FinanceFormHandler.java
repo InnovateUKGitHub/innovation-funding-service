@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,9 +30,9 @@ public class FinanceFormHandler {
         this.costService = costService;
     }
 
-    public void handle(HttpServletRequest request) {
+    public boolean handle(HttpServletRequest request) {
         List<Cost> costs = getCosts(request);
-        storeCosts(costs);
+        return storeCosts(costs);
     }
 
     private List<Cost> getCosts(HttpServletRequest request) {
@@ -145,6 +146,9 @@ public class FinanceFormHandler {
                 break;
             case TRAVEL:
                 costItem = getTravelCost(id, costFields);
+                break;
+            case OTHER_COSTS:
+                costItem = getOtherCost(id, costFields);
                 break;
             default:
                 log.error("getCostItem, unsupported type: "+ costType);
@@ -294,6 +298,25 @@ public class FinanceFormHandler {
         return new TravelCost(id, costPerItem, item, quantity);
     }
 
+    private CostItem getOtherCost(Long id, List<CostFormField> costFormFields) {
+        String description = null;
+        BigDecimal cost = null;
+
+        for(CostFormField costFormField : costFormFields) {
+            String fieldValue = costFormField.getValue();
+            if(fieldValue!=null) {
+                if (costFormField.getCostName().equals("description")) {
+                    description = fieldValue;
+                } else if (costFormField.getCostName().equals("otherCost")) {
+                    cost = getBigDecimalValue(fieldValue, 0d);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
+                }
+            }
+        }
+        return new OtherCost(id, cost, description);
+    }
+
     private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {
         Optional<CostFormField> grantClaimPercentageField = costFormFields.stream().findFirst();
         Integer grantClaimPercentage = 0;
@@ -319,8 +342,9 @@ public class FinanceFormHandler {
         }
     }
 
-    private void storeCosts(List<Cost> costs) {
+    private boolean storeCosts(List<Cost> costs) {
         costs.stream().forEach(c -> costService.update(c));
+        return true;
     }
 
     private Cost updateCost(Cost cost) {
