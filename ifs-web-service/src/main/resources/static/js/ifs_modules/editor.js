@@ -54,7 +54,6 @@ var ifs_editor = (function(){
         },
         bindEditors : function(){
             jQuery('.editor').bind('hallomodified', function(event, data) {
-                //make sure that there never is only a break
                 var source = jQuery(this).next();
                 ifs_editor.processHtmlToMarkdown(data.content,source);
                 jQuery(source).trigger('keyup');
@@ -91,7 +90,7 @@ var ifs_editor = (function(){
 
             }
             return html;
-        },
+        }
         // contentEditableEnterFix : function(){
         //    // for having good html we only agree upon <p>test</p> and not p<br/> 
         //    // however <br/> is default behaviour in FF, Chrome with contenteditble sections
@@ -105,7 +104,5 @@ var ifs_editor = (function(){
         //         });
         //     }
         // }
-
-
     };
 })();
