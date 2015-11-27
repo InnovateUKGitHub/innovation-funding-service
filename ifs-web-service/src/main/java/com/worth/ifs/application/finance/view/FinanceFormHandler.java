@@ -140,11 +140,48 @@ public class FinanceFormHandler {
             case OVERHEADS:
                 costItem = getOverheadsCosts(id, costFields);
                 break;
+            case CAPITAL_USAGE:
+                costItem = getCapitalUsage(id, costFields);
+                break;
+            case TRAVEL:
+                costItem = getTravelCost(id, costFields);
+                break;
             default:
                 log.error("getCostItem, unsupported type: "+ costType);
                 break;
         }
         return costItem;
+    }
+
+    private CostItem getCapitalUsage(Long id, List<CostFormField> costFields) {
+        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        Integer deprecation = null;
+        String description = null;
+        String existing = null;
+        BigDecimal npv = null;
+        BigDecimal residualValue = null;
+        Integer utilisation = null;
+
+        for(CostFormField costFormField : costFields) {
+            if (costFormField.getCostName().equals("item")) {
+                description = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("existing")) {
+                existing = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("deprecation_period")) {
+                deprecation = Integer.valueOf(costFormField.getValue());
+            }else if (costFormField.getCostName().equals("npv")) {
+                npv = getBigDecimalValue(costFormField.getValue(), 0d);
+            }else if (costFormField.getCostName().equals("residual_value")) {
+                residualValue = getBigDecimalValue(costFormField.getValue(), 0d);
+            }else if (costFormField.getCostName().equals("utilisation")) {
+                utilisation = Integer.valueOf(costFormField.getValue());
+            }else{
+                log.info("Unused costField: "+costFormField.getCostName());
+            }
+        }
+
+        return new CapitalUsage( id,  deprecation,  description,  existing,
+                 npv,  residualValue,  utilisation );
     }
 
     private CostItem getOverheadsCosts(Long id, List<CostFormField> costFields) {
@@ -157,6 +194,8 @@ public class FinanceFormHandler {
                 acceptRate = costFormField.getValue();
             }else if (costFormField.getCostName().equals("customRate")) {
                 customRate = Integer.valueOf(costFormField.getValue());
+            }else{
+                log.info("Unused costField: "+costFormField.getCostName());
             }
         }
         return new Overhead(id, acceptRate, customRate);
@@ -178,6 +217,8 @@ public class FinanceFormHandler {
                 } else if (costFormField.getCostName().equals("labourDays") ||
                         costFormField.getCostName().equals("workingDays")) {
                     labourDays = getIntegerValue(fieldValue, 0);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
@@ -197,6 +238,8 @@ public class FinanceFormHandler {
                     cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
                     quantity = getIntegerValue(fieldValue, 0);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
@@ -220,11 +263,35 @@ public class FinanceFormHandler {
                     name = fieldValue;
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
 
         return new SubContractingCost(id, cost, country, name, role);
+    }
+
+    private CostItem getTravelCost(Long id, List<CostFormField> costFormFields) {
+        BigDecimal costPerItem = null;
+        String item = null;
+        Integer quantity = null;
+
+        for(CostFormField costFormField : costFormFields) {
+            String fieldValue = costFormField.getValue();
+            if(fieldValue!=null) {
+                if (costFormField.getCostName().equals("travelPurpose")) {
+                    item = fieldValue;
+                } else if (costFormField.getCostName().equals("travelNumTimes")) {
+                    quantity = getIntegerValue(fieldValue, 0);
+                } else if (costFormField.getCostName().equals("travelCostEach")) {
+                    costPerItem = getBigDecimalValue(fieldValue, 0d);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
+                }
+            }
+        }
+        return new TravelCost(id, costPerItem, item, quantity);
     }
 
     private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {
