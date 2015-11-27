@@ -2,7 +2,7 @@ package com.worth.ifs.form.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class FormInputResponseRestServiceMocksTest extends BaseRestServiceMocksTest<FormInputResponseRestServiceImpl> {
+public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTest<FormInputResponseRestServiceImpl> {
 
     private static final String formInputResponseRestURL = "/forminputresponses";
 

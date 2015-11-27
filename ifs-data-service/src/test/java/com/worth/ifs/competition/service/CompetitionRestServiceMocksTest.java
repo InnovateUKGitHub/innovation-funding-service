@@ -1,6 +1,6 @@
 package com.worth.ifs.competition.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.competition.domain.Competition;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class CompetitionRestServiceMocksTest extends BaseRestServiceMocksTest<CompetitionsRestServiceImpl> {
+public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionsRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competitions";
 
