@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
-import com.worth.ifs.BaseServiceMocksTest;
+import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * <p>
  * Created by dwatson on 07/10/15.
  */
-public class AssessorServiceImplMockTest extends BaseServiceMocksTest<AssessorService> {
+public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorService> {
 
     @Override
     protected AssessorService supplyServiceUnderTest() {

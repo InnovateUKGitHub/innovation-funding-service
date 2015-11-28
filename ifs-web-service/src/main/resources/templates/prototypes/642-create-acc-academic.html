@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Create your account</h1>
+
+	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
+	
+	<h2 class="heading-medium">Academic organisation</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Academic organisation</legend>
+
+			<div class="form-group">
+				<label class="form-label" for="first-name">
+					<span class="form-label-bold">Find your academic organisation
+					<span class="form-hint">This will be the academic organisation that you will be working for, for the duration of the application</span>
+					</span>
+				</label>
+				<input class="form-control" id="org-name" name="org-name" type="text" value="" />
+				<button type="submit" id="org-search" class="button">Search</button>
+			</div>
+
+			<ul id="results" class="results-list panel-indent" style="display: none;">
+				<li class="type-company">
+					<h3>
+						<a href="#" class="select-academic-organisation" title="View company"> University of Bradford
+						</a>
+					</h3>
+				</li>
+
+				<li class="type-company">
+					<h3>
+						<a href="#" class="select-academic-organisation" title="View company"> University of Brighton
+						</a>
+					</h3>
+				</li>
+
+				<li class="type-company">
+					<h3>
+						<a href="#" class="select-academic-organisation" title="View company"> University of Bristol
+						</a>
+					</h3>
+				</li>
+
+			
+
+			</ul>
+
+		</fieldset>
+
+		<div id="selected-academic-organisation" style="display: none">
+			
+			<h3 class="heading-small">Acadmeic organisation</h3>
+			<p>University of Bristol</p>
+
+			<h3 class="heading-small">Address</h3>
+			<p>Senate House<br />
+				Tyndall Ave<br />
+				Bristol<br />
+				BS8 1TH
+			</p>
+
+			<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Save organisation, continue to create your profile</button>
+
+
+		</div>
+			
+		
+</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	jQuery('#org-name').on('keydown',function(e){ 
+		if (this.value.length>0){
+			jQuery("#results").show();
+			jQuery("#manual-company-input").hide();
+        }else{
+        	jQuery("#results").hide();
+        }
+
+	});
+
+	jQuery('.select-academic-organisation').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#results").hide();
+		jQuery("#selected-academic-organisation").show();
+
+	});
+
+</script>
+</body>
+</html>

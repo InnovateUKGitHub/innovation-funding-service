@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<!-- ===========================Place: main <content>  =========================== --> 
+<!-- ===========================Sub header for application lead =========================== --> 
 
 <div th:fragment="prototype-sub-header">
 	<div class="sub-header">
@@ -27,12 +27,57 @@
     </div>
 </div>
 
+<!-- ===========================Sub header for collaborator =========================== --> 
+
+<div th:fragment="prototype-sub-header-collaborator">
+    <div class="sub-header">
+        <div class="deadline">Days left to submit&nbsp;&nbsp;
+            <div class="pie-container">
+                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                <div class="pie-overlay">
+                    <div>0</div>
+                    <span>Days left</span>
+                </div>
+            </div>
+        </div>
+        <a href="/prototypes/635-application-overview-collaborator">Application overview</a>
+    </div>
+</div>
+
 <!-- ==============Assign questions in application summary  ====================== -->
 
 <div th:fragment="prototype-assign-question">
 	<div class="column-third assign-container collapsible">
         <div class="assign-button">
             Assigned to: <strong>You</strong>
+        </div>
+
+        <div class="assign-team">
+            <h3>Reassign question</h3>
+            <ul class="list-bullet">
+                <li>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+                    
+                </li>
+                <li>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+                    
+                </li>
+                <li>
+                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ==============Reassigned question to you in application summary  ====================== -->
+
+<div th:fragment="prototype-reassigned-question-to-you">
+    <div class="column-third assign-container collapsible">
+        <div class="assign-button">
+            Reassigned to: <strong>You</strong>
         </div>
 
         <div class="assign-team">
@@ -80,6 +125,45 @@
                     
                 </li>
             </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========Assigned questions in application summary - collaborator view======= -->
+
+<div th:fragment="prototype-question-collaborator-assigned-to-me">
+    <div class="column-third assign-container">
+        <div>
+            Assigned to you
+        </div>
+    </div>
+</div>
+
+
+<!-- ========Assigned questions in application summary - collaborator view======= -->
+
+<div th:fragment="prototype-question-collaborator-assigned-to-lead">
+    <div class="column-third assign-container">
+        <div>
+            Assigned to John Smith
+        </div>
+    </div>
+</div>
+
+
+<!-- ================== Application progress snippet  =========================== --> 
+
+<div th:fragment="prototype-application-progress">
+    <h3 class="heading-medium no-margin">Application progress:</h3>
+                
+    <div class="progress-container medium no-margin-left no-margin-right">
+        <div class="progress-indicator">
+            <div class="start">0%</div>
+            <div class="progress" style="width:9%">
+                <div>9%</div>
+            </div>
+            <div class="end">100%</div>
         </div>
     </div>
 </div>

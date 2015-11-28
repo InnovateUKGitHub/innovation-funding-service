@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 
 
-public class UserRestServiceMocksTest extends BaseRestServiceMocksTest<UserRestServiceImpl> {
+public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/users";
     private static final String processRolesUrl = "/processroles";

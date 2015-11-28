@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-form">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+<form action="#" method="post" class="form-serialize-js">
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="hgroup">
+				<p class="subtitle no-margin">A novel solution to an old problem</p>
+				<h1 class="heading-large">Potential market</h1>
+			</div>
+		</div>
+		<div class="column-third">
+			<h3 class="heading-small no-margin">Application progress:</h3>
+			<div class="progress-container medium no-margin-left">
+		        <div class="progress-indicator">
+		            <div class="start">0%</div>
+		            <div class="progress" style="width:56%">
+		                <div>56%</div>
+		            </div>
+		            <div class="end">100%</div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	<div class="form-group" id="0">
+		
+		<label class="form-label form-label-bold" for="1">2. What is the size of the potential market for your project?</label>
+		
+		<div class="validation-messages">
+			
+		</div>
+		
+		<details role="group">
+		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+		<span class="summary">What should I include in the market opportunity section?</span>
+		</summary>
+		<div class="panel-indent" id="details-content-0" aria-hidden="false" style="display: block;">
+			<p>Describe the size of the potential market for your project, including:</p>
+				<ul class="list-bullet">
+					<li>details of your target market, for instance, how competitive and profitable it is</li>
+					<li>the current size of the market, with actual and predicted growth rates</li>
+					<li>the market share you expect to achieve and the reasons for this estimate</li>
+					<li>the wider economic value you expect your project to add to the UK and/or the EEA (European Economic Area)</li>
+				</ul>
+				<p>Tell us what return on investment you expect your project to achieve. You should base this estimate on relevant industry data and tell us how you have calculated this.</p>
+				<p>If you are targeting an undeveloped market, you should also:</p>
+				<ul class="list-bullet">
+					<li>describe how you plan to access this market</li>
+					<li>estimate its potential size</li>
+					<li>explain how you will explore its potential</li>
+				</ul>
+			</div>
+		</details>
+		<div class="textarea-wrapped assigned-to-me word-count">
+			<div class="textarea-header" id="formInput[1]">
+				
+			<div class="assignee  assigned-to-me ">
+		        This question is assigned to <strong>you</strong>
+		    </div>
+			</div>
+			<div class="editor" contenteditable="true">
+				<p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead.  A tool to reduce that amount by a significant proportion would be taken up by the entire industry.  </p>
+				<p>At this time no other solutions are available or near market giving us the leading edge on market share.  </p>
+				<p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
+			</div>
+		</div>
+		<div class="textarea-footer">
+			
+			<div class="assign-container">
+				<small><span>Last updated: </span>
+					<span>
+						<span>15 November 02:31PM</span>
+					</span>
+					by
+					<span>you</span>
+				</small>
+			</div>
+		
+			
+			<span class="count-label">
+				<small>
+					<span class="count-message">Words remaining:</span>
+					<span class="count-down positive" aria-live="polite">446</span>
+				</small>
+			</span>
+			
+		</div>
+
+		<!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
+		<div class="alignright-button extra-margin">
+			<button type="submit" name="mark_as_complete" class="button" formaction="/prototypes/635-application-question2-collaborator-done" value="1">Work done - return to lead
+			</button>
+		</div>
+		
+		<!-- if  readonly we show the edit form button-->
+	</div>
+
+</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="#">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">1. Business opportunity</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question3-collaborator">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">3. Project exploitation</span>
+        </a>
+    </li>
+</ul>
+
+	<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

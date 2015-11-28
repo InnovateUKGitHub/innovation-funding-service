@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-form">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+<form action="#" method="post" class="form-serialize-js">
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="hgroup">
+				<p class="subtitle no-margin">A novel solution to an old problem</p>
+				<h1 class="heading-large">Economic benefit</h1>
+			</div>
+		</div>
+		<div class="column-third">
+			<h3 class="heading-small no-margin">Application progress:</h3>
+			<div class="progress-container medium no-margin-left">
+		        <div class="progress-indicator">
+		            <div class="start">0%</div>
+		            <div class="progress" style="width:56%">
+		                <div>56%</div>
+		            </div>
+		            <div class="end">100%</div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	<div class="form-group" id="0">
+		
+		<label class="form-label form-label-bold" for="1">4. What economic, social and environmental benefits do you expect your project to deliver and when?</label>
+		
+		<div class="validation-messages">
+			
+		</div>
+		
+		<details role="group">
+		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+		<span class="summary">What should I include in the benefits section?</span>
+		</summary>
+		<div class="panel-indent" id="details-content-3" aria-hidden="false" style="display: block;"><p>Describe all the benefits you expect your project to deliver, including:</p><strong>Economic</strong> – this is the real impact the project will have on its economic environment. This is not traditional corporate accounting profit and can include cost avoidance. You should identify and quantify any expected benefits to:<p></p><ul class="list-bullet">         <li>users (intermediaries and end users)</li><li>suppliers</li><li>broader industrial markets</li><li>the UK economy</li></ul><p><strong>Social</strong> - quantify any expected social impacts, either positive or negative, on, for example:</p><ul class="list-bullet">         <li>quality of life</li><li>social inclusion/exclusion</li><li>education</li><li>public empowerment</li><li>health and safety</li><li>regulation</li><li>diversity</li><li>government priorities</li></ul><p><strong>Environmental</strong> – show how your project will benefit the environment or have low impact. For example, this could include:</p><p></p><ul class="list-bullet">         <li>careful management of energy consumption</li><li>reductions in carbon emissions</li><li>reducing manufacturing and materials waste</li>rendering waste less toxic before disposing of it in a safe and legal manner<li>re-manufacturing (cradle to cradle)</li></ul></div>
+		</details>
+		<div class="textarea-wrapped marked-as-complete word-count">
+			<div class="textarea-header" id="formInput[1]">
+				
+			<div class="assignee  assigned-to-me ">
+		        This question is marked as <strong>complete</strong>
+		    </div>
+			</div>
+			<div class="readonly">
+				<p>The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.  </p>
+
+				<p>The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field.</p>
+
+				<p>Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+			</div>
+		</div>
+		<div class="textarea-footer">
+			
+			<div class="assign-container">
+				<small><span>Last updated: </span>
+					<span>
+						<span>15 November 02:31PM</span>
+					</span>
+					by
+					<span>you</span>
+				</small>
+			</div>
+		
+			
+			<span class="count-label">
+				<small>
+					<span class="count-message">Words remaining:</span>
+					<span class="count-down positive" aria-live="polite">446</span>
+				</small>
+			</span>
+			
+		</div>
+		
+		<!-- if  readonly we show the edit form button-->
+	</div>
+
+</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question3-collaborator">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">3. Project exploitation</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="#">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">5. Technical approach</span>
+        </a>
+    </li>
+</ul>
+
+	<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
