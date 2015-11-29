@@ -36,7 +36,7 @@
 				<button type="submit" id="org-search" class="button">Search</button>
 			</div>
 
-			<ul id="results" class="results-list panel-indent" style="display: none;">
+			<ul id="org-results" class="results-list panel-indent">
 				<li class="type-company">
 				<h3>
 					<a href="/prototypes/642-org-selected-from-companies-house" title="View company"> NOMENSA LTD
@@ -69,7 +69,7 @@
 		</fieldset>
 		<a href="#" id="manual-company-trigger">Not on companies House?</a>
 			
-		<div id="manual-company-input" class="extra-margin" style="display: none">
+		<div id="manual-company-input" class="extra-margin">
 			<fieldset>
 				<legend class="visuallyhidden">Organisation details</legend>
 				<div class="form-group">
@@ -98,7 +98,7 @@
 				</div>
 				<a href="#" id="enter-address-manually">Enter address manually</a>
 			</fieldset>
-			<fieldset id="address-details" class="extra-margin" style="display: none;">
+			<fieldset id="address-details" class="extra-margin">
 				<legend class="visuallyhidden">Address details</legend>
 				<div class="form-group">
 					<label class="form-label" for="street">
@@ -196,10 +196,10 @@
 <script type="text/javascript">
 	jQuery('#org-name').on('keydown',function(e){ 
 		if (this.value.length>0){
-			jQuery("#results").show();
+			jQuery("#org-results").show();
 			jQuery("#manual-company-input").hide();
         }else{
-        	jQuery("#results").hide();
+        	jQuery("#org-results").hide();
         }
 
 	});
@@ -207,7 +207,7 @@
 	jQuery('#manual-company-trigger').on('click',function(e){ 
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
-		jQuery("#results").hide();
+		jQuery("#org-results").hide();
 
 	});
 

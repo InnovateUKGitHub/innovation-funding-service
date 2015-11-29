@@ -36,7 +36,7 @@
 				<button type="submit" id="org-search" class="button">Search</button>
 			</div>
 
-			<ul id="results" class="results-list panel-indent" style="display: none;">
+			<ul id="org-results" class="results-list panel-indent">
 				<li class="type-company">
 					<h3>
 						<a href="#" class="select-academic-organisation" title="View company"> University of Bradford
@@ -64,7 +64,7 @@
 
 		</fieldset>
 
-		<div id="selected-academic-organisation" style="display: none">
+		<div id="selected-academic-organisation">
 			
 			<h3 class="heading-small">Acadmeic organisation</h3>
 			<p>University of Bristol</p>
@@ -94,17 +94,17 @@
 <script type="text/javascript">
 	jQuery('#org-name').on('keydown',function(e){ 
 		if (this.value.length>0){
-			jQuery("#results").show();
+			jQuery("#org-results").show();
 			jQuery("#manual-company-input").hide();
         }else{
-        	jQuery("#results").hide();
+        	jQuery("#org-results").hide();
         }
 
 	});
 
 	jQuery('.select-academic-organisation').on('click',function(e){ 
 		e.preventDefault();
-		jQuery("#results").hide();
+		jQuery("#org-results").hide();
 		jQuery("#selected-academic-organisation").show();
 
 	});
