@@ -2,8 +2,7 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.assessment.domain.Recommendation;
-
+import com.worth.ifs.assessment.domain.Assessment;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -11,9 +10,9 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class AssessmentBuilder extends BaseBuilder<Recommendation, AssessmentBuilder> {
+public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder> {
 
-    private AssessmentBuilder(List<BiConsumer<Integer, Recommendation>> multiActions) {
+    private AssessmentBuilder(List<BiConsumer<Integer, Assessment>> multiActions) {
         super(multiActions);
     }
 
@@ -22,13 +21,13 @@ public class AssessmentBuilder extends BaseBuilder<Recommendation, AssessmentBui
     }
 
     @Override
-    protected AssessmentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Recommendation>> actions) {
+    protected AssessmentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Assessment>> actions) {
         return new AssessmentBuilder(actions);
     }
 
     @Override
-    protected Recommendation createInitial() {
-        return new Recommendation();
+    protected Assessment createInitial() {
+        return new Assessment();
     }
 
     public AssessmentBuilder withId(Long... ids) {

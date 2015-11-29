@@ -2,8 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.worth.ifs.assessment.domain.Recommendation;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,12 @@ public class AssessmentController {
 
 
     @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
-    public List<Recommendation> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+    public List<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
         return assessmentHandler.getAllByCompetitionAndAssessor(competitionId, userId);
     }
 
     @RequestMapping("/findAssessmentByApplication/{userId}/{applicationId}")
-    public Recommendation getAssessmentByUserAndApplication( @PathVariable("userId") final Long userId, @PathVariable("applicationId") final Long applicationId ) {
+    public Assessment getAssessmentByUserAndApplication( @PathVariable("userId") final Long userId, @PathVariable("applicationId") final Long applicationId ) {
         return assessmentHandler.getOneByAssessorAndApplication(userId, applicationId);
     }
 
@@ -54,20 +55,20 @@ public class AssessmentController {
     @RequestMapping(value = "/acceptAssessmentInvitation/{applicationId}/{assessorId}")
     public void acceptAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
                                            @PathVariable("assessorId") final Long assessorId,
-                                           @RequestBody Recommendation recommendation) {
-        Recommendation recommendationOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
-        recommendation.setProcessStatus(recommendationOriginal.getProcessStatus());
-        assessmentWorkflowEventHandler.acceptInvitation(applicationId, assessorId, recommendation);
+                                           @RequestBody Assessment assessment) {
+        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        assessment.setProcessStatus(assessmentOriginal.getProcessStatus());
+        assessmentWorkflowEventHandler.acceptInvitation(applicationId, assessorId, assessment);
     }
 
     @RequestMapping(value = "/rejectAssessmentInvitation/{applicationId}/{assessorId}")
     public void rejectAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
                                            @PathVariable("assessorId") final Long assessorId,
-                                           @RequestBody Recommendation recommendation) {
-        Recommendation recommendationOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
-        String currentProcessStatus = recommendationOriginal.getProcessStatus();
-        recommendation.setProcessStatus(currentProcessStatus);
-        assessmentWorkflowEventHandler.rejectInvitation(applicationId, assessorId, recommendation);
+                                           @RequestBody ProcessOutcome processOutcome) {
+        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        String currentProcessStatus = assessmentOriginal.getProcessStatus();
+        //assessment.setProcessStatus(currentProcessStatus);
+        assessmentWorkflowEventHandler.rejectInvitation(applicationId, assessorId, currentProcessStatus, processOutcome);
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
@@ -78,8 +79,8 @@ public class AssessmentController {
         ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
         Set<Long> assessments = fromArrayNodeToSet(assessmentsIds);
         for(Long assessmentId : assessments) {
-            Recommendation recommendation = assessmentHandler.getOne(assessmentId);
-            assessmentWorkflowEventHandler.submit(recommendation);
+            Assessment assessment = assessmentHandler.getOne(assessmentId);
+            assessmentWorkflowEventHandler.submit(assessment);
         }
         return new Boolean(true);
     }
@@ -107,12 +108,15 @@ public class AssessmentController {
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
-        Recommendation recommendation = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
-        Recommendation newRecommendation = new Recommendation();
-        newRecommendation.setSummary(assessmentHandler.getRecommendedValueFromString(suitableValue), suitableFeedback, comments, Double.parseDouble(overallScore));
-        newRecommendation.setProcessStatus(recommendation.getProcessStatus());
+        Assessment assessment = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        Assessment newAssessment = new Assessment();
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setOutcome(assessmentHandler.getRecommendedValueFromString(suitableValue).name());
+        processOutcome.setDescription(suitableFeedback);
+        processOutcome.setComment(comments);
+        newAssessment.setProcessStatus(assessment.getProcessStatus());
 
-        assessmentWorkflowEventHandler.recommend(applicationId, assessorId, newRecommendation);
+        assessmentWorkflowEventHandler.recommend(applicationId, assessorId, newAssessment);
         return true;
     }
 

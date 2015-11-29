@@ -1,18 +1,18 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.domain.Recommendation;
+import com.worth.ifs.assessment.domain.Assessment;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * Interface for CRUD operations on {@link Recommendation} related data.
+ * Interface for CRUD operations on {@link Assessment} related data.
  */
 public interface AssessmentRestService {
 
-    public List<Recommendation> getAllByAssessorAndCompetition(Long userId, Long competitionId);
+    public List<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
 
-    public Recommendation getOneByAssessorAndApplication(Long userId, Long applicationId);
+    public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId);
 
     public Integer getTotalAssignedByAssessorAndCompetition(Long userId, Long competitionId);
 
@@ -24,8 +24,8 @@ public interface AssessmentRestService {
 
     public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments, Double overallScore);
 
-    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Recommendation recommendation);
+    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment);
 
-    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Recommendation recommendation);
+    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment);
 
 }

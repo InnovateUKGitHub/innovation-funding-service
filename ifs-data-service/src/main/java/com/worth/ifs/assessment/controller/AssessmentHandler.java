@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.assessment.domain.Recommendation;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AssessmentHandler is responsible to manage the domain logic around the Recommendation's domain range.
- * This avoids code coupling and spread knlowledge and responsability over Recommendation's and allows us
+ * AssessmentHandler is responsible to manage the domain logic around the Assessment's domain range.
+ * This avoids code coupling and spread knowledge and responsability over Assessment's and allows us
  * to have the access to them centered here, preventing any incoherence by multiple ways.
  *
  * So this class is responsible to manage interactions with the AssessmentRepository, being a facade between
- * the outside world and the Recommendation's world.
+ * the outside world and the Assessment's world.
  */
 @Component
 public class AssessmentHandler {
@@ -26,15 +26,15 @@ public class AssessmentHandler {
 
     public AssessmentHandler(){}
 
-    public void save(Recommendation a) {
+    public void save(Assessment a) {
         assessments.save(a);
     }
 
-    public Recommendation saveAndGet(Recommendation a) {
+    public Assessment saveAndGet(Assessment a) {
         return assessments.save(a);
     }
 
-    public Recommendation getOne(Long id) {
+    public Assessment getOne(Long id) {
         return assessments.findById(id);
     }
 
@@ -43,14 +43,13 @@ public class AssessmentHandler {
      * By 'All' is meant all the assessments whose invitation was not rejected.
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
      */
-    public List<Recommendation> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
-        //List<Recommendation> allAssessments = new ArrayList<>();
+    public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
         Set<String> states = AssessmentStates.getStates();
         states.remove(AssessmentStates.REJECTED.getState());
         return assessments.findByAssessorIdAndApplicationCompetitionIdAndStatusIn(assessorId, competitionId, states);
     }
 
-    public Recommendation getOneByAssessorAndApplication(Long userId, Long applicationId) {
+    public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId) {
         return assessments.findOneByAssessorIdAndApplicationId(userId, applicationId);
     }
 

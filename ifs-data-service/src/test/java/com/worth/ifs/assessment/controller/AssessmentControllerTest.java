@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.assessment.domain.Recommendation;
+import com.worth.ifs.assessment.domain.Assessment;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RecommendationControllerTest extends BaseControllerMockMVCTest {
+public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     private static String applicationControllerPath = "/assessment";
 
@@ -31,14 +31,14 @@ public class RecommendationControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testFindAssessmentsByCompetition() throws Exception {
-        Recommendation recommendation = new Recommendation();
+        Assessment assessment = new Assessment();
 
-        List<Recommendation> recommendations = new ArrayList<Recommendation>();
-        recommendations.add(recommendation);
+        List<Assessment> assessments = new ArrayList<Assessment>();
+        assessments.add(assessment);
 
-        recommendation.setId(123L);
+        assessment.setId(123L);
 
-        when(assessmentHandler.getAllByCompetitionAndAssessor(1L, 1L)).thenReturn(recommendations);
+        when(assessmentHandler.getAllByCompetitionAndAssessor(1L, 1L)).thenReturn(assessments);
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
@@ -48,11 +48,11 @@ public class RecommendationControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testGetAssessmentByUserAndApplication() throws Exception {
-        Recommendation recommendation = new Recommendation();
+        Assessment assessment = new Assessment();
 
-        recommendation.setId(456L);
+        assessment.setId(456L);
 
-        when(assessmentHandler.getOneByAssessorAndApplication(1L, 1L)).thenReturn(recommendation);
+        when(assessmentHandler.getOneByAssessorAndApplication(1L, 1L)).thenReturn(assessment);
 
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentByApplication/1/1"))
                 .andExpect(status().isOk())

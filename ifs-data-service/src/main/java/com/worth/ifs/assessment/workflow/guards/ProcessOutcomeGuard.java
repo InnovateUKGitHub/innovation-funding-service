@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow.guards;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
@@ -10,15 +10,15 @@ import org.springframework.statemachine.guard.Guard;
  * to the next state. This will not happen if the evaluation is failing.
  */
 @Configuration
-public class AssessmentGuard implements Guard<String, String> {
+public class ProcessOutcomeGuard implements Guard<String, String> {
 
     @Override
     public boolean evaluate(StateContext<String, String> context) {
-        Object assessmentObject = context.getMessageHeader("assessment");
+        Object processOutcomeObject = context.getMessageHeader("processOutcome");
         Object applicationId = context.getMessageHeader("applicationId");
         Object assessorId = context.getMessageHeader("assessorId");
 
-        if(isAssessment(assessmentObject) &&
+        if(isProcessOutcome(processOutcomeObject) &&
                 isTypeOfLong(applicationId) &&
                 isTypeOfLong(assessorId)) {
             return true;
@@ -30,7 +30,7 @@ public class AssessmentGuard implements Guard<String, String> {
         return object!=null && object instanceof Long;
     }
 
-    private boolean isAssessment(Object object) {
-        return object!=null && object instanceof Assessment;
+    private boolean isProcessOutcome(Object object) {
+        return object!=null && object instanceof ProcessOutcome;
     }
 }
