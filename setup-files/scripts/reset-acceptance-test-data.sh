@@ -14,11 +14,11 @@ if [ -z "$3" ]; then
 fi
 
 
-read -p "This will import fresh data into your $1 database - are you sure? " -n 1 -r
+read -p "This will reset the acceptance test data in your $1 database - are you sure? " -n 1 -r
 echo 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
-  mysql $1 -u$2 -p$3 < ../data-dump/ifs-data.sql
+  mysql $1 -u$2 -p$3 < ../data-dump/ifs-reset-for-test.sql
 
 fi
