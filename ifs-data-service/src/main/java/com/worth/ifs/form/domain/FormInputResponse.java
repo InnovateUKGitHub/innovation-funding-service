@@ -77,6 +77,8 @@ public class FormInputResponse {
 
     @JsonIgnore
     public Integer getWordCount(){
+        // this code removes the list items from the wysiwyg value.
+        // If we don't then every list item will also count as one word.
         String cleanInput = this.value.replaceAll("([0-9]+\\.\\ |\\*\\ )", "");
         return cleanInput.split("\\s+").length;
     }
