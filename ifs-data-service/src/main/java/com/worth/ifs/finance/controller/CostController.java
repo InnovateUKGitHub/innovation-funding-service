@@ -65,7 +65,8 @@ public class CostController {
 
             newCost.getCostValues()
                 .stream()
-                .filter(costValue -> costValue.getValue()!=null)
+                .filter(c -> c.getValue() != null)
+                .filter(c -> !c.getValue().equals("null"))
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
 
         } else {
@@ -92,6 +93,10 @@ public class CostController {
     }
 
     private void updateCostValue(CostValue costValue, Cost savedCost){
+        if(costValue.getCostField() == null){
+            log.error("CostField is null");
+            return;
+        }
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);

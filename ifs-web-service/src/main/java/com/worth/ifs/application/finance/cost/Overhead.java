@@ -6,13 +6,15 @@ import java.math.BigDecimal;
  * {@code Overhead} implements {@link CostItem}
  */
 public class Overhead implements CostItem {
-    String acceptRate;
-    Integer customRate;
+    private Long id;
+    private String acceptRate;
+    private Integer customRate;
 
     public Overhead() {
     }
 
-    public Overhead(String acceptRate, Integer customRate) {
+    public Overhead(Long id, String acceptRate, Integer customRate) {
+        this.id = id;
         this.acceptRate = acceptRate;
         this.customRate = customRate;
     }
@@ -32,7 +34,7 @@ public class Overhead implements CostItem {
 
     @Override
     public Long getId() {
-        return null;
+        return id;
     }
 
 }
