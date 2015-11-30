@@ -26,7 +26,6 @@ public class LabourCostCategory implements CostCategory {
     @Override
     public BigDecimal getTotal() {
         total = costs.stream()
-                .filter(c -> c.getTotal() != null)
                 .map(c -> ((LabourCost)c).getTotal(workingDaysPerYear.getLabourDays()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
