@@ -77,7 +77,8 @@ public class FormInputResponse {
 
     @JsonIgnore
     public Integer getWordCount(){
-        return this.value.split("\\s+").length;
+        String cleanInput = this.value.replaceAll("([0-9]+\\.\\ |\\*\\ )", "");
+        return cleanInput.split("\\s+").length;
     }
 
     @JsonIgnore
