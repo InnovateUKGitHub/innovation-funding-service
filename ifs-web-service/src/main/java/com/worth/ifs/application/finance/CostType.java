@@ -1,5 +1,8 @@
 package com.worth.ifs.application.finance;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Cost types are used to identify the different categories that costs can have
  */
@@ -28,6 +31,7 @@ public enum CostType {
                 }
             }
         }
+        LogFactory.getLog(CostType.class).error("Not a valid costype " + type);
         throw new IllegalArgumentException("Not a valid CostType : " + type);
     }
 

@@ -41,4 +41,9 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public void delete(Long costId) {costRestService.delete(costId);}
+
+    @Override
+    public void add(Long applicationFinanceId, Long questionId) {
+        costRestService.add(applicationFinanceId, questionId);
+    }
 }
