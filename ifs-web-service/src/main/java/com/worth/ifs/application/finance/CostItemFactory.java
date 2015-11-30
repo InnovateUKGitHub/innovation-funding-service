@@ -27,7 +27,7 @@ public class CostItemFactory {
             case OTHER_COSTS:
                 return new OtherCost(cost.getId(), cost.getCost(),cost.getDescription());
             case OVERHEADS:
-                return new Overhead(cost.getItem(), cost.getQuantity());
+                return new Overhead(cost.getId(), cost.getItem(), cost.getQuantity());
             case SUBCONTRACTING_COSTS:
                 return createSubcontractingCost(cost);
             case TRAVEL:

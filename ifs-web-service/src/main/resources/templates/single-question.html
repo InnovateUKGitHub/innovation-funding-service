@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
-    <div th:each="formInput, status : ${question.getFormInputs()}" th:with="formInputIndex=(${status.index})" th:remove="tag">
-        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
-    </div>
+    <form action="#"  method="post" th:object="${form}" class="form-serialize-js">
+        <div th:each="formInput, status : ${question.getFormInputs()}" th:with="formInputIndex=(${status.index})" th:remove="tag">
+            <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+        </div>
+    </form>
 </html>
