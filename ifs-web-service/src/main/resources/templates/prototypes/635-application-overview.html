@@ -29,7 +29,7 @@
         <div class="column-half">
             <ul class="list-bullet">
             	<li><a href="/prototypes/632-organisation-collaborator-overview">View team members and add collaborators</a></li>
-            	<li><a href="#">See comprtition brief</a></li>
+            	<li><a href="#">See competition brief</a></li>
             </ul>
         </div>
         
@@ -44,6 +44,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#1">Application details</a></h3>
 					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -51,7 +52,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#2">Project summary</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -59,7 +60,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#3">Public description</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -67,7 +68,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#4">Scope</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 		</ul>
@@ -95,7 +96,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question3">3. Project exploitation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 			<li class="section-status assigned-to-me">
@@ -133,9 +134,9 @@
 			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#12">8. Project time</a></h3>
+						<h3 class="heading-small"><a href="#12">8. Project team</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -143,7 +144,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#13">9. Funding</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -151,7 +152,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#14">10. Adding value</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-reassign-question" th:remove="tag" />
+					
 				</div>
 			</li>
 		</ul>
@@ -163,6 +164,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/631-finances-assigned-to-you">Empire Ltd finances</a></h3>
 					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
 				</div>
 			</li>
 			<li>
