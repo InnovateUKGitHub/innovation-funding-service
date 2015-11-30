@@ -261,7 +261,7 @@ public class FinanceFormHandler {
             if(fieldValue!=null) {
                 if (costFormField.getCostName().equals("country")) {
                     country = fieldValue;
-                } else if (costFormField.getCostName().equals("cost")) {
+                } else if (costFormField.getCostName().equals("subcontractingCost")) {
                     cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("name")) {
                     name = fieldValue;

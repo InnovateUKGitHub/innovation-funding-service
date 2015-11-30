@@ -18,6 +18,7 @@ var ifs_finance = (function(){
             },
             init : function(){
                 ifs_finance.bindCalculationActionToFields(); // Bind calculations
+                jQuery("body").append(jQuery("<div class=\"js-hidden\"><input id=\"hundred-field\" value=\"100\" /></div>"))
             },
             bindCalculationActionToFields : function(){
 
