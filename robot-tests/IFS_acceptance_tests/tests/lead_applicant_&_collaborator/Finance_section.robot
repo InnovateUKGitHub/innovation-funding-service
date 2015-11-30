@@ -57,6 +57,11 @@ Verify the test guidance in the "Your Finance section"
     # and the Applicant refreshes the page
     # Then the new "Gross Annual" amount should be visible
 
+Verify auto the auto-save of the "Grant" field
+    Given the applicant is in the Finance section
+    Then auto-save should work for the "Grant" field
+    and the grant value should be correct in the finance summary page
+
 *** Keywords ***
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
@@ -149,4 +154,27 @@ The total subcontracting costs should be 100
 
 Input has value
     ${input_value} =    Get Value    ${input_selector}
-    Should Be Equal As Strings    ${input_value} =    £ 522
+    Should Be Equal As Strings    ${input_value}    £ 522
+
+the applicant is in the Finance section
+    Go To    ${FINANCES}
+
+auto-save should work for the "Grant" field
+    Clear Element Text    css=#cost-financegrantclaim
+    focus    css=.column-half:nth-child(1) .button-block
+    Sleep    1s
+    Reload Page
+    ${input_value} =    Get Value    id=cost-financegrantclaim
+    Should Be Equal As Strings    ${input_value}    0
+    Clear Element Text    id=cost-financegrantclaim
+    Input Text    id=cost-financegrantclaim    25
+    focus    css=.column-half:nth-child(1) .button-block
+    Sleep    1s
+    Reload Page
+    focus    css=.column-half:nth-child(1) .button-block
+    ${input_value} =    Get Value    id=cost-financegrantclaim
+    Should Be Equal As Strings    ${input_value}    25
+
+the grant value should be correct in the finance summary page
+    Click Link    link=Project financial summary
+    Element Should Contain    css=.form-group > table tr:nth-child(2) .numeric:nth-child(3)    25
