@@ -2,11 +2,10 @@ package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -25,7 +23,7 @@ import static org.springframework.http.HttpMethod.PUT;
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
  */
-public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<ApplicationRestServiceImpl> {
+public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationRestServiceImpl> {
 
     private static final String applicationRestURL = "/applications";
 

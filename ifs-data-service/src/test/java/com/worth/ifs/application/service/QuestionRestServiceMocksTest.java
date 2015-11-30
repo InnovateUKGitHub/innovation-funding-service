@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Question;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
 
-public class QuestionRestServiceMocksTest extends BaseRestServiceMocksTest<QuestionRestServiceImpl> {
+public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionRestServiceImpl> {
 
     private static final String questionRestURL = "/question";
 

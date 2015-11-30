@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.finance.domain.Cost;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class CostRestServiceMocksTest extends BaseRestServiceMocksTest<CostRestServiceImpl> {
+public class CostRestServiceMocksTest extends BaseRestServiceUnitTest<CostRestServiceImpl> {
 
     private static final String costRestURL = "/cost";
 

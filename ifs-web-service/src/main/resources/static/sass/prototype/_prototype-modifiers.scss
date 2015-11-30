@@ -1,0 +1,32 @@
+.total-cost{
+	.heading-medium{
+		margin-left: 20px; 
+	}
+}
+
+		
+/*--- Controlling visibility of hidden panels for js and non-js ---*/
+
+%hidden-blocks-js{
+	display: none;
+
+	.no-js &{
+		display: block;
+	}
+}
+
+#org-results{
+	@extend %hidden-blocks-js;
+}
+
+#manual-company-input{
+	@extend %hidden-blocks-js;
+}
+
+#address-details{
+	@extend %hidden-blocks-js;
+}
+
+#selected-academic-organisation{
+	@extend %hidden-blocks-js;
+}

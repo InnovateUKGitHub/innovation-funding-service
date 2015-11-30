@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class AssessmentRestServiceMocksTest extends BaseRestServiceMocksTest<AssessmentRestServiceImpl> {
+public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<AssessmentRestServiceImpl> {
 
     private static String assessmentRestURL = "/assessments";
 

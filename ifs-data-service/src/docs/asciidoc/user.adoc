@@ -13,7 +13,7 @@ include::{snippets}/user/get-all-users/curl-request.adoc[]
 include::{snippets}/user/get-user/http-request.adoc[]
 
 ==== Response
-include::{snippets}/user/get-user/find-user-applications/http-response.adoc[]
+include::{snippets}/user/get-user/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/get-user/curl-request.adoc[]

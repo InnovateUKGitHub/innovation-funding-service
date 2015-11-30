@@ -1,5 +1,5 @@
 /* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, md: false, Showdown: false, document : false */
+/* globals  jQuery : false, md: false, showdown: false */
 
 //wysiwyg editor for textareas
 //Dependencies to load first : hallo.min.js
@@ -14,12 +14,12 @@ var ifs_editor = (function(){
             textareas : '.textarea-wrapped textarea',
             htmlOptions : {
                 format: false,
-                allowedTags: ['p','em','strong','ol','ul','li','br','b'],
+                allowedTags: ['p','em','strong','ol','ul','li','br','b','div']
             }
         },
         init : function(){
             s = this.settings;
-            converter = new Showdown.converter();
+            converter = new showdown.Converter();
 
             var textareas = jQuery(s.textareas);
              jQuery.each(textareas,function(){
@@ -28,7 +28,7 @@ var ifs_editor = (function(){
 
             ifs_editor.initEditors();
             ifs_editor.bindEditors();
-            ifs_editor.contentEditableEnterFix();
+           // ifs_editor.contentEditableEnterFix();
         },
         prepareEditor : function(textarea){
             var el = jQuery(textarea);
@@ -54,7 +54,6 @@ var ifs_editor = (function(){
         },
         bindEditors : function(){
             jQuery('.editor').bind('hallomodified', function(event, data) {
-                //make sure that there never is only a break
                 var source = jQuery(this).next();
                 ifs_editor.processHtmlToMarkdown(data.content,source);
                 jQuery(source).trigger('keyup');
@@ -88,20 +87,22 @@ var ifs_editor = (function(){
             }
             else {
                 html = converter.makeHtml(content);
+
             }
             return html;
-        },
-        contentEditableEnterFix : function(){
-            var formatBlockSupported = document.queryCommandSupported("formatBlock");
-            if(formatBlockSupported){
-                jQuery('.editor').on( "keypress", function(event){
-                     if(event.keyCode == '13') {
-                        document.execCommand('formatBlock', false, 'p');
-                     }
-                });
-            }
         }
+        // contentEditableEnterFix : function(){
+        //    // for having good html we only agree upon <p>test</p> and not p<br/> 
+        //    // however <br/> is default behaviour in FF, Chrome with contenteditble sections
+        //     var formatBlockSupported = document.queryCommandSupported("formatBlock");
 
-
+        //     if(formatBlockSupported){
+        //         jQuery('.editor').on( "keypress", function(event){
+        //              if(event.keyCode == '13') {
+        //                 document.execCommand('formatBlock', false, 'p');
+        //              }
+        //         });
+        //     }
+        // }
     };
 })();

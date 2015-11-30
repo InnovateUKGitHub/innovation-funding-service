@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">A novel solution to an old problem</p>
+		<h1 class="heading-xlarge no-margin-top">Application overview</h1>
+	</div>
+
+	<div class="grid-row">
+		 <div class="column-half">
+           <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
+        </div>
+        <div class="column-half">
+            <ul class="list-bullet">
+            	<li><a href="#">View project team</a></li>
+            	<li><a href="#">See comprtition brief</a></li>
+            </ul>
+        </div>
+        
+    </div>
+
+	<form action="#" method="post" class="application-overview">
+
+		<h2 class="heading-medium">Details</h2>
+		<ul class="list-overview">
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#1">Application details</a></h3>
+					</div>
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#2">Project summary</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#3">Public description</a></h3>
+					</div>
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#4">Scope</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+		</ul>
+		
+		<h2 class="heading-medium">Application questions</h2>
+		<ul class="list-overview">
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/635-application-question1-collaborator">1. Business opportunity</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status assigned-to-me">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/635-application-question2-collaborator">2. Potential market</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/635-application-question3-collaborator">3. Project exploitation</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#8">4. Economic benefit</a></h3>
+					</div>
+				</div>
+			</li>
+			<li class="section-status assigned-to-me">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#9">5. Technical approach</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#10">6. Innovation</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#11">7. Risks</a></h3>
+					</div>
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#12">8. Project time</a></h3>
+					</div>
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#13">9. Funding</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#14">10. Adding value</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+				</div>
+			</li>
+		</ul>
+
+		<h2 class="heading-medium">Finances</h2>
+		<ul class="list-overview">
+			<li class="section-status assigned-to-me">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/631-finances-assigned-to-you">Empire Ltd finances</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+				</div>
+			</li>
+			<li>
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="631-finances-overview">Finances overview</a></h3>
+					</div>
+				</div>
+			</li>
+		</ul>
+
+	</form>
+
+	<!-- <div class="alignright-button">
+        <a role="button" tabindex="0" class="button" href="/prototypes/745-review-submit">Review &amp; submit</a>
+    </div> -->
+
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
