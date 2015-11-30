@@ -65,7 +65,14 @@ public class CapitalUsage implements CostItem {
 
     public BigDecimal getTotal() {
         // ( npv - residualValue ) * utilization-percentage
-        return npv.subtract(residualValue).multiply(new BigDecimal(utilisation).divide(new BigDecimal(100)));
+        BigDecimal result;
+        try{
+            result = npv.subtract(residualValue).multiply(new BigDecimal(utilisation).divide(new BigDecimal(100)));
+        }catch(NullPointerException e){
+            result = BigDecimal.ZERO;
+        }
+        result.setScale(2);
+        return result;
     }
 
 }
