@@ -50,12 +50,8 @@
        	</h2>
 
 		<div id="collapsible-1" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Labour content
-				</div>
-			</div>
-    	</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
+		</div>
 
 
     	<h2>Overheads
@@ -65,11 +61,7 @@
        	</h2>
 
 		<div id="collapsible-2" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Overheads content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-overheads" th:remove="tag" />
     	</div>
 
 
@@ -80,11 +72,7 @@
        	</h2>
 
 		<div id="collapsible-3" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Materials content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
     	</div>
 
 
@@ -95,11 +83,7 @@
        	</h2>
 
 		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Capital usage content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
     	</div>
 
 
@@ -110,11 +94,7 @@
        	</h2>
 
 		<div id="collapsible-5" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Subcontracting costs content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
     	</div>
 
 
@@ -125,11 +105,7 @@
        	</h2>
 
 		<div id="collapsible-6" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Travel &amp; subsistence content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
     	</div>
 
 
@@ -140,11 +116,7 @@
        	</h2>
 
 		<div id="collapsible-7" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Other costs content
-				</div>
-			</div>
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
     	</div>
 
 

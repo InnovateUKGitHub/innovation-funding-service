@@ -76,3 +76,15 @@
 .application-overview{
     margin-bottom: 30px;
 }
+
+
+/*-------- Companies House results panel example -------------*/
+
+li.type-company{
+    padding: 0 0 25px 0;
+
+    .meta.crumbtrail{
+        margin: 0;
+        padding: 0;
+    }
+}
