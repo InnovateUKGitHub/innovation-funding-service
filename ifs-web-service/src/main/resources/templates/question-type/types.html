@@ -682,7 +682,6 @@
                         <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
                                 <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${otherCost.id}, name='description', value=${otherCost.description})" th:remove="tag" />
-
                             </td>
                             <td class="numeric">
                                 <input type="number" th:name="${type +'-otherCost-' + otherCost.id}" class="form-control form-control-1-1 form-finances-other-cost" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>

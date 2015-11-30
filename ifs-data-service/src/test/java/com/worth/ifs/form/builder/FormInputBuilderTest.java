@@ -22,7 +22,6 @@ public class FormInputBuilderTest {
 
     @Test
     public void test_buildOne_defaultValuesAsExpected() {
-
         FormInput formInput = newFormInput().build();
         assertEquals(Long.valueOf(1), formInput.getId());
         assertEquals("Description 1", formInput.getDescription());
@@ -30,7 +29,6 @@ public class FormInputBuilderTest {
 
     @Test
     public void test_buildMany_defaultValuesAsExpected() {
-
         List<FormInput> formInputs = newFormInput().build(3);
 
         assertEquals(Long.valueOf(1), formInputs.get(0).getId());

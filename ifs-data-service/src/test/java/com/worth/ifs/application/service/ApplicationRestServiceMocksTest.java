@@ -44,7 +44,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         // now run the method under test
         Application application = service.getApplicationById(123L);
         assertNotNull(application);
-        assertTrue(application == response.getBody());
+        assertTrue(application.equals(response.getBody()));
     }
 
     @Test
