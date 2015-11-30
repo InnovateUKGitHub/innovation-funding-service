@@ -1,5 +1,6 @@
 package com.worth.ifs.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -110,6 +111,11 @@ public class Application {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    @JsonIgnore
+    public List<ApplicationFinance> getApplicationFinances() {
+        return applicationFinances;
     }
 
     public Long getDurationInMonths() {
