@@ -147,6 +147,14 @@
                 >
 		</textarea>
 </div>
+<div th:fragment="form-finance-textarea (type, id, name, value)">
+		<textarea
+                th:id="${'cost-'+ type + '-'+id+'-'+name}"
+                th:name="${type +'-'+name+'-' + id}"
+                th:text="${value}"
+                >
+		</textarea>
+</div>
 
 <div th:fragment="form-textarea-wordcount (id, name, value, readonly, maxWords)">
     <div class="textarea-wrapped word-count">

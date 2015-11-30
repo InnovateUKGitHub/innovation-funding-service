@@ -420,14 +420,9 @@
                 <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
                         <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-item'}">Item description</label>
-                        <!--name="capital_usage-0-capitalUsageItem"-->
-                        <input type="textarea"
-                               th:id="${'cost-capital_usage-'+capitalUsage.id+'-item'}"
-                               class="form-control form-finances-capital-usage-item"
-                               th:name="${type +'-item-' + capitalUsage.id}"
-                               cols="40"
-                               rows="3"
-                               th:value="${capitalUsage.getDescription()}" />
+
+                        <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${capitalUsage.id}, name='item', value=${capitalUsage.getDescription()})" th:remove="tag" />
+
                         <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                     </div>
 
@@ -557,10 +552,7 @@
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                             <label class="form-label" th:for="${'cost-'+ type + '-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
 
-                            <textarea
-                                   th:id="${'cost-'+ type + '-'+subContractingCost.id+'-role'}"
-                                   th:name="${type +'-role-' + subContractingCost.id}"
-                                   th:text="${subContractingCost.role}"></textarea>
+                            <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${subContractingCost.id}, name='role', value=${subContractingCost.role})" th:remove="tag" />
                         </div>
 
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
@@ -689,10 +681,7 @@
                     <div th:each="otherCost : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
-                                <textarea
-                                        th:id="${'cost-'+ type + '-'+otherCost.id+'-description'}"
-                                        th:name="${type +'-description-' + otherCost.id}"
-                                        th:text="${otherCost.description}"></textarea>
+                                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${otherCost.id}, name='description', value=${otherCost.description})" th:remove="tag" />
 
                             </td>
                             <td class="numeric">
