@@ -1,0 +1,86 @@
+*** Settings ***
+Documentation     INFUND-218
+...               Acceptance tests: wysiwyg editor
+...
+...               Format a text area's text as bold
+...               Format a text area's text as italic
+...               Bullet formatting
+...               You should see the expected format in the text field area
+...
+...               This should be tested in different sections
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
+
+*** Variables ***
+${VAR}            ${EMPTY}
+
+*** Test Cases ***
+Verify Project summary accepts Bold text format
+    When the applicant is in the Overview page
+    Then the Applicant clicks the "Application details" section
+    Then clicks on "Project summary" section
+    Then verify for bold format
+
+Verify Project summary accepts Italic text format
+    When the applicant is in the Overview page
+    Then the Applicant clicks the "Application details" section
+    Then clicks on "Project summary" section
+    Then verify for Italic format
+
+Verify Project summary accepts numbering bullets
+    When the applicant is in the Overview page
+    Then the Applicant clicks the "Application details" section
+    Then clicks on "Project summary" section
+    Then verify for numbering bullet format
+
+Verify Project summary accepts bullets
+    When the applicant is in the Overview page
+    Then the Applicant clicks the "Application details" section
+    Then clicks on "Project summary" section
+    Then verify for bullet format
+
+*** Keywords ***
+the applicant is in the Overview page
+    go to    ${APPLICATION_OVERVIEW_URL}
+
+the Applicant clicks the "Application details" section
+    Click Element    css=#section-1 > button
+
+clicks on "Project summary" section
+    Click Link    link=Project summary
+    Wait Until Element Is Visible    css=#form-input-11 .editor
+    Clear Element Text    css=#form-input-11 .editor
+    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
+
+verify for bold format
+    Click Button    css=.bold_button
+    Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
+    Sleep    2s
+    ${VAR}=    Get Text    css=#form-input-11 .editor b
+
+verify for Italic format
+    Click Button    css=.italic_button
+    Input Text    css=#form-input-11 .editor    Entering text to check if it accepts italic format.
+    Sleep    2s
+    ${VAR}=    Get Text    css=#form-input-11 .editor i
+
+verify for numbering bullet format
+    Input Text    css=#form-input-11 .editor    testing
+    Click Button    css=.insertOrderedList_button
+    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
+    Sleep    2s
+    ${VAR}=    Get Text    css=#form-input-11 .editor ol
+    Focus    css=.app-submit-btn
+
+verify for bullet format
+    Input Text    css=#form-input-11 .editor    testing
+    Click Button    css=.insertUnorderedList_button
+    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
+    Sleep    2s
+    ${VAR}=    Get Text    css=#form-input-11 .editor li
+    Focus    css=.app-submit-btn
