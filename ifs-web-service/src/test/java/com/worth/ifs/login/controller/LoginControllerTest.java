@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -88,8 +89,45 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("email", "info@test.nl")
                         .param("password", "testFOUT")
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login?invalid"));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("login"))
+                .andExpect(model().attributeHasFieldErrors("loginForm", "password"));
+    }
+
+    @Test
+    public void testSubmitInvalidEmail() throws Exception {
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "infotest.nl")
+                        .param("password", "testFOUT")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("login"))
+                .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
+    }
+
+    @Test
+    public void testSubmitWithoutEmail() throws Exception {
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "")
+                        .param("password", "test")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("login"))
+                .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
+    }
+
+    @Test
+    public void testSubmitWithoutPassword() throws Exception {
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "info@test.nl")
+                        .param("password", "")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("login"))
+                .andExpect(model().attributeHasFieldErrors("loginForm", "password"));
     }
 
     @Test
