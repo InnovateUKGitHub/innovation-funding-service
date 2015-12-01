@@ -1,69 +1,78 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Sign In'"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Sign In'" th:remove="tag"></div>
 </head>
 <body class="sign-in">
 
-    <div th:include="fragments/layout :: body-start" th:remove="tag"></div>	
-    <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
-	<main id="content">
-   		 <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-
-
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
 
-<section th:if="${(param.invalid != null)}" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
-	<h1 class="heading-medium error-summary-heading" id="error-summary-heading">
-	  Your username/password combination doesn't seem to work
-	</h1>
-	<p>
-	  Please try again  
-	</p>
-</section>
+    <form action="/login" th:object="${loginForm}" method="POST">
+        <section th:if="${#fields.hasErrors('*')}" class="error-summary" role="group"
+                 aria-labelledby="error-summary-heading" tabindex="-1">
+            <h1 class="heading-medium error-summary-heading" id="error-summary-heading">
+                Your username/password combination doesn't seem to work
+            </h1>
+
+            <p>
+                Please try again
+            </p>
+        </section>
 
 
+        <div class="grid-row">
+            <section class="column-half">
+                <h1 class="heading-large">Sign in</h1>
 
-<div class="grid-row">
-	<section class="column-half">
-		<h1 class="heading-large">Sign in</h1>
-        <form action="/login" th:object="${loginForm}" method="POST">
-        	<fieldset>
-        		<legend class="visuallyhidden">Sign in</legend>
-				<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-					<label class="form-label" for="id_email">E-mail address</label>
-					<input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email" />
-				</div><!-- .form-group -->
+                <fieldset>
+                    <legend class="visuallyhidden">Sign in</legend>
+                    <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_email">E-mail address</label>
+                        <input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                    <!-- .form-group -->
 
-				<div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">
-					<label class="form-label" for="id_password">Password</label>
-					<input class="form-control form-control-3-4" type="password" th:field="*{password}" id="id_password" />
-				</div><!-- .form-group -->
-			</fieldset>
-			<input class="button" value="Sign in" type="submit" />
-        </form>
-	</section>
-	<section class="column-half">
-	    <h1 class="heading-large">New to this service?</h1>
-	    <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+                    <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_password">Password</label>
+                        <input class="form-control form-control-3-4" type="password" th:field="*{password}"
+                               id="id_password"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('password')}"
+                              th:errors="*{password}"></span>
+                    </div>
+                    <!-- .form-group -->
+                </fieldset>
+                <input class="button" value="Sign in" type="submit"/>
 
-	    <p>Creating an account allows you to:</p>
-	    <ul class="list-bullet">
-	        <li>Apply for a competition</li>
-	        <li>Track your competition applications</li>
-	        <li>View application feedback</li>
-	        <li>Setup successful project</li>
-	    </ul>
-	</section>
+            </section>
+            <section class="column-half">
+                <h1 class="heading-large">New to this service?</h1>
 
-</div>
+                <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>,
+                    even if you already have an existing account with "Innovate UK".</p>
+
+                <p>Creating an account allows you to:</p>
+                <ul class="list-bullet">
+                    <li>Apply for a competition</li>
+                    <li>Track your competition applications</li>
+                    <li>View application feedback</li>
+                    <li>Setup successful project</li>
+                </ul>
+            </section>
+
+        </div>
+    </form>
 
 
-		 <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
-	</main>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
 
-    <div th:include="fragments/layout :: footer" th:remove="tag"></div>
-	<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
 </body>
 </html>
