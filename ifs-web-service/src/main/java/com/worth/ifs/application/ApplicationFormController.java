@@ -310,6 +310,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
+                value = value.trim();
                 if(StringUtils.isEmpty(value)){
                     errors.add("Please enter the full title of the project.");
                 }else{

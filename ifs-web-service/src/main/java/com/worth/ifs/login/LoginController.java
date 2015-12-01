@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * This controller handles user login, logout and authentication / authorization.
@@ -41,16 +43,23 @@ public class LoginController {
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@ModelAttribute LoginForm loginForm, HttpServletResponse response) {
+    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response) {
         String destination = "";
-        try {
-            User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
-            userAuthenticationService.addAuthentication(response, authenticatedUser);
-            destination = redirectionForUser(authenticatedUser);
+        if(bindingResult.hasErrors()){
+            destination = "login";
+        }else{
+            try {
+                User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
+                userAuthenticationService.addAuthentication(response, authenticatedUser);
+                destination = redirectionForUser(authenticatedUser);
 
-        } catch(BadCredentialsException bce) {
-            destination = redirectionForUknownUser();
+            } catch(BadCredentialsException bce) {
+                bindingResult.rejectValue("email", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
+                bindingResult.rejectValue("password", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
+                destination = "login";
+            }
         }
+
         return destination;
     }
 
