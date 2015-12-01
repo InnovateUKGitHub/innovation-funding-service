@@ -32,9 +32,10 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -180,7 +181,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())

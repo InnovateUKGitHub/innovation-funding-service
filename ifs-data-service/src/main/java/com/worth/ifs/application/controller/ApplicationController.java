@@ -227,8 +227,8 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
-    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
+    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {

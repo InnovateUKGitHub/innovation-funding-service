@@ -135,10 +135,10 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         ResponseEntity<Application> response = new ResponseEntity<>(application, OK);
 
-        when(mockRestTemplate.exchange(eq(expectedUrl), eq(PUT), isA(HttpEntity.class), eq(Application.class))).thenReturn(response);
+        when(mockRestTemplate.postForEntity(eq(expectedUrl), isA(HttpEntity.class), eq(Application.class))).thenReturn(response);
 
         // now run the method under test
         Application returnedResponse = service.createApplication(123L, 456L, "testApplicationName123");
-        returnedResponse.getName().equals(application.getName());
+        assertEquals(returnedResponse.getName(),application.getName());
     }
 }
