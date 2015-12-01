@@ -1,6 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +18,7 @@ public class ApplicationTest {
     List<ProcessRole> processRoles;
     ApplicationStatus applicationStatus;
     Long id;
+    List<ApplicationFinance> applicationFinances;
 
     @Before
     public void setUp() throws Exception {
@@ -24,6 +26,7 @@ public class ApplicationTest {
         name = "testApplicationName";
         applicationStatus = new ApplicationStatus();
         competition = new Competition();
+        applicationFinances = new ArrayList<>();
 
         processRoles = new ArrayList<ProcessRole>();
         processRoles.add(new ProcessRole());
@@ -40,5 +43,6 @@ public class ApplicationTest {
         Assert.assertEquals(application.getApplicationStatus(), applicationStatus);
         Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
+        Assert.assertEquals(application.getApplicationFinances(), applicationFinances);
     }
 }

@@ -31,8 +31,6 @@ public class SectionController {
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
-    ResponseRepository responseRepository;
-    @Autowired
     FormInputResponseRepository formInputResponseRepository;
     @Autowired
     SectionRepository sectionRepository;
