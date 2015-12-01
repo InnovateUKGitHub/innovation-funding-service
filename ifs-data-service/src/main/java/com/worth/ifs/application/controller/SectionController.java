@@ -41,6 +41,8 @@ public class SectionController {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private final static String FINANCE_SUMMARY_QUESTION_NAME_STRING = "FINANCE_SUMMARY_INDICATOR_STRING";
+
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("organisationId") final Long organisationId) {
@@ -121,7 +123,7 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
-            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING")){
+            if(question.getName()!=null && question.getName().equals(FINANCE_SUMMARY_QUESTION_NAME_STRING)){
                 if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
