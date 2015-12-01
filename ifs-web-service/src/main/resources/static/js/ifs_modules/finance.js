@@ -150,7 +150,7 @@ var ifs_finance = (function(){
                     elementToMove.detach();
                     header.append(elementToMove);
                     elementToMove.show();
-             });
+                });
             }
     };   
 })();
