@@ -207,7 +207,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andReturn();
     }
 
-
     @Test
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
@@ -280,9 +279,48 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
+    }
 
+    @Test
+    public void testSaveFormElementEmptyApplicationTitle() throws Exception {
+        String value = "";
+        String questionId = "application_details-title";
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("value", value)
+                        .param("applicationId", application.getId().toString())
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        Assert.assertEquals(jsonExpectedContent, content);
+    }
+
+    @Test
+    public void testSaveFormElementSpacesApplicationTitle() throws Exception {
+        String value = " ";
+        String questionId = "application_details-title";
+
+        MvcResult result = mockMvc.perform(
+                post("/application-form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("value", value)
+                        .param("applicationId", application.getId().toString())
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test
@@ -302,7 +340,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
     }
 
@@ -323,7 +361,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value.\"]}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test
@@ -343,7 +381,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test
@@ -390,7 +428,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test
@@ -414,7 +452,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         log.info("Response : "+ content);
 
         String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
-        Assert.assertEquals(content, jsonExpectedContent);
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test

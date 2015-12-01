@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.finance.domain.CostField;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class CostFieldRestServiceMocksTest extends BaseRestServiceMocksTest<CostFieldRestServiceImpl> {
+public class CostFieldRestServiceMocksTest extends BaseRestServiceUnitTest<CostFieldRestServiceImpl> {
 
     private static final String costFieldRestURL = "/costfield";
 

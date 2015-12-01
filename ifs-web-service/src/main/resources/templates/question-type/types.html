@@ -248,7 +248,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads">
         <p th:text="${question.getDescription()}"></p>
-        <div th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
+        <div th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},overheadCosts=${costCategory?.costs[0]}">
             <div class="grid-row">
                 <strong class="column-half">
                     20% of labour costs
@@ -263,49 +263,68 @@
                 <legend>Do you choose to accept this rate?</legend>
                 <ul id="id_overheads-acceptRate">
                     <li>
-                        <label for="id_overheads-acceptRate_0">
-                            <input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes"/>
-                            <span> </span><span>20% of labour costs</span>
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}">
+                            <input
+                                   th:id="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}"
+                                   type="radio"
+                                   th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
+                                   value="Yes"
+                                   th:checked="${overheadCosts?.acceptRate == 'Yes'}">
+                                20% of labour costs
+                            </input>
                         </label>
                     </li>
                     <li>
-                        <label for="id_overheads-acceptRate_1">
-                            <input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no"/>
-                            <span> </span>
-                            <span >Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)</span>
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_1'}" data-target="customRate">
+                            <input
+                                   th:id="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_1'}"
+                                   type="radio"
+                                   th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
+                                   value="No"
+                                   th:checked="${overheadCosts?.acceptRate == 'No'}">
+                                Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)
+                            </input>
                         </label>
                     </li>
                 </ul>
             </fieldset>
             <br/>
-            <div id="custom-rate" th:if="${costCategory.costs!=null and costCategory.costs.size() > 0}" th:with="overheadCosts=${costCategory.costs[0]}">
+            <div id="customRate" class="panel-indent js-hidden">
                 <div class="form-group">
-                    <label class="form-label" for="id_overheads-customRate">Overhead rate</label>
-                    <input type="number"
-                           name="overheads-customRate"
+                    <label class="form-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}">Overhead rate</label>
+                    <input type="text"
+                           th:name="'overheads-customRate-'+${overheadCosts?.id}"
+                           th:id="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}"
                            data-calculation-input="overhead-rate"
                            class="form-control form-control-1-8"
-                           id="id_overheads-customRate"
-                           th:value="'£ ' + ${#numbers.formatDecimal(overheadCosts.getCustomRate(),0,0)}" /> %
+                           th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" /> %
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label" for="id_overheads-calculatedRate">Overhead calculation</label>
-                    <input type="number" name="overheads-calculatedRate" class="form-control" readonly="" id="id_overheads-calculatedRate"
-                           data-calculation-field="[data-calculation-input=total-labour],100,[data-calculation-input=overhead-rate]"
-                           data-calculation-operations="/,*"
+                    <label class="form-label" th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
+                    <input type="text"
+                           th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
+                           th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}"
+                           class="form-control"
+                           readonly=""
+                           data-binding-input="subsection-total-9"
+                           data-calculation-operations=""
                            data-calculation-input="overhead-calculated"
-                            th:value="'£ ' + ${#numbers.formatDecimal(overheadCosts.total, 0, 'COMMA', 0, 'POINT')}"/>
+                           th:value="'£ 0'"/>
                 </div>
             </div>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total overhead costs
-                    <input type="number" name="overheads-totalCosts" class="form-control form-control-1-4 alignright" readonly="" id="id_overheads-totalCosts"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
-                           data-calculation-field="[data-calculation-input=overhead-calculated]"
-                           data-calculation-operations="+"
-                           th:value="'£ 0'"
+                    <input type="text"
+                           th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
+                           class="form-control form-control-1-4 alignright"
+                           readonly=""
+                           id="id_overheads-totalCosts"
+                           data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
+                           data-calculation-operations="*"
+                           th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
+
+                           th:value="''"
                            />
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                         <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -396,47 +415,93 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}" >
+        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageItem">Item description</label>
-                        <input type="textarea" id="id_capitalusage-0-capitalUsageItem" class="form-control form-finances-capital-usage-item"
-                                  name="capitalusage-0-capitalUsageItem" cols="40" rows="3" th:value="${capitalUsage.getDescription()}" />
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-item'}">Item description</label>
+
+                        <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${capitalUsage.id}, name='item', value=${capitalUsage.getDescription()})" th:remove="tag" />
+
                         <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                     </div>
 
-                    <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageNewOrExisting" class="form-label">New or existing item</label>
-                        <select id="id_capitalusage-0-capitalUsageNewOrExisting" class="form-control form-finances-capital-usage-existing" name="capitalusage-0-capitalUsageNewOrExisting">
-                            <option selected="${capitalUsage.getExisting() == ''}" value=""></option>
-                            <option value="New" selected="${capitalUsage.getExisting() == 'New'}">New</option>
-                            <option value="Existing" selected="${capitalUsage.getExisting() == 'Existing'}">Existing</option>
-                        </select>
+                    <div class="form-group inline">
+                        <label class="form-label">New or existing item</label>
+                            <label class="block-label">
+                                <input th:id="${'cost-capital_usage-'+capitalUsage.id+'-existing_0'}"
+                                       type="radio"
+                                       th:name="${type +'-existing-' + capitalUsage.id}"
+                                       value="New"
+                                       th:checked="${capitalUsage.existing == 'New'}">
+                                New
+                                </input>
+                            </label>
+
+                            <label class="block-label">
+                                <input th:id="${'cost-capital_usage-'+capitalUsage.id+'-existing_1'}"
+                                       type="radio"
+                                       th:name="${type +'-existing-' + capitalUsage.id}"
+                                       value="Existing"
+                                       th:checked="${capitalUsage.existing == 'Existing'}">
+                                Existing
+                                </input>
+                            </label>
+
+
                     </div>
 
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-label">Deprecation period (months)</label>
-                        <input type="number" id="id_capitalusage-0-capitalUsageDeprecationPeriod" class="form-control form-finances-capital-usage-depreciation" name="capitalusage-0-capitalUsageDeprecationPeriod"
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-deprecation_period'}" class="form-label">Deprecation period (months)</label>
+                        <input
+                                type="number"
+                                th:id="${'cost-capital_usage-'+capitalUsage.id+'-deprecation_period'}"
+                                class="form-control form-finances-capital-usage-depreciation"
+                                th:name="${type +'-deprecation_period-' + capitalUsage.id}"
                                 th:value="${capitalUsage.deprecation}"/>
                     </div>
 
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageNPV" class="form-label">Net Present Value at the start of your project start or the price you bought it for (£)</label>
-                        <input type="number" value="10000" id="id_capitalusage-0-capitalUsageNPV" class="form-control form-finances-capital-usage-npv" name="capitalusage-0-capitalUsageNPV"
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-npv'}" class="form-label">Net Present Value at the start of your project start or the price you bought it for (£)</label>
+                        <input
+                                type="number"
+                                value="10000"
+                                th:id="${'cost-capital_usage-'+capitalUsage.id+'-npv'}"
+                                class="form-control form-finances-capital-usage-npv"
+                                th:name="${type +'-npv-' + capitalUsage.id}"
                                th:value="${#numbers.formatDecimal(capitalUsage.npv,0,0)}"/>
                     </div>
 
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageResidualValue" class="form-label">Residual value at end of project (£)</label>
-                        <input type="number" value="200" id="id_capitalusage-0-capitalUsageResidualValue" class="form-control form-finances-capital-usage-residual-value" name="capitalusage-0-capitalUsageResidualValue"
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-residual_value'}" class="form-label">Residual value at end of project (£)</label>
+                        <input
+                                type="number"
+                                value="200"
+                                th:id="${'cost-capital_usage-'+capitalUsage.id+'-residual_value'}"
+                                class="form-control form-finances-capital-usage-residual-value"
+                                th:name="${type +'-residual_value-' + capitalUsage.id}"
                                th:value="${#numbers.formatDecimal(capitalUsage.residualValue,0,0)}"/>
                     </div>
 
                     <div class="form-group">
-                        <label for="id_capitalusage-0-capitalUsageUtilisation" class="form-label">Utilisation (%)</label>
-                        <input type="number" value="20" id="id_capitalusage-0-capitalUsageUtilisation" class="form-control form-finances-capital-usage-utilisation" name="capitalusage-0-capitalUsageUtilisation"
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-utilisation'}" class="form-label">Utilisation (%)</label>
+                        <input type="number"
+                               value="20"
+                               th:id="${'cost-capital_usage-'+capitalUsage.id+'-utilisation'}"
+                               class="form-control form-finances-capital-usage-utilisation"
+                               th:name="${type +'-utilisation-' + capitalUsage.id}"
                                th:value="${capitalUsage.utilisation}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-netCost'}" class="form-label">Net Cost</label>
+                        <input type="text"
+                               th:attr="data-calculation-fields=${'#cost-capital_usage-'+capitalUsage.id+'-npv,#cost-capital_usage-'+capitalUsage.id+'-residual_value,#cost-capital_usage-'+capitalUsage.id+'-utilisation,#hundred-field'}"
+                               data-calculation-operations="-,*,/"
+                               readonly="readonly"
+                               th:id="${'cost-capital_usage-'+capitalUsage.id+'-netCost'}"
+                               th:name="${type + '-netCost-' + capitalUsage.id}"
+                               th:value="'£ ' + ${#numbers.formatDecimal(capitalUsage.total, 0, 0)}"/>
                     </div>
                 </div>
             </div>
@@ -447,7 +512,9 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-capital-usage-costs-total-field"
+                           data-calculation-fields="[id*=netCost]"
+                           data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
@@ -483,23 +550,17 @@
                         </div>
 
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
-                            <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
-                            <div th:include="question-type/form-elements :: form-textarea (
-		 					id=${'cost-subcontracting-'+subContractingCost.id+'-role'},
-		 					value=${subContractingCost.role},
-		 					readonly=false,
-		 					name=${type + '-role-' + subContractingCost.id}
-		 					)" th:remove="tag" />
+                            <label class="form-label" th:for="${'cost-'+ type + '-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
 
+                            <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${subContractingCost.id}, name='role', value=${subContractingCost.role})" th:remove="tag" />
                         </div>
 
                         <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
+                            <label class="form-label" th:for="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}">Cost</label>
                             <input type="number"
-                                   th:name="${type +'-cost-' + subContractingCost.id}"
+                                   th:name="${type +'-subcontractingCost-' + subContractingCost.id}"
                                    class="form-control form-finances-subcontracting-cost"
-                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-subcontractingCost'}"
+                                   th:id="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}"
                                    data-calculation-input="subcontracting-cost-row"
                                    th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
                         </div>
@@ -535,7 +596,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
+        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -551,16 +612,23 @@
                     <div th:each="travelCost : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${travelCost.id}">
                             <td>
-                                <input type="text" name="travel-0-travelPurpose" class="form-control form-control-1-1 form-finances-travel-purpose" id="id_travel-0-travelPurpose" th:value="${travelCost.getItem()}" />
+                                <input type="text" th:name="${type +'-travelPurpose-' + travelCost.id}" class="form-control form-control-1-1 form-finances-travel-purpose" th:id="${'cost-'+type+'-'+travelCost.id+'-travelPurpose'}" th:value="${travelCost.getItem()}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelNumTimes" class="form-control form-control-1-1 form-finances-travel-number" id="id_travel-0-travelNumTimes" th:value="${travelCost.getQuantity()}" />
+                                <input type="number" th:name="${type +'-travelNumTimes-' + travelCost.id}" class="form-control form-control-1-1 form-finances-travel-number" th:id="${'cost-'+type+'-'+travelCost.id+'-travelNumTimes'}" th:value="${travelCost.getQuantity()}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelCostEach" class="form-control form-control-1-1 form-finances-travel-cost" id="id_travel-0-travelCostEach" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
+                                <input type="number" th:name="${type +'-travelCostEach-' + travelCost.id}" class="form-control form-control-1-1 form-finances-travel-cost" th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}" th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="travel-0-travelCostTotal" class="form-control form-control-1-1 form-finances-travel-total" readonly="" id="id_travel-0-travelCostTotal" th:value="${#numbers.formatDecimal(travelCost.getTotal(),0,0)}" />
+                                <input type="text"
+                                       th:name="${type +'-travelCostTotal-' + travelCost.id}"
+                                       class="form-finances-travel-total"
+                                       readonly=""
+                                       th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostTotal'}"
+                                       th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}+',#'+${'cost-'+type+'-'+travelCost.id+'-travelNumTimes'},data-calculation-rawValue=${travelCost.getTotal()}"
+                                       data-calculation-operations="*"
+                                       th:value="'£ ' + ${#numbers.formatDecimal(travelCost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                             </td>
                             <td>
                                 <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
@@ -578,6 +646,8 @@
                 <label>
                     Total travel &amp; subsistence costs
                     <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
+                           data-calculation-fields="[id*=travelCostTotal]"
+                           data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
@@ -597,7 +667,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
+        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -611,13 +681,13 @@
                     <div th:each="otherCost : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
-                                <div th:include="question-type/form-elements :: form-textarea-simple(id='other-cost-'+${otherCost.getId()}, name='other-0-otherDescription['+${otherCost.getId()}+']', value=${otherCost.getDescription()})" th:remove="tag" />
+                                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${otherCost.id}, name='description', value=${otherCost.description})" th:remove="tag" />
                             </td>
                             <td class="numeric">
-                                <input type="number" name="other-0-otherCost" class="form-control form-control-1-1 form-finances-other-cost" id="id_other-0-otherCost" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
+                                <input type="number" th:name="${type +'-otherCost-' + otherCost.id}" class="form-control form-control-1-1 form-finances-other-cost" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
                             </td>
                             <td>
-                                <a class="delete-row" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${otherCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -633,6 +703,8 @@
                     Total other costs
                     <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
+                           data-calculation-fields="[id*=otherCost]"
+                           data-calculation-operations="+"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
 
                     <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">

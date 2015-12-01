@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Test class for testing security annotations on methods in the AssessorService
+ * Test class for testing security annotations on methods in the AssessorService interface
  */
 public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<AssessorService> {
 

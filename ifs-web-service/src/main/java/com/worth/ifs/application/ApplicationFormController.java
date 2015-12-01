@@ -90,7 +90,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
-    public String addAnotherWithFragmentResponse(Form form, Model model,
+    public String addAnotherWithFragmentResponse(@Valid Form form, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @PathVariable("questionId") final Long questionId,
@@ -110,7 +110,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
-    public String addAnother(Model model,
+    public String addAnother(Form form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
@@ -175,7 +175,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-        financeFormHandler.handle(request);
+        if(financeFormHandler.handle(request)){
+            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
 
         addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
 
@@ -302,10 +304,13 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         try {
             List<String> errors = new ArrayList<>();
+            String fieldName = request.getParameter("fieldName");
+
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
             if (inputIdentifier.equals("application_details-title")) {
+                value = value.trim();
                 if(StringUtils.isEmpty(value)){
                     errors.add("Please enter the full title of the project.");
                 }else{
@@ -341,12 +346,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                 }
                 application.setStartDate(startDate);
                 applicationService.save(application);
-            } else if (inputIdentifier.startsWith("cost-")) {
-                String fieldName = request.getParameter("fieldName");
+            } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
                 FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
                 if (fieldName != null && value != null) {
-                    log.debug("FIELDNAME: " + fieldName + " VALUE: " + value);
-                    financeFormHandler.storeField(fieldName, value);
+                    String cleanedFieldName = fieldName;
+                    if(fieldName.startsWith("cost-")){
+                        cleanedFieldName = fieldName.replace("cost-", "");
+                    }
+                    log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
+                    financeFormHandler.storeField(cleanedFieldName, value);
                 }
             } else {
                 Long formInputId = Long.valueOf(inputIdentifier);
@@ -373,6 +381,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         } catch (Exception e) {
 //            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
+            log.error("Exception on autosave: ");
+            log.error(e.getMessage());
+            e.printStackTrace();
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
 
             ObjectMapper mapper = new ObjectMapper();

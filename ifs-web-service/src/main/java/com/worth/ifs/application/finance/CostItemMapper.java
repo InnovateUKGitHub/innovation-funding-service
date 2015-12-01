@@ -63,7 +63,7 @@ public class CostItemMapper {
                 GrantClaim grantClaim = (GrantClaim) costItem;
                 return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
         }
-
+        log.error("Not a valid CostType: " + costType);
         throw new IllegalArgumentException("Not a valid CostType: " + costType);
     }
 

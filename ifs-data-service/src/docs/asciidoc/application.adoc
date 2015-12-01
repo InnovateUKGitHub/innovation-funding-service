@@ -17,19 +17,15 @@ include::{snippets}/application/find-user-applications/http-request.adoc[]
 ==== Response
 include::{snippets}/application/find-user-applications/http-response.adoc[]
 
-include::{snippets}/application/find-user-applications/response-fields.adoc[]
-
 ==== Curl Example
 include::{snippets}/application/find-user-applications/curl-request.adoc[]
 
 === Retrieve all applications
 ==== Request
-include::{snippets}/find-all-applications/http-request.adoc[]
+include::{snippets}/application/find-all-applications/http-request.adoc[]
 
 ==== Response
 include::{snippets}/application/find-all-applications/http-response.adoc[]
-
-include::{snippets}/application/find-all-applications/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/find-all-applications/curl-request.adoc[]

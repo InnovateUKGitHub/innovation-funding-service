@@ -21,60 +21,179 @@
 		<div class="column-two-thirds">
             <div class="hgroup" style="padding-top: 20px">
 				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin-top">Application overview</h1>
+				<h1 class="heading-xlarge no-margin">Finances overview</h1>
+				<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
 			</div>
         </div>
         <div class="column-third competition-details">
-            <h3 class="heading-medium">Application progress:</h3>
-            
-		    <div class="progress-container medium no-margin-left no-margin-right">
-		        <div class="progress-indicator">
-		            <div class="start">0%</div>
-		            <div class="progress" style="width:9%">
-		                <div>9%</div>
-		            </div>
-		            <div class="end">100%</div>
-		        </div>
-		    </div>
+            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
         </div>
     </div>
-	
-	<h2 class="heading-medium">Assign a member of your team responsible for submitting for your organisation</h2>
 
-	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Assign a member of your team responsible for submitting for your organisation</legend>
-			
-			<div class="form-block">
-				<label class="block-label" for="radio-1">
-					<input id="radio-1" type="radio" name="radio-group" value="Charles Barron" />
-					Charles Barron
-				</label>
-				<label class="block-label" for="radio-2">
-					<input id="radio-2" type="radio" name="radio-group" value="Mark Malone" />
-					Mark Malone
-				</label>
-				<label class="block-label" for="radio-3">
-					<input id="radio-3" type="radio" name="radio-group" value="Ryann Blessed" />
-					Ryan Blessed
-				</label>
-			</div>
+	<h2 class="heading-medium">Funding rules for this competition</h2> 
+	<p>We will fund projects between &pound;200,000 and &pound;1 million. We may consider projects with costs outside of this range. We expect projects to last between 12 and 24 months.</p>
 
-		</fieldset>
-			
-		<button class="button button-large extra-margin" name="create-account" type="submit">Assign</button>
-	</form>
+	<p>Business partners can claim funding at the following rates:</p>
+
+	<ul class="list-bullet">
+		<li>small businesses - 70% of total eligible costs</li>
+		<li>medium size businesses - 60% of total eligible costs</li>
+		<li>large - 50% of total elligible costs</li>
+	</ul>
+
+	<h2 class="heading-medium">Finances summary</h2>
+	<p>This is the level of cost detail that the assessors will see during the assessment process</p>
+
+	<div class="form-group">
+	    <table>
+	        <thead>
+	            <tr>
+	                <th scope="col">&nbsp;</th>
+	                <th scope="col" class="numeric">Total costs</th>
+	                <th scope="col" class="numeric">
+	                    % Grant
+	                </th>
+	                <th scope="col" class="numeric">
+	                    Funding sought
+	                </th>
+	                <th scope="col" class="numeric width-medium">
+	                    Other public sector funding
+	                </th>
+	                <th scope="col" class="numeric width-medium">
+	                    Contribution to project
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr>
+	                <th> <div>Empire Ltd</div>
+	                    <div><small>Lead organisation</small></div></th>
+	                <td class="numeric"><strong>£450,983</strong></td>
+	                <td class="numeric">63</td>
+	                <td class="numeric">£105,517</td>
+	                <td class="numeric">£60,659</td>
+	                <td class="numeric">£284,807</td>
+	            </tr>
+	            <tr>
+	                <th><div>Ludlow</div>
+	                    <div><small>Partner</small></div></th>
+	                <td class="numeric"><strong>£192,256</strong></td>
+	                <td class="numeric">50</td>
+	                <td class="numeric">£31,655</td>
+	                <td class="numeric">£18,198</td>
+	                <td class="numeric">£142,404</td>
+	            </tr>
+	            <tr>
+	                <th><div>EGGS</div>
+	                    <div><small>Partner</small></div></th>
+	                <td class="numeric"><strong>£258,727</strong></td>
+	                <td class="numeric">70</td>
+	                <td class="numeric">£73,862</td>
+	                <td class="numeric">£42,461</td>
+	                <td class="numeric">£37,402</td>
+	            </tr>
+	            <tr>
+	                <th>Total</th>
+	                <td class="numeric"><strong>£192,256</strong></td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</div>
+
+	<p class="form-hint icon-info-small-blue">Please provide your financial breakdown in <a href="/prototypes/631-finances-assign-user">Your finances section</a></p>
+
+
+	<h2 class="heading-medium">Project cost breakdown</h2>
+
+	<div class="form-group">
+	    <div style="overflow: auto;">
+	        <table>
+	            <thead>
+	                <tr>
+	                    <th scope="col">&nbsp;</th>
+	                    <th scope="col" class="numeric">Total</th>
+	                    <th scope="col" class="numeric">
+	                       Labour  
+	                    </th>
+	                    <th scope="col" class="numeric">
+	                        Overheads 
+	                    </th>
+	                    <th scope="col" class="numeric">
+	                        Materials 
+	                    </th>
+	                    <th scope="col" class="numeric width-small">Capital usage</th>
+	                    <th scope="col" class="numeric width-small">Subcontracting cost</th>
+	                    <th scope="col" class="numeric width-small">Travel and subsistence</th>
+	                    <th scope="col" class="numeric width-small">Other Costs</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr>
+	                    <th><div>Empire Ltd</div>
+	                        <div><small>Lead organisation</small></div></th>
+	                    <td class="numeric"><strong>£257,033</strong></td>
+	                    <td class="numeric">£126,207</td>
+	                    <td class="numeric">£86,167</td>
+	                    <td class="numeric">£44,659</td>
+	                    <td class="numeric">£257,033</td>
+	                    <td class="numeric">£126,207</td>
+	                    <td class="numeric">£86,167</td>
+	                    <td class="numeric">£44,659</td>
+	                </tr>
+	                <tr>
+	                    <th><div>Ludlow</div>
+	                        <div><small>Partner</small></div></th>
+	                    <td class="numeric"><strong>£0</strong></td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                </tr>
+	                <tr>
+	                    <th><div>EGGS</div>
+	                        <div><small>Partner</small></div></th>
+	                    <td class="numeric"><strong>£38,950</strong></td>
+	                    <td class="numeric">£8,600</td>
+	                    <td class="numeric">£19,350</td>
+	                    <td class="numeric">£11,000</td>
+	                    <td class="numeric">£38,950</td>
+	                    <td class="numeric">£8,600</td>
+	                    <td class="numeric">£19,350</td>
+	                    <td class="numeric">£11,000</td>
+	                </tr>
+	                <tr>
+	                    <th>Total</th>
+	                    <td class="numeric"><strong>£450,983</strong></td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
 
 	<ul class="pagination">
-	    <li class="next">
-	        <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
-	            <span class="pagination-label">Next</span>
-	            <span class="pagination-part-title">Finances overview</span>
+	    <li class="prev">
+	        <a rel="prev" title="Navigate to next part" href="/prototypes/631-finances-assigned-to-you">
+	            <span class="pagination-label">Previous</span>
+	            <span class="pagination-part-title">Your finances</span>
 	        </a>
 	    </li>
 	</ul>
 
-	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+	<a href="/prototypes/635-application-overview" class="button-secondary">Return to application overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

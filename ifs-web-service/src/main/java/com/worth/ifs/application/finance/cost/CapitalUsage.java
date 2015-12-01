@@ -1,5 +1,8 @@
 package com.worth.ifs.application.finance.cost;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
@@ -8,6 +11,7 @@ import java.math.BigDecimal;
  * {@code CapitalUsage} implements {@link CostItem}
  */
 public class CapitalUsage implements CostItem {
+    private final Log log = LogFactory.getLog(getClass());
     Long id;
     Integer deprecation;
     String description;
@@ -60,7 +64,15 @@ public class CapitalUsage implements CostItem {
     }
 
     public BigDecimal getTotal() {
-        return npv.subtract(residualValue.multiply(new BigDecimal(utilisation)));
+        // ( npv - residualValue ) * utilization-percentage
+        BigDecimal result;
+        try{
+            result = npv.subtract(residualValue).multiply(new BigDecimal(utilisation).divide(new BigDecimal(100)));
+        }catch(NullPointerException e){
+            result = BigDecimal.ZERO;
+        }
+        result.setScale(2);
+        return result;
     }
 
 }

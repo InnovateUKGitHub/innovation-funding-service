@@ -19,7 +19,7 @@ import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
  *
  * Created by dwatson on 02/10/15.
  */
-public abstract class BaseRestServiceMocksTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
+public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
 
     @Mock
     protected RestTemplate mockRestTemplate;

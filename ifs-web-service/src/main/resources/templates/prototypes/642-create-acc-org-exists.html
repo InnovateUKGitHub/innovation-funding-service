@@ -16,13 +16,15 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-large">Create an account</h1>
-	<p class="form-hint icon-info-small-blue">Organisations must be UK based to receive funding from innovate UK</p>
+	<h1 class="heading-large">Create your account</h1>
 	
-	<h2 class="heading-medium">Organisation details</h2>
 	<div class="panel-indent">
-	<p>You have been assigned by the lead applicant (Applicant Name HERE) to the following organisation </p>
-		<h3 class="heading-small no-margin">CompanyONE</h3>	
+		<p>The profile that you are creating will be linked to the following organisation <br />
+		<strong>Nomensa</strong></p>
+
+		<h3 class="heading-small">Type</h3>
+		<p>Business</p>
+
 	</div>
 	
 	<h2 class="heading-medium">Your details</h2>
@@ -39,6 +41,7 @@
 					<option value="">Miss</option>
 					<option value="">Mrs</option>
 					<option value="">Ms</option>
+					<option value="">Dr</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -61,11 +64,8 @@
 				<input class="form-control" id="phone-number" name="phone-number" type="text" />
 			</div>
 			<div class="form-group">
-				<label class="form-label" for="email">
-					<span class="form-label-bold">Email</span>
-				</label>
-				<span class="form-hint">You will need this to sign into your account</span>
-				<input class="form-control" id="email" name="email" type="text" />
+				<h3 class="heading-small">Email</h3>
+				<p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>john.smith@nomensa.com</strong></p>
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="password">
@@ -75,12 +75,12 @@
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="retype-password">
-					<span class="form-label-bold">Retype Password</span>
+					<span class="form-label-bold">Re-type password</span>
 				</label>
 				<input class="form-control" id="retype-password" name="retype-password" type="password" />
 			</div>
 		</fieldset>
-		<button class="button button-large" name="create-account" type="submit">Create account</button>
+		<button class="button button-large" name="create-account" formaction="/prototypes/635-application-overview-collaborator" type="submit">Create account and link to company</button>
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

@@ -15,16 +15,16 @@
             timeOpen : 3000
         },
         init : function(){
-        	s = this.settings;
-        	ifs_closeCss.removeCssClass(s.isOpenCssClass,s.timeOpen);
+            s = this.settings;
+            ifs_closeCss.removeCssClass(s.isOpenCssClass,s.timeOpen);
         },
-       	removeCssClass : function(cssClass,seconds){
-        	var el = jQuery('.'+cssClass);
-        	if(el.length){
-		        setTimeout(function(){
-	            	el.removeClass(cssClass);
-	        	},seconds);
-        	}
+        removeCssClass : function(cssClass,seconds){
+            var el = jQuery('.'+cssClass);
+            if(el.length){
+                setTimeout(function(){
+                    el.removeClass(cssClass);
+                },seconds);
+            }
         }
-	};
+    };
 })();

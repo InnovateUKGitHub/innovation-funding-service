@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<!-- ===========================Question - labour  =========================== --> 
+
+<div th:fragment="finance-question-labour">
+	<div class="question">
+		<div><p>You may claim the labour costs of all individuals you have working on your project.</p> <p> If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you should keep timesheets and payroll records. These should show the actual hours worked by individuals and paid by the organisation.</p></div>
+		
+		<details role="group">
+		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+		<span class="summary">Labour costs guidance</span>
+		</summary>
+		<div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;"><p>You can include the following labour costs, based upon your PAYE records:</p> <ul class="list-bullet">         <li>gross salary</li><li>National Insurance</li><li>company pension contribution</li><li>life insurance</li><li>other non-discretionary package costs.</li>     </ul><p>You can't include:</p><ul class="list-bullet">         <li>discretionary bonuses</li><li>performance related payments of any kind</li></ul> <p>We base the total number of working days per year on full time days less standard holiday allowance. You should not include:</p><ul class="list-bullet">         <li>sick days</li><li>waiting time</li><li>training days</li><li>non-productive time</li></ul> <p>On the finance form, list the total days worked by all categories of staff on your project. Describe their role.</p><p>We will review the total amount of time and cost before we approve your application. The terms and conditions of the grant include compliance with these points.</p></div>
+		</details>
+	<div>
+	<div data-finance-subsection-table-container="28">
+		<div class="form-group">
+			<table>
+				<tbody>
+					<tr>
+						<th class="width-large">
+							
+							<label class="form-label" for="working_days">Working Days per Year</label>
+						</th>
+						<td>
+							<input type="number" class="width-small" id="cost-labour-1-workingDays" name="labour-workingDays-1" value="232" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="form-group">
+				<table id="labour-costs-table">
+					<thead>
+						<tr>
+							<th>Role within project</th>
+							<th class="numeric">Gross Annual Salary</th>
+							<th class="numeric">Rate (&pound;/day)</th>
+							<th class="numeric">Days to be spent by all staff at this grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						<tr data-cost-row="2">
+							<td>
+								<input type="text" name="labour-role-2" id="cost-labour-2-labourRole" value="Manager" />
+							</td>
+							<td class="numeric">
+								<input type="number" name="labour-grossAnnualSalary-2" id="cost-labour-2-labourGrossSalary" class="width-medium" value="50000" />
+							</td>
+							<td class="numeric">
+								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="215.51724" id="cost-labour-2-labourRate" class="width-medium" name="labour-labourRate-2" value="£ 216" />
+							</td>
+							<td class="numeric">
+								<input type="number" class="width-medium" id="cost-labour-2-labourDays" name="labour-labourDays-2" value="168" />
+							</td>
+						</tr>
+						<tr data-cost-row="2">
+							<td colspan="4" class="numeric">
+								Total costs
+								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-2-labourDays" data-calculation-rawvalue="36206.89632" name="labour-total-2" class="width-medium" id="cost-labour-2-labourTotalCost" value="£ 36,207" />
+								<a class="delete-row control" data-cost-row="2" href="/application-form/deletecost/1/7/2">Remove</a>
+							</td>
+						</tr>
+						
+						
+						<tr data-cost-row="4">
+							<td>
+								<input type="text" name="labour-role-4" id="cost-labour-4-labourRole" value="Engineer" />
+							</td>
+							<td class="numeric">
+								<input type="number" name="labour-grossAnnualSalary-4" class="width-medium" id="cost-labour-4-labourGrossSalary" value="30000" />
+							</td>
+							<td class="numeric">
+								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="129.31034" class="width-medium" id="cost-labour-4-labourRate" name="labour-labourRate-4" value="£ 129" />
+							</td>
+							<td class="numeric">
+								<input type="number" class="width-medium" id="cost-labour-4-labourDays" name="labour-labourDays-4" value="696" />
+							</td>
+						</tr>
+						<tr data-cost-row="4">
+							<td colspan="4" class="numeric">
+								Total costs
+								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-4-labourDays" data-calculation-rawvalue="89999.99664" name="labour-total-4" class="width-medium" id="cost-labour-4-labourTotalCost" value="£ 90,000" />
+								<a class="delete-row control" data-cost-row="4" href="/application-form/deletecost/1/7/4">Remove</a>
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+				<p class="alignright">
+					<a class="add-another-row" data-clone-rows="0-1" href="/application-form/addcost/1/7/28?expand=true&amp;panel=collapsible-0">Add another role</a>
+				</p>
+			</div>
+			<div class="form-group form-group--align-right alignright">
+				<label>
+					Total labour costs
+					<input class="form-control form-control-1-4 alignright" data-calculation-fields="[id*=labourTotalCost]" data-calculation-operations="+" readonly="" type="text" id="cost-labour-total-field" data-binding-input="subsection-total-9" data-calculation-rawvalue="126206.89296" value="£ 126,207" />
+					<span style="display: none;" data-subsection-id="9" class="section-status complete place-in-header">
+						<span data-binding-output="subsection-total-9">£ 126,207</span>
+					</span>
+				</label>
+			</div>
+			
+			<div class="alignright-button">
+		            
+	            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+	            </button>
+	            
+	        </div>
+
+		</div>
+		
+	</div>
+	</div>
+	</div>
+</div>
+
+<!-- ===========================Question - Overheads  =========================== --> 
+
+<div th:fragment="finance-question-overheads">
+	<div class="question">
+		<div>
+			<div><p>Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
+			
+			<details>
+			<summary>
+			<span class="summary">Overheads guidance</span>
+			</summary>
+			<div class="panel-indent">We will review and test your calculation. This is so that we can make sure that the items included are eligible and reasonable<p></p><p>Please read our guide to claiming Overheads for further information.</p></div>
+			</details>
+		</div>
+		
+		<div>
+			<p>A common way of estimating overheads on Innovate UK projects is to use a flat rate of 20% of labour costs. This is the default rate. If you want to use a different rate, please enter it below and we will assess your overheads on this basis.  If your project is successful, you will need to justify this rate to our finance team. Two methods of declaring overheads are available:</p>
+			<div>
+				<div class="grid-row">
+					<strong class="column-half">
+					20% of labour costs
+					</strong>
+					<strong class="column-half">
+					Calculated rate: <span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]" data-calculation-operations=""></span>
+					</strong>
+				</div>
+				<br />
+				<fieldset>
+					<legend>Do you choose to accept this rate?</legend>
+					<ul id="id_overheads-acceptRate">
+						<li>
+							<label for="id_overheads-acceptRate_0">
+								<input class="block-label" id="id_overheads-acceptRate_0" type="radio" name="overheads-acceptRate" value="yes" />
+								<span> </span><span>20% of labour costs</span>
+							</label>
+						</li>
+						<li>
+							<label for="id_overheads-acceptRate_1">
+								<input class="block-label" id="id_overheads-acceptRate_1" type="radio" name="overheads-acceptRate" value="no" />
+								<span> </span>
+								<span>Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)</span>
+							</label>
+						</li>
+					</ul>
+				</fieldset>
+				<br />
+				
+				<div class="form-group form-group--align-right alignright">
+					<label>
+						Total overhead costs
+						<input type="number" name="overheads-totalCosts" class="form-control form-control-1-4 alignright" readonly="" id="id_overheads-totalCosts" data-calculation-field="[data-calculation-input=overhead-calculated]" data-calculation-operations="+" data-binding-input="subsection-total-10" value="£ 0" />
+						<span style="display: none;" data-subsection-id="10" class="section-status complete place-in-header">
+							<span data-binding-output="subsection-total-10">£ 0</span>
+						</span>
+					</label>
+				</div>
+
+				<div class="alignright-button">
+		            
+		            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+		            </button>
+		            
+		        </div>
+				
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<!-- ===========================Question - Materials  =========================== --> 
+
+<div th:fragment="finance-question-materials">
+	<div class="question">
+		<div>
+			<div><p>You can claim the costs of materials used on your project providing:</p><ul class="list-bullet">         <li>they are not already purchased or included in the overheads</li><li>they won't have a residual/resale value at the end of your project. If they do, you can claim the costs minus this value.</li></ul><p>Please refer to our guide to project costs for further information.</p></div>
+			
+			<details role="group">
+			<summary role="button" aria-controls="details-content-2" tabindex="0" aria-expanded="false">
+			<span class="summary">Materials costs guidance</span>
+			</summary>
+			<div class="panel-indent" id="details-content-2" aria-hidden="true" style="display: none;">If you are using materials supplied by associated companies or sub contracted from other consortium members then you are required to exclude the profit element of the value placed on that material - the materials should be charged at cost.
+				Software that you have purchased specifically for use during your project should be included in materials.
+			However if you already own software which will be used in the project, or it is provided for usage within your consortium by a consortium member, only additional costs incurred &amp; paid between the start and end of your project will be eligible. Examples of costs that may be eligible are those related to the preparation of disks, manuals, installation, training or customisation.</div>
+			</details>
+		</div>
+		<table id="material-costs-table">
+		    <thead>
+		        <tr>
+		            <th>Item</th>
+		            <th class="numeric">Quantity</th>
+		            <th class="numeric">Cost Per Item</th>
+		            <th class="numeric">Total</th>
+		            <th>&nbsp;</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <tr data-cost-row="12">
+		            <td>
+		                <input type="text" name="materials-item-12" id="cost-materials-12-item" value="Powder" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-quantity-12" id="cost-materials-12-quantity" value="20" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-cost-12" id="cost-materials-12-cost" value="100" />
+		            </td>
+		            <td>
+		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-12-quantity,#cost-materials-12-cost" data-calculation-rawvalue="2000" name="materials-total-12" id="cost-materials-12-materialTotal" value="£ 2000" />
+		            </td>
+		            <td class="alignright remove">
+		                <a class="delete-row" data-cost-row="12" href="/application-form/deletecost/1/7/12">Remove</a>
+		            </td>
+		        </tr>
+		        
+		        <tr data-cost-row="19">
+		            <td>
+		                <input type="text" name="materials-item-19" id="cost-materials-19-item" value="crucibles" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-quantity-19" id="cost-materials-19-quantity" value="6" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-cost-19" id="cost-materials-19-cost" value="600" />
+		            </td>
+		            <td>
+		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-19-quantity,#cost-materials-19-cost" data-calculation-rawvalue="3600" name="materials-total-19" id="cost-materials-19-materialTotal" value="£ 3600" />
+		            </td>
+		            <td class="alignright remove">
+		                <a class="delete-row" data-cost-row="19" href="/application-form/deletecost/1/7/19">Remove</a>
+		            </td>
+		        </tr>
+		        
+		        <tr data-cost-row="20">
+		            <td>
+		                <input type="text" name="materials-item-20" id="cost-materials-20-item" value="valves" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-quantity-20" id="cost-materials-20-quantity" value="12" />
+		            </td>
+		            <td>
+		                <input type="number" name="materials-cost-20" id="cost-materials-20-cost" value="250" />
+		            </td>
+		            <td>
+		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-20-quantity,#cost-materials-20-cost" data-calculation-rawvalue="3000" name="materials-total-20" id="cost-materials-20-materialTotal" value="£ 3000" />
+		            </td>
+		            <td class="alignright remove">
+		                <a class="delete-row" data-cost-row="20" href="/application-form/deletecost/1/7/20">Remove</a>
+		            </td>
+		        </tr>
+		        
+		    </tbody>
+		</table>
+
+		<div class="alignright-button">
+		            
+            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+            </button>
+            
+        </div>
+	</div>
+</div>
+
+
+<!-- ===========================Question - Capital  =========================== --> 
+
+<div th:fragment="finance-question-capital">
+	<div class="question">
+		<div>
+			<div><p>Capital usage refers to an asset that you will use in your project. The asset will have a useful life of more than one year, be stand-alone, distinct and moveable.</p></div>
+			
+			<details role="group">
+			<summary role="button" aria-controls="details-content-3" tabindex="0" aria-expanded="false">
+			<span class="summary">Capital usage guidance</span>
+			</summary>
+			<div class="panel-indent" id="details-content-3" aria-hidden="true" style="display: none;"><p>You should provide details of capital equipment and tools you will buy for, or use on, your project.</p><p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value at the end of your project from its original price. If you owned the equipment before you started the project, you should use its Net Present Value.</p><p>This value is then multiplied by the percentage that your project will be utilising the equipment. This final value represents the eligible cost to your project.</p></div>
+			</details>
+		</div>
+		<div>
+		    <p>Please provide a breakdown of the capital items you will buy and/or use for the project.</p>
+		    <div data-finance-subsection-table-container="31">
+		        
+		        <p class="alignright">
+		            <a class="add-another-row" data-clone-rows="0" href="/application-form/addcost/1/7/31">Add another asset</a>
+		        </p>
+		        <hr />
+		        <div class="form-group form-group--align-right alignright">
+		            <label>
+		                Total capital usage costs
+		                <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field" data-binding-input="subsection-total-12" value="£ 0" />
+		                <span style="display: none;" data-subsection-id="12" class="section-status  place-in-header">
+		                    <span data-binding-output="subsection-total-12">£ 0</span>
+		                </span>
+		            </label>
+		        </div>
+		        <div class="alignright-button">
+		            
+		            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+		            </button>
+		            
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+
+
+<!-- ===========================Question - Subcontracting  =========================== --> 
+
+<div th:fragment="finance-question-subcontracting">
+	<div class="question">
+		<div>
+		    <div><p>Subcontract costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration. You may subcontract work if you don't have the expertise in your consortium. You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
+		    
+		    <details role="group">
+		    <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
+		    <span class="summary">Subcontracting costs guidance</span>
+		    </summary>
+		    <div class="panel-indent" id="details-content-4" aria-hidden="true" style="display: none;">Subcontract services supplied by associated companies should exclude any profit element and be charged at cost.
+		        You should name the subcontractor (where known) and describe what the subcontractor will be doing and where the work will be undertaken. We will look at the size of this contribution when assessing eligibility and level of support.
+		    </div>
+		    </details>
+		</div><div>
+		<p>Please provide details of any work that you expect to subcontract for your project.</p>
+		<div data-finance-subsection-table-container="32">
+		    <div class="form-row">
+		        <div>
+		            <div class="form-group" data-cost-row="13">
+		                <label class="form-label" for="cost-subcontracting-13-companyName">Subcontractor name</label>
+		                <input type="text" class="form-control form-finances-subcontracting-company" name="subcontracting_costs-name-13" id="cost-subcontracting-13-companyName" value="Mr Francis Bois" />
+		                <a class="delete-row" data-cost-row="13" href="/application-form/deletecost/1/7/13">Remove</a>
+		            </div>
+		            <div class="form-group" data-cost-row="13">
+		                <label class="form-label" for="cost-subcontracting-13-country">Country where the subcontractor will work</label>
+		                <input type="text" class="form-control form-finances-subcontracting-country" name="subcontracting_costs-country-13" id="cost-subcontracting-13-country" value="France" />
+		            </div>
+		            <div class="form-group" data-cost-row="13">
+		                <label class="form-label" for="cost-subcontracting-13-role">Role of the subcontractor in the project and description of the work they’ll do</label>
+		                <!--<textarea rows="3" cols="40" name="subcontracting-0-subcontractingRole" class="form-control form-finances-subcontracting-role" id="" th:inline="text">[[]]</textarea>-->
+		                
+		                <textarea id="cost-subcontracting-13-role" name="formInput[cost-subcontracting-13-role]"></textarea>
+		            </div>
+		            <div class="form-group" data-cost-row="13">
+		                <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
+		                <input type="number" class="form-control form-finances-subcontracting-cost width-medium" data-calculation-input="subcontracting-cost-row" name="subcontracting_costs-cost-13" id="cost-subcontracting-13-subcontractingCost" value="150000" />
+		            </div>
+		        </div>
+		    </div>
+		    <p class="alignright">
+		        <a class="add-another-row" data-clone-rows="0" href="/application-form/addcost/1/7/32">Add another subcontractor</a>
+		    </p>
+		    <div class="form-group form-group--align-right alignright">
+		        <label>
+		            Total subcontracting costs
+		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-subcontracting-total" data-calculation-fields="[id*=subcontractingCost]" data-calculation-operations="+" data-binding-input="subsection-total-13" data-calculation-rawvalue="150000" value="£ 150,000" />
+		            <span style="display: none;" data-subsection-id="13" class="section-status complete place-in-header">
+		                <span data-binding-output="subsection-total-13">£ 150,000</span>
+		            </span>
+		        </label>
+		    </div>
+		    <div class="alignright-button">
+		            
+	            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+	            </button>
+	            
+	        </div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<!-- ===========================Question - Travel  =========================== --> 
+
+<div th:fragment="finance-question-travel">
+	<div class="question">
+		<div>
+		    <div><p>You should include travel and subsistence costs that relate only to this project. </p></div>
+		</div>
+		<div>
+		<p></p>
+		<div data-finance-subsection-table-container="33">
+		    <div class="form-group">
+		        <table id="travel-costs-table">
+		            <thead>
+		                <tr>
+		                    <th>Purpose of journey or description of subsistence cost</th>
+		                    <th class="numeric">Number of times</th>
+		                    <th class="numeric">Cost each (£)</th>
+		                    <th class="numeric">Total (£)</th>
+		                    <th>&nbsp;</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                
+		            </tbody>
+		        </table>
+		        <p class="alignright">
+		            <a class="add-another-row" data-clone-rows="0" href="/application-form/addcost/1/7/33">Add another travel cost</a>
+		        </p>
+		    </div>
+		    <div class="form-group form-group--align-right alignright">
+		        <label>
+		            Total travel &amp; subsistence costs
+		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field" data-binding-input="subsection-total-14" value="£ 0" />
+		            <span style="display: none;" data-subsection-id="14" class="section-status complete place-in-header">
+		                <span data-binding-output="subsection-total-14">£ 0</span>
+		            </span>
+		        </label>
+		    </div>
+		     <div class="alignright-button">
+		            
+	            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+	            </button>
+	            
+	        </div>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- ===========================Question - Other  =========================== --> 
+
+<div th:fragment="finance-question-other">
+	<div class="question">
+		<div>
+		    <div><p>You can use this section to detail costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p></div>
+		    
+		    <details role="group">
+		    <summary role="button" aria-controls="details-content-5" tabindex="0" aria-expanded="false">
+		    <span class="summary">Other costs guidance</span>
+		    </summary>
+		    <div class="panel-indent" id="details-content-5" aria-hidden="true" style="display: none;"><p>Examples of other costs include:</p><p><strong>Training costs</strong> – these costs are eligible for support if they relate to your project. We may support management training for your project but will not support ongoing training.</p><p><strong>Preparation of technical reports</strong> – for example, if the main aim of your project is standards support or technology transfer. You should show how this is more than you would produce through good project management.</p><p><strong>Market assessment</strong> – we may support of market assessments studies. The study will need to help us understand how your project is a good match for your target market. It could also be eligible if it helps commercialise your product</p><p></p><strong>Licensing in new technologies</strong> – if new technology makes up a large part of your project, we will expect you to develop that technology. For instance, if the value of the technology is more than £100,000. <p></p><p><strong>Patent filing costs for NEW IP generated by your project</strong> - these are eligible for SMEs up to a limit of £7,500 per partner. You should not include legal costs relating to the filing or trademark related expenditure.</p><p>Regulatory compliance costs are eligible if necessary to carry out your project.</p></div>
+		    </details>
+		</div><div>
+		<p>Please note that legal or project audit and accountancy fees are not eligible and should not be included as an 'other cost'.Patent filing costs of NEW IP relating to the project are limited to £5,000 for SME applicants only.
+		Please provide estimates of other costs that do not fit within any other cost headings.</p>
+		<div data-finance-subsection-table-container="34">
+		    <div class="form-group">
+		        <table id="other-costs-table">
+		            <thead>
+		                <tr>
+		                    <th>Description and justification of the cost</th>
+		                    <th class="numeric">Estimated cost (£)</th>
+		                    <th>&nbsp;</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                
+		            </tbody>
+		        </table>
+		        <p class="alignright">
+		            <a class="add-another-row" data-clone-rows="0" href="/application-form/addcost/1/7/34">Add another cost</a>
+		        </p>
+		    </div>
+		    <div class="form-group form-group--align-right alignright">
+		        <label>
+		            Total other costs
+		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field" data-binding-input="subsection-total-15" value="£ 0" />
+		            <span style="display: none;" data-subsection-id="15" class="section-status complete place-in-header">
+		                <span data-binding-output="subsection-total-15">£ 0</span>
+		            </span>
+		        </label>
+		    </div>
+		     <div class="alignright-button">
+		            
+	            <button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-31" value="31">Mark as complete
+	            </button>
+	            
+	        </div>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+
+</html>

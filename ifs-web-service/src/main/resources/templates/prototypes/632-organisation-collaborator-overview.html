@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+  	 <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="hgroup" style="padding-top: 20px">
+                <p class="subtitle no-margin-bottom">A novel solution to an old problem</p>
+                <h1 class="heading-xlarge no-margin-top">Project team</h1>
+            </div>
+        </div>
+        <div class="column-third">
+            <h3 class="heading-small">Application progress:</h3>
+            <div class="progress-container medium no-margin-left">
+                <div class="progress-indicator">
+                    <div class="start">0%</div>
+                    <div class="progress" style="width:56%">
+                        <div>56%</div>
+                    </div>
+                    <div class="end">100%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+
+    <h2 class="heading-medium">Acme Ltd. <small>(Lead organisation)</small></h2>
+    <ul class="list-bullet">
+        <li><a href="mailto:robwaite@acme.org.uk">Rob Waite</a><small>(Lead applicant)</small></li>
+        <li><a href="mailto:rogeraxe@acme.org.uk">Roger Axe</a> <small>(pending)</small></li>
+        <li><a href="mailto:ssmiths@acme.org.uk">Steven Smiths</a></li>
+    </ul>
+    <h2 class="heading-medium">Worth Systems</h2>
+    <ul class="list-bullet">
+        <li><a href="mailto:efurcic@worth.systems">Elvis Furcic</a> <small>(pending)</small></li>
+        <li><a href="mailto:chris@worth.systems">Christopher Johnson</a></li>
+    </ul>
+    <h2 class="heading-medium">IO systems <small>(pending)</small></h2>
+    <ul class="list-bullet">
+        <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small></li>
+    </ul>
+
+    <p><a href="./633-application-invite.html">Invite new contributers</a></p>
+  	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

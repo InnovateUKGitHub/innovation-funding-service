@@ -39,11 +39,16 @@
 			<section>
 				<h2 class="heading-medium">Application refinement</h2>
 				<ul class="list-bullet">
-					<li><h3>INFUND-631</h3> <a href="/prototypes/631-finances-assign-user">As an applicant I want to view all partners project finances to be able to assess and compare within the overall project costs</a></li>
-					<li><h3>INFUND-632</h3> As an applicant I want to view all organisations and individuals working on my application</li>
-					<li><h3>INFUND-633</h3> As a lead applicant I want to invite other collaborators during the application phase so that my full team can work on the application (even if undecided when application created)</li>
+					<li><h3>INFUND-631</h3> <a href="/prototypes/631-finances-assign-user">As an applicant I want to view all partners project finances to be able to assess and compare within the overall project costs</a>
+						<ul class="list-bullet">
+							<li><a href="/prototypes/631-finances-assigned-to-you">Finances assigned to you</a></li>
+							<li><a href="/prototypes/631-finances-not-assigned-to-you">Finances not assigned to you</a></li>
+						</ul>
+					</li>
+					<li><h3>INFUND-632</h3> <a href="/prototypes/632-organisation-collaborator-overview.html">As an applicant I want to view all organisations and individuals working on my application</a></li>
 					<li><h3>INFUND-634</h3> As an applicant I want to print/download my application so that I can review and work offline</li>
-					<li><h3>INFUND-635</h3><a href="/prototypes/635-application-overview"> As a collaborator I want to complete my section of the form and mark this as done so that the lead applicant is able to track progress and submit when ready</a></li>
+					<li><h3>INFUND-635 <strong>(lead)</strong></h3><a href="/prototypes/635-application-overview"> As a lead applicant I want to complete my section of the form and mark this as done so that the lead applicant is able to track progress and submit when ready</a></li>
+					<li><h3>INFUND-635 <strong>(collaborator)</strong></h3><a href="/prototypes/635-application-overview-collaborator"> As a collaborator I want to complete my section of the form and mark this as done so that the lead applicant is able to track progress and submit when ready</a></li>
 					<li><h3>INFUND-636</h3> Plus style refinements - e.g. consistency of page headings, layout of forms, restructure of overview page, changing accordions etc.</li>
 					<li><h3>INFUND-745</h3><a href="/prototypes/745-review-submit"> As a lead applicant I need to understand when application is in a state when it can be submitted so I can submit my application</a></li> 
 				</ul>
@@ -51,23 +56,25 @@
 			<section>
 				<h2 class="heading-medium">Academic finances</h2>
 				<ul class="list-bullet">
-					<li><h3>INFUND-637</h3>As an academic contributer I need to document my financial requirements to provide to the relevant organisations</li>
-					<li><h3>INFUND-XXX</h3>As an academic contributer I want to identify myself as an academic so that I'm presented with the relevant finance input fields</li>
-					<li><h3>INFUND-638</h3>As an academic contributer I need to provide these finances (J-ES) to Innovate UK to submit my grant claim</li>
-					<li><h3>INFUND-639</h3>As a partner I need visibilty of the academic finance contribution to my application so that I'm able to understand the total project costs</li>
-					<li><h3>INFUND-640</h3>As an assessor I want visibility of all academic partner contributions so that I can review the breakdown of the full project costs</li>
-					<li><h3>INFUND-641</h3>As a member of the project finance team at Innovate UK I need access to access academic finances as part of the due diligence phase to review these as part of the overall project costs</li>
+					<li><h3>INFUND-637</h3><a href="/prototypes/637-academic-finances">As an academic contributer I need to document my financial requirements to provide to the relevant organisations</a></li>
+					<!-- <li><h3>INFUND-XXX</h3>As an academic contributer I want to identify myself as an academic so that I'm presented with the relevant finance input fields</li>
+					<li><h3>INFUND-638</h3>As an academic contributer I need to provide these finances (J-ES) to Innovate UK to submit my grant claim</li>  -->
+					<li><h3>INFUND-639</h3><a href="/prototypes/639-finances-academic-overview">As a partner I need visibilty of the academic finance contribution to my application so that I'm able to understand the total project costs</a></li>
+					<!--<li><h3>INFUND-640</h3>As an assessor I want visibility of all academic partner contributions so that I can review the breakdown of the full project costs</li>
+					<li><h3>INFUND-641</h3>As a member of the project finance team at Innovate UK I need access to access academic finances as part of the due diligence phase to review these as part of the overall project costs</li> -->
 				</ul>
 			</section>
 			<section>
 				<h2 class="heading-medium">Registration / Create account</h2>
 				<ul class="list-bullet">
-					<li><h3>INFUND-642</h3><a href="/prototypes/642-create-acc-org-exists">As an applicant I want to create an account, so that I can apply into competitions</a></li>
-					<li><h3>INFUND-643</h3>As an applicant I want to create an account from the sign in page, so that I can create an account if I don’t have a log in</li>
-					<li><h3>INFUND-644</h3>As an applicant I want to fill out certain information, so that it is automatically attached to the application when I apply into a competition</li>
-					<li><h3>INFUND-645</h3>As an applicant I want to insert my organisation size as per EU definition, so that I am aligned with the eligibility criteria set for each competition</li>
-					<li><h3>INFUND-646</h3>As an applicant I want the option of entering my organisation address manually, so that I can enter any specific information not captured in the auto look up</li>
-					<li><h3>INFUND-647</h3>As an applicant I want to search for my organisation address using a postcode lookup, so that I don’t enter the address information with any mistakes</li>
+					<li><h3>INFUND-642</h3><a href="/prototypes/642-create-acc-step1">As an applicant I want to create an account, so that I can apply into competitions </a></li>
+					<li><h3>INFUND-642</h3><a href="/prototypes/642-create-acc-org-exists">As an applicant I want to create an account, so that I can apply into competitions <strong>(Org already registered)</strong></a></li>
+					<li><h3>INFUND-643</h3><a href="/prototypes/643-signup-create-acc">As an 
+					 applicant (<strong>lead</strong>) I want to create an account from the sign in page, so that I can create an account if I don’t have a log in</a></li>
+					<li><h3>INFUND-644</h3><a href="/prototypes/642-create-acc-org-new">As an applicant I want to fill out certain information, so that it is automatically attached to the application when I apply into a competition</a> (Part of user journey INFUND-642, e.g organisation is automatically attached to an applicant's account during registration)</li>
+					<li><h3>INFUND-645</h3><a href="/prototypes/642-org-selected-from-companies-house">As an applicant I want to insert my organisation size as per EU definition, so that I am aligned with the eligibility criteria set for each competition</a></li>
+					<li><h3>INFUND-646</h3><a href="/prototypes/642-create-acc-business">As an applicant I want the option of entering my organisation address manually, so that I can enter any specific information not captured in the auto look up</a></li>
+					<li><h3>INFUND-647</h3><a href="/prototypes/642-create-acc-research">As an applicant I want to search for my organisation address using a postcode lookup, so that I don’t enter the address information with any mistakes</a></li>
 					<li><h3>INFUND-648</h3>As an applicant/collaborator/assessor I always want easy access to innovate uk contact information no matter what screen I’m on, so that I can contact the support team if I have an issue</li>
 					<li><h3>INFUND-649</h3>As the service delivery manager for IFS I want the applicant/collaborator/assessor to feedback any issues they have with a specific page, so that we can investigate and rectify as quickly as possible</li>
 					<li><h3>INFUND-675</h3>As an applicant I want to have an applicant profile where I can edit my company details so that I can update my details (e.g. phone number)</li>
@@ -79,8 +86,10 @@
 					<li><h3>INFUND-650 </h3><a href="/prototypes/650-create-application.html">As an applicant I want to create a new application so that I can submit an entry into a relevant competition</a></li>
 					<li><h3>INFUND-651 </h3><a href="/prototypes/651-652-create-application-invite.html">As a lead applicant I want to invite members of my own team so that they can contribute to the application</a></li>
 					<li><h3>INFUND-652 </h3><a href="/prototypes/651-652-create-application-invite.html">As a lead applicant I want to invite other individuals within other organisations so that they can contribute to the application</a></li>
+					<li><h3>INFUND-633</h3><a href="/prototypes/633-application-invite.html"> As a lead applicant I want to invite other collaborators during the application phase so that my full team can work on the application (even if undecided when application created)</a></li>
 					<li><h3>INFUND-653 </h3>As an applicant I want access to all competition briefing materials as I create a new application so that I have all the information I need to begin my application</li>
 					<li><h3>INFUND-654 </h3>As an applicant I want the process of applying through IFS explained so that I understand what is required and how I should work with my consortium</li>
+			
 				</ul>
 			</section>
 		</div>

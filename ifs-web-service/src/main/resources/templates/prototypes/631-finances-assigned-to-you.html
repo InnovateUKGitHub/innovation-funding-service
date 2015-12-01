@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <style> .message-alert {
+        background: #e4eff6;
+        padding-left: 30px;
+        } </style>
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+            <div class="hgroup" style="padding-top: 20px">
+				<p class="subtitle no-margin">A novel solution to an old problem</p>
+				<h1 class="heading-xlarge no-margin-top">Empire Ltd Finances</h1>
+			</div>
+        </div>
+        <div class="column-third competition-details">
+            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
+        </div>
+    </div>
+
+    <div class="message-alert">
+        <h2 class="heading-small">You are assigned to your organisation's finances</h2>
+        <p>
+        If you have been assigned this role in error or if you need to pass on to someone else, then please <br /><a href="/prototypes/631-finances-assign-user"><strong>Assign another member of your organisation</strong></a>
+        </p>
+    </div>
+
+	<p class="form-info extra-margin">You can use this section to detail the project costs for your organisation only. Only your organisation can see this level of detail</p>
+
+	<div class="collapsible section-overview">
+        
+       	<h2>Labour
+			<span style="" data-subsection-id="1" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 126,207</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-1" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
+		</div>
+
+
+    	<h2>Overheads
+			<span style="" data-subsection-id="2" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-2" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-overheads" th:remove="tag" />
+    	</div>
+
+
+		<h2>Materials
+			<span style="" data-subsection-id="3" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 10,076</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-3" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Capital usage
+			<span style="" data-subsection-id="4" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-4" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Subcontracting costs
+			<span style="" data-subsection-id="5" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 150,000</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-5" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Travel &amp; subsistence
+			<span style="" data-subsection-id="6" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-6" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Other costs
+			<span style="" data-subsection-id="7" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-7" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
+    	</div>
+
+
+    </div>
+
+    <hr />
+
+    <div class="grid-row total-cost">
+        <div class="column-half">
+            <p class="heading-medium">Total project costs</p>
+        </div>
+        <div class="column-half alignright">
+            <input type="text" readonly="readonly" class="heading-medium width-medium" data-calculation-fields="[id*=total]" data-calculation-operations="+" value="£ 286,283" />
+        </div>
+    </div>
+
+
+
+	<ul class="pagination">
+	    <li class="next">
+	        <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
+	            <span class="pagination-label">Next</span>
+	            <span class="pagination-part-title">Finances overview</span>
+	        </a>
+	    </li>
+	</ul>
+
+	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

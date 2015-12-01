@@ -20,7 +20,7 @@ public class NotEmptyValidator extends BaseValidator {
         log.debug("do NotEmpty validation ");
         FormInputResponse response = (FormInputResponse) target;
 
-        if (StringUtils.isEmpty(response.getValue()) || response.getValue().trim() == "") {
+        if (StringUtils.isEmpty(response.getValue()) || response.getValue().trim().equals("")) {
             log.debug("NotEmpty validation message for: " + response.getId());
             errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
         }

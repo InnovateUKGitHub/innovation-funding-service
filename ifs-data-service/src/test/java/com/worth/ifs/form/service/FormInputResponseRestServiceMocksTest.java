@@ -2,7 +2,7 @@ package com.worth.ifs.form.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class FormInputResponseRestServiceMocksTest extends BaseRestServiceMocksTest<FormInputResponseRestServiceImpl> {
+public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTest<FormInputResponseRestServiceImpl> {
 
     private static final String formInputResponseRestURL = "/forminputresponses";
 
@@ -32,7 +32,6 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceMocksT
 
     @Test
     public void test_getResponsesByApplicationId() {
-
         String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/findResponsesByApplication/123";
         FormInputResponse[] returnedResponses = newFormInputResponse().buildArray(3, FormInputResponse.class);
         ResponseEntity<FormInputResponse[]> returnedEntity = new ResponseEntity<>(returnedResponses, OK);
@@ -45,7 +44,6 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceMocksT
 
     @Test
     public void test_saveQuestionResponse() {
-
         String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/saveQuestionResponse/";
 
         ObjectNode expectedEntity = new ObjectMapper().createObjectNode().

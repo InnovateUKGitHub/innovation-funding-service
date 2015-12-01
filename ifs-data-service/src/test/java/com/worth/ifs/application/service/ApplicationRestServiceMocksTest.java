@@ -2,7 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseRestServiceMocksTest;
+import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import org.junit.Test;
@@ -17,8 +17,12 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import static org.junit.Assert.*;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -30,7 +34,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
  */
-public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<ApplicationRestServiceImpl> {
+public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationRestServiceImpl> {
 
     private static final String applicationRestURL = "/applications";
 
@@ -52,7 +56,8 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceMocksTest<Ap
         // now run the method under test
         Application application = service.getApplicationById(1L);
         assertNotNull(application);
-        assertTrue(application == response.getBody().toApplication());
+        assertTrue(application.equals(response.getBody()));
+
     }
 */
     @Test

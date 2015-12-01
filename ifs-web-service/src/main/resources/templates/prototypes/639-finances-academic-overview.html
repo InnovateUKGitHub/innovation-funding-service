@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+            <div class="hgroup" style="padding-top: 20px">
+				<p class="subtitle no-margin">A novel solution to an old problem</p>
+				<h1 class="heading-xlarge no-margin">Finances overview</h1>
+				<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
+			</div>
+        </div>
+        <div class="column-third competition-details">
+            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
+        </div>
+    </div>
+
+	<h2 class="heading-medium">Funding rules for this competition</h2> 
+	<p>We will fund projects between &pound;200,000 and &pound;1 million. We may consider projects with costs outside of this range. We expect projects to last between 12 and 24 months.</p>
+
+	<p>Business partners can claim funding at the following rates:</p>
+
+	<ul class="list-bullet">
+		<li>small businesses - 70% of total eligible costs</li>
+		<li>medium size businesses - 60% of total eligible costs</li>
+		<li>large - 50% of total elligible costs</li>
+	</ul>
+
+	<h2 class="heading-medium">Finances sumary</h2>
+	<p>This is the level of cost detail that the assessors will see during the assessment process</p>
+
+	<div class="form-group">
+	    <table>
+	        <thead>
+	            <tr>
+	                <th scope="col">&nbsp;</th>
+	                <th scope="col" class="numeric">Total costs</th>
+	                <th scope="col" class="numeric">
+	                    % Grant
+	                </th>
+	                <th scope="col" class="numeric">
+	                    Funding sought
+	                </th>
+	                <th scope="col" class="numeric width-medium">
+	                    Other public sector funding
+	                </th>
+	                <th scope="col" class="numeric width-medium">
+	                    Contribution to project
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr>
+	                <th> <div>Empire Ltd</div>
+	                    <div><small>Lead organisation</small></div></th>
+	                <td class="numeric"><strong>£450,983</strong></td>
+	                <td class="numeric">63</td>
+	                <td class="numeric">£105,517</td>
+	                <td class="numeric">£60,659</td>
+	                <td class="numeric">£284,807</td>
+	            </tr>
+	            <tr>
+	                <th><div>Ludlow</div>
+	                    <div><small>Partner</small></div></th>
+	                <td class="numeric"><strong>£192,256</strong></td>
+	                <td class="numeric">50</td>
+	                <td class="numeric">£31,655</td>
+	                <td class="numeric">£18,198</td>
+	                <td class="numeric">£142,404</td>
+	            </tr>
+	            <tr>
+	                <th><div>EGGS</div>
+	                    <div><small>Partner</small></div></th>
+	                <td class="numeric"><strong>£258,727</strong></td>
+	                <td class="numeric">70</td>
+	                <td class="numeric">£73,862</td>
+	                <td class="numeric">£42,461</td>
+	                <td class="numeric">£37,402</td>
+	            </tr>
+	            <tr>
+	                <th><div>University of Bristol</div>
+	                    <div><small>Academic partner</small></div></th>
+	                <td class="numeric"><strong>£0</strong></td>
+	                <td class="numeric">70</td>
+	                <td class="numeric">£0</td>
+	                <td class="numeric">£0</td>
+	                <td class="numeric">£0</td>
+	            </tr>
+	            <tr>
+	                <th>Total</th>
+	                <td class="numeric"><strong>£192,256</strong></td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	                <td class="numeric">&nbsp;</td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</div>
+
+	<p class="form-hint icon-info-small-blue">Please provide your financial breakdown in <a href="/prototypes/631-finances-assign-user">Your finances section</a></p>
+
+
+	<h2 class="heading-medium">Project cost breakdown</h2>
+
+	<div class="form-group">
+	    <div style="overflow: auto;">
+	        <table>
+	            <thead>
+	                <tr>
+	                    <th scope="col">&nbsp;</th>
+	                    <th scope="col" class="numeric">Total</th>
+	                    <th scope="col" class="numeric">
+	                       Labour  
+	                    </th>
+	                    <th scope="col" class="numeric">
+	                        Overheads 
+	                    </th>
+	                    <th scope="col" class="numeric">
+	                        Materials 
+	                    </th>
+	                    <th scope="col" class="numeric width-small">Capital usage</th>
+	                    <th scope="col" class="numeric width-small">Subcontracting cost</th>
+	                    <th scope="col" class="numeric width-small">Travel and subsistence</th>
+	                    <th scope="col" class="numeric width-small">Other Costs</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr>
+	                    <th><div>Empire Ltd</div>
+	                        <div><small>Lead organisation</small></div></th>
+	                    <td class="numeric"><strong>£257,033</strong></td>
+	                    <td class="numeric">£126,207</td>
+	                    <td class="numeric">£86,167</td>
+	                    <td class="numeric">£44,659</td>
+	                    <td class="numeric">£257,033</td>
+	                    <td class="numeric">£126,207</td>
+	                    <td class="numeric">£86,167</td>
+	                    <td class="numeric">£44,659</td>
+	                </tr>
+	                <tr>
+	                    <th><div>Ludlow</div>
+	                        <div><small>Partner</small></div></th>
+	                    <td class="numeric"><strong>£0</strong></td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£0</td>
+	                </tr>
+	                <tr>
+	                    <th><div>EGGS</div>
+	                        <div><small>Partner</small></div></th>
+	                    <td class="numeric"><strong>£38,950</strong></td>
+	                    <td class="numeric">£8,600</td>
+	                    <td class="numeric">£19,350</td>
+	                    <td class="numeric">£11,000</td>
+	                    <td class="numeric">£38,950</td>
+	                    <td class="numeric">£8,600</td>
+	                    <td class="numeric">£19,350</td>
+	                    <td class="numeric">£11,000</td>
+	                </tr>
+	                <tr>
+	                    <th><div>University of Bristol</div>
+	                    <div><small>Academic partner</small></div></th>
+	                    <td class="numeric"><strong>£155,000</strong></td>
+	                    <td class="numeric">£150,000</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£5,000</td>
+	                    <td class="numeric">£155,000</td>
+	                    <td class="numeric">£150,000</td>
+	                    <td class="numeric">£0</td>
+	                    <td class="numeric">£5,000</td>
+	                </tr>
+	                <tr>
+	                    <th>Total</th>
+	                    <td class="numeric"><strong>£450,983</strong></td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                    <td class="numeric">&nbsp;</td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
+
+	<h2 class="heading-medium">Academic partner breakdown</h2>
+	<p>Academic partners submit their project costs through the Je-S system. For a full brealkdown of their project costs, please see the below documents.</p>
+
+	<h3 class="heading-medium">University of Bristol</h3>
+	<p><strong>Download Je-S form:</strong></p>
+	<p><a href="#">jes-1601603.pdf</a>(161.96kb)</p>
+
+	<h3 class="heading-medium">University of Bath</h3>
+	<p><strong>Download Je-S form:</strong></p>
+	<p>Not uploaded yet</p>
+
+	<ul class="pagination">
+	    <li class="prev">
+	        <a rel="prev" title="Navigate to next part" href="/prototypes/637-academic-finances">
+	            <span class="pagination-label">Previous</span>
+	            <span class="pagination-part-title">Your finances</span>
+	        </a>
+	    </li>
+	</ul>
+
+	<a href="/prototypes/635-application-overview" class="button-secondary">Return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
