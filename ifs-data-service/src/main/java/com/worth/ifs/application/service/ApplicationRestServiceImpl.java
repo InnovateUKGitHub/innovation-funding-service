@@ -3,13 +3,11 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,10 +30,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public Application getApplicationById(Long applicationId) {
-        ParameterizedTypeReference<ApplicationResource> responseType = new ParameterizedTypeReference<ApplicationResource>() {};
-        ResponseEntity<ApplicationResource> applicationResourceEntities = restGetParameterizedType(dataRestServiceURL + applicationRestURL + "/" + applicationId, responseType);
-        ApplicationResource applicationResource =applicationResourceEntities.getBody();
-        return applicationResource.toApplication();
+        Application application = restGet(applicationRestURL + "/" + applicationId, Application.class);
+        return application;
 
     }
 
