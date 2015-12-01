@@ -69,23 +69,35 @@ public class ApplicationController {
         this.applicationResourceAssembler = applicationResourceAssembler;
     }
 
-    @RequestMapping("/{id}")
-        public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
-            Application application = applicationRepository.findOne(id);
-            return applicationResourceAssembler.toResource(application);
-        }
+    @RequestMapping("/hateoas/{id}")
+    public ApplicationResource getApplicationByIdHateoas(@PathVariable("id") final Long id) {
+        Application application = applicationRepository.findOne(id);
+        return applicationResourceAssembler.toResource(application);
+    }
 
-    @RequestMapping("/")
-    public Resources<ApplicationResource> findAll() {
+    @RequestMapping("/hateoas/")
+    public Resources<ApplicationResource> findAllHateoas() {
         List<Application> applications = applicationRepository.findAll();
         Resources<ApplicationResource> resources = applicationResourceAssembler.toEmbeddedList(applications);
         return resources;
     }
 
+    @RequestMapping("/{id}")
+    public Application getApplicationById(@PathVariable("id") final Long id) {
+        return applicationRepository.findOne(id);
+    }
+
+
+    @RequestMapping("/")
+    public List<Application> findAll() {
+        List<Application> applications = applicationRepository.findAll();
+        return applications;
+    }
+
     @RequestMapping("/findByUser/{userId}")
     public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
+        List<ProcessRole> roles = processRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
             log.debug("+++++++++++++++++++++");
@@ -116,8 +128,8 @@ public class ApplicationController {
 
             status = HttpStatus.OK;
 
-        }else{
-            log.error("NOT_FOUND "+ id);
+        } else {
+            log.error("NOT_FOUND " + id);
             status = HttpStatus.NOT_FOUND;
         }
 
@@ -156,9 +168,9 @@ public class ApplicationController {
         log.info("Total completed questions" + countCompleted);
 
         double percentageCompleted;
-        if(questions.size() == 0){
+        if (questions.size() == 0) {
             percentageCompleted = 0;
-        }else{
+        } else {
             percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
 
@@ -168,9 +180,9 @@ public class ApplicationController {
         return node;
     }
 
-    @RequestMapping(value="/updateApplicationStatus", method=RequestMethod.GET)
+    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
     public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
-                                                          @RequestParam("statusId") final Long statusId){
+                                                          @RequestParam("statusId") final Long statusId) {
 
         Application application = applicationRepository.findOne(id);
         ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
@@ -193,11 +205,11 @@ public class ApplicationController {
                                                                      @PathVariable("role") final UserRoleType role) {
         User user = userRepository.findOne(userId);
 
-        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
-        List<Application> allApps= applicationRepository.findAll();
+        List<ProcessRole> roles = processRoleRepository.findByUser(user);
+        List<Application> allApps = applicationRepository.findAll();
         List<Application> apps = new ArrayList<>();
         for (Application app : allApps) {
-            if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)  ) {
+            if (app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)) {
                 apps.add(app);
             }
         }
@@ -207,7 +219,7 @@ public class ApplicationController {
     private boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         boolean contains = false;
         int i = 0;
-        while( !contains && i < roles.size()) {
+        while (!contains && i < roles.size()) {
             contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
             i++;
         }

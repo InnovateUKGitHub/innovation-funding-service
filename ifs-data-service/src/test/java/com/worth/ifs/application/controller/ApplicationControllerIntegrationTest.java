@@ -36,13 +36,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         String originalTitle= "A novel solution to an old problem";
         String newTitle = "A new title";
 
-        Application application = controller.getApplicationById(1L).toApplication();
+        Application application = controller.getApplicationById(1L);
         assertEquals(originalTitle, application.getName());
 
         application.setName(newTitle);
         controller.saveApplicationDetails(1L, application);
 
-        Application updated = controller.getApplicationById(1L).toApplication();
+        Application updated = controller.getApplicationById(1L);
         assertEquals(newTitle, updated.getName());
 
     }

@@ -66,7 +66,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/1"))
+        mockMvc.perform(get("/application/hateoas/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
@@ -137,7 +137,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         //ugly hack to ensure correct URI's in response
         expected = expected.replaceAll("localhost", "localhost:8090");
 
-        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+        mockMvc.perform(get("/application/hateoas/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(is(expected)))
                 .andDo(document("application/find-all-applications"));
