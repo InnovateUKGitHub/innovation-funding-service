@@ -58,7 +58,7 @@ var ifs_autoSave = (function(){
              })
              .done(function(data){
                  var doneAjaxTime = new Date().getTime();
-                 var remainingWaitingTime = (this.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                  // set the form-saved-state
                  jQuery('.form-serialize-js').data('serializedFormState',formState);
@@ -83,7 +83,7 @@ var ifs_autoSave = (function(){
                  }
              }).fail(function(data) {
                  var doneAjaxTime = new Date().getTime();
-                 var remainingWaitingTime = (this.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                  setTimeout(function(){
                      ifs_autoSave.removeValidationError(formGroup);
