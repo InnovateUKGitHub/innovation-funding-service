@@ -10,13 +10,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -44,17 +41,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public List<Application> getApplicationsByUserId(Long userId) {
-        ParameterizedTypeReference<Resources<ApplicationResource>> responseType = new ParameterizedTypeReference<Resources<ApplicationResource>>() {};
-        ResponseEntity<Resources<ApplicationResource>> applicationResourceEntities = restGetParameterizedType(dataRestServiceURL + applicationRestURL + "/findByUser/" + userId, responseType);
-        Resources<ApplicationResource> applicationResources =applicationResourceEntities.getBody();
-
-        Collection<ApplicationResource> resources = applicationResources.getContent();
-        List<Application> applications = new ArrayList<>(resources.size());
-
-        for (ApplicationResource resource : resources) {
-            applications.add(resource.toApplication());
-        }
-        return applications;
+        return asList(restGet(applicationRestURL + "/findByUser/" + userId, Application[].class));
     }
 
     @Override
