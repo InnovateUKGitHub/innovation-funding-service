@@ -11,7 +11,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.user.domain.*;
@@ -78,8 +78,7 @@ public class ApplicationController {
     @RequestMapping("/hateoas/")
     public Resources<ApplicationResource> findAllHateoas() {
         List<Application> applications = applicationRepository.findAll();
-        Resources<ApplicationResource> resources = applicationResourceAssembler.toEmbeddedList(applications);
-        return resources;
+        return applicationResourceAssembler.toEmbeddedList(applications);
     }
 
     @RequestMapping("/{id}")
@@ -90,8 +89,7 @@ public class ApplicationController {
 
     @RequestMapping("/")
     public List<Application> findAll() {
-        List<Application> applications = applicationRepository.findAll();
-        return applications;
+        return applicationRepository.findAll();
     }
 
     @RequestMapping("/findByUser/{userId}")
@@ -145,12 +143,12 @@ public class ApplicationController {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
-                .flatMap((s) -> s.getQuestions().stream())
-                .filter((q -> q.isMarkAsCompletedEnabled()))
+                .flatMap(s -> s.getQuestions().stream())
+                .filter(Question::isMarkAsCompletedEnabled)
                 .collect(Collectors.toList());
 
         List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream().map(p -> p.getOrganisation()).collect(Collectors.toSet());
+        Set<Organisation> organisations = processRoles.stream().map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
@@ -160,7 +158,7 @@ public class ApplicationController {
                 .filter(q -> !q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
-        Long totalMultipleStatusQuestions = questions.stream().filter(q -> q.hasMultipleStatuses()).count() * organisations.size();
+        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
@@ -168,7 +166,7 @@ public class ApplicationController {
         log.info("Total completed questions" + countCompleted);
 
         double percentageCompleted;
-        if (questions.size() == 0) {
+        if (questions.isEmpty()) {
             percentageCompleted = 0;
         } else {
             percentageCompleted = (100.0 / totalQuestions) * countCompleted;
@@ -203,20 +201,14 @@ public class ApplicationController {
     public List<Application> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-        User user = userRepository.findOne(userId);
 
-        List<ProcessRole> roles = processRoleRepository.findByUser(user);
         List<Application> allApps = applicationRepository.findAll();
-        List<Application> apps = new ArrayList<>();
-        for (Application app : allApps) {
-            if (app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)) {
-                apps.add(app);
-            }
-        }
-        return apps;
+        return allApps.stream()
+            .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
+            .collect(Collectors.toList());
     }
 
-    private boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
+    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
@@ -227,8 +219,8 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
-    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
+    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {

@@ -105,11 +105,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         application.setName(applicationName);
 
         String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
-        ResponseEntity<Application> creationResponse = restPut(url, application, Application.class);
+        Application createdApplication = restPost(url, application, Application.class);
 
-        Application newApplication = creationResponse.getBody();
-
-        return newApplication;
+        return createdApplication;
     }
 
 }

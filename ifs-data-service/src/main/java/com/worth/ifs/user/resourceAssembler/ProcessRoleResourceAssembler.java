@@ -1,7 +1,7 @@
-package com.worth.ifs.user.resourceAssembler;
+package com.worth.ifs.user.resourceassembler;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.user.controller.ProcessRoleController;
 import com.worth.ifs.user.domain.ProcessRole;

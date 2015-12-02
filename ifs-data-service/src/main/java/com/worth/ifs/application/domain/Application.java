@@ -28,13 +28,11 @@ public class Application {
     @Min(0)
     private Long durationInMonths; // in months
 
-    public void setId(Long id) { this.id = id; }
+    @OneToMany(mappedBy="application")
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="application")
-    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
-
-    @OneToMany(mappedBy="application")
-    private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
+    private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="applicationStatusId", referencedColumnName="id")
@@ -45,6 +43,12 @@ public class Application {
     private Competition competition;
 
     public Application() {
+        /*default constructor*/}
+
+    public Application(Long id, String name, ApplicationStatus applicationStatus) {
+        this.id = id;
+        this.name = name;
+        this.applicationStatus = applicationStatus;
     }
 
     public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
@@ -57,6 +61,10 @@ public class Application {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -95,19 +103,11 @@ public class Application {
         this.competition = competition;
     }
 
-    public Application(Long id, String name, ApplicationStatus applicationStatus) {
-        this.id = id;
-        this.name = name;
-        this.applicationStatus = applicationStatus;
-    }
-
     public void addUserApplicationRole(ProcessRole... processRoles){
         if(this.processRoles == null){
             this.processRoles = new ArrayList<>();
         }
         this.processRoles.addAll(Arrays.asList(processRoles));
-
-
     }
 
     public LocalDate getStartDate() {

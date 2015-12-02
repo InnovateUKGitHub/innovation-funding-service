@@ -3,7 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resourceAssembler.ProcessRoleResourceAssembler;
+import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

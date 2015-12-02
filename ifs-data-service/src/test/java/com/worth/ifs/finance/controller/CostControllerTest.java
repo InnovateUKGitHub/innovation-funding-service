@@ -25,15 +25,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.hamcrest.core.Is.is;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -133,15 +129,12 @@ public class CostControllerTest {
 
         MvcResult response = mockMvc.perform(get("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
-                .andExpect(status().isOk())
+                .content(""))
+                .andExpect(status().isBadRequest())
                 .andReturn();
         String content = response.getResponse().getContentAsString();
 
         Assert.assertEquals(content, "");
-
-        verify(costRepository, times(1)).exists(123L);
-        verifyNoMoreInteractions(costRepository);
     }
 
     @Test
@@ -153,11 +146,9 @@ public class CostControllerTest {
         when(costRepository.findOne(123L)).thenReturn(cost1);
         ObjectMapper mapper = new ObjectMapper();
 
-
         String jsonCost = mapper.writeValueAsString(cost2);
 
-
-        mockMvc.perform(get("/cost/update/{id}", "123")
+        mockMvc.perform(post("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonCost))
                 .andExpect(status().isOk());
@@ -166,7 +157,7 @@ public class CostControllerTest {
 
     @Test
     public void findByApplicationIdShouldReturnEmptyArrayOnWrongId() throws Exception {
-        when(costRepository.findByApplicationFinanceId(123L)).thenReturn(Arrays.asList());
+        when(costRepository.findByApplicationFinanceId(123L)).thenReturn(emptyList());
 
         mockMvc.perform(get("/cost/get/{applicationFinanceId}", "123"))
                 .andExpect(status().isOk())

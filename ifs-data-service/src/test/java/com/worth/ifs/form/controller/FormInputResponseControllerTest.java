@@ -1,4 +1,4 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;

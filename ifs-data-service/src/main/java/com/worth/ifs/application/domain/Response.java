@@ -117,9 +117,9 @@ public class Response {
         Response response = (Response) o;
 
         if (id != null ? !id.equals(response.id) : response.id != null) return false;
-        if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
-        if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
-        return application != null ? !application.equals(response.application) : response.application != null;
+        else if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
+        else if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
+        else return application != null ? !application.equals(response.application) : response.application != null;
     }
 
     @Override

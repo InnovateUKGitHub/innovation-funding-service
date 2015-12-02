@@ -1,11 +1,11 @@
-package com.worth.ifs.application.resourceAssembler;
+package com.worth.ifs.application.resourceassembler;
 
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.resourceAssembler.ProcessRoleResourceAssembler;
+import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;

@@ -5,7 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.resourceAssembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
@@ -32,9 +33,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -66,15 +67,16 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/hateoas/1"))
+        mockMvc.perform(get("/application/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
                         responseFields(
+                                fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("links").description("HATEOAS style links"),
+                                fieldWithPath("processRoles").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competition").description("Competition"))));
         mockMvc.perform(get("/application/2"))
@@ -129,17 +131,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void applicationControllerShouldReturnAllApplications() throws Exception {
-
-        List<Application> applications = newApplication().build(3);
+        int applicationNumber = 3;
+        List<Application> applications = newApplication().build(applicationNumber);
         when(applicationRepositoryMock.findAll()).thenReturn(applications);
 
-        String expected = new ObjectMapper().writeValueAsString(new ApplicationResourceAssembler().toEmbeddedList(applications));
-        //ugly hack to ensure correct URI's in response
-        expected = expected.replaceAll("localhost", "localhost:8090");
-
-        mockMvc.perform(get("/application/hateoas/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(is(expected)))
+                .andExpect(jsonPath("$", hasSize(applicationNumber)))
                 .andDo(document("application/find-all-applications"));
     }
 
@@ -180,7 +178,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
