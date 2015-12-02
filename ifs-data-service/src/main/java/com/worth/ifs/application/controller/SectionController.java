@@ -2,31 +2,24 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.validator.util.ValidationUtil;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +31,8 @@ public class SectionController {
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
+    ResponseRepository responseRepository;
+    @Autowired
     FormInputResponseRepository formInputResponseRepository;
     @Autowired
     SectionRepository sectionRepository;
@@ -45,8 +40,6 @@ public class SectionController {
     QuestionController questionController;
 
     private final Log log = LogFactory.getLog(getClass());
-
-    private final static String FINANCE_SUMMARY_QUESTION_NAME_STRING = "FINANCE_SUMMARY_INDICATOR_STRING";
 
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
@@ -77,16 +70,24 @@ public class SectionController {
         List<Long> incompleteSections = new ArrayList<>();
 
         for (Section section : sections) {
-            Boolean sectionIsValid = true;
+            boolean sectionIncomplete = false;
 
             List<Question> questions = section.getQuestions();
             for (Question question : questions) {
-                // if there is a maxWordCount, ensure that no responses have gone over the limit
-                if(!question.getFormInputs().stream().allMatch(input -> applicationInputResponsesAreValid(applicationId, input))) {
-                    sectionIsValid = false;
+                if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
+
+                    // if there is a maxWordCount, ensure that no responses have gone over the limit
+                    sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
+                        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
+                        return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
+                    });
+
+                } else {
+                    // no wordcount.
+                    sectionIncomplete = false;
                 }
             }
-            if (!sectionIsValid) {
+            if (sectionIncomplete) {
                 incompleteSections.add(section.getId());
             }
         }
@@ -99,17 +100,8 @@ public class SectionController {
         return sectionRepository.findByName(name);
     }
 
-    private boolean applicationInputResponsesAreValid(Long applicationId, FormInput formInput) {
-        boolean responsesAreValid = true;
-        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInput.getId());
-        responsesAreValid = responses.stream().noneMatch(response -> ValidationUtil.validateResponse(response).hasErrors()==true);
-
-        return responsesAreValid;
-    }
-
     private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        boolean sectionIsComplete = true;
-        sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
+        boolean sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
 
         // check if section has subsections, if there are subsections let the outcome depend on those subsections
         // and the section itself if it contains questions with mark as complete attached
@@ -128,7 +120,7 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
-            if(question.getName()!=null && question.getName().equals(FINANCE_SUMMARY_QUESTION_NAME_STRING)){
+            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING")){
                 if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
