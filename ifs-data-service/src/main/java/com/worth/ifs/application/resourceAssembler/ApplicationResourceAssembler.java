@@ -6,6 +6,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -19,6 +21,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Service
 public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Application, ApplicationResource> {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private Class<ApplicationController> controllerClass = ApplicationController.class;
 
@@ -38,7 +42,7 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
                 resource.add(processRoleResourceAssembler.linkToSingleResource(role).withRel("roles"));
             }
         }catch(NullPointerException e){
-            //no roles found
+            log.error(e);
         }
 
         return resource;
