@@ -1,6 +1,7 @@
 *** Variables ***
 ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
+${SERVER_BASE}    localhost:8080
 ${SERVER}         http://${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/login
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard

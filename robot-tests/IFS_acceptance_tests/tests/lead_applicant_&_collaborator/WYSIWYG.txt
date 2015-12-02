@@ -43,6 +43,33 @@ Verify Project summary accepts bullets
     Then the Applicant clicks the "Application details" section
     Then clicks on "Project summary" section
     Then verify for bullet format
+Project summary section accepts Bold text format
+    Given the applicant is in the Overview page
+    Given the Applicant clicks the "Application details" section
+    Given the Applicant clicks on "Project summary" section
+    When the Applicant clicks on Bold button in "Project summary"
+    Then text entered should be Bold and keep the same after page refresh
+
+Project summary section accepts Italic text format
+    Given the applicant is in the Overview page
+    Given the Applicant clicks the "Application details" section
+    Given the Applicant clicks on "Project summary" section
+    When the Applicant clicks on Italic button in "Project summary"
+    Then text entered should be Italic and keep the same after page refresh
+
+Project summary section accepts Numbering bullet format
+    Given the applicant is in the Overview page
+    Given the Applicant clicks the "Application details" section
+    Given the Applicant clicks on "Project summary" section
+    When the Applicant clicks on Numbering bullet button in "Project summary"
+    Then text entered should be in Numbering bullets and keep the same after page refresh
+
+Project summary section accepts Bullet format
+    Given the applicant is in the Overview page
+    Given the Applicant clicks the "Application details" section
+    Given the Applicant clicks on "Project summary" section
+    When the Applicant clicks on Bullet format button in "Project summary"
+    Then text entered should be in Bullet format and keep the same after page refresh
 
 *** Keywords ***
 the applicant is in the Overview page
@@ -52,35 +79,90 @@ the Applicant clicks the "Application details" section
     Click Element    css=#section-1 > button
 
 clicks on "Project summary" section
+the Applicant clicks on "Project summary" section
     Click Link    link=Project summary
     Wait Until Element Is Visible    css=#form-input-11 .editor
+    Wait Until Page Contains Element    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
 
 verify for bold format
+the Applicant clicks on Bold button in "Project summary"
+    Clear Element Text    css=#form-input-11 .editor
     Click Button    css=.bold_button
+
+text entered should be Bold
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
     Sleep    2s
     ${VAR}=    Get Text    css=#form-input-11 .editor b
+    Element Should Be Visible    css=#form-input-11 .editor b
+
+the text entered should be Italic
+    Input Text    css=#form-input-11 .editor    Entering text to verify ITALIC.
+    Element Should Be Visible    css=#form-input-11 .editor i
 
 verify for Italic format
+the Applicant clicks on Italic button in "Project summary"
+    Clear Element Text    css=#form-input-11 .editor
     Click Button    css=.italic_button
     Input Text    css=#form-input-11 .editor    Entering text to check if it accepts italic format.
     Sleep    2s
     ${VAR}=    Get Text    css=#form-input-11 .editor i
+    #Focus    css=.app-submit-btn
 
 verify for numbering bullet format
     Input Text    css=#form-input-11 .editor    testing
+text entered should be Bold and keep the same after page refresh
+    Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
+    Element Should Be Visible    css=#form-input-11 .editor b
+    Focus    css=.app-submit-btn
+    Sleep    1s
+    Reload Page
+    Wait Until Page Contains Element    css=#form-input-11 .editor strong
+
+the Applicant clicks on Numbering bullet button in "Project summary"
+    Input Text    css=#form-input-11 .editor    This is testing for numbering bullets.
     Click Button    css=.insertOrderedList_button
     #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
     Sleep    2s
     ${VAR}=    Get Text    css=#form-input-11 .editor ol
     Focus    css=.app-submit-btn
+    Sleep    1s
 
 verify for bullet format
+the entered text should be in Numbering bullets
+    Element Should Be Visible    css=#form-input-11 .editor ol
+
+the Applicant clicks on Bullet format button in "Project summary"
     Input Text    css=#form-input-11 .editor    testing
     Click Button    css=.insertUnorderedList_button
     #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
     Sleep    2s
     ${VAR}=    Get Text    css=#form-input-11 .editor li
     Focus    css=.app-submit-btn
+    Sleep    1s
+
+the text should be in Bullet format
+    Element Should Be Visible    css=#form-input-11 .editor li
+
+text entered should be Italic and keep the same after page refresh
+    Input Text    css=#form-input-11 .editor    Entering text to verify ITALIC.
+    Element Should Be Visible    css=#form-input-11 .editor i
+    Focus    css=.app-submit-btn
+    Sleep    1s
+    Reload Page
+    Wait Until Page Contains Element    css=#form-input-11 .editor em
+
+text entered should be in Numbering bullets and keep the same after page refresh
+    Element Should Be Visible    css=#form-input-11 .editor ol
+    Reload Page
+    Focus    css=.app-submit-btn
+    Sleep    1s
+    Wait Until Page Contains Element    css=#form-input-11 .editor ol
+
+text entered should be in Bullet format and keep the same after page refresh
+    Element Should Be Visible    css=#form-input-11 .editor li
+    Reload Page
+    Focus    css=.app-submit-btn
+    Sleep    1s
+    Wait Until Page Contains Element    css=#form-input-11 .editor li
