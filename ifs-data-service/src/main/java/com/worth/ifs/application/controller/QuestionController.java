@@ -8,8 +8,6 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +25,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     ProcessRoleRepository processRoleRepository;
 
@@ -100,7 +96,7 @@ public class QuestionController {
                                          @PathVariable("organisationId") Long organisationId) {
         Application application = applicationRepository.findOne(applicationId);
         List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
-        Set<Long> questionsMarkedAsComplete = questions
+        return questions
                 .stream()
                 .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
                         .stream()
@@ -108,7 +104,6 @@ public class QuestionController {
                                 (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, applicationId, organisationId).orElse(Boolean.FALSE)) ||
                                 (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
                 .map(Question::getId).collect(Collectors.toSet());
-        return questionsMarkedAsComplete;
     }
 
 
@@ -130,7 +125,7 @@ public class QuestionController {
 
     private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if(questionStatuses!=null && questionStatuses.size()>0) {
+        if(questionStatuses!=null && questionStatuses.isEmpty()) {
             return questionStatuses.get(0);
         }
         return null;
@@ -171,7 +166,7 @@ public class QuestionController {
 
     private Boolean isMarkedAsCompleteForSingleStatus(Long questionId, Long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if(questionStatuses!=null && questionStatuses.size() > 0) {
+        if(questionStatuses!=null && questionStatuses.isEmpty()) {
             return isMarkedAsCompleteForSingleStatus(questionStatuses.get(0)).orElse(Boolean.FALSE);
         }
         return Boolean.FALSE;

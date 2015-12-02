@@ -9,7 +9,8 @@ var ifs_autoSave = (function(){
         settings : {
             inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"])',
             textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
-            typeTimeout : 500
+            typeTimeout : 500,
+            minimumUpdateTime : 1000 // the minimum time between the ajax request, and displaying the result of the ajax call.
         },
         init : function(){
             s = this.settings;
@@ -56,50 +57,53 @@ var ifs_autoSave = (function(){
                 }
              })
              .done(function(data){
-                var doneAjaxTime = new Date().getTime();
+                 var doneAjaxTime = new Date().getTime();
+                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
-                // set the form-saved-state
-                jQuery('.form-serialize-js').data('serializedFormState',formState);
+                 // set the form-saved-state
+                 jQuery('.form-serialize-js').data('serializedFormState',formState);
                  field.removeClass('error');
                  formGroup.removeClass('error');
                   
                   //save message
                  if(data.success == 'true'){
-                    if((doneAjaxTime-startAjaxTime) < 1500) {
-                        setTimeout(function(){
-                            ifs_autoSave.removeValidationError(formGroup);
-                           formTextareaSaveInfo.html('Saved!');
-                        },1500);
-                    } else {
-                        ifs_autoSave.removeValidationError(formGroup);
-                        formTextareaSaveInfo.html('Saved!');
-                    }
+                     setTimeout(function(){
+                         ifs_autoSave.removeValidationError(formGroup);
+                         formTextareaSaveInfo.html('Saved!');
+                     }, remainingWaitingTime);
                  }else{
-                    formTextareaSaveInfo.html("Invalid input, not saved.");
-                    ifs_autoSave.removeValidationError(formGroup);
-                    jQuery.each(data.validation_errors, function(index, value){
-                        validationMessages.append('<span class="error-message">' + value + '</span>');
-                    });
-                    formGroup.addClass('error');
+                     setTimeout(function(){
+                         formTextareaSaveInfo.html("Invalid input, but saved anyway.");
+                         ifs_autoSave.removeValidationError(formGroup);
+                         jQuery.each(data.validation_errors, function(index, value){
+                             validationMessages.append('<span class="error-message">' + value + '</span>');
+                         });
+                         formGroup.addClass('error');
+                     }, remainingWaitingTime);
                  }
              }).fail(function(data) {
-                 ifs_autoSave.removeValidationError(formGroup);
+                 var doneAjaxTime = new Date().getTime();
+                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
-                 var errorMessage = data.responseJSON.errorMessage;
-                 if (formGroup.length) {
-                     formGroup.addClass('error');
-                     if(formTextareaSaveInfo.length){
-                        formTextareaSaveInfo.html(errorMessage);
+                 setTimeout(function(){
+                     ifs_autoSave.removeValidationError(formGroup);
+
+                     var errorMessage = data.responseJSON.errorMessage;
+                     if (formGroup.length) {
+                         formGroup.addClass('error');
+                         if(formTextareaSaveInfo.length){
+                            formTextareaSaveInfo.html(errorMessage);
+                         }
+                         else {
+                            var label = formGroup.find('label').first();
+                            if (label.length) {
+                              validationMessages.append('<span class="error-message">' + errorMessage + '</span>');
+                            }
+                         }
+                     } else {
+                         field.addClass('error');
                      }
-                     else {
-                        var label = formGroup.find('label').first();
-                        if (label.length) {
-                          validationMessages.append('<span class="error-message">' + errorMessage + '</span>');
-                        }  
-                     }
-                 } else {
-                     field.addClass('error');
-                 }
+                 }, remainingWaitingTime);
              });
         },
         removeValidationError: function (formGroup){

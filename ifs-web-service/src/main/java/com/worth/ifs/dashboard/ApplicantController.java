@@ -41,6 +41,12 @@ public class ApplicantController {
     public String dashboard(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
+        log.debug("++++++++++++++++++++++");
+        log.debug(user.getName());
+        log.debug(user.getId());
+        log.debug(user.getEmail());
+        log.debug("++++++++++++++++++++++");
+
 
         model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
 

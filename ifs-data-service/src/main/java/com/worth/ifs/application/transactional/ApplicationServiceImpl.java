@@ -5,10 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,7 +36,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
 
-        List<Role> roles = roleRepository.findByName("leadapplicant");
+        List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
         Role role = roles.get(0);
 
         Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();

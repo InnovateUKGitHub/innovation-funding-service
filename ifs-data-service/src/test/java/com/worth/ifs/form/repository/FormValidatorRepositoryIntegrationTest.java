@@ -1,20 +1,14 @@
 package com.worth.ifs.form.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.validator.EmailValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
  * Repository Integration tests for Form Inputs.

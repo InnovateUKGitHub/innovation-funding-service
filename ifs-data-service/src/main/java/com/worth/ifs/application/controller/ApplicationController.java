@@ -3,18 +3,18 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -22,12 +22,15 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
  * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
+@ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
     @Autowired
@@ -56,29 +60,48 @@ public class ApplicationController {
     @Autowired
     CompetitionsRepository competitionRepository;
 
-    @Autowired
-    private ApplicationService applicationService;
-
+    private ApplicationResourceAssembler applicationResourceAssembler;
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping("/id/{id}")
+    @Autowired
+    public ApplicationController(ApplicationResourceAssembler applicationResourceAssembler) {
+        this.applicationResourceAssembler = applicationResourceAssembler;
+    }
+
+    @RequestMapping("/hateoas/{id}")
+    public ApplicationResource getApplicationByIdHateoas(@PathVariable("id") final Long id) {
+        Application application = applicationRepository.findOne(id);
+        return applicationResourceAssembler.toResource(application);
+    }
+
+    @RequestMapping("/hateoas/")
+    public Resources<ApplicationResource> findAllHateoas() {
+        List<Application> applications = applicationRepository.findAll();
+        return applicationResourceAssembler.toEmbeddedList(applications);
+    }
+
+    @RequestMapping("/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
         return applicationRepository.findOne(id);
     }
 
-    @RequestMapping("/findAll")
-     public List<Application> findAll() {
-        List<Application> applications = applicationRepository.findAll();
-        return applications;
+
+    @RequestMapping("/")
+    public List<Application> findAll() {
+        return applicationRepository.findAll();
     }
 
     @RequestMapping("/findByUser/{userId}")
     public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
-        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
+        List<ProcessRole> roles = processRoleRepository.findByUser(user);
         List<Application> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
+            log.debug("+++++++++++++++++++++");
+            log.debug(role.getApplication().getName());
+            log.debug(role.getApplication().getId());
+            log.debug("+++++++++++++++++++++");
             apps.add(role.getApplication());
         }
         return apps;
@@ -103,8 +126,8 @@ public class ApplicationController {
 
             status = HttpStatus.OK;
 
-        }else{
-            log.error("NOT_FOUND "+ id);
+        } else {
+            log.error("NOT_FOUND " + id);
             status = HttpStatus.NOT_FOUND;
         }
 
@@ -120,12 +143,12 @@ public class ApplicationController {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
-                .flatMap((s) -> s.getQuestions().stream())
-                .filter((q -> q.isMarkAsCompletedEnabled()))
+                .flatMap(s -> s.getQuestions().stream())
+                .filter(Question::isMarkAsCompletedEnabled)
                 .collect(Collectors.toList());
 
         List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream().map(p -> p.getOrganisation()).collect(Collectors.toSet());
+        Set<Organisation> organisations = processRoles.stream().map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
@@ -135,7 +158,7 @@ public class ApplicationController {
                 .filter(q -> !q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
-        Long totalMultipleStatusQuestions = questions.stream().filter(q -> q.hasMultipleStatuses()).count() * organisations.size();
+        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
@@ -143,9 +166,9 @@ public class ApplicationController {
         log.info("Total completed questions" + countCompleted);
 
         double percentageCompleted;
-        if(questions.size() == 0){
+        if (questions.isEmpty()) {
             percentageCompleted = 0;
-        }else{
+        } else {
             percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
 
@@ -155,9 +178,9 @@ public class ApplicationController {
         return node;
     }
 
-    @RequestMapping(value="/updateApplicationStatus", method=RequestMethod.GET)
+    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
     public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
-                                                          @RequestParam("statusId") final Long statusId){
+                                                          @RequestParam("statusId") final Long statusId) {
 
         Application application = applicationRepository.findOne(id);
         ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
@@ -178,23 +201,17 @@ public class ApplicationController {
     public List<Application> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-        User user = userRepository.findOne(userId);
 
-        List<ProcessRole> roles =  processRoleRepository.findByUser(user);
-        List<Application> allApps= applicationRepository.findAll();
-        List<Application> apps = new ArrayList<>();
-        for (Application app : allApps) {
-            if ( app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role)  ) {
-                apps.add(app);
-            }
-        }
-        return apps;
+        List<Application> allApps = applicationRepository.findAll();
+        return allApps.stream()
+            .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
+            .collect(Collectors.toList());
     }
 
-    private boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
+    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         boolean contains = false;
         int i = 0;
-        while( !contains && i < roles.size()) {
+        while (!contains && i < roles.size()) {
             contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
             i++;
         }
@@ -202,14 +219,46 @@ public class ApplicationController {
         return contains;
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.PUT)
-    public Application createApplicationByApplicationNameForUserTokenAndCompetitionId(
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
+    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
 
+        User user = userRepository.findOne(userId);
+
         String applicationName = jsonObj.get("name").textValue();
-        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId);
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = LocalDate.now();
+        application.setStartDate(currentDate);
+
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
+
+        List<Role> roles = roleRepository.findByName("leadapplicant");
+        Role role = roles.get(0);
+
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+
+        Competition competition = competitionRepository.findOne(competitionId);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
+
+        applicationRepository.save(application);
+        processRoleRepository.save(processRole);
+
+        return application;
     }
 
 }

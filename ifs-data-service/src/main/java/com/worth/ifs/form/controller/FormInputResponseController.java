@@ -1,6 +1,7 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.form.domain.FormInput;
@@ -16,6 +17,7 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.validator.ValidatedResponse;
+import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +83,7 @@ public class FormInputResponseController {
         User user = userRepository.findOne(userId);
 
         List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
-        if (userAppRoles == null || userAppRoles.size() == 0) {
+        if (userAppRoles == null || userAppRoles.isEmpty()) {
             // user has no role on this application, so should not be able to write..
             return null;
         }
@@ -133,7 +135,13 @@ public class FormInputResponseController {
 
         response.setValue(value);
 
-        BindingResult bindingResult = this.validateResponse(response);
+        BindingResult bindingResult = ValidationUtil.validateResponse(response);
+
+        log.debug("Got validation errors: ");
+        bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
+
+        formInputResponseRepository.save(response);
+        log.debug("Single question saved!");
 
         if (bindingResult.hasErrors()) {
             log.debug("Got validation errors: ");
@@ -163,12 +171,11 @@ public class FormInputResponseController {
                     } catch (Exception e) {
                         log.error("Could not find validator class: " + v.getClazzName());
                         log.error("Exception message: " + e.getMessage());
+                        log.error(e);
                     }
                 }
         );
         binder.validate();
-        BindingResult bindingResult = binder.getBindingResult();
-        return bindingResult;
+        return binder.getBindingResult();
     }
-
 }

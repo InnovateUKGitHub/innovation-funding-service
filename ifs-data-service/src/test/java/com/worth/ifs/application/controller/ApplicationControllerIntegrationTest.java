@@ -2,9 +2,13 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Application;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,6 +18,15 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     protected void setControllerUnderTest(ApplicationController controller) {
         this.controller = controller;
+    }
+
+    private MockHttpServletRequest request;
+
+    @Before
+    public void setUpForHateoas() {
+        request = new MockHttpServletRequest();
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
     }
 
     @Test

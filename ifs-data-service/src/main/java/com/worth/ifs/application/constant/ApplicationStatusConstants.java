@@ -6,15 +6,15 @@ package com.worth.ifs.application.constant;
  * The value of these entries are used when saving to the database.
  */
 public enum ApplicationStatusConstants {
-    CREATED(Long.valueOf(1), "created"),
-    SUBMITTED(Long.valueOf(2), "submitted"),
-    APPROVED(Long.valueOf(3), "approved"),
-    REJECTED(Long.valueOf(4), "rejected");
+    CREATED(1L, "created"),
+    SUBMITTED(2L, "submitted"),
+    APPROVED(3L, "approved"),
+    REJECTED(4L, "rejected");
 
     private final Long id;
     private final String name;
 
-    private ApplicationStatusConstants(Long id, String name){
+    ApplicationStatusConstants(Long id, String name){
         this.id = id;
         this.name = name;
     }
