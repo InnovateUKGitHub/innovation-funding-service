@@ -1,11 +1,11 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.ServiceLocator;
@@ -16,14 +16,13 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.validator.ValidatedResponse;
+import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -32,7 +31,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 
@@ -133,42 +131,16 @@ public class FormInputResponseController {
 
         response.setValue(value);
 
-        BindingResult bindingResult = this.validateResponse(response);
+        BindingResult bindingResult = ValidationUtil.validateResponse(response);
 
-        if (bindingResult.hasErrors()) {
-            log.debug("Got validation errors: ");
-            bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
-        } else {
-            formInputResponseRepository.save(response);
-            log.debug("Single question saved!");
-        }
+        log.debug("Got validation errors: ");
+        bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
+
+        formInputResponseRepository.save(response);
+        log.debug("Single question saved!");
+
         ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
         servletResponse.setStatus(HttpServletResponse.SC_OK);
         return validatedResponse.getAllErrors();
     }
-
-    private BindingResult validateResponse(FormInputResponse response) {
-        Set<FormValidator> validators = response.getFormInput().getFormValidators();
-
-        DataBinder binder = new DataBinder(response);
-
-        // Get validators from the FormInput, and add to binder.
-        validators.forEach(
-                v ->
-                {
-                    Validator validator = null;
-                    try {
-                        validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
-                        binder.addValidators(validator);
-                    } catch (Exception e) {
-                        log.error("Could not find validator class: " + v.getClazzName());
-                        log.error("Exception message: " + e.getMessage());
-                    }
-                }
-        );
-        binder.validate();
-        BindingResult bindingResult = binder.getBindingResult();
-        return bindingResult;
-    }
-
 }

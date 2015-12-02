@@ -73,7 +73,7 @@ var ifs_autoSave = (function(){
                      }, remainingWaitingTime);
                  }else{
                      setTimeout(function(){
-                         formTextareaSaveInfo.html("Invalid input, not saved.");
+                         formTextareaSaveInfo.html("Invalid input, but saved anyway.");
                          ifs_autoSave.removeValidationError(formGroup);
                          jQuery.each(data.validation_errors, function(index, value){
                              validationMessages.append('<span class="error-message">' + value + '</span>');
