@@ -136,46 +136,16 @@ public class FormInputResponseController {
         response.setValue(value);
 
         BindingResult bindingResult = ValidationUtil.validateResponse(response);
-
-        log.debug("Got validation errors: ");
-        bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
+        if (bindingResult.hasErrors()) {
+            log.debug("Got validation errors: ");
+            bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
+        }
 
         formInputResponseRepository.save(response);
         log.debug("Single question saved!");
 
-        if (bindingResult.hasErrors()) {
-            log.debug("Got validation errors: ");
-            bindingResult.getAllErrors().stream().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
-        } else {
-            formInputResponseRepository.save(response);
-            log.debug("Single question saved!");
-        }
         ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
         servletResponse.setStatus(HttpServletResponse.SC_OK);
         return validatedResponse.getAllErrors();
-    }
-
-    private BindingResult validateResponse(FormInputResponse response) {
-        Set<FormValidator> validators = response.getFormInput().getFormValidators();
-
-        DataBinder binder = new DataBinder(response);
-
-        // Get validators from the FormInput, and add to binder.
-        validators.forEach(
-                v ->
-                {
-                    Validator validator = null;
-                    try {
-                        validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
-                        binder.addValidators(validator);
-                    } catch (Exception e) {
-                        log.error("Could not find validator class: " + v.getClazzName());
-                        log.error("Exception message: " + e.getMessage());
-                        log.error(e);
-                    }
-                }
-        );
-        binder.validate();
-        return binder.getBindingResult();
     }
 }

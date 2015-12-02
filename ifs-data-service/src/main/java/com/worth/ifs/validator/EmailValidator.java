@@ -17,7 +17,6 @@ import org.springframework.validation.Errors;
 public class EmailValidator extends BaseValidator {
     private final Log log = LogFactory.getLog(getClass());
 
-
     @Override
     public void validate(Object target, Errors errors) {
         log.debug("do Email validation ");
