@@ -4,7 +4,8 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Academic finances'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <style> .message-alert {
-        background: #e4eff6 url("../images/message-star.png") no-repeat scroll 25px 25px;
+        background: #e4eff6;
+        padding-left: 30px;
         } </style>
 </head>
 <body class="app-overview">
@@ -19,64 +20,32 @@
     <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div class="grid-row">
-		<div class="column-two-thirds">
-            <div class="hgroup" style="padding-top: 20px">
-				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin-top">Organisation B finances <small>(academic)</small></h1>
-			</div>
-        </div>
-        <div class="column-third competition-details">
-            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
-        </div>
-    </div>
 
-    <div class="message-alert">
-        <h2 class="heading-small">You are assigned the finances</h2>
-        <p>
-        You are currently responsible for submitting the finances for this organisation
-        </p>
-        <div class="assign-container collapsible">
-	        <div class="assign-button">
-	            Reassign finances
-	        </div>
-
-	        <div class="assign-team">
-	            <h3>Reassign finances</h3>
-	            <ul class="list-bullet">
-	                <li>
-	                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-	                    
-	                </li>
-	                <li>
-	                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-	                    
-	                </li>
-	                <li>
-	                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-	                    
-	                </li>
-	            </ul>
-	        </div>
-	    </div>
-    </div>
-	
-	<div class="panel-indent">
-	    <p>To receive Innovate UK funding, your academic organisation must apply for funding through the JeS system </p>
-		<p>To gain a better understanding of the Je-S equirements and process please go to the <a href="#">Je-S website</a></p>
+    <div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+		<h1 class="heading-xlarge no-margin-top">University of Bristol finances</h1>
 	</div>
+
+
+    <h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
+
+	<p>Only your organisation can see this level of detail.
+		All members of your organisation can acesss and edit your finances
+		We recommend assigning completion of your finances to one member of your team</p>
+	
 
 	<form>
 		<fieldset>
-			<h2 class="heading-medium no-margin">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h2>
-			<legend class="visuallyhidden">Upload a pdf copy of the Je-S output confirming a status oof 'With Council'</legend>
-			<p><a href="#">How do I create my Je-S output?</a></p>
-			<label for="upload-jes-pdf" class="visuallyhidden">Upload Je-S PDF</label>
-			<input type="file" name="upload-jes-pdf" id="upload-jes-pdf" class="button-secondary" />
-		</fieldset>
-		<fieldset>
-			<h2 class="heading-medium">Innovate UK (TSB) contribution</h2>
+			<h2 class="heading-medium">Innovate UK funding</h2>
 			<legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
+			<p>Innovate UK is the new name for the Technology Strategy Board (TSB)</p>
+			
+		    <p>To receive Innovate UK funding, your academic organisation must apply for funding through the JeS system. To gain a better understanding of the Je-S equirements and process please go to the <a href="#">Je-S website</a></p>
+
+		    <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this application will not be submitted into this competition.</p>
+
+		    <h3 class="heading-small">Your project costs</h3>
+
 			<p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate UK</p>
 			<p>Enter the figures from the following fields on the Je-S form:</p>
 
@@ -237,14 +206,19 @@
 		  	</div>
 
 		  </fieldset>
+		  <fieldset>
+			<h2 class="heading-medium">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h2>
+			<legend class="visuallyhidden">Upload a pdf copy of the Je-S output confirming a status oof 'With Council'</legend>
+			<p><a href="#">How do I create my Je-S output?</a></p>
+			<label for="upload-jes-pdf" class="visuallyhidden">Upload Je-S PDF</label>
+			<input type="file" name="upload-jes-pdf" id="upload-jes-pdf" class="button-secondary" />
+		</fieldset>
 
 	</form>
 
-	<h3 class="heading-medium">Please ensure you allow sufficient time for Je-S approval before the application submission deadline.</h3>
-	<p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this application will not be submitted into this competition.</p>
 
 	<div class="alignright-button extra-margin">
-		<button type="submit" name="mark_as_complete" class="button" formaction="/prototypes/635-application-question3" value="1">Mark finances as complete
+		<button type="submit" name="mark_as_complete" class="button" formaction="/prototypes/635-application-question3" value="1">Mark as complete
 		</button>
 	</div>
 
