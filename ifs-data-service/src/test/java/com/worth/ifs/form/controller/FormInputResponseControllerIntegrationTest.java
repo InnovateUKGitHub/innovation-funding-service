@@ -85,6 +85,29 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
     @Test
     @Rollback
+    public void test_saveWordCountExceedingQuestionResponse() {
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode jsonObj = mapper.createObjectNode();
+        jsonObj.put("userId", 1);
+        jsonObj.put("applicationId", 1);
+        jsonObj.put("formInputId", 1);
+
+        String value = "";
+        for(int i=0; i<=501; i++) {
+            value+=" word";
+        }
+
+        jsonObj.put("value", value);
+
+        List<String> errors = controller.saveQuestionResponse(jsonObj, response);
+        assertThat(errors, hasSize(1));
+        assertThat(errors, hasItem("Maximum word count exceeded"));
+    }
+
+    @Test
+    @Rollback
     public void test_saveQuestionResponse() {
         HttpServletResponse response = mock(HttpServletResponse.class);
 
