@@ -56,7 +56,7 @@
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=false)" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" th:remove="tag" />
         <span>%</span>
     </div>
 
@@ -68,7 +68,7 @@
             <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', response=${currentApplication.getName()} )" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', field='application.name' )" th:remove="tag" />
         </div>
 
         <div class="form-group">
@@ -80,8 +80,8 @@
             <br/>
 
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', day=${currentApplication.getStartDate().getDayOfMonth()}, month=${currentApplication.getStartDate().getMonthValue()}, year=${currentApplication.getStartDate().getYear()})" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', months=${currentApplication.getDurationInMonths()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate')" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths')" th:remove="tag" />
         </div>
 
         <div class="form-group">
@@ -110,7 +110,7 @@
 
     <div th:fragment="finance">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title=${question.getName()}, name=${'finance-grantclaim-'+organisationgrantClaimPercentageId}, percentage=${organisationGrantClaimPercentage})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title=${question.getName()}, field='formInput['+${'finance-grantclaim-'+organisationgrantClaimPercentageId}+']')" th:remove="tag" />
             <span>%</span>
         </div>
     </div>

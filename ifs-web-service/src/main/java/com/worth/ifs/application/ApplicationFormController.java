@@ -22,11 +22,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,11 +42,16 @@ import java.util.stream.Collectors;
 public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
 
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
+        dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
+    }
+
     @Autowired
     CostService costService;
 
     @RequestMapping("/{applicationId}")
-    public String applicationForm(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
@@ -51,7 +59,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
-    public String applicationFormWithOpenSection(@Valid Form form, BindingResult bindingResult, Model model,
+    public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
@@ -90,7 +98,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
-    public String addAnotherWithFragmentResponse(@Valid Form form, Model model,
+    public String addAnotherWithFragmentResponse(@Valid @ModelAttribute("form") ApplicationForm form, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @PathVariable("questionId") final Long questionId,
@@ -100,7 +108,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request, form);
     }
 
-    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, Form form) {
+    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
@@ -110,7 +118,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
-    public String addAnother(Form form, Model model,
+    public String addAnother(@ModelAttribute("form") ApplicationForm form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
@@ -147,10 +155,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 //        return application;
 //    }
 
-    private Map<Long, List<String>> saveApplicationForm(Form form, Model model,
+    private BindingResult saveApplicationForm(ApplicationForm form, Model model,
                                                         @PathVariable("applicationId") final Long applicationId,
                                                         @PathVariable("sectionId") final Long sectionId,
-                                                        HttpServletRequest request, HttpServletResponse response) {
+                                                        HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Application application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
@@ -160,12 +168,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
 
         Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
+        errors.forEach((k, errorsList) -> {
+            errorsList.forEach(e -> {
+                bindingResult.rejectValue("formInput["+ k +"]", e, e);
+            });
+        });
 
         // save application details if they are in the request
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.info("key " + key));
 
-        setApplicationDetails(application, params);
+        setApplicationDetails(application, form.getApplication());
         boolean marked = markQuestion(request, params, applicationId, user.getId(), errors);
 
         applicationService.save(application);
@@ -181,7 +194,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
 
-        return errors;
+        return bindingResult;
     }
 
     /**
@@ -189,21 +202,18 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String applicationFormSubmit(@Valid @ModelAttribute("form") Form form,
-                                        BindingResult bindingResult,  Model model,
+    public String applicationFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
+                                        BindingResult bindingResult,
+                                        Model model,
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
                                         HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-        Map<Long, List<String>> errors = saveApplicationForm(form, model, applicationId, sectionId, request, response);
 
-        errors.forEach((k,v) -> log.info("Remote validation: "+ k + " v: "+ v));
-        errors.forEach((k,errorList) -> {
-            errorList.forEach(error -> {
-                bindingResult.rejectValue("formInput[" + k + "]", error, error);
-            });
-        });
+        bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult = saveApplicationForm(form, model, applicationId, sectionId, request, response, bindingResult);
+        bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
@@ -214,7 +224,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
 
-        if(errors.size() > 0){
+        if(bindingResult.hasErrors()){
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
@@ -264,31 +274,25 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errorMap;
     }
 
-    private void setApplicationDetails(Application application, Map<String, String[]> applicationDetailParams) {
-        if (applicationDetailParams.containsKey("question[application_details-title]")) {
-            String title = applicationDetailParams.get("question[application_details-title]")[0];
-            application.setName(title);
+    /**
+     * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
+     */
+    private void setApplicationDetails(Application application, Application updatedApplication) {
+        if(updatedApplication == null){
+            return;
         }
-        if (applicationDetailParams.containsKey("question[application_details-startdate][year]")) {
-            int year = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][year]")[0]);
-            int month = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][month]")[0]);
-            int day = Integer.valueOf(applicationDetailParams.get("question[application_details-startdate][day]")[0]);
-            LocalDate date = LocalDate.of(year, month, day);
-            application.setStartDate(date);
+
+        if(updatedApplication.getName() != null){
+            log.error("setApplicationDetails: "+ updatedApplication.getName());
+            application.setName(updatedApplication.getName());
         }
-        if (applicationDetailParams.containsKey("question[application_details-duration]")) {
-            String durationString = applicationDetailParams.get("question[application_details-duration]")[0];
-
-            Long duration = null;
-            if(StringUtils.hasText(durationString)){
-                try {
-                    duration = Long.parseLong(durationString);
-                } catch(NumberFormatException e){
-                    // just use the null value.
-                }
-            }
-            application.setDurationInMonths(duration);
-
+        if(updatedApplication.getStartDate() != null) {
+            log.error("setApplicationDetails: "+ updatedApplication.getStartDate());
+            application.setStartDate(updatedApplication.getStartDate());
+        }
+        if(updatedApplication.getDurationInMonths() != null){
+            log.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
+            application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }
 
@@ -302,55 +306,19 @@ public class ApplicationFormController extends AbstractApplicationController {
                              HttpServletRequest request,
                              HttpServletResponse response) {
 
+        List<String> errors = new ArrayList<>();
         try {
-            List<String> errors = new ArrayList<>();
             String fieldName = request.getParameter("fieldName");
-
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
-            if (inputIdentifier.equals("application_details-title")) {
-                value = value.trim();
-                if(StringUtils.isEmpty(value)){
-                    errors.add("Please enter the full title of the project.");
-                }else{
-                    Application application = applicationService.getById(applicationId);
-                    application.setName(value);
-                    applicationService.save(application);
-                }
-            } else if (inputIdentifier.equals("application_details-duration")) {
-                Long durationInMonth = Long.valueOf(value);
-                if(durationInMonth == null || durationInMonth < 1L){
-                    errors.add("Please enter a valid duration.");
-                }else{
-                    Application application = applicationService.getById(applicationId);
-                    application.setDurationInMonths(durationInMonth);
-                    applicationService.save(application);
-                }
-            } else if (inputIdentifier.startsWith("application_details-startdate")) {
-                Application application = applicationService.getById(applicationId);
-                LocalDate startDate = application.getStartDate();
-
-                if (startDate == null) {
-                    startDate = LocalDate.now();
-                }
-                if (inputIdentifier.endsWith("_day")) {
-                    startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-                } else if (inputIdentifier.endsWith("_month")) {
-                    startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-                } else if (inputIdentifier.endsWith("_year")) {
-                    startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-                }
-                if(startDate.isBefore(LocalDate.now())){
-                    errors.add("Please enter a future date.");
-                }
-                application.setStartDate(startDate);
-                applicationService.save(application);
+            if (fieldName.startsWith("application.")) {
+                errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
             } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
                 FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
                 if (fieldName != null && value != null) {
                     String cleanedFieldName = fieldName;
-                    if(fieldName.startsWith("cost-")){
+                    if (fieldName.startsWith("cost-")) {
                         cleanedFieldName = fieldName.replace("cost-", "");
                     }
                     log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
@@ -361,44 +329,87 @@ public class ApplicationFormController extends AbstractApplicationController {
                 errors = formInputResponseService.save(user.getId(), applicationId, formInputId, value);
             }
 
-
-            if(errors.size() > 0){
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("success", "false");
-                ArrayNode errorsNode = mapper.createArrayNode();
-                errors.stream().forEach(e -> errorsNode.add(e));
-                node.set("validation_errors", errorsNode);
-                return node;
-            }else{
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("success", "true");
-                return node;
+            if (errors.size() > 0) {
+                return this.createJsonObjectNode(false, errors);
+            } else {
+                return this.createJsonObjectNode(true, null);
             }
-
-
-
         } catch (Exception e) {
-//            throw new AutosaveElementException(inputIdentifier, value, applicationId, e);
             log.error("Exception on autosave: ");
             log.error(e.getMessage());
             e.printStackTrace();
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
 
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("success", "false");
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errorsNode.add(ex.getErrorMessage());
-            node.set("validation_errors", errorsNode);
-            return node;
-
-//            AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-//            response.setStatus(400);
-//            log.info("Autosave failed with error: "+ ex.getErrorMessage());
-//            return ex.createJsonResponse();
+            errors.add(ex.getErrorMessage());
+            return this.createJsonObjectNode(false, errors);
         }
+    }
+
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("success", (success ? "true" : "false"));
+        if(!success){
+            ArrayNode errorsNode = mapper.createArrayNode();
+            errors.stream().forEach(e -> errorsNode.add(e));
+            node.set("validation_errors", errorsNode);
+        }
+        return node;
+    }
+
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+        Application application = applicationService.getById(applicationId);
+
+        if (fieldName.equals("application.name")) {
+            value = value.trim();
+            if(StringUtils.isEmpty(value)){
+                errors.add("Please enter the full title of the project.");
+            }else{
+
+                application.setName(value);
+                applicationService.save(application);
+            }
+        } else if (fieldName.startsWith("application.durationInMonths")) {
+            Long durationInMonth = Long.valueOf(value);
+            if(durationInMonth == null || durationInMonth < 1L){
+                errors.add("Please enter a valid duration.");
+            }else{
+                application.setDurationInMonths(durationInMonth);
+                applicationService.save(application);
+            }
+        } else if (fieldName.startsWith("application.startDate")) {
+            errors = this.saveApplicationStartDate(application, fieldName, value, errors);
+
+        }
+        return errors;
+    }
+
+    private List<String> saveApplicationStartDate(Application application, String fieldName, String value, List<String> errors) {
+        LocalDate startDate = application.getStartDate();
+
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+        try{
+            if (fieldName.endsWith(".dayOfMonth")) {
+                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+            } else if (fieldName.endsWith(".monthValue")) {
+                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+            } else if (fieldName.endsWith(".year")) {
+                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+            }
+            if(startDate.isBefore(LocalDate.now())){
+                errors.add("Please enter a future date.");
+            }
+
+            application.setStartDate(startDate);
+            applicationService.save(application);
+        }catch(DateTimeException e){
+            errors.add("Please enter a valid date.");
+        }catch(NumberFormatException e){
+            errors.add("Please enter a valid date.");
+        }
+        return errors;
     }
 
     public void assignQuestion(Model model,
@@ -408,9 +419,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         assignQuestion(request, applicationId);
     }
 
-    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form) {
+    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
         Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true, form);
-        addOrganisationFinanceDetails(model, application, userId);
+        form.application = application;
+        addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);
         return application;
     }

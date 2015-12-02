@@ -206,7 +206,7 @@ public class ApplicationController extends AbstractApplicationController {
         Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        addOrganisationFinanceDetails(model, application, userId);
+        addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);
         return application;
     }

@@ -223,7 +223,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("mark_as_complete", "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 2)) // one for empty  input field, one for mark-as-complete
+                .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
                 .andReturn();
     }
@@ -265,12 +265,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testSaveFormElementApplicationTitle() throws Exception {
         String value = "New application title #216";
-        String questionId = "application_details-title";
+        String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -286,12 +286,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testSaveFormElementEmptyApplicationTitle() throws Exception {
         String value = "";
-        String questionId = "application_details-title";
+        String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -306,12 +306,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testSaveFormElementSpacesApplicationTitle() throws Exception {
         String value = " ";
-        String questionId = "application_details-title";
+        String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -326,12 +326,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "123";
-        String questionId = "application_details-duration";
+        String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -347,12 +347,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testSaveFormElementApplicationInvalidDuration() throws Exception {
         String value = "aaaa";
-        String questionId = "application_details-duration";
+        String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "formInput[" + questionId + "]")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
@@ -387,12 +387,13 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testSaveFormElementApplicationStartDate() throws Exception {
         String value = "30";
-        String questionId = "application_details-startdate_day";
+        String questionId= "application_details-startdate_day";
+        String fieldName = "application.startDate.dayOfMonth";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
                         .param("formInputId", questionId)
-                        .param("fieldName", "formInput["+questionId+"]")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", "1")
         ).andExpect(status().isOk())
@@ -410,15 +411,15 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 //    (expected = NestedServletException.class)
     @Test
      public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
-
-        String questionId = "application_details-startdate_day";
+        String questionId= "application_details-startdate_day";
+        String fieldName = "application.startDate.dayOfMonth";
         Long userId = loggedInUser.getId();
         String value = "35";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
                         .param("formInputId", questionId)
-                        .param("fieldName", "formInput[" + questionId + "]")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -433,15 +434,15 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElementApplicationAttributeInvalidMonth() throws Exception {
-
-        String questionId = "application_details-startdate_month";
+        String questionId= "application_details-startdate_month";
+        String fieldName = "application.startDate.monthValue";
         Long userId = loggedInUser.getId();
         String value = "13";
 
         MvcResult result = mockMvc.perform(
                 post("/application-form/saveFormElement")
                         .param("formInputId", questionId)
-                        .param("fieldName", "question[" + questionId + "]")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)

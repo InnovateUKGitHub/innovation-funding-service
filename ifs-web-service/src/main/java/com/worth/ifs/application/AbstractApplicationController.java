@@ -5,13 +5,13 @@ import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -64,6 +64,8 @@ public abstract class AbstractApplicationController {
 
     @Autowired
     FinanceService financeService;
+
+
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
@@ -200,14 +202,15 @@ public abstract class AbstractApplicationController {
         model.addAttribute("assignedSections", assignedSections);
     }
 
-    protected void addOrganisationFinanceDetails(Model model, Application application, Long userId) {
+    protected void addOrganisationFinanceDetails(Model model, Application application, Long userId, Form form) {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
-        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
         model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
 
-
+        String formInputKey = "finance-grantclaim-" + organisationFinance.getGrantClaimPercentageId();
+        String formInputValue = (organisationFinance.getGrantClaimPercentage() != null ? organisationFinance.getGrantClaimPercentage().toString() : "") ;
+        form.addFormInput(formInputKey, formInputValue);
     }
 
     protected void addFinanceDetails(Model model, Application application) {
