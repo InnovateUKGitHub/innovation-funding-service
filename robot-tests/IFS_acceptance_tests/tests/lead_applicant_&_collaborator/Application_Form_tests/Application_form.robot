@@ -10,11 +10,11 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the Autosave for the "Rovel additive..." Application form

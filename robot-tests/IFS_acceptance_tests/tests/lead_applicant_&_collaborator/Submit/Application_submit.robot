@@ -7,11 +7,11 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
-Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
 Verify the "Review and submit" button (overview page)

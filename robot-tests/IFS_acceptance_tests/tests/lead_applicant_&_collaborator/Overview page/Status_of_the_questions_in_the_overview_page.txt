@@ -2,11 +2,11 @@
 Documentation     INFUND-39 As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the questions status for the "Application details" section
