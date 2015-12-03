@@ -1,0 +1,8 @@
+@import "compass/css3";
+
+//within our own modules the documentation is next to the source code so we import the entire source
+@import '../sass/govuk';
+@import 'govuk-docs';
+
+//styling for the styleguide 
+@import 'docs-styling';
