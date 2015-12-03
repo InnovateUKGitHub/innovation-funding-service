@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -65,7 +66,8 @@ public class CostController {
 
             newCost.getCostValues()
                 .stream()
-                .filter(costValue -> costValue.getValue()!=null)
+                .filter(c -> c.getValue() != null)
+                .filter(c -> !c.getValue().equals("null"))
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
 
         } else {
@@ -92,6 +94,10 @@ public class CostController {
     }
 
     private void updateCostValue(CostValue costValue, Cost savedCost){
+        if(costValue.getCostField() == null){
+            log.error("CostField is null");
+            return;
+        }
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
@@ -108,6 +114,7 @@ public class CostController {
         return costRepository.findOne(id);
     }
 
+    @Transactional
     @RequestMapping("/delete/{costId}")
     public void delete(@PathVariable("costId") final Long costId) {
         costValueRepository.deleteByCostId(costId);

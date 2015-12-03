@@ -2,15 +2,16 @@
 Documentation     INFUND-406: As an applicant, and on the application form I have validation error, I cannot mark questions or sections as complete in order to submit my application
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the user can't mark as complete empty text areas
     [Documentation]    -INFUND-406
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the "Project Summary" question is empty
     and the applicant marks the question as complete
@@ -19,6 +20,7 @@ Verify that the user can't mark as complete empty text areas
 
 Verify that the user doesn't get the error when the text area is not empty anymore
     [Documentation]    -INFUND-406
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the "Project Summary" question is empty
     and the applicant marks the question as complete

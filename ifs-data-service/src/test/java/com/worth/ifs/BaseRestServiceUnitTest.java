@@ -28,7 +28,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected abstract ServiceType registerRestServiceUnderTest();
 
-    protected static final String dataServicesUrl = "http://localhost/tests/dataServices";
+    protected static String dataServicesUrl = "http://localhost/dummy";
 
     private static final String VALID_AUTH_TOKEN = "VALID_AUTH_TOKEN";
 

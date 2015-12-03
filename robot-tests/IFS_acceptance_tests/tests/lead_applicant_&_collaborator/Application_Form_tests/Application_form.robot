@@ -10,16 +10,16 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the Autosave for the "Rovel additive..." Application form
     [Documentation]    INFUND-189
-    [Tags]
+    [Tags]    Applicant
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant enters some text
     and the Applicant refreshes the page
@@ -40,6 +40,7 @@ Verify the navigation for the "Rovel additive..." form
 
 Verify the last update metadata
     [Documentation]    INFUND-283
+    [Tags]    Applicant
     Given the applicant is on the application overview page
     and opens the 'Your business proposition' section
     Then the last update date of question 1 is a date in the past

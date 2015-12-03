@@ -41,6 +41,10 @@ public class UserController {
      public User getUserByToken(@PathVariable("token") final String token) {
         List<User> users = repository.findByToken(token);
         if (users.size() > 0){
+            log.debug("+++++++++++++++++++++++");
+            log.debug(users.get(0).getName());
+            log.debug(users.get(0).getId());
+            log.debug("+++++++++++++++++++++++");
             return users.get(0);
         }else{
             return null;

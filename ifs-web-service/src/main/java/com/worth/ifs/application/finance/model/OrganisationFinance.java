@@ -90,6 +90,9 @@ public class OrganisationFinance {
 
     public BigDecimal getTotal() {
         return costCategories.entrySet().stream()
+                .filter(cat -> cat != null)
+                .filter(cat -> cat.getValue() != null)
+                .filter(cat -> cat.getValue().getTotal() != null)
                 .map(cat -> cat.getValue().getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

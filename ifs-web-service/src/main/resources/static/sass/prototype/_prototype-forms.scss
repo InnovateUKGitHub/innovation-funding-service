@@ -28,3 +28,48 @@
 		padding-top: 6px;
 	}
 }
+
+/*----- Inline form elements for academic finances ----*/
+
+.form-inline{
+
+	.form-group{
+		margin-bottom: 20px;
+
+		&.underline{
+			border-bottom: 1px solid $black;
+			margin-top: 10px
+		}
+
+		&.border-top{
+			border-top: 1px solid $black;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			padding: 20px 0;
+		}
+
+		&.totals{
+			border: 1px solid $border-colour;
+			background: $panel-colour;
+			padding: 10px 5px;
+
+			.form-control{
+				border: none;
+				background: none;
+				font-weight: bold;
+			}
+		}
+
+	}
+
+	.form-label{
+		float: left;
+		width: 30%;
+		margin-right: 20px;
+		padding-top: 5px;
+	}
+
+	.form-control{
+		float: left;
+	}
+}

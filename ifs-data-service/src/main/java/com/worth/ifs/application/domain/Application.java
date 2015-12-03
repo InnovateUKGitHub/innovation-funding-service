@@ -1,10 +1,13 @@
 package com.worth.ifs.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,17 +21,18 @@ public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotEmpty
     private String name;
     private LocalDate startDate;
+    @Min(0)
     private Long durationInMonths; // in months
 
-    public void setId(Long id) { this.id = id; }
+    @OneToMany(mappedBy="application")
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="application")
-    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
-
-    @OneToMany(mappedBy="application")
-    private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
+    private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="applicationStatusId", referencedColumnName="id")
@@ -39,6 +43,12 @@ public class Application {
     private Competition competition;
 
     public Application() {
+        /*default constructor*/}
+
+    public Application(Long id, String name, ApplicationStatus applicationStatus) {
+        this.id = id;
+        this.name = name;
+        this.applicationStatus = applicationStatus;
     }
 
     public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
@@ -51,6 +61,10 @@ public class Application {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -89,19 +103,11 @@ public class Application {
         this.competition = competition;
     }
 
-    public Application(Long id, String name, ApplicationStatus applicationStatus) {
-        this.id = id;
-        this.name = name;
-        this.applicationStatus = applicationStatus;
-    }
-
     public void addUserApplicationRole(ProcessRole... processRoles){
         if(this.processRoles == null){
             this.processRoles = new ArrayList<>();
         }
         this.processRoles.addAll(Arrays.asList(processRoles));
-
-
     }
 
     public LocalDate getStartDate() {
@@ -110,6 +116,11 @@ public class Application {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    @JsonIgnore
+    public List<ApplicationFinance> getApplicationFinances() {
+        return applicationFinances;
     }
 
     public Long getDurationInMonths() {

@@ -9,7 +9,6 @@ public class FormValidatorTest {
 
     @Test
     public void test_formInputTypeBasicAttributes() throws Exception {
-
         String title = "Email Validator";
         Class clazz = EmailValidator.class;
 
@@ -20,7 +19,6 @@ public class FormValidatorTest {
     }
     @Test
     public void test_formInputTypeSetValidatorClazz() throws Exception {
-
         String title = "Email Validator";
         Class clazz = EmailValidator.class;
 
@@ -37,6 +35,4 @@ public class FormValidatorTest {
         Assert.assertEquals(formValidator.getClazzName(), NotEmptyValidator.class.getName());
         Assert.assertEquals(formValidator.getClazz(), NotEmptyValidator.class);
     }
-
-
 }

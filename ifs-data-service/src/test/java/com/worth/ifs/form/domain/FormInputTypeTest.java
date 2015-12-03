@@ -7,7 +7,6 @@ public class FormInputTypeTest {
 
     @Test
     public void test_formInputTypeBasicAttributes() throws Exception {
-
         Long id = 1L;
         String title = "formInputTypeTitle";
         FormInputType formInputType = new FormInputType(id, title);

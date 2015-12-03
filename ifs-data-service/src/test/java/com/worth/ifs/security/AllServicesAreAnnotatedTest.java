@@ -1,6 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.service.ApplicationRestServiceImpl;
 import com.worth.ifs.application.service.QuestionRestServiceImpl;
 import com.worth.ifs.application.service.ResponseRestServiceImpl;
@@ -13,6 +14,7 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
+import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
 import org.junit.Test;
@@ -53,7 +55,10 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     ApplicationRestServiceImpl.class,
                     ResponseRestServiceImpl.class,
                     TokenAuthenticationService.class,
-                    StatelessAuthenticationFilter.class});
+                    StatelessAuthenticationFilter.class,
+                    ApplicationResourceAssembler.class,
+                    ProcessRoleResourceAssembler.class
+            });
 
     List<Class<? extends Annotation>> securityAnnotations
             = Arrays.asList(

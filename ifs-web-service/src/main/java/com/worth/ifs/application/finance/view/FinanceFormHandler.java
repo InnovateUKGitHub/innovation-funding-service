@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,9 +30,9 @@ public class FinanceFormHandler {
         this.costService = costService;
     }
 
-    public void handle(HttpServletRequest request) {
+    public boolean handle(HttpServletRequest request) {
         List<Cost> costs = getCosts(request);
-        storeCosts(costs);
+        return storeCosts(costs);
     }
 
     private List<Cost> getCosts(HttpServletRequest request) {
@@ -114,8 +115,10 @@ public class FinanceFormHandler {
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
         if (keyParts.length > 2) {
-            Long id = Long.valueOf(keyParts[2]);
             return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
+        }else if(keyParts.length == 2){
+            log.info("id == null");
+            return new CostFormField(costTypeKey, value, null, keyParts[1], keyParts[0]);
         }
         return null;
     }
@@ -134,8 +137,72 @@ public class FinanceFormHandler {
                 break;
             case FINANCE:
                 costItem = getClaimGrantPercentage(id, costFields);
+                break;
+            case OVERHEADS:
+                costItem = getOverheadsCosts(id, costFields);
+                break;
+            case CAPITAL_USAGE:
+                costItem = getCapitalUsage(id, costFields);
+                break;
+            case TRAVEL:
+                costItem = getTravelCost(id, costFields);
+                break;
+            case OTHER_COSTS:
+                costItem = getOtherCost(id, costFields);
+                break;
+            default:
+                log.error("getCostItem, unsupported type: "+ costType);
+                break;
         }
         return costItem;
+    }
+
+    private CostItem getCapitalUsage(Long id, List<CostFormField> costFields) {
+        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        Integer deprecation = null;
+        String description = null;
+        String existing = null;
+        BigDecimal npv = null;
+        BigDecimal residualValue = null;
+        Integer utilisation = null;
+
+        for(CostFormField costFormField : costFields) {
+            if (costFormField.getCostName().equals("item")) {
+                description = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("existing")) {
+                existing = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("deprecation_period")) {
+                deprecation = Integer.valueOf(costFormField.getValue());
+            }else if (costFormField.getCostName().equals("npv")) {
+                npv = getBigDecimalValue(costFormField.getValue(), 0d);
+            }else if (costFormField.getCostName().equals("residual_value")) {
+                residualValue = getBigDecimalValue(costFormField.getValue(), 0d);
+            }else if (costFormField.getCostName().equals("utilisation")) {
+                utilisation = Integer.valueOf(costFormField.getValue());
+            }else{
+                log.info("Unused costField: "+costFormField.getCostName());
+            }
+        }
+
+        return new CapitalUsage( id,  deprecation,  description,  existing,
+                 npv,  residualValue,  utilisation );
+    }
+
+    private CostItem getOverheadsCosts(Long id, List<CostFormField> costFields) {
+        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        Integer customRate = null;
+        String acceptRate = null;
+
+        for(CostFormField costFormField : costFields) {
+            if (costFormField.getCostName().equals("acceptRate")) {
+                acceptRate = costFormField.getValue();
+            }else if (costFormField.getCostName().equals("customRate")) {
+                customRate = Integer.valueOf(costFormField.getValue());
+            }else{
+                log.info("Unused costField: "+costFormField.getCostName());
+            }
+        }
+        return new Overhead(id, acceptRate, customRate);
     }
 
     private CostItem getLabourCost(Long id, List<CostFormField> costFormFields) {
@@ -154,6 +221,8 @@ public class FinanceFormHandler {
                 } else if (costFormField.getCostName().equals("labourDays") ||
                         costFormField.getCostName().equals("workingDays")) {
                     labourDays = getIntegerValue(fieldValue, 0);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
@@ -173,6 +242,8 @@ public class FinanceFormHandler {
                     cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
                     quantity = getIntegerValue(fieldValue, 0);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
@@ -190,17 +261,60 @@ public class FinanceFormHandler {
             if(fieldValue!=null) {
                 if (costFormField.getCostName().equals("country")) {
                     country = fieldValue;
-                } else if (costFormField.getCostName().equals("cost")) {
+                } else if (costFormField.getCostName().equals("subcontractingCost")) {
                     cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("name")) {
                     name = fieldValue;
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
                 }
             }
         }
 
         return new SubContractingCost(id, cost, country, name, role);
+    }
+
+    private CostItem getTravelCost(Long id, List<CostFormField> costFormFields) {
+        BigDecimal costPerItem = null;
+        String item = null;
+        Integer quantity = null;
+
+        for(CostFormField costFormField : costFormFields) {
+            String fieldValue = costFormField.getValue();
+            if(fieldValue!=null) {
+                if (costFormField.getCostName().equals("travelPurpose")) {
+                    item = fieldValue;
+                } else if (costFormField.getCostName().equals("travelNumTimes")) {
+                    quantity = getIntegerValue(fieldValue, 0);
+                } else if (costFormField.getCostName().equals("travelCostEach")) {
+                    costPerItem = getBigDecimalValue(fieldValue, 0d);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
+                }
+            }
+        }
+        return new TravelCost(id, costPerItem, item, quantity);
+    }
+
+    private CostItem getOtherCost(Long id, List<CostFormField> costFormFields) {
+        String description = null;
+        BigDecimal cost = null;
+
+        for(CostFormField costFormField : costFormFields) {
+            String fieldValue = costFormField.getValue();
+            if(fieldValue!=null) {
+                if (costFormField.getCostName().equals("description")) {
+                    description = fieldValue;
+                } else if (costFormField.getCostName().equals("otherCost")) {
+                    cost = getBigDecimalValue(fieldValue, 0d);
+                }else{
+                    log.info("Unused costField: "+costFormField.getCostName());
+                }
+            }
+        }
+        return new OtherCost(id, cost, description);
     }
 
     private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {
@@ -228,8 +342,9 @@ public class FinanceFormHandler {
         }
     }
 
-    private void storeCosts(List<Cost> costs) {
+    private boolean storeCosts(List<Cost> costs) {
         costs.stream().forEach(c -> costService.update(c));
+        return true;
     }
 
     private Cost updateCost(Cost cost) {

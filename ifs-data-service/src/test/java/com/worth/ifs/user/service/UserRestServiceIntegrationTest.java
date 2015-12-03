@@ -2,11 +2,11 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceIntegrationTest;
 import com.worth.ifs.user.domain.User;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for {@link UserRestServiceImpl}.

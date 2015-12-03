@@ -4,7 +4,8 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <style> .message-alert {
-        background: #e4eff6 url("../images/message-star.png") no-repeat scroll 25px 25px;
+        background: #e4eff6;
+        padding-left: 30px;
         } </style>
 </head>
 <body class="app-overview">
@@ -19,27 +20,15 @@
     <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+	<h1 class="heading-xlarge no-margin-top">Empire Ltd Finances</h1>
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-            <div class="hgroup" style="padding-top: 20px">
-				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin-top">Empire Ltd Finances</h1>
-			</div>
-        </div>
-        <div class="column-third competition-details">
-            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
-        </div>
-    </div>
+	<h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
 
-    <div class="message-alert">
-        <h2 class="heading-small">You are assigned to your organisation's finances</h2>
-        <p>
-        If you have been assigned this role in error or if you need to pass on to someone else, then please <br /><a href="/prototypes/631-finances-assign-user"><strong>Assign another member of your organisation</strong></a>
-        </p>
-    </div>
-
-	<p class="form-info extra-margin">You can use this section to detail the project costs for your organisation only. Only your organisation can see this level of detail</p>
+	<p>Only your organisation can see this level of detail.
+		All members of your organisation can acesss and edit your finances
+		We recommend assigning completion of your finances to one member of your team</p>
 
 	<div class="collapsible section-overview">
         

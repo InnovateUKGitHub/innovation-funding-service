@@ -32,7 +32,6 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void test_findOne() {
-
         FormInputResponse response = repository.findOne(1L);
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
@@ -47,7 +46,6 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void test_findByApplicationIdAndFormInputId() {
-
         // test that we can find responses to form input "1" for certain applications
         assertEquals(1, repository.findByApplicationIdAndFormInputId(1L, 1L).size());
         assertEquals(0, repository.findByApplicationIdAndFormInputId(2L, 1L).size());
@@ -71,7 +69,6 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void test_findByApplicationIdAndUpdateByAndFormInputId() {
-
         // test that we can find processrole "1"'s response to form input "1" for certain applications
         long processRoleId = 1L;
         assertNotNull(repository.findByApplicationIdAndUpdatedByIdAndFormInputId(1L, processRoleId, 1L));
@@ -105,7 +102,6 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void test_findByUpdateBy() {
-
         // test that we can find processrole "1"'s responses to any applications
         long processRoleId = 1L;
         List<FormInputResponse> responses = repository.findByUpdatedById(processRoleId);
@@ -122,7 +118,6 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(2015, response.getUpdateDate().getYear());
         assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
         assertEquals("1. What is the business opportunity that your project addresses?", response.getFormInput().getDescription());
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -83,6 +81,29 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         List<String> errors = controller.saveQuestionResponse(jsonObj, response);
         assertThat(errors, hasSize(1));
         assertThat(errors, hasItem("Please enter some text"));
+    }
+
+    @Test
+    @Rollback
+    public void test_saveWordCountExceedingQuestionResponse() {
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode jsonObj = mapper.createObjectNode();
+        jsonObj.put("userId", 1);
+        jsonObj.put("applicationId", 1);
+        jsonObj.put("formInputId", 1);
+
+        String value = "";
+        for(int i=0; i<=501; i++) {
+            value+=" word";
+        }
+
+        jsonObj.put("value", value);
+
+        List<String> errors = controller.saveQuestionResponse(jsonObj, response);
+        assertThat(errors, hasSize(1));
+        assertThat(errors, hasItem("Maximum word count exceeded"));
     }
 
     @Test

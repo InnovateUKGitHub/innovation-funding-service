@@ -33,7 +33,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @InjectMocks
     private ApplicationController applicationController;
 
-
     @Before
     public void setUp(){
         super.setup();
@@ -53,8 +52,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupFinances();
     }
-
-
 
     @Test
      public void testApplicationDetails() throws Exception {

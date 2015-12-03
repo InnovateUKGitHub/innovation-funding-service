@@ -140,18 +140,47 @@
 
 <!-- ===========================Place: <main> content-end =========================== --> 
 
-<div th:fragment="main-content-end"></div>
+<div th:fragment="main-content-end">
+    <details style="margin-top: 100px;">
+        <summary><span class="summary">Is there anything wrong with this page?</span></summary>
+        <div class="panel-indent">
+            <h2 class="heading-medium no-margin">Help us improve the innovation funding service</h2>
+            <p class="form-info">Don’t include personal or financial information</p>
+            <form>
+                <!-- Use .form-group to create spacing when wrapping label and input pairs -->
+                <div class="form-group">
+                    <label class="form-label" for="what-doing">What you were doing</label>
+                    <input class="form-control" id="what-doing" name="what-doing" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="what-went-wrong">What went wrong</label>
+                    <input class="form-control" id="what-went-wrong" name="what-went-wrong" type="text" />
+                </div>
+                <div class="button-wrapper">
+                    <button name="commit" type="submit" class="button">Send</button>
+                </div>
+            </form>
+
+        </div>
+    </details>
+</div>
 
 
 <!-- ===========================Place: main <footer>  =========================== --> 
 
 <div th:fragment="footer">
+
   <footer class="group js-footer" id="footer" role="contentinfo">
 
       <div class="footer-wrapper">
         
         <div class="footer-meta">
           <div class="footer-meta-inner">
+            <ul>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
           
             <div class="open-government-licence">
               <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>

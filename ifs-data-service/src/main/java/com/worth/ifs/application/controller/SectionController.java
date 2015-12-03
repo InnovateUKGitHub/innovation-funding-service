@@ -4,10 +4,11 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ApplicationController exposes Application data and operations through a REST API.
+ * SectionController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/section")
@@ -100,8 +101,7 @@ public class SectionController {
     }
 
     private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        boolean sectionIsComplete = true;
-        sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
+        boolean sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
 
         // check if section has subsections, if there are subsections let the outcome depend on those subsections
         // and the section itself if it contains questions with mark as complete attached
@@ -120,6 +120,13 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
+            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING")){
+                if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
+                    sectionIsComplete = false;
+                }
+                break;
+            }
+
             if(!question.isMarkAsCompletedEnabled())
                 continue;
 
@@ -133,4 +140,27 @@ public class SectionController {
         return sectionIsComplete;
     }
 
+    public boolean childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+        boolean allSectionsWithSubsectionsAreComplete = true;
+
+        Application application = applicationRepository.findOne(applicationId);
+        List<Section> sections = parentSection.getChildSections();
+
+        List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
+
+        for (Section section : sections) {
+            //Only check the sections that have subsections
+            if(section.hasChildSections() && !section.equals(excludedSection)) {
+                //Check if section is complete for all organisations that participate in the application
+                for(ApplicationFinance applicationFinance : applicationFinanceList) {
+                    if (!this.isSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId())) {
+                        allSectionsWithSubsectionsAreComplete=false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return allSectionsWithSubsectionsAreComplete;
+    }
 }
