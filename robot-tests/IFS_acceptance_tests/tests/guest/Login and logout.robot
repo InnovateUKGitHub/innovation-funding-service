@@ -13,14 +13,14 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Log-out
-    [Tags]    Applicant
+    [Tags]    Guest
     [Setup]    Login as user    &{lead_applicant_credentials}
     Given the Applicant is logged-in
     When The Applicant clicks the log-out button
     Then the applicant should be logged-out
 
 Invalid Login
-    [Tags]    Applicant
+    [Tags]    Guest
     Given the user is not logged-in
     When the guest user inserts correct username
     And the guest user inserts wrong password
@@ -28,7 +28,7 @@ Invalid Login
     Then the guest user should get an error message
 
 Valid login as Applicant
-    [Tags]    Applicant
+    [Tags]    Guest
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${lead_applicant_credentials["email"]}
     And the user inserts password    ${lead_applicant_credentials["password"]}
@@ -38,6 +38,7 @@ Valid login as Applicant
     [Teardown]    Logout as user
 
 Valid login as Collaborator
+    [Tags]    Guest
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${collaborator1_credentials["email"]}
     And the user inserts password    ${collaborator1_credentials["password"]}
@@ -48,7 +49,7 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor
+    [Tags]    Assessor    Guest
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${assessor_credentials["email"]}
     And the user inserts password    ${assessor_credentials["password"]}

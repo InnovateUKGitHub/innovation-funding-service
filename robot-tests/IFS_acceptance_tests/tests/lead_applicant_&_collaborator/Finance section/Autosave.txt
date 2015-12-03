@@ -14,6 +14,7 @@ ${APPLICANT_PSW}    test
 
 *** Test Cases ***
 Verify auto the auto-save of the "Grant" field
+    [Tags]    Applicant    Autosave    Finance
     Given the applicant is in the Finance section
     Then auto-save should work for the "Grant" field
     and the grant value should be correct in the finance summary page

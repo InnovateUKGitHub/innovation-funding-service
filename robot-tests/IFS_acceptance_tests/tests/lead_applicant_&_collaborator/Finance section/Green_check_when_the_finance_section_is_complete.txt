@@ -11,6 +11,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 'Green check' shows in the sidebar when all the questions are marked as complete
     [Documentation]    INFUND-407
+    [Tags]    Applicant    Finance    Collaboration
     When the lead applicant has marked all the questions as complete
     and the 1st collaborator has marked all the questions as complete
     and the 2nd collaborator has marked all the questions as complete
@@ -18,11 +19,13 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 Applicant shouldn't see 'Green checks' in the sidebar when (s)he marks the 'Labour' as incomplete
     [Documentation]    INFUND-407
+    [Tags]    applicant    Finance    Collaboration
     When applicant marks the labour section as incomplete
     Then green checks should not be visible in the sidebar
 
 The collaborators should have 'Green checks' only for the "Your Finance" when the applicant marks 'Labour' as incomplete
     [Documentation]    INFUND-407
+    [Tags]    Applicant    Finance    Collaboration
     When applicant marks the Labour section as incomplete
     Then the 1st applicant should see the 'Green check' only in the 'Your Finances'
     And the 2nd applicant should see the 'Green check' only in the 'Your Finances'

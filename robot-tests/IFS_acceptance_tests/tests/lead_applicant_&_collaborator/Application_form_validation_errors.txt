@@ -11,12 +11,14 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Verify the validation error when the Project title field is empty
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the application form
     When the applicant clears the application title field
     The applicant should get a validation error for the title field
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error for the date
@@ -27,6 +29,7 @@ Verify the validation error for an invalid date (Year)
 
 Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the applicant inserts "32" in the day field
     Then the applicant should get a validation error for the date
@@ -41,6 +44,7 @@ Verify the validation error for an invalid date (day)
 
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the applicant inserts "0" in the month field
     Then the applicant should get a validation error for the date
@@ -55,6 +59,7 @@ Verify the validation error for an invalid date (month)
 
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the application form
     When the applicant inserts "0" in the duration field
     Then the applicant should get a validation error for the duration
@@ -67,6 +72,7 @@ Verify the validation error for the duration field
 
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error

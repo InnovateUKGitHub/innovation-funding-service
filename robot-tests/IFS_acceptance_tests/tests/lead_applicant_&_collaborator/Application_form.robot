@@ -19,7 +19,7 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Verify the Autosave for the "Rovel additive..." Application form
     [Documentation]    INFUND-189
-    [Tags]
+    [Tags]    Applicant
     Given the Applicant opens the "Rovel additive" application form
     When the Applicant enters some text
     and the Applicant refreshes the page
@@ -40,6 +40,7 @@ Verify the navigation for the "Rovel additive..." form
 
 Verify the last update metadata
     [Documentation]    INFUND-283
+    [Tags]    Applicant
     Given the applicant is on the application overview page
     and opens the 'Your business proposition' section
     Then the last update date of question 1 is a date in the past
