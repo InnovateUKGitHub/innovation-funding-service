@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- ===========================Prototype index page  =========================== --> 
+
+<!-- ========Assessor view - showing scores in overview headers======= -->
+
+<div th:fragment="prototype-assessor-score">
+    <div class="column-third">
+        SCORE
+    </div>
+</div>
+
+<!-- ========Assessor view - sub header back to comp dashboard======= -->
+
+<div th:fragment="prototype-assessor-subheader(link, url)">
+    <div class="sub-header">
+        <div class="deadline">Days left to submit&nbsp;&nbsp;
+            <div class="pie-container">
+                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                <div class="pie-overlay">
+                    <div>0</div>
+                    <span>Days left</span>
+                </div>
+            </div>
+        </div>
+        <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+    </div>
+</div>
+
+<!-- ===================Assessor Page title============================== -->
+<div th:fragment="prototype-assessor-page-title(subtitle, heading)">
+    <div class="hgroup" style="padding-top: 20px">
+        <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
+        <h1 class="heading-xlarge no-margin-top" th:text="${heading}">Title here</h1>
+    </div>
+</div>
+
+</html>

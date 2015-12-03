@@ -26,12 +26,15 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<header class="page-header group">
+	<header class="page-header no-margin-bottom group">
 		<div class="hgroup">
 			<h1>Prototype index</h1>
 			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
 		</div>
 	</header>
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:remove="tag" />
+
 
 	<section class="grid-row">
 		<div class="row">
