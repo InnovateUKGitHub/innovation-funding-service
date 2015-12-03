@@ -4,21 +4,21 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...               -INFUND-265: As both lead applicant and collaborator I want to see the changes other participants have made since my last visit, so I can see progress made on the application form
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the assign button is visible in the overview page
-    [Tags]    Collaborator
+    [Tags]    Collaboration
     When the Applicant is in the overview page
     Then the collaborators should be visible in the overview page
 
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
-    [Tags]    Collaborator
+    [Tags]    Collaboration
     Given the Applicant is in the application details section
     When the Applicant assigns the question 11 to the collaborator    Jessica Doe
     Then the success message should show
@@ -27,14 +27,14 @@ Verify the applicant can assign a question
 
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
-    [Tags]    Collaborator
+    [Tags]    Collaboration
     Given the second Collaborator is logged in
     When the second Collaborator is in the application overview page
     Then the question 11 should not be editable
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
-    [Tags]    Collaborator
+    [Tags]    Collaboration
     When the Collaborator is in the Application details section
     Then the Collaborator gets the assigned notification
     and question 11 should be assigned to the collaborator
@@ -42,16 +42,18 @@ Verify the field is enabled for the collaborator/assignee
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280
+    [Tags]    Collaboration
     When the collaborator marks the question 11 as complete
     Then the 'Last update' message should be updated
 
 Verify the field is disabled for the Collaborator
     [Documentation]    INFUND-275
-    [Tags]    Collaborator
+    [Tags]    Collaboration
     Then the field of the question 11 should be disabled
 
 Verify the Lead applicant can assign a question back to him self
     [Documentation]    INFUND-275
+    [Tags]    Collaboration
     [Setup]    Switch to the first browser
     Given the Applicant opens again the application form
     when the Applicant assigns the question 11 to the collaborator    Jessica Doe

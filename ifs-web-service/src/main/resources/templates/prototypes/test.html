@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+  <!-- HARDCODED PROTOTYPE HTML -->
+
+
+<form>
+    <fieldset class="inline">
+
+      <legend class="visuallyhidden">Do you know their National Insurance number?</legend>
+
+      <div class="form-group">
+
+        <label class="block-label" data-target="example-ni-no" for="radio-indent-1">
+          <input id="radio-indent-1" name="radio-indent-group" value="Yes" type="radio"  />
+          Yes
+        </label>
+
+        <label class="block-label" for="radio-indent-2">
+          <input id="radio-indent-2" name="radio-indent-group" value="No" type="radio" />
+          No
+        </label>
+
+        <div class="panel-indent js-hidden" id="example-ni-no">
+          <label class="form-label" for="national-insurance">National Insurance number</label>
+          <input class="form-control" name="national-insurance" id="national-insurance" type="text" />
+        </div>
+
+      </div>
+
+    </fieldset>
+
+    <fieldset class="inline">
+
+      <legend class="visuallyhidden">Do you know their National Insurance number?</legend>
+
+      <div class="form-group">
+
+        <label class="block-label" data-target="lalal" for="radio-test-1">
+          <input id="radio-test-1" name="radio-indent-group1" value="Yes" type="radio" checked="checked" />
+          Yes
+        </label>
+
+        <label class="block-label" for="radio-test-2">
+          <input id="radio-test-2" name="radio-indent-group1" value="No" type="radio" />
+          No
+        </label>
+
+        <div class="panel-indent js-hidden" id="lalal">
+          <label class="form-label" for="national-insurance">National Insurance number</label>
+          <input class="form-control" name="national-insurance" id="national-insurance" type="text" />
+        </div>
+
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+
+      <legend class="visuallyhidden">What is your nationality?</legend>
+
+      <div class="form-group">
+        <label class="block-label" for="nationalities-british">
+          <input id="nationalities-british" name="nationalities" value="British" type="checkbox" />
+          British (including English, Scottish, Welsh and Northern Irish)
+        </label>
+        <label class="block-label" for="nationalities-irish">
+          <input id="nationalities-irish" name="nationalities" value="Irish" type="checkbox" />
+          Irish
+        </label>
+        <label class="block-label" for="nationalities-other" data-target="example-different-country">
+          <input id="nationalities-other" name="nationalities" value="Citizen of a different country" type="checkbox" checked="checked" />
+          Citizen of a different country
+        </label>
+        <div class="panel-indent js-hidden" id="example-different-country">
+          <label class="form-label" for="nationalities-other-country">Country name</label>
+          <input class="form-control" id="nationalities-other-country" name="nationalities-other-country" type="text" />
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+
+  <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

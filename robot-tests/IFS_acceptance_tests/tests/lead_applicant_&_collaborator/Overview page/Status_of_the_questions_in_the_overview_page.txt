@@ -2,15 +2,16 @@
 Documentation     INFUND-39 As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify the questions status for the "Application details" section
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the Application form
     When the Applicant edits the "Project summary" question
     and the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
@@ -19,6 +20,7 @@ Verify the questions status for the "Application details" section
 
 Verify the question status for the "Scope" section
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the Scope section
     When the Applicant edits the "Scope" question
     and the applicant assigns the "Scope" question to Jessica Doe    Jessica Doe
@@ -27,6 +29,7 @@ Verify the question status for the "Scope" section
 
 Verify the question status for the "Your business proposition" section
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the Your business proposition section
     When the Applicant edits the question 1
     and the applicant assigns the question 1 to Jessica Doe    Jessica Doe
@@ -35,6 +38,7 @@ Verify the question status for the "Your business proposition" section
 
 Verify the question status for the "Your approach to the project" section
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the "Your approach..." section
     When the Applicant edits question 5
     and the applicant assigns question 5 to Jessica Doe    Jessica Doe
@@ -43,6 +47,7 @@ Verify the question status for the "Your approach to the project" section
 
 Verify the question status for the "Funding" section
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the "Funding" section
     When the Applicant edits question 9
     and the applicant assigns question 9 to Jessica Doe    Jessica Doe
@@ -51,6 +56,7 @@ Verify the question status for the "Funding" section
 
 Verify the blue flag when the question is assigned to the applicant
     [Documentation]    INFUND-39
+    [Tags]    Applicant
     Given Applicant goes to the application form
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Application details section(overview page)

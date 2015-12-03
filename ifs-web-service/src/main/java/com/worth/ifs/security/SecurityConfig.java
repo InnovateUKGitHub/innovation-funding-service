@@ -53,7 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint("/login"))
             .and()
-                .headers().cacheControl();
+                .headers()
+                    .frameOptions().sameOrigin()
+                    .cacheControl();
+
 
         //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
     }

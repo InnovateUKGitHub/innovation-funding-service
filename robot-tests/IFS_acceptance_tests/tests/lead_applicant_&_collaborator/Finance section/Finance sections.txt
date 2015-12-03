@@ -2,11 +2,11 @@
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** variables ***
 ${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk
@@ -15,13 +15,13 @@ ${APPLICANT_PSW}    test
 *** Test Cases ***
 Verify the Finance sections
     [Documentation]    INFUND-192
-    [Tags]    Applicant
+    [Tags]    Applicant    Finance
     When the applicant is in the "Your Finances" sub-section
     Then the Applicant should see all the "Your Finance" Sections
 
 Verify the test guidance in the "Your Finance section"
     [Documentation]    INFUND-192
-    [Tags]    Applicant
+    [Tags]    Applicant    Finance
     When the applicant is in the "Your Finances" sub-section
     When the Applicant is in the Labour sub-section
     And the Applicant clicks the "Labour costs guidance"
@@ -57,15 +57,7 @@ Verify the test guidance in the "Your Finance section"
     # and the Applicant refreshes the page
     # Then the new "Gross Annual" amount should be visible
 
-Verify auto the auto-save of the "Grant" field
-    Given the applicant is in the Finance section
-    Then auto-save should work for the "Grant" field
-    and the grant value should be correct in the finance summary page
-
 *** Keywords ***
-the applicant is in the "Your Finances" sub-section
-    Applicant is in the 'Your Finance' sub-section
-
 the Applicant should see all the "Your Finance" Sections
     Page Should Contain Element    css=h2:nth-child(1) button
     Page Should Contain Element    css=#question-20 > div > h2:nth-child(3) > button
@@ -155,26 +147,3 @@ The total subcontracting costs should be 100
 Input has value
     ${input_value} =    Get Value    ${input_selector}
     Should Be Equal As Strings    ${input_value}    £ 522
-
-the applicant is in the Finance section
-    Go To    ${FINANCES}
-
-auto-save should work for the "Grant" field
-    Clear Element Text    css=#cost-financegrantclaim
-    focus    css=.column-half:nth-child(1) .button-block
-    Sleep    1s
-    Reload Page
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    Should Be Equal As Strings    ${input_value}    0
-    Clear Element Text    id=cost-financegrantclaim
-    Input Text    id=cost-financegrantclaim    25
-    focus    css=.column-half:nth-child(1) .button-block
-    Sleep    1s
-    Reload Page
-    focus    css=.column-half:nth-child(1) .button-block
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    Should Be Equal As Strings    ${input_value}    25
-
-the grant value should be correct in the finance summary page
-    Click Link    link=Project financial summary
-    Element Should Contain    css=.form-group > table tr:nth-child(2) .numeric:nth-child(3)    25

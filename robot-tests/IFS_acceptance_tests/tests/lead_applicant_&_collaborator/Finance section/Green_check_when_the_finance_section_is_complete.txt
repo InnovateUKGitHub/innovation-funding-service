@@ -1,0 +1,161 @@
+*** Settings ***
+Documentation     -INFUND-407: As an applicant, I want to see when all the partners have completed their finance details so I know that the financial summary is complete.
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
+
+*** Test Cases ***
+'Green check' shows in the sidebar when all the questions are marked as complete
+    [Documentation]    INFUND-407
+    [Tags]    Applicant    Finance    Collaboration
+    When the lead applicant has marked all the questions as complete
+    and the 1st collaborator has marked all the questions as complete
+    and the 2nd collaborator has marked all the questions as complete
+    Then the green checks should be visible in the sidebar for the three applicants
+
+Applicant shouldn't see 'Green checks' in the sidebar when (s)he marks the 'Labour' as incomplete
+    [Documentation]    INFUND-407
+    [Tags]    applicant    Finance    Collaboration
+    When applicant marks the labour section as incomplete
+    Then green checks should not be visible in the sidebar
+
+The collaborators should have 'Green checks' only for the "Your Finance" when the applicant marks 'Labour' as incomplete
+    [Documentation]    INFUND-407
+    [Tags]    Applicant    Finance    Collaboration
+    When applicant marks the Labour section as incomplete
+    Then the 1st applicant should see the 'Green check' only in the 'Your Finances'
+    And the 2nd applicant should see the 'Green check' only in the 'Your Finances'
+
+*** Keywords ***
+the lead applicant has marked all the questions as complete
+    Applicant is in the 'Your Finance' sub-section
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(1) > button
+    click the mark as complete if the question is not completed    css=#collapsible-1 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=.complete:nth-child(1) .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(3) > button
+    click the mark as complete if the question is not completed    css=#collapsible-2 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-1+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    click the mark as complete if the question is not completed    css=#collapsible-3 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-2+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(7) > button
+    click the mark as complete if the question is not completed    css=#collapsible-4 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-3+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
+    click the mark as complete if the question is not completed    css=#collapsible-5 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-4+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(11) > button
+    click the mark as complete if the question is not completed    css=#collapsible-6 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-5+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(13) > button
+    click the mark as complete if the question is not completed    css=#collapsible-7 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+
+the 1st collaborator has marked all the questions as complete
+    The guest user opens the browser
+    Input Text    id=id_email    jessica.doe@ludlow.co.uk
+    Input Password    id=id_password    test
+    Click Element    css=#content > form > div > section:nth-child(1) > input
+    Applicant is in the 'Your Finance' sub-section
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(1) > button
+    click the mark as complete if the question is not completed    css=#collapsible-1 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=.complete:nth-child(1) .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(3) > button
+    click the mark as complete if the question is not completed    css=#collapsible-2 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-1+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    click the mark as complete if the question is not completed    css=#collapsible-3 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-2+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(7) > button
+    click the mark as complete if the question is not completed    css=#collapsible-4 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-3+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
+    click the mark as complete if the question is not completed    css=#collapsible-5 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-4+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(11) > button
+    click the mark as complete if the question is not completed    css=#collapsible-6 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-5+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(13) > button
+    click the mark as complete if the question is not completed    css=#collapsible-7 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+
+the 2nd collaborator has marked all the questions as complete
+    The guest user opens the browser
+    Input Text    id=id_email    pete.tom@egg.com
+    Input Password    id=id_password    test
+    Click Element    css=#content > form > div > section:nth-child(1) > input
+    Applicant is in the 'Your Finance' sub-section
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(1) > button
+    click the mark as complete if the question is not completed    css=#collapsible-1 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=.complete:nth-child(1) .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(3) > button
+    click the mark as complete if the question is not completed    css=#collapsible-2 > div:nth-child(2) > div > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-1+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    click the mark as complete if the question is not completed    css=#collapsible-3 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-2+ .complete .place-in-header
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(7) > button
+    click the mark as complete if the question is not completed    css=#collapsible-4 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-3+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
+    click the mark as complete if the question is not completed    css=#collapsible-5 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-4+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(11) > button
+    click the mark as complete if the question is not completed    css=#collapsible-6 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#collapsible-5+ .complete .place-in-header
+    click element    css=#form-input-20 > div.collapsible > h2:nth-child(13) > button
+    click the mark as complete if the question is not completed    css=#collapsible-7 > div:nth-child(2) > div > div.alignright-button > button[name="mark_as_complete"]
+
+click the mark as complete if the question is not completed
+    [Arguments]    ${Mark_as_complete}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_as_complete}
+    Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_as_complete}
+    Run keyword if    '${status}' == 'PASS'    sleep    4s
+    Wait Until Element Is Not Visible    ${Mark_as_complete}
+
+the green checks should be visible in the sidebar for the three applicants
+    Switch to the first browser
+    Check if all the finance sections are marked as complete
+    Switch Browser    2
+    Check if all the finance sections are marked as complete
+    Switch browser    3
+    Check if all the finance sections are marked as complete
+
+Check if all the finance sections are marked as complete
+    Reload Page
+    element should be visible    css=.section-status.complete .section-status.complete + .section-status.complete
+
+click the mark as incomplete if the question is completed
+    [Arguments]    ${Mark_as_incomplete}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_as_incomplete}
+    Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_as_incomplete}
+    sleep    4s
+
+applicant marks the labour section as incomplete
+    Switch to the first browser
+    Applicant is in the 'Your Finance' sub-section
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(1) > button
+    click the mark as incomplete if the question is completed    css=#collapsible-1 > div:nth-child(2) > div > button[name="mark_as_incomplete"]
+
+green checks should not be visible in the sidebar
+    Switch to the first browser
+    check if all the finance sections are not marked a complete
+
+check if all the finance sections are not marked a complete
+    Reload Page
+    Element Should Not Be Visible    css=.section-status.complete .section-status.complete + .section-status.complete
+
+the 1st applicant should see the 'Green check' only in the 'Your Finances'
+    Switch Browser    2
+    Check if only the 'Your Finance' section' has the 'Green Check' in the sidebar
+
+Check if only the 'Your Finance' section' has the 'Green Check' in the sidebar
+    Reload Page
+    Wait Until Element Is Visible    css=.section-status.complete:nth-child(1)
+    Wait Until Element Is Not Visible    css=.section-status.complete .section-status.complete + .section-status.complete
+
+the 2nd applicant should see the 'Green check' only in the 'Your Finances'
+    Switch Browser    3
+    Check if only the 'Your Finance' section' has the 'Green Check' in the sidebar
