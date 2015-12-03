@@ -26,8 +26,10 @@ gulp.task('ifs-js', function () {
 //concat and minify all the govuk files
 gulp.task('govuk-js',function(){
    return gulp.src([
-		'js/vendor/govuk/*.js',
-		'!js/vendor/govuk/ie.js',
+		'js/vendor/govuk/govuk-template.js',
+		'js/vendor/govuk/details.polyfill.js',
+    'js/vendor/govuk/selection-buttons.js',
+    'js/vendor/govuk/application.js'
 		])
   .pipe(concat('govuk.min.js'))
   .pipe(uglify())
