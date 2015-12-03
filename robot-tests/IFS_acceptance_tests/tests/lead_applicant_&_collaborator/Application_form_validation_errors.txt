@@ -95,7 +95,7 @@ when the applicant inserts 01 in the day
     Input Text    id=application_details-startdate_day    01
 
 the applicant should not see the validation error any more
-    sleep     1s
+    sleep    1s
     Focus    css=.app-submit-btn
     Wait Until Element Is Not Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
 
@@ -140,10 +140,11 @@ when the applicant inserts "-1" in the month field
 the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Focus    css=.app-submit-btn
-    Click Element    css=.bold_button
+    Click Element    css=.fa-bold
+    sleep    1s
 
 the applicant should get a validation error
-    #Focus    css=.app-submit-btn
+    Focus    css=.app-submit-btn
     Wait Until Element Is Visible    css=#form-input-11 .error-message
 
 the applicant inserts "0" in the duration field
