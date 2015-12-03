@@ -125,7 +125,7 @@ public class QuestionController {
 
     private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if(questionStatuses!=null && questionStatuses.isEmpty()) {
+        if(questionStatuses!=null && !questionStatuses.isEmpty()) {
             return questionStatuses.get(0);
         }
         return null;
@@ -166,7 +166,7 @@ public class QuestionController {
 
     private Boolean isMarkedAsCompleteForSingleStatus(Long questionId, Long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if(questionStatuses!=null && questionStatuses.isEmpty()) {
+        if(questionStatuses!=null && !questionStatuses.isEmpty()) {
             return isMarkedAsCompleteForSingleStatus(questionStatuses.get(0)).orElse(Boolean.FALSE);
         }
         return Boolean.FALSE;
