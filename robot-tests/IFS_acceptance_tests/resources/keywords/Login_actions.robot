@@ -1,8 +1,10 @@
+*** Settings ***
+Library  SauceLabs
+
 *** Variables ***
 ${REMOTE_URL}     ${EMPTY}
 ${DESIRED_CAPABILITIES}    ${EMPTY}
 ${SERVER_AUTH}    ${EMPTY}
-${PROTOCOL}    http://
 ${TEST_TAGS}    ${EMPTY}
 
 *** Keywords ***
@@ -33,7 +35,7 @@ TestTeardown User closes the browser
     Close all browsers
 
 User closes the browser
-    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS' | ${TEST_NAME}    ${TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS' | ${SUITE_NAME}    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
     Close all browsers
 
 Logout as user
