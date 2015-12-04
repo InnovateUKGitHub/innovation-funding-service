@@ -2,11 +2,11 @@
 Documentation     INGINFUND-669 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
 ${CREATE_CONFIRM_PAGE}    ${SERVER}/application/create-confirm-competition
@@ -15,6 +15,7 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 *** Test Cases ***
 Verify the confirmation page page
     [Documentation]    INFUND-669
+    [Tags]    Applicant
     When the applicant goes to the confirm competition url
     Then the applicant should get the confirm competition page
     and when the applicant confirms this page
@@ -22,12 +23,14 @@ Verify the confirmation page page
 
 Verify the validation errors for the new application input
     [Documentation]    INFUND-669
+    [Tags]    Applicant
     Given the user is in the "Create application" page
     When the applicant leaves the new application title empty
     Then the applicant should get a validation error(new application)
 
 Verify the creation of a new application
     [Documentation]    INFUND-669
+    [Tags]    Applicant
     Given the user is in the "Create application" page
     When the applicant inserts a valid competition title
     and the applicant creates the new application
