@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 public class ExtendedLink extends Link {
 
     @XmlAttribute
-    private String title = "";
+    private String title;
 
     @XmlAttribute
-    private String name = "";
+    private String name;
 
     public ExtendedLink(String href) {
         super(href);

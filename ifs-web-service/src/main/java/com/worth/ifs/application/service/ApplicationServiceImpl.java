@@ -21,8 +21,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationRestService applicationRestService;
 
     @Override
-    public Application getById(Long applicationId) {
-        return applicationRestService.getApplicationById(applicationId);
+    public Application getById(Long applicationId, Boolean... hateoas) {
+        if(hateoas.length>0 && hateoas[0]) {
+            return applicationRestService.getApplicationByIdHateoas(applicationId);
+        }else{
+            return applicationRestService.getApplicationById(applicationId);
+        }
     }
 
     @Override

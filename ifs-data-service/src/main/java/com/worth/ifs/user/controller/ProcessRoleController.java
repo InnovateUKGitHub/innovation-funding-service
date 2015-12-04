@@ -37,7 +37,12 @@ public class ProcessRoleController {
     }
 
     @RequestMapping("/{id}")
-    public ProcessRoleResource findOne(@PathVariable("id") final Long id) {
+    public ProcessRole findOne(@PathVariable("id") final Long id) {
+        return processRoleRepository.findOne(id);
+    }
+
+    @RequestMapping("/hateoas/{id}")
+    public ProcessRoleResource findOneHateoas(@PathVariable("id") final Long id) {
         ProcessRole processRole = processRoleRepository.findOne(id);
         return processRoleResourceAssembler.toResource(processRole);
     }
