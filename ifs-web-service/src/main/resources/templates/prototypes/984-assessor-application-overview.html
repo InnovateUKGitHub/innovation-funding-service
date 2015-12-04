@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="app-overview">
+<body class="assessment-overview">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -26,29 +26,32 @@
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#1">Application details</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-details">Application details</a></h3>
 					</div>
 				</div>
 			</li>
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#2">Project summary</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-summary">Project summary</a></h3>
 					</div>
 				</div>
 			</li>
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#3">Public description</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-description">Public description</a></h3>
 					</div>
 				</div>
 			</li>
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#4">Scope</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-scope">Scope</a></h3>
 					</div>
+					<div class="column-third">
+				        In scope? <strong>Yes</strong>
+				    </div>
 				</div>
 			</li>
 		</ul>
@@ -58,7 +61,23 @@
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="/prototypes/635-application-question1-collaborator">1. Business opportunity</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question1">1. Business opportunity</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="#">2. Potential market</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=7" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question3">3. Project exploitation</a></h3>
 					</div>
 					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
 				</div>
@@ -66,23 +85,7 @@
 			<li class="section-status">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="/prototypes/635-application-question2-collaborator">2. Potential market</a></h3>
-					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
-				</div>
-			</li>
-			<li class="section-status">
-				<div class="grid-row">
-					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="/prototypes/635-application-question3-collaborator">3. Project exploitation</a></h3>
-					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
-				</div>
-			</li>
-			<li class="section-status">
-				<div class="grid-row">
-					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#8">4. Economic benefit</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question4">4. Economic benefit</a></h3>
 					</div>
 					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
 				</div>
