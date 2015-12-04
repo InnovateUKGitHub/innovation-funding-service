@@ -13,11 +13,19 @@ ${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk
 ${APPLICANT_PSW}    test
 
 *** Test Cases ***
-Verify auto the auto-save of the "Grant" field
+Auto-save test for the "Grant" field
     [Tags]    Applicant    Autosave    Finance
     Given the applicant is in the Finance section
     Then auto-save should work for the "Grant" field
     and the grant value should be correct in the finance summary page
+
+Auto-save test for the "Your Finance" sections
+    [Documentation]    INFUND-192
+    [Tags]    Finance    Autosave    Applicant
+    Given the user is in the Labour section
+    When the Applicant edits the "The Gross Annual Salary"
+    and the Applicant reloads the page
+    Then the new "Gross Annual" amount should be visible
 
 *** Keywords ***
 the grant value should be correct in the finance summary page
@@ -39,3 +47,26 @@ auto-save should work for the "Grant" field
     focus    css=.column-half:nth-child(1) .button-block
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25
+
+the user is in the Labour section
+    Applicant is in the 'Your Finance' sub-section
+    Click Element    css=#question-20 > div.collapsible > h2:nth-child(1) > button
+
+the Applicant edits the "The Gross Annual Salary"
+    Wait Until Page Contains Element    css=#labour-costs-table tbody td:nth-of-type(2) input
+    Clear Element Text    css=#cost-labour-1-workingDays
+    Input Text    css=#cost-labour-1-workingDays    256
+    Input Text    css=#labour-costs-table tbody td:nth-of-type(2) input    2000
+    Input Text    css=#labour-costs-table tbody td:nth-of-type(4) input    150
+    Focus    css=#content > div.grid-row > div.column-two-thirds > form > div.alignright-button > a
+
+the Applicant reloads the page
+    Sleep    2s
+    Reload Page
+
+the new "Gross Annual" amount should be visible
+    Click Element    css=#question-20 > div.collapsible > h2:nth-child(1) > button
+    Wait Until Element Contains    css=#cost-labour-1-workingDays    256
+    #Textfield Value Should Be    css=#cost-labour-1-workingDays    256
+    #Textfield Value Should Be    css=#labour-costs-table tbody td:nth-of-type(2) input    2000
+    Textfield Value Should Be    css=#labour-costs-table tbody td:nth-of-type(4) input    150
