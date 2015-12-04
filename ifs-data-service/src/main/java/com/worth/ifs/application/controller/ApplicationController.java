@@ -69,7 +69,7 @@ public class ApplicationController {
         this.applicationResourceAssembler = applicationResourceAssembler;
     }
 
-    @RequestMapping("/hateoas/{id}")
+    @RequestMapping("/{id}")
     public ApplicationResource getApplicationByIdHateoas(@PathVariable("id") final Long id) {
         Application application = applicationRepository.findOne(id);
         return applicationResourceAssembler.toResource(application);
@@ -81,7 +81,7 @@ public class ApplicationController {
         return applicationResourceAssembler.toEmbeddedList(applications);
     }
 
-    @RequestMapping("/{id}")
+    @RequestMapping("/normal/{id}")
     public Application getApplicationById(@PathVariable("id") final Long id) {
         return applicationRepository.findOne(id);
     }

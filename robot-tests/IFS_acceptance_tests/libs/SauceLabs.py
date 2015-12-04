@@ -30,6 +30,9 @@ class SauceLabs:
         response = requests.put(url, data=json.dumps(payload), headers=headers)
         assert response.status_code == 200, response.text
 
+        BuiltIn().log_to_console("SauceOnDemandSessionID={0} job-name={1}".format(job_id, name))
+
+
         # Log video url from the response
         video_url = json.loads(response.text).get('video_url')
         if video_url:

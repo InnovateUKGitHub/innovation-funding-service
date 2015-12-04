@@ -67,7 +67,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/1"))
+        mockMvc.perform(get("/application/normal/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
@@ -79,7 +79,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("processRoles").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competition").description("Competition"))));
-        mockMvc.perform(get("/application/2"))
+        mockMvc.perform(get("/application/normal/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication2Name")));
     }

@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface ApplicationRestService {
     public Application getApplicationById(Long applicationId);
+    public Application getApplicationByIdHateoas(Long applicationId);
     public List<Application> getApplicationsByUserId(Long userId);
     public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
     public void saveApplication(Application application);

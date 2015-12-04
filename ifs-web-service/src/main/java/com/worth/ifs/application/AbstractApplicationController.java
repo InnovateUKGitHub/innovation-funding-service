@@ -106,9 +106,10 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form) {
+    protected Application addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form, Boolean... hateoas) {
 
-        Application application = applicationService.getById(applicationId);
+        Application application = applicationService.getById(applicationId, hateoas);
+        application.setId(applicationId);
         Competition competition = application.getCompetition();
 
         model.addAttribute("currentApplication", application);
@@ -155,6 +156,8 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, Application application, Form form) {
+        log.info("*********************");
+        log.info(application.getId());
         List<FormInputResponse> responses = getFormInputResponses(application);
         Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
