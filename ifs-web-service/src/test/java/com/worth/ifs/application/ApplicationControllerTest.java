@@ -3,7 +3,6 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
