@@ -21,7 +21,7 @@ The guest user clicks the log-in button
     Click Button    css=input.button
 
 The guest user opens the browser
-    Open browser  about:  ${BROWSER}
+    Open browser  ${PROTOCOL}${SERVER_BASE}  ${BROWSER}
     ...  remote_url=${REMOTE_URL}
     ...  desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if  '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
