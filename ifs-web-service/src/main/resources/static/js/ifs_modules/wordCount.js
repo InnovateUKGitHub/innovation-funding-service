@@ -1,7 +1,4 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, window: false, setTimeout : false, clearTimeout: false */
-
-var ifs_wordCount = (function(){
+IFS.wordCount = (function(){
     "use strict";
     var s; 
     return {
@@ -12,12 +9,12 @@ var ifs_wordCount = (function(){
         init : function(){
             s = this.settings; 
             jQuery('body').on('change', s.wordcountEl, function(e){ 
-              ifs_wordCount.updateWordCount(e.target);
+              IFS.wordCount.updateWordCount(e.target);
             });
             //wait until the user stops typing 
             jQuery('body').on('keyup', s.wordcountEl, function(e) { 
-               clearTimeout(window.ifs_wordcount_timer);
-               window.ifs_wordcount_timer = setTimeout(function(){ifs_wordCount.updateWordCount(e.target); }, s.typeTimeout);
+               clearTimeout(window.IFS.wordcount_timer);
+               window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
             });
         },
         updateWordCount : function(textarea){

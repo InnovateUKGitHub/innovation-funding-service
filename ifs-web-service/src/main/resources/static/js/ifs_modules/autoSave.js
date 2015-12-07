@@ -1,7 +1,4 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, setTimeout : false, clearTimeout: false,window:false */
-
-var ifs_autoSave = (function(){
+IFS.autoSave = (function(){
     "use strict";
     var s; // private alias to settings 
 
@@ -15,14 +12,13 @@ var ifs_autoSave = (function(){
         init : function(){
             s = this.settings;
             var saveFields = s.inputs+','+s.textareas;
-
             jQuery('body').on('change', saveFields, function(e){ 
-                ifs_autoSave.fieldChanged(e.target);
+                IFS.autoSave.fieldChanged(e.target);
             });
             //wait until the user stops typing 
             jQuery('body').on('keyup', saveFields, function(e) { 
-                clearTimeout(window.ifs_autoSave_timer);
-                window.ifs_autoSave_timer = setTimeout(function(){ ifs_autoSave.fieldChanged(e.target); }, s.typeTimeout);
+                clearTimeout(window.IFS.autoSave_timer);
+                window.IFS.autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
             });
         },
         fieldChanged : function (element){
@@ -58,7 +54,7 @@ var ifs_autoSave = (function(){
              })
              .done(function(data){
                  var doneAjaxTime = new Date().getTime();
-                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                 var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                  // set the form-saved-state
                  jQuery('.form-serialize-js').data('serializedFormState',formState);
@@ -68,13 +64,13 @@ var ifs_autoSave = (function(){
                   //save message
                  if(data.success == 'true'){
                      setTimeout(function(){
-                         ifs_autoSave.removeValidationError(formGroup);
+                         IFS.autoSave.removeValidationError(formGroup);
                          formTextareaSaveInfo.html('Saved!');
                      }, remainingWaitingTime);
                  }else{
                      setTimeout(function(){
                          formTextareaSaveInfo.html("Invalid input, but saved anyway.");
-                         ifs_autoSave.removeValidationError(formGroup);
+                         IFS.autoSave.removeValidationError(formGroup);
                          jQuery.each(data.validation_errors, function(index, value){
                              validationMessages.append('<span class="error-message">' + value + '</span>');
                          });
@@ -83,10 +79,10 @@ var ifs_autoSave = (function(){
                  }
              }).fail(function(data) {
                  var doneAjaxTime = new Date().getTime();
-                 var remainingWaitingTime = (ifs_autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                 var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                  setTimeout(function(){
-                     ifs_autoSave.removeValidationError(formGroup);
+                     IFS.autoSave.removeValidationError(formGroup);
 
                      var errorMessage = data.responseJSON.errorMessage;
                      if (formGroup.length) {

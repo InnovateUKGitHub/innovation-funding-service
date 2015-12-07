@@ -12,6 +12,7 @@ gulp.task('js',['ifs-js','govuk-js','hallo-js']);
 //concat and minify all the ifs files
 gulp.task('ifs-js', function () {
    return gulp.src([
+      'js/namespace.js',
    		'js/ifs_modules/*.js',
    		'js/ifs_pages/*.js',
    		'js/ifs.js'

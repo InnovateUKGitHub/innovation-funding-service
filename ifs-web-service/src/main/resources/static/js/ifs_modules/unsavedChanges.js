@@ -1,8 +1,5 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false,  window: false*/
-
 // save the current form state, so we can warn the user if he leaves the page without saving.
-var ifs_unsavedChanges = (function(){
+IFS.unsavedChanges = (function(){
     "use strict";
     var s; 
     return {
@@ -11,7 +8,7 @@ var ifs_unsavedChanges = (function(){
         },
         init : function(){
             s = this.settings; 
-            ifs_unsavedChanges.initUnsavedChangesWarning();
+            IFS.unsavedChanges.initUnsavedChangesWarning();
         },
         initUnsavedChangesWarning : function(){
             s.formelement.data('serializedFormState',jQuery('.form-serialize-js').serialize());
