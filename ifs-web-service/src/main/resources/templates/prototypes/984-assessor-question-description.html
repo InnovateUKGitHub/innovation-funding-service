@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-details">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Mobile Phone Data for Logistics Analytics'}, ${'Public description'})" th:remove="tag" />
+
+	<form action="#" method="post">
+		<div class="extra-margin">
+			
+			<h2 class="heading-medium no-margin">Public description</h2>
+			
+			<p>Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress. The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.</p>
+
+		</div>
+
+	</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question-summary">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">Project summary</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question-scope">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">Scope</span>
+        </a>
+    </li>
+</ul>
+
+<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

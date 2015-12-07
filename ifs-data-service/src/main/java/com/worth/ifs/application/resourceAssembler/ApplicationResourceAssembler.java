@@ -4,6 +4,7 @@ import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.resource.ExtendedLink;
+import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,9 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     @Autowired
     private ProcessRoleResourceAssembler processRoleResourceAssembler;
 
+    @Autowired
+    private CompetitionResourceAssembler competitionResourceAssembler;
+
     public ApplicationResourceAssembler() {
         super(ApplicationController.class, ApplicationResource.class);
     }
@@ -45,11 +49,13 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
             log.error(e);
         }
 
+        resource.add(competitionResourceAssembler.linkToSingleResource(application.getCompetition()).withRel("competition"));
+
         return resource;
     }
 
     public ExtendedLink linkToSingleResource(Application application) {
-        Link link = linkTo(methodOn(controllerClass).getApplicationById(application.getId())).withSelfRel();
+        Link link = linkTo(methodOn(controllerClass).getApplicationByIdHateoas(application.getId())).withSelfRel();
         return new ExtendedLink(link).withTitle(application.getName());
     }
 

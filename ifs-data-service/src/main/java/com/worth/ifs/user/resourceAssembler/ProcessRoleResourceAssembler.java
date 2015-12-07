@@ -30,7 +30,7 @@ public class ProcessRoleResourceAssembler extends ResourceAssemblerSupport<Proce
     }
 
     public ExtendedLink linkToSingleResource(ProcessRole role) {
-        Link link = linkTo(methodOn(controllerClass).findOne(role.getId())).withSelfRel();
+        Link link = linkTo(methodOn(controllerClass).findOneHateoas(role.getId())).withSelfRel();
         return new ExtendedLink(link);
     }
 
