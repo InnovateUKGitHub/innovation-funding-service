@@ -43,22 +43,22 @@ public class AssessmentHandler {
      * By 'All' is meant all the assessments whose invitation was not rejected.
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
      */
-    public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
+    public List<Assessment> getAllByProcessRole(Long processRoleId) {
         Set<String> states = AssessmentStates.getStates();
         states.remove(AssessmentStates.REJECTED.getState());
-        return assessments.findByAssessorIdAndApplicationCompetitionIdAndStatusIn(assessorId, competitionId, states);
+        return assessments.findByProcessRoleIdAndStatusIn(processRoleId, states);
     }
 
-    public Assessment getOneByAssessorAndApplication(Long userId, Long applicationId) {
-        return assessments.findOneByAssessorIdAndApplicationId(userId, applicationId);
+    public Assessment getOneByProcessRole(Long processRoleId) {
+        return assessments.findOneByProcessRoleId(processRoleId);
     }
 
-    public Integer getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long userId) {
-        return assessments.findNumberOfSubmittedAssessmentsByCompetition(userId, competitionId);
+    public Integer getTotalSubmittedAssessments(Long processRoleId) {
+        return assessments.countByProcessRoleIdAndStatus(processRoleId, "submitted");
     }
-    public Integer getTotalAssignedAssessmentsByCompetition(Long competitionId, Long userId) {
+    public Integer getTotalAssignedAssessmentsByProcessRole(Long processRoleId) {
         // By 'assigned' is meant an assessment process not rejected
-        return assessments.findNumberOfAssignedAssessmentsByCompetition(userId, competitionId);
+        return assessments.countByProcessRoleIdAndNotStatus(processRoleId, "rejected");
     }
 
     public RecommendedValue getRecommendedValueFromString(String value) {

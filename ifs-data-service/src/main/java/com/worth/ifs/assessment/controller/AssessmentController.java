@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.user.controller.ProcessRoleController;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,48 +29,46 @@ public class AssessmentController {
 
     @Autowired
     AssessmentHandler assessmentHandler;
+    ProcessRoleController processRoleController;
 
     @Autowired
     AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
 
-    @RequestMapping("/findAssessmentsByCompetition/{userId}/{competitionId}")
-    public List<Assessment> findAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessmentHandler.getAllByCompetitionAndAssessor(competitionId, userId);
+    @RequestMapping("/findAssessmentsByCompetition/{processRoleId}")
+    public List<Assessment> findAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
+        return assessmentHandler.getAllByProcessRole(processRoleId);
     }
 
-    @RequestMapping("/findAssessmentByApplication/{userId}/{applicationId}")
-    public Assessment getAssessmentByUserAndApplication( @PathVariable("userId") final Long userId, @PathVariable("applicationId") final Long applicationId ) {
-        return assessmentHandler.getOneByAssessorAndApplication(userId, applicationId);
+    @RequestMapping("/findAssessmentByApplication/{processRoleId}")
+    public Assessment getAssessmentByUserAndApplication( @PathVariable("processRoleId") final Long processRoleId) {
+        return assessmentHandler.getOneByProcessRole(processRoleId);
     }
 
-    @RequestMapping("/totalAssignedAssessmentsByCompetition/{userId}/{competitionId}")
-    public Integer getTotalAssignedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-       return assessmentHandler.getTotalAssignedAssessmentsByCompetition(competitionId, userId);
+    @RequestMapping("/totalAssignedAssessmentsByCompetition/{processRoleId}")
+    public Integer getTotalAssignedAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
+       return assessmentHandler.getTotalAssignedAssessmentsByProcessRole(processRoleId);
     }
 
-    @RequestMapping("/totalSubmittedAssessmentsByCompetition/{userId}/{competitionId}")
-    public Integer getTotalSubmittedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessmentHandler.getTotalSubmittedAssessmentsByCompetition(competitionId, userId);
+    @RequestMapping("/totalSubmittedAssessmentsByCompetition/{processRoleId}")
+    public Integer getTotalSubmittedAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
+        return assessmentHandler.getTotalSubmittedAssessments(processRoleId);
     }
 
-    @RequestMapping(value = "/acceptAssessmentInvitation/{applicationId}/{assessorId}")
-    public void acceptAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
-                                           @PathVariable("assessorId") final Long assessorId,
+    @RequestMapping(value = "/acceptAssessmentInvitation/{processRoleId}")
+    public void acceptAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody Assessment assessment) {
-        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        Assessment assessmentOriginal = assessmentHandler.getOneByProcessRole(processRoleId);
         assessment.setProcessStatus(assessmentOriginal.getProcessStatus());
-        assessmentWorkflowEventHandler.acceptInvitation(applicationId, assessorId, assessment);
+        assessmentWorkflowEventHandler.acceptInvitation(processRoleId, assessment);
     }
 
-    @RequestMapping(value = "/rejectAssessmentInvitation/{applicationId}/{assessorId}")
-    public void rejectAssessmentInvitation(@PathVariable("applicationId") final Long applicationId,
-                                           @PathVariable("assessorId") final Long assessorId,
+    @RequestMapping(value = "/rejectAssessmentInvitation/{processRoleId}")
+    public void rejectAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody ProcessOutcome processOutcome) {
-        Assessment assessmentOriginal = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        Assessment assessmentOriginal = assessmentHandler.getOneByProcessRole(processRoleId);
         String currentProcessStatus = assessmentOriginal.getProcessStatus();
-        //assessment.setProcessStatus(currentProcessStatus);
-        assessmentWorkflowEventHandler.rejectInvitation(applicationId, assessorId, currentProcessStatus, processOutcome);
+        assessmentWorkflowEventHandler.rejectInvitation(processRoleId, currentProcessStatus, processOutcome);
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
@@ -108,7 +108,8 @@ public class AssessmentController {
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
-        Assessment assessment = assessmentHandler.getOneByAssessorAndApplication(assessorId, applicationId);
+        ProcessRole processRole = processRoleController.findByUserApplication(assessorId, applicationId);
+        Assessment assessment = assessmentHandler.getOneByProcessRole(processRole.getId());
         Assessment newAssessment = new Assessment();
         ProcessOutcome processOutcome = new ProcessOutcome();
         processOutcome.setOutcome(assessmentHandler.getRecommendedValueFromString(suitableValue).name());
@@ -116,7 +117,7 @@ public class AssessmentController {
         processOutcome.setComment(comments);
         newAssessment.setProcessStatus(assessment.getProcessStatus());
 
-        assessmentWorkflowEventHandler.recommend(applicationId, assessorId, newAssessment);
+        assessmentWorkflowEventHandler.recommend(processRole.getId(), newAssessment);
         return true;
     }
 

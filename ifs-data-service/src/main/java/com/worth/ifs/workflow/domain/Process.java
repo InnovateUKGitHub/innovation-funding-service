@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "process_type")
+@DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Process {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +32,10 @@ public abstract class Process {
 
     @OneToMany(mappedBy="process")
     protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="processRole", referencedColumnName = "id")
+    ProcessRole processRole;
 
     public Process() {
     }
@@ -93,5 +98,9 @@ public abstract class Process {
     @JsonIgnore
     public Calendar getVersion() {
         return lastModified;
+    }
+
+    public ProcessRole getProcessRole() {
+        return processRole;
     }
 }

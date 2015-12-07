@@ -21,8 +21,11 @@ public class ProcessOutcome {
         this.comment = comment;
     }
 
-    @Enumerated
-    private OutcomeType outcomeType;
+    @ManyToOne
+    @JoinColumn(name="processId", referencedColumnName="id")
+    Process process;
+
+    private String outcomeType;
 
     public String getOutcome() {
         return outcome;
@@ -40,7 +43,7 @@ public class ProcessOutcome {
         this.description = description;
     }
 
-    public OutcomeType getOutcomeType() {
+    public String getOutcomeType() {
         return outcomeType;
     }
 

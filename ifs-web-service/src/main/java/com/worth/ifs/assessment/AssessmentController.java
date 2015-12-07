@@ -330,7 +330,6 @@ public class AssessmentController extends AbstractApplicationController {
         return ! (recommendationValue.equals("no") && feedback.isEmpty());
     }
 
-
     private Pair<Competition, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
         //gets
         Competition competition = competitionService.getCompetitionById(competitionId);
