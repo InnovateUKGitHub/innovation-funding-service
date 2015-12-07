@@ -1,10 +1,6 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, md: false, showdown: false */
-
 //wysiwyg editor for textareas
 //Dependencies to load first : hallo.min.js
-
-var ifs_editor = (function(){
+IFS.editor = (function(){
     "use strict";
     var s; // private alias to settings 
     var converter; 
@@ -23,12 +19,12 @@ var ifs_editor = (function(){
 
             var textareas = jQuery(s.textareas);
              jQuery.each(textareas,function(){
-                ifs_editor.prepareEditor(this);
+                IFS.editor.prepareEditor(this);
             });
 
-            ifs_editor.initEditors();
-            ifs_editor.bindEditors();
-           // ifs_editor.contentEditableEnterFix();
+            IFS.editor.initEditors();
+            IFS.editor.bindEditors();
+           // IFS.editor.contentEditableEnterFix();
         },
         prepareEditor : function(textarea){
             var el = jQuery(textarea);
@@ -40,7 +36,7 @@ var ifs_editor = (function(){
                 el.before('<div class="editor"></div>');
             }
             el.attr('aria-hidden','true');
-            ifs_editor.processMarkdownToHtml(el,el.prev());
+            IFS.editor.processMarkdownToHtml(el,el.prev());
         },
         initEditors: function(){
           jQuery('.editor').hallo({
@@ -55,20 +51,20 @@ var ifs_editor = (function(){
         bindEditors : function(){
             jQuery('.editor').bind('hallomodified', function(event, data) {
                 var source = jQuery(this).next();
-                ifs_editor.processHtmlToMarkdown(data.content,source);
+                IFS.editor.processHtmlToMarkdown(data.content,source);
                 jQuery(source).trigger('keyup');
             });
         },
         processMarkdownToHtml: function(sourceEl,editorEl) {
             var sourceVal = sourceEl.val();
-            if (ifs_editor.htmlToMarkdown(jQuery(editorEl).html()) == sourceVal) {
+            if (IFS.editor.htmlToMarkdown(jQuery(editorEl).html()) == sourceVal) {
               return;
             }
-            var html = ifs_editor.markdownToHtml(sourceVal);
+            var html = IFS.editor.markdownToHtml(sourceVal);
             jQuery(editorEl).html(html); 
         },
         processHtmlToMarkdown : function(editorEl,sourceEl) {
-            var markdown = ifs_editor.htmlToMarkdown(editorEl);
+            var markdown = IFS.editor.htmlToMarkdown(editorEl);
             if (jQuery(sourceEl).get(0).value == markdown) {
               return;
             }

@@ -1,8 +1,5 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false */
-
 //Innovation Funding Services javascript for calculating the finance fields
-var ifs_finance = (function(){
+IFS.finance = (function(){
     "use strict";
     return {
          MathOperation : {
@@ -17,9 +14,9 @@ var ifs_finance = (function(){
                 }
             },
             init : function(){
-                ifs_finance.bindCalculationActionToFields(); // Bind calculations
-                ifs_finance.sectionInfoInHeader();
-                ifs_finance.mirrorInputs();
+                IFS.finance.bindCalculationActionToFields(); // Bind calculations
+                IFS.finance.sectionInfoInHeader();
+                IFS.finance.mirrorInputs();
 
                 // Used for calculations
                 jQuery("body").append(jQuery("<div class=\"js-hidden\"><input id=\"hundred-field\" value=\"100\" /></div>"));
@@ -46,7 +43,7 @@ var ifs_finance = (function(){
                     };
 
                     if (matchingDependencies.toArray().map(idFn).indexOf(idFn(input)) !== -1) {
-                        ifs_finance.doMath(dependantField, matchingDependencies);
+                        IFS.finance.doMath(dependantField, matchingDependencies);
                     }
                 };
 
@@ -90,26 +87,26 @@ var ifs_finance = (function(){
                     calculatedValue=values[0];
                 }
                 else {
-                    calculatedValue = ifs_finance.MathOperation[operation[0]](values[0],values[1]);
+                    calculatedValue = IFS.finance.MathOperation[operation[0]](values[0],values[1]);
                 }
                 //one operation and more values, all get the same operation
 
                 if((operation.length == 1) && (values.length > 2)) {
                     for (i = 2; i < values.length; i++) {
                         //console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
-                        calculatedValue = ifs_finance.MathOperation[operation[0]](calculatedValue,values[i]);
+                        calculatedValue = IFS.finance.MathOperation[operation[0]](calculatedValue,values[i]);
                     }
                 }
                //multiple operations and multiple values
                 else if((operation.length > 1) && (values.length > 2)) {
                     for (i = 1; i < operation.length; i++) {
                         // console.log('round:',i,operation[i],calculatedValue,values[i+1])
-                        calculatedValue = ifs_finance.MathOperation[operation[i]](calculatedValue,values[i+1]);
+                        calculatedValue = IFS.finance.MathOperation[operation[i]](calculatedValue,values[i+1]);
                     }
                 }
                 element.attr("data-calculation-rawvalue",calculatedValue);
 
-                var formatted = ifs_finance.formatCurrency(Math.round(calculatedValue));
+                var formatted = IFS.finance.formatCurrency(Math.round(calculatedValue));
                 if (element.is('span')) {
                     element.text(formatted);
                 } else {

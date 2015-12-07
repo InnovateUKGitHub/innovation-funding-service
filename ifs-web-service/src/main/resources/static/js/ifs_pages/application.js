@@ -1,13 +1,10 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  ifs_collapsible: false, jQuery : false, document : false*/
-
 // Handlers for single section refreshing when assigning questions to users on the Application Overview
 // dependency on ifs_collpasible
-var ifs_application_page = (function(){
+IFS.application_page = (function(){
     "use strict";
     return {
         init: function(){
-            jQuery(document).on('click', 'form.application-overview [name="assign_question"]', ifs_application_page.handleAssignQuestionFragmentReload);
+            jQuery(document).on('click', 'form.application-overview [name="assign_question"]', IFS.application_page.handleAssignQuestionFragmentReload);
             
         },
          handleAssignQuestionFragmentReload : function(e) {
@@ -23,7 +20,7 @@ var ifs_application_page = (function(){
                 var replacement = htmlReplacement.find('li.section[data-question-id=' + questionId + ']');
                 sectionToUpdate.replaceWith(replacement);
 
-                ifs_collapsible.collapsibleWithinScope(replacement);
+                IFS.collapsible.collapsibleWithinScope(replacement);
 
             };
             jQuery.ajax({
