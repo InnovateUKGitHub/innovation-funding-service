@@ -1,10 +1,6 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  Modernizr : falase, jQuery : false, document : false*/
-
 //Based upon Lea verou's SVG pie, adjusted with jquery and modernizr for more legacy support
 //http://www.smashingmagazine.com/2015/07/designing-simple-pie-charts-with-css/
-
-var ifs_pieChart = (function(){
+IFS.pieChart = (function(){
     "use strict";
      var s; // private alias to settings 
 
@@ -16,7 +12,7 @@ var ifs_pieChart = (function(){
             s = this.settings;
             if(Modernizr.svg && Modernizr.inlinesvg){
                 jQuery(s.pieElement).each(function() {
-                		ifs_pieChart.pieSVG(this);	
+                		IFS.pieChart.pieSVG(this);	
                 });
             }
         },

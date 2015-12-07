@@ -1,3 +1,6 @@
+/* jshint strict: false, undef: true, unused: true */
+
+
 //Dom based routing 
 //------------------
 //Based on Paul Irish' code, please read blogpost
@@ -13,36 +16,36 @@
 //For now this will suffice, if complexity increases we might look at a more complex loader like requireJs. 
 //Please think before adding javascript, this project should work without any of this scripts.  
 
-var IFS = {
+var IFSLoader = {
   common : {
     init : function(){
-        ifs_collapsible.init();
-        ifs_conditionalForms.init();
-        ifs_wordCount.init();
-        ifs_editor.init();
+      IFS.collapsible.init();
+      IFS.conditionalForms.init();
+      IFS.wordCount.init();
+      IFS.editor.init();
     }, 
     finalize : function(){
-        ifs_pieChart.init();
-        ifs_modal.init();
-        ifs_closeCss.init();
+      IFS.pieChart.init();
+      IFS.modal.init();
+      IFS.closeCss.init();
     }
   },
   'app-form' : {
     init : function(){
-        ifs_unsavedChanges.init();
-        ifs_autoSave.init();
-        ifs_finance.init();
-        ifs_financeRows.init();
+      IFS.unsavedChanges.init();
+      IFS.autoSave.init();
+      IFS.finance.init();
+      IFS.financeRows.init();
     }
   },
   'app-details' : {
-    init : function(){ ifs_application_page.init(); }
+    init : function(){IFS.application_page.init(); }
   },
   'assessment-details' : {
-    init: function(){ ifs_assesment_feedback_page.init();}  
+    init: function(){IFS.assesment_feedback_page.init();}  
   },
   'assessment-submit-review' : {
-    init: function(){ ifs_assesment_submit_review_page.init();}  
+    init: function(){IFS.assesment_submit_review_page.init();}  
   }
 };
 
@@ -55,7 +58,7 @@ var UTIL = (function(){
   "use strict";
   return {
       fire : function(func,funcname, args){
-        var namespace = IFS;  // indicate your obj literal namespace here
+        var namespace = IFSLoader;  // indicate your obj literal namespace here
         funcname = (funcname === undefined) ? 'init' : funcname;
         if (func !== '' && namespace[func] && typeof namespace[func][funcname] == 'function'){
           namespace[func][funcname](args);
