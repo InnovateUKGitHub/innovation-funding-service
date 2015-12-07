@@ -127,6 +127,8 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-create-confirm-competition";
     }
 
+
+
     /**
      * This method is for the post request when the users clicks the input[type=submit] button.
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
