@@ -41,7 +41,7 @@ public class AssessorFeedback {
         this.assessor = assessor;
     }
 
-    public static final AssessorFeedback createForResponseAndAssessor(Response response, ProcessRole assessor) {
+    public static AssessorFeedback createForResponseAndAssessor(Response response, ProcessRole assessor) {
         return new AssessorFeedback(response, assessor);
     }
 
@@ -100,12 +100,11 @@ public class AssessorFeedback {
         AssessorFeedback that = (AssessorFeedback) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (response != null ? !response.equals(that.response) : that.response != null) return false;
-        if (assessor != null ? !assessor.equals(that.assessor) : that.assessor != null) return false;
-        if (assessorId != null ? !assessorId.equals(that.assessorId) : that.assessorId != null) return false;
-        if (assessmentValue != null ? !assessmentValue.equals(that.assessmentValue) : that.assessmentValue != null)
-            return false;
-        return !(assessmentFeedback != null ? !assessmentFeedback.equals(that.assessmentFeedback) : that.assessmentFeedback != null);
+        else if (response != null ? !response.equals(that.response) : that.response != null) return false;
+        else if (assessor != null ? !assessor.equals(that.assessor) : that.assessor != null) return false;
+        else if (assessorId != null ? !assessorId.equals(that.assessorId) : that.assessorId != null) return false;
+        else if (assessmentValue != null ? !assessmentValue.equals(that.assessmentValue) : that.assessmentValue != null) return false;
+        else return !(assessmentFeedback != null ? !assessmentFeedback.equals(that.assessmentFeedback) : that.assessmentFeedback != null);
 
     }
 

@@ -45,23 +45,34 @@ small {
 
 
 .alignright-button {
+	text-align:right;
 	overflow: hidden;
 	clear: both;
+	
+	a {
+		line-height:45px;
+	}
+	a.button {
+		line-height:1;
+	}
 
-	.button,
+	a,
 	button,
 	[role="button"] {
-		&:first-child {
+		display:inline-block;
+		margin:0 5px 0 0;
+
+		&:last-child {
 			margin-right:0;
 		}
-		float:right;
 	}
 }
   @include media-down(mobile) {
-	.button {
-		margin-right:0;
-		margin-left:0;
-		float:none;
+	a,
+	button,
+	[role="button"] {
+		margin:0 0 5px;
+		display: block;
 		text-align: center;
 	}
   }
@@ -111,5 +122,18 @@ input[type="button"] {
 	text-align:right;
 }
 
+/*
 
+###Added icons
 
+*/
+.icon-print {
+  width: 16px;
+  height: 18px;
+  background-image: file-url("icons/icon-print.png");
+
+  @include device-pixel-ratio() {
+    background-image: file-url("icons/icon-print-2x.png");
+    background-size: 100%;
+  }
+}

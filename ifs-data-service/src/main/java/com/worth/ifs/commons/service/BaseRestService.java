@@ -1,10 +1,12 @@
 package com.worth.ifs.commons.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -41,6 +43,7 @@ public abstract class BaseRestService {
         return responseEntity.getBody();
     }
 
+
     /**
      * restGet is a generic method that performs a RESTful GET request.
      *
@@ -52,6 +55,11 @@ public abstract class BaseRestService {
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.GET, jsonEntity(""), c);
     }
+
+    protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
+        return getRestTemplate().exchange(URI.create(path), HttpMethod.GET, jsonEntity(""), responseType);
+    }
+
 
     /**
      * restPost is a generic method that performs a RESTful POST request.

@@ -3,7 +3,6 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -33,7 +32,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @InjectMocks
     private ApplicationController applicationController;
 
-
     @Before
     public void setUp(){
         super.setup();
@@ -53,8 +51,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupFinances();
     }
-
-
 
     @Test
      public void testApplicationDetails() throws Exception {

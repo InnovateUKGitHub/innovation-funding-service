@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Create your account</h1>
+
+	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from Innovate UK</p>
+	
+	<h2 class="heading-medium">Business Organisation</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Business Organisation</legend>
+			<div class="form-block">
+				<h3 class="heading-small">Organisation name</h3>
+				<p>Nomensa</p>
+				<h3 class="heading-small">Registration number</h3>
+				<p>0123456789</p>
+				<h3 class="heading-small">Address</h3>
+				<p>13 Queens Square <br />
+					Bristol <br />
+					BS1 4NT
+				</p>
+			</div>
+		</fieldset>
+		
+		<h2 class="heading-small">Organisation size</h2>
+		<fieldset>
+			<legend class="visuallyhidden">Organisation size</legend>
+			<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
+			<div class="form-block">
+				<label class="block-label" for="radio-1">
+					<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+					Micro / small
+				</label>
+				<label class="block-label" for="radio-2">
+					<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+					Medium
+				</label>
+				<label class="block-label" for="radio-3">
+					<input id="radio-3" type="radio" name="radio-group" value="Large"/>
+					Large
+				</label>
+			</div>
+		</fieldset>
+
+
+
+		<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/643-create-acc-org-new-lead">Continue</button>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

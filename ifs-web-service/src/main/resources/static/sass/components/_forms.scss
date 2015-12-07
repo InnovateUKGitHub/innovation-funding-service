@@ -140,13 +140,16 @@ table td{
 
     } 
 
+    .textarea-header + textarea,
+    .textarea-header + [contenteditable="true"],
+    .textarea-header + .readonly {
+        border-top:none;
+    }
+
     textarea,
     [contenteditable="true"],
     .readonly {
-        border-top:none;
-        border-bottom:  1px solid $border-colour;
-        border-left:  1px solid $border-colour;
-        border-right:  1px solid $border-colour;
+        border:  1px solid $border-colour;
         min-height: 250px;
         margin: 0;
         padding: 5px 10px;

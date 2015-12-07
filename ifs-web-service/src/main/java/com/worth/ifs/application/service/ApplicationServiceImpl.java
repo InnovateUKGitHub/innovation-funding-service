@@ -21,8 +21,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationRestService applicationRestService;
 
     @Override
-    public Application getById(Long applicationId) {
-        return applicationRestService.getApplicationById(applicationId);
+    public Application getById(Long applicationId, Boolean... hateoas) {
+        if(hateoas.length>0 && hateoas[0]) {
+            return applicationRestService.getApplicationByIdHateoas(applicationId);
+        }else{
+            return applicationRestService.getApplicationById(applicationId);
+        }
     }
 
     @Override
@@ -45,12 +49,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     public Map<Long, Integer> getProgress(Long userId) {
         List<Application> applications = applicationRestService.getApplicationsByUserId(userId);
         Map<Long, Integer> applicationProgress = new HashMap<>();
-        applications.forEach(application -> {
-            if(application.getApplicationStatus().getName().equals("created")){
-                Double progress = applicationRestService.getCompleteQuestionsPercentage(application.getId());
-                applicationProgress.put(application.getId(), progress.intValue());
-            }
-        });
+        applications.stream()
+            .filter(a -> a.getApplicationStatus().getName().equals("created"))
+            .map(Application::getId)
+            .forEach(id -> {
+                Double progress = applicationRestService.getCompleteQuestionsPercentage(id);
+                applicationProgress.put(id, progress.intValue());
+            });
         return applicationProgress;
     }
 

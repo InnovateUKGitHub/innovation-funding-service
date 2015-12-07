@@ -8,11 +8,14 @@ import org.springframework.validation.Errors;
 
 /**
  * This class validates the FormInputResponse, it checks if there is a emailaddress present.
+ *
+ * The hibernate validator uses these specs:
+ * the specification of a valid email can be found in
+ * <a href="http://www.faqs.org/rfcs/rfc2822.html">RFC 2822</a>
  */
 @Component
 public class EmailValidator extends BaseValidator {
     private final Log log = LogFactory.getLog(getClass());
-
 
     @Override
     public void validate(Object target, Errors errors) {

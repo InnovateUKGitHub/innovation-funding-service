@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- ===========================Prototype index page  =========================== --> 
+
+<!-- ========Assessor view - showing scores in overview headers======= -->
+<div th:fragment="prototype-assessor-score">
+    <div class="column-third" th:text="${(score != null ? 'Score ' + score + ' / 10' : 'Score not given yet')}">
+        SCORE here
+    </div>
+</div>
+
+
+<!-- ========Assessor view - sub header back to comp dashboard======= -->
+<div th:fragment="prototype-assessor-subheader(link, url)">
+    <div class="sub-header">
+        <div class="deadline">Days left to submit&nbsp;&nbsp;
+            <div class="pie-container">
+                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                <div class="pie-overlay">
+                    <div>0</div>
+                    <span>Days left</span>
+                </div>
+            </div>
+        </div>
+        <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+    </div>
+</div>
+
+<!-- ===================Assessor Page title============================== -->
+<div th:fragment="prototype-assessor-page-title(subtitle, heading)">
+    <div class="page-header no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
+        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
+    </div>
+</div>
+
+<!-- ===================Assessor feedback============================== -->
+<div th:fragment="prototype-assessor-feedback">
+    <div th:if="${question == null}">
+        <fieldset>
+            <legend class="visuallyhidden">Question score</legend> 
+            <div class="form-group">
+            <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+            <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
+                <option value="" th:text="${(score != null ? score  : 'Set score')}"></option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select> / 10
+            </div>
+        </fieldset>
+    </div>
+
+    <div th:if="${question == 'yesno'}">
+        <h2 class="heading-small">Is the application in scope?</h2>
+        <fieldset class="inline">
+            <legend class="visuallyhidden">Is the application in scope?</legend>
+            <div class="form-group">
+                <label class="block-label" for="assessor-question-confirmation-yes">
+                <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                    Yes
+                </label>
+                <label class="block-label" for="assessor-question-confirmation-no">
+                <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                    No
+                </label>
+            </div>
+        </fieldset>
+    </div>  
+        
+     <fieldset>
+        <legend class="visuallyhidden">Question feedback</legend>
+        <div class="form-group">
+            <div class="form-group">
+                
+                 <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
+                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                 </label>
+                
+                <div class="textarea-wrapped word-count">
+        
+                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
+
+                    <div class="textarea-footer">
+                        
+                        <span class="count-label">
+                                <span class="count-message">Words remaining:</span>
+                                <span class="count-down positive" aria-live="polite">349</span>
+                        </span>
+                
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+</div>
+
+
+
+
+</html>

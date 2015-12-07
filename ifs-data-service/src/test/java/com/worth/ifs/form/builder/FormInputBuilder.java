@@ -33,6 +33,10 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
                 .with(idBasedDescriptions("Description "));
     }
 
+    public FormInputBuilder withWordCount(Integer... wordCount) {
+        return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    }
+
     @Override
     protected FormInput createInitial() {
         return new FormInput();

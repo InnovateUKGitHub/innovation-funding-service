@@ -2,41 +2,61 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.MediaType;
+import org.mockito.Mock;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
+    private final Log log = LogFactory.getLog(getClass());
+
+    @Mock
+    private ApplicationResourceAssembler applicationResourceAssembler;
+
+    private MockHttpServletRequest request;
+
+    @Before
+    public void setUpForHateoas() {
+        request = new MockHttpServletRequest();
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
+    }
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController();
+        ApplicationController applicationController = new ApplicationController(new ApplicationResourceAssembler());
+        return applicationController;
     }
 
     @Test
@@ -47,23 +67,21 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/id/1"))
+        mockMvc.perform(get("/application/normal/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is("testApplication1Name")))
-                .andExpect(jsonPath("id", is(1)))
+                .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
                         responseFields(
                                 fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoles").description("Process Roles"),
+                                fieldWithPath("processRoles").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competition").description("Competition"))));
-        mockMvc.perform(get("/application/id/2"))
+        mockMvc.perform(get("/application/normal/2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is("testApplication2Name")))
-                .andExpect(jsonPath("id", is(2)));
+                .andExpect(jsonPath("$.name", is("testApplication2Name")));
     }
 
     @Test
@@ -113,49 +131,61 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void applicationControllerShouldReturnAllApplications() throws Exception {
-
-        List<Application> applications = new ArrayList<Application>();
-        applications.add(new Application(null, "testApplication1Name", null, null, 1L));
-        applications.add(new Application(null, "testApplication2Name", null, null, 2L));
-        applications.add(new Application(null, "testApplication3Name", null, null, 3L));
-
+        int applicationNumber = 3;
+        List<Application> applications = newApplication().build(applicationNumber);
         when(applicationRepositoryMock.findAll()).thenReturn(applications);
-        mockMvc.perform(get("/application/findAll"))
+
+        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]name", is("testApplication1Name")))
-                .andExpect(jsonPath("[0]id", is(1)))
-                .andExpect(jsonPath("[1]name", is("testApplication2Name")))
-                .andExpect(jsonPath("[1]id", is(2)))
-                .andExpect(jsonPath("[2]name", is("testApplication3Name")))
-                .andExpect(jsonPath("[2]id", is(3)))
+                .andExpect(jsonPath("$", hasSize(applicationNumber)))
                 .andDo(document("application/find-all-applications"));
     }
 
     @Test
     public void applicationControllerCanCreateApplication() throws Exception {
+        Long competitionId = 1L;
+        Long userId = 1L;
+        String applicationName = "testApplication";
+        String roleName = "leadapplicant";
 
-        long competitionId = 123L;
-        long userId = 456L;
+        Application application = new Application();
+        application.setName(applicationName);
 
-        User user = newUser().build();
-        Organisation organisation = newOrganisation().with(name("testOrganisation")).build();
-        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
+        Competition competition = new Competition();
+        Role role = new Role();
+        role.setName(roleName);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        Organisation organisation = new Organisation(1L , "testOrganisation");
+        User user = new User();
 
-        when(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("the application name", competitionId, userId)).
-                thenReturn(application);
+        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+        user.addUserApplicationRole(processRole);
 
-        mockMvc.perform(put("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(newApplication().with(name("the application name")).build())))
+        ApplicationStatus applicationStatus = new ApplicationStatus();
+        applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());
+        List<ApplicationStatus> applicationStatuses = new ArrayList<>();
+        applicationStatuses.add(applicationStatus);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String applicationJsonString = mapper.writeValueAsString(application);
+
+
+        when(applicationStatusRepositoryMock.findByName(ApplicationStatusConstants.CREATED.getName())).thenReturn(applicationStatuses);
+        when(competitionsRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+
+        mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
+                .contentType(APPLICATION_JSON)
+                .content(applicationJsonString))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
                 .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
                 .andDo(document("application/create-application"));
-
-        verify(applicationService).createApplicationByApplicationNameForUserIdAndCompetitionId("the application name", competitionId, userId);
     }
 }

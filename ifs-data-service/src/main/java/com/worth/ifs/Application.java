@@ -10,6 +10,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     Log log = LogFactory.getLog(Application.class);

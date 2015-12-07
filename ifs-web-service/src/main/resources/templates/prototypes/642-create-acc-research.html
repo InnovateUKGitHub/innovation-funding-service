@@ -23,7 +23,7 @@
 	<h2 class="heading-medium">Research organisation</h2>
 
 	<form>	
-		<div id="manual-company-input" class="extra-margin">
+		<div id="manual-research-input" class="extra-margin">
 			<fieldset>
 				<legend class="visuallyhidden">Organisation details</legend>
 				<div class="form-group">
@@ -52,7 +52,7 @@
 				</div>
 				<a href="#" id="enter-address-manually">Enter address manually</a>
 			</fieldset>
-			<fieldset id="address-details" class="extra-margin" style="display: none;">
+			<fieldset id="address-details" class="extra-margin">
 				<legend class="visuallyhidden">Address details</legend>
 				<div class="form-group">
 					<label class="form-label" for="street">
@@ -109,7 +109,7 @@
 	jQuery('#org-name').on('keydown',function(e){ 
 		if (this.value.length>0){
 			jQuery("#results").show();
-			jQuery("#manual-company-input").hide();
+			jQuery("#manual-research-input").hide();
         }else{
         	jQuery("#results").hide();
         }
@@ -118,7 +118,7 @@
 
 	jQuery('#manual-company-trigger').on('click',function(e){ 
 		e.preventDefault();
-		jQuery("#manual-company-input").show();
+		jQuery("#manual-research-input").show();
 		jQuery("#results").hide();
 
 	});

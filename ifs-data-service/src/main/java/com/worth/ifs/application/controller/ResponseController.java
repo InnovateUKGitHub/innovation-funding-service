@@ -71,7 +71,7 @@ public class ResponseController {
         Application app = applicationRepository.findOne(applicationId);
         List<ProcessRole> userAppRoles = app.getProcessRoles();
 
-        List<Response> responses = new ArrayList<Response>();
+        List<Response> responses = new ArrayList<>();
         for (ProcessRole userAppRole : userAppRoles) {
             responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
         }
@@ -84,7 +84,7 @@ public class ResponseController {
         User user = userRepository.findOne(userId);
 
         List<ProcessRole> userAppRoles = processRoleRepository.findByUserAndApplication(user, application);
-        if(userAppRoles == null || userAppRoles.size()== 0){
+        if(userAppRoles == null || userAppRoles.isEmpty()){
             // user has no role on this application, so should not be able to write..
             log.error("FORBIDDEN TO SAVE");
             return null;

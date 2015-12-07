@@ -1,33 +1,30 @@
-if [ -d "./docs" ]; then
-	rm -r ./docs
+if [ -d "./styleguide" ]; then
+	rm -r ./styleguide
 fi
 
 #generate css
-bundle exec compass clean -c config-docs.rb && 
-bundle exec compass compile -c config-docs.rb 
+compass clean -c config-docs.rb && 
+compass compile -c config-docs.rb 
 
-#generate styleguide and make the docs.html the index.html
-./node_modules/.bin/styledocco -n "Innovation Funding Service styleguide" css-docs/docs.css \
+#generate styleguide and make the govuk-components.html the index.html
+./node_modules/.bin/styledocco -o styleguide -n "Innovation Funding Service styleguide" css-docs \
 	--include ./js/vendor/modernizr/modernizr.js \
-	--include ./js/ifs.js \
-	--include ./js/ifs-finance.js \
-	--include ./js/ifs-recommendation.js \
-	--include ./js/ifs-applications.js \
-	--include ./js/vendor/govuk/selection-buttons.js \
-	--include ./js/vendor/govuk/application.js \
+	--include ./js/dest/hallo.min.js \
+	--include ./js/dest/govuk.min.js \
+	--include ./js/dest/ifs.min.js \
 	--verbose &&
-rm ./docs/index.html && 
-mv ./docs/docs.html ./docs/index.html  
+rm ./styleguide/index.html && 
+cp ./styleguide/govuk-elements.html ./styleguide/index.html  
 
 #copy the images of the styleguide to the docs folder and also the javascript that is used by it.
-cp -r ./sass-docs/images ./docs
-cp -r ./sass-docs/js ./docs
+cp -r ./sass-docs/images ./styleguide
+cp -r ./sass-docs/js ./styleguide
 
 #OSX open the styleguide with chrome 
 #FILEPATH=`pwd`
-#open -a "Google Chrome"  "$FILEPATH/docs/index.html"
+#open -a "Google Chrome"  "$FILEPATH/styleguide/index.html"
 #
-open -a "Google Chrome"  "http://localhost:8080/docs/index.html"
+#open -a "Google Chrome"  "http://localhost:8080/styleguide/index.html"
 
 #remove css-docs folder
 if [ -d "./css-docs" ]; then

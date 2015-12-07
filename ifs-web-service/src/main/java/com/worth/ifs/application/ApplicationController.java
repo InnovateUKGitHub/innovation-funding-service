@@ -44,6 +44,15 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-details";
     }
 
+    @RequestMapping("/hateoas/{applicationId}")
+    public String applicationDetailsHateoas(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request){
+        log.info("HATEOAS Application with id " + applicationId);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, true);
+        return "application-details-hateoas";
+    }
+
     @RequestMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(Form form, Model model,
                                      @PathVariable("applicationId") final Long applicationId,
@@ -202,11 +211,11 @@ public class ApplicationController extends AbstractApplicationController {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
-    private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form);
+    private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form, Boolean... hateoas) {
+        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form, hateoas);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        addOrganisationFinanceDetails(model, application, userId);
+        addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);
         return application;
     }

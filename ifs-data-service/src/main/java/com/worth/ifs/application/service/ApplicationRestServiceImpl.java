@@ -3,18 +3,29 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.client.Traverson;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.springframework.hateoas.client.Hop.rel;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
@@ -30,7 +41,31 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public Application getApplicationById(Long applicationId) {
-        return restGet(applicationRestURL + "/id/" + applicationId, Application.class);
+        return restGet(applicationRestURL + "/normal/" + applicationId, Application.class);
+    }
+
+    @Override
+    public Application getApplicationByIdHateoas(Long applicationId) {
+        ParameterizedTypeReference<Resources<ProcessRole>> typeReference =
+            new ParameterizedTypeReference<Resources<ProcessRole>>(){};
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("IFS_AUTH_TOKEN","123abc");
+        Traverson traverson = new Traverson(URI.create(dataRestServiceURL + applicationRestURL + "/" + applicationId), MediaTypes.HAL_JSON);
+        Application application = traverson.follow(rel("self")).withHeaders(headers)
+                                            .toObject(ApplicationResource.class).toApplication();
+        Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)
+                                            .toObject(typeReference);
+        List<ProcessRole> roles = new ArrayList<>(roleResources.getContent());
+        application.setProcessRoles(roles);
+        return application;
+
+    }
+
+    private ProcessRole getRole(String href){
+        ParameterizedTypeReference<ProcessRoleResource> typeReference =
+            new ParameterizedTypeReference<ProcessRoleResource>() {};
+        ResponseEntity<ProcessRoleResource> resource = restGetParameterizedType(href, typeReference);
+        return resource.getBody().toProcessRole();
     }
 
     @Override
@@ -45,15 +80,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         ResponseEntity<String> response =
                 restPostWithEntity(applicationRestURL + "/saveApplicationDetails/" + application.getId(), application, String.class);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationRestRestService, save == ok : " + response.getBody());
-        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            //  bad credentials?
-            log.info("Unauthorized save request.");
-        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            log.info("Status code not_found .....");
-        }
-
+        logResponse(response);
     }
 
     @Override
@@ -64,6 +91,10 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
         log.debug("ApplicationRestRestService.updateApplicationStatus sending for applicationId " + applicationId);
 
+        logResponse(response);
+    }
+
+    private void logResponse(ResponseEntity<String> response){
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("ApplicationRestRestService, save == ok : " + response.getBody());
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
@@ -103,11 +134,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         application.setName(applicationName);
 
         String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
-        ResponseEntity<Application> creationResponse = restPut(url, application, Application.class);
 
-        Application newApplication = creationResponse.getBody();
-
-        return newApplication;
+        return restPost(url, application, Application.class);
     }
 
 }

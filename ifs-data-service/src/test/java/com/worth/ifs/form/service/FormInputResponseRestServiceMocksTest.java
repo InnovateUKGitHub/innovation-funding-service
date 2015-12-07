@@ -32,7 +32,6 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getResponsesByApplicationId() {
-
         String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/findResponsesByApplication/123";
         FormInputResponse[] returnedResponses = newFormInputResponse().buildArray(3, FormInputResponse.class);
         ResponseEntity<FormInputResponse[]> returnedEntity = new ResponseEntity<>(returnedResponses, OK);
@@ -45,7 +44,6 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_saveQuestionResponse() {
-
         String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/saveQuestionResponse/";
 
         ObjectNode expectedEntity = new ObjectMapper().createObjectNode().

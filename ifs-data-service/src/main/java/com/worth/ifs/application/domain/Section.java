@@ -93,11 +93,7 @@ public class Section implements Comparable<Section> {
     }
 
     public Boolean hasChildSections() {
-        if(this.childSections!= null && this.childSections.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.childSections!= null && this.childSections.isEmpty();
     }
 
     public void setParentSection(Section parentSection) {

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+      <style>
+body.print-doc {
+  background: #dee0e2;
+  margin: 0mm;
+  line-height: 1.5;
+}
+
+.print-doc section {
+  background: #fff;
+  width: 21cm;
+  min-height: 29.7cm;
+  display: block;
+  margin: 0.5cm auto;
+  box-sizing:border-box;
+  padding:2cm;
+/*  box-shadow: 0 0 1cm rgba(0, 0, 0, 0.2);*/
+  position: relative;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1),0 3px 1px -2px rgba(0,0,0,0.1),0 1px 5px 0 rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+.print-doc   .textarea-wrapped .readonly {
+   margin-top:10px;
+   min-height: 1em;
+   resize:none;
+   background-color: #fff;
+}
+
+section + section {
+    page-break-before: always;
+}
+
+
+.page-indication  {
+  top: 29.7cm;
+  border-top:3px dashed rgba(0,0,0,0.5);
+  width: 100%;
+  height: 0px;
+  position: absolute;
+  left:0;
+}
+
+.page-indication + .page-indication{
+  top: 59.4cm;
+}
+.page-indication + .page-indication + .page-indication {
+  top: 89.1cm;
+}
+
+.question .form-group .form-label-bold {
+  display: block;
+  font-weight: bold;
+}
+
+.question .form-group {
+  padding:5px 0;
+}
+
+
+@media print {
+  body, .print-doc section {
+    margin: 0;
+    padding: 0;
+  }
+  .print-doc section {
+    width: auto;
+    min-height: auto;
+    box-shadow: none;
+  }
+
+}
+@page {
+    size: A4;   /* auto is the current printer page size */
+    /*margin: 2cm;*/
+}
+      </style>
+      <script type="text/javascript">
+            window.print()
+      </script>
+</head>
+
+<body class="print-doc">
+
+
+
+
+
+
+<section> 
+<h1 class="heading-large">Application details</h1>
+<div id="collapsible-1" aria-hidden="false">
+   <div>
+      <div class="question" id="form-input-9">
+         <div class="form-group">
+            <label class="form-label form-label-bold" for="application_details-title">Project title</label>
+            <input class="form-control width-full" readonly="readonly" id="application_details-title" name="formInput[application_details-title]" value="A novel solution to an old problem" type="text" />
+         </div>
+         <div class="form-group">
+            <label class="form-label form-label-bold" for="details-application-timescale">Estimated timescales</label>
+            Project start date
+            <br/>
+            <div class="date-group">
+               <div class="day">
+                  <label class="form-label" for="application_details-startdate_day">Day</label>
+                  <input class="form-control width-extra-small" placeholder="DD" readonly="readonly" id="application_details-startdate_day" name="formInput[application_details-startdate_day]" value="1" type="number" />
+               </div>
+               <div class="month">
+                  <label class="form-label" for="application_details-startdate_month">Month</label>
+                  <input class="form-control width-extra-small" placeholder="MM" readonly="readonly" id="application_details-startdate_month" name="formInput[application_details-startdate_month]" value="11" type="number" />
+               </div>
+               <div class="year">
+                  <label class="form-label" for="application_details-startdate_year">Year</label>
+                  <input class="form-control width-extra-small" placeholder="YYYY" readonly="readonly" id="application_details-startdate_year" name="formInput[application_details-startdate_year]" value="2016" type="number" />
+               </div>
+            </div>
+            <br/>
+            <div class="form-group">
+               <label class="form-label" for="application_details-duration">Duration months</label>
+               <div class="validation-messages">
+               </div>
+               <input class="form-control width-extra-small" readonly="readonly" id="application_details-duration" name="formInput[application_details-duration]" value="51" type="number" />
+            </div>
+         </div>
+            <h2 class="heading-medium">Lead organisation</h2>
+            <div>Empire Ltd</div>
+            <h2 class="heading-medium">Partners</h2>
+            <ul class="list-bullet">
+               <li>
+                  <span>Ludlow</span>
+               </li>
+               <li>
+                  <span>EGGS</span>
+               </li>
+            </ul>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-11">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="11">Project summary</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>Entering text to check if it accepts Numbering bullets format1. Entering text to check if it accepts Numbering bullets format2.</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-12">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="12">Public description</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>asdfasdfafds</p>
+                  <p>asdf</p>
+                  <p>adsf</p>
+                  <p>asfd</p>
+                  <p>fads</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+<section>
+<h1 class="heading-large">Scope</h1>
+<div id="collapsible-2" aria-hidden="false">
+   <div>
+      <div class="question" id="form-input-13">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="13">How does your project align with the scope of this competition?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.
+                     Identification will involve the university testing conditions to determine the exact circumstance of the Issue.
+                     Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment.
+                     After this we will work with our prototyping partner to create a tool to correct the issue.  Once tested and certified this will be rolled out to mass production.
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+<section>
+<h1 class="heading-large">Your business proposition</h1>
+<div id="collapsible-3" aria-hidden="false">
+   <div>
+      <div class="question" id="form-input-1">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="1">1. What is the business opportunity that your project addresses?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p><strong>asdfasdfasdfasdf</strong></p>
+                  <p>asdfasdfasdf</p>
+                  <ul>
+                     <li>asdfasdf</li>
+                     <li>asdfasdfafds</li>
+                     <li>asdfasdf</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-2">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="2">2. What is the size of the potential market for your project?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p><strong>hghg</strong></p>
+                  <p><strong>asdfasdfasdfasdf asdf asdf asdf asd f asdf asdf a sdf asdasdf asdf a sdf asd asd fas dfd aasdfasdfasdf</strong></p>
+                  <p><strong>asdfasdf</strong></p>
+                  <p><strong>test</strong></p>
+                  <ol>
+                     <li>asdfasdfadsfasdfasdf</li>
+                     <li>asdfasdf</li>
+                     <li>asdfasdf asdf asdf asdf</li>
+                     <li>asdfaaaa a a a aasdfasd</li>
+                     <li>lalalalallaalala</li>
+                     <li>asdfasdfasdflit</li>
+                  </ol>
+                  <p>pizza asdf asdf a df</p>
+                  <p>asdfasdf</p>
+                  <p>adsfasdf</p>
+                  <p>asdfa</p>
+                  <p>asdfasdfasdfasdf</p>
+                  <p>asdfasdfafsd</p>
+               </div>
+             
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-3">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="3">3. How will you exploit and market your project?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <ul>
+                     <li><em><strong>asdfasdf</strong></em></li>
+                     <li><em><strong>kjkljlkjklj</strong></em></li>
+                     <li>kjlkjlkjlkj</li>
+                  </ul>
+                  <p><em>asdfaasdfasdf asdf asdf asdf a df asdf asdf asd fasd f adsf asd fas df asdf as df asdf asdf asd fa sdf asdf a f</em> asdfasdf asdf asdf asdfasdf asdf</p>
+                  <p>asdfasdfasdfasdfadsfasdfasdfasdfasdf</p>
+                  <p><em>asdf</em></p>
+                  <p><em>asdf</em></p>
+               </div>
+               
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-4">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="4">4. What economic, social and environmental benefits do you expect your project to deliver and when?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.  </p>
+                  <p>The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field.</p>
+                  <p>Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+               </div>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+<section>
+<h1 class="heading-large">Your approach to the project</h1>
+<div id="collapsible-4" aria-hidden="false">
+   <div>
+      <div class="question" id="form-input-5">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="5">5. What technical approach will you use and how will you manage your project?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <ol>
+                     <li><strong>asdf</strong></li>
+                     <li><strong>asdf</strong></li>
+                     <li><strong>asfd</strong></li>
+                  </ol>
+                  <ul>
+                     <li><strong>asdfasdf</strong></li>
+                     <li><strong>asdfasdf</strong></li>
+                  </ul>
+               </div>
+	         </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-6">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="6">6. What is innovative about your project?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p><em>*The project is based on Manchester's novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees. asdf asdf asdf asdf *</em></p>
+                  <ul>
+                     <li>test</li>
+                     <li>test2</li>
+                     <li>test3</li>
+                     <li>test4</li>
+                  </ul>
+                  <p>asdfasdfadsf asdf asdf asf adsf</p>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-7">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="7">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>Three principal risks exist at this stage:1. The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identif<em>y if the method needs to be altered during scale up to replicate results. In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase2. During the phase to engineer a technique to isolate the issue we anticipate that there are inherent safety issues. We have consulted an independent firm to ensure that suitable equipment and measures have been put in place to minimise the risk to staff.3. Although we are confident that our fabrication partner is the best option for the prototype solution there is an indication that a particular piece of heavy machinery, currently unavailable in the UK will be required. Our Fabrication partner has already investigated options for accessing this equipment in the Far East and an appropriate budget has been set aside to be used for this purpose if required.</em></p>
+                  <p>asdfasdf</p>
+                  <p>asdf</p>
+                  <p>asdf</p>
+                  <p>asdfasfd</p>
+                  <p>asdf</p>
+                  <p>asdf</p>
+                  <p>asfd</p>
+                  <p>f</p>
+                  <p>a</p>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-8">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="8">8. Does your project team have the skills, experience and facilities to deliver this project?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <p>The team consists of:
+                     Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field.  We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.
+                  </p>
+                  <p>Academic – the principal investigator and his team have been studying the issue for a number of years and have qualifications across the spectrum that apply to the field.  Together they have already identified several efficiencies that can be made within the industry.</p>
+                  <p>The Fabricators – Are a leading team within complex engineering fabrication.  They have work on multiple high budget engineering solutions and consist of a team of people with many years’ experience in a range of industries</p>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+<section>
+<h1 class="heading-large">Funding</h1>
+<div>
+   <div>
+      <div class="question" id="form-input-15">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="15">9. What will your project cost?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly"></div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <div class="question" id="form-input-16">
+         <div class="form-group" id="0">
+            <label class="form-label form-label-bold" for="16">10. How does financial support from Innovate UK and its funding partners add value?</label>
+            <div class="textarea-wrapped ">
+               <div class="readonly">
+                  <ul>
+                     <li>asdfasdf</li>
+                     <li>asdf</li>
+                     <li>asdf</li>
+                     <li>asdf</li>
+                  </ul>
+                  <p><strong>test</strong></p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+<section>
+<h1 class="heading-large">Finances Summary</h1>
+<div >
+   <div class="question">
+      <p>This is the overview of the finances provided by all partners in this project.</p>
+      <div>
+         <div class="form-group">
+            <table>
+               <thead>
+                  <tr>
+                     <th scope="col">&nbsp;</th>
+                     <th scope="col" class="numeric">Total</th>
+                     <th scope="col" class="numeric">
+                        <div>Empire Ltd</div>
+                        <div><small>Lead organisation</small></div>
+                     </th>
+                     <th scope="col" class="numeric">
+                        <div>Ludlow</div>
+                        <div><small>Partner</small></div>
+                     </th>
+                     <th scope="col" class="numeric">
+                        <div>EGGS</div>
+                        <div><small>Partner</small></div>
+                     </th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <th>Total costs</th>
+                     <td class="numeric">£13,171,494</td>
+                     <td class="numeric">£13,005,318</td>
+                     <td class="numeric">£105,517</td>
+                     <td class="numeric">£60,659</td>
+                  </tr>
+                  <tr>
+                     <th>% Grant</th>
+                     <td class="numeric">63</td>
+                     <td class="numeric">50</td>
+                     <td class="numeric">70</td>
+                     <td class="numeric">70</td>
+                  </tr>
+                  <tr>
+                     <th>Funding sought</th>
+                     <td class="numeric">£258,727</td>
+                     <td class="numeric">£142,404</td>
+                     <td class="numeric">£73,862</td>
+                     <td class="numeric">£42,461</td>
+                  </tr>
+                  <tr>
+                     <th>Other public sector funding</th>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                  </tr>
+                  <tr>
+                     <th>Contribution to project</th>
+                     <td class="numeric">£192,256</td>
+                     <td class="numeric">£142,404</td>
+                     <td class="numeric">£31,655</td>
+                     <td class="numeric">£18,198</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <h2 class="heading-medium">Funding breakdown</h2>
+      <div class="form-group">
+         <div style="overflow: auto;">
+            <table>
+               <thead>
+                  <tr>
+                     <th scope="col">&nbsp;</th>
+                     <th scope="col" class="numeric">Total</th>
+                     <th scope="col" class="numeric">
+                        <div>Empire Ltd</div>
+                        <div><small>Lead organisation</small></div>
+                     </th>
+                     <th scope="col" class="numeric">
+                        <div>Ludlow</div>
+                        <div><small>Partner</small></div>
+                     </th>
+                     <th scope="col" class="numeric">
+                        <div>EGGS</div>
+                        <div><small>Partner</small></div>
+                     </th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <th>Labour</th>
+                     <td class="numeric">£220,835</td>
+                     <td class="numeric">£90,009</td>
+                     <td class="numeric">£86,167</td>
+                     <td class="numeric">£44,659</td>
+                  </tr>
+                  <tr>
+                     <th>Overheads</th>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                  </tr>
+                  <tr>
+                     <th>Materials</th>
+                     <td class="numeric">£12,795,659</td>
+                     <td class="numeric">£12,765,309</td>
+                     <td class="numeric">£19,350</td>
+                     <td class="numeric">£11,000</td>
+                  </tr>
+                  <tr>
+                     <th>Capital usage</th>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                  </tr>
+                  <tr>
+                     <th>Subcontracting costs</th>
+                     <td class="numeric">£155,000</td>
+                     <td class="numeric">£150,000</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£5,000</td>
+                  </tr>
+                  <tr>
+                     <th>Travel and subsistence</th>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                  </tr>
+                  <tr>
+                     <th>Other Costs</th>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                     <td class="numeric">£0</td>
+                  </tr>
+                  <tr>
+                     <th>Total</th>
+                     <td class="numeric" style="font-weight: 700;">£13,171,494</td>
+                     <td class="numeric">£13,005,318</td>
+                     <td class="numeric">£105,517</td>
+                     <td class="numeric">£60,659</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+</section>
+
+
+</body>
+</html>
