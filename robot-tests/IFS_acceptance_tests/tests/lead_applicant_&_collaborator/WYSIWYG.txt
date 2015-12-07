@@ -1,13 +1,5 @@
 *** Settings ***
-Documentation     INFUND-218
-...               Acceptance tests: wysiwyg editor
-...
-...               Format a text area's text as bold
-...               Format a text area's text as italic
-...               Bullet formatting
-...               You should see the expected format in the text field area
-...
-...               This should be tested in different sections
+Documentation     INFUND-187: As an applicant in the application form, I should be able to format my text in a basic way (bold, underline and bullets), so I can style my text properly
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
@@ -17,101 +9,53 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${VAR}            ${EMPTY}
 
 *** Test Cases ***
-Verify Project summary accepts Bold text format
-    When the applicant is in the Overview page
-    Then the Applicant clicks the "Application details" section
-    Then clicks on "Project summary" section
-    Then verify for bold format
-
-Verify Project summary accepts Italic text format
-    When the applicant is in the Overview page
-    Then the Applicant clicks the "Application details" section
-    Then clicks on "Project summary" section
-    Then verify for Italic format
-
-Verify Project summary accepts numbering bullets
-    When the applicant is in the Overview page
-    Then the Applicant clicks the "Application details" section
-    Then clicks on "Project summary" section
-    Then verify for numbering bullet format
-
-Verify Project summary accepts bullets
-    When the applicant is in the Overview page
-    Then the Applicant clicks the "Application details" section
-    Then clicks on "Project summary" section
-    Then verify for bullet format
 Project summary section accepts Bold text format
-    Given the applicant is in the Overview page
-    Given the Applicant clicks the "Application details" section
-    Given the Applicant clicks on "Project summary" section
+    [Documentation]    INFUND-187
+    [Tags]    Applicant    Form    WYSIWYG
+    Given the applicant is in the Application details section
     When the Applicant clicks on Bold button in "Project summary"
     Then text entered should be Bold and keep the same after page refresh
 
 Project summary section accepts Italic text format
-    Given the applicant is in the Overview page
-    Given the Applicant clicks the "Application details" section
-    Given the Applicant clicks on "Project summary" section
+    [Documentation]    INFUND-187
+    [Tags]    Applicant    Form    WYSIWYG
+    Given the applicant is in the Application details section
     When the Applicant clicks on Italic button in "Project summary"
     Then text entered should be Italic and keep the same after page refresh
 
 Project summary section accepts Numbering bullet format
-    Given the applicant is in the Overview page
-    Given the Applicant clicks the "Application details" section
-    Given the Applicant clicks on "Project summary" section
+    [Documentation]    INFUND-187
+    [Tags]    Applicant    Form    WYSIWYG
+    Given the applicant is in the Application details section
     When the Applicant clicks on Numbering bullet button in "Project summary"
     Then text entered should be in Numbering bullets and keep the same after page refresh
 
 Project summary section accepts Bullet format
-    Given the applicant is in the Overview page
-    Given the Applicant clicks the "Application details" section
-    Given the Applicant clicks on "Project summary" section
+    [Documentation]    INFUND-187
+    [Tags]    Applicant    Form    WYSIWYG
+    Given the applicant is in the Application details section
     When the Applicant clicks on Bullet format button in "Project summary"
     Then text entered should be in Bullet format and keep the same after page refresh
 
 *** Keywords ***
-the applicant is in the Overview page
-    go to    ${APPLICATION_OVERVIEW_URL}
-
-the Applicant clicks the "Application details" section
-    Click Element    css=#section-1 > button
-
-clicks on "Project summary" section
-the Applicant clicks on "Project summary" section
-    Click Link    link=Project summary
-    Wait Until Element Is Visible    css=#form-input-11 .editor
-    Wait Until Page Contains Element    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
-
-verify for bold format
 the Applicant clicks on Bold button in "Project summary"
     Clear Element Text    css=#form-input-11 .editor
     Click Button    css=.bold_button
 
 text entered should be Bold
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
-    Sleep    2s
-    ${VAR}=    Get Text    css=#form-input-11 .editor b
     Element Should Be Visible    css=#form-input-11 .editor b
 
 the text entered should be Italic
     Input Text    css=#form-input-11 .editor    Entering text to verify ITALIC.
     Element Should Be Visible    css=#form-input-11 .editor i
 
-verify for Italic format
 the Applicant clicks on Italic button in "Project summary"
     Clear Element Text    css=#form-input-11 .editor
     Click Button    css=.italic_button
-    Input Text    css=#form-input-11 .editor    Entering text to check if it accepts italic format.
-    Sleep    2s
-    ${VAR}=    Get Text    css=#form-input-11 .editor i
-    #Focus    css=.app-submit-btn
 
-verify for numbering bullet format
-    Input Text    css=#form-input-11 .editor    testing
 text entered should be Bold and keep the same after page refresh
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
     Element Should Be Visible    css=#form-input-11 .editor b
@@ -123,22 +67,15 @@ text entered should be Bold and keep the same after page refresh
 the Applicant clicks on Numbering bullet button in "Project summary"
     Input Text    css=#form-input-11 .editor    This is testing for numbering bullets.
     Click Button    css=.insertOrderedList_button
-    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
-    Sleep    2s
-    ${VAR}=    Get Text    css=#form-input-11 .editor ol
     Focus    css=.app-submit-btn
     Sleep    1s
 
-verify for bullet format
 the entered text should be in Numbering bullets
     Element Should Be Visible    css=#form-input-11 .editor ol
 
 the Applicant clicks on Bullet format button in "Project summary"
     Input Text    css=#form-input-11 .editor    testing
     Click Button    css=.insertUnorderedList_button
-    #Click Element    xpath=//*[@id="0"]/div[3]/div[2]
-    Sleep    2s
-    ${VAR}=    Get Text    css=#form-input-11 .editor li
     Focus    css=.app-submit-btn
     Sleep    1s
 
@@ -166,3 +103,6 @@ text entered should be in Bullet format and keep the same after page refresh
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Page Contains Element    css=#form-input-11 .editor li
+
+the applicant is in the Application details section
+    go to    ${APPLICATION_URL}
