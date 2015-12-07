@@ -5,7 +5,7 @@
 
 <!-- ========Assessor view - showing scores in overview headers======= -->
 <div th:fragment="prototype-assessor-score">
-    <div class="column-third" th:text="${(score != null ? 'Score ' + score + ' / 10' : 'Score not given yet')}">
+    <div class="column-third" th:text="${(score != null ? 'Score ' + score + ' / 10' : ' ')}">
         SCORE here
     </div>
 </div>
@@ -29,7 +29,7 @@
 
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-assessor-page-title(subtitle, heading)">
-    <div class="page-header no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>

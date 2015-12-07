@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+</head>
+<body class="assessment-review">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <header class="page-header group no-pad">
+        <h1 class="heading-xlarge">Technology Inspired</h1>
+    </header>
+
+    <div class="grid-row">
+        <div class="column-two-thirds" style="padding-right: 45px;">
+            <p>Investment of up to £3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+        </div>
+        <div class="column-third">
+            <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/{competitionId}(competitionId=${competitionId})}">Create application</a>
+            <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/login(applicationCreateCompetitionId=${competitionId})}">Sign in to apply</a>
+
+        </div>
+    </div>
+
+
+
+        <h2 class="heading-large">Summary</h2>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <ul>
+                    <li><h3 class="heading-small">Opens:</h3> 18 May 2015</li>
+                    <li><h3 class="heading-small">Closes:</h3> 09 Sept 2015</li>
+                    <li><h3 class="heading-small">Innovative area:</h3> Digital economy</li>
+                    <li><h3 class="heading-small">Programme type:</h3> Collaborative R&amp;D</li>
+                </ul>
+
+                <h2 class="heading-small">Eligibility:</h2>
+                <ul class="list-bullet">
+                    <li>All organisations must be UK based</li>
+                    <li>Project must be lead by a small or micro business</li>
+                </ul>
+            </div>
+            <div class="column-two-thirds">
+                <p>Innovate UK is to invest up to £3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+
+                <ul class="list-bullet">
+                    <li><a href="#">Full competition brief</a></li>
+                </ul>
+
+                <p>The aim of this competition is to ensure that small and micro businesses in the UK are well positioned to respond to market opportunities across a range of economic sectors.</p>
+
+                <p>Studies must be led by a business. Projects are open to companies of any size, but must be led by a small or micro company, working in collaboration with one or more business or research partners.</p>
+
+                <p>Small or micro businesses could receive up to 70% of their eligible project costs, medium-sized businesses 60% and large businesses 50%.</p>
+
+                <p>We expect projects to last 6 to 15 months and to range in size from total costs of £50,000 to £150,000, although we may consider projects outside this range.</p>
+
+                <p>This competition opens on 18 May 2015, and the deadline for applications is at noon on 9 September 2015. There will be a briefing day for potential applicants in London on 20 May 2015.</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h2 class="heading-large">Background</h2>
+
+                <p>Innovate UK aims to stimulate business innovation across four key technology areas: advanced materials; biosciences; electronics, sensors and photonics; and ICT.</p>
+
+                <p>The four areas are what we call ‘enabling technologies' because they underpin the development of high-value products and services that meet market needs in many industrial sectors. Advances in these areas will keep UK industry at the forefront of technological innovation and help to generate significant growth. As our <a href="https://www.gov.uk/government/publications/enabling-technologies-strategy-2012-to-2015">Enabling technologies strategy 2012–15</a> makes clear, supporting these technology areas is a  key aim of Innovate UK.</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h2 class="heading-large">Before you apply</h2>
+
+                <p>Before you apply for a competition you must first create an account. If you already have an account you'll need to sign in.</p>
+
+                <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/{competitionId}(competitionId=${competitionId})}">Create application</a>
+                <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/login(applicationCreateCompetitionId=${competitionId})}">Sign in to apply</a>
+
+                <span class="form-hint">Closing date: 09 Sep 2015</span>
+            </div>
+        </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

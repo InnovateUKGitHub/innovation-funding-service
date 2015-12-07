@@ -21,6 +21,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     private String accessDeniedUrl;
 
     public CustomAuthenticationEntryPoint() {
+
     }
 
     public CustomAuthenticationEntryPoint(String accessDeniedUrl) {
