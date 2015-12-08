@@ -127,8 +127,19 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, T> successResponse(T response) {
+    protected static <T> Either<ServiceFailure, T> successBody(T response) {
         return Either.<ServiceFailure, T> right(response);
+    }
+
+    /**
+     * Create a Right of T, to indicate a success.
+     *
+     * @param response
+     * @param <T>
+     * @return
+     */
+    protected static <T> Either<ServiceFailure, ServiceSuccess<T>> successResponse(T response) {
+        return Either.<ServiceFailure, ServiceSuccess<T>> right(new ServiceSuccess(response));
     }
 
     /**
@@ -140,5 +151,18 @@ public abstract class BaseTransactionalService  {
      */
     protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error) {
         return left(error(error));
+    }
+
+
+
+    /**
+     * Create a Left of ServiceFailure, to indicate a failure.
+     *
+     * @param error
+     * @param <T>
+     * @return
+     */
+    protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error, Throwable e) {
+        return left(error(error, e));
     }
 }

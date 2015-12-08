@@ -45,13 +45,19 @@ public class ServiceFailure {
     }
 
     private List<GlobalError> errors;
+    private Throwable cause;
 
-    public ServiceFailure(List<GlobalError> errors) {
+    private ServiceFailure(List<GlobalError> errors, Throwable e) {
         this.errors = errors;
+        this.cause = e;
     }
 
     public static ServiceFailure error(List<String> messages) {
-        return new ServiceFailure(messages.stream().map(GlobalError::new).collect(toList()));
+        return new ServiceFailure(messages.stream().map(GlobalError::new).collect(toList()), null);
+    }
+
+    public static ServiceFailure error(List<String> messages, Throwable e) {
+        return new ServiceFailure(messages.stream().map(GlobalError::new).collect(toList()), e);
     }
 
     public static ServiceFailure error(String... messages) {
@@ -70,6 +76,22 @@ public class ServiceFailure {
         return error(asList(messages).stream().map(Enum::name).collect(toList()));
     }
 
+    public static ServiceFailure error(Throwable e, String... messages) {
+        return error(asList(messages), e);
+    }
+
+    public static ServiceFailure error(String message, Throwable e) {
+        return error(e, new String[] { message });
+    }
+
+    public static ServiceFailure error(Enum<?> message, Throwable e) {
+        return error(message.name(), e);
+    }
+
+    public static ServiceFailure error(Throwable e, Enum<?>... messages) {
+        return error(asList(messages).stream().map(Enum::name).collect(toList()), e);
+    }
+
     public boolean is(String... messages) {
         List<String> containedErrors = errors.stream().map(GlobalError::getMessage).collect(toList());
         List<String> messagesList = asList(messages);
@@ -78,5 +100,9 @@ public class ServiceFailure {
 
     public boolean is(Enum<?>... messages) {
         return is(asList(messages).stream().map(Enum::name).collect(toList()).toArray(new String[] {}));
+    }
+
+    public Throwable getCause() {
+        return cause;
     }
 }

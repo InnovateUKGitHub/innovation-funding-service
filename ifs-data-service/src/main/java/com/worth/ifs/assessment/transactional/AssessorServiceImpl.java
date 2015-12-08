@@ -83,7 +83,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private Either<ServiceFailure, ProcessRole> validateProcessRoleInApplication(Response response, ProcessRole processRole) {
-        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? successResponse(processRole) : errorResponse(PROCESS_ROLE_INCORRECT_APPLICATION);
+        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? successBody(processRole) : errorResponse(PROCESS_ROLE_INCORRECT_APPLICATION);
     };
 
     /**
@@ -94,6 +94,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private Either<ServiceFailure, ProcessRole> validateProcessRoleCorrectType(ProcessRole processRole, UserRoleType type) {
-        return processRole.getRole().getName().equals(type.getName()) ? successResponse(processRole) : errorResponse(PROCESS_ROLE_INCORRECT_TYPE);
+        return processRole.getRole().getName().equals(type.getName()) ? successBody(processRole) : errorResponse(PROCESS_ROLE_INCORRECT_TYPE);
     };
 }
