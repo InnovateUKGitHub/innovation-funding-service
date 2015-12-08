@@ -13,29 +13,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/650-comp-details'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="message-alert">
-        <h2 class="heading-medium">Competition eligibility</h2>
-        <p>To being a new application for the competition 'Technology Inspired' you must meet the following criteria</p>
-
-        <ul class="list-bullet extra-margin">
-        	<li>
-        		<h3 class="heading-small>">Create this application as the <strong>lead partner</strong> of the consortium</h3>
-        		<p>If you are not the lead, please contact your lead partner to create the application</p>
-        	</li>
-        	<li>
-        		<h3 class="heading-small>">Lead this application as a <strong>Business</strong></h3>
-        		<p>Applications into this competition must be lead by a business</p>
-        	</li>
-        	<li>
-        		<h3 class="heading-small>">Be based in the <strong>UK</strong></h3>
-        		<p>Non UK organisations are not eligible to recieve funding from Innovate UK</p>
-        	</li>
-        </ul>
-        
+        <h2 class="heading-small">Applications to Innovate UK competitions must be lead by a UK based business</h2>
+        <p>
+        If you are a member of an academic or research organisation your application into this competition needs to be created by the lead business of your consortium. 
+        </p>
+        <p>The lead business can then invite collaborators to join the application (these can include reasearch and academic institutions)</p>
     </div>
 
 	<div class="grid-row">
