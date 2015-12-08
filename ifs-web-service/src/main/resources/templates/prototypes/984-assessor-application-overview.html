@@ -44,7 +44,7 @@
 					</div>
 				</div>
 			</li>
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-scope">Scope</a></h3>
@@ -58,7 +58,7 @@
 		
 		<h2 class="heading-medium">Application questions</h2>
 		<ul class="list-overview">
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question1">1. Business opportunity</a></h3>
@@ -66,28 +66,28 @@
 					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
 				</div>
 			</li>
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="#">2. Potential market</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question2">2. Potential market</a></h3>
 					</div>
 					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=7" th:remove="tag" />
 				</div>
 			</li>
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question3">3. Project exploitation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
 				</div>
 			</li>
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question4">4. Economic benefit</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
 				</div>
 			</li>
 			<li class="section-status">
@@ -106,12 +106,12 @@
 					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
 				</div>
 			</li>
-			<li class="section-status">
+			<li class="section-status marked-as-complete">
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#11">7. Risks</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=5" th:remove="tag" />
 				</div>
 			</li>
 			<li class="section-status">
@@ -142,9 +142,9 @@
 
 	</form>
 
-	<!-- <div class="alignright-button">
-        <a role="button" tabindex="0" class="button" href="/prototypes/745-review-submit">Review &amp; submit</a>
-    </div> -->
+	<div class="alignright-button">
+        <a role="button" tabindex="0" class="button large" href="/prototypes/984-assessor-application-summary">Review assessment</a>
+    </div>
 
 
 

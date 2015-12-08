@@ -27,7 +27,7 @@
 
 		</div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:remove="tag" />
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3" th:remove="tag" />
 
 	</form>
 
