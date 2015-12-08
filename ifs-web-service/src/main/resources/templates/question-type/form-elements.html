@@ -235,6 +235,7 @@
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
         </div>
         <div class="assign-team">
+            <h3>Reassign question</h3>
             <ul class="list-bullet">
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
@@ -257,7 +258,6 @@
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">
             Assigned to: Nobody
         </div>
-
 </div>
 
 
