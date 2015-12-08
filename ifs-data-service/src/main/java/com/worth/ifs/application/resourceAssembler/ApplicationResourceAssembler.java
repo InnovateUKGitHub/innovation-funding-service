@@ -2,7 +2,7 @@ package com.worth.ifs.application.resourceassembler;
 
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -21,7 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Service
-public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Application, ApplicationResource> {
+public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Application, ApplicationResourceHateoas> {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -34,12 +34,12 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     private CompetitionResourceAssembler competitionResourceAssembler;
 
     public ApplicationResourceAssembler() {
-        super(ApplicationController.class, ApplicationResource.class);
+        super(ApplicationController.class, ApplicationResourceHateoas.class);
     }
 
     @Override
-    public ApplicationResource toResource(Application application) {
-        final ApplicationResource resource = createResourceWithId(application.getId(), application);
+    public ApplicationResourceHateoas toResource(Application application) {
+        final ApplicationResourceHateoas resource = createResourceWithId(application.getId(), application);
         // Add (multiple) links to processRoles
         try{
             for (ProcessRole role : application.getProcessRoles()) {
@@ -60,8 +60,8 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     }
 
     @Override
-    protected ApplicationResource instantiateResource(Application application) {
-        return new ApplicationResource(application.getId(),
+    protected ApplicationResourceHateoas instantiateResource(Application application) {
+        return new ApplicationResourceHateoas(application.getId(),
             application.getName(),
             application.getStartDate(),
             application.getDurationInMonths(),
@@ -71,8 +71,8 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
         );
     }
 
-    public Resources<ApplicationResource> toEmbeddedList(Iterable<Application> entities) {
-        final List<ApplicationResource> resources = toResources(entities);
+    public Resources<ApplicationResourceHateoas> toEmbeddedList(Iterable<Application> entities) {
+        final List<ApplicationResourceHateoas> resources = toResources(entities);
         return new Resources<>(resources, linkTo(controllerClass).withSelfRel());
     }
 }

@@ -13,35 +13,23 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-create-acc-business'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Return to seach results'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-large">Create your account</h1>
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-xlarge no-margin">Technology inspired</h1>
+    </div>
 
-	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from Innovate UK</p>
-	
-	<h2 class="heading-medium">Business Organisation</h2>
-
-	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Business Organisation</legend>
-			<div class="form-block">
-				<h3 class="heading-small">Organisation name</h3>
-				<p>Nomensa</p>
-				<h3 class="heading-small">Registration number</h3>
-				<p>0123456789</p>
-				<h3 class="heading-small">Address</h3>
-				<p>13 Queens Square <br />
-					Bristol <br />
-					BS1 4NT
-				</p>
-			</div>
-		</fieldset>
-
-		<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Continue</button>
-	</form>
-
+    <div class="grid-row">
+		<div class="column-two-thirds">
+			<p>Investment of up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advance materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT)</p>
+		</div>
+		<div class="column-third">
+			<a href="/prototypes/643-signup-create-acc" class="button">Sign in to apply</a>
+			<p class="form-hint">Closing date: 01 Mar 2016</p>
+		</div>
+    </div>
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

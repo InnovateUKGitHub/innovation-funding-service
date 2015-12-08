@@ -13,18 +13,25 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-signup-create-acc'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-large">Create your account</h1>
+	<!--<h1 class="heading-large">Create your account</h1>
 
-	<p class="form-hint icon-info-small-blue">Before creating your account you need to enter the details for the organisation that you will be working for if the application is successful</p>
+	 <p class="form-hint icon-info-small-blue">Before creating your account you need to enter the details for the organisation that you will be working for if the application is successful</p> -->
 	
-	<h2 class="heading-medium">Organisation details</h2>
+	<h2 class="heading-large">Your organisation</h2>
 
 	<div class="panel-indent">
-		<p>Your have been assigned by the lead applicant to the following company <br />
-		<strong>Nomensa</strong></p>
+		
+		<p>You have been invited to join a collaborative application for the competition <a href="/prototypes/650-comp-details">Technology Inspired</a>.</p>
+		<p>Lead organisation: <strong>Worth Systems</strong><br />
+		Lead applicant: <strong>John Smith</strong></p>
+		 
+		<p>The lead applicant has invited you to join this application on behalf of the following organisation:
+		Nomensa</p>
+		 
 		<p>If this is not the correct organisation <a href="mailto:lead@competition.com">email the application lead</a></p>
 	</div>
 	
@@ -39,12 +46,16 @@
 					Business
 				</label>
 				<label class="block-label" for="radio-2">
-					<input id="radio-2" type="radio" name="radio-group" value="Research" onClick="location.href='/prototypes/642-create-acc-research';"/>
+					<input id="radio-2" type="radio" name="radio-group" value="Research" onClick="location.href='/prototypes/642-create-acc-research-choice';"/>
 					Research
 				</label>
 				<label class="block-label" for="radio-3">
-					<input id="radio-3" type="radio" name="radio-group" value="Academic" onClick="location.href='/prototypes/642-create-acc-academic';"/>
-					Academic
+					<input id="radio-3" type="radio" name="radio-group" value="Academic" onClick="location.href='/prototypes/642-create-acc-public-sector';"/>
+					Public sector
+				</label>
+				<label class="block-label" for="radio-4">
+					<input id="radio-4" type="radio" name="radio-group" value="Academic" onClick="location.href='/prototypes/642-create-acc-charity';"/>
+					Charity
 				</label>
 			</div>
 			
