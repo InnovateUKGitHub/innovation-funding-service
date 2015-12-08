@@ -16,7 +16,7 @@ public class LoginForm {
     private String email;
     @NotEmpty(message = "Please enter your password")
     private String password;
-
+    private String actionUrl;
 
     public String getPassword() {
         return password;
@@ -31,5 +31,13 @@ public class LoginForm {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getActionUrl() {
+        return actionUrl;
+    }
+
+    public void setActionUrl(String actionUrl) {
+        this.actionUrl = actionUrl;
     }
 }

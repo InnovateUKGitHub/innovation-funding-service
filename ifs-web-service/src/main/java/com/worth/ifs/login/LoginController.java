@@ -5,6 +5,7 @@ import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
@@ -30,12 +31,14 @@ public class LoginController {
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
-
     @RequestMapping(value="/login", method=RequestMethod.GET)
      public String login( Model model, HttpServletRequest request) {
-        model.addAttribute("loginForm", new LoginForm());
+        LoginForm loginForm = new LoginForm();
+        setFormActionURL(loginForm, request);
+        model.addAttribute("loginForm", loginForm);
         return "login";
     }
+
     @RequestMapping(value="/login", params={"logout"})
     public String logout(HttpServletResponse response) {
         userAuthenticationService.removeAuthentication(response);
@@ -43,7 +46,7 @@ public class LoginController {
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response) {
+    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
         String destination = "";
         if(bindingResult.hasErrors()){
             destination = "login";
@@ -51,16 +54,66 @@ public class LoginController {
             try {
                 User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
                 userAuthenticationService.addAuthentication(response, authenticatedUser);
-                destination = redirectionForUser(authenticatedUser);
+                destination = setDestination(authenticatedUser, request);
 
             } catch(BadCredentialsException bce) {
-                bindingResult.rejectValue("email", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
-                bindingResult.rejectValue("password", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
-                destination = "login";
+                bindResult(bindingResult);
+                setFormActionURL(loginForm, request);
+                setDestinationToLogin();
+                destination = "/login";
             }
         }
 
         return destination;
+    }
+
+    private void setFormActionURL(LoginForm loginForm, HttpServletRequest request) {
+        String applicationCreateCompetitionIdString = request.getParameter("applicationCreateCompetitionId");
+        if(applicationCreateCompetitionIdString!=null) {
+            loginForm.setActionUrl("/login?applicationCreateCompetitionId="+applicationCreateCompetitionIdString);
+        }
+        else {
+            loginForm.setActionUrl("/login");
+        }
+    }
+
+    private void bindResult(BindingResult bindingResult) {
+        bindingResult.rejectValue("email", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
+        bindingResult.rejectValue("password", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
+
+    }
+
+    private String setDestinationToLogin() {
+        return "/login";
+    }
+
+    private String setDestination(User authenticatedUser, HttpServletRequest request) {
+        Long applicationCreateCompetitionId = getApplicationCreateCompetitionId(request);
+
+        String destination = null;
+        if(applicationCreateCompetitionId!=null) {
+            destination = redirectionForCreateApplication(applicationCreateCompetitionId);
+        }
+        else {
+            destination = redirectionForUser(authenticatedUser);
+        }
+
+        return destination;
+    }
+
+
+    private Long getApplicationCreateCompetitionId(HttpServletRequest request) {
+            String applicationCreateCompetitionIdString = request.getParameter("applicationCreateCompetitionId");
+        Long applicationCreateCompetitionId = null;
+        if(applicationCreateCompetitionIdString!=null) {
+            applicationCreateCompetitionId = Long.parseLong(applicationCreateCompetitionIdString);
+        }
+
+        return applicationCreateCompetitionId;
+    }
+
+    private String redirectionForCreateApplication(Long competitionIdRedirect) {
+        return "redirect:/application/create/"+competitionIdRedirect;
     }
 
     private String redirectionForUser(User user) {
