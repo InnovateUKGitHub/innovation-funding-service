@@ -39,8 +39,7 @@ Verify that when Applicant clicks the "Scope" this section is expanded
 Verify that only the main questions show and not the file uploads
     [Documentation]    INFUND-428
     [Tags]    Applicant
-    Given the Applicant is in the application overview page
-    When the Applicant clicks the "Yous approach" section
+    When the Applicant is in the application overview page
     Then the uploads should not be visible
 
 Verify the applicant can see the days left to submit
@@ -78,12 +77,12 @@ the Applicant is in the application overview page
     Applicant goes to the Overview page
 
 the applicant should see six sections
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(1)
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(2)
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(3)
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(4)
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(5)
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(6)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(1)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(2)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(3)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(4)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(5)
+    Page Should Contain Element    css=.application-overview > h2:nth-of-type(6)
 
 the Applicant clicks the "Scope" section
     [Documentation]    1. click second section
@@ -112,16 +111,13 @@ the second section should be visible
 the "Scope" sub-section should be visible
     Element Should Be Visible    link=How does your project align with the scope of this competition?
 
-the Applicant clicks the "Yous approach" section
-    Click Element    css=#content > form > div > h2:nth-child(7) > button
-
 the uploads should not be visible
     Element Should Not Be Visible    css=#question-14 > div > input[type="file"]
     Element Should Not Be Visible    css=#question-17 > div > input[type="file"]
     Element Should Not Be Visible    css=#question-18 > div > input[type="file"]
 
 The "Days left to submit" should be visible in the overview page
-    Element Should Be Visible    css=#content > div.sub-header > div > div > div.pie-overlay > div
+    Element Should Be Visible    css=.sub-header .deadline .pie-overlay > div
 
 The Progress bar should be 0% in the overview page
     Element Text Should Be    css=#content > div.grid-row > div.column-half.competition-details > div > div > div.progress    0%
@@ -159,4 +155,4 @@ the progress bar on the my applications page should be 14%
     Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    14%
 
 The "days left to submit" should be correct in the overview page
-    Element Text Should Be    css=#content > div.sub-header > div > div > div.pie-overlay > div    0
+    Element Text Should Be    css=.sub-header .deadline .pie-overlay > div    8

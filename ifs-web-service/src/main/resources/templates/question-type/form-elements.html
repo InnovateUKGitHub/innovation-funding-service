@@ -230,7 +230,10 @@
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="assign-buttons">
     <div class="assign-container collapsible" th:if="${question.isAssignEnabled()}">
-        <div class="assign-button">Assign question</div>
+
+        <div class="assign-button">
+              <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
+        </div>
         <div class="assign-team">
             <ul class="list-bullet">
                 <li th:each="assignableUser : ${assignableUsers}">
@@ -246,6 +249,19 @@
         </div>
     </div>
 </div>
+<!-- ========================= Assigned to =========================== -->
+<div th:fragment="assigned-to">
+        <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
+        Assigned to: <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+        </div>
+        <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">
+            Assigned to: Nobody
+        </div>
+
+</div>
+
+
+<!-- ========================= Last update info =========================== -->
 
 <div  th:fragment="last-update-info">
         <p th:if="${response?.getUpdateDate()}"><small><span>Last updated: </span>

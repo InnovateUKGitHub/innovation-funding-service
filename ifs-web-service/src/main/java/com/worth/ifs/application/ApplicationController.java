@@ -1,10 +1,10 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -114,7 +114,7 @@ public class ApplicationController extends AbstractApplicationController {
         String applicationNameWithoutWhiteSpace= applicationName.replaceAll("\\s","");
 
         if(applicationNameWithoutWhiteSpace.length() > 0) {
-            Application application = applicationService.createApplication(competitionId, userId, applicationName);
+            ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
             return "redirect:/application/"+application.getId();
         }
         else {
@@ -160,7 +160,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
 
-        Application application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
 
@@ -213,8 +213,8 @@ public class ApplicationController extends AbstractApplicationController {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
-    private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form, Boolean... hateoas) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form, hateoas);
+    private ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form, Boolean... hateoas) {
+        ApplicationResource application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form, hateoas);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addOrganisationFinanceDetails(model, application, userId, form);
