@@ -9,6 +9,7 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -95,7 +96,7 @@ public class BaseUnitTest {
     @Mock
     public SectionService sectionService;
 
-    public List<com.worth.ifs.application.domain.Application> applications;
+    public List<ApplicationResource> applications;
     public List<Section> sections;
     public Map<Long, Question> questions;
     public Map<Long, FormInputResponse> formInputsToFormInputResponses;
@@ -232,10 +233,10 @@ public class BaseUnitTest {
         approvedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
         rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
 
-        com.worth.ifs.application.domain.Application app1 = new com.worth.ifs.application.domain.Application(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
-        com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", submittedApplicationStatus);
-        com.worth.ifs.application.domain.Application app3 = new com.worth.ifs.application.domain.Application(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
-        com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
+        ApplicationResource app1 = new ApplicationResource(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
+        ApplicationResource app2 = new ApplicationResource(2L, "Providing sustainable childcare", submittedApplicationStatus);
+        ApplicationResource app3 = new ApplicationResource(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
+        ApplicationResource app4 = new ApplicationResource(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
@@ -247,20 +248,20 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, app1, role1, organisation1);
-        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, app2, role1, organisation1);
-        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, app3, role1, organisation1);
-        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, app4, role1, organisation1);
-        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), app1, role2, organisation2);
-        ProcessRole processRole6 = new ProcessRole(6L, assessor, app2, assessorRole, organisation1);
-        ProcessRole processRole7 = new ProcessRole(7L, assessor, app3, assessorRole, organisation1);
-        ProcessRole processRole8 = new ProcessRole(8L, assessor, app1, assessorRole, organisation1);
+        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, new Application(app1), role1, organisation1);
+        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, new Application(app2), role1, organisation1);
+        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, new Application(app3), role1, organisation1);
+        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, new Application(app4), role1, organisation1);
+        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), new Application(app1), role2, organisation2);
+        ProcessRole processRole6 = new ProcessRole(6L, assessor, new Application(app2), assessorRole, organisation1);
+        ProcessRole processRole7 = new ProcessRole(7L, assessor, new Application(app3), assessorRole, organisation1);
+        ProcessRole processRole8 = new ProcessRole(8L, assessor, new Application(app1), assessorRole, organisation1);
 
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(asList(processRole5));
 
-        competition.addApplication(app1, app2, app3, app4);
+        competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
         app1.setCompetition(competition);
         app1.setProcessRoles(asList(processRole1, processRole5));
@@ -306,13 +307,13 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationResponses(){
-        Application application = applications.get(0);
+        ApplicationResource application = applications.get(0);
 
         Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), new Application(application));
+        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), new Application(application));
 
         List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
@@ -332,18 +333,18 @@ public class BaseUnitTest {
     }
 
     public void setupFinances() {
-        Application application = applications.get(0);
-        applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
+        ApplicationResource application = applications.get(0);
+        applicationFinance = new ApplicationFinance(1L, new Application(application), organisations.get(0));
         when(financeService.getApplicationFinances(application.getId())).thenReturn(asList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
     }
 
     public void setupAssessment(){
-        Assessment assessment1 = new Assessment(assessor, applications.get(0));
+        Assessment assessment1 = new Assessment(assessor, new Application(applications.get(0)));
         assessment1.setId(1L);
-        Assessment assessment2 = new Assessment(assessor, applications.get(1));
+        Assessment assessment2 = new Assessment(assessor, new Application(applications.get(1)));
         assessment2.setId(2L);
-        Assessment assessment3 = new Assessment(assessor, applications.get(2));
+        Assessment assessment3 = new Assessment(assessor, new Application(applications.get(2)));
         assessment3.setId(3L);
         assessment3.submit();
 

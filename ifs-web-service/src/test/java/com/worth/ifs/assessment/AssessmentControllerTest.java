@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -83,7 +83,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testUserIsNotAssessorOnApplication() throws Exception {
 
         this.loginUser(applicant);
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -98,7 +98,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -114,7 +114,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
-        Application application = applications.get(0);
+        ApplicationResource application = applications.get(0);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -129,7 +129,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
-        Application application = applications.get(2);
+        ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -148,7 +148,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
 
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
@@ -169,7 +169,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testUpdateQuestionAssessmentFeedbackInvalid() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
                 Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
@@ -188,7 +188,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationAssessmentDetailsReject() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
@@ -199,7 +199,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testGetAssessmentSubmitReview() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentSubmitReview))
@@ -208,7 +208,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testInvitationAnswerReject() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
 
         String reason = "Decline because of 123";
         String observations = "Observations 12345678";
@@ -225,7 +225,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testInvitationAnswerAccept() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -259,7 +259,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testAssessmentSummaryComplete() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
 
         String feedback = "just because 345678";
         String isSuitable = "Yes, suitable for funding";
@@ -282,8 +282,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
         Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments, overallScore);
     }
 
-    private Assessment getAssessment(Application application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getApplication().equals(application)).findFirst();
+    private Assessment getAssessment(ApplicationResource application) {
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> new ApplicationResource(a.getApplication()).equals(application)).findFirst();
         Assert.assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }

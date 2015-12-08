@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -40,19 +41,19 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public Application getApplicationById(Long applicationId) {
-        return restGet(applicationRestURL + "/normal/" + applicationId, Application.class);
+    public ApplicationResource getApplicationById(Long applicationId) {
+        return restGet(applicationRestURL + "/normal/" + applicationId, ApplicationResource.class);
     }
 
     @Override
-    public Application getApplicationByIdHateoas(Long applicationId) {
+    public ApplicationResource getApplicationByIdHateoas(Long applicationId) {
         ParameterizedTypeReference<Resources<ProcessRole>> typeReference =
             new ParameterizedTypeReference<Resources<ProcessRole>>(){};
         HttpHeaders headers = new HttpHeaders();
         headers.add("IFS_AUTH_TOKEN","123abc");
         Traverson traverson = new Traverson(URI.create(dataRestServiceURL + applicationRestURL + "/" + applicationId), MediaTypes.HAL_JSON);
-        Application application = traverson.follow(rel("self")).withHeaders(headers)
-                                            .toObject(ApplicationResource.class).toApplication();
+        ApplicationResource application = new ApplicationResource(traverson.follow(rel("self")).withHeaders(headers)
+                                            .toObject(ApplicationResourceHateoas.class).toApplication());
         Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)
                                             .toObject(typeReference);
         List<ProcessRole> roles = new ArrayList<>(roleResources.getContent());
@@ -69,12 +70,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public List<Application> getApplicationsByUserId(Long userId) {
-        return asList(restGet(applicationRestURL + "/findByUser/" + userId, Application[].class));
+    public List<ApplicationResource> getApplicationsByUserId(Long userId) {
+        return asList(restGet(applicationRestURL + "/findByUser/" + userId, ApplicationResource[].class));
     }
 
     @Override
-    public void saveApplication(Application application) {
+    public void saveApplication(ApplicationResource application) {
         log.debug("ApplicationRestRestService.saveApplication " + application.getId());
 
         ResponseEntity<String> response =
@@ -116,8 +117,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
-        return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, Application[].class));
+    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
+        return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ApplicationResource[].class));
     }
 
     @Override
@@ -129,13 +130,13 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public Application createApplication(Long competitionId, Long userId, String applicationName) {
-        Application application = new Application();
+    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
+        ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
 
         String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
 
-        return restPost(url, application, Application.class);
+        return restPost(url, application, ApplicationResource.class);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.resource.ApplicationResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -24,7 +24,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Mock
     ApplicationRestService applicationRestService;
-    private List<Application> applications;
+    private List<ApplicationResource> applications;
     private Long userId;
 
 
@@ -37,7 +37,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 withName("created", "submitted", "something", "finished", "approved", "rejected").
                 buildArray(6, ApplicationStatus.class);
 
-        applications = newApplication().withApplicationStatus(statuses).build(6);
+        applications = newApplicationResource().withApplicationStatus(statuses).build(6);
 
         userId = 1L;
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(applications);
@@ -53,31 +53,31 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
      public void testGetById() throws Exception {
         Long applicationId = 1L;
-        List<Application> applications = newApplication().withId(applicationId).build(1);
+        List<ApplicationResource> applications = newApplicationResource().withId(applicationId).build(1);
         applications.get(0).setId(applicationId);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(applications.get(0));
 
-        Application returnedApplication = service.getById(applicationId);
-        assertEquals(applications.get(0), returnedApplication);
+        ApplicationResource returnedApplication = service.getById(applicationId);
+        assertEquals(applications.get(0).getId(), returnedApplication.getId());
     }
     @Test
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
-        Application returnedApplication = service.getById(applicationId);
+        ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }
 
     @Test
     public void testGetByIdNullValue() throws Exception {
         Long applicationId = null;
-        Application returnedApplication = service.getById(applicationId);
+        ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }
 
 
     @Test
     public void testGetInProgress() throws Exception {
-        List<Application> returnedApplications = service.getInProgress(userId);
+        List<ApplicationResource> returnedApplications = service.getInProgress(userId);
         returnedApplications.stream().forEach(a ->
                 assertThat(a.getApplicationStatus().getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
                 );
@@ -85,7 +85,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Test
     public void testGetFinished() throws Exception {
-        List<Application> returnedApplications = service.getFinished(userId);
+        List<ApplicationResource> returnedApplications = service.getFinished(userId);
         returnedApplications.stream().forEach(a ->
                         assertThat(a.getApplicationStatus().getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
         );
