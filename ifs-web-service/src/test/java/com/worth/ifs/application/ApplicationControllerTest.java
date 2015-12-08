@@ -35,7 +35,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @Before
     public void setUp(){
         super.setup();
-        // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
 

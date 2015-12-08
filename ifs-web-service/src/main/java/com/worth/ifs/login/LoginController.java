@@ -23,6 +23,7 @@ import javax.validation.Valid;
  * This controller handles user login, logout and authentication / authorization.
  * It will also redirect the user after the login/logout is successful.
  */
+
 @Controller
 @Configuration
 public class LoginController {
@@ -32,7 +33,7 @@ public class LoginController {
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
-     public String login( Model model, HttpServletRequest request) {
+    public String login( Model model, HttpServletRequest request) {
         LoginForm loginForm = new LoginForm();
         setFormActionURL(loginForm, request);
         model.addAttribute("loginForm", loginForm);
@@ -46,41 +47,38 @@ public class LoginController {
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
-        String destination = "";
-        if(bindingResult.hasErrors()){
-            destination = "login";
-        }else{
+    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+        String destination = "/login";
+        if(!bindingResult.hasErrors()) {
             try {
                 User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
                 userAuthenticationService.addAuthentication(response, authenticatedUser);
                 destination = setDestination(authenticatedUser, request);
-
             } catch(BadCredentialsException bce) {
                 bindResult(bindingResult);
                 setFormActionURL(loginForm, request);
                 setDestinationToLogin();
-                destination = "/login";
             }
         }
 
         return destination;
     }
 
-    private void setFormActionURL(LoginForm loginForm, HttpServletRequest request) {
-        String applicationCreateCompetitionIdString = request.getParameter("applicationCreateCompetitionId");
-        if(applicationCreateCompetitionIdString!=null) {
-            loginForm.setActionUrl("/login?applicationCreateCompetitionId="+applicationCreateCompetitionIdString);
+    private String setFormActionURL(LoginForm loginForm, HttpServletRequest request) {
+        Long competitionIdString = getCompetitionId(request);
+        if(competitionIdString!=null) {
+            loginForm.setActionUrl("/login?competitionId="+competitionIdString);
         }
         else {
             loginForm.setActionUrl("/login");
         }
+
+        return "something";
     }
 
     private void bindResult(BindingResult bindingResult) {
         bindingResult.rejectValue("email", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
         bindingResult.rejectValue("password", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
-
     }
 
     private String setDestinationToLogin() {
@@ -88,11 +86,11 @@ public class LoginController {
     }
 
     private String setDestination(User authenticatedUser, HttpServletRequest request) {
-        Long applicationCreateCompetitionId = getApplicationCreateCompetitionId(request);
+        Long competitionId = getCompetitionId(request);
 
         String destination = null;
-        if(applicationCreateCompetitionId!=null) {
-            destination = redirectionForCreateApplication(applicationCreateCompetitionId);
+        if(competitionId!=null) {
+            destination = redirectionForCreateApplication(competitionId);
         }
         else {
             destination = redirectionForUser(authenticatedUser);
@@ -102,14 +100,20 @@ public class LoginController {
     }
 
 
-    private Long getApplicationCreateCompetitionId(HttpServletRequest request) {
-            String applicationCreateCompetitionIdString = request.getParameter("applicationCreateCompetitionId");
-        Long applicationCreateCompetitionId = null;
-        if(applicationCreateCompetitionIdString!=null) {
-            applicationCreateCompetitionId = Long.parseLong(applicationCreateCompetitionIdString);
+    private Long getCompetitionId(HttpServletRequest request) {
+        String competitionIdString = request.getParameter("competitionId");
+        Long competitionId = null;
+
+        try {
+            if(Long.parseLong(competitionIdString)>=0) {
+                competitionId = Long.parseLong(competitionIdString);
+            }
+        }
+        catch (NumberFormatException e) {
+            log.info("Invalid competitionId number format:" + e);
         }
 
-        return applicationCreateCompetitionId;
+        return competitionId;
     }
 
     private String redirectionForCreateApplication(Long competitionIdRedirect) {
@@ -118,15 +122,12 @@ public class LoginController {
 
     private String redirectionForUser(User user) {
         String roleName = "";
+
         if(user.getRoles().size() > 0) {
             roleName = user.getRoles().get(0).getName();
         }
-        return "redirect:/" + roleName + "/dashboard";
-    }
 
-    private String redirectionForUknownUser() {
-        log.info("No user found");
-        return "redirect:/login?invalid";
+        return "redirect:/" + roleName + "/dashboard";
     }
 }
 
