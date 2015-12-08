@@ -19,6 +19,7 @@
 	position: relative;
 	line-height:40px;
 	font-size: 16px;
+	overflow: hidden;
 
 	.deadline {
 		float:right;
@@ -29,8 +30,7 @@
 	}
 
 	.pie-overlay {
-		background: $grey-4;
-		
+		background: $grey-4;	
 	}
 }
 

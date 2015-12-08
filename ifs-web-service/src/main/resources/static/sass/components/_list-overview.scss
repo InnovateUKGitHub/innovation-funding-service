@@ -1,0 +1,46 @@
+.list-overview{
+	margin-left: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li{	
+        border-bottom: 1px solid $border-colour;  
+    }
+    li:first-child{
+        border-top: 1px solid $border-colour;  
+    }
+    
+    li.grid-row {
+    	min-height: 30px;
+        margin: 0
+
+    }
+    h3.heading-small {
+       margin: 10px;
+    }
+
+    .assign-container{
+       	font-size: 14px;
+        padding: 12px 0 12px 20px;
+
+    	.assign-team{
+    		margin-top: 0;
+    		margin-bottom: 10px;
+    	}
+    	li{
+    		border: none;
+    	}
+    }
+
+    .marked-as-complete {
+		@extend %mark-done-right;
+		background-position: right top;
+		background-size: 30px;
+	}
+
+	.assigned-to-me {
+		@extend %mark-assigned-right;
+		background-position: right top;
+		background-size: 30px;
+	}
+}
