@@ -145,6 +145,7 @@ green checks should not be visible in the sidebar
 
 check if all the finance sections are not marked a complete
     Reload Page
+    sleep    2s
     Element Should Not Be Visible    css=.section-status.complete .section-status.complete + .section-status.complete
 
 the 1st applicant should see the 'Green check' only in the 'Your Finances'
