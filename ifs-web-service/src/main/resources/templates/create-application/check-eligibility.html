@@ -48,7 +48,7 @@
             <section class="column-half">
                 <h1 class="heading-large">Sign in</h1>
 
-                <form action="/login?redirect_url=create-application" th:object="${loginForm}" method="POST">
+                <form action="/login?redirect_url=/create-application/your-details" th:object="${loginForm}" method="POST">
                     <fieldset>
                         <legend class="visuallyhidden">Sign in</legend>
                         <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">

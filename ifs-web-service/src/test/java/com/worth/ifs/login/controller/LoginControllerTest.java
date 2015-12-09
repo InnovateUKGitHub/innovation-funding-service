@@ -144,14 +144,27 @@ public class LoginControllerTest extends BaseUnitTest {
     public void testRedirectToCreateApplicationWithValidLogin() throws Exception {
         String userPass = "test";
         when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
-        mockMvc.perform(post("/login?applicationCreateCompetitionId=1")
+        mockMvc.perform(post("/login?redirect_url=/create-application/your-details")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", loggedInUser.getEmail())
                 .param("password", userPass))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/application/create/1"))
+                .andExpect(view().name("redirect:/create-application/your-details"))
                 .andReturn();
 
+    }
+
+    @Test
+    public void testInvalidRedirectToCreateApplicationWithValidLogin() throws Exception {
+        String userPass = "test";
+        when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
+        mockMvc.perform(post("/login?redirect_url=http://google.com")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", loggedInUser.getEmail())
+                .param("password", userPass))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/applicant/dashboard"))
+                .andReturn();
     }
 
     @Test

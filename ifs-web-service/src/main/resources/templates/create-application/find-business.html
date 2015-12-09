@@ -38,11 +38,11 @@
                 <ul id="org-results" class="results-list panel-indent">
                     <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
                         <h3>
-                            <a th:href="${'/create-application/selected-business/'+ company.id}" title="View company" th:text="${company.name}">
+                            <a th:href="${'/create-application/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
                             </a>
                         </h3>
-                        <p class="meta crumbtrail" > <strong th:text="${company.id}">04214477</strong> - <span th:text="${company.description}"></span></p>
-                        <p>King William House, 13 Queen Square, Bristol, BS1 4NT</p>
+                        <p class="meta crumbtrail" th:text="${company.description}"></p>
+                        <p th:text="${company.location}"></p>
                     </li>
                 </ul>
 
