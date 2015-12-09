@@ -43,6 +43,7 @@ public class Application {
     @JoinColumn(name="competition", referencedColumnName="id")
     private Competition competition;
 
+
     public Application() {
         /*default constructor*/}
 
@@ -61,7 +62,7 @@ public class Application {
     }
 
     public Application(ApplicationResource resource){
-        this.competition = resource.getCompetition();
+        this.competition = null;
         this.name = resource.getName();
         this.processRoles = resource.getProcessRoles();
         this.applicationStatus = resource.getApplicationStatus();
@@ -69,6 +70,11 @@ public class Application {
         this.applicationFinances = resource.getApplicationFinances();
         this.startDate = resource.getStartDate();
         this.durationInMonths = resource.getDurationInMonths();
+    }
+
+    public Application(ApplicationResource resource, Competition competition){
+        this(resource);
+        this.competition = competition;
     }
 
     protected boolean canEqual(Object other) {

@@ -1,6 +1,6 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -43,7 +43,7 @@ public class ApplicationResourceTest {
         Assert.assertEquals(applicationResource.getName(), name);
         Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus);
         Assert.assertEquals(applicationResource.getProcessRoles(), processRoles);
-        Assert.assertEquals(applicationResource.getCompetition(), competition);
+        Assert.assertEquals(applicationResource.getCompetitionId(), competition.getId());
         Assert.assertEquals(applicationResource.getApplicationFinances(), applicationFinances);
     }
 }

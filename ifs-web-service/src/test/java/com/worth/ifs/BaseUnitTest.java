@@ -50,6 +50,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.any;
@@ -95,6 +96,8 @@ public class BaseUnitTest {
     public OrganisationService organisationService;
     @Mock
     public SectionService sectionService;
+    @Mock
+    public CompetitionService competitionService;
 
     public List<ApplicationResource> applications;
     public List<Section> sections;
@@ -161,7 +164,7 @@ public class BaseUnitTest {
         Section section1 = sectionBuilder.
                 with(id(1L)).
                 with(name("Application details")).
-                withQuestions(asList(q01)).
+                withQuestions(singletonList(q01)).
                 build();
 
         Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
@@ -170,7 +173,7 @@ public class BaseUnitTest {
         Section section2 = sectionBuilder.
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
-                withQuestions(asList(q10)).
+                withQuestions(singletonList(q10)).
                 build();
 
         Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
@@ -214,17 +217,18 @@ public class BaseUnitTest {
             }
         }
 
-        competitions = asList(competition);
+        competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
         when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
-        loggedInUser.setRoles(asList(applicantRole));
-        assessor.setRoles(asList(assessorRole));
+        loggedInUser.setRoles(singletonList(applicantRole));
+        assessor.setRoles(singletonList(assessorRole));
     }
 
     public void setupApplicationWithRoles(){
@@ -259,18 +263,18 @@ public class BaseUnitTest {
 
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
-        organisation2.setProcessRoles(asList(processRole5));
+        organisation2.setProcessRoles(singletonList(processRole5));
 
         competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
-        app1.setCompetition(competition);
+        app1.setCompetitionId(competition.getId());
         app1.setProcessRoles(asList(processRole1, processRole5));
-        app2.setCompetition(competition);
-        app2.setProcessRoles(asList(processRole2));
-        app3.setCompetition(competition);
+        app2.setCompetitionId(competition.getId());
+        app2.setProcessRoles(singletonList(processRole2));
+        app3.setCompetitionId(competition.getId());
         app3.setProcessRoles(asList(processRole3, processRole7, processRole8));
-        app4.setCompetition(competition);
-        app4.setProcessRoles(asList(processRole4));
+        app4.setCompetitionId(competition.getId());
+        app4.setProcessRoles(singletonList(processRole4));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(1).addUserApplicationRole(processRole5);
@@ -309,7 +313,6 @@ public class BaseUnitTest {
     public void setupApplicationResponses(){
         ApplicationResource application = applications.get(0);
 
-        Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
         Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), new Application(application));
@@ -318,8 +321,8 @@ public class BaseUnitTest {
         List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
 
-        questions.get(20L).setResponses(asList(response));
-        questions.get(21L).setResponses(asList(response2));
+        questions.get(20L).setResponses(singletonList(response));
+        questions.get(21L).setResponses(singletonList(response2));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
 
@@ -335,7 +338,7 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinance = new ApplicationFinance(1L, new Application(application), organisations.get(0));
-        when(financeService.getApplicationFinances(application.getId())).thenReturn(asList(applicationFinance));
+        when(financeService.getApplicationFinances(application.getId())).thenReturn(singletonList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
     }
 
@@ -355,7 +358,7 @@ public class BaseUnitTest {
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
         assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
 
-        submittedAssessments = asList(assessment3);
+        submittedAssessments = singletonList(assessment3);
         assessments = asList(assessment1, assessment2, assessment3);
         when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);

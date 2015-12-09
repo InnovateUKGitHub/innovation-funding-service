@@ -9,7 +9,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResourceHateoas;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,7 +68,7 @@ public class ApplicationResourceHateoas extends ResourceWithEmbeddeds {
             HttpEntity entity = new HttpEntity(headers);
             log.info("getting competition with token: "+token);
 
-            HttpEntity<CompetitionResource> response = restTemplate.exchange(href, HttpMethod.GET, entity, CompetitionResource.class);
+            HttpEntity<CompetitionResourceHateoas> response = restTemplate.exchange(href, HttpMethod.GET, entity, CompetitionResourceHateoas.class);
             this.competition = response.getBody().toCompetition();
         }
         Application application = new Application(competition, name, processRoles, applicationStatus, id);

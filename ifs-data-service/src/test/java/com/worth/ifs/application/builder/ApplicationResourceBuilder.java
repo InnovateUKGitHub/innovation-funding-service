@@ -40,7 +40,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withCompetition(Competition competition) {
-        return with(application -> application.setCompetition(competition));
+        return with(application -> application.setCompetitionId(competition.getId()));
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {

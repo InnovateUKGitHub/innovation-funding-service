@@ -202,7 +202,7 @@
 <div th:fragment="header-sub">
     <div class="sub-header">
         <div class="deadline">Days left to submit&nbsp;&nbsp;
-           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentApplication.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${currentApplication.getCompetition().getDaysLeft()}" th:remove="tag" />
+           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
     </div>
 </div>

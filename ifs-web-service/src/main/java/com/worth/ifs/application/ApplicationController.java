@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -162,15 +163,15 @@ public class ApplicationController extends AbstractApplicationController {
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-
-        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), true);
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-        List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
 
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
