@@ -45,7 +45,6 @@ public class CreateApplicationController extends AbstractApplicationController {
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(CreateApplicationConstants.COMPETITION_ID, competitionId);
 
-        log.warn("CompetitionId " + competitionId);
         this.saveToCookie(request, response, CreateApplicationConstants.COMPETITION_ID, String.valueOf(competitionId));
 
         return "create-application/check-eligibility";
@@ -58,7 +57,6 @@ public class CreateApplicationController extends AbstractApplicationController {
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        log.warn("createOrganisationType Eligible" + form.getFormInput("eligible"));
         model.addAttribute("form", form);
         if(user ==  null){
             return "redirect:/login";
@@ -80,10 +78,10 @@ public class CreateApplicationController extends AbstractApplicationController {
         if(user ==  null){
             return "redirect:/login";
         }else if(!bindingResult.hasErrors()){
-            log.warn("OrganisationName "+ companyHouseForm.getOrganisationName());
+            log.debug("OrganisationName " + companyHouseForm.getOrganisationName());
             List<CompanyHouseBusiness> companies = searchCompanyHouse(companyHouseForm.getOrganisationName());
-            companies.forEach(c -> log.info("Addresss: " + c.getLocation()));
-            companies.forEach(c -> log.info("line 1 : " + c.getOfficeAddress().getAddressLine1()));
+            companies.forEach(c -> log.debug("Addresss: " + c.getLocation()));
+            companies.forEach(c -> log.debug("line 1 : " + c.getOfficeAddress().getAddressLine1()));
             companyHouseForm.setCompanyHouseList(companies);
 
             return "create-application/find-business";
@@ -115,13 +113,13 @@ public class CreateApplicationController extends AbstractApplicationController {
                                       HttpServletRequest request,
                                       HttpServletResponse response ) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        log.warn("companyHouseOrganisationId a " + companyId);
+        log.debug("companyHouseOrganisationId a " + companyId);
 
         this.saveToCookie(request, response, CreateApplicationConstants.COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
         if(organisationService == null){
-            log.info("companyHouseService is null");
+            log.debug("companyHouseService is null");
         }
 
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
@@ -156,11 +154,11 @@ public class CreateApplicationController extends AbstractApplicationController {
         return null;
     }
     private void logState(HttpServletRequest request, HttpServletResponse response){
-        log.warn("=== Logging cookie state === ");
+        log.debug("=== Logging cookie state === ");
         for (Cookie cookie : request.getCookies()) {
-            log.warn("COOKIE name: " + cookie.getName());
-            log.warn("COOKIE value: " + cookie.getValue());
+            log.debug("COOKIE name: " + cookie.getName());
+            log.debug("COOKIE value: " + cookie.getValue());
         }
-        log.warn("=== ==================== === ");
+        log.debug("=== ==================== === ");
     }
 }

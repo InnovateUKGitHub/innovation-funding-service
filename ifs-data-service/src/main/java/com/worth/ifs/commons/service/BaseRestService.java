@@ -131,7 +131,6 @@ public abstract class BaseRestService {
 
     @NotSecured("")
     public HttpHeaders getHeaders(){
-        log.info("default getHeaders()");
         return getJSONHeaders();
     }
 

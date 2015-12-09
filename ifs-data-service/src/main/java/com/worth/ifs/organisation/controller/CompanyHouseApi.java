@@ -58,7 +58,7 @@ public class CompanyHouseApi extends BaseRestService {
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
     public CompanyHouseBusiness getOrganisationById(String id){
-        log.info("getOrganisationById "+ id);
+        log.debug("getOrganisationById "+ id);
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
 
         JsonNode jsonNode = restGet("company/" + id, JsonNode.class);
@@ -94,7 +94,7 @@ public class CompanyHouseApi extends BaseRestService {
 
     @NotSecured("")
     public HttpHeaders getHeaders(){
-        log.info("Adding authorization headers");
+        log.debug("Adding authorization headers");
         HttpHeaders headers = super.getHeaders();
 
         String auth = COMPANY_HOUSE_KEY + ":";
