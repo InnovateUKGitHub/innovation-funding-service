@@ -42,13 +42,13 @@
                     <li>Setup successful project</li>
                 </ul>
 
-                <a href="/create-application/find-business" class="button" value="create-account" type="submit">Create</a>
+                <a href="/application/create/find-business" class="button" value="create-account" type="submit">Create</a>
 
             </section>
             <section class="column-half">
                 <h1 class="heading-large">Sign in</h1>
 
-                <form action="/login?redirect_url=/create-application/your-details" th:object="${loginForm}" method="POST">
+                <form action="/login?redirect_url=/application/create/your-details" th:object="${loginForm}" method="POST">
                     <fieldset>
                         <legend class="visuallyhidden">Sign in</legend>
                         <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">

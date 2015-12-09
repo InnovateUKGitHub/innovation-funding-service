@@ -38,7 +38,7 @@
                 <ul id="org-results" class="results-list panel-indent">
                     <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
                         <h3>
-                            <a th:href="${'/create-application/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
+                            <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
                             </a>
                         </h3>
                         <p class="meta crumbtrail" th:text="${company.description}"></p>
