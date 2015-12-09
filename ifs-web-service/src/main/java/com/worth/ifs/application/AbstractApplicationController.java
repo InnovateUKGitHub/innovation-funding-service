@@ -260,7 +260,6 @@ public abstract class AbstractApplicationController {
     protected Optional<Section> getSection(List<Section> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         if (sectionId.isPresent()) {
-
             Long id = sectionId.get();
 
             // get the section that we want to show, so we can use this on to show the correct questions.
@@ -281,5 +280,15 @@ public abstract class AbstractApplicationController {
 
         List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
         return new OrganisationFinance(applicationFinance.getId(),applicationFinance.getOrganisation(),organisationCosts);
+    }
+
+    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, selectFirstSectionIfNoneCurrentlySelected, form, hateoas);
+        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        form.application = application;
+        addOrganisationFinanceDetails(model, application, userId, form);
+        addFinanceDetails(model, application);
+        return application;
     }
 }
