@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Sign In'" th:remove="tag"></div>
+</head>
+<body class="sign-in">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+        <h1 class="heading-large">Create your account</h1>
+
+        <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
+
+        <div class="panel-indent">
+            <p>The profile that you are creating will be linked to the following organisation <br/>
+                <strong>Nomensa</strong></p>
+        </div>
+
+        <h2 class="heading-medium">Your details</h2>
+
+        <form action="/registration/register" method="post" th:object="${registrationForm}">
+            <fieldset>
+                <legend class="visuallyhidden">Your details</legend>
+                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="title">
+                        <span class="form-label-bold">Title</span>
+                    </label>
+                    <select class="form-control width-medium" id="title" name="title" th:field="*{title}">
+                        <option value="Mr">Mr</option>
+                        <option value="Miss">Miss</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+                    </select>
+                    <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                </div>
+                <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="firstName">
+                        <span class="form-label-bold">First name</span>
+                    </label>
+                    <input class="form-control" id="firstName" name="firstName" type="text" th:field="*{firstName}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+                </div>
+
+                <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="lastName">
+                        <span class="form-label-bold">Last name</span>
+                    </label>
+                    <input class="form-control" id="lastName" name="lastName" type="text" th:field="*{lastName}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+                </div>
+                <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="phoneNumber">
+                        <span class="form-label-bold">Phone number</span>
+                        <span class="form-hint">We may use this to contact you about the application</span>
+                    </label>
+                    <input class="form-control" id="phoneNumber" name="phoneNumber" type="text" th:field="*{phoneNumber}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        <span class="form-label-bold">Email</span>
+                        <span class="form-hint">You will need this to sign into your account</span>
+                    </label>
+                    <input class="form-control" id="email" name="email" type="text" th:field="*{email}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+                <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="password">
+                        <span class="form-label-bold">Password</span>
+                    </label>
+                    <input class="form-control" id="password" name="password" type="password" th:field="*{password}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+                <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="retypedPassword">
+                        <span class="form-label-bold">Re-type password</span>
+                    </label>
+                    <input class="form-control" id="retypedPassword" name="retypedPassword" type="password" th:field="*{retypedPassword}"/>
+                    <span class="error-message" th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></span>
+                </div>
+            </fieldset>
+            <button class="button button-large" name="create-account" type="submit">Create account</button>
+        </form>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
