@@ -1,5 +1,8 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.security.NotSecured;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -16,16 +19,19 @@ import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOK
  * BaseRestService provides a base for all Service classes.
  */
 public abstract class BaseRestService {
-
-    protected String dataRestServiceURL;
+    private final Log log = LogFactory.getLog(getClass());
 
     private Supplier<RestTemplate> restTemplateSupplier = () -> new RestTemplate();
 
+    protected String dataRestServiceURL;
+
+    @NotSecured("")
     @Value("${ifs.data.service.rest.baseURL}")
     public void setDataRestServiceUrl(String dataRestServiceURL) {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
+    @NotSecured("")
     public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
         this.restTemplateSupplier = restTemplateSupplier;
     }
@@ -104,7 +110,7 @@ public abstract class BaseRestService {
      */
     protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> c) {
         RestTemplate restTemplate = getRestTemplate();
-        HttpHeaders headers = getJSONHeaders();
+        HttpHeaders headers = getHeaders();
 
         if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
@@ -114,6 +120,7 @@ public abstract class BaseRestService {
         return restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
     }
 
+    @NotSecured("")
     public static HttpHeaders getJSONHeaders() {
         //set your headers
         HttpHeaders headers = new HttpHeaders();
@@ -122,8 +129,15 @@ public abstract class BaseRestService {
         return headers;
     }
 
+    @NotSecured("")
+    public HttpHeaders getHeaders(){
+        log.info("default getHeaders()");
+        return getJSONHeaders();
+    }
+
+
     protected <T> HttpEntity<T> jsonEntity(T entity){
-        HttpHeaders headers = getJSONHeaders();
+        HttpHeaders headers = getHeaders();
         if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
