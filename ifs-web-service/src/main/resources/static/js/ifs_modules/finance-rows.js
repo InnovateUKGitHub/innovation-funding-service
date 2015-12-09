@@ -15,8 +15,12 @@ IFS.financeRows = (function() {
             var urlPart = urlParamsParts[0];
             var paramsPart = urlParamsParts.length == 2 ? ('&' + urlParamsParts[1]) : '';
 
-            var questionToUpdate = originalLink.parents('[data-question-id]');
-            var owningQuestionId = questionToUpdate.attr('data-question-id');
+            var questionToUpdate = originalLink.closest('.question');
+            var owningQuestionId;
+            if( questionToUpdate.attr('id').indexOf('form-input-') !== -1){
+                owningQuestionId = questionToUpdate.attr('id').replace('form-input-','');
+            }
+
             var dynamicHref = urlPart + '/' + owningQuestionId + '?singleFragment=true' + paramsPart;
             return dynamicHref;
         },
