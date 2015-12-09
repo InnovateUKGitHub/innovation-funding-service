@@ -9,12 +9,14 @@ import com.worth.ifs.application.service.SectionRestServiceImpl;
 import com.worth.ifs.assessment.service.AssessmentRestServiceImpl;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
 import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
+import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
 import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
@@ -43,7 +45,9 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-            new Class<?>[]{UserRestServiceImpl.class,
+            new Class<?>[]{
+                    BaseRestService.class,
+                    UserRestServiceImpl.class,
                     OrganisationRestServiceImpl.class,
                     FormInputResponseRestServiceImpl.class,
                     CompetitionsRestServiceImpl.class,
@@ -54,6 +58,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     SectionRestServiceImpl.class,
                     QuestionRestServiceImpl.class,
                     ApplicationRestServiceImpl.class,
+                    CompanyHouseRestServiceImpl.class,
                     ResponseRestServiceImpl.class,
                     TokenAuthenticationService.class,
                     StatelessAuthenticationFilter.class,

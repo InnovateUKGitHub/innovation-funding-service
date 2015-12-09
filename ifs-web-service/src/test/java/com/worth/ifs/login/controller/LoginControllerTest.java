@@ -15,8 +15,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -146,48 +144,39 @@ public class LoginControllerTest extends BaseUnitTest {
     public void testRedirectToCreateApplicationWithValidLogin() throws Exception {
         String userPass = "test";
         when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
-        mockMvc.perform(post("/login?competitionId=1")
+        mockMvc.perform(post("/login?redirect_url=/create-application/your-details")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", loggedInUser.getEmail())
                 .param("password", userPass))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/application/create/1"))
+                .andExpect(view().name("redirect:/create-application/your-details"))
                 .andReturn();
 
+    }
+
+    @Test
+    public void testInvalidRedirectToCreateApplicationWithValidLogin() throws Exception {
+        String userPass = "test";
+        when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
+        mockMvc.perform(post("/login?redirect_url=http://google.com")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", loggedInUser.getEmail())
+                .param("password", userPass))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/applicant/dashboard"))
+                .andReturn();
     }
 
     @Test
     public void testRedirectToCreateApplicationWithInvalidLogin() throws Exception {
         when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
-        mockMvc.perform(post("/login?competitionId=1")
+        mockMvc.perform(post("/login?applicationCreateCompetitionId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", "info@test.nl")
                 .param("password", "testFOUT"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("/login"))
-                .andExpect(model().attribute("loginForm", hasProperty("actionUrl", is("/login?competitionId=1"))))
                 .andReturn();
     }
 
-    @Test
-    public void testLoginPageWithStringAsCompetitionId() throws Exception {
-        when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
-        mockMvc.perform(get("/login?competitionId=abcdef")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("email", "info@test.nl")
-                .param("password", "testFOUT"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("loginForm", hasProperty("actionUrl", is("/login"))))
-                .andReturn();
-    }
-
-    @Test
-    public void testLoginPageWithNegativeIntegerAsCompetitionId() throws Exception {
-        mockMvc.perform(get("/login?competitionId=-10")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("loginForm", hasProperty("actionUrl", is("/login"))))
-                .andReturn();
-    }
 }

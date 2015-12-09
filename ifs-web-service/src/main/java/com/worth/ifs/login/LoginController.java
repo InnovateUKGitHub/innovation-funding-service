@@ -5,11 +5,11 @@ import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +35,6 @@ public class LoginController {
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login( Model model, HttpServletRequest request) {
         LoginForm loginForm = new LoginForm();
-        setFormActionURL(loginForm, request);
         model.addAttribute("loginForm", loginForm);
         return "login";
     }
@@ -53,10 +52,16 @@ public class LoginController {
             try {
                 User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
                 userAuthenticationService.addAuthentication(response, authenticatedUser);
-                destination = setDestination(authenticatedUser, request);
+                if (authenticatedUser != null) {
+                    String redirectUrl = getRedirectUrl(request);
+                    if(redirectUrl != null){
+                        destination = "redirect:"+redirectUrl;
+                    }else{
+                        destination = redirectionForUser(authenticatedUser);
+                    }
+                }
             } catch(BadCredentialsException bce) {
                 bindResult(bindingResult);
-                setFormActionURL(loginForm, request);
                 setDestinationToLogin();
             }
         }
@@ -64,16 +69,18 @@ public class LoginController {
         return destination;
     }
 
-    private String setFormActionURL(LoginForm loginForm, HttpServletRequest request) {
-        Long competitionIdString = getCompetitionId(request);
-        if(competitionIdString!=null) {
-            loginForm.setActionUrl("/login?competitionId="+competitionIdString);
-        }
-        else {
-            loginForm.setActionUrl("/login");
-        }
 
-        return "something";
+    private String getRedirectUrl(HttpServletRequest request){
+        String redirectUrl =null;
+        if(request.getParameter("redirect_url") != null && StringUtils.hasText(request.getParameter("redirect_url"))){
+            redirectUrl = request.getParameter("redirect_url");
+
+            if(!redirectUrl.startsWith("/") || redirectUrl.contains("http")){
+                log.error("Login tried to redirect to not allowed URL: "+ redirectUrl);
+                redirectUrl = null;
+            }
+        }
+        return redirectUrl;
     }
 
     private void bindResult(BindingResult bindingResult) {
@@ -83,41 +90,6 @@ public class LoginController {
 
     private String setDestinationToLogin() {
         return "/login";
-    }
-
-    private String setDestination(User authenticatedUser, HttpServletRequest request) {
-        Long competitionId = getCompetitionId(request);
-
-        String destination = null;
-        if(competitionId!=null) {
-            destination = redirectionForCreateApplication(competitionId);
-        }
-        else {
-            destination = redirectionForUser(authenticatedUser);
-        }
-
-        return destination;
-    }
-
-
-    private Long getCompetitionId(HttpServletRequest request) {
-        String competitionIdString = request.getParameter("competitionId");
-        Long competitionId = null;
-
-        try {
-            if(Long.parseLong(competitionIdString)>=0) {
-                competitionId = Long.parseLong(competitionIdString);
-            }
-        }
-        catch (NumberFormatException e) {
-            log.info("Invalid competitionId number format:" + e);
-        }
-
-        return competitionId;
-    }
-
-    private String redirectionForCreateApplication(Long competitionIdRedirect) {
-        return "redirect:/application/create/"+competitionIdRedirect;
     }
 
     private String redirectionForUser(User user) {
