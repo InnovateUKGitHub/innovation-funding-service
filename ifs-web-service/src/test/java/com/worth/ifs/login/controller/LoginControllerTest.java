@@ -102,7 +102,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "testFOUT")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
     }
 
@@ -114,7 +114,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "test")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
     }
 
@@ -126,7 +126,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "password"));
     }
 

@@ -1,4 +1,4 @@
-package com.worth.ifs.organisation.service;
+package com.worth.ifs.organisation.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -15,8 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class communicates with the Company House API.
+ * This is used to get information abouts companies.
+ * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
+ */
 @Service
-public class CompanyHouseService extends BaseRestService {
+public class CompanyHouseApi extends BaseRestService {
     @Value("${ifs.data.company-house.url}")
     private final String COMPANY_HOUSE_API = null;
 
@@ -26,7 +31,7 @@ public class CompanyHouseService extends BaseRestService {
     private static final int SEARCH_ITEMS_MAX = 20;
     private final Log log = LogFactory.getLog(getClass());
 
-    public CompanyHouseService() {
+    public CompanyHouseApi() {
         super();
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
     }

@@ -1,7 +1,6 @@
 package com.worth.ifs.organisation.controller;
 
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.organisation.service.CompanyHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,7 @@ import java.util.List;
 @RequestMapping("/companyhouse")
 public class CompanyHouseController {
     @Autowired
-    CompanyHouseService companyHouseService;
+    CompanyHouseApi companyHouseService;
 
     @RequestMapping("/searchCompanyHouse/{name}")
      public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("name") final String name) {

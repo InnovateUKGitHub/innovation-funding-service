@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
 import com.worth.ifs.user.domain.Organisation;
@@ -25,7 +26,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     CompanyHouseRestService companyHouseRestService;
 
-    public TreeSet<Organisation> getApplicationOrganisations(Application application) {
+    public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
@@ -38,7 +39,7 @@ public class OrganisationServiceImpl implements OrganisationService {
         return organisations;
     }
 
-    public Optional<Organisation> getApplicationLeadOrganisation(Application application) {
+    public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
 
         Optional<Organisation> leadOrganisation = userApplicationRoles.stream()
@@ -49,7 +50,9 @@ public class OrganisationServiceImpl implements OrganisationService {
         return leadOrganisation;
     }
 
-    public Optional<Organisation> getUserOrganisation(Application application, Long userId) {
+    public Optional<Organisation> getUserOrganisation(ApplicationResource
+
+                                                              application, Long userId) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
 
         Optional<Organisation> userOrganisation = userApplicationRoles.stream()
