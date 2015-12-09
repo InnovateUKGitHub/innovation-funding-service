@@ -23,7 +23,7 @@ public class CompetitionController {
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
-    @RequestMapping("/{competitionId}/details/")
+    @RequestMapping("/{competitionId}/details")
     public String competitionDetails(Form form, Model model, @PathVariable("competitionId") final Long competitionId,
                                      HttpServletRequest request) {
         boolean userIsLoggedIn = userIsLoggedIn(request);

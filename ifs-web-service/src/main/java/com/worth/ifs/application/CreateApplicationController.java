@@ -27,7 +27,7 @@ import java.util.List;
  * the basic information about the competition the application is related to.
  */
 @Controller
-@RequestMapping("/create-application")
+@RequestMapping("/application/create")
 public class CreateApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
 
