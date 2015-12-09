@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/application-form")
 public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
+    private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -54,7 +55,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-form";
     }
 
@@ -65,7 +66,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         ApplicationResource app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -110,7 +111,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
@@ -192,7 +193,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, true);
 
         return bindingResult;
     }
@@ -417,13 +418,5 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
-    }
-
-    protected ApplicationResource addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
-        ApplicationResource application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true, form);
-        form.application = application;
-        addOrganisationFinanceDetails(model, application, userId, form);
-        addFinanceDetails(model, application);
-        return application;
     }
 }
