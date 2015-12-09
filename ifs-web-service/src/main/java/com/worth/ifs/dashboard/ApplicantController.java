@@ -1,7 +1,7 @@
 package com.worth.ifs.dashboard;
 
 
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -50,7 +50,7 @@ public class ApplicantController {
 
         model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
 
-        List<Application> inProgress = applicationService.getInProgress(user.getId());
+        List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", applicationService.getFinished(user.getId()));
@@ -62,7 +62,7 @@ public class ApplicantController {
      * Get a list of application ids, where one of the questions is assigned to the current user. This is only for the
      * collaborators, since the leadapplicant is the default assignee.
      */
-    private List<Long> getAssignedApplications(List<Application> inProgress, User user){
+    private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, User user){
         return inProgress.stream().filter(a -> {
                     ProcessRole role = processRoleService.findProcessRole(user.getId(), a.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){

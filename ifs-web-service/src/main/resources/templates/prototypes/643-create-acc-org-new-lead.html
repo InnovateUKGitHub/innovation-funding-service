@@ -13,10 +13,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/643-org-selected-from-companies-house-lead'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-large">Create your account</h1>
+
+	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
 	
 	<div class="panel-indent">
 		<p>The profile that you are creating will be linked to the following organisation <br />
@@ -78,8 +81,14 @@
 				</label>
 				<input class="form-control" id="retype-password" name="retype-password" type="password" />
 			</div>
+			<div class="form-block">
+				<label class="block-label" for="terms-conditions">
+					<input id="terms-conditions" type="checkbox" value="terms-conditions"/>
+					I agree to the <a href="#">terms and conditions</a>
+				</label>
+			</div>
 		</fieldset>
-		<button class="button button-large" name="create-account" formaction="/prototypes/651-652-create-application-invite" type="submit">Create account</button>
+		<button class="button button-large extra-margin" name="create-account" formaction="/prototypes/651-652-create-application-invite" type="submit">Create account</button>
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

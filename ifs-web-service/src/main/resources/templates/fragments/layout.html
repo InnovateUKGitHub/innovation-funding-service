@@ -163,6 +163,7 @@
 
         </div>
     </details>
+    <p><strong>Need help with this service?</strong> <a href="/prototypes/1119-contact">Contact us</a></p>
 </div>
 
 
@@ -203,7 +204,6 @@
         <div class="deadline">Days left to submit&nbsp;&nbsp;
            <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentApplication.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${currentApplication.getCompetition().getDaysLeft()}" th:remove="tag" />
         </div>
-        <strong th:text="${currentApplication.getName()}" />
     </div>
 </div>
 

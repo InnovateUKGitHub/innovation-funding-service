@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+/**
+ * This controller will handle all requests that are related to a competition.
+ */
+
 @Controller
 @RequestMapping("/competition")
 public class CompetitionController {
@@ -22,15 +26,21 @@ public class CompetitionController {
     @RequestMapping("/{competitionId}/details/")
     public String competitionDetails(Form form, Model model, @PathVariable("competitionId") final Long competitionId,
                                      HttpServletRequest request) {
-        Authentication authentication = userAuthenticationService.getAuthentication(request);
-        if (authentication != null) {
-            model.addAttribute("userIsLoggedIn", true);
-        } else {
-            model.addAttribute("userIsLoggedIn", false);
-        }
+        boolean userIsLoggedIn = userIsLoggedIn(request);
+        model.addAttribute("userIsLoggedIn", userIsLoggedIn);
         model.addAttribute("competitionId", competitionId);
 
         return "competition-details";
+    }
+
+    private boolean userIsLoggedIn(HttpServletRequest request) {
+        Authentication authentication = userAuthenticationService.getAuthentication(request);
+
+        if(authentication != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

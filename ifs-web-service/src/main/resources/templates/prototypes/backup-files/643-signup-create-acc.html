@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="message-alert">
+        <h2 class="heading-small">Applications to Innovate UK competitions must be lead by a UK based business</h2>
+        <p>
+        If you are a member of an academic or research organisation your application into this competition needs to be created by the lead business of your consortium. 
+        </p>
+        <p>The lead business can then invite collaborators to join the application (these can include reasearch and academic institutions)</p>
+    </div>
+
+	<div class="grid-row">
+		<section class="column-half">
+			<h1 class="heading-large">Sign in</h1>
+	        <form action="#" method="POST">
+	        	<fieldset>
+	        		<legend class="visuallyhidden">Sign in</legend>
+					<div class="form-group">
+						<label class="form-label" for="id_email">E-mail address</label>
+						<input class="form-control form-control-3-4" type="text" id="id_email" name="email" value="" />
+					</div><!-- .form-group -->
+
+					<div class="form-group">
+						<label class="form-label" for="id_password">Password</label>
+						<input class="form-control form-control-3-4" type="password" id="id_password" name="password" value="" />
+					</div><!-- .form-group -->
+				</fieldset>
+				<input class="button" formaction="/prototypes/650-create-application" value="Sign in" type="submit" />
+	        </form>
+		</section>
+		<section class="column-half">
+		    <h1 class="heading-large">New to this service?</h1>
+		    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+
+		    <p>Creating an account allows you to:</p>
+		    <ul class="list-bullet">
+		        <li>Apply for a competition</li>
+		        <li>Track your competition applications</li>
+		        <li>View application feedback</li>
+		        <li>Setup successful project</li>
+		    </ul>
+		</section>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

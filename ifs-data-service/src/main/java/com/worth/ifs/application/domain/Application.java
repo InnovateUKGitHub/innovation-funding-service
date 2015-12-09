@@ -1,6 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -57,6 +58,17 @@ public class Application {
         this.processRoles = processRoles;
         this.applicationStatus = applicationStatus;
         this.id = id;
+    }
+
+    public Application(ApplicationResource resource){
+        this.competition = resource.getCompetition();
+        this.name = resource.getName();
+        this.processRoles = resource.getProcessRoles();
+        this.applicationStatus = resource.getApplicationStatus();
+        this.id = resource.getId();
+        this.applicationFinances = resource.getApplicationFinances();
+        this.startDate = resource.getStartDate();
+        this.durationInMonths = resource.getDurationInMonths();
     }
 
     protected boolean canEqual(Object other) {

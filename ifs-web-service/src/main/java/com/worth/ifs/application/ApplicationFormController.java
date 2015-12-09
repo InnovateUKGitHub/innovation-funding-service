@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/application-form")
 public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
+    private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -54,7 +55,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-form";
     }
 
@@ -63,9 +64,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
-        Application app = applicationService.getById(applicationId);
+        ApplicationResource app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -110,7 +111,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Application application = addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
@@ -160,7 +161,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                         @PathVariable("sectionId") final Long sectionId,
                                                         HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Application application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationService.getById(applicationId);
         Competition comp = application.getCompetition();
         List<Section> sections = comp.getSections();
 
@@ -192,7 +193,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
-        addApplicationAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, true);
 
         return bindingResult;
     }
@@ -277,7 +278,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
      */
-    private void setApplicationDetails(Application application, Application updatedApplication) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if(updatedApplication == null){
             return;
         }
@@ -358,7 +359,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
-        Application application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationService.getById(applicationId);
 
         if (fieldName.equals("application.name")) {
             value = value.trim();
@@ -384,7 +385,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private List<String> saveApplicationStartDate(Application application, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
         LocalDate startDate = application.getStartDate();
 
         if (startDate == null) {
@@ -417,13 +418,5 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
-    }
-
-    protected Application addApplicationAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, true, form);
-        form.application = application;
-        addOrganisationFinanceDetails(model, application, userId, form);
-        addFinanceDetails(model, application);
-        return application;
     }
 }

@@ -13,6 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/643-create-acc-business-lead'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -30,15 +31,91 @@
 				<p>Nomensa</p>
 				<h3 class="heading-small">Registration number</h3>
 				<p>0123456789</p>
-				<h3 class="heading-small">Address</h3>
+				<h3 class="heading-small">Registered address</h3>
 				<p>13 Queens Square <br />
 					Bristol <br />
 					BS1 4NT
 				</p>
 			</div>
 		</fieldset>
+
+		<h2 class="heading-medium">Operating address</h2>
+		<fieldset>
+			<legend class="visuallyhidden">Operating address</legend>
+			<div class="form-block">
+				<label class="block-label" for="address-same">
+					<input id="address-same" type="checkbox" value="address-same"/>
+					The registered address is the same as the operating address
+				</label>
+			</div>
+		</fieldset>
+
+		<div id="manual-company-input" class="extra-margin" style="display: block">
+			<fieldset>
+				<legend class="visuallyhidden">Organisation details</legend>
+				<div class="form-group">
+					<label class="form-label" for="postcode-check">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+					<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				</div>
+				<div class="form-group" id="select-address-block" style="display: none">
+					<label class="form-label" for="title">
+						<span class="form-label-bold">Select your address</span>
+					</label>
+					<select class="form-control" id="select-address" name="select-address">
+						<option value="">BS1 4NT, Peter Brett Associates, 10, Queen Square, Bristol </option>
+						<option value="">BS1 4NT, Sybase (UK) Ltd, 10, Queen Square, Bristol  </option>
+						<option value="">BS1 4NT, Hydrock, 11-12, Queen Square, Bristol </option>
+						<option value="">BS1 4NT, Nomensa Ltd, King William House, 13, Queen Square, Bristol </option>
+					</select>
+				</div>
+				<a href="#" id="enter-address-manually">Enter address manually</a>
+			</fieldset>
+			<fieldset id="address-details" class="extra-margin">
+				<legend class="visuallyhidden">Address details</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" />
+				</div>
+			</fieldset>
+		</div>
+
 		
-		<h2 class="heading-small">Organisation size</h2>
+		<h2 class="heading-medium">Organisation size</h2>
 		<fieldset>
 			<legend class="visuallyhidden">Organisation size</legend>
 			<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
@@ -70,5 +147,46 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	
+	jQuery('input#address-same').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#manual-company-input").hide();
+		}else{
+			jQuery("#manual-company-input").show();
+		}
+
+	});
+
+	jQuery('#manual-company-trigger').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#manual-company-input").show();
+		jQuery("#org-results").hide();
+
+	});
+
+	jQuery('#postcode-lookup').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#select-address-block").show();
+
+	});
+
+	jQuery('#select-address').on('change',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#street").val("King William House");
+		jQuery("#street-2").val("13 Queens Square");
+		jQuery("#town").val("Bristol");
+		jQuery("#postcode").val("BS1 4NT");
+
+	});
+
+	jQuery('#enter-address-manually').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#select-address-block").hide();
+	});
+</script>
 </body>
 </html>

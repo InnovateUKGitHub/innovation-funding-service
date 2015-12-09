@@ -726,15 +726,15 @@
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
        
 
-    <fieldset class="inline" id="${question.getId()}">
+    <fieldset class="inline" id="otherCostsShowHideToggle">
       <div class="form-group">
         <label class="block-label" data-target="otherCostsForm" for="radio-indent-1">
-          <input id="${question.getId()}-yes" name="radio-indent-group" value="Yes" type="radio" />
+          <input id="otherCostsShowHideToggle-yes" name="radio-indent-group" value="Yes" type="radio" />
           Yes
         </label>
 
         <label class="block-label" for="radio-indent-2">
-          <input id="${question.getId()}-no" name="radio-indent-group" value="No" type="radio" />
+          <input id="otherCostsShowHideToggle-no" name="radio-indent-group" value="No" type="radio" />
           No
         </label>
 

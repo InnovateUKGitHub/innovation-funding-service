@@ -23,6 +23,7 @@ import javax.validation.Valid;
  * This controller handles user login, logout and authentication / authorization.
  * It will also redirect the user after the login/logout is successful.
  */
+
 @Controller
 @Configuration
 public class LoginController {
@@ -32,7 +33,7 @@ public class LoginController {
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
-     public String login( Model model, HttpServletRequest request) {
+    public String login( Model model, HttpServletRequest request) {
         LoginForm loginForm = new LoginForm();
         model.addAttribute("loginForm", loginForm);
         return "login";
@@ -45,21 +46,14 @@ public class LoginController {
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
-    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm,
-                              BindingResult bindingResult,
-                              HttpServletResponse response,
-                              HttpServletRequest request,
-                              Model model) {
-        String destination = "";
-        if(bindingResult.hasErrors()){
-            destination = "login";
-        }else{
-            String redirectUrl = getRedirectUrl(request);
-
+    public String loginSubmit(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+        String destination = "/login";
+        if(!bindingResult.hasErrors()) {
             try {
                 User authenticatedUser = userAuthenticationService.authenticate(loginForm.getEmail(), loginForm.getPassword());
                 userAuthenticationService.addAuthentication(response, authenticatedUser);
                 if (authenticatedUser != null) {
+                    String redirectUrl = getRedirectUrl(request);
                     if(redirectUrl != null){
                         destination = "redirect:"+redirectUrl;
                     }else{
@@ -69,12 +63,12 @@ public class LoginController {
             } catch(BadCredentialsException bce) {
                 bindResult(bindingResult);
                 setDestinationToLogin();
-                destination = "/login";
             }
         }
 
         return destination;
     }
+
 
     private String getRedirectUrl(HttpServletRequest request){
         String redirectUrl =null;
@@ -92,7 +86,6 @@ public class LoginController {
     private void bindResult(BindingResult bindingResult) {
         bindingResult.rejectValue("email", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
         bindingResult.rejectValue("password", "Your username/password combination doesn't seem to work", "Your username/password combination doesn't seem to work");
-
     }
 
     private String setDestinationToLogin() {
@@ -101,15 +94,12 @@ public class LoginController {
 
     private String redirectionForUser(User user) {
         String roleName = "";
+
         if(user.getRoles().size() > 0) {
             roleName = user.getRoles().get(0).getName();
         }
-        return "redirect:/" + roleName + "/dashboard";
-    }
 
-    private String redirectionForUknownUser() {
-        log.info("No user found");
-        return "redirect:/login?invalid";
+        return "redirect:/" + roleName + "/dashboard";
     }
 }
 

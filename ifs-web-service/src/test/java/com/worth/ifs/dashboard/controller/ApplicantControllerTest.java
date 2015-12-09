@@ -1,7 +1,7 @@
 package com.worth.ifs.dashboard.controller;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.dashboard.ApplicantController;
 import com.worth.ifs.user.domain.User;
 import org.junit.After;
@@ -12,9 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.anyLong;
@@ -81,7 +79,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
     public void testDashboardApplicant() throws Exception {
         this.loginUser(applicant);
 
-        List<Application> progressMap = applications.subList(0,1);
+        List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
 
@@ -102,7 +100,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         User collabUsers = this.users.get(1);
         this.loginUser(collabUsers);
 
-        List<Application> progressMap = applications.subList(0,1);
+        List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(collabUsers.getId())).thenReturn(progressMap);
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
