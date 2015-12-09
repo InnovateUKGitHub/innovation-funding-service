@@ -60,6 +60,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         antPathRequestMatchers.add(new AntPathRequestMatcher("/favicon.ico"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/docs/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/competition/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/registration/**"));
         return new OrRequestMatcher(antPathRequestMatchers);
     }
 

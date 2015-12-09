@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface OrganisationRestService {
     public List<Organisation> getOrganisationsByApplicationId(Long applicationId);
+    public Organisation getOrganisationById(Long organisationId);
 }

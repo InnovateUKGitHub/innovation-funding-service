@@ -17,12 +17,12 @@
 
         <div class="panel-indent">
             <p>The profile that you are creating will be linked to the following organisation <br/>
-                <strong>Nomensa</strong></p>
+                <strong><div th:text="${organisationName}"/></strong></p>
         </div>
 
         <h2 class="heading-medium">Your details</h2>
 
-        <form action="/registration/register" method="post" th:object="${registrationForm}">
+        <form th:action="${registrationForm.getActionUrl()}" method="post" th:object="${registrationForm}">
             <fieldset>
                 <legend class="visuallyhidden">Your details</legend>
                 <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
@@ -61,7 +61,7 @@
                     <input class="form-control" id="phoneNumber" name="phoneNumber" type="text" th:field="*{phoneNumber}"/>
                     <span class="error-message" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
                 </div>
-                <div class="form-group">
+                <div cth:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
                         <span class="form-hint">You will need this to sign into your account</span>

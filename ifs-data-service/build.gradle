@@ -86,6 +86,7 @@ task client(type: Jar) {
         // filter to only include certain class files (Ant glob pattern)
         include "com/worth/ifs/*/service/**"
         include "com/worth/ifs/*/domain/**"
+        include "com/worth/ifs/*/dto/**"
         include "com/worth/ifs/*/constant/**"
         include "com/worth/ifs/*/resource/**"
         include "com/worth/ifs/util/**"

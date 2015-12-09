@@ -4,6 +4,9 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.OrganisationRestServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
+    @Autowired
+    OrganisationRestService organisationRestService;
+
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Comparator<Organisation> compareById =
@@ -53,4 +59,9 @@ public class OrganisationServiceImpl implements OrganisationService {
 
         return userOrganisation;
     }
+
+    public Organisation getOrganisationById(Long organisationId) {
+        return organisationRestService.getOrganisationById(organisationId);
+    }
+
 }

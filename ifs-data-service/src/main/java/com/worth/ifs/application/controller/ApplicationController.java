@@ -246,7 +246,7 @@ public class ApplicationController {
         List<Role> roles = roleRepository.findByName("leadapplicant");
         Role role = roles.get(0);
 
-        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+        Organisation userOrganisation = user.getOrganisations().get(0);
 
         Competition competition = competitionRepository.findOne(competitionId);
         ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
