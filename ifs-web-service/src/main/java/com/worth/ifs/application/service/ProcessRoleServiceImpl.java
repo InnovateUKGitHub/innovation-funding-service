@@ -25,4 +25,9 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId) {
         return userRestService.findAssignableProcessRoles(applicationId);
     }
+
+    @Override
+    public ProcessRole getById(Long id){
+        return userRestService.findProcessRoleById(id);
+    }
 }

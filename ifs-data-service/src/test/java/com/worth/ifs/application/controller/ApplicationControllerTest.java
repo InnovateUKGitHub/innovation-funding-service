@@ -76,7 +76,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoles").description("processRoles"),
+                                fieldWithPath("processRoleIds").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competitionId").description("Competition Id"))));
         mockMvc.perform(get("/application/normal/2"))
@@ -159,7 +159,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Organisation organisation = new Organisation(1L , "testOrganisation");
         User user = new User();
 
-        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
+        ProcessRole processRole = new ProcessRole(1L, user, null, role, organisation);
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
         user.addUserApplicationRole(processRole);
@@ -182,10 +182,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
+                .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
     }
 }

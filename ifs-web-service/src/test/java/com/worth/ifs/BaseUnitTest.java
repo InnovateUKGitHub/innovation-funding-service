@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
@@ -268,13 +269,13 @@ public class BaseUnitTest {
         competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
         app1.setCompetitionId(competition.getId());
-        app1.setProcessRoles(asList(processRole1, processRole5));
+        app1.setProcessRoleIds(asList(processRole1, processRole5).stream().map(ProcessRole::getId).collect(Collectors.toList()));
         app2.setCompetitionId(competition.getId());
-        app2.setProcessRoles(singletonList(processRole2));
+        app2.setProcessRoleIds(singletonList(processRole2).stream().map(ProcessRole::getId).collect(Collectors.toList()));
         app3.setCompetitionId(competition.getId());
-        app3.setProcessRoles(asList(processRole3, processRole7, processRole8));
+        app3.setProcessRoleIds(asList(processRole3, processRole7, processRole8).stream().map(ProcessRole::getId).collect(Collectors.toList()));
         app4.setCompetitionId(competition.getId());
-        app4.setProcessRoles(singletonList(processRole4));
+        app4.setProcessRoleIds(singletonList(processRole4).stream().map(ProcessRole::getId).collect(Collectors.toList()));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(1).addUserApplicationRole(processRole5);
@@ -307,6 +308,14 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
         //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
+        when(processRoleService.getById(1L)).thenReturn(processRole1);
+        when(processRoleService.getById(2L)).thenReturn(processRole2);
+        when(processRoleService.getById(3L)).thenReturn(processRole3);
+        when(processRoleService.getById(4L)).thenReturn(processRole4);
+        when(processRoleService.getById(5L)).thenReturn(processRole5);
+        when(processRoleService.getById(6L)).thenReturn(processRole6);
+        when(processRoleService.getById(7L)).thenReturn(processRole7);
+        when(processRoleService.getById(8L)).thenReturn(processRole8);
 
     }
 

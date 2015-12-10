@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Relation(value="application", collectionRelation="applications")
 public class ApplicationResource {
@@ -19,7 +20,7 @@ public class ApplicationResource {
     private String name;
     private LocalDate startDate;
     private Long durationInMonths; // in months
-    private List<ProcessRole> processRoles = new ArrayList<>();
+    private List<Long> processRoleIds = new ArrayList<>();
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
     private ApplicationStatus applicationStatus;
     private Long competitionId;
@@ -36,7 +37,7 @@ public class ApplicationResource {
     public ApplicationResource(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
         this.competitionId = competition.getId();
         this.name = name;
-        this.processRoles = processRoles;
+        this.processRoleIds = processRoles.stream().map(ProcessRole::getId).collect(Collectors.toList());
         this.applicationStatus = applicationStatus;
         this.id = id;
     }
@@ -48,7 +49,11 @@ public class ApplicationResource {
             this.competitionId = application.getCompetition().getId();
         }
         this.name = application.getName();
-        this.processRoles = application.getProcessRoles();
+        if (application.getProcessRoles() == null) {
+            this.processRoleIds = new ArrayList<>();
+        }else {
+            this.processRoleIds = application.getProcessRoles().stream().map(ProcessRole::getId).collect(Collectors.toList());
+        }
         this.applicationStatus = application.getApplicationStatus();
         this.id = application.getId();
         this.applicationFinances = application.getApplicationFinances();
@@ -98,12 +103,12 @@ public class ApplicationResource {
         this.name = name;
     }
 
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
+    public List<Long> getProcessRoleIds() {
+        return processRoleIds;
     }
 
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = processRoles;
+    public void setProcessRoleIds(List<Long> processRoleIds) {
+        this.processRoleIds = processRoleIds;
     }
 
     public ApplicationStatus getApplicationStatus() {
@@ -123,10 +128,10 @@ public class ApplicationResource {
     }
 
     public void addUserApplicationRole(ProcessRole... processRoles){
-        if(this.processRoles == null){
-            this.processRoles = new ArrayList<>();
+        if(this.processRoleIds == null){
+            this.processRoleIds = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        this.processRoleIds.addAll(Arrays.asList(processRoles).stream().map(ProcessRole::getId).collect(Collectors.toList()));
     }
 
     public LocalDate getStartDate() {
