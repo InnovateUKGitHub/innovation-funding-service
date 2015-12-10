@@ -22,7 +22,7 @@ public class Cost {
     BigDecimal cost;
 
     @OneToMany(mappedBy="cost")
-    private List<CostValue> costValues = new ArrayList<CostValue>();
+    private List<CostValue> costValues = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="applicationFinanceId", referencedColumnName="id")

@@ -35,7 +35,7 @@ public class HttpUtilsTest {
     public void test_requestParameterPresent_presentButNull() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("testParameter", (String) null);
-        assertEquals(Optional.ofNullable(null), HttpUtils.requestParameterPresent("testParameter", request));
+        assertEquals(Optional.empty(), HttpUtils.requestParameterPresent("testParameter", request));
     }
 
 }

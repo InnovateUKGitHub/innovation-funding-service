@@ -10,5 +10,6 @@ import java.util.List;
  */
 @Service
 public interface CompetitionService {
+    Competition getById(Long id);
     List<Competition> getAllCompetitions();
 }

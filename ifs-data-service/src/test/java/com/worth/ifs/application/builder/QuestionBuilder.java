@@ -12,9 +12,6 @@ import java.util.function.Function;
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 03/11/15.
- */
 public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     private QuestionBuilder(List<BiConsumer<Integer, Question>> newMultiActions) {

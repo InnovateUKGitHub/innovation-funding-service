@@ -66,6 +66,9 @@ public abstract class AbstractApplicationController {
     @Autowired
     FinanceService financeService;
 
+    @Autowired
+    CompetitionService competitionService;
+
 
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
@@ -111,7 +114,7 @@ public abstract class AbstractApplicationController {
 
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
         application.setId(applicationId);
-        Competition competition = application.getCompetition();
+        Competition competition = competitionService.getById(application.getCompetitionId());
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
@@ -195,14 +198,15 @@ public abstract class AbstractApplicationController {
         model.addAttribute("markedAsComplete", questionService.getMarkedAsComplete(application.getId(), organisationId));
     }
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
-        List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
         model.addAttribute("questionAssignees", questionAssignees);
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         model.addAttribute("notifications", notifications);
         questionService.removeNotifications(notifications);
-        List<Long> assignedSections = sectionService.getUserAssignedSections(application.getCompetition().getSections(), questionAssignees, userId);
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
         model.addAttribute("assignedSections", assignedSections);
     }
 
@@ -231,8 +235,8 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
-
-        List<Section> sectionsList = sectionService.getParentSections(application.getCompetition().getSections());
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
 
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
@@ -244,11 +248,13 @@ public abstract class AbstractApplicationController {
 
     protected void addSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
         addSectionDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
-        List<Section> sections = sectionService.getParentSections(application.getCompetition().getSections());
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        List<Section> sections = sectionService.getParentSections(competition.getSections());
         model.addAttribute("sections", sections);
     }
     private void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
 
@@ -260,7 +266,6 @@ public abstract class AbstractApplicationController {
     protected Optional<Section> getSection(List<Section> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         if (sectionId.isPresent()) {
-
             Long id = sectionId.get();
 
             // get the section that we want to show, so we can use this on to show the correct questions.
@@ -281,5 +286,15 @@ public abstract class AbstractApplicationController {
 
         List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
         return new OrganisationFinance(applicationFinance.getId(),applicationFinance.getOrganisation(),organisationCosts);
+    }
+
+    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, selectFirstSectionIfNoneCurrentlySelected, form, hateoas);
+        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        form.application = application;
+        addOrganisationFinanceDetails(model, application, userId, form);
+        addFinanceDetails(model, application);
+        return application;
     }
 }

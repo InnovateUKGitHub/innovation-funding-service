@@ -23,20 +23,27 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRestService userRestService;
 
+    @Autowired
+    ProcessRoleService processRoleService;
+
     @Override
     public List<User> getAssignable(Long applicationId) {
         return userRestService.findAssignableUsers(applicationId);
     }
 
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         Set<User> users = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(uar -> uar.getUser())
@@ -45,7 +52,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         Set<User> users = userApplicationRoles.stream()
                 .map(uar -> uar.getUser())
                 .collect(Collectors.toSet());

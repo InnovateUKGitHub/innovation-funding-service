@@ -83,27 +83,29 @@ public class ApplicationController {
     }
 
     @RequestMapping("/normal/{id}")
-    public Application getApplicationById(@PathVariable("id") final Long id) {
-        return applicationRepository.findOne(id);
+    public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
+        return new ApplicationResource(applicationRepository.findOne(id));
     }
 
 
     @RequestMapping("/")
-    public List<Application> findAll() {
-        return applicationRepository.findAll();
+    public List<ApplicationResource> findAll() {
+        return applicationRepository.findAll().stream()
+            .map(ApplicationResource::new)
+            .collect(Collectors.toList());
     }
 
     @RequestMapping("/findByUser/{userId}")
-    public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
+    public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        List<Application> apps = new ArrayList<>();
+        List<ApplicationResource> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
             log.debug("+++++++++++++++++++++");
             log.debug(role.getApplication().getName());
             log.debug(role.getApplication().getId());
             log.debug("+++++++++++++++++++++");
-            apps.add(role.getApplication());
+            apps.add(new ApplicationResource(role.getApplication()));
         }
         return apps;
     }
@@ -222,7 +224,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
-    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
+    public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
@@ -260,7 +262,7 @@ public class ApplicationController {
         applicationRepository.save(application);
         processRoleRepository.save(processRole);
 
-        return application;
+        return new ApplicationResource(application);
     }
 
 }

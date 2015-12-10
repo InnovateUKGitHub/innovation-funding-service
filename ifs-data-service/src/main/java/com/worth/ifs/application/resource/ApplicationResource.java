@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Relation(value="application", collectionRelation="applications")
 public class ApplicationResource {
@@ -19,10 +20,10 @@ public class ApplicationResource {
     private String name;
     private LocalDate startDate;
     private Long durationInMonths; // in months
-    private List<ProcessRole> processRoles = new ArrayList<>();
+    private List<Long> processRoleIds = new ArrayList<>();
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
     private ApplicationStatus applicationStatus;
-    private Competition competition;
+    private Long competitionId;
 
     public ApplicationResource() {
         /*default constructor*/}
@@ -34,17 +35,25 @@ public class ApplicationResource {
     }
 
     public ApplicationResource(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
-        this.competition = competition;
+        this.competitionId = competition.getId();
         this.name = name;
-        this.processRoles = processRoles;
+        this.processRoleIds = processRoles.stream().map(ProcessRole::getId).collect(Collectors.toList());
         this.applicationStatus = applicationStatus;
         this.id = id;
     }
 
     public ApplicationResource(Application application){
-        this.competition = application.getCompetition();
+        if(application.getCompetition()==null){
+            this.competitionId = null;
+        }else {
+            this.competitionId = application.getCompetition().getId();
+        }
         this.name = application.getName();
-        this.processRoles = application.getProcessRoles();
+        if (application.getProcessRoles() == null) {
+            this.processRoleIds = new ArrayList<>();
+        }else {
+            this.processRoleIds = application.getProcessRoles().stream().map(ProcessRole::getId).collect(Collectors.toList());
+        }
         this.applicationStatus = application.getApplicationStatus();
         this.id = application.getId();
         this.applicationFinances = application.getApplicationFinances();
@@ -61,7 +70,7 @@ public class ApplicationResource {
             if(this.name==null && that.name==null){
                 return true;
             }
-            else if( ! this.name.equals(that.name)){
+            else if( this.name==null || that.name==null || ! this.name.equals(that.name)){
                 return false;
             }
             if(this.id==null && that.id==null){
@@ -94,12 +103,12 @@ public class ApplicationResource {
         this.name = name;
     }
 
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
+    public List<Long> getProcessRoleIds() {
+        return processRoleIds;
     }
 
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = processRoles;
+    public void setProcessRoleIds(List<Long> processRoleIds) {
+        this.processRoleIds = processRoleIds;
     }
 
     public ApplicationStatus getApplicationStatus() {
@@ -110,19 +119,19 @@ public class ApplicationResource {
         this.applicationStatus = applicationStatus;
     }
 
-    public Competition getCompetition() {
-        return competition;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
+    public void setCompetitionId(Long id) {
+        this.competitionId = id;
     }
 
     public void addUserApplicationRole(ProcessRole... processRoles){
-        if(this.processRoles == null){
-            this.processRoles = new ArrayList<>();
+        if(this.processRoleIds == null){
+            this.processRoleIds = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        this.processRoleIds.addAll(Arrays.asList(processRoles).stream().map(ProcessRole::getId).collect(Collectors.toList()));
     }
 
     public LocalDate getStartDate() {

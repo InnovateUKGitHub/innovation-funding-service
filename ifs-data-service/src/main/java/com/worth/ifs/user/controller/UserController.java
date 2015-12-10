@@ -44,7 +44,7 @@ public class UserController {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String handleException(Exception e) {
-        e.printStackTrace();
+        log.error(e.getStackTrace());
         return "return error object instead";
     }
 
@@ -101,7 +101,7 @@ public class UserController {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<User> users = roles.stream()
                 .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
-                .map(r -> r.getUser())
+                .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
         return users;
     }
@@ -110,7 +110,7 @@ public class UserController {
     public Set<User> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<User> users = roles.stream()
-                .map(r -> r.getUser())
+                .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
         return users;
     }

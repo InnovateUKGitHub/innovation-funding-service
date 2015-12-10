@@ -138,6 +138,7 @@ watch {
     }
 }
 
+//noinspection GroovyMissingReturnStatement
 processResources {
     filesMatching("*.properties") {
         expand project.properties

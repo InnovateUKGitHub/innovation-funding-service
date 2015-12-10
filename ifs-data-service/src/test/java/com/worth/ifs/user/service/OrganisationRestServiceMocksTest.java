@@ -30,7 +30,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         String expectedUrl = dataServicesUrl + organisationsUrl + "/findByApplicationId/123";
         Organisation[] returnedResponse = newOrganisation().buildArray(3, Organisation.class);
-        ResponseEntity<Organisation[]> responseEntity = new ResponseEntity<Organisation[]>(returnedResponse, OK);
+        ResponseEntity<Organisation[]> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Organisation[].class)).thenReturn(responseEntity);
 

@@ -3,6 +3,7 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResourceHateoas;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -40,7 +41,7 @@ public class CompetitionController {
     }
 
     @RequestMapping("/{id}")
-    public CompetitionResource getCompetitionByIdHateoas(@PathVariable("id") final Long id) {
+    public CompetitionResourceHateoas getCompetitionByIdHateoas(@PathVariable("id") final Long id) {
         Competition competition = repository.findById(id);
         return competitionResourceAssembler.toResource(competition);
     }

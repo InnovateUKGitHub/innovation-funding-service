@@ -265,27 +265,17 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
     }
 
-    ;
-
     public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfMethods> {
     }
-
-    ;
 
     public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
     }
 
-    ;
-
     public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods> {
     }
 
-    ;
-
     public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods> {
     }
-
-    ;
 
     public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>> {
         public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map) {
@@ -295,8 +285,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
     }
-
-    ;
 
 
 }

@@ -12,6 +12,7 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -76,7 +77,7 @@ public class AssessmentController extends AbstractApplicationController {
         allAssessments.sort(new AssessmentStatusComparator());
 
         //filters the assessments to just have the submitted assessments here
-        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(toList());
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(Assessment::isSubmitted).collect(toList());
 
         //filters the assessments to just the not submmited assessments
         List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(toList());
@@ -181,8 +182,14 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, Assessment assessment) {
-        getAndPassAssessmentDetails(competitionId, new ApplicationResource(assessment.getApplication()).getId(), userId, model);
-        Set<String> partners =  new ApplicationResource(assessment.getApplication()).getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
+        ApplicationResource application = applicationService.getById(assessment.getApplication().getId());
+        getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
+        List<Long> processRoleIds = application.getProcessRoleIds();
+        Set<String> partners = processRoleIds.stream()
+            .map(id -> processRoleService.getById(id))
+            .map(ProcessRole::getOrganisation)
+            .map(Organisation::getName)
+            .collect(Collectors.toSet());
         model.addAttribute("partners", partners);
 
         return applicationReview;

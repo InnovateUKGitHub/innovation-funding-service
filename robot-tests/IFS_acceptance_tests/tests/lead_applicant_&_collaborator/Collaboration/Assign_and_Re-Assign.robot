@@ -14,15 +14,15 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify that the assign button is visible in the overview page
     [Tags]    Collaboration
     When the Applicant is in the overview page
-    Then the collaborators should be visible in the overview page
+    Then the assign button should be visible in the overview page
 
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration
     Given the Applicant is in the application details section
-    When the Applicant assigns the question 11 to the collaborator    Jessica Doe
+    When the Applicant assigns the public description question to the collaborator    Jessica Doe
     Then the success message should show
-    and the field of the question 11 should be disabled
+    and the field of the public description question should be disabled
     and the last update should show the collaborators name
 
 Verify the field is disabled for other collaborators
@@ -30,60 +30,60 @@ Verify the field is disabled for other collaborators
     [Tags]    Collaboration
     Given the second Collaborator is logged in
     When the second Collaborator is in the application overview page
-    Then the question 11 should not be editable
+    Then the public description question should not be editable
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     When the Collaborator is in the Application details section
     Then the Collaborator gets the assigned notification
-    and question 11 should be assigned to the collaborator
+    and the public description question should be assigned to the collaborator
     and the collaborator can see the 'assigned to you' in the overview page
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280
     [Tags]    Collaboration
-    When the collaborator marks the question 11 as complete
+    When the collaborator marks the public description question as complete
     Then the 'Last update' message should be updated
 
 Verify the field is disabled for the Collaborator
     [Documentation]    INFUND-275
     [Tags]    Collaboration
-    Then the field of the question 11 should be disabled
+    Then the field of the public description question should be disabled
 
 Verify the Lead applicant can assign a question back to him self
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     [Setup]    Switch to the first browser
     Given the Applicant opens again the application form
-    when the Applicant assigns the question 11 to the collaborator    Jessica Doe
-    and the field of the question 11 should be disabled
+    When the Applicant assigns the public description question to the collaborator    Jessica Doe
+    and the field of the public description question should be disabled
     and the lead applicant re-assign the question to him self    Steve Smith
 
 *** Keywords ***
 the Applicant is in the application details section
     Applicant goes to the Application form
 
-When the Applicant assigns the question 11 to the collaborator
+When the Applicant assigns the public description question to the collaborator
     [Arguments]    ${assignee_name}
-    Clear Element Text    id=11
-    Input Text    id=11    lead Applicant's text 123...
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Click Element    xpath=//div[@id="question-11"]//button[contains(text(),"${assignee_name}")]
+    Clear Element Text    css=#form-input-12 .editor
+    Input Text    css=#form-input-12 .editor    lead Applicant's text 123...
+    Click Element    css=#form-input-12 .assign-button button
+    Click Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
 
 the success message should show
     Wait Until Element Is Visible    css=#content > div.event-alert
     Element Should Contain    css=#content > div.event-alert    Question assigned successfully
 
-the field of the question 11 should be disabled
-    Element Should Be Disabled    id=11
+the field of the public description question should be disabled
     sleep    2
+    Element Should Be Disabled    id=12
 
 the Collaborator is in the Application details section
     The guest user opens the browser
     Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
-    Click Element    css=#content > div > section:nth-child(1) > form > input
+    Click Element    css=input.button
     Applicant goes to the Application form
 
 the Collaborator gets the assigned notification
@@ -92,63 +92,61 @@ the Collaborator gets the assigned notification
 
 and the collaborator can see the 'assigned to you' in the overview page
     Applicant goes to the Overview page
-    Click Element    css=#content > form > div > h2:nth-child(1) > button
-    Page Should Contain Element    css=#collapsible-1 > ul > li:nth-child(2) > div > div.column-third > div
+    Element Should Contain    css=#section-1 .list-overview > li:nth-child(3) div.assign-button button    You
 
-the question 11 should not be editable
-    Element Should Be Disabled    id=11
+the public description question should not be editable
+    Element Should Be Disabled    id=12
 
 the second Collaborator is logged in
     The guest user opens the browser
     Input Text    id=id_email    pete.tom@egg.com
     Input Password    id=id_password    test
-    Click Element    css=#content > div > section:nth-child(1) > form > input
+    Click Element    css=input.button
 
 the applicant clicks the assign to Lead applicant
-    Switch to the first browser    1
+    Switch to the first browser
     Applicant goes to the Application form
-    Click Element    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
+    Click Element    css=#form-input-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
+    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
 
 the field should be re-assigned to the Applicant
-    Element Should Be Enabled    id=11
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
+    Element Should Be Enabled    css=#form-input-12 .editor
+    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
 
-question 11 should be assigned to the collaborator
-    Page Should Contain Element    css=#question-11 > div > div.textarea-wrapped.assigned-to-me.word-count
-    Page Should Contain Element    css=#question-11 > div > div.textarea-wrapped.assigned-to-me.word-count > div.textarea-header > div
-    Element Should Be Enabled    id=11
+the public description question should be assigned to the collaborator
+    Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count
+    Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count > div.textarea-header > div
+    Element Should Be Enabled    id=12
 
 the second Collaborator is in the application overview page
     Applicant goes to the Application form
 
-the collaborator marks the question 11 as complete
+the collaborator marks the public description question as complete
     Applicant goes to the Application form
-    Clear Element Text    id=11
-    Input Text    id=11    collaborator's text
-    Click Element    css=#question-11 .buttonlink
+    Clear Element Text    css=#form-input-12 .editor
+    Input Text    css=#form-input-12 .editor    collaborator's text
+    Click Element    css=#form-input-12 .buttonlink
 
 the 'Last update' message should be updated
-    Element Should Contain    css=#question-11 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-header > p > small    Last updated: Today by you
+    Element Should Contain    css=#form-input-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-header > p > small    Last updated: Today by you
 
 the Applicant is in the overview page
     Applicant goes to the Overview page
 
-the collaborators should be visible in the overview page
-    Click Element    css=#content > form > div > h2:nth-child(1) > button
-    Page Should Contain Element    css=#collapsible-1 > ul > li:nth-child(3) > div > div.column-third > div > div > div.assign-button > button
+the assign button should be visible in the overview page
+    Page Should Contain Element    css=#section-1 .list-overview > li:nth-child(3) div.assign-button button
 
 the last update should show the collaborators name
-    Element Should Contain    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-header > p > small    Last updated: Today by you
+    Element Should Contain    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-header > p > small    Last updated: Today by you
 
 the lead applicant re-assign the question to him self
     [Arguments]    ${assignee_name}
     Reload Page
-    Click Element    css=#question-11 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Click Element    xpath=//div[@id="question-11"]//button[contains(text(),"${assignee_name}")]
-    Element Should Be Enabled    id=11
+    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
+    Click Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
+    Element Should Be Enabled    id=12
 
 the Applicant opens again the application form
     Reload Page
     Applicant goes to the Application form
-    Mark question 11 as editable
+    Mark question 12 as editable

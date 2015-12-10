@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <style> .message-alert {
+        background: #e4eff6;
+        padding-left: 30px;
+        } </style>
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+		<h1 class="heading-xlarge no-margin">Empire Ltd Finances</h1>
+		<p>Business</p>
+	</div>
+
+	<h2 class="heading-medium">Provide your organisation's finances</h2>
+
+	<p>Only your organisation can see this level of detail.
+		All members of your organisation can acesss and edit your finances
+		We recommend assigning completion of your finances to one member of your team</p>
+
+	<div class="collapsible section-overview">
+        
+       	<h2>Labour
+			<span style="" data-subsection-id="1" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 126,207</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-1" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
+		</div>
+
+
+    	<h2>Overheads
+			<span style="" data-subsection-id="2" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-2" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-overheads" th:remove="tag" />
+    	</div>
+
+
+		<h2>Materials
+			<span style="" data-subsection-id="3" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 10,076</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-3" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Capital usage
+			<span style="" data-subsection-id="4" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-4" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Subcontracting costs
+			<span style="" data-subsection-id="5" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 150,000</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-5" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Travel &amp; subsistence
+			<span style="" data-subsection-id="6" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-6" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
+    	</div>
+
+
+    	<h2>Other costs
+			<span style="" data-subsection-id="7" class="section-status place-in-header">
+	            <span data-binding-output="subsection-total-91">£ 0</span>
+	        </span>
+       	</h2>
+
+		<div id="collapsible-7" aria-hidden="false">
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
+    	</div>
+
+
+    </div>
+
+    <hr />
+
+    <div class="grid-row total-cost">
+        <div class="column-half">
+            <p class="heading-medium">Total project costs</p>
+        </div>
+        <div class="column-half alignright">
+            <input type="text" readonly="readonly" class="heading-medium width-medium" data-calculation-fields="[id*=total]" data-calculation-operations="+" value="£ 286,283" />
+        </div>
+    </div>
+
+    <h2 class="heading-medium no-margin-bottom">What role is your organisation taking in this application?</h2>
+	<fieldset>
+		<legend class="visuallyhidden">What role is your organisation taking in this application?</legend>
+		<p class="form-hint">Please select how your organisation will be involved in this consortium.</p>
+		<div class="form-block">
+			<label class="block-label" for="radio-1">
+				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+				Business role (Economic activity)
+			</label>
+			<label class="block-label" for="radio-2">
+				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+				Research role (Non- economic activity)
+			</label>
+		</div>
+
+		<div class="form-group extra-margin">
+			<label class="form-label" for="other-funding">
+				<span class="heading-medium">Funding level</span>
+				<span class="form-hint">Please enter the funding level that you would like to apply for in this application</span>
+			</label>
+			<details>
+			    <summary><span class="summary">What funding level should I enter?</span></summary>
+			    <div class="panel-indent">
+			    	Help text required
+			    </div>
+			</details>
+			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %
+		</div>
+	</fieldset>
+		
+	<div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
+	
+	<div class="alignright-button extra-margin">
+		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
+		</button>
+	</div>
+
+	<ul class="pagination">
+	    <li class="next">
+	        <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
+	            <span class="pagination-label">Next</span>
+	            <span class="pagination-part-title">Finances overview</span>
+	        </a>
+	    </li>
+	</ul>
+
+	<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	
+	jQuery('input#funding-yes').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#finance-other-funding").show();
+		}else{
+			jQuery("#finance-other-funding").hide();
+		}
+	});
+
+	jQuery('input#funding-no').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#finance-other-funding").hide();
+		}else{
+			jQuery("#finance-other-funding").show();
+		}
+	});
+</script>
+</body>
+</html>

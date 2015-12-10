@@ -18,7 +18,7 @@ public class CostField {
     String type;
 
     @OneToMany(mappedBy="costField")
-    private List<CostValue> costValues = new ArrayList<CostValue>();
+    private List<CostValue> costValues = new ArrayList<>();
 
     public CostField() {
     }

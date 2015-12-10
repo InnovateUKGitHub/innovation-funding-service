@@ -22,7 +22,7 @@ public enum AssessmentStates implements ProcessStates {
     private static final Map<String, AssessmentStates> assessmentStatesMap;
 
     static {
-        assessmentStatesMap = new HashMap<String, AssessmentStates>();
+        assessmentStatesMap = new HashMap<>();
 
         for (AssessmentStates assessmentState : AssessmentStates.values()) {
             assessmentStatesMap.put(assessmentState.getState(), assessmentState);

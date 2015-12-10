@@ -231,7 +231,7 @@
                                data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
-                               readonly="" type="text" id="cost-labour-total-field"
+                               readonly="readonly" type="text" id="cost-labour-total-field"
                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                             <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -305,7 +305,7 @@
                            th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
                            th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}"
                            class="form-control"
-                           readonly=""
+                           readonly="readonly"
                            data-binding-input="subsection-total-9"
                            data-calculation-operations=""
                            data-calculation-input="overhead-calculated"
@@ -318,7 +318,7 @@
                     <input type="text"
                            th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
                            class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            id="id_overheads-totalCosts"
                            data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                            data-calculation-operations="*"
@@ -374,7 +374,7 @@
                                        th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
                                        th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
                             <td class="alignright remove"> 
@@ -393,7 +393,7 @@
                 <label>
                     Total materials costs
                     <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
-                           readonly="" type="text" id="material-costs-total-field"
+                           readonly="readonly" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.total}"
@@ -512,7 +512,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-capital-usage-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="cost-capital-usage-costs-total-field"
                            data-calculation-fields="[id*=netCost]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -571,7 +571,7 @@
                 <label>
                     Total subcontracting costs
                     <input class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            type="text"
                            id="cost-subcontracting-total"
                            data-calculation-fields="[id*=subcontractingCost]"
@@ -622,7 +622,7 @@
                                 <input type="text"
                                        th:name="${type +'-travelCostTotal-' + travelCost.id}"
                                        class="form-finances-travel-total"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostTotal'}"
                                        th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}+',#'+${'cost-'+type+'-'+travelCost.id+'-travelNumTimes'},data-calculation-rawValue=${travelCost.getTotal()}"
                                        data-calculation-operations="*"
@@ -643,7 +643,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total travel &amp; subsistence costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="travel-costs-total-field"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -699,7 +699,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total other costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="other-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            data-calculation-fields="[id*=otherCost]"
                            data-calculation-operations="+"

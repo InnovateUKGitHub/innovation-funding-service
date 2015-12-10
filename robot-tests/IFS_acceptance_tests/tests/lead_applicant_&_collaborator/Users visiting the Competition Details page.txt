@@ -1,0 +1,79 @@
+*** Settings ***
+Documentation     INFUND-921 : As an applicant I want to be able to select a link from the competition web page to visit a competition further description page containing relevant links so that I can apply into the competition.
+...
+...               Sub-Task
+...               INFUND-1102 : Add button with redirect to create/verify organisation page
+Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant    Form    Users visiting the Competition Details page
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
+
+*** Test Cases ***
+When user is not logged in and later enters correct login
+    [Documentation]    INFUND-921 : As an applicant I want to be able to select a link from the competition web page to visit a competition further description page containing relevant links so that I can apply into the competition.
+    ...
+    ...    Sub-Task
+    ...    INFUND-1102 : Add button with redirect to create/verify organisation page
+    [Tags]
+    Given the applicant is logged-out
+    When the Applicant is in Competition details page
+    Then the Applicant should see "Sign in to Apply" button
+    And the Applicant will click on "Sign in to Apply" button
+    And the Applicant will input correct login details
+    And the Applicant will be in the "Create Application" page
+
+When user is not logged in and later enters incorrect login
+    [Documentation]    INFUND-921 : As an applicant I want to be able to select a link from the competition web page to visit a competition further description page containing relevant links so that I can apply into the competition.
+    ...
+    ...    Sub-Task
+    ...    INFUND-1102 : Add button with redirect to create/verify organisation page
+    Given the applicant is logged-out
+    When the Applicant is in Competition details page
+    Then the Applicant should see "Sign in to Apply" button
+    And the Applicant will click on "Sign in to Apply" button
+    And the Applicant will input incorrect login details
+    Then the Applicant will input correct login details
+    And the Applicant will be in the "Create Application" page
+
+When user is logged in
+    When the Applicant is in Competition details page
+    Then the Applicant should see "Create Application" button
+    And the Applicant clicks on "Create application" button
+
+*** Keywords ***
+the Applicant should see "Sign in to Apply" button
+    Page Should Contain Element    css=.column-third a.button
+
+the Applicant is in Competition details page
+    go to    ${COMPETITION_DETAILS_URL}
+
+the Applicant will click on "Sign in to Apply" button
+    Click Element    css=.column-third a.button
+    Wait Until Page Contains    Sign in
+
+the Applicant will be in the "Create Application" page
+    Page Should Contain    Create Application
+
+the Applicant will input incorrect login details
+    Input Text    id=id_email    steve.smith@empire.com
+    Input Password    id=id_password    abcd
+    Click Button    css=input.button
+
+the Applicant will input correct login details
+    Input Text    id=id_email    steve.smith@empire.com
+    Input Password    id=id_password    test
+    Click Button    css=input.button
+
+the applicant is logged-out
+    go to     ${LOG_OUT}
+
+the Applicant should see "Create Application" button
+    Page Should Contain Element    css=.column-third a.button
+
+the Applicant clicks on "Create application" button
+    Click Element    css=.column-third a.button
+    Page Should Contain    Create Application

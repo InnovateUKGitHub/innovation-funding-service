@@ -13,22 +13,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-            <div class="hgroup" style="padding-top: 20px">
-				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin">Finances overview</h1>
-				<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
-			</div>
-        </div>
-        <div class="column-third competition-details">
-            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
-        </div>
-    </div>
+     <div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+		<h1 class="heading-xlarge no-margin">Finances overview</h1>
+		<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
+	</div>
 
 	<h2 class="heading-medium">Funding rules for this competition</h2> 
 	<p>We will fund projects between &pound;200,000 and &pound;1 million. We may consider projects with costs outside of this range. We expect projects to last between 12 and 24 months.</p>

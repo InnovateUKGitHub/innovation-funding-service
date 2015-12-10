@@ -3,7 +3,6 @@ package com.worth.ifs.user.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -15,9 +14,6 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
-/**
- * Created by dwatson on 02/10/15.
- */
 public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
 
     @Override
@@ -42,7 +38,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Rollback
     public void test_createUser() {
         // Create a new user
-        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<ProcessRole>()));
+        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>()));
         assertNotNull(newUser.getId());
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
@@ -57,7 +53,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Rollback
     public void test_deleteNewUser() {
         // Create a new user
-        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<ProcessRole>()));
+        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>()));
 
         // and immediately delete them
         repository.delete(newUser.getId());

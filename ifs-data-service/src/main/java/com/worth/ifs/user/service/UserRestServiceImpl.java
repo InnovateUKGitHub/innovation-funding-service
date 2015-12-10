@@ -37,24 +37,21 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(token))
             return null;
 
-        User user = restGet(userRestURL + "/token/" + token, User.class);
-        return user;
+        return restGet(userRestURL + "/token/" + token, User.class);
     }
 
     public User retrieveUserByEmailAndPassword(String email, String password) {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
             return null;
 
-        User user = restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
-        return user;
+        return restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
     }
 
     public User retrieveUserById(Long id) {
         if(id == null || id.equals(0L))
             return null;
 
-        User user = restGet(userRestURL + "/id/" + id, User.class);
-        return user;
+        return restGet(userRestURL + "/id/" + id, User.class);
     }
 
     public List<User> findAll() {
@@ -64,8 +61,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
-        ProcessRole processRole = restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
-        return processRole;
+        return restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
+    }
+
+    public ProcessRole findProcessRoleById(Long processRoleId) {
+        return restGet(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
     }
 
     public List<ProcessRole> findProcessRole(Long applicationId) {
