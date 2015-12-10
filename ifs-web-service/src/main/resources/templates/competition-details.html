@@ -21,7 +21,7 @@
         </div>
         <div class="column-third">
             <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Create application</a>
-            <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/login(competitionId=${competitionId})}">Sign in to apply</a>
+            <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
 
         </div>
     </div>

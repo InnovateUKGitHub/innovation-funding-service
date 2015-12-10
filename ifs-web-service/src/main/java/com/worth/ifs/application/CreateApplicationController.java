@@ -40,13 +40,10 @@ public class CreateApplicationController extends AbstractApplicationController {
                                    @PathVariable(CreateApplicationConstants.COMPETITION_ID) Long competitionId,
                                    HttpServletRequest request,
                                    HttpServletResponse response){
-
-        User user = userAuthenticationService.getAuthenticatedUser(request);
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(CreateApplicationConstants.COMPETITION_ID, competitionId);
 
         this.saveToCookie(request, response, CreateApplicationConstants.COMPETITION_ID, String.valueOf(competitionId));
-
         return "create-application/check-eligibility";
     }
 
@@ -55,35 +52,21 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     @RequestMapping("/create-organisation-type")
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-
         model.addAttribute("form", form);
-        if(user ==  null){
-            return "redirect:/login";
-        }else{
-            return "create-application/create-organisation-type";
-        }
-
-
+        return "create-application/create-organisation-type";
     }
+
     @RequestMapping(value="/find-business", method = RequestMethod.POST)
     public String createOrganisationBusinessPost(@Valid @ModelAttribute("companyHouseLookup") CompanyHouseForm companyHouseForm,
                                              BindingResult bindingResult,
                                              Model model,
                                              HttpServletRequest request,
                                              HttpServletResponse response ) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
         this.logState(request, response);
 
-        if(user ==  null){
-            return "redirect:/login";
-        }else if(!bindingResult.hasErrors()){
-            log.debug("OrganisationName " + companyHouseForm.getOrganisationName());
+        if(!bindingResult.hasErrors()){
             List<CompanyHouseBusiness> companies = searchCompanyHouse(companyHouseForm.getOrganisationName());
-            companies.forEach(c -> log.debug("Addresss: " + c.getLocation()));
-            companies.forEach(c -> log.debug("line 1 : " + c.getOfficeAddress().getAddressLine1()));
             companyHouseForm.setCompanyHouseList(companies);
-
             return "create-application/find-business";
         }else{
             return "create-application/find-business";
@@ -97,14 +80,8 @@ public class CreateApplicationController extends AbstractApplicationController {
                                              Model model,
                                              HttpServletRequest request,
                                              HttpServletResponse response ) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
         this.logState(request, response);
-
-        if(user ==  null){
-            return "redirect:/login";
-        }else{
-            return "create-application/find-business";
-        }
+        return "create-application/find-business";
     }
 
     @RequestMapping("/selected-business/{companyId}")
@@ -112,9 +89,6 @@ public class CreateApplicationController extends AbstractApplicationController {
                                       @PathVariable("companyId") final String companyId,
                                       HttpServletRequest request,
                                       HttpServletResponse response ) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        log.debug("companyHouseOrganisationId a " + companyId);
-
         this.saveToCookie(request, response, CreateApplicationConstants.COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
@@ -124,19 +98,13 @@ public class CreateApplicationController extends AbstractApplicationController {
 
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
-
-        if(user ==  null){
-            return "redirect:/login";
-        }else{
-            return "create-application/confirm-selected-organisation";
-        }
+        return "create-application/confirm-selected-organisation";
     }
 
 
 
 
     private List<CompanyHouseBusiness> searchCompanyHouse(String organisationName) {
-        // TODO: implement company house api here
         return organisationService.searchCompanyHouseOrganisations(organisationName);
     }
 
