@@ -12,7 +12,8 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJsonResponse;
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -32,8 +33,8 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
     @Test
     public void test_withProcessRoleReturnJsonResponse() {
 
-        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(asList(role));
-        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(asList(returnedProcessRole));
+        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(singletonList(role));
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(singletonList(returnedProcessRole));
 
         Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
                 applicationId, new MockHttpServletResponse(), serviceLocator,
@@ -45,7 +46,7 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
     @Test
     public void test_withProcessRoleReturnJsonResponse_noRole() {
 
-        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(asList());
+        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(emptyList());
 
         Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
                 applicationId, new MockHttpServletResponse(), serviceLocator,
@@ -57,8 +58,8 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
     @Test
     public void test_withProcessRoleReturnJsonResponse_noProcessRole() {
 
-        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(asList(role));
-        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(asList());
+        when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(singletonList(role));
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(emptyList());
 
         Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
                 applicationId, new MockHttpServletResponse(), serviceLocator,

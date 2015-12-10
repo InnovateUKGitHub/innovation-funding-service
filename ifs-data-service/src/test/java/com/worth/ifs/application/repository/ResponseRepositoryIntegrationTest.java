@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by dwatson on 05/10/15.
- */
 public class ResponseRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ResponseRepository> {
 
     @Override

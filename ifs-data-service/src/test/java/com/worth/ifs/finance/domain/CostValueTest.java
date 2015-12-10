@@ -44,7 +44,7 @@ public class CostValueTest {
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
         Cost newCost = new Cost(2L, "cost item", "cost description", 10, price, applicationFinance, question);
-        CostField newCostField = new CostField(2l,"title","type");
+        CostField newCostField = new CostField(2L,"title","type");
 
         costValue.setCost(newCost);
         costValue.setCostField(newCostField);

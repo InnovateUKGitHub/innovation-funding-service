@@ -13,9 +13,6 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 08/10/15.
- */
 public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, AssessorFeedbackBuilder> {
 
     private AssessorFeedbackBuilder(List<BiConsumer<Integer, AssessorFeedback>> multiActions) {

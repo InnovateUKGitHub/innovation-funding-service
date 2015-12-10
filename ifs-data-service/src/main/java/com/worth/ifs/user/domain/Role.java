@@ -26,7 +26,7 @@ public class Role {
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany(mappedBy="roles")
-    private List<User> users = new ArrayList<>();;
+    private List<User> users = new ArrayList<>();
 
     public Role() {
     }

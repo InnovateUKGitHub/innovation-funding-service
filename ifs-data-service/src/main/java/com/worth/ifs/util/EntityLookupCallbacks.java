@@ -47,11 +47,10 @@ public class EntityLookupCallbacks {
         Supplier<JsonStatusResponse> noRoleAvailable = () -> JsonStatusResponse.badRequest("No role of type " + roleType + " set up on Application " + applicationId, httpResponse);
         Supplier<JsonStatusResponse> noProcessRoleAvailable = () -> JsonStatusResponse.badRequest("No process role of type " + roleType + " set up on Application " + applicationId, httpResponse);
 
-        return getRoleForRoleType(roleType, serviceLocator.getRoleRepository(), noRoleAvailable).map(role -> {
-            return getProcessRoleForRoleUserAndApplication(role, userId, applicationId, serviceLocator.getProcessRoleRepository(), noProcessRoleAvailable).map(processRole -> {
-                return doWithProcessRoleFn.apply(processRole);
-            });
-        });
+        return getRoleForRoleType(roleType, serviceLocator.getRoleRepository(), noRoleAvailable)
+            .map(role -> getProcessRoleForRoleUserAndApplication(role, userId, applicationId, serviceLocator.getProcessRoleRepository(), noProcessRoleAvailable)
+                .map(doWithProcessRoleFn::apply)
+            );
     }
 
     public static <FailureType> Either<FailureType, Role> getRoleForRoleType(UserRoleType type, RoleRepository roleRepository, Supplier<FailureType> noAssessorRoleOnApplication) {

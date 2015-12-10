@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import static java.util.Collections.singletonList;
 
 public class RestServicesHelper {
     public RestTemplate hateoasRestTemplate(){
@@ -20,7 +20,7 @@ public class RestServicesHelper {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
         converter.setObjectMapper(mapper);
-        return new RestTemplate(Arrays.asList(converter));
+        return new RestTemplate(singletonList(converter));
     }
 
     public <T> T getResources(String url, ParameterizedTypeReference<T> responseType){

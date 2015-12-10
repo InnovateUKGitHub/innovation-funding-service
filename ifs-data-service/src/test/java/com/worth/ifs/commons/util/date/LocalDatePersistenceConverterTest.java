@@ -17,7 +17,7 @@ public class LocalDatePersistenceConverterTest {
     @Test
     public void test_convertToDatabaseColumn() {
 
-        LocalDate originalDate = LocalDate.of(2015, 03, 05);
+        LocalDate originalDate = LocalDate.of(2015, 3, 5);
         Date convertedDate = new LocalDatePersistenceConverter().convertToDatabaseColumn(originalDate);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(convertedDate.getTime());

@@ -70,7 +70,7 @@ public class ApplicationResource {
             if(this.name==null && that.name==null){
                 return true;
             }
-            else if( ! this.name.equals(that.name)){
+            else if( this.name==null || that.name==null || ! this.name.equals(that.name)){
                 return false;
             }
             if(this.id==null && that.id==null){

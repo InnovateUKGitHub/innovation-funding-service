@@ -28,7 +28,7 @@ public class FormValidatorRepositoryIntegrationTest extends BaseRepositoryIntegr
     public void test_findByIdEmailValidator() {
         Long id= 1L;
         FormValidator validator = repository.findById(id);
-        assertEquals(Long.valueOf(id), validator.getId());
+        assertEquals(id, validator.getId());
         assertEquals(EmailValidator.class.getName(), validator.getClazzName());
         try {
             assertEquals(EmailValidator.class, validator.getClazz());
@@ -41,7 +41,7 @@ public class FormValidatorRepositoryIntegrationTest extends BaseRepositoryIntegr
     public void test_findByIdNotEmptyValidator() {
         Long id= 2L;
         FormValidator validator = repository.findById(id);
-        assertEquals(Long.valueOf(id), validator.getId());
+        assertEquals(id, validator.getId());
         assertEquals(NotEmptyValidator.class.getName(), validator.getClazzName());
         try {
             assertEquals(NotEmptyValidator.class, validator.getClazz());

@@ -55,8 +55,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        ApplicationController applicationController = new ApplicationController(new ApplicationResourceAssembler());
-        return applicationController;
+        return new ApplicationController(new ApplicationResourceAssembler());
     }
 
     @Test
@@ -160,8 +159,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         User user = new User();
 
         ProcessRole processRole = new ProcessRole(1L, user, null, role, organisation);
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
         user.addUserApplicationRole(processRole);
 
         ApplicationStatus applicationStatus = new ApplicationStatus();
