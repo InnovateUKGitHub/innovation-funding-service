@@ -54,7 +54,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentByApplication/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(456)))
-                .andDo(document("assessment/find-application-user-assessment"))
+                .andDo(document("assessment/find-application-user-assessment"));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("3"))
-                .andDo(document("assessment/total-assigned-assessments"))
+                .andDo(document("assessment/total-assigned-assessments"));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalSubmittedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("35"))
-                .andDo(document("assessment/total-submitted-assessments"))
+                .andDo(document("assessment/total-submitted-assessments"));
     }
 
     @Test
