@@ -9,6 +9,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -40,7 +41,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withCompetition(Competition competition) {
-        return with(application -> application.setCompetition(competition));
+        return with(application -> application.setCompetitionId(competition.getId()));
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
@@ -52,6 +53,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoles(asList(processRoles)));
+        return with(application -> application.setProcessRoleIds(asList(processRoles).stream().map(ProcessRole::getId).collect(Collectors.toList())));
     }
 }

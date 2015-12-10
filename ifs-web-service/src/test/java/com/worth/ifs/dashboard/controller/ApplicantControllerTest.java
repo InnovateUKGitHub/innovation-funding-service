@@ -27,11 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@ContextConfiguration
 public class ApplicantControllerTest extends BaseUnitTest {
 
-
     @InjectMocks
     private ApplicantController applicantController;
-
-
 
     @Before
     public void setUp() {
@@ -47,13 +44,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
-
-
-
     }
-
-
-
 
     @After
     public void tearDown() throws Exception {
@@ -62,14 +53,12 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
     @Test
     public void testDashboard() throws Exception {
-
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
                 .andExpect(model().attribute("applicationsInProcess", hasSize(0)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
                 .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
-
     }
 
     /**
@@ -89,7 +78,6 @@ public class ApplicantControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
                 .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
-
     }
 
     /**

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 /**
@@ -16,7 +18,7 @@ public class CollectionFunctionsTest {
     @Test
     public void test_flattenLists() {
 
-        List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(4, 5), asList(6));
+        List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(4, 5), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 4, 5, 6);
 
         assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
@@ -25,7 +27,7 @@ public class CollectionFunctionsTest {
     @Test
     public void test_flattenLists_nullSafe() {
 
-        List<List<Integer>> deepList = asList(asList(1, 2, 3), null, asList(6));
+        List<List<Integer>> deepList = asList(asList(1, 2, 3), null, singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
         assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
@@ -34,7 +36,7 @@ public class CollectionFunctionsTest {
     @Test
     public void test_flattenLists_emptyElements() {
 
-        List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(), asList(6));
+        List<List<Integer>> deepList = asList(asList(1, 2, 3), emptyList(), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
         assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
@@ -43,8 +45,8 @@ public class CollectionFunctionsTest {
     @Test
     public void test_flattenLists_allEmpty() {
 
-        List<List<Integer>> deepList = asList(asList(), asList(), asList());
-        List<Integer> expectedFlatList = asList();
+        List<List<Integer>> deepList = asList(emptyList(), emptyList(), emptyList());
+        List<Integer> expectedFlatList = emptyList();
 
         assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
@@ -54,7 +56,7 @@ public class CollectionFunctionsTest {
 
         List<Integer> list1 = asList(1, 2, 3);
         List<Integer> list2 = asList(4, 5);
-        List<Integer> list3 = asList(6);
+        List<Integer> list3 = singletonList(6);
 
         List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
 
@@ -66,7 +68,7 @@ public class CollectionFunctionsTest {
 
         List<Integer> list1 = null;
         List<Integer> list2 = asList(4, 5);
-        List<Integer> list3 = asList(6);
+        List<Integer> list3 = singletonList(6);
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
@@ -76,9 +78,9 @@ public class CollectionFunctionsTest {
     @Test
     public void test_combineLists_emptyElements() {
 
-        List<Integer> list1 = asList();
+        List<Integer> list1 = emptyList();
         List<Integer> list2 = asList(4, 5);
-        List<Integer> list3 = asList(6);
+        List<Integer> list3 = singletonList(6);
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
@@ -122,15 +124,15 @@ public class CollectionFunctionsTest {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesSeen = new ArrayList<>();
-        final List<String> valuesToIterateOver = asList();
+        final List<String> valuesToIterateOver = emptyList();
 
         CollectionFunctions.forEachWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             valuesSeen.add(value);
         });
 
-        assertEquals(asList(), indicesSeen);
-        assertEquals(asList(), valuesSeen);
+        assertEquals(emptyList(), indicesSeen);
+        assertEquals(emptyList(), valuesSeen);
     }
 
     @Test
@@ -169,15 +171,15 @@ public class CollectionFunctionsTest {
     public void test_mapWithIndex_emptyElements() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
-        final List<String> valuesToIterateOver = asList();
+        final List<String> valuesToIterateOver = emptyList();
 
         List<String> newStrings = CollectionFunctions.mapWithIndex(valuesToIterateOver, (i, value) -> {
             indicesSeen.add(i);
             return value + " changed";
         });
 
-        assertEquals(asList(), indicesSeen);
-        assertEquals(asList(), newStrings);
+        assertEquals(emptyList(), indicesSeen);
+        assertEquals(emptyList(), newStrings);
     }
 
     @Test
@@ -208,7 +210,7 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_getOnlyElement() {
-        assertEquals("hi there", CollectionFunctions.getOnlyElement(asList("hi there")));
+        assertEquals("hi there", CollectionFunctions.getOnlyElement(singletonList("hi there")));
     }
 
     @Test
@@ -231,7 +233,7 @@ public class CollectionFunctionsTest {
     @Test
     public void test_getOnlyElement_notEnoughElements() {
         try {
-            CollectionFunctions.getOnlyElement(asList());
+            CollectionFunctions.getOnlyElement(emptyList());
             fail("Should have thrown an IllegalArgumentException as there weren't enough elements");
         } catch (IllegalArgumentException e) {
             // expected behaviour

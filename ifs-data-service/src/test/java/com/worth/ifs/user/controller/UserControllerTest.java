@@ -5,9 +5,9 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -30,7 +30,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", "test/image/url/2", null);
         User testUser3 = new User(3L, "testUser3", "email3@email.nl", "password", "testToken789ghi", "test/image/url/3", null);
 
-        List<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
         users.add(testUser1);
         users.add(testUser2);
         users.add(testUser3);
@@ -64,14 +64,14 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("token", is(testUser1.getToken())))
-                .andDo(document("user/get-user"));;
+                .andDo(document("user/get-user"));
     }
 
     @Test
     public void userControllerShouldReturnUserByToken() throws Exception {
         User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
-        List<User> userList = Arrays.asList(testUser1);
+        List<User> userList = singletonList(testUser1);
 
         when(userRepositoryMock.findByToken(testUser1.getToken())).thenReturn(userList);
 
@@ -81,7 +81,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("token", is(testUser1.getToken())))
-                .andDo(document("user/get-user-by-token"));;
+                .andDo(document("user/get-user-by-token"));
 
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -32,7 +33,7 @@ public class CollectionFunctions {
     public static <T> List<T> flattenLists(List<List<T>> lists) {
         return lists.stream()
                 .filter(l -> l != null)
-                .flatMap(l -> l.stream())
+                .flatMap(Collection::stream)
                 .collect(toList());
     }
 
@@ -43,6 +44,7 @@ public class CollectionFunctions {
      * @param <T>
      * @return combined List containing the elements of the given Lists, in the original list order
      */
+    @SafeVarargs
     public static <T> List<T> combineLists(List<T>... lists) {
 
         List<T> combinedList = new ArrayList<>();

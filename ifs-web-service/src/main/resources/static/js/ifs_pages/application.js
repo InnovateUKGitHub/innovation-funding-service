@@ -19,7 +19,7 @@ IFS.application_page = (function(){
                 var questionId = sectionToUpdate.attr('id');
                 var replacement = htmlReplacement.find('#' + questionId);
                 sectionToUpdate.replaceWith(replacement);
-                IFS.collapsible.collapsibleWithinScope(replacement);
+            IFS.collapsible.collapsibleWithinScope(replacement);
             };
             if(sectionToUpdate.length && sectionId){
               jQuery.ajax({

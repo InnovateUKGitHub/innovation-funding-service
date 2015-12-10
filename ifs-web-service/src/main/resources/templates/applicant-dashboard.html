@@ -18,7 +18,6 @@
     </div>
 
     <div class="my-applications">
-
         <section class="in-progress">
             <h1 class="heading-large">In Progress</h1>
             <ul class="boxed-list">
@@ -33,8 +32,8 @@
                             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
                         </div>
                         <div class="column-half">
-                            <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${application.competition.endDate}" th:remove="tag" />
-                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${application.getCompetition().getStartDateToEndDatePercentage()},daysLeft=${application.getCompetition().getDaysLeft()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${competitions.get(application.getId()).getEndDate()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(application.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(application.getId()).getDaysLeft()}" th:remove="tag" />
                         </div>
                     </div>
                     <div class="grid-row" th:if="${application.getApplicationStatus().getName() == 'submitted'}" >

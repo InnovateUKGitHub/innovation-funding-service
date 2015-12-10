@@ -23,7 +23,7 @@ public class SectionTest {
     public void setUp() throws Exception {
         id = 0L;
         competition = new Competition();
-        questions = new ArrayList<Question>();
+        questions = new ArrayList<>();
         questions.add(new Question());
         questions.add(new Question());
         questions.add(new Question());

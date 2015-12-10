@@ -3,8 +3,10 @@ package com.worth.ifs.dashboard;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -16,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -37,6 +42,9 @@ public class ApplicantController {
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
+    @Autowired
+    CompetitionService competitionService;
+
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -51,9 +59,23 @@ public class ApplicantController {
         model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
 
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
+        List<ApplicationResource> finished = applicationService.getFinished(user.getId());
+        Map<Long, Competition> competitions = new HashMap<>();
+        Stream.concat(inProgress.stream(), finished.stream())
+            .forEach(application -> {
+                log.debug(application.getId());
+                log.debug(application.getName());
+                log.debug(application.getCompetitionId());
+                    competitions.put(
+                        application.getId(),
+                        competitionService.getById(application.getCompetitionId())
+                    );
+                }
+            );
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
-        model.addAttribute("applicationsFinished", applicationService.getFinished(user.getId()));
+        model.addAttribute("applicationsFinished", finished);
+        model.addAttribute("competitions", competitions);
 
         return "applicant-dashboard";
     }

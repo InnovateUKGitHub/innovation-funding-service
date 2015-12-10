@@ -16,25 +16,25 @@ Resource          ../../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
 Verify that the Applicant can access the Overview page
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     Given the user is logged in as applicant
     When the Applicant clicks the "Rovel Additive Manufacturing Process" application
     Then the Applicant should see the overview of the selected application
 
 Verify that the Applicant can see the List with the sections
-    [Tags]    Applicant
-    Given the Applicant is in the application overview page
+    [Tags]    Applicant    Overview
+    When Applicant goes to the Overview page
     Then the applicant should see six sections
 
 Verify that when Applicant clicks the "Scope" this section is expanded
     [Tags]    Applicant
-    Given the Applicant is in the application overview page
-    Then the Applicant clicks the "Scope" section
-    Then the First section should not be expanded
-    And the first section should be hidden
-    And the second button should be expanded
-    And the second section should be visible
-    And the "Scope" sub-section should be visible
+    #Given the Applicant is in the application overview page
+    #Then the Applicant clicks the "Scope" section
+    #Then the First section should not be expanded
+    #And the first section should be hidden
+    #And the second button should be expanded
+    #And the second section should be visible
+    #And the "Scope" sub-section should be visible
 
 Verify that only the main questions show and not the file uploads
     [Documentation]    INFUND-428
@@ -77,12 +77,12 @@ the Applicant is in the application overview page
     Applicant goes to the Overview page
 
 the applicant should see six sections
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(1)
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(2)
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(3)
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(4)
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(5)
-    Page Should Contain Element    css=.application-overview > h2:nth-of-type(6)
+    Element Should Be Visible    css=#section-1 .heading-medium
+    Element Should Be Visible    css=#section-2 .heading-medium
+    Element Should Be Visible    css=#section-3 .heading-medium
+    Element Should Be Visible    css=#section-4 .heading-medium
+    Element Should Be Visible    css=#section-5 .heading-medium
+    Element Should Be Visible    css=#section-6 .heading-medium
 
 the Applicant clicks the "Scope" section
     [Documentation]    1. click second section

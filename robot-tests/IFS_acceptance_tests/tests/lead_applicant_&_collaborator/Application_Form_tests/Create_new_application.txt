@@ -68,10 +68,10 @@ the applicant creates the new application
     Click Element    css=#content > form > input
 
 the applicant should redirect in the application overview page
-    Element Should Contain    css=#content > h1    Application overview
+    Page Should Contain    Application overview
 
 the title of the new application should be visible in the overview page
-    Element Should Contain    css=#content > div.sub-header > strong    New application title
+    Element Should Contain    css=.page-title    New application title
 
 the new application should be visible in the dashboard page
     Click Link    link= My dashboard

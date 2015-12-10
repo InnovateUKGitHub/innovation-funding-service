@@ -107,13 +107,13 @@
         <div class="month">
             <div th:include="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.monthValue',placeholder='MM')"
+            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM')"
                  th:remove="tag"/>
         </div>
         <div class="year">
             <div th:include="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.year',placeholder='YYYY')"
+            <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY')"
                  th:remove="tag"/>
         </div>
     </div>
@@ -187,7 +187,19 @@
                   "
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
-        <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
+ 
+         <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
+           <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                 src="/images/field/field-done.png"
+                 alt="This field is marked as done"
+                 title="This field is marked as done" 
+                 class="marked-as-complete" />
+          <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+                 src="/images/field/field-assigned.png"
+                 alt="This field is assigned to you"
+                 title="This field is assigned to you"
+                 class="assigned-to-me" />
+
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
@@ -218,6 +230,8 @@
                  th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
+
+
     </div>
 </div>
 <!-- ========================= Current Assignee =========================== -->
@@ -291,6 +305,7 @@
 
 <div th:fragment="form-edit-question-button">
     <a tabindex="0"
+       class="button-secondary"
        th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
        th:text="Edit"/>
 </div>

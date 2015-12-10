@@ -1,6 +1,6 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicationResourceTest {
     ApplicationResource applicationResource;
@@ -29,10 +30,10 @@ public class ApplicationResourceTest {
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
-        processRoles = new ArrayList<ProcessRole>();
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
+        processRoles = new ArrayList<>();
+        processRoles.add(new ProcessRole(1L,null,null,null,null));
+        processRoles.add(new ProcessRole(2L,null,null,null,null));
+        processRoles.add(new ProcessRole(3L,null,null,null,null));
 
         applicationResource = new ApplicationResource(competition, name, processRoles, applicationStatus, id);
     }
@@ -42,8 +43,8 @@ public class ApplicationResourceTest {
         Assert.assertEquals(applicationResource.getId(), id);
         Assert.assertEquals(applicationResource.getName(), name);
         Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus);
-        Assert.assertEquals(applicationResource.getProcessRoles(), processRoles);
-        Assert.assertEquals(applicationResource.getCompetition(), competition);
+        Assert.assertEquals(applicationResource.getProcessRoleIds(), processRoles.stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        Assert.assertEquals(applicationResource.getCompetitionId(), competition.getId());
         Assert.assertEquals(applicationResource.getApplicationFinances(), applicationFinances);
     }
 }

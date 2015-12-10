@@ -9,6 +9,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -50,6 +51,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     CostService costService;
+
+    @Autowired
+    CompetitionService competitionService;
 
     @RequestMapping("/{applicationId}")
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
@@ -112,7 +116,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), false);
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
@@ -162,7 +167,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                         HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition comp = application.getCompetition();
+        Competition comp = competitionService.getById(application.getCompetitionId());
         List<Section> sections = comp.getSections();
 
         // get the section that we want, so we can use this on to store the correct questions.

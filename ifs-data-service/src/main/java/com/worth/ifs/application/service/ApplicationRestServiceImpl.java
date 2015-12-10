@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.springframework.hateoas.client.Hop.rel;
@@ -57,7 +58,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)
                                             .toObject(typeReference);
         List<ProcessRole> roles = new ArrayList<>(roleResources.getContent());
-        application.setProcessRoles(roles);
+        application.setProcessRoleIds(roles.stream().map(ProcessRole::getId).collect(Collectors.toList()));
         return application;
 
     }
