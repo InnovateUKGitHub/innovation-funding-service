@@ -25,4 +25,5 @@ public class CompanyHouseController {
         CompanyHouseBusiness company = companyHouseService.getOrganisationById(id);
         return company;
     }
+
 }
