@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+
+/**
+ * Class to expose methods to communicate with the company house api.
+ */
 @Service
 public class CompanyHouseRestServiceImpl  extends BaseRestService implements CompanyHouseRestService{
     @Value("${ifs.data.service.rest.companyhouse}")
@@ -19,5 +23,4 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
     public CompanyHouseBusiness getOrganisationById(String id){
         return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, CompanyHouseBusiness.class);
     }
-
 }

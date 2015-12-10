@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * CompanyHouseController exposes CompanyHouse data and operations through a REST API.
+ */
 @RestController
 @RequestMapping("/companyhouse")
 public class CompanyHouseController {
@@ -25,5 +28,4 @@ public class CompanyHouseController {
         CompanyHouseBusiness company = companyHouseService.getOrganisationById(id);
         return company;
     }
-
 }

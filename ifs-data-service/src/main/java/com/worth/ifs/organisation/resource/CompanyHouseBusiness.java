@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
 
+/**
+ * Resource object to store the company details, from the company house api.
+ */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     private String companyNumber;
@@ -23,6 +26,15 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
         this.dateOfCreation = dateOfCreation;
         this.description = description;
         this.officeAddress = officeAddress;
+    }
+
+    @JsonIgnore
+    public String getLocation() {
+        String locationString = "";
+        locationString +=  officeAddress.getAddressLine1();
+        locationString +=  ", "+ officeAddress.getLocality();
+        locationString +=  ", "+ officeAddress.getPostalCode();
+        return locationString;
     }
 
     public String getName() {
@@ -72,15 +84,4 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     public void setOfficeAddress(PostalAddress officeAddress) {
         this.officeAddress = officeAddress;
     }
-
-    @JsonIgnore
-    public String getLocation() {
-        String locationString = "";
-        locationString +=  officeAddress.getAddressLine1();
-        locationString +=  ", "+ officeAddress.getLocality();
-        locationString +=  ", "+ officeAddress.getPostalCode();
-        return locationString;
-    }
-
-
 }

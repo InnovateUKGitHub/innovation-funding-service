@@ -46,20 +46,23 @@ Uses javascript to make it expand, when there is no javascript it will just show
 */
 
 %toggle-button {
-	background-color: #DEE0E2;
 	font-size: 19px;
 	font-weight: 700;
 	text-align:left;
-	padding: 15px 40px 15px 20px; //padding right for the icons
-	margin: 0 0 5px;
+	padding: 10px 40px 10px 0px; //padding right for the icons
+	background:#fff;
 }
 .collapsible {
 
-	h2{
+	> h2{
 		position: relative;
-	}
+		border-top: 1px solid $border-colour; 
+    }
+    > h2:last-child {
+		border-top: 1px solid $border-colour; 
+    }
 
-	h2 button {
+	> h2 button {
 		border:0;
 		cursor: pointer;
 		position: relative;
@@ -74,7 +77,7 @@ Uses javascript to make it expand, when there is no javascript it will just show
 		}
 	}
 	
-	h2 button[aria-expanded] {
+	> h2 button[aria-expanded] {
 		display: block;
 		width: 100%;
 		&:after {
@@ -85,27 +88,32 @@ Uses javascript to make it expand, when there is no javascript it will just show
 			line-height: 1;
 		}
 	}
-	h2 button[aria-expanded="true"]{
+	> h2 button[aria-expanded="true"]{
 		margin-bottom: 0;
 		&:after {
 			content: '\25b2\0020';
 		}
 	}
-	h2 + [aria-hidden] {
+	> h2 + [aria-hidden] {
 		display: none;
 	}
 
-	h2 + [aria-hidden="false"] {
+	> h2 + [aria-hidden="false"] {
 		display: block;
 		@extend %contain-floats;
- 		padding:15px 0;
+ 		padding:0 0 15px;
+	}
+	.status {
+		float:right;
+		padding-top:2px;
+		font-weight:normal;
+		font-size:0.9em;
 	}
 	.section {
 		margin-left: 10px;
 		padding-left: 10px;
 		background-repeat:no-repeat;
 		background-position: 100% 0; 
-		border-bottom: 1px solid $grey-3;
 		&:last-child {
 			padding-bottom:10px;
 		}
