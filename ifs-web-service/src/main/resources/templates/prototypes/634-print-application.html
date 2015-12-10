@@ -8,6 +8,19 @@ body.print-doc {
   margin: 0mm;
   line-height: 1.5;
 }
+.print-bar  {
+  position: fixed;
+  bottom:0;
+  width:100%;
+  text-align: center;
+  z-index: 999;
+  background-color: rgba(255,255,255,0.5);
+  border-top:1px solid #BFC1C3;
+  padding:15px 0;
+}
+.print-bar button {
+  margin:0;
+}
 
 .print-doc section {
   background: #fff;
@@ -87,11 +100,13 @@ section + section {
 
 
 
-
+<div class="print-bar">
+  <button class="button" onclick="window.print()">Print your application</button>
+</div>
 
 <section> 
 <h1 class="heading-large">Application details</h1>
-<div id="collapsible-1" aria-hidden="false">
+<div>
    <div>
       <div class="question" id="form-input-9">
          <div class="form-group">
@@ -166,10 +181,8 @@ section + section {
       </div>
    </div>
 </div>
-</section>
-<section>
-<h1 class="heading-large">Scope</h1>
-<div id="collapsible-2" aria-hidden="false">
+
+<div>
    <div>
       <div class="question" id="form-input-13">
          <div class="form-group" id="0">
@@ -189,8 +202,9 @@ section + section {
 </div>
 </section>
 <section>
-<h1 class="heading-large">Your business proposition</h1>
-<div id="collapsible-3" aria-hidden="false">
+<h1 class="heading-large">Application questions</h1>
+
+<div>
    <div>
       <div class="question" id="form-input-1">
          <div class="form-group" id="0">
@@ -278,10 +292,8 @@ section + section {
       </div>
    </div>
 </div>
-</section>
-<section>
-<h1 class="heading-large">Your approach to the project</h1>
-<div id="collapsible-4" aria-hidden="false">
+
+<div>
    <div>
       <div class="question" id="form-input-5">
          <div class="form-group" id="0">
@@ -362,9 +374,7 @@ section + section {
       </div>
    </div>
 </div>
-</section>
-<section>
-<h1 class="heading-large">Funding</h1>
+
 <div>
    <div>
       <div class="question" id="form-input-15">
@@ -398,7 +408,7 @@ section + section {
 </div>
 </section>
 <section>
-<h1 class="heading-large">Finances Summary</h1>
+<h1 class="heading-large">Finances</h1>
 <div >
    <div class="question">
       <p>This is the overview of the finances provided by all partners in this project.</p>

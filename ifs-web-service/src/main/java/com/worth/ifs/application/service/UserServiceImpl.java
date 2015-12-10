@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.service.UserRestService;
@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
         return userRestService.findAssignableUsers(applicationId);
     }
 
-    public Boolean isLeadApplicant(Long userId, Application application) {
+    public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
-    public Set<User> getAssignableUsers(Application application) {
+    public Set<User> getAssignableUsers(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Set<User> users = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    public Set<User> getApplicationUsers(Application application) {
+    public Set<User> getApplicationUsers(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles();
         Set<User> users = userApplicationRoles.stream()
                 .map(uar -> uar.getUser())

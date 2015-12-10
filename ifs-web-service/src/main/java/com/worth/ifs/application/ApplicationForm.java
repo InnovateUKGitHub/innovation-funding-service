@@ -1,14 +1,8 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.application.domain.Application;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
@@ -17,17 +11,17 @@ import java.util.Map;
 public class ApplicationForm extends Form {
 
     @Valid
-    public Application application;
+    public ApplicationResource application;
 
     public ApplicationForm() {
         super();
     }
 
-    public Application getApplication() {
+    public ApplicationResource getApplication() {
         return application;
     }
 
-    public void setApplication(Application application) {
+    public void setApplication(ApplicationResource application) {
         this.application = application;
     }
 }

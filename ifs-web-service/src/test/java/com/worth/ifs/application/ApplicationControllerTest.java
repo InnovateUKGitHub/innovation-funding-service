@@ -1,8 +1,8 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -35,7 +35,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @Before
     public void setUp(){
         super.setup();
-        // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
 
@@ -54,7 +53,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
      public void testApplicationDetails() throws Exception {
-        Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
 
        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -67,20 +66,20 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                 .andExpect(model().attribute("incompletedSections", Arrays.asList(3L, 4L)))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetitionId())))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
     @Test
     public void testApplicationSummary() throws Exception {
-        Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetitionId())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
@@ -89,7 +88,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
     }
 
     public void testNotExistingApplicationDetails() throws Exception {
-        Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -101,7 +100,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationDetailsOpenSection() throws Exception {
-        Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         Section section = sections.get(2);
 
         Map<Long, Section> collectedSections =
@@ -116,7 +115,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", app.getCompetition()))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetitionId())))
                 .andExpect(model().attribute("sections", collectedSections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
@@ -124,12 +123,11 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
-//        Matchers.hasItems()
     }
 
     @Test
     public void testApplicationConfirmSubmit() throws Exception {
-            Application app = applications.get(0);
+            ApplicationResource app = applications.get(0);
 
             //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
             when(applicationService.getById(app.getId())).thenReturn(app);
@@ -143,7 +141,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationSubmit() throws Exception {
-        Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
 
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
@@ -169,7 +167,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
      public void testApplicationCreateWithoutApplicationName() throws Exception {
-        Application application = new Application();
+        ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
         User user = new User(1L, "testname", null, null, null, null, null);
@@ -185,7 +183,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationCreateWithWhitespaceAsApplicationName() throws Exception {
-        Application application = new Application();
+        ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
         User user = new User(1L, "testname", null, null, null, null, null);
@@ -201,7 +199,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationCreateWithApplicationName() throws Exception {
-        Application application = new Application();
+        ApplicationResource application = new ApplicationResource();
         application.setName("application");
         application.setId(1L);
 

@@ -49,11 +49,11 @@ public class AssessmentSubmitReviewModel {
     }
 
     private static <R, T> Function<Pair<R, T>, R> leftPair() {
-        return pair -> pair.getLeft();
+        return Pair::getLeft;
     }
 
     private static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return e -> e.getValue();
+        return Map.Entry::getValue;
     }
 
     private static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {

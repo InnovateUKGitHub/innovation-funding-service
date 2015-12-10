@@ -1,9 +1,9 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -53,7 +53,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Mock
     private Model model;
 
-    private Application application;
+    private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
     private Long formInputId;
@@ -102,7 +102,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationForm() throws Exception {
-        com.worth.ifs.application.domain.Application app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         ProcessRole userAppRole = new ProcessRole();
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
@@ -280,7 +280,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test
@@ -341,7 +341,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test
@@ -403,7 +403,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(Application.class));
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
 
     }
 

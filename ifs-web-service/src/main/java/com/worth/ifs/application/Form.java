@@ -32,4 +32,7 @@ public class Form {
     public void addFormInput(String key, String value){
         this.formInput.put(key, value);
     }
+    public String getFormInput(String key){
+        return this.formInput.get(key);
+    }
 }

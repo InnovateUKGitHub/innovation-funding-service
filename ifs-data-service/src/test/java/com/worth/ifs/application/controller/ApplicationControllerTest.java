@@ -78,7 +78,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
                                 fieldWithPath("processRoles").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
-                                fieldWithPath("competition").description("Competition"))));
+                                fieldWithPath("competitionId").description("Competition Id"))));
         mockMvc.perform(get("/application/normal/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication2Name")));

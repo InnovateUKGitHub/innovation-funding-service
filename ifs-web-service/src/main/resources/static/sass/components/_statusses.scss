@@ -118,66 +118,17 @@ Status is displayed in the collapsible header area.
 
 */
 
-.collapsible { 
-	
-	h2{
-		span.section-status.place-in-header {
-			position: absolute;
-			z-index: 10;
-			top: 14px;
-			right: 25px;
-			padding-right: 25px;
-		}
-
-		.no-js &.complete:after{
-			content: " ";
-			position: absolute;
-			z-index: 10;
-			top: 20px;
-			right: 25px;
-			width: 20px;
-			height: 20px;
-			@extend %icon-tick;
-		}
-
-		&.section-complete:before{
-			content: "Complete";
-			color: $grey-1;
-			font-size: 16px;
-			position: absolute;
-			z-index: 10;
-			top: 18px;
-			right: 55px;
-			padding-right: 25px;
-			@extend %icon-tick;
-			background-position: right 50%;
-		}
-
-		&.section-incomplete:before{
-			content: "Incomplete";
-			color: $grey-1;
-			font-size: 16px;
-			position: absolute;
-			z-index: 10;
-			top: 18px;
-			right: 55px;
-			padding-right: 25px;
-			@extend %icon-incomplete;
-			background-position: right 50%;
-		}
+.collapsible,
+.list-overview { 
+	li {
+		position:relative;
 	}
-
-	.section.marked-as-complete {
-		@extend %mark-done-right;
-		background-position: right top;
+	img.section-status {
+		position:absolute;
+		right:0;
+		top:0;
 	}
-
-	.section.assigned-to-me {
-		@extend %mark-assigned-right;
-		background-position: right top;
-	}
-
-	.section-status {
+	div.section-status {
 	    float:right;
 	    font-weight:300;
 	    font-size:16px;
@@ -185,19 +136,25 @@ Status is displayed in the collapsible header area.
 	    color:$grey-1;
 	    padding-right:30px;
 	}
-	.section-status.complete {
+	.section-complete,
+	.section-incomplete {
+		padding-right:20px;
+		background-position: right 50%;
+	}
+	.section-complete{
 		@extend %icon-tick;
-		background-position: right center;
 	}
-	.section-status.incomplete {
+	.section-incomplete{
 		@extend %icon-incomplete;
-		background-position: right center;
-	}
-	.section-status.assigned{
-		@extend %icon-assigned-to-me;
-		background-position: right center;
 	}
 
+	.section-status.place-in-header {
+		position: absolute;
+		z-index: 10;
+		top: 14px;
+		right: 25px;
+		padding-right: 25px;	
+	}
 }
 
 
@@ -229,12 +186,21 @@ Assigned to me
 */
 
 .textarea-wrapped {
-	&.marked-as-complete .textarea-header {
-		@extend %mark-done-left;
+	.textarea-header {
+		position:relative;
 	}
-	&.assigned-to-me .textarea-header {
-		@extend %mark-assigned-left;
+	img.marked-as-complete,
+	img.assigned-to-me {
+		position:absolute;
+		left:0;
+		top: 0;
 	}
+	// &.marked-as-complete .textarea-header {
+	// 	@extend %mark-done-left;
+	// }
+	// &.assigned-to-me .textarea-header {
+	// 	@extend %mark-assigned-left;
+	// }
 
 	&.marked-as-complete textarea[readonly],
 	&.marked-as-complete .readonly,

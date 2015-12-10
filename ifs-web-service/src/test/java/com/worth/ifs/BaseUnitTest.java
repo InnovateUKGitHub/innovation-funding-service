@@ -9,6 +9,7 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -49,6 +50,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.any;
@@ -94,8 +96,10 @@ public class BaseUnitTest {
     public OrganisationService organisationService;
     @Mock
     public SectionService sectionService;
+    @Mock
+    public CompetitionService competitionService;
 
-    public List<com.worth.ifs.application.domain.Application> applications;
+    public List<ApplicationResource> applications;
     public List<Section> sections;
     public Map<Long, Question> questions;
     public Map<Long, FormInputResponse> formInputsToFormInputResponses;
@@ -161,7 +165,7 @@ public class BaseUnitTest {
         Section section1 = sectionBuilder.
                 with(id(1L)).
                 with(name("Application details")).
-                withQuestions(asList(q01)).
+                withQuestions(singletonList(q01)).
                 build();
 
         Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
@@ -170,7 +174,7 @@ public class BaseUnitTest {
         Section section2 = sectionBuilder.
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
-                withQuestions(asList(q10)).
+                withQuestions(singletonList(q10)).
                 build();
 
         Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
@@ -214,17 +218,18 @@ public class BaseUnitTest {
             }
         }
 
-        competitions = asList(competition);
+        competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
         when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
-        loggedInUser.setRoles(asList(applicantRole));
-        assessor.setRoles(asList(assessorRole));
+        loggedInUser.setRoles(singletonList(applicantRole));
+        assessor.setRoles(singletonList(assessorRole));
     }
 
     public void setupApplicationWithRoles(){
@@ -233,10 +238,10 @@ public class BaseUnitTest {
         approvedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
         rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
 
-        com.worth.ifs.application.domain.Application app1 = new com.worth.ifs.application.domain.Application(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
-        com.worth.ifs.application.domain.Application app2 = new com.worth.ifs.application.domain.Application(2L, "Providing sustainable childcare", submittedApplicationStatus);
-        com.worth.ifs.application.domain.Application app3 = new com.worth.ifs.application.domain.Application(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
-        com.worth.ifs.application.domain.Application app4 = new com.worth.ifs.application.domain.Application(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
+        ApplicationResource app1 = new ApplicationResource(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
+        ApplicationResource app2 = new ApplicationResource(2L, "Providing sustainable childcare", submittedApplicationStatus);
+        ApplicationResource app3 = new ApplicationResource(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
+        ApplicationResource app4 = new ApplicationResource(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
@@ -248,29 +253,29 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, app1, role1, organisation1);
-        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, app2, role1, organisation1);
-        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, app3, role1, organisation1);
-        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, app4, role1, organisation1);
-        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), app1, role2, organisation2);
-        ProcessRole processRole6 = new ProcessRole(6L, assessor, app2, assessorRole, organisation1);
-        ProcessRole processRole7 = new ProcessRole(7L, assessor, app3, assessorRole, organisation1);
-        ProcessRole processRole8 = new ProcessRole(8L, assessor, app1, assessorRole, organisation1);
+        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, new Application(app1), role1, organisation1);
+        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, new Application(app2), role1, organisation1);
+        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, new Application(app3), role1, organisation1);
+        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, new Application(app4), role1, organisation1);
+        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), new Application(app1), role2, organisation2);
+        ProcessRole processRole6 = new ProcessRole(6L, assessor, new Application(app2), assessorRole, organisation1);
+        ProcessRole processRole7 = new ProcessRole(7L, assessor, new Application(app3), assessorRole, organisation1);
+        ProcessRole processRole8 = new ProcessRole(8L, assessor, new Application(app1), assessorRole, organisation1);
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8);
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
-        organisation2.setProcessRoles(asList(processRole5));
+        organisation2.setProcessRoles(singletonList(processRole5));
 
-        competition.addApplication(app1, app2, app3, app4);
+        competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
-        app1.setCompetition(competition);
+        app1.setCompetitionId(competition.getId());
         app1.setProcessRoles(asList(processRole1, processRole5));
-        app2.setCompetition(competition);
-        app2.setProcessRoles(asList(processRole2));
-        app3.setCompetition(competition);
+        app2.setCompetitionId(competition.getId());
+        app2.setProcessRoles(singletonList(processRole2));
+        app3.setCompetitionId(competition.getId());
         app3.setProcessRoles(asList(processRole3, processRole7, processRole8));
-        app4.setCompetition(competition);
-        app4.setProcessRoles(asList(processRole4));
+        app4.setCompetitionId(competition.getId());
+        app4.setProcessRoles(singletonList(processRole4));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(1).addUserApplicationRole(processRole5);
@@ -307,19 +312,18 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationResponses(){
-        Application application = applications.get(0);
+        ApplicationResource application = applications.get(0);
 
-        Boolean markAsComplete = false;
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), application);
-        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), application);
+        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), new Application(application));
+        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), new Application(application));
 
         List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
 
-        questions.get(20L).setResponses(asList(response));
-        questions.get(21L).setResponses(asList(response2));
+        questions.get(20L).setResponses(singletonList(response));
+        questions.get(21L).setResponses(singletonList(response2));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
 
@@ -333,9 +337,9 @@ public class BaseUnitTest {
     }
 
     public void setupFinances() {
-        Application application = applications.get(0);
-        applicationFinance = new ApplicationFinance(1L, application, organisations.get(0));
-        when(financeService.getApplicationFinances(application.getId())).thenReturn(asList(applicationFinance));
+        ApplicationResource application = applications.get(0);
+        applicationFinance = new ApplicationFinance(1L, new Application(application), organisations.get(0));
+        when(financeService.getApplicationFinances(application.getId())).thenReturn(singletonList(applicationFinance));
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
     }
 
@@ -357,7 +361,7 @@ public class BaseUnitTest {
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
         assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
 
-        submittedAssessments = asList(assessment3);
+        submittedAssessments = singletonList(assessment3);
         assessments = asList(assessment1, assessment2, assessment3);
         when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
         when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment1);

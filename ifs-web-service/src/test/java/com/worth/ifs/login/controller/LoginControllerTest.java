@@ -75,7 +75,6 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("email", loggedInUser.getEmail())
                         .param("password", userPass)
         );
-
     }
 
     /**
@@ -84,13 +83,14 @@ public class LoginControllerTest extends BaseUnitTest {
     @Test
     public void testSubmitInvalidLogin() throws Exception {
         when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
+
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", "info@test.nl")
                         .param("password", "testFOUT")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "password"));
     }
 
@@ -102,7 +102,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "testFOUT")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
     }
 
@@ -114,7 +114,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "test")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "email"));
     }
 
@@ -126,7 +126,7 @@ public class LoginControllerTest extends BaseUnitTest {
                         .param("password", "")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login"))
+                .andExpect(view().name("/login"))
                 .andExpect(model().attributeHasFieldErrors("loginForm", "password"));
     }
 
@@ -138,6 +138,45 @@ public class LoginControllerTest extends BaseUnitTest {
                 .andExpect(view().name("redirect:/login"));
 
         System.out.println("Testing Logout...");
+    }
+
+    @Test
+    public void testRedirectToCreateApplicationWithValidLogin() throws Exception {
+        String userPass = "test";
+        when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
+        mockMvc.perform(post("/login?redirect_url=/create-application/your-details")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", loggedInUser.getEmail())
+                .param("password", userPass))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/create-application/your-details"))
+                .andReturn();
+
+    }
+
+    @Test
+    public void testInvalidRedirectToCreateApplicationWithValidLogin() throws Exception {
+        String userPass = "test";
+        when(userAuthenticationService.authenticate(loggedInUser.getEmail(), userPass)).thenReturn(loggedInUser);
+        mockMvc.perform(post("/login?redirect_url=http://google.com")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", loggedInUser.getEmail())
+                .param("password", userPass))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/applicant/dashboard"))
+                .andReturn();
+    }
+
+    @Test
+    public void testRedirectToCreateApplicationWithInvalidLogin() throws Exception {
+        when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
+        mockMvc.perform(post("/login?applicationCreateCompetitionId=1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "info@test.nl")
+                .param("password", "testFOUT"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("/login"))
+                .andReturn();
     }
 
 }

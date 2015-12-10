@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class contains methods to retrieve and store {@link Application} related data,
+ * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
  */
 @Service
@@ -21,7 +21,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationRestService applicationRestService;
 
     @Override
-    public Application getById(Long applicationId, Boolean... hateoas) {
+    public ApplicationResource getById(Long applicationId, Boolean... hateoas) {
         if(hateoas.length>0 && hateoas[0]) {
             return applicationRestService.getApplicationByIdHateoas(applicationId);
         }else{
@@ -30,16 +30,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<Application> getInProgress(Long userId) {
-        List<Application> applications = applicationRestService.getApplicationsByUserId(userId);
+    public List<ApplicationResource> getInProgress(Long userId) {
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         return applications.stream()
                 .filter(a -> (a.getApplicationStatus().getName().equals("created") || a.getApplicationStatus().getName().equals("submitted")))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public List<Application> getFinished(Long userId) {
-        List<Application> applications = applicationRestService.getApplicationsByUserId(userId);
+    public List<ApplicationResource> getFinished(Long userId) {
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         return applications.stream()
                 .filter(a -> (a.getApplicationStatus().getName().equals("approved") || a.getApplicationStatus().getName().equals("rejected")))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -47,11 +47,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
-        List<Application> applications = applicationRestService.getApplicationsByUserId(userId);
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         Map<Long, Integer> applicationProgress = new HashMap<>();
         applications.stream()
             .filter(a -> a.getApplicationStatus().getName().equals("created"))
-            .map(Application::getId)
+            .map(ApplicationResource::getId)
             .forEach(id -> {
                 Double progress = applicationRestService.getCompleteQuestionsPercentage(id);
                 applicationProgress.put(id, progress.intValue());
@@ -60,8 +60,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Application createApplication(Long competitionId, Long userId, String applicationName) {
-        Application application = applicationRestService.createApplication(competitionId, userId, applicationName);
+    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
+        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName);
+
         return application;
     }
 
@@ -81,7 +82,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void save(Application application) {
+    public void save(ApplicationResource application) {
         applicationRestService.saveApplication(application);
     }
 }

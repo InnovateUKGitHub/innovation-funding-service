@@ -5,15 +5,15 @@ Applicant goes to the Overview page
 Applicant goes to the Application form
     Go To    ${APPLICATION_URL}
 
-Applicant edits the Public description question
-    Clear Element Text    id=12
-    Input Text    id=12    I am a robot
+Applicant edits the 'Project Summary' question
+    Clear Element Text    css=#form-input-11 .editor
+    Input Text    css=#form-input-11 .editor    I am a robot
 
 Mark scope question 13 as editable
     Click Element    css=#question-13 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Mark question 11 as editable
-    Click Element    css=#question-11 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    Click Element    css=#form-input-11 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Mark question 12 as editable
     click Element    css=#question-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
