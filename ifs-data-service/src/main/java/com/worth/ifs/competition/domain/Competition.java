@@ -146,6 +146,8 @@ public class Competition {
     public List<Application> getApplications() {
         return applications;
     }
+    @JsonIgnore
+    public List<Question> getQuestions(){return questions;}
 
 
 
@@ -165,5 +167,12 @@ public class Competition {
         return startDateToEndDatePercentage;
     }
 
+    public void setAssessmentEndDate(LocalDate assessmentEndDate) {
+        this.assessmentEndDate = assessmentEndDate;
+    }
+
+    public void setAssessmentStartDate(LocalDate assessmentStartDate){
+        this.assessmentStartDate = assessmentStartDate;
+    }
 }
 

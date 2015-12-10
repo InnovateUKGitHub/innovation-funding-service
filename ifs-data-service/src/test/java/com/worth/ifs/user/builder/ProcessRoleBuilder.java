@@ -2,6 +2,7 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -16,9 +17,6 @@ import static com.worth.ifs.BuilderAmendFunctions.setUser;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 08/10/15.
- */
 public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuilder> {
 
     private ProcessRoleBuilder(List<BiConsumer<Integer, ProcessRole>> multiActions) {
@@ -64,7 +62,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     public ProcessRoleBuilder withUser(User... users) {
-        return withArray((user, processRole) -> setUser(user, processRole), users);
+        return withArray(BuilderAmendFunctions::setUser, users);
     }
 
     @Override

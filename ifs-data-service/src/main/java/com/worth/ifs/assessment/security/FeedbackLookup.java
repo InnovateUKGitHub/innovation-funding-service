@@ -29,12 +29,10 @@ public class FeedbackLookup {
             Response response = responseRepository.findOne(id.getResponseId());
             if (response != null) {
                 return response.getResponseAssessmentForAssessor(processRoleRepository.findOne(id.getAssessorProcessRoleId())).map(
-                        assessorFeedback -> {
-                            return new Feedback()
-                                    .setId(id)
-                                    .setText(ofNullable(assessorFeedback.getAssessmentFeedback()))
-                                    .setValue(ofNullable(assessorFeedback.getAssessmentValue()));
-                        }
+                        assessorFeedback -> new Feedback()
+                                .setId(id)
+                                .setText(ofNullable(assessorFeedback.getAssessmentFeedback()))
+                                .setValue(ofNullable(assessorFeedback.getAssessmentValue()))
                 ).orElse(null);
             }
         }

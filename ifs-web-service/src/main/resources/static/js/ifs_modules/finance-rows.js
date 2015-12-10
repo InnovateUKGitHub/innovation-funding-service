@@ -1,14 +1,11 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false, document : false, ifs_autoSave: false*/
-
 // Set up the handlers for adding and removing Cost Category costs rows
-var ifs_financeRows = (function() {
+IFS.financeRows = (function() {
     "use strict";
 
     return {
         init: function(){
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .add-another-row', ifs_financeRows.addCostsRowHandler);
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .delete-row', ifs_financeRows.removeCostsRowHandler);
+            jQuery(document).on('click', '[data-finance-subsection-table-container] .add-another-row', IFS.financeRows.addCostsRowHandler);
+            jQuery(document).on('click', '[data-finance-subsection-table-container] .delete-row', IFS.financeRows.removeCostsRowHandler);
         },
         generateFragmentUrl : function(originalLink) {
             // Replace the non-javascript add and remove functionality with single fragment question HTML responses
@@ -18,8 +15,12 @@ var ifs_financeRows = (function() {
             var urlPart = urlParamsParts[0];
             var paramsPart = urlParamsParts.length == 2 ? ('&' + urlParamsParts[1]) : '';
 
-            var questionToUpdate = originalLink.parents('[data-question-id]');
-            var owningQuestionId = questionToUpdate.attr('data-question-id');
+            var questionToUpdate = originalLink.closest('.question');
+            var owningQuestionId;
+            if( questionToUpdate.attr('id').indexOf('form-input-') !== -1){
+                owningQuestionId = questionToUpdate.attr('id').replace('form-input-','');
+            }
+
             var dynamicHref = urlPart + '/' + owningQuestionId + '?singleFragment=true' + paramsPart;
             return dynamicHref;
         },
@@ -28,7 +29,7 @@ var ifs_financeRows = (function() {
             // per other fields and that the repeating-total fields have a back-reference to any added fields
 
             var amendRowsLink = jQuery(this);
-            var dynamicHref = ifs_financeRows.generateFragmentUrl(amendRowsLink);
+            var dynamicHref = IFS.financeRows.generateFragmentUrl(amendRowsLink);
 
             jQuery.get(dynamicHref, function(data) {
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
@@ -36,14 +37,14 @@ var ifs_financeRows = (function() {
                 var tableSectionId = tableSectionToUpdate.attr('data-finance-subsection-table-container');
                 var replacement = htmlReplacement.find('[data-finance-subsection-table-container=' + tableSectionId + ']');
                 tableSectionToUpdate.replaceWith(replacement);
-                ifs_autoSave.init();
+                IFS.autoSave.init();
             });
             e.preventDefault();
             return false;
         },
         removeCostsRowHandler : function(e) {
             var amendRowsLink = jQuery(this);
-            var dynamicHref = ifs_financeRows.generateFragmentUrl(amendRowsLink);
+            var dynamicHref = IFS.financeRows.generateFragmentUrl(amendRowsLink);
 
             jQuery.get(dynamicHref, function() {
                 var costRowsId = amendRowsLink.attr('data-cost-row');
@@ -53,7 +54,6 @@ var ifs_financeRows = (function() {
             });
             e.preventDefault();
             return false;
-        }
-        
+        }        
     };
 })();

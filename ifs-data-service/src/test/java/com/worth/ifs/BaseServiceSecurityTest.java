@@ -242,7 +242,8 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
 
     }
 
-    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {};
-    public static class LookupClassToMock extends HashMap<Class<?>, Object> {};
+    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
+
+    public static class LookupClassToMock extends HashMap<Class<?>, Object> {}
 
 }

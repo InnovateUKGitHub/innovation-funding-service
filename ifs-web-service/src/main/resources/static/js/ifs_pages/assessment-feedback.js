@@ -1,12 +1,9 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false, window : false, setTimeout : false*/
-
-var ifs_assesment_feedback_page = (function(){
+IFS.assesment_feedback_page = (function(){
     "use strict";
     return {
 		init : function(){
-		    jQuery('body').on('change', '[id ^= "assessor-question-feedback-text-"],[data-feedback-value]', ifs_assesment_feedback_page.handleAssessorFeedbackUpdate);
-		    jQuery('body').on('keyup', '[id ^= "assessor-question-feedback-"]', ifs_assesment_feedback_page.registerKeyupCallback(ifs_assesment_feedback_page.handleAssessorFeedbackFieldChangeOnField, 500));
+		    jQuery('body').on('change', '[id ^= "assessor-question-feedback-text-"],[data-feedback-value]', IFS.assesment_feedback_page.handleAssessorFeedbackUpdate);
+		    jQuery('body').on('keyup', '[id ^= "assessor-question-feedback-"]', IFS.assesment_feedback_page.registerKeyupCallback(IFS.assesment_feedback_page.handleAssessorFeedbackFieldChangeOnField, 500));
 		},
 	    registerKeyupCallback : function(callback, keyupDelay) {
 	        return function(e) {
@@ -65,7 +62,7 @@ var ifs_assesment_feedback_page = (function(){
 	    },
 	    handleAssessorFeedbackUpdate : function() {
 	        var field = jQuery(this);
-	        return ifs_assesment_feedback_page.handleAssessorFeedbackFieldChangeOnField(field);
+	        return IFS.assesment_feedback_page.handleAssessorFeedbackFieldChangeOnField(field);
 	    }
     };
 })();

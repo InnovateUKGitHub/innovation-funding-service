@@ -18,7 +18,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,8 +41,8 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         FormInputResponse[] consortiumResponses = newFormInputResponse().withFormInputs(formInput).buildArray(2, FormInputResponse.class);
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(asList(consortiumResponses[0]));
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(asList(consortiumResponses[1]));
+        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
+        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
 
         mockMvc.perform(post("/forminputresponse/findResponsesByApplication/123")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +64,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         when(formInputRepository.findOne(789L)).thenReturn(formInput);
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
-        when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(asList(applicantProcessRole));
+        when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(singletonList(applicantProcessRole));
 
         String contentString = "{\"userId\":123,\"applicationId\":456,\"formInputId\":789,\"value\":\"\"}";
         mockMvc.perform(post("/forminputresponse/saveQuestionResponse/")

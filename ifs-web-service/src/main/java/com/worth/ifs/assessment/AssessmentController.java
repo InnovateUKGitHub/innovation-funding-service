@@ -3,14 +3,16 @@ package com.worth.ifs.assessment;
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.Form;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
-import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -75,7 +77,7 @@ public class AssessmentController extends AbstractApplicationController {
         allAssessments.sort(new AssessmentStatusComparator());
 
         //filters the assessments to just have the submitted assessments here
-        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(toList());
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(Assessment::isSubmitted).collect(toList());
 
         //filters the assessments to just the not submmited assessments
         List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(toList());
@@ -150,7 +152,7 @@ public class AssessmentController extends AbstractApplicationController {
             return showApplicationReviewView(model, competitionId, userId, assessment);
         }
 
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, assessment.getApplication().getId());
+        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, new ApplicationResource(assessment.getApplication()).getId());
         boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
         if (invalidAssessor) {
             log.warn("User is not an Assessor on this application");
@@ -161,14 +163,14 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
-        addApplicationDetails(assessment.getApplication().getId(), userId, sectionId, model, true, null);
+        addApplicationDetails(new ApplicationResource(assessment.getApplication()).getId(), userId, sectionId, model, true, null);
 
-        List<Response> questionResponses = responseService.getByApplication(assessment.getApplication().getId());
+        List<Response> questionResponses = responseService.getByApplication(new ApplicationResource(assessment.getApplication()).getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
 
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        addFinanceDetails(model, assessment.getApplication());
+        addFinanceDetails(model, new ApplicationResource(assessment.getApplication()));
         return assessmentDetails;
     }
 
@@ -180,8 +182,14 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, Assessment assessment) {
-        getAndPassAssessmentDetails(competitionId, assessment.getApplication().getId(), userId, model);
-        Set<String> partners =  assessment.getApplication().getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
+        ApplicationResource application = applicationService.getById(assessment.getApplication().getId());
+        getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
+        List<Long> processRoleIds = application.getProcessRoleIds();
+        Set<String> partners = processRoleIds.stream()
+            .map(id -> processRoleService.getById(id))
+            .map(ProcessRole::getOrganisation)
+            .map(Organisation::getName)
+            .collect(Collectors.toSet());
         model.addAttribute("partners", partners);
 
         return applicationReview;
@@ -212,7 +220,7 @@ public class AssessmentController extends AbstractApplicationController {
                                             User user) {
 
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(user.getId(), applicationId);
-        List<Response> responses = getResponses(assessment.getApplication());
+        List<Response> responses = getResponses(new ApplicationResource(assessment.getApplication()));
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {

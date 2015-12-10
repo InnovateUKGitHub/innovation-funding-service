@@ -20,7 +20,7 @@ public class OrganisationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "test organisation";
-        processRoles = new ArrayList<ProcessRole>();
+        processRoles = new ArrayList<>();
         organisation = new Organisation(id, name);
     }
 

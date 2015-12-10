@@ -64,12 +64,14 @@ public class AssessmentHandler {
 
     public RecommendedValue getRecommendedValueFromString(String value) {
 
-        if ( value.equals("yes") )
-            return RecommendedValue.YES;
-        else  if ( value.equals("no"))
-            return RecommendedValue.NO;
-        else
-            return RecommendedValue.EMPTY;
+        switch (value) {
+            case "yes":
+                return RecommendedValue.YES;
+            case "no":
+                return RecommendedValue.NO;
+            default:
+                return RecommendedValue.EMPTY;
+        }
 
     }
 }

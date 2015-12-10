@@ -61,6 +61,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1"
     compile 'org.apache.commons:commons-lang3:3.4'
     compile "org.flywaydb:flyway-core:3.2.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
@@ -136,6 +137,7 @@ watch {
     }
 }
 
+//noinspection GroovyMissingReturnStatement
 processResources {
     filesMatching("*.properties") {
         expand project.properties

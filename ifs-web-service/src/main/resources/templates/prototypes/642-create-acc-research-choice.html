@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-create-acc-step1'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Create an account</h1>
+
+	 <p class="form-hint icon-info-small-blue">Organisations must be UK based to receive funding from Innovate UK</p>
+	
+	<h2 class="heading-large">Research organisation</h2>
+
+	
+	<h2 class="heading-small">Please select your type or research organisation</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Please select your type or research organisation</legend>
+			<div class="form-block">
+				<label class="block-label" for="radio-1">
+					<input id="radio-1" type="radio" name="radio-group" value="Academic" onClick="location.href='/prototypes/642-create-acc-academic';"/>
+					Academic
+				</label>
+				<label class="block-label" for="radio-2">
+					<input id="radio-2" type="radio" name="radio-group" value="Research" onClick="location.href='/prototypes/642-create-acc-research?org=Research and technology organisation (RTO)';"/>
+					Research &amp; technology organisation (RTO)
+				</label>
+				<label class="block-label" for="radio-3">
+					<input id="radio-3" type="radio" name="radio-group" value="Catapult" onClick="location.href='/prototypes/642-create-acc-research?org=Catapult';"/>
+					Catapult
+				</label>
+				<label class="block-label" for="radio-4">
+					<input id="radio-4" type="radio" name="radio-group" value="Public sector research" onClick="location.href='/prototypes/642-create-acc-research?org=Public sector research environment';"/>
+					Public sector research environment
+				</label>
+				<label class="block-label" for="radio-5">
+					<input id="radio-5" type="radio" name="radio-group" value="Research council institute" onClick="location.href='/prototypes/642-create-acc-research?org=Research council institute';"/>
+					Research council institute
+				</label>
+			</div>
+			
+		</fieldset>
+		<button class="button button-large extra-margin" name="select-company-type" type="submit" formaction="/prototypes/642-create-acc-business">Continue</button>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

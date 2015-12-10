@@ -13,6 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-create-acc-business'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -38,7 +39,7 @@
 			</div>
 		</fieldset>
 
-		<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Save company, continue to create your profile</button>
+		<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Continue</button>
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

@@ -1,19 +1,16 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false, document : false*/
-
 //  Progressive collapsibles original code by @Heydonworks altered by Worth Systems
 //-----------------------------------------------------------------------------
-var ifs_collapsible = (function(){
+IFS.collapsible = (function(){
   "use strict";
   var s; // private alias to settings 
 
   return {
       settings: {
-        collapsibleEl : '.collapsible > h2, .assign-container .assign-button'
+        collapsibleEl : '.collapsible > h2, .collapsible > h3, .assign-container .assign-button'
       },
       init : function() {
             s = this.settings;
-            ifs_collapsible.collapsibleWithinScope(jQuery(document));
+            IFS.collapsible.collapsibleWithinScope(jQuery(document));
       },
       collapsibleWithinScope : function($scope) {
 
@@ -27,7 +24,7 @@ var ifs_collapsible = (function(){
 
           $scope.find(s.collapsibleEl).each(function(index,value) {
               var inst = jQuery(value);
-              ifs_collapsible.addCollapsibleBehaviourToElement(inst, index, maxId + 1);
+              IFS.collapsible.addCollapsibleBehaviourToElement(inst, index, maxId + 1);
           });
       },
       addCollapsibleBehaviourToElement : function(inst, index, idOffset) {

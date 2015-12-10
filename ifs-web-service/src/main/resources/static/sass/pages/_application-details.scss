@@ -1,32 +1,19 @@
 
 //everything should be wrapped within this body class. 
 .app-details {
-	.section .grid-row {
+	.section {
 		color:$secondary-text-colour;
 		font-size:16px;
 
 	}
-	.assignee {
-		padding: 25px 35px 20px 60px;	
-	}
-
 	.alignright-button {
 		padding-top:40px;
 	}
 	.progress-container {
-		margin-left: 0;
-		margin-right:140px;
+		margin-left: 5px;
+		margin-right:5px;
 	}
-	.collapsible h2 + [aria-hidden="false"] {
-		padding:0;
-	}
-	.assign-container .assign-button > button {
-		margin: 0 0 2px -3px;
-	}
-	.assign-team {
-		margin-top:0;
-		right:0;
-	}
+
 }
 
 @include media-down(mobile){

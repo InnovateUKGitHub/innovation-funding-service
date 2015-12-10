@@ -1,16 +1,12 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals jQuery : false */
-
 //Brent: Did some investigation what this does as it wasn't clear to me
 //Does Hide and show textarea and some basic data validation
 //Hide and show of form elements are already within the gov.uk js and client side validation is nice but we should cover that more generic. 
-
-var ifs_assesment_submit_review_page = (function(){
+IFS.assesment_submit_review_page = (function(){
     "use strict";
     return {
         init: function(){
-          ifs_assesment_submit_review_page.suitableForFundingChange();
-          ifs_assesment_submit_review_page.beforeSubmitCheck();
+          IFS.assesment_submit_review_page.suitableForFundingChange();
+          IFS.assesment_submit_review_page.beforeSubmitCheck();
         },
         suitableForFundingChange : function(){
             jQuery( "#suitable-for-funding" ).change(function() {

@@ -13,14 +13,17 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-create-acc-research-choice'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-large">Create your account</h1>
 
 	<p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
-	
-	<h2 class="heading-medium">Research organisation</h2>
+
+	<h2 class="heading-medium" th:text="${param.org[0]}" th:unless="${param.org == null}">Research organisation</h2>
+
+	<h2 class="heading-medium" th:text="${'Research organisation'}" th:unless="${param.org != null}">Research organisation</h2>
 
 	<form>	
 		<div id="manual-research-input" class="extra-margin">
@@ -93,7 +96,7 @@
 			</fieldset>
 
 
-			<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Save organisation, continue to create your profile</button>
+			<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Continue</button>
 		</div>
 		
 	</form>

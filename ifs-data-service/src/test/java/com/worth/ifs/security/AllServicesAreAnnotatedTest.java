@@ -9,11 +9,14 @@ import com.worth.ifs.application.service.SectionRestServiceImpl;
 import com.worth.ifs.assessment.service.AssessmentRestServiceImpl;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
 import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
+import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
 import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
@@ -42,7 +45,8 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-            new Class<?>[]{UserRestServiceImpl.class,
+                    BaseRestService.class,
+                    UserRestServiceImpl.class,
                     OrganisationRestServiceImpl.class,
                     FormInputResponseRestServiceImpl.class,
                     CompetitionsRestServiceImpl.class,
@@ -53,21 +57,23 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     SectionRestServiceImpl.class,
                     QuestionRestServiceImpl.class,
                     ApplicationRestServiceImpl.class,
+                    CompanyHouseRestServiceImpl.class,
                     ResponseRestServiceImpl.class,
                     TokenAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
                     ApplicationResourceAssembler.class,
-                    ProcessRoleResourceAssembler.class
-            });
+                    ProcessRoleResourceAssembler.class,
+                    CompetitionResourceAssembler.class
+            );
 
     List<Class<? extends Annotation>> securityAnnotations
             = Arrays.asList(
-            new Class[]{PreAuthorize.class,
-                    PreFilter.class,
-                    PostAuthorize.class,
-                    PostAuthorize.class,
-                    NotSecured.class
-            });
+                PreAuthorize.class,
+                PreFilter.class,
+                PostAuthorize.class,
+                PostAuthorize.class,
+                NotSecured.class
+            );
 
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
@@ -110,11 +116,9 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
         Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
-            for (Class<?> exclusion : excludedClasses) {
-                if (service.getClass().isAssignableFrom(exclusion)) {
-                    i.remove();
-                }
-            }
+            excludedClasses.stream().filter(exclusion -> service.getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
+                i.remove();
+            });
         }
         return services;
     }

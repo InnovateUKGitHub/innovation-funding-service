@@ -11,71 +11,60 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:remove="tag"></div>
     <div th:include="fragments/elements :: notification" th:remove="tag"></div>
 
-    <h1 class="heading-xlarge">Application overview</h1>
+    <div class="page-title">
+        <h2 class="subtitle" th:text="${currentApplication.getName()} +' - Application number ' + ${currentApplication.getId()} "/>
+        <h1 class="heading-xlarge">Application overview</h1>
+    </div>
+
+
     <div class="grid-row">
-        <div class="column-half competition-details">
-            <h2 class="bold-medium">Competition details</h2>
-            <p th:text="${currentCompetition.getDescription()}" />
-            <ul class="list-bullet" style="margin-bottom: 40px">
-                <li><a rel="external" target="_blank" href="#">See competition brief</a></li>
-            </ul>
-            <h3 class="heading-small">Application progress:</h3>
+         <div class="column-half">
             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" th:remove="tag"></div>
         </div>
-
         <div class="column-half">
-            <h2 class="bold-medium">Application Team</h2>
             <ul class="list-bullet">
-                <li th:each="organisation : ${applicationOrganisations}">
-                    <span th:text="${organisation.getName()}"></span>
-                    <small th:if="${organisation.equals(leadOrganisation)}">(Lead partner)</small>
-                </li>
+                <li><a href="#">View team members and add collaborators</a></li>
             </ul>
-            <p><a href="#">View team members and add collaborators</a></p>
         </div>
     </div>
+
+    <h2 class="bold-medium">Competition details</h2>
+    <p th:text="${currentCompetition.getDescription()}" />
+
    
     <form action="#" method="post" class="application-overview">
-        <div class="collapsible section-overview js-close-others">
             <div th:remove="tag" th:each="section : ${sections.values()}">
-                <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')"  th:id="'section-'+${section.getId()}">
-                    <span th:remove="tag" th:text="${section.getName()}"></span>
-                    <span class="section-status complete" th:if="${completedSections.contains(section.getId())}"><span class="visuallyhidden">-</span> Complete</span>
-                    <span class="section-status assigned" th:if="${assignedSections?.contains(section.id)}"><span class="visuallyhidden assigned-to-me">-</span> Assigned to you</span>
-                    <span class="section-status incomplete" th:if="${incompletedSections?.contains(section.id)}"><span class="visuallyhidden incomplete">-</span> Incomplete</span>
-                </h2>
-                <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}">
+                <section th:id="'section-'+${section.getId()}">
+                <h2 th:text="${section.getName()}" class="heading-medium"/>
+                <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:case="${0}" th:remove="tag">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
+                    <!--/* sections with children like the finance */--> 
                     <div th:case="*" th:remove="tag">
-                        <li th:class="section">
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
-                                    <h4 class="heading-medium">
-                                        <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}"
-                                           th:text="${section.getName()}" />
-                                    </h4>
-                                </div>
+                        <li class="grid-row" th:classappend="section">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}"
+                                       th:text="${section.getName()}" />
+                                </h3>
                             </div>
                         </li>
-                        <li th:class="section" th:each="childSection : ${section.getChildSections()}">
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
-                                    <h4 class="heading-medium">
-                                        <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${childSection.getId()}"
-                                           th:text="${childSection.getName()}" />
-                                    </h4>
-                                </div>
+                        <li class="grid-row" th:classappend="section" th:each="childSection : ${section.getChildSections()}">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${childSection.getId()}"
+                                       th:text="${childSection.getName()}" />
+                                </h3>
                             </div>
                         </li>
                     </div>
                 </ul>
+                </section>
             </div>
-        </div>
     </form>
     <div class="alignright-button">
         <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>

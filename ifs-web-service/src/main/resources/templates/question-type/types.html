@@ -231,7 +231,7 @@
                                data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
-                               readonly="" type="text" id="cost-labour-total-field"
+                               readonly="readonly" type="text" id="cost-labour-total-field"
                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                             <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -305,7 +305,7 @@
                            th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
                            th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}"
                            class="form-control"
-                           readonly=""
+                           readonly="readonly"
                            data-binding-input="subsection-total-9"
                            data-calculation-operations=""
                            data-calculation-input="overhead-calculated"
@@ -318,7 +318,7 @@
                     <input type="text"
                            th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
                            class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            id="id_overheads-totalCosts"
                            data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                            data-calculation-operations="*"
@@ -374,7 +374,7 @@
                                        th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
                                        th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
                             <td class="alignright remove"> 
@@ -393,7 +393,7 @@
                 <label>
                     Total materials costs
                     <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
-                           readonly="" type="text" id="material-costs-total-field"
+                           readonly="readonly" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.total}"
@@ -512,7 +512,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-capital-usage-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="cost-capital-usage-costs-total-field"
                            data-calculation-fields="[id*=netCost]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -535,35 +535,33 @@
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
         <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
-            <div class="form-row">
-                <div th:each="subContractingCost : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
-                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
-                            <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
-                            <a class="delete-row" th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-                        </div>
+            <div class="form-row" th:each="subContractingCost : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
+                <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
+                    <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
+                    <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
+                    <a class="delete-row" th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                </div>
 
-                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where the subcontractor will work</label>
-                            <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country"
-                                   th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
-                        </div>
+                <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
+                    <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-country'}">Country where the subcontractor will work</label>
+                    <input type="text" th:name="${type +'-country-' + subContractingCost.id}" class="form-control form-finances-subcontracting-country"
+                           th:id="${'cost-subcontracting-'+subContractingCost.id+'-country'}" th:value="${subContractingCost.country}" />
+                </div>
 
-                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" th:for="${'cost-'+ type + '-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
+                <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
+                    <label class="form-label" th:for="${'cost-'+ type + '-'+subContractingCost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
 
-                            <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${subContractingCost.id}, name='role', value=${subContractingCost.role})" th:remove="tag" />
-                        </div>
+                    <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${subContractingCost.id}, name='role', value=${subContractingCost.role})" th:remove="tag" />
+                </div>
 
-                        <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
-                            <label class="form-label" th:for="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}">Cost</label>
-                            <input type="number"
-                                   th:name="${type +'-subcontractingCost-' + subContractingCost.id}"
-                                   class="form-control form-finances-subcontracting-cost"
-                                   th:id="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}"
-                                   data-calculation-input="subcontracting-cost-row"
-                                   th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
-                        </div>
+                <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
+                    <label class="form-label" th:for="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}">Cost</label>
+                    <input type="number"
+                           th:name="${type +'-subcontractingCost-' + subContractingCost.id}"
+                           class="form-control form-finances-subcontracting-cost"
+                           th:id="${'cost-subcontracting_costs-'+subContractingCost.id+'-subcontractingCost'}"
+                           data-calculation-input="subcontracting-cost-row"
+                           th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}" />
                 </div>
             </div>
             <p class="alignright">
@@ -573,7 +571,7 @@
                 <label>
                     Total subcontracting costs
                     <input class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            type="text"
                            id="cost-subcontracting-total"
                            data-calculation-fields="[id*=subcontractingCost]"
@@ -624,7 +622,7 @@
                                 <input type="text"
                                        th:name="${type +'-travelCostTotal-' + travelCost.id}"
                                        class="form-finances-travel-total"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostTotal'}"
                                        th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}+',#'+${'cost-'+type+'-'+travelCost.id+'-travelNumTimes'},data-calculation-rawValue=${travelCost.getTotal()}"
                                        data-calculation-operations="*"
@@ -645,7 +643,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total travel &amp; subsistence costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="travel-costs-total-field"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -701,7 +699,7 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total other costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="other-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            data-calculation-fields="[id*=otherCost]"
                            data-calculation-operations="+"
@@ -728,15 +726,15 @@
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
        
 
-    <fieldset class="inline" id="${question.getId()}">
+    <fieldset class="inline" id="otherCostsShowHideToggle">
       <div class="form-group">
         <label class="block-label" data-target="otherCostsForm" for="radio-indent-1">
-          <input id="${question.getId()}-yes" name="radio-indent-group" value="Yes" type="radio" />
+          <input id="otherCostsShowHideToggle-yes" name="radio-indent-group" value="Yes" type="radio" />
           Yes
         </label>
 
         <label class="block-label" for="radio-indent-2">
-          <input id="${question.getId()}-no" name="radio-indent-group" value="No" type="radio" />
+          <input id="otherCostsShowHideToggle-no" name="radio-indent-group" value="No" type="radio" />
           No
         </label>
 

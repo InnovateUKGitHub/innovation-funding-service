@@ -46,9 +46,8 @@ small {
 
 .alignright-button {
 	text-align:right;
-	overflow: hidden;
-	clear: both;
-	
+  @extend %contain-floats;
+   
 	a {
 		line-height:45px;
 	}
@@ -68,13 +67,15 @@ small {
 	}
 }
   @include media-down(mobile) {
-	a,
-	button,
-	[role="button"] {
-		margin:0 0 5px;
-		display: block;
-		text-align: center;
-	}
+  	.alignright-button {
+		a,
+		button,
+		[role="button"] {
+			margin:0 0 5px;
+			display: block;
+			text-align: center;
+		}
+  	}
   }
 
   /*
@@ -100,6 +101,18 @@ input[type="button"] {
 	    		background: none; 
 	    	}
 	    }
+	}
+}
+
+
+.page-title {
+	padding-top: 25px;
+
+	h2 {
+		margin-bottom:0;
+	}
+	h1 {
+		margin-top:0;
 	}
 }
 
@@ -136,4 +149,27 @@ input[type="button"] {
     background-image: file-url("icons/icon-print-2x.png");
     background-size: 100%;
   }
+}
+
+/* 
+
+###Secondary Buttons 
+
+```
+<a href="#" class="button-secondary" tabindex="0">Anchor like a button</a>
+<button class="button-secondary">Real button</button>
+
+```
+
+*/
+.button-secondary{
+	@include button($panel-colour);
+	@include box-sizing (border-box);
+	margin: 0 $gutter-half $gutter-half 0;
+	padding: em(10) em(15) em(5) em(15);
+	vertical-align: top;
+	@include media (mobile) {
+		width: 100%;
+		text-align: center;
+	}
 }

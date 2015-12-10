@@ -1,8 +1,5 @@
-/* jshint strict: true, undef: true, unused: true */
-/* globals  jQuery : false, setTimeout : false*/
-
 //If there is javascript it becomes a modal, if there is not a links to the original page.
-var ifs_modal = (function(){
+IFS.modal = (function(){
     "use strict";
     var s; // private alias to settings 
 
@@ -13,8 +10,8 @@ var ifs_modal = (function(){
         init : function(){
             s = this.settings;
             if(jQuery(s.element).length) {
-                ifs_modal.initModals();
-                ifs_modal.modalCloseLink();
+                IFS.modal.initModals();
+                IFS.modal.modalCloseLink();
             }
         },
         initModals : function(){
@@ -26,7 +23,7 @@ var ifs_modal = (function(){
                 if(target.length){
                     e.preventDefault();
 
-                    ifs_modal.disableTabPage();
+                    IFS.modal.disableTabPage();
                     target.add('.modal-overlay').attr('aria-hidden','false');
                     //vertical center,old browser support so no fancy css stuff :(
                     setTimeout(function(){
@@ -58,7 +55,7 @@ var ifs_modal = (function(){
         },
         modalCloseLink : function(){
             jQuery('body').on('click','.js-close',function(){
-                ifs_modal.enableTabPage();
+                IFS.modal.enableTabPage();
                 jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden','true');
 
             });

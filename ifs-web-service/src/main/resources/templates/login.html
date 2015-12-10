@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
 
-    <form action="/login" th:object="${loginForm}" method="POST">
+    <form th:action="${loginForm.getActionUrl()}" th:object="${loginForm}" method="POST">
         <section th:if="${#fields.hasErrors('*')}" class="error-summary" role="group"
                  aria-labelledby="error-summary-heading" tabindex="-1">
             <h1 class="heading-medium error-summary-heading" id="error-summary-heading">

@@ -1,10 +1,11 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -12,11 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,60 +31,70 @@ import java.util.stream.Collectors;
 @RequestMapping("/application")
 public class ApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
+    private boolean selectFirstSectionIfNoneCurrentlySelected = false;
 
     @RequestMapping("/{applicationId}")
-    public String applicationDetails(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
         log.info("Application with id " + applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
     }
 
+    @RequestMapping("/hateoas/{applicationId}")
+    public String applicationDetailsHateoas(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request){
+        log.info("HATEOAS Application with id " + applicationId);
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected, true);
+        return "application-details-hateoas";
+    }
+
     @RequestMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(Form form, Model model,
+    public String applicationDetailsOpenSection(ApplicationForm form, Model model,
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
     }
 
     @RequestMapping("/{applicationId}/summary")
-    public String applicationSummary(Form form, BindingResult bindingResult, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
         List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         
         return "application-summary";
     }
 
     @RequestMapping("/{applicationId}/confirm-submit")
-    public String applicationConfirmSubmit(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-confirm-submit";
     }
 
     @RequestMapping("/{applicationId}/submit")
-    public String applicationSubmit(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-submitted";
     }
 
     @RequestMapping("/{applicationId}/track")
-    public String applicationTrack(Form form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-track";
     }
     @RequestMapping("/create/{competitionId}")
@@ -105,7 +112,7 @@ public class ApplicationController extends AbstractApplicationController {
         String applicationNameWithoutWhiteSpace= applicationName.replaceAll("\\s","");
 
         if(applicationNameWithoutWhiteSpace.length() > 0) {
-            Application application = applicationService.createApplication(competitionId, userId, applicationName);
+            ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
             return "redirect:/application/"+application.getId();
         }
         else {
@@ -118,12 +125,14 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-create-confirm-competition";
     }
 
+
+
     /**
      * This method is for the post request when the users clicks the input[type=submit] button.
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragmentIndividualSection(Form form, Model model,
+    public String assignQuestionAndReturnSectionFragmentIndividualSection(ApplicationForm form, Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
                                                          @RequestParam("sectionId") final Long sectionId,
                                                          HttpServletRequest request, HttpServletResponse response){
@@ -136,7 +145,7 @@ public class ApplicationController extends AbstractApplicationController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @RequestMapping(value = "/{applicationId}", params = {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragment(Form form, Model model,
+    public String assignQuestionAndReturnSectionFragment(ApplicationForm form, Model model,
                                                          @PathVariable("applicationId") final Long applicationId,
                                                          @RequestParam("sectionId") final Long sectionId,
                                                          HttpServletRequest request, HttpServletResponse response){
@@ -144,25 +153,25 @@ public class ApplicationController extends AbstractApplicationController {
         return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
-    private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response, Form form) {
+    private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response, ApplicationForm form) {
         doAssignQuestion(applicationId, request, response);
 
         // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
 
-        Application application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-
-        Optional<Section> currentSection = getSection(application.getCompetition().getSections(), Optional.of(sectionId), true);
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-        List<Question> questions = questionService.findByCompetition(application.getCompetition().getId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
 
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
@@ -202,12 +211,5 @@ public class ApplicationController extends AbstractApplicationController {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
-    private Application addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form) {
-        Application application = super.addApplicationDetails(applicationId, userId, currentSectionId, model, false, form);
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        addOrganisationFinanceDetails(model, application, userId, form);
-        addFinanceDetails(model, application);
-        return application;
-    }
+
 }

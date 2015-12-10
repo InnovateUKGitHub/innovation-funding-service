@@ -99,7 +99,8 @@ public class ServiceFailure {
     }
 
     public boolean is(Enum<?>... messages) {
-        return is(asList(messages).stream().map(Enum::name).collect(toList()).toArray(new String[] {}));
+        List<String> var = asList(messages).stream().map(Enum::name).collect(toList());
+        return is(var.toArray(new String[var.size()]));
     }
 
     public Throwable getCause() {

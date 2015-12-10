@@ -11,6 +11,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
@@ -69,40 +70,42 @@ public class ApplicationController {
         this.applicationResourceAssembler = applicationResourceAssembler;
     }
 
-    @RequestMapping("/hateoas/{id}")
-    public ApplicationResource getApplicationByIdHateoas(@PathVariable("id") final Long id) {
+    @RequestMapping("/{id}")
+    public ApplicationResourceHateoas getApplicationByIdHateoas(@PathVariable("id") final Long id) {
         Application application = applicationRepository.findOne(id);
         return applicationResourceAssembler.toResource(application);
     }
 
     @RequestMapping("/hateoas/")
-    public Resources<ApplicationResource> findAllHateoas() {
+    public Resources<ApplicationResourceHateoas> findAllHateoas() {
         List<Application> applications = applicationRepository.findAll();
         return applicationResourceAssembler.toEmbeddedList(applications);
     }
 
-    @RequestMapping("/{id}")
-    public Application getApplicationById(@PathVariable("id") final Long id) {
-        return applicationRepository.findOne(id);
+    @RequestMapping("/normal/{id}")
+    public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
+        return new ApplicationResource(applicationRepository.findOne(id));
     }
 
 
     @RequestMapping("/")
-    public List<Application> findAll() {
-        return applicationRepository.findAll();
+    public List<ApplicationResource> findAll() {
+        return applicationRepository.findAll().stream()
+            .map(ApplicationResource::new)
+            .collect(Collectors.toList());
     }
 
     @RequestMapping("/findByUser/{userId}")
-    public List<Application> findByUserId(@PathVariable("userId") final Long userId) {
+    public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        List<Application> apps = new ArrayList<>();
+        List<ApplicationResource> apps = new ArrayList<>();
         for (ProcessRole role : roles) {
             log.debug("+++++++++++++++++++++");
             log.debug(role.getApplication().getName());
             log.debug(role.getApplication().getId());
             log.debug("+++++++++++++++++++++");
-            apps.add(role.getApplication());
+            apps.add(new ApplicationResource(role.getApplication()));
         }
         return apps;
     }
@@ -113,7 +116,7 @@ public class ApplicationController {
      */
     @RequestMapping("/saveApplicationDetails/{id}")
     public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
-                                                         @RequestBody Application application) {
+                                                         @RequestBody ApplicationResource application) {
 
         Application applicationDb = applicationRepository.findOne(id);
         HttpStatus status;
@@ -198,13 +201,14 @@ public class ApplicationController {
 
 
     @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
-    public List<Application> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
+    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
 
         List<Application> allApps = applicationRepository.findAll();
         return allApps.stream()
             .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
+            .map(ApplicationResource::new)
             .collect(Collectors.toList());
     }
 
@@ -220,7 +224,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
-    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
+    public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
@@ -258,7 +262,7 @@ public class ApplicationController {
         applicationRepository.save(application);
         processRoleRepository.save(processRole);
 
-        return application;
+        return new ApplicationResource(application);
     }
 
 }

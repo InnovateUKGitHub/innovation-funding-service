@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.service.UserRestService;
@@ -22,20 +22,27 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRestService userRestService;
 
+    @Autowired
+    ProcessRoleService processRoleService;
+
     @Override
     public List<User> getAssignable(Long applicationId) {
         return userRestService.findAssignableUsers(applicationId);
     }
 
-    public Boolean isLeadApplicant(Long userId, Application application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+    public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
-    public Set<User> getAssignableUsers(Application application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+    public Set<User> getAssignableUsers(ApplicationResource application) {
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         Set<User> users = userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(uar -> uar.getUser())
@@ -43,8 +50,10 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    public Set<User> getApplicationUsers(Application application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles();
+    public Set<User> getApplicationUsers(ApplicationResource application) {
+        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+            .map(id -> processRoleService.getById(id))
+            .collect(Collectors.toList());
         Set<User> users = userApplicationRoles.stream()
                 .map(uar -> uar.getUser())
                 .collect(Collectors.toSet());

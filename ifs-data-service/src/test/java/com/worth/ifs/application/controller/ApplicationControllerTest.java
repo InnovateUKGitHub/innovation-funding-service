@@ -55,8 +55,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        ApplicationController applicationController = new ApplicationController(new ApplicationResourceAssembler());
-        return applicationController;
+        return new ApplicationController(new ApplicationResourceAssembler());
     }
 
     @Test
@@ -67,7 +66,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
         when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
 
-        mockMvc.perform(get("/application/1"))
+        mockMvc.perform(get("/application/normal/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication1Name")))
                 .andDo(document("application/get-application",
@@ -76,10 +75,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoles").description("processRoles"),
+                                fieldWithPath("processRoleIds").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
-                                fieldWithPath("competition").description("Competition"))));
-        mockMvc.perform(get("/application/2"))
+                                fieldWithPath("competitionId").description("Competition Id"))));
+        mockMvc.perform(get("/application/normal/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testApplication2Name")));
     }
@@ -159,9 +158,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Organisation organisation = new Organisation(1L , "testOrganisation");
         User user = new User();
 
-        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+        ProcessRole processRole = new ProcessRole(1L, user, null, role, organisation);
         user.addUserApplicationRole(processRole);
 
         ApplicationStatus applicationStatus = new ApplicationStatus();
@@ -182,10 +179,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
+                .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
     }
 }
