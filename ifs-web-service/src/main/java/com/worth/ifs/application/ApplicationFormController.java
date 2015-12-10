@@ -59,7 +59,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-form";
     }
 
@@ -138,28 +138,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
         financeService.addCost(applicationFinance.getId(), questionId);
     }
-
-    /**
-     * Get the details of the current application, add this to the model so we can use it in the templates.
-     */
-
-//    private Application addApplicationDetails(Long applicationId, Long userId, Long currentSectionId, Model model) {
-//        Application application = applicationService.getById(applicationId);
-//        model.addAttribute("currentApplication", application);
-//        Competition competition = application.getCompetition();
-//        model.addAttribute("currentCompetition", competition);
-//
-//        Organisation userOrganisation = organisationService.getUserOrganisation(application, userId).get();
-//
-//        addOrganisationDetails(model, application, Optional.of(userOrganisation));
-//        addQuestionsDetails(model, application, Optional.of(userOrganisation), userId);
-//        addOrganisationFinanceDetails(model, application, userId);
-//        addFinanceDetails(model, application);
-//        addMappedSectionsDetails(model, application, Optional.of(currentSectionId), Optional.of(userOrganisation), false);
-//        addUserDetails(model, application, userId);
-//
-//        return application;
-//    }
 
     private BindingResult saveApplicationForm(ApplicationForm form, Model model,
                                                         @PathVariable("applicationId") final Long applicationId,

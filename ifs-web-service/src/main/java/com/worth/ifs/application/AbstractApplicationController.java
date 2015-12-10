@@ -110,7 +110,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form, Boolean... hateoas) {
+    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
 
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
         application.setId(applicationId);
@@ -289,8 +289,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
-        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, selectFirstSectionIfNoneCurrentlySelected, form, hateoas);
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form, selectFirstSectionIfNoneCurrentlySelected, hateoas);
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         form.application = application;
         addOrganisationFinanceDetails(model, application, userId, form);
