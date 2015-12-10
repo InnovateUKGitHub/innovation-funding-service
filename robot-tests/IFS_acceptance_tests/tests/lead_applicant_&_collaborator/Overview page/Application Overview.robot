@@ -24,7 +24,7 @@ Verify that the Applicant can access the Overview page
 Verify that the Applicant can see the List with the sections
     [Tags]    Applicant    Overview
     When Applicant goes to the Overview page
-    Then the applicant should see six sections
+    Then the applicant should see three sections
 
 Verify that when Applicant clicks the "Scope" this section is expanded
     [Tags]    Applicant
@@ -76,12 +76,9 @@ the Applicant should see the overview of the selected application
 the Applicant is in the application overview page
     Applicant goes to the Overview page
 
-the applicant should see six sections
+the applicant should see three sections
     Element Should Be Visible    css=#section-1 .heading-medium
     Element Should Be Visible    css=#section-2 .heading-medium
-    Element Should Be Visible    css=#section-3 .heading-medium
-    Element Should Be Visible    css=#section-4 .heading-medium
-    Element Should Be Visible    css=#section-5 .heading-medium
     Element Should Be Visible    css=#section-6 .heading-medium
 
 the Applicant clicks the "Scope" section

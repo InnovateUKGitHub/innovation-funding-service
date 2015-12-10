@@ -30,7 +30,7 @@ Verify the question status for the "Scope" section
 Verify the question status for the "Your business proposition" section
     [Documentation]    INFUND-39
     [Tags]    Applicant
-    Given Applicant goes to the Your business proposition section
+    Given Applicant goes to the Application questions section
     When the Applicant edits the question 1
     and the applicant assigns the question 1 to Jessica Doe    Jessica Doe
     #Then the "last update" date should be correct for the question 1

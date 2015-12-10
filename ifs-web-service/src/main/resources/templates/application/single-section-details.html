@@ -14,7 +14,7 @@
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
                         <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
-                           th:text="${question.getName()}" />
+                           th:text="${question.shortName}" />
                     </h3>
                 </div>
                 <div class="column-third">
