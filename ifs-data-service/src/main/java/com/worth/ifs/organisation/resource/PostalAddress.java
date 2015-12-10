@@ -1,5 +1,8 @@
 package com.worth.ifs.organisation.resource;
 
+/**
+ * Resource object to store the address details, from the company, from the company house api.
+ */
 public class PostalAddress {
     private String addressLine1;
     private String addressLine2;

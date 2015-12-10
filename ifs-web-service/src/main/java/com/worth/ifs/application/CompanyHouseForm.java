@@ -6,6 +6,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Object to store the data that is use form the company house form, while creating a new application.
+ */
 public class CompanyHouseForm  extends Form{
     @NotEmpty
     private String organisationName;
