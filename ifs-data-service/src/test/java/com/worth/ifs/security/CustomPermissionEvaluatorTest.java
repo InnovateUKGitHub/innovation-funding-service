@@ -15,14 +15,12 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
@@ -42,7 +40,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     private User readWriteUser = newUser().build();
 
     private List<User> readUsers = asList(readOnlyUser, readWriteUser);
-    private List<User> writeUsers = asList(readWriteUser);
+    private List<User> writeUsers = singletonList(readWriteUser);
 
     private Object rulesBeans1 = new Object() {
         @PermissionRule("Read")
@@ -165,20 +163,20 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_simpleFindRules() {
         // Method under test
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans1));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         assertEquals(1, rules.size());
     }
 
     @Test
     public void test_complexFindRules() {
         // Method under test
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans2));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         assertEquals(4, rules.size());
     }
 
     @Test
     public void test_simpledDtoClassToMethods() {
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans1));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         // Method under test
         DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
         assertEquals(1, dtoClassToMethods.size());
@@ -187,7 +185,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_complexDtoClassToMethods() {
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans2));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         // Method under test
         DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
         assertEquals(2, dtoClassToMethods.size());
@@ -197,7 +195,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_simpleDtoClassToPermissionToMethods() {
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans1));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
         // Method under test
@@ -211,7 +209,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_complexDtoClassToPermissionToMethods() {
-        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(asList(rulesBeans2));
+        List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
         // Method under test
@@ -289,7 +287,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_hasPermission_withUserAuthenticationParameter() {
 
-        List<Object> allPermissionBeans = asList(userAuthenticationParameterRulesBeans);
+        List<Object> allPermissionBeans = singletonList(userAuthenticationParameterRulesBeans);
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
         when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
 
@@ -305,7 +303,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_hasPermission_invalidSecondParameter() {
 
-        List<Object> allPermissionBeans = asList(invalidParameterRulesBeans);
+        List<Object> allPermissionBeans = singletonList(invalidParameterRulesBeans);
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
         when(applicationContextMock.getBeansWithAnnotation(PermissionRules.class)).thenReturn(allPermissionBeansToMap);
 
@@ -320,7 +318,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_simpleFindLookupStrategies() {
         // Method under test
-        List<Pair<Object, Method>> lookupStrategies = permissionEvaluator.findLookupStrategies(asList(permissionEntityLookupBeans1));
+        List<Pair<Object, Method>> lookupStrategies = permissionEvaluator.findLookupStrategies(singletonList(permissionEntityLookupBeans1));
         assertEquals(1, lookupStrategies.size());
     }
 
@@ -447,8 +445,8 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         permissionEvaluator.generateLookupStrategies();
         assertEquals(
                 "There should only be a Read permission on Integers",
-                Arrays.asList("Read"),
-                permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), Integer.valueOf(123)));
+            singletonList("Read"),
+                permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), 123));
         assertEquals(
                 "There should only be a Read and Write permission on String",
                 Arrays.asList(new String[]{"Read", "Write"}),
@@ -464,7 +462,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         assertEquals(
                 "A domain object can have no permissions",
                 new ArrayList<>(),
-                permissionEvaluator.getPermissions(new UserAuthentication(new User()), Float.valueOf(1.0f)));
+                permissionEvaluator.getPermissions(new UserAuthentication(new User()), 1.0f));
 
     }
 

@@ -64,7 +64,7 @@ public class Application {
     public Application(ApplicationResource resource){
         this.competition = null;
         this.name = resource.getName();
-        this.processRoles = resource.getProcessRoles();
+        this.processRoles = null;
         this.applicationStatus = resource.getApplicationStatus();
         this.id = resource.getId();
         this.applicationFinances = resource.getApplicationFinances();

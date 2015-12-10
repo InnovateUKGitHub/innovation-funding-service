@@ -35,7 +35,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         user2.setPassword("user2");
 
         User[] userList = new User[] { user1, user2 };
-        ResponseEntity<User[]> responseEntity = new ResponseEntity<User[]>(userList, HttpStatus.OK);
+        ResponseEntity<User[]> responseEntity = new ResponseEntity<>(userList, HttpStatus.OK);
         when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findAll/", GET, httpEntityForRestCall(), User[].class)).thenReturn(responseEntity);
 
         List<User> users = service.findAll();

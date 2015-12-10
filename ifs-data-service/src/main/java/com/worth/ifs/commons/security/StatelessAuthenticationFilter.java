@@ -50,7 +50,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
      * For example static resources.
      */
     public RequestMatcher getIgnoredRequestMatchers() {
-        List<RequestMatcher> antPathRequestMatchers = new ArrayList<RequestMatcher>();
+        List<RequestMatcher> antPathRequestMatchers = new ArrayList<>();
         antPathRequestMatchers.add(new AntPathRequestMatcher("/error"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/css/**"));

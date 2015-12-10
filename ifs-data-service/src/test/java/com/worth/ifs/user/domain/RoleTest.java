@@ -19,7 +19,7 @@ public class RoleTest {
         id = 0L;
         name = "userApplicationRoleTestName";
 
-        processRoles = new ArrayList<ProcessRole>();
+        processRoles = new ArrayList<>();
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());

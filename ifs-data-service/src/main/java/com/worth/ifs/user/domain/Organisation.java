@@ -19,10 +19,10 @@ public class Organisation {
     private String name;
 
     @OneToMany(mappedBy="organisation")
-    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="organisation")
-    private List<ApplicationFinance> applicationFinances = new ArrayList<ApplicationFinance>();
+    private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
     public Organisation() {
 

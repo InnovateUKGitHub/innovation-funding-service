@@ -11,6 +11,7 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
@@ -48,9 +49,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
-        when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(asList(applicationStatus));
+        when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
         when(competitionsRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(asList(leadApplicantRole));
+        when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(Collections.singletonList(leadApplicantRole));
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
         Application created =

@@ -17,5 +17,5 @@ public interface OrganisationService {
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application);
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId);
     public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId);
-    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String name);
+    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText);
 }

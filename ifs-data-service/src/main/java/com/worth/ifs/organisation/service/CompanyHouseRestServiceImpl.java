@@ -17,8 +17,8 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
     @Value("${ifs.data.service.rest.companyhouse}")
     String companyHouseRestUrl;
 
-    public List<CompanyHouseBusiness> searchOrganisationsByName(String name){
-        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+name, CompanyHouseBusiness[].class));
+    public List<CompanyHouseBusiness> searchOrganisations(String searchText){
+        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchText, CompanyHouseBusiness[].class));
     }
     public CompanyHouseBusiness getOrganisationById(String id){
         return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, CompanyHouseBusiness.class);

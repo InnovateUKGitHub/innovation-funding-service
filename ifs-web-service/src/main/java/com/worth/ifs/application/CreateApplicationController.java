@@ -119,6 +119,9 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     private void logState(HttpServletRequest request, HttpServletResponse response){
         log.debug("=== Logging cookie state === ");
+        if(request.getCookies()  == null || request.getCookies().length == 0 ){
+            return ;
+        }
         for (Cookie cookie : request.getCookies()) {
             log.debug("COOKIE name: " + cookie.getName());
             log.debug("COOKIE value: " + cookie.getValue());

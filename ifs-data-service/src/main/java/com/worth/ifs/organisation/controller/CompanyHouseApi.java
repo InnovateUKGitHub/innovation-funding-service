@@ -38,9 +38,9 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public List<CompanyHouseBusiness> searchOrganisationsByName(String name) {
+    public List<CompanyHouseBusiness> searchOrganisations(String searchText) {
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
-        JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + name, JsonNode.class);
+        JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + searchText, JsonNode.class);
         JsonNode companyItems = companiesResources.path("items");
         List<CompanyHouseBusiness> results = new ArrayList<>();
         companyItems.forEach(i -> results.add(companySearchMapper(i)));
