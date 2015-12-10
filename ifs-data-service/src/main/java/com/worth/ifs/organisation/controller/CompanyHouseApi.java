@@ -61,9 +61,19 @@ public class CompanyHouseApi extends BaseRestService {
         log.debug("getOrganisationById "+ id);
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
 
-        JsonNode jsonNode = restGet("company/" + id, JsonNode.class);
+        JsonNode jsonNode = null;
+        try{
+            jsonNode = restGet("company/" + id, JsonNode.class);
+        }catch(Exception e){
+            log.error("Exception: " + e.getMessage());
+            jsonNode = null;
+        }
 
-        return companyProfileMapper(jsonNode);
+        if (jsonNode == null){
+            return null;
+        }else{
+            return companyProfileMapper(jsonNode);
+        }
     }
 
     private CompanyHouseBusiness companyProfileMapper(JsonNode jsonNode){
@@ -104,5 +114,4 @@ public class CompanyHouseApi extends BaseRestService {
         headers.add("Authorization", authHeader);
         return headers;
     }
-
 }
