@@ -37,14 +37,15 @@ public class RegistrationController {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
+
     @RequestMapping(value="/register", method= RequestMethod.GET)
     public String register(Model model, HttpServletRequest request) {
         String destination = "registration-register";
 
         Organisation organisation = getOrganisation(request);
-        Long competitionId = getCompetitionId(request);
 
-        if(getOrganisationId(request)!=null && organisation!=null && competitionId!=null) {
+        if(getOrganisationId(request)!=null && organisation!=null) {
             addRegistrationFormToModel(model, request);
             addOrganisationNameToModel(model, organisation);
         }
@@ -69,7 +70,7 @@ public class RegistrationController {
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
             if(user!=null) {
-                destination = "redirect:/login?competitionId="+getCompetitionId(request);
+                destination = "redirect:/login";
             }
         }
         else {
@@ -93,12 +94,8 @@ public class RegistrationController {
         return organisationService.getOrganisationById(getOrganisationId(request));
     }
 
-    private Boolean addOrganisationName() {
-        return true;
-    }
-
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationIdString = request.getParameter("organisationId");
+        String organisationIdString = request.getParameter(ORGANISATION_ID_PARAMETER_NAME);
         Long organisationId = null;
 
         try {
@@ -113,25 +110,8 @@ public class RegistrationController {
         return organisationId;
     }
 
-    private Long getCompetitionId(HttpServletRequest request) {
-        String competitionIdString = request.getParameter("competitionId");
-        Long competitionId = null;
-
-        try {
-            if(Long.parseLong(competitionIdString)>=0) {
-                competitionId = Long.parseLong(competitionIdString);
-            }
-        }
-        catch (NumberFormatException e) {
-            log.info("Invalid competitionId number format:" + e);
-        }
-
-        return competitionId;
-    }
-
     private void setFormActionURL(RegistrationForm registrationForm, HttpServletRequest request) {
         Long organisationId = getOrganisationId(request);
-        Long competitionId = getCompetitionId(request);
-        registrationForm.setActionUrl("/registration/register?organisationId="+organisationId+"&competitionId="+competitionId);
+        registrationForm.setActionUrl("/registration/register?"+ORGANISATION_ID_PARAMETER_NAME+"="+organisationId);
     }
 }
