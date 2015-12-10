@@ -17,9 +17,9 @@ public class CompanyHouseController {
     @Autowired
     CompanyHouseApi companyHouseService;
 
-    @RequestMapping("/searchCompanyHouse/{name}")
-     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("name") final String name) {
-        List<CompanyHouseBusiness> companies = companyHouseService.searchOrganisationsByName(name);
+    @RequestMapping("/searchCompanyHouse/{searchText}")
+     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
+        List<CompanyHouseBusiness> companies = companyHouseService.searchOrganisations(searchText);
         return companies;
     }
 

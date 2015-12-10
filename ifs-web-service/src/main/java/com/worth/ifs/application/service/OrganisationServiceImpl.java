@@ -69,8 +69,8 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String name) {
-        return  companyHouseRestService.searchOrganisationsByName(name);
+    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText) {
+        return  companyHouseRestService.searchOrganisations(searchText);
     }
 
 

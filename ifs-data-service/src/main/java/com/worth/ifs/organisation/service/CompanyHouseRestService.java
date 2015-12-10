@@ -8,6 +8,6 @@ import java.util.List;
  * Interface for communication with the company house services
  */
 public interface CompanyHouseRestService {
-    List<CompanyHouseBusiness> searchOrganisationsByName(String name);
+    List<CompanyHouseBusiness> searchOrganisations(String searchText);
     CompanyHouseBusiness getOrganisationById(String organisationId);
 }
