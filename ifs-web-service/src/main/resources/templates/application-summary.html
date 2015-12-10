@@ -30,9 +30,11 @@
 
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js collapsible section-overview">
             <div th:remove="tag" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-                <h2 th:text="${section.getName()}" th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'') +
-                        ' '+ ((${completedSections.contains(section.getId())}) ? 'section-complete':'')+
-                        ' '+ ((${incompletedSections.contains(section.getId())}) ? 'section-incomplete':'')" />
+                <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
+                    <div th:text="${section.getName()}" th:remove="tag" />
+                    <div class="section-status section-complete" th:if="${completedSections.contains(section.getId())}">Complete</div>
+                    <div class="section-status section-incomplete" th:if="${incompletedSections.contains(section.getId())}">Section Incomplete</div>
+                </h2>
 
                     <div th:each="question : ${section.getQuestions()}">
                         <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})" th:id="'form-input-'+${formInput.getId()}" >

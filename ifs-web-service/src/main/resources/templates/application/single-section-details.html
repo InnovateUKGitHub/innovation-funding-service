@@ -6,9 +6,9 @@
 
     <div th:each="question : ${section.getQuestions()}" th:remove="tag">
 
-        <li th:each="formInput, status : ${question.getFormInputs()}" th:if="${formInput.isIncludedInApplicationSummary()}"
+        <li class="grid-row section"
+            th:each="formInput, status : ${question.getFormInputs()}" th:if="${formInput.isIncludedInApplicationSummary()}"
             th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(formInput.getId())})"
-            th:class="'grid-row section '+(${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)} ? 'marked-as-complete ' : (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : ''))"
             th:attr="data-question-id=${question.id},data-section-id=${section.id}" th:id="'form-input-'+${formInput.getId()}">
 
                 <div class="column-two-thirds">
@@ -27,6 +27,21 @@
                         </div>
                     </div>
                 </div>
+                <img class="section-status complete" 
+                     src="/images/field/field-done-right.png"
+                     width="30"
+                     height="30" 
+                     th:alt="'The &quot;'+${question.getName()}+'&quot; section is marked as done'"
+                     th:title="'The &quot;'+${question.getName()}+'&quot; section is marked as done'"
+                     th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}" />
+                <img class="section-status assigned" 
+                     src="/images/field/field-assigned-right.png"
+                     width="30"
+                     height="30" 
+                     th:alt="'The &quot;'+${question.getName()}+'&quot; section is assigned to you'"
+                     th:title="'The &quot;'+${question.getName()}+'&quot; section is assigned to you'"
+                     th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+                     th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}" />
         </li>
     </div>
 </ul>
