@@ -30,14 +30,14 @@ public class FormInputResponseTest {
 
     @Test
     public void testGetWordCountEmptyValue() throws Exception {
-        assertEquals(0l, formInputResponse.getWordCount().longValue());
+        assertEquals(0L, formInputResponse.getWordCount().longValue());
     }
 
     @Test
     public void testGetWordCountSimpleText() throws Exception {
         value = "Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.";
         initFormInputResponse();
-        assertEquals(33l, formInputResponse.getWordCount().longValue());
+        assertEquals(33L, formInputResponse.getWordCount().longValue());
     }
 
     /**
@@ -59,7 +59,7 @@ public class FormInputResponseTest {
                 "\n" +
                 "The end result of our **_project_** will be a _novel_ tool to manage the **issue** and substantially reduce the wastage caused by it.";
         initFormInputResponse();
-        assertEquals(64l, formInputResponse.getWordCount().longValue());
+        assertEquals(64L, formInputResponse.getWordCount().longValue());
     }
 
     @Test

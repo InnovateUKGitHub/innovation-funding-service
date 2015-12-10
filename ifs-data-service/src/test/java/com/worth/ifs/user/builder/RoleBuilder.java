@@ -10,9 +10,6 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-/**
- * Created by dwatson on 08/10/15.
- */
 public class RoleBuilder extends BaseBuilder<Role, RoleBuilder> {
 
     private RoleBuilder(List<BiConsumer<Integer, Role>> multiActions) {

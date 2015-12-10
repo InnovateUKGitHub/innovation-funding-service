@@ -14,8 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,7 +95,7 @@ public class ApplicationFinanceControllerTest {
 
     @Test
     public void findByApplicationShouldReturnApplicationByApplicationId() throws Exception {
-        when(applicationFinanceRepository.findByApplicationId(anyLong())).thenReturn(Arrays.asList(applicationFinance));
+        when(applicationFinanceRepository.findByApplicationId(anyLong())).thenReturn(singletonList(applicationFinance));
 
         mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "1"))
                 .andExpect(status().isOk());

@@ -45,7 +45,6 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-            new Class<?>[]{
                     BaseRestService.class,
                     UserRestServiceImpl.class,
                     OrganisationRestServiceImpl.class,
@@ -65,16 +64,16 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     ApplicationResourceAssembler.class,
                     ProcessRoleResourceAssembler.class,
                     CompetitionResourceAssembler.class
-            });
+            );
 
     List<Class<? extends Annotation>> securityAnnotations
             = Arrays.asList(
-            new Class[]{PreAuthorize.class,
-                    PreFilter.class,
-                    PostAuthorize.class,
-                    PostAuthorize.class,
-                    NotSecured.class
-            });
+                PreAuthorize.class,
+                PreFilter.class,
+                PostAuthorize.class,
+                PostAuthorize.class,
+                NotSecured.class
+            );
 
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
@@ -117,11 +116,9 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
         Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
-            for (Class<?> exclusion : excludedClasses) {
-                if (service.getClass().isAssignableFrom(exclusion)) {
-                    i.remove();
-                }
-            }
+            excludedClasses.stream().filter(exclusion -> service.getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
+                i.remove();
+            });
         }
         return services;
     }

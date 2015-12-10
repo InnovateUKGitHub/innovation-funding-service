@@ -28,7 +28,7 @@ public class ApplicationTest {
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
-        processRoles = new ArrayList<ProcessRole>();
+        processRoles = new ArrayList<>();
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());

@@ -201,9 +201,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Ignore
     @Test
     public void testGetAssessmentSubmitReview() throws Exception {
-        ApplicationResource application = applications.get(1);
-
-        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
+        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), 1L))
                 .andExpect(view().name(assessmentSubmitReview))
                 .andExpect(model().attributeExists("model"));
     }
