@@ -33,6 +33,153 @@
     </div>
 </div>
 
+<!-- ===================Finances summary============================== -->
+<div th:fragment="prototype-finances-summary">
+    <h2 class="heading-medium">Finances summary</h2>
+    <p>This is the level of cost detail that the assessors will see during the assessment process</p>
+    <div class="form-group">
+        <div style="overflow: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col" class="numeric">Total costs</th>
+                        <th scope="col" class="numeric width-small">
+                        % Grant
+                    </th>
+                    <th scope="col" class="numeric width-small-medium">
+                        Funding sought
+                    </th>
+                    <th scope="col" class="numeric width-medium">
+                        Other public sector funding
+                    </th>
+                    <th scope="col" class="numeric width-small-medium">
+                        Contribution to project
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr class="section-complete">
+                        <th> <div>Empire Ltd</div>
+                            <div><small>Lead organisation</small></div></th>
+                        <td class="numeric"><strong>&pound;100,000</strong></td>
+                        <td class="numeric">60%</td>
+                        <td class="numeric">&pound;60,000</td>
+                        <td class="numeric">&pound;10,000</td>
+                        <td class="numeric">&pound;30,000</td>
+                    </tr>
+                    <tr class="section-complete">
+                        <th><div>Ludlow</div>
+                            <div><small>Partner</small></div></th>
+                        <td class="numeric"><strong>&pound;150,000</strong></td>
+                        <td class="numeric">40%</td>
+                        <td class="numeric">&pound;60,000</td>
+                        <td class="numeric">&pound;15,000</td>
+                        <td class="numeric">&pound;75,000</td>
+                    </tr>
+                    <tr class="section-incomplete">
+                        <th><div>EGGS</div>
+                            <div><small>Partner</small></div></th>
+                        <td class="numeric"><strong>&pound;30,000</strong></td>
+                        <td class="numeric">100%</td>
+                        <td class="numeric">&pound;30,000</td>
+                        <td class="numeric">N/A</td>
+                        <td class="numeric">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>&pound;280,000</strong></td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===================Finances summary============================== -->
+<div th:fragment="prototype-project-cost-breakdown">
+    <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
+
+    <div class="form-group">
+        <div style="overflow: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col" class="numeric">Total</th>
+                        <th scope="col" class="numeric">
+                           Labour  
+                        </th>
+                        <th scope="col" class="numeric">
+                            Overheads 
+                        </th>
+                        <th scope="col" class="numeric">
+                            Materials 
+                        </th>
+                        <th scope="col" class="numeric width-small">Capital usage</th>
+                        <th scope="col" class="numeric width-small">Subcontracting cost</th>
+                        <th scope="col" class="numeric width-small">Travel and subsistence</th>
+                        <th scope="col" class="numeric width-small">Other Costs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><div>Empire Ltd</div>
+                            <div><small>Lead organisation</small></div></th>
+                        <td class="numeric"><strong>£257,033</strong></td>
+                        <td class="numeric">£126,207</td>
+                        <td class="numeric">£86,167</td>
+                        <td class="numeric">£44,659</td>
+                        <td class="numeric">£257,033</td>
+                        <td class="numeric">£126,207</td>
+                        <td class="numeric">£86,167</td>
+                        <td class="numeric">£44,659</td>
+                    </tr>
+                    <tr>
+                        <th><div>Ludlow</div>
+                            <div><small>Partner</small></div></th>
+                        <td class="numeric"><strong>£0</strong></td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                        <td class="numeric">£0</td>
+                    </tr>
+                    <tr>
+                        <th><div>EGGS</div>
+                            <div><small>Partner</small></div></th>
+                        <td class="numeric"><strong>£38,950</strong></td>
+                        <td class="numeric">£8,600</td>
+                        <td class="numeric">£19,350</td>
+                        <td class="numeric">£11,000</td>
+                        <td class="numeric">£38,950</td>
+                        <td class="numeric">£8,600</td>
+                        <td class="numeric">£19,350</td>
+                        <td class="numeric">£11,000</td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>£450,983</strong></td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
 </html>
