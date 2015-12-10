@@ -6,6 +6,8 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import static java.util.stream.Collectors.*;
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSubmitReviewModel {
+    private final Log log = LogFactory.getLog(getClass());
 
     private final Assessment assessment;
     private final Application application;
@@ -60,10 +63,9 @@ public class AssessmentSubmitReviewModel {
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
-
         this.assessment = assessment;
-        this.application = assessment.getApplication();
-        this.competition = assessment.getApplication().getCompetition();
+        this.application = assessorProcessRole.getApplication();
+        this.competition = assessorProcessRole.getApplication().getCompetition();
 
         questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).

@@ -25,10 +25,9 @@ public class RejectAction implements Action<String, String> {
     @Override
     public void execute(StateContext<String, String> context) {
         ProcessOutcome processOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
-        Long applicationId = (Long) context.getMessageHeader("applicationId");
-        Long assessorId = (Long) context.getMessageHeader("assessorId");
+        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
 
-        Assessment assessment = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
+        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
         if (assessment != null) {
             assessment.setProcessStatus(context.getTransition().getTarget().getId());
             assessment.getProcessOutcomes().add(processOutcome);

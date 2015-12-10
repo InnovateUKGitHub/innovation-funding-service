@@ -3,6 +3,8 @@ package com.worth.ifs.assessment;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -100,6 +102,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
         Application application = applications.get(1);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -116,6 +119,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         Application application = applications.get(0);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -131,6 +135,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         Application application = applications.get(2);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -190,6 +195,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsReject() throws Exception {
         Application application = applications.get(1);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
                 .andExpect(view().name(rejectInvitation))
@@ -208,7 +214,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testInvitationAnswerReject() throws Exception {
-        Application application = applications.get(1);
+        ProcessRole assessorProcessRole = assessorProcessRoles.get(0);
 
         String reason = "Decline because of 123";
         String observations = "Observations 12345678";
@@ -216,28 +222,32 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 post("/assessor/invitation_answer")
                         .param("reject", "a")
                         .param("competitionId", "1")
-                        .param("applicationId", String.valueOf(application.getId()))
+                        .param("applicationId", String.valueOf(assessorProcessRole.getApplication().getId()))
                         .param("decisionReason", reason)
                         .param("observations", observations)
         ).andExpect(status().is3xxRedirection());
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).rejectAssessmentInvitation(eq(application.getId()), eq(assessor.getId()), any(Assessment.class));
+        Mockito.inOrder(assessmentRestService)
+                .verify(assessmentRestService, calls(1))
+                .rejectAssessmentInvitation(eq(assessorProcessRole.getId()), any(ProcessOutcome.class));
     }
 
     @Test
     public void testInvitationAnswerAccept() throws Exception {
-        Application application = applications.get(1);
-        Assessment assessment = getAssessment(application);
+        ProcessRole assessorProcessRole = assessorProcessRoles.get(0);
+        Assessment assessment = getAssessment(assessorProcessRole.getApplication());
 
         log.info("assessment status: " + assessment.getProcessStatus());
-        log.info("Application we use for assessment test: " + application.getId());
+        log.info("Application we use for assessment test: " + assessorProcessRole.getApplication().getId());
 
         mockMvc.perform(
                 post("/assessor/invitation_answer")
                         .param("accept", "a")
                         .param("competitionId", "1")
-                        .param("applicationId", String.valueOf(application.getId()))
+                        .param("applicationId", String.valueOf(assessorProcessRole.getApplication().getId()))
         ).andExpect(status().is3xxRedirection());
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).acceptAssessmentInvitation(eq(application.getId()), eq(assessor.getId()), any(Assessment.class));
+        Mockito.inOrder(assessmentRestService)
+                .verify(assessmentRestService, calls(1))
+                .acceptAssessmentInvitation(eq(assessorProcessRole.getId()), any(Assessment.class));
     }
 
     @Test
@@ -264,7 +274,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
         String feedback = "just because 345678";
         String isSuitable = "Yes, suitable for funding";
         String comments = "comment; x";
-        Double overallScore = 60.0;
         mockMvc.perform(
                 post("/assessor/competitions/{competitionId}/applications/{applicationId}/complete",
                         application.getCompetition().getId(),
@@ -274,16 +283,15 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("is-suitable-for-funding", isSuitable)
                         .param("suitable-for-funding-feedback", feedback)
                         .param("comments-to-share", comments)
-                        .param("overall-score", overallScore + "")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/assessor/competitions/" + competition.getId() + "/applications"));
 
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments, overallScore);
+        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments);
     }
 
     private Assessment getAssessment(Application application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getApplication().equals(application)).findFirst();
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getProcessRole().getApplication().equals(application)).findFirst();
         Assert.assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }

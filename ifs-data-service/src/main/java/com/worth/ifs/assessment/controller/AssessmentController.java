@@ -35,24 +35,24 @@ public class AssessmentController {
     AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
 
-    @RequestMapping("/findAssessmentsByCompetition/{processRoleId}")
-    public List<Assessment> findAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
-        return assessmentHandler.getAllByProcessRole(processRoleId);
+    @RequestMapping("/findAssessmentsByCompetition/{assessorId}/{competitionId}")
+    public List<Assessment> findAssessmentsByProcessRole( @PathVariable("assessorId") final Long assessorId, @PathVariable("competitionId") final Long competitionId) {
+        return assessmentHandler.getAllByCompetitionAndAssessor(competitionId, assessorId);
     }
 
-    @RequestMapping("/findAssessmentByApplication/{processRoleId}")
-    public Assessment getAssessmentByUserAndApplication( @PathVariable("processRoleId") final Long processRoleId) {
+    @RequestMapping("/findAssessmentByProcessRole/{processRoleId}")
+    public Assessment getAssessmentByProcessRole( @PathVariable("processRoleId") final Long processRoleId) {
         return assessmentHandler.getOneByProcessRole(processRoleId);
     }
 
-    @RequestMapping("/totalAssignedAssessmentsByCompetition/{processRoleId}")
-    public Integer getTotalAssignedAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
-       return assessmentHandler.getTotalAssignedAssessmentsByProcessRole(processRoleId);
+    @RequestMapping("/totalAssignedAssessmentsByCompetition/{userId}/{competitionId}")
+    public Integer getTotalAssignedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+        return assessmentHandler.getTotalAssignedAssessmentsByCompetition(competitionId, userId);
     }
 
-    @RequestMapping("/totalSubmittedAssessmentsByCompetition/{processRoleId}")
-    public Integer getTotalSubmittedAssessmentsByCompetition( @PathVariable("processRoleId") final Long processRoleId) {
-        return assessmentHandler.getTotalSubmittedAssessments(processRoleId);
+    @RequestMapping("/totalSubmittedAssessmentsByCompetition/{userId}/{competitionId}")
+    public Integer getTotalSubmittedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
+        return assessmentHandler.getTotalSubmittedAssessmentsByCompetition(competitionId, userId);
     }
 
     @RequestMapping(value = "/acceptAssessmentInvitation/{processRoleId}")

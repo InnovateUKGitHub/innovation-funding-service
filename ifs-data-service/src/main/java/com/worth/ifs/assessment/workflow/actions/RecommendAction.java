@@ -27,9 +27,8 @@ public class RecommendAction implements Action<String, String> {
     @Override
     public void execute(StateContext<String, String> context) {
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
-        Long applicationId = (Long) context.getMessageHeader("applicationId");
-        Long assessorId = (Long) context.getMessageHeader("assessorId");
-        Assessment assessment = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
+        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
+        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
 
         if(assessment!=null) {
             Optional<ProcessOutcome> processOutcome = assessment.getProcessOutcomes()

@@ -40,6 +40,7 @@ public class AssessmentSubmitReviewModelTest {
         // Build the data
         //
         ProcessRole assessorProcessRole = newProcessRole().build();
+        Assessment assessment = newAssessment().build();
 
         List<Question> section1Questions = newQuestion().build(2);
         List<Question> section2Questions = newQuestion().build(2);
@@ -76,10 +77,7 @@ public class AssessmentSubmitReviewModelTest {
                 withFeedback(section2ResponseFeedback).
                 build(2);
 
-        Assessment assessment = newAssessment().
-                withApplication(application).
-                build();
-
+        assessorProcessRole.setApplication(application);
         List<Response> allResponses = combineLists(section1Responses, section2Responses);
 
         //
@@ -96,7 +94,6 @@ public class AssessmentSubmitReviewModelTest {
         //
         assertNotNull(model);
         assertEquals(application, model.getApplication());
-        assertEquals(assessment, model.getAssessment());
         assertEquals(competition, model.getCompetition());
 
         originalQuestionToFeedback.entrySet().forEach(entry -> {
@@ -161,7 +158,10 @@ public class AssessmentSubmitReviewModelTest {
         Section section = newSection().withQuestions(questions).build();
         Competition competition = newCompetition().withSections(asList(section)).build();
         Application application = newApplication().withCompetition(competition).build();
-        Assessment assessment = newAssessment().withApplication(application).build();
+        Assessment assessment = newAssessment().build();
+
+        assessorProcessRole.setApplication(application);
+        differentAssessor.setApplication(application);
 
         List<AssessorFeedback> feedback = newFeedback().
                 withAssessor(assessorProcessRole).
@@ -273,8 +273,9 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
-        Assessment assessment = newAssessment().withApplication(application).build();
+        Assessment assessment = newAssessment().build();
 
+        assessorProcessRole.setApplication(application);
         //
         // Build the model
         //
@@ -309,7 +310,9 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
-        Assessment assessment = newAssessment().withApplication(application).build();
+        Assessment assessment = newAssessment().build();
+
+        assessorProcessRole.setApplication(application);
 
         List<AssessorFeedback> feedback = newFeedback().
                 withAssessor(assessorProcessRole).

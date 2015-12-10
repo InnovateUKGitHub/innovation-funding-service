@@ -30,7 +30,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     }
 
     @Test
-    public void testFindAssessmentsByCompetition() throws Exception {
+    public void testFindAssessmentsByProcessRole() throws Exception {
         Assessment assessment = new Assessment();
 
         List<Assessment> assessments = new ArrayList<Assessment>();
@@ -47,21 +47,21 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     }
 
     @Test
-    public void testGetAssessmentByUserAndApplication() throws Exception {
+    public void testGetAssessmentByProcessRole() throws Exception {
         Assessment assessment = new Assessment();
 
         assessment.setId(456L);
 
-        when(assessmentHandler.getOneByAssessorAndApplication(1L, 1L)).thenReturn(assessment);
+        when(assessmentHandler.getOneByProcessRole(1L)).thenReturn(assessment);
 
-        mockMvc.perform(get(applicationControllerPath+"/findAssessmentByApplication/1/1"))
+        mockMvc.perform(get(applicationControllerPath+"/findAssessmentByProcessRole/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(456)))
                 .andDo(document("recommendation/find-application-user-recommendation"));;
     }
 
     @Test
-    public void testGetTotalAssignedAssessmentsByCompetition() throws Exception {
+    public void testGetTotalAssignedAssessmentsByProcessRole() throws Exception {
         when(assessmentHandler.getTotalAssignedAssessmentsByCompetition(1L, 1L)).thenReturn(3);
 
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))

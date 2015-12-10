@@ -23,9 +23,8 @@ public class AcceptAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Long applicationId = (Long) context.getMessageHeader("applicationId");
-        Long assessorId = (Long) context.getMessageHeader("assessorId");
-        Assessment assessment = assessmentRepository.findOneByAssessorIdAndApplicationId(assessorId, applicationId);
+        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
+        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
 
         if(assessment !=null) {
             assessment.setProcessStatus(context.getTransition().getTarget().getId());

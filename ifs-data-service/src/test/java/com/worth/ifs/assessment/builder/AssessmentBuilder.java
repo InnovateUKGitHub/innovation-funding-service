@@ -34,10 +34,6 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((id, assessment) -> setField("id", id, assessment), ids);
     }
 
-    public AssessmentBuilder withApplication(Application... applications) {
-        return withArray((application, assessment) -> setField("application", application, assessment), applications);
-    }
-
     public AssessmentBuilder withProcessState(String... processStates) {
         return withArray((processState, assessment) -> assessment.setProcessStatus(processState), processStates);
     }

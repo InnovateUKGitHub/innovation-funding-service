@@ -1,5 +1,7 @@
 package com.worth.ifs.assessment.controller;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
@@ -22,20 +24,20 @@ import java.util.Set;
 public class AssessmentHandler {
 
     @Autowired
-    private AssessmentRepository assessments;
+    private AssessmentRepository assessmentRepository;
 
     public AssessmentHandler(){}
 
     public void save(Assessment a) {
-        assessments.save(a);
+        assessmentRepository.save(a);
     }
 
     public Assessment saveAndGet(Assessment a) {
-        return assessments.save(a);
+        return assessmentRepository.save(a);
     }
 
     public Assessment getOne(Long id) {
-        return assessments.findById(id);
+        return assessmentRepository.findById(id);
     }
 
     /**
@@ -43,32 +45,30 @@ public class AssessmentHandler {
      * By 'All' is meant all the assessments whose invitation was not rejected.
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
      */
-    public List<Assessment> getAllByProcessRole(Long processRoleId) {
+    public List<Assessment> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
         Set<String> states = AssessmentStates.getStates();
         states.remove(AssessmentStates.REJECTED.getState());
-        return assessments.findByProcessRoleIdAndStatusIn(processRoleId, states);
+        return assessmentRepository.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(assessorId, competitionId, states);
     }
 
     public Assessment getOneByProcessRole(Long processRoleId) {
-        return assessments.findOneByProcessRoleId(processRoleId);
+        return assessmentRepository.findOneByProcessRoleId(processRoleId);
     }
 
-    public Integer getTotalSubmittedAssessments(Long processRoleId) {
-        return assessments.countByProcessRoleIdAndStatus(processRoleId, "submitted");
+    public Integer getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long assessorId) {
+        return assessmentRepository.countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatus(assessorId, competitionId, ApplicationStatusConstants.SUBMITTED.getName());
     }
-    public Integer getTotalAssignedAssessmentsByProcessRole(Long processRoleId) {
+    public Integer getTotalAssignedAssessmentsByCompetition(Long competitionId, Long assessorId) {
         // By 'assigned' is meant an assessment process not rejected
-        return assessments.countByProcessRoleIdAndNotStatus(processRoleId, "rejected");
+        return assessmentRepository.countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusNot(assessorId, competitionId, ApplicationStatusConstants.REJECTED.getName());
     }
 
     public RecommendedValue getRecommendedValueFromString(String value) {
-
         if ( value.equals("yes") )
             return RecommendedValue.YES;
         else  if ( value.equals("no"))
             return RecommendedValue.NO;
         else
             return RecommendedValue.EMPTY;
-
     }
 }

@@ -18,7 +18,7 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
     Assessment findById(@Param("id") Long id);
     Set<Assessment> findAll();
     Assessment findOneByProcessRoleId(Long processRoleId);
-    Integer countByProcessRoleIdAndStatus(Long processRoleId, String status);
-    Integer countByProcessRoleIdAndNotStatus(Long processRoleId, String status);
-    List<Assessment> findByProcessRoleIdAndStatusIn(Long processRoleId, Set<String> status);
+    Integer countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatus(Long userId, Long competitionId,  String status);
+    Integer countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusNot(Long userId, Long competitionId, String status);
+    List<Assessment> findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(Long userId, Long competitionId, Set<String> status);
 }

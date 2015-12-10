@@ -76,27 +76,26 @@
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium">
-                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}" th:text="${assessment.application.name}">link for application assessment</a>
-                                <!--">-->
+                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${assessment.processRole.competition.id},aid=${application.id})}" th:text="${assessment.processRole.id}">link for application assessment</a>
                             </h4>
-                            <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                            <div><p th:text="${assessment.processRole.organisation.name}" /></div>
                         </div>
                         <div class="column-assessment-status navigation-right">
-                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
-                                <p th:text="${#strings.capitalizeWords(assessment.getProcessStatus().toLowerCase())}">Assessment Status</p>
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.processStatus) + ' ' + #strings.toLowerCase(assessment?.lastOutcome?.outcome)}">
+                                <p th:text="${#strings.capitalizeWords(assessment.processStatus.toLowerCase())}">Assessment Status</p>
 
                                 <!--if assessment is pending acceptance-->
-                                <p class="application-listing_pending" th:unless="${assessment.getProcessStatus()} neq 'pending'">
-                                    <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${assessment.application.id})}">accept / reject assessment</a>
+                                <p class="application-listing_pending" th:unless="${assessment.processStatus} neq 'pending'">
+                                    <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${application.id})}">accept / reject assessment</a>
                                 </p>
 
                                 <!--otherwise shows the overall score -->
                                 <p class="application-listing_pending" th:unless="${assessment.getProcessStatus() eq 'pending' or assessment.hasAssessmentStarted() == false}">
-                                    <h3 class="score"><span th:text="${assessment.getOverallScore()}"/> %</h3>
+                                    <h3 class="score"><span th:text="70"/> %</h3>
                                     <small>Overall score</small>
                                     <div class="recommend-container">
-                                        <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                        <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                     </div>
                                 </p>
                             </div>
@@ -125,20 +124,20 @@
                 <li th:each="assessment : ${submittedAssessments}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
-                            <h4 class="heading-medium" th:text="${assessment.application.name}"/>
+                            <h4 class="heading-medium" th:text="${application.name}"/>
 
-                            <div><p th:text="${assessment.application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                            <div><p th:text="${application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
                         </div>
                         <div class="column-assessment-status navigation-right">
-                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment.getRecommendedValue())}">
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment..lastOutcome?.outcome)}">
                                 <p th:text="${#strings.capitalizeWords(assessment.getProcessStatus().toLowerCase())}">Assessment Status</p>
 
                                 <!-- shows the overall score -->
-                                <h3 class="score"><span th:text="${assessment.getOverallScore()}"/>%</h3>
+                                <h3 class="score"><span th:text="60"/>%</h3>
                                 <small>Overall score</small>
                                 <div class="recommend-container">
-                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                    <p th:if="${assessment.getRecommendedValue() == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                 </div>
                             </div>
                         </div>

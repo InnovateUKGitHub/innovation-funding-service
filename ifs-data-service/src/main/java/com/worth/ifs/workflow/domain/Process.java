@@ -40,6 +40,10 @@ public abstract class Process {
     public Process() {
     }
 
+    public Process(ProcessRole processRole) {
+        this.processRole = processRole;
+    }
+
     public Process(String event, String status) {
         this.event = event;
         this.status = status;
@@ -100,7 +104,12 @@ public abstract class Process {
         return lastModified;
     }
 
+    public void setProcessRole(ProcessRole processRole) {
+        this.processRole = processRole;
+    }
+
     public ProcessRole getProcessRole() {
         return processRole;
     }
+
 }
