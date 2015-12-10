@@ -1,5 +1,6 @@
 package com.worth.ifs.registration;
 
+import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,16 +13,17 @@ import javax.validation.constraints.Size;
  * you want to prefill a form.
  */
 
+@FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
+
 public class RegistrationForm {
     @Email
     @NotEmpty(message = "Please enter your email")
     private String email;
 
-    @Size(min = 6, max = 30)
     @NotEmpty(message = "Please enter your password")
+    @Size(min = 6, max = 30, message = "Password size should be between 6 and 30 characters")
     private String password;
 
-    @Size(min = 6, max = 30)
     @NotEmpty(message = "Please re-type your password")
     private String retypedPassword;
 
