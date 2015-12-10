@@ -17,7 +17,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
@@ -26,7 +26,7 @@
 		<p>Business</p>
 	</div>
 
-	<h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
+	<h2 class="heading-medium">Provide your organisation's finances</h2>
 
 	<p>Only your organisation can see this level of detail.
 		All members of your organisation can acesss and edit your finances
@@ -124,22 +124,18 @@
         </div>
     </div>
 
-    <h2 class="heading-medium no-margin-bottom">Organisation size</h2>
+    <h2 class="heading-medium no-margin-bottom">What role is your organisation taking in this application?</h2>
 	<fieldset>
-		<legend class="visuallyhidden">Organisation size and funding level</legend>
-		<p class="form-hint">To determine the level of funding you are eligible to receive please provide you r business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a> for guidance.</p>
+		<legend class="visuallyhidden">What role is your organisation taking in this application?</legend>
+		<p class="form-hint">Please select how your organisation will be involved in this consortium.</p>
 		<div class="form-block">
 			<label class="block-label" for="radio-1">
 				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
-				Micro / small - claim up to 70%
+				Business role (Economic activity)
 			</label>
 			<label class="block-label" for="radio-2">
 				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
-				Medium - claim up to 60%
-			</label>
-			<label class="block-label" for="radio-3">
-				<input id="radio-3" type="radio" name="radio-group" value="Large"/>
-				Large - claim up to 50%
+				Research role (Non- economic activity)
 			</label>
 		</div>
 
@@ -174,7 +170,7 @@
 	    </li>
 	</ul>
 
-	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+	<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

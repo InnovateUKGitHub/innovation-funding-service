@@ -493,5 +493,80 @@
 </div>
 
 
+<!-- ===========================Question - Other funding  =========================== --> 
+
+<div th:fragment="finance-other-funding">
+
+<h2 class="heading-medium no-margin-bottom">Other funding</h2>
+	<fieldset>
+		<legend class="visuallyhidden">Other funding</legend>
+		<p class="form-hint">Please tell us if you have received, or will receive any other public sector funding for this project.</p>
+		<details>
+			    <summary><span class="summary">What should I include in other funding?</span></summary>
+			    <div class="panel-indent">
+			    	Help text required
+			    </div>
+		</details>
+		<div class="form-block inline">
+			<label class="block-label" for="funding-yes">
+				<input id="funding-yes" type="radio" name="funding-group" value="funding-yes"/>
+				Yes
+			</label>
+			<label class="block-label" for="funding-no">
+				<input id="funding-no" type="radio" name="funding-group" value="funding-no"/>
+				No
+			</label>
+		</div>
+
+		<div class="question" id="finance-other-funding">
+			<div data-finance-subsection-table-container="34">
+			    <div class="form-group">
+			        <table id="other-costs-table">
+			            <thead>
+			                <tr>
+			                    <th>Source of funding</th>
+			                    <th class="width-medium">Date secured</th>
+			                    <th class="numeric width-medium">Funding amount (&pound;)</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                	<td>
+			                		<label for="other-funding-source" class="visuallyhidden">Source of funding</label>
+			                		<input type="text" id="other-funding-source" />
+			                	</td>
+			                	<td>
+			                		<label for="other-funding-date" class="visuallyhidden">Date secured</label>
+			                		<input type="text" id="other-funding-date" />
+			                	</td>
+			                	<td>
+			                		<label for="other-funding-amount" class="visuallyhidden">Funding amount (&pound;)</label>
+			                		<input type="text" id="other-funding-amount" class="numeric" />
+			                	</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			        <p class="alignright">
+			            <a class="add-another-row" data-clone-rows="0" href="#">Add another source of funding</a>
+			        </p>
+			        <p>Your updated funding level is <strong>60%</strong></p>
+			        <details>
+					    <summary><span class="summary">Why has this changed?</span></summary>
+					    <div class="panel-indent">
+					    	Help text required
+					    </div>
+				</details>
+			    </div>
+			</div>
+		</div>
+
+	</fieldset>
+	
+</div>
+
+
+
+
+
 
 </html>
