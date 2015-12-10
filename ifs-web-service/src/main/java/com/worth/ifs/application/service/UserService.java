@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.dto.UserDto;
 
 import java.util.List;
 import java.util.Set;
@@ -14,4 +15,6 @@ public interface UserService {
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     public Set<User> getAssignableUsers(ApplicationResource application);
     public Set<User> getApplicationUsers(ApplicationResource application);
+    public UserDto createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
+
 }
