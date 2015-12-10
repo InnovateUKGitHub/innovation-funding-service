@@ -145,28 +145,42 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                         HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition comp = competitionService.getById(application.getCompetitionId());
-        List<Section> sections = comp.getSections();
+        Competition competition = competitionService.getById(application.getCompetitionId());
+        Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
 
-        // get the section that we want, so we can use this on to store the correct questions.
-        Section section = sections.stream().filter(x -> x.getId().equals(sectionId)).findFirst().get();
+        Map<Long, List<String>> errors = saveQuestionResponsesInSection(application, selectedSection, request, user.getId(), bindingResult);
+        setApplicationDetails(application, form.getApplication());
+        applicationService.save(application);
+        markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), user.getId(), applicationId);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, true);
+        return bindingResult;
+    }
+
+    private Section getSelectedSection(List<Section> sections, Long sectionId) {
+        return sections.stream()
+                .filter(x -> x.getId().equals(sectionId))
+                .findFirst()
+                .get();
+    }
+
+    private Map<Long, List<String>> saveQuestionResponsesInSection(ApplicationResource application, Section section, HttpServletRequest request, Long userId, BindingResult bindingResult) {
+        Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), userId, application.getId());
         errors.forEach((k, errorsList) -> {
             errorsList.forEach(e -> {
                 bindingResult.rejectValue("formInput["+ k +"]", e, e);
             });
         });
+        return errors;
+    }
 
-        // save application details if they are in the request
+    private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
+        // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.info("key " + key));
 
-        setApplicationDetails(application, form.getApplication());
-        boolean marked = markQuestion(request, params, applicationId, user.getId(), errors);
+        boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
-        applicationService.save(application);
-        // if a question is marked as complete, don't show the field saved message.
         if(!marked){
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
@@ -175,10 +189,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(financeFormHandler.handle(request)){
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
-
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, true);
-
-        return bindingResult;
     }
 
     /**
@@ -296,22 +306,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
             log.debug("INPUT ID: " + inputIdentifier);
-            if (fieldName.startsWith("application.")) {
-                errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
-            } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-                FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-                if (fieldName != null && value != null) {
-                    String cleanedFieldName = fieldName;
-                    if (fieldName.startsWith("cost-")) {
-                        cleanedFieldName = fieldName.replace("cost-", "");
-                    }
-                    log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
-                    financeFormHandler.storeField(cleanedFieldName, value);
-                }
-            } else {
-                Long formInputId = Long.valueOf(inputIdentifier);
-                errors = formInputResponseService.save(user.getId(), applicationId, formInputId, value);
-            }
+            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
             if (errors.size() > 0) {
                 return this.createJsonObjectNode(false, errors);
@@ -319,13 +314,35 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return this.createJsonObjectNode(true, null);
             }
         } catch (Exception e) {
-            log.error("Exception on autosave: ");
-            log.error(e.getMessage());
-            e.printStackTrace();
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-
             errors.add(ex.getErrorMessage());
             return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+        List<String> errors = new ArrayList<>();
+
+        if (fieldName.startsWith("application.")) {
+            errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+        } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
+            storeCostField(fieldName, value);
+        } else {
+            Long formInputId = Long.valueOf(inputIdentifier);
+            errors = formInputResponseService.save(userId, applicationId, formInputId, value);
+        }
+        return errors;
+    }
+
+    private void storeCostField(String fieldName, String value) {
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
+        if (fieldName != null && value != null) {
+            String cleanedFieldName = fieldName;
+            if (fieldName.startsWith("cost-")) {
+                cleanedFieldName = fieldName.replace("cost-", "");
+            }
+            log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
+            financeFormHandler.storeField(cleanedFieldName, value);
         }
     }
 
