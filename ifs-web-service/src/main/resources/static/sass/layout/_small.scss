@@ -150,3 +150,26 @@ input[type="button"] {
     background-size: 100%;
   }
 }
+
+/* 
+
+###Secondary Buttons 
+
+```
+<a href="#" class="button-secondary" tabindex="0">Anchor like a button</a>
+<button class="button-secondary">Real button</button>
+
+```
+
+*/
+.button-secondary{
+	@include button($panel-colour);
+	@include box-sizing (border-box);
+	margin: 0 $gutter-half $gutter-half 0;
+	padding: em(10) em(15) em(5) em(15);
+	vertical-align: top;
+	@include media (mobile) {
+		width: 100%;
+		text-align: center;
+	}
+}

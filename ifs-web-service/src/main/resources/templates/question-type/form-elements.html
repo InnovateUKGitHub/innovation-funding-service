@@ -305,6 +305,7 @@
 
 <div th:fragment="form-edit-question-button">
     <a tabindex="0"
+       class="button-secondary"
        th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
        th:text="Edit"/>
 </div>

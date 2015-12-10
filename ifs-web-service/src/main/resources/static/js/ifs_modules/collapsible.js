@@ -6,7 +6,7 @@ IFS.collapsible = (function(){
 
   return {
       settings: {
-        collapsibleEl : '.collapsible > h2, .assign-container .assign-button'
+        collapsibleEl : '.collapsible > h2, .collapsible > h3, .assign-container .assign-button'
       },
       init : function() {
             s = this.settings;
