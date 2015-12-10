@@ -150,7 +150,15 @@ public class UserController {
         newUser.setPassword(userDto.getPassword());
         newUser.setEmail(userDto.getEmail());
         newUser.setTitle(userDto.getTitle());
+
+        String fullName = concatenateFullName(userDto.getFirstName(), userDto.getLastName());
+        newUser.setName(fullName);
+
         return newUser;
+    }
+
+    private String concatenateFullName(String firstName, String lastName) {
+        return firstName+" "+lastName;
     }
 
     private User addTokenBasedOnIdToUser(User user) {

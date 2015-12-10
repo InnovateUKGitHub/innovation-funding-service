@@ -82,6 +82,8 @@ public class User {
         return name;
     }
 
+    public void setName(String name) { this.name = name; }
+
     public String getEmail() {
         return email;
     }
@@ -141,7 +143,6 @@ public class User {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
     public String getLastName() {
         return lastName;
