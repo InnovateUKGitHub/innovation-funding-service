@@ -114,6 +114,11 @@ public class Section implements Comparable<Section> {
         return super.equals(obj);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public Integer getPriority() {
         return priority;
     }

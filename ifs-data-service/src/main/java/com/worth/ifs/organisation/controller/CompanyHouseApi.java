@@ -67,7 +67,7 @@ public class CompanyHouseApi extends BaseRestService {
         try {
             jsonNode = restGet("company/" + id, JsonNode.class);
         } catch (Exception e) {
-            log.error("Exception: " + e.getMessage());
+            log.error(e);
             jsonNode = null;
         }
 
