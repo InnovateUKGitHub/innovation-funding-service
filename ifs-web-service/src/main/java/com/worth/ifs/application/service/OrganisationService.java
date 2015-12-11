@@ -16,6 +16,7 @@ public interface OrganisationService {
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application);
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application);
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId);
+    public Organisation getOrganisationById(Long organisationId);
     public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId);
     public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText);
 }

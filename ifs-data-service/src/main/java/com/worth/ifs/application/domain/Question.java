@@ -18,6 +18,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String shortName;
 
     @Column(length=5000)
     private String description;
@@ -75,6 +76,10 @@ public class Question {
 
     public String getName() {
         return name;
+    }
+
+    public String getShortName() {
+        return shortName;
     }
 
     public void setSection(Section section) {
