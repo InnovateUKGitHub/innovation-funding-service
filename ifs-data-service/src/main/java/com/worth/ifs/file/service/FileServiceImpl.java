@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
 import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.copyOfRange;
@@ -29,7 +30,8 @@ import static java.util.Arrays.copyOfRange;
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
     enum ServiceFailures {
-        UNABLE_TO_CREATE_FILE
+        UNABLE_TO_CREATE_FILE, //
+        DUPLICATE_FILE_CREATED, //
     }
 
     @Autowired
@@ -66,6 +68,11 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
             Path path = Files.createDirectories(Paths.get(File.separator + pathElements.get(0), remainingPathElements));
             File createdFile = new File(path.toString(), filename);
+
+            if (createdFile.exists()) {
+                return errorResponse(DUPLICATE_FILE_CREATED);
+            }
+
             boolean createdSuccessfully = createdFile.createNewFile();
 
             if (createdSuccessfully) {
