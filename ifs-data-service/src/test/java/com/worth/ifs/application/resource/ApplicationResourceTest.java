@@ -47,4 +47,9 @@ public class ApplicationResourceTest {
         Assert.assertEquals(applicationResource.getCompetitionId(), competition.getId());
         Assert.assertEquals(applicationResource.getApplicationFinances(), applicationFinances);
     }
+
+    @Test
+    public void equalsShouldReturnFalseOnNull() throws Exception{
+        Assert.assertFalse(applicationResource.equals(null));
+    }
 }

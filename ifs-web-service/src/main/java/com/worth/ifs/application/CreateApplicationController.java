@@ -179,7 +179,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     private void saveToCookie(HttpServletRequest request, HttpServletResponse response, String fieldName, String fieldValue){
-        if(fieldName != null && fieldName != null){
+        if(fieldName != null){
             response.addCookie(new Cookie(fieldName, fieldValue));
         }
     }

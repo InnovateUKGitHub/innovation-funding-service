@@ -327,18 +327,42 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 
 	<div class="collapsible section-overview">
 
-    	<h2>Finances overview
-			<div class="section-status section-complete">Complete</div>
-    	</h2>
+		<!-- Finances not complete -->
+		<div th:unless="${param.warning == null}" th:remove="tag"> 
 
-    	<div id="collapsible-15" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Finances overview
-				</div>
+			<h2>Finances overview
+				<div class="section-status section-incomplete">Incomplete</div>
+    		</h2>
+
+			<div class="question"> 
+				<div th:include="prototypes/fragments/applicant-view :: prototype-warning-incomplete" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="incomplete=true" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
 			</div>
-    	</div>
-    	
+		</div>
+		
+		<!-- Finances complete -->
+		<div th:unless="${param.warning != null}" th:remove="tag"> 
+
+			<h2>Finances overview
+				<div class="section-status section-complete">Complete</div>
+			</h2>
+
+			<div class="question">
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+			</div>	
+
+		</div>
+	
 	</div>
 
 	<hr />

@@ -199,10 +199,12 @@
 
 <!-- =========================== Element : subheader =========================== -->
 
+
 <div th:fragment="header-sub">
     <div class="sub-header">
+        <a th:if="${linkTitle != null and linkUrl != null}" th:href="${linkUrl}" th:text="${linkTitle}" />
         <div class="deadline">Days left to submit&nbsp;&nbsp;
-           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
+          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
     </div>
 </div>

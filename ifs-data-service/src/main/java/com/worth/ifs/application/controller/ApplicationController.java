@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -90,24 +92,14 @@ public class ApplicationController {
 
     @RequestMapping("/")
     public List<ApplicationResource> findAll() {
-        return applicationRepository.findAll().stream()
-            .map(ApplicationResource::new)
-            .collect(Collectors.toList());
+        return simpleMap(applicationRepository.findAll(),ApplicationResource::new);
     }
 
     @RequestMapping("/findByUser/{userId}")
     public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        List<ApplicationResource> apps = new ArrayList<>();
-        for (ProcessRole role : roles) {
-            log.debug("+++++++++++++++++++++");
-            log.debug(role.getApplication().getName());
-            log.debug(role.getApplication().getId());
-            log.debug("+++++++++++++++++++++");
-            apps.add(new ApplicationResource(role.getApplication()));
-        }
-        return apps;
+        return simpleMap(roles,role -> new ApplicationResource(role.getApplication()));
     }
 
     /**

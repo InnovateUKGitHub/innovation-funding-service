@@ -4,11 +4,11 @@ $browser-minimum-versions : (
 	"firefox": null,
 	"ie": "9",
 	"safari": null,
-	"opera": null
+	"opera": null 
 );
-@import "compass/css3";
+@import "compass/css3"; 
 
 @import "govuk";
-@import "components";
+@import "components"; 
 @import "pages";
-@import "print";
+@import "print"; 

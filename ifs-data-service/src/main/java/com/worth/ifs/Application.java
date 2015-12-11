@@ -13,12 +13,12 @@ import javax.servlet.ServletException;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    Log log = LogFactory.getLog(Application.class);
+    private static final Log log = LogFactory.getLog(Application.class);
 
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        System.out.println("Spring Application builder configure method");
+        log.info("Spring Application builder configure method");
         log.info("======== Application.configure()");
         return application.sources(Application.class);
     }
@@ -29,7 +29,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("======== Application.main()");
+        log.info("======== Application.main()");
         SpringApplication.run(Application.class, args);
     }
 }

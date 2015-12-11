@@ -61,6 +61,7 @@ public class LoginController {
                     }
                 }
             } catch(BadCredentialsException bce) {
+                log.error(bce);
                 bindResult(bindingResult);
                 setDestinationToLogin();
             }

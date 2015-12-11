@@ -3,7 +3,6 @@ package com.worth.ifs.application.finance.cost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 
@@ -67,11 +66,12 @@ public class CapitalUsage implements CostItem {
         // ( npv - residualValue ) * utilization-percentage
         BigDecimal result;
         try{
-            result = npv.subtract(residualValue).multiply(new BigDecimal(utilisation).divide(new BigDecimal(100)));
+            log.debug(utilisation);
+            result = npv.subtract(residualValue).multiply(new BigDecimal(utilisation).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
         }catch(NullPointerException e){
+            log.error(e);
             result = BigDecimal.ZERO;
         }
-        result.setScale(2);
         return result;
     }
 

@@ -26,16 +26,6 @@ Verify that the Applicant can see the List with the sections
     When Applicant goes to the Overview page
     Then the applicant should see three sections
 
-Verify that when Applicant clicks the "Scope" this section is expanded
-    [Tags]    Applicant    Overview
-    #Given the Applicant is in the application overview page
-    #Then the Applicant clicks the "Scope" section
-    #Then the First section should not be expanded
-    #And the first section should be hidden
-    #And the second button should be expanded
-    #And the second section should be visible
-    #And the "Scope" sub-section should be visible
-
 Verify that only the main questions show and not the file uploads
     [Documentation]    INFUND-428
     [Tags]    Applicant    Overview
@@ -80,33 +70,6 @@ the applicant should see three sections
     Element Should Be Visible    css=#section-1 .heading-medium
     Element Should Be Visible    css=#section-2 .heading-medium
     Element Should Be Visible    css=#section-6 .heading-medium
-
-the Applicant clicks the "Scope" section
-    [Documentation]    1. click second section
-    Click Element    css=.section-overview > h2:nth-of-type(2) button
-
-The First section should not be expanded
-    [Documentation]    Assumption: page is loaded with first section option because of /section/1
-    ...
-    ...
-    ...    2. check if the first button is now not expanded anymore (aria-expanded=false)
-    ...
-    ...    4. check if the second button is now expanded (aria-expanded=true)
-    ...
-    ...    5. check if the second section is now visible \ (aria-hidden=false)
-    Page Should Contain Element    css=.section-overview > h2:nth-of-type(1) button[aria-expanded="false"]
-
-the first section should be hidden
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(1)[aria-hidden="true"]
-
-the second button should be expanded
-    Page Should Contain Element    css=.section-overview > h2:nth-of-type(2) button[aria-expanded="true"]
-
-the second section should be visible
-    Page Should Contain Element    css=.section-overview > div:nth-of-type(2)[aria-hidden="false"]
-
-the "Scope" sub-section should be visible
-    Element Should Be Visible    link=How does your project align with the scope of this competition?
 
 the uploads should not be visible
     Element Should Not Be Visible    css=#question-14 > div > input[type="file"]
