@@ -19,9 +19,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
-
-    <a class="back" th:href="@{/application/{id}/(id=${currentApplication.getId()})}">&lt; Back to application</a>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
     
      <div class="page-title">
         <h2 class="subtitle" th:text="${currentApplication.getName()} +' - Application number ' + ${currentApplication.getId()} "/>
