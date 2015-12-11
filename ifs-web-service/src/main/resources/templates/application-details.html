@@ -38,7 +38,7 @@
     <form action="#" method="post" class="application-overview">
             <div th:remove="tag" th:each="section : ${sections.values()}">
                 <section th:id="'section-'+${section.getId()}">
-                <h2 th:text="${section.name}" class="heading-medium"/>
+                <h2 th:text="${section.name}" class="heading-medium no-margin-bottom"/>
                     <p th:text="${section.description}"></p>
                     <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:case="${0}" th:remove="tag">
