@@ -26,3 +26,4 @@ ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
 ${LOG_OUT}        ${SERVER}/logout
 ${APPLICATION_QUESTIONS_SECTION_URL}    http://localhost/application-form/1/section/2/
+${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
