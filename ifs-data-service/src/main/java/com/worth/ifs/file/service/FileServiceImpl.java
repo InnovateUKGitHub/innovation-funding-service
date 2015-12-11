@@ -55,7 +55,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Either<ServiceFailure, File> createdFile = doCreateFile(pathElements, filename);
             return createdFile.map(file -> successResponse(file));
 
-        });
+        }, UNABLE_TO_CREATE_FILE);
     }
 
     private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename) {

@@ -18,7 +18,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
@@ -77,6 +77,21 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode) {
+        return handlingErrors(serviceCode, UNEXPECTED_ERROR);
+    }
+
+    /**
+     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+     * response (an Either with a left of ServiceFailure).
+     *
+     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+     * type UNEXPECTED_ERROR.
+     *
+     * @param serviceCode
+     * @param <T>
+     * @return
+     */
+    protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode, Enum<?> catchAllError) {
         try {
             Either<ServiceFailure, T> response = serviceCode.get();
 
@@ -88,7 +103,7 @@ public abstract class BaseTransactionalService  {
         } catch (Exception e) {
             log.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
             rollbackTransaction();
-            return errorResponse(UNEXPECTED_ERROR);
+            return errorResponse(catchAllError);
         }
     }
 

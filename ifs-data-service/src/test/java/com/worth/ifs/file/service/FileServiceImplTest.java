@@ -22,10 +22,12 @@ import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
+import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 /**
@@ -198,5 +200,16 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals("samefilename", secondFile.getName());
         String expectedPath2 = fullPathsToNewFiles.get(1).stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
         assertEquals(expectedPath2 + File.separator + "samefilename", secondFile.getPath());
+    }
+
+    @Test
+    public void testCreateFileWithUnexpectedExceptionsHandlesFailureGracefully() {
+
+        RuntimeException exception = new RuntimeException("you shall not pass!");
+        when(fileEntryRepository.save(isA(FileEntry.class))).thenThrow(exception);
+
+        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(newFileEntryResource().with(id(null)).build());
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
     }
 }
