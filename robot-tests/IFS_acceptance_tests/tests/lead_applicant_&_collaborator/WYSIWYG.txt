@@ -42,7 +42,7 @@ Project summary section accepts Bullet format
 *** Keywords ***
 the Applicant clicks on Bold button in "Project summary"
     Clear Element Text    css=#form-input-11 .editor
-    Click Button    css=.bold_button
+    click element    css=.bold_button
 
 text entered should be Bold
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
@@ -54,7 +54,7 @@ the text entered should be Italic
 
 the Applicant clicks on Italic button in "Project summary"
     Clear Element Text    css=#form-input-11 .editor
-    Click Button    css=.italic_button
+    Click Element    css=.italic_button
 
 text entered should be Bold and keep the same after page refresh
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
@@ -66,7 +66,7 @@ text entered should be Bold and keep the same after page refresh
 
 the Applicant clicks on Numbering bullet button in "Project summary"
     Input Text    css=#form-input-11 .editor    This is testing for numbering bullets.
-    Click Button    css=.insertOrderedList_button
+    Click Element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
@@ -75,7 +75,7 @@ the entered text should be in Numbering bullets
 
 the Applicant clicks on Bullet format button in "Project summary"
     Input Text    css=#form-input-11 .editor    testing
-    Click Button    css=.insertUnorderedList_button
+    Click Element    css=.insertUnorderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
