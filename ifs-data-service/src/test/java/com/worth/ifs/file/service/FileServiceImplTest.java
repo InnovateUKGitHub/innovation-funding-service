@@ -18,10 +18,11 @@ import org.mockito.Mock;
 import java.io.File;
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -75,7 +76,49 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(newFileResult.exists());
         assertEquals("thefilename", newFileResult.getName());
 
-        String expectedPath = fullPathToNewFile.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator+ nextPathSegment);
+        String expectedPath = fullPathToNewFile.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
         assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
+    }
+
+    @Test
+    public void testCreateTwoFilesInSameFolder() {
+
+        List<FileEntryResource> fileResources = newFileEntryResource().
+                with(id(null)).
+                with(names((i, resource) -> "fileEntry" + i)).
+                build(2);
+
+        List<FileEntry> persistedFiles = newFileEntry().
+                with(incrementingIds()).
+                with(names((i, resource) -> "fileEntry" + i)).
+                build(2);
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        forEachWithIndex(fileResources, (i, resource) -> {
+            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMimeType(), resource.getFilesizeBytes());
+            when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
+        });
+
+        forEachWithIndex(persistedFiles, (i, file) -> {
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(file)).thenReturn(Pair.of(fullPathToNewFile, "thefilename" + (i + 1)));
+        });
+
+
+        Either<ServiceFailure, ServiceSuccess<File>> result1 = service.createFile(fileResources.get(0));
+        Either<ServiceFailure, ServiceSuccess<File>> result2 = service.createFile(fileResources.get(1));
+
+        assertTrue(result2.isRight());
+
+        File firstFile = result1.getRight().getResult();
+        assertTrue(firstFile.exists());
+        assertEquals("thefilename1", firstFile.getName());
+
+        File secondFile = result2.getRight().getResult();
+        assertTrue(secondFile.exists());
+        assertEquals("thefilename2", secondFile.getName());
+
+        String expectedPath = fullPathToNewFile.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
+        assertEquals(expectedPath + File.separator + "thefilename2", secondFile.getPath());
     }
 }
