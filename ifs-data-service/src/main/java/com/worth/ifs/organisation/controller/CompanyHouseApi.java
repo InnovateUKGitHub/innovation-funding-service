@@ -3,7 +3,7 @@ package com.worth.ifs.organisation.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.organisation.resource.PostalAddress;
+import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.security.NotSecured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +48,7 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     private CompanyHouseBusiness companySearchMapper(JsonNode jsonNode) {
-        PostalAddress officeAddress = getPostalAddress(jsonNode, "address");
+        Address officeAddress = getAddress(jsonNode, "address");
         return new CompanyHouseBusiness(
                 jsonNode.path("company_number").asText(),
                 jsonNode.path("title").asText(),
@@ -80,7 +80,7 @@ public class CompanyHouseApi extends BaseRestService {
 
     private CompanyHouseBusiness companyProfileMapper(JsonNode jsonNode) {
         String description = null;
-        PostalAddress officeAddress = getPostalAddress(jsonNode, "registered_office_address");
+        Address officeAddress = getAddress(jsonNode, "registered_office_address");
         return new CompanyHouseBusiness(
                 jsonNode.path("company_number").asText(),
                 jsonNode.path("company_name").asText(),
@@ -90,8 +90,8 @@ public class CompanyHouseApi extends BaseRestService {
                 officeAddress);
     }
 
-    private PostalAddress getPostalAddress(JsonNode jsonNode, String path) {
-        PostalAddress address = new PostalAddress(
+    private Address getAddress(JsonNode jsonNode, String path) {
+        Address address = new Address(
                 jsonNode.path(path).path("address_line_1").asText(),
                 jsonNode.path(path).path("address_line_2").asText(),
                 jsonNode.path(path).path("care_of").asText(),
