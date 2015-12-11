@@ -99,7 +99,6 @@ public abstract class AbstractApplicationController {
 
         Map<String, String[]> params = request.getParameterMap();
         if(params.containsKey("assign_question")){
-            String assign = request.getParameter("assign_question");
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
@@ -127,9 +126,9 @@ public abstract class AbstractApplicationController {
         addMarkedAsCompleteDetails(model, application, userOrganisation);
         addApplicationFormDetailInputs(application, form);
 
-        userOrganisation.ifPresent(org -> {
-            addAssigneableDetails(model, application, org, userId);
-        });
+        userOrganisation.ifPresent(org ->
+            addAssigneableDetails(model, application, org, userId)
+        );
 
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
         return application;
@@ -157,9 +156,9 @@ public abstract class AbstractApplicationController {
         model.addAttribute("applicationOrganisations", organisationService.getApplicationOrganisations(application));
 
         Optional<Organisation> leadOrganisation = organisationService.getApplicationLeadOrganisation(application);
-        leadOrganisation.ifPresent(org -> {
-            model.addAttribute("leadOrganisation", org);
-        });
+        leadOrganisation.ifPresent(org ->
+            model.addAttribute("leadOrganisation", org)
+        );
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
