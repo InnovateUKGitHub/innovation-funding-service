@@ -63,28 +63,6 @@ public class ApplicationResource {
         this.durationInMonths = application.getDurationInMonths();
     }
 
-    @Override
-    public boolean equals(Object other){
-        if(!(other instanceof ApplicationResource)){
-            return false;
-        }else{
-            ApplicationResource that = (ApplicationResource) other;
-            if(this.name==null && that.name==null){
-                return true;
-            }
-            else if( this.name==null || that.name==null || ! this.name.equals(that.name)){
-                return false;
-            }
-            if(this.id==null && that.id==null){
-                return true;
-            }
-            else if( this.id == null || that.id == null || ! this.id.equals(that.id)){
-                return false;
-            }
-            return true;
-        }
-    }
-
     protected boolean canEqual(Object other) {
         return other instanceof ApplicationResource;
     }
@@ -155,5 +133,32 @@ public class ApplicationResource {
 
     public void setDurationInMonths(Long durationInMonths) {
         this.durationInMonths = durationInMonths;
+    }
+
+    @Override
+    public boolean equals(Object other){
+        if(!(other instanceof ApplicationResource)){
+            return false;
+        }else{
+            ApplicationResource that = (ApplicationResource) other;
+            if(this.name==null && that.name==null){
+                return true;
+            }
+            else if( this.name==null || that.name==null || ! this.name.equals(that.name)){
+                return false;
+            }
+            if(this.id==null && that.id==null){
+                return true;
+            }
+            else if( this.id == null || that.id == null || ! this.id.equals(that.id)){
+                return false;
+            }
+            return true;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

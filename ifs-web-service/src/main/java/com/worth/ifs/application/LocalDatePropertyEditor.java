@@ -5,8 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.request.WebRequest;
 
 import java.beans.PropertyEditorSupport;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -37,6 +35,7 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         try {
             setValue(LocalDate.of(year, month, day));
         } catch (Exception ex) {
+            log.error(ex);
             setValue(null);
         }
     }
