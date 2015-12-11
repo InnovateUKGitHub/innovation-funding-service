@@ -30,7 +30,7 @@
     </p>
 
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
-            <div th:remove="tag" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+            <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
                 <h2 th:text="${section.getName()}" class="heading-medium" />
                 <div class="collapsible" th:each="question : ${section.getQuestions()}">
                     <h3>
@@ -42,20 +42,21 @@
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
-            </div>
-            <h2 class="heading-medium">Finance</h2>
-            <div class="collapsible">
-                <h3>Finances Summary</h3>
-                <div class="question">
-                    <p>This is the overview of the finances provided by all partners in this project.</p>
-                    <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
+            </section>
+            <section>
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances Summary</h3>
+                    <div class="question">
+                        <p>This is the overview of the finances provided by all partners in this project.</p>
+                        <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
 
-                    <div th:replace="question-type/types :: application_finances_summary"></div>
-                    <h2 class="heading-medium">Funding breakdown</h2>
-                    <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+                        <div th:replace="question-type/types :: application_finances_summary"></div>
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+                    </div>
                 </div>
-            </div>
-            
+            </section>
         </form>
     <hr/>
     <div>
