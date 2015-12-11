@@ -44,6 +44,18 @@ public class FileEntry {
         return filesizeBytes;
     }
 
+    public void setOriginalFilename(String originalFilename) {
+        this.originalFilename = originalFilename;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public void setFilesizeBytes(long filesizeBytes) {
+        this.filesizeBytes = filesizeBytes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
