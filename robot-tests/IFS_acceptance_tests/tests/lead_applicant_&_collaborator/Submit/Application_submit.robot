@@ -17,27 +17,27 @@ Resource          ../../../resources/variables/User_credentials.robot
 Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
-    [Tags]    Applicant
+    [Tags]    Applicant    Submit    Review and Submit
     When the applicant is in the overview page
     Then the overview page should have the "Review & Submit" button
     and the button should redirect to the summary page
 
 Verify the "review and submit" button (Form)
-    [Tags]    Applicant
+    [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the applicant is in the form
     When the Applicant clicks the "Review and submit" button
     Then the applicant will navigate to the summary page
 
 Verify the "Submit button" is disabled when the state of the application is not valid
     [Documentation]    INFUND-195
-    [Tags]    Applicant
+    [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the application is not valid
     When the Applicant is in the summary page
     Then the submit button should be disabled
 
 Verify the Warning message when the applicant clicks the submit button in the summary page
     [Documentation]    INFUND-205, INFUND-195
-    [Tags]    Applicant
+    [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the application is valid
     When the applicant submits the application in the summary page
     Then the applicant should get a warning message
@@ -45,14 +45,14 @@ Verify the Warning message when the applicant clicks the submit button in the su
 
 Verify the successful submit page
     [Documentation]    INFUND-205
-    [Tags]    Applicant
+    [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the application is valid
     When the applicant submits the application
     Then the Applicant should navigate to the "submit confirmation" page
     and the page should have a confirmation text
     and the "Return to dashboard" button is visible
     and the "Return to dashboard" button navigates to the dashboard page
-    [Teardown]    Mark question as incomplete
+    and the link of the application should redirect to the submitted application page
 
 *** Keywords ***
 the applicant will navigate to the summary page
@@ -144,3 +144,7 @@ Enter invalid data into Question field
     Wait Until Element Is Visible    css=#form-input-12 .editor
     Clear Element Text    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10
+
+the link of the application should redirect to the submitted application page
+    click link    link=A novel solution to an old problem
+    Page Should Contain    Application status
