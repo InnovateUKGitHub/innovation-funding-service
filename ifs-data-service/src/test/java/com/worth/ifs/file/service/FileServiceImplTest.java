@@ -2,10 +2,10 @@ package com.worth.ifs.file.service;
 
 import com.google.common.io.Files;
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.file.domain.FormInputResponseFile;
-import com.worth.ifs.file.domain.builders.FormInputResponseFileBuilder;
-import com.worth.ifs.file.resource.BaseFileConverter;
-import com.worth.ifs.file.resource.FormInputResponseFileResource;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.domain.builders.FileEntryBuilder;
+import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
@@ -19,8 +19,8 @@ import java.io.File;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.file.domain.builders.FormInputResponseFileBuilder.newFormInputResponseFile;
-import static com.worth.ifs.file.resource.builders.FormInputResponseFileResourceBuilder.newFormInputResponseFileResource;
+import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -35,7 +35,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     private FileService service = new FileServiceImpl();
 
     @Mock
-    private BaseFileConverter converterMock;
+    private FileEntryRepository fileEntryRepository;
 
     @Mock
     private FileStorageStrategy fileStorageStrategyMock;
@@ -51,21 +51,18 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateFile() {
 
-        FormInputResponseFileResource fileResource = newFormInputResponseFileResource().
+        FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
-                withFormInputResponseId(123L).
                 build();
 
-        FormInputResponseFileBuilder fileBuilder = newFormInputResponseFile().
-                withFormInputResponseId(123L);
+        FileEntryBuilder fileBuilder = newFileEntry();
 
-        FormInputResponseFile unpersistedFile = fileBuilder.with(id(null)).build();
-        FormInputResponseFile persistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
         List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
 
-        when(converterMock.valueOf(fileResource)).thenReturn(unpersistedFile);
-        when(converterMock.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);

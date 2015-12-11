@@ -1,6 +1,6 @@
 package com.worth.ifs.file.service;
 
-import com.worth.ifs.file.domain.BaseFile;
+import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,7 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     @Override
-    public Pair<List<String>, String> getAbsoluteFilePathAndName(BaseFile file) {
+    public Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file) {
         return getFilePathAndName(file.getId());
     }
 

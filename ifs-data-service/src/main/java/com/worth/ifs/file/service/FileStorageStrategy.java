@@ -1,6 +1,6 @@
 package com.worth.ifs.file.service;
 
-import com.worth.ifs.file.domain.BaseFile;
+import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface FileStorageStrategy {
 
-    Pair<List<String>, String> getAbsoluteFilePathAndName(BaseFile file);
+    Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file);
 }

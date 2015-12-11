@@ -1,8 +1,9 @@
 package com.worth.ifs.file.service;
 
-import com.worth.ifs.file.domain.BaseFile;
-import com.worth.ifs.file.resource.BaseFileConverter;
-import com.worth.ifs.file.resource.BaseFileResource;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -22,7 +23,7 @@ import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.copyOfRange;
 
 /**
- * The class is an implementation of FileService that, based upon a given strategy, is able to
+ * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
  * store and retrieve files.
  */
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
@@ -32,20 +33,20 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Autowired
-    private FileStorageStrategy strategy;
+    private FileStorageStrategy fileStorageStrategy;
 
     @Autowired
-    private BaseFileConverter converter;
+    private FileEntryRepository fileEntryRepository;
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<File>> createFile(BaseFileResource resource) {
+    public Either<ServiceFailure, ServiceSuccess<File>> createFile(FileEntryResource resource) {
 
         return handlingErrors(() -> {
 
-            BaseFile baseFile = converter.valueOf(resource);
-            BaseFile savedFileEntry = converter.save(baseFile);
+            FileEntry fileEntry = FileEntryResourceAssembler.valueOf(resource);
+            FileEntry savedFileEntry = fileEntryRepository.save(fileEntry);
 
-            Pair<List<String>, String> filePathAndName = strategy.getAbsoluteFilePathAndName(savedFileEntry);
+            Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
             List<String> pathElements = filePathAndName.getLeft();
             String filename = filePathAndName.getRight();
 
