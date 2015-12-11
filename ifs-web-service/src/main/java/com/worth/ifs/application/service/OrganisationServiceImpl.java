@@ -7,6 +7,8 @@ import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
+    @Autowired
+    OrganisationRestService organisationRestService;
+
 
     @Autowired
     CompanyHouseRestService companyHouseRestService;
@@ -68,9 +73,14 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String name) {
-        return  companyHouseRestService.searchOrganisationsByName(name);
+    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText) {
+        return  companyHouseRestService.searchOrganisations(searchText);
     }
 
+
+
+    public Organisation getOrganisationById(Long organisationId) {
+        return organisationRestService.getOrganisationById(organisationId);
+    }
 
 }

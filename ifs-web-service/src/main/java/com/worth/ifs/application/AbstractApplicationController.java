@@ -110,7 +110,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, boolean selectFirstSectionIfNoneCurrentlySelected, Form form, Boolean... hateoas) {
+    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, Form form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
 
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
         application.setId(applicationId);
@@ -125,11 +125,21 @@ public abstract class AbstractApplicationController {
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addMarkedAsCompleteDetails(model, application, userOrganisation);
+        addApplicationFormDetailInputs(application, form);
 
+        userOrganisation.ifPresent(org -> {
+            addAssigneableDetails(model, application, org, userId);
+        });
+
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
+        return application;
+    }
+
+    private void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
         if(form == null){
             form = new Form();
         }
-        // Add the details from the application itself.
+
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
@@ -139,13 +149,6 @@ public abstract class AbstractApplicationController {
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
         form.setFormInput(formInputs);
-
-        userOrganisation.ifPresent(org -> {
-            addAssigneableDetails(model, application, org, userId);
-        });
-
-        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
-        return application;
     }
 
     protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
@@ -289,8 +292,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
-        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, selectFirstSectionIfNoneCurrentlySelected, form, hateoas);
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form, selectFirstSectionIfNoneCurrentlySelected, hateoas);
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         form.application = application;
         addOrganisationFinanceDetails(model, application, userId, form);

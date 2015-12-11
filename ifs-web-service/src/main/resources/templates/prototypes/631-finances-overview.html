@@ -13,177 +13,30 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-            <div class="hgroup" style="padding-top: 20px">
-				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin">Finances overview</h1>
-				<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
-			</div>
-        </div>
-        <div class="column-third competition-details">
-            <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
-        </div>
-    </div>
+     <div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+		<h1 class="heading-xlarge no-margin">Finances overview</h1>
+		<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
+	</div>
 
 	<h2 class="heading-medium">Funding rules for this competition</h2> 
 	<p>We will fund projects between &pound;200,000 and &pound;1 million. We may consider projects with costs outside of this range. We expect projects to last between 12 and 24 months.</p>
 
-	<p>Business partners can claim funding at the following rates:</p>
+	<p>To support our business focus, Innovate UK aims to optimise the level of funding business receives whilst recognising the importance of the contribution of research organisations to R&amp;D projects. We require, therefore, the following levels of participation:</p>
 
 	<ul class="list-bullet">
-		<li>small businesses - 70% of total eligible costs</li>
-		<li>medium size businesses - 60% of total eligible costs</li>
-		<li>large - 50% of total elligible costs</li>
+		<li>at least 70% of the total eligible project costs are incurred by commercial organisations and</li>
+		<li>a maximum of 30% of total eligible project costs is available to research participants. Where there is more than one research participant, this maximum will be shared between them.</li>
 	</ul>
 
-	<h2 class="heading-medium">Finances summary</h2>
-	<p>This is the level of cost detail that the assessors will see during the assessment process</p>
+	<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:remove="tag" />
 
-	<div class="form-group">
-	    <table>
-	        <thead>
-	            <tr>
-	                <th scope="col">&nbsp;</th>
-	                <th scope="col" class="numeric">Total costs</th>
-	                <th scope="col" class="numeric">
-	                    % Grant
-	                </th>
-	                <th scope="col" class="numeric">
-	                    Funding sought
-	                </th>
-	                <th scope="col" class="numeric width-medium">
-	                    Other public sector funding
-	                </th>
-	                <th scope="col" class="numeric width-medium">
-	                    Contribution to project
-	                </th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            <tr>
-	                <th> <div>Empire Ltd</div>
-	                    <div><small>Lead organisation</small></div></th>
-	                <td class="numeric"><strong>£450,983</strong></td>
-	                <td class="numeric">63</td>
-	                <td class="numeric">£105,517</td>
-	                <td class="numeric">£60,659</td>
-	                <td class="numeric">£284,807</td>
-	            </tr>
-	            <tr>
-	                <th><div>Ludlow</div>
-	                    <div><small>Partner</small></div></th>
-	                <td class="numeric"><strong>£192,256</strong></td>
-	                <td class="numeric">50</td>
-	                <td class="numeric">£31,655</td>
-	                <td class="numeric">£18,198</td>
-	                <td class="numeric">£142,404</td>
-	            </tr>
-	            <tr>
-	                <th><div>EGGS</div>
-	                    <div><small>Partner</small></div></th>
-	                <td class="numeric"><strong>£258,727</strong></td>
-	                <td class="numeric">70</td>
-	                <td class="numeric">£73,862</td>
-	                <td class="numeric">£42,461</td>
-	                <td class="numeric">£37,402</td>
-	            </tr>
-	            <tr>
-	                <th>Total</th>
-	                <td class="numeric"><strong>£192,256</strong></td>
-	                <td class="numeric">&nbsp;</td>
-	                <td class="numeric">&nbsp;</td>
-	                <td class="numeric">&nbsp;</td>
-	                <td class="numeric">&nbsp;</td>
-	            </tr>
-	        </tbody>
-	    </table>
-	</div>
-
-	<p class="form-hint icon-info-small-blue">Please provide your financial breakdown in <a href="/prototypes/631-finances-assign-user">Your finances section</a></p>
-
-
-	<h2 class="heading-medium">Project cost breakdown</h2>
-
-	<div class="form-group">
-	    <div style="overflow: auto;">
-	        <table>
-	            <thead>
-	                <tr>
-	                    <th scope="col">&nbsp;</th>
-	                    <th scope="col" class="numeric">Total</th>
-	                    <th scope="col" class="numeric">
-	                       Labour  
-	                    </th>
-	                    <th scope="col" class="numeric">
-	                        Overheads 
-	                    </th>
-	                    <th scope="col" class="numeric">
-	                        Materials 
-	                    </th>
-	                    <th scope="col" class="numeric width-small">Capital usage</th>
-	                    <th scope="col" class="numeric width-small">Subcontracting cost</th>
-	                    <th scope="col" class="numeric width-small">Travel and subsistence</th>
-	                    <th scope="col" class="numeric width-small">Other Costs</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	                <tr>
-	                    <th><div>Empire Ltd</div>
-	                        <div><small>Lead organisation</small></div></th>
-	                    <td class="numeric"><strong>£257,033</strong></td>
-	                    <td class="numeric">£126,207</td>
-	                    <td class="numeric">£86,167</td>
-	                    <td class="numeric">£44,659</td>
-	                    <td class="numeric">£257,033</td>
-	                    <td class="numeric">£126,207</td>
-	                    <td class="numeric">£86,167</td>
-	                    <td class="numeric">£44,659</td>
-	                </tr>
-	                <tr>
-	                    <th><div>Ludlow</div>
-	                        <div><small>Partner</small></div></th>
-	                    <td class="numeric"><strong>£0</strong></td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                    <td class="numeric">£0</td>
-	                </tr>
-	                <tr>
-	                    <th><div>EGGS</div>
-	                        <div><small>Partner</small></div></th>
-	                    <td class="numeric"><strong>£38,950</strong></td>
-	                    <td class="numeric">£8,600</td>
-	                    <td class="numeric">£19,350</td>
-	                    <td class="numeric">£11,000</td>
-	                    <td class="numeric">£38,950</td>
-	                    <td class="numeric">£8,600</td>
-	                    <td class="numeric">£19,350</td>
-	                    <td class="numeric">£11,000</td>
-	                </tr>
-	                <tr>
-	                    <th>Total</th>
-	                    <td class="numeric"><strong>£450,983</strong></td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                    <td class="numeric">&nbsp;</td>
-	                </tr>
-	            </tbody>
-	        </table>
-	    </div>
-	</div>
-
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+	
 	<ul class="pagination">
 	    <li class="prev">
 	        <a rel="prev" title="Navigate to next part" href="/prototypes/631-finances-assigned-to-you">

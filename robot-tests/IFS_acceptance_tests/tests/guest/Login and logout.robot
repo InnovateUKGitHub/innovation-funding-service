@@ -71,7 +71,7 @@ the guest user inserts wrong password
     Input Password    id=id_password    testtest
 
 the guest user should get an error message
-    Element Should Be Visible    id=error-summary-heading-example-1
+    Element Should Be Visible    css=.error-message
     Page Should Not Contain Element    link=Logout
 
 the guest user inserts applicant user name

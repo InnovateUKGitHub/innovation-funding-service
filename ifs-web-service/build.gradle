@@ -29,6 +29,7 @@ dependencies {
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.jayway.jsonpath:json-path"
     compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-beanutils:commons-beanutils:1.8.3'
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     // Use this for including the api lib from the data-service.

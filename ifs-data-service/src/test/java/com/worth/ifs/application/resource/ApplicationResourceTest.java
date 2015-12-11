@@ -30,7 +30,7 @@ public class ApplicationResourceTest {
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
-        processRoles = new ArrayList<ProcessRole>();
+        processRoles = new ArrayList<>();
         processRoles.add(new ProcessRole(1L,null,null,null,null));
         processRoles.add(new ProcessRole(2L,null,null,null,null));
         processRoles.add(new ProcessRole(3L,null,null,null,null));

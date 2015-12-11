@@ -20,15 +20,8 @@
 		margin-top:1em;
 	}
 	
-	input[readonly],
-	textarea[readonly], 
-	.textarea-wrapped textarea[readonly] {
-		padding:0;
-		border:none;
-		background:none;
-	}
-
 	.question {
-		margin-left:10px; 
+		overflow: hidden;
+		margin:20px; 
 	}
 } 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -33,12 +34,15 @@ public class OrganisationController {
     @RequestMapping("/findByApplicationId/{applicationId}")
     public Set<Organisation> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        Set<Organisation> organisations = new LinkedHashSet<>();
-        for (ProcessRole role : roles) {
-            organisations.add(organisationRepository.findByProcessRoles(role));
-        }
+        Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(Collectors.toCollection(LinkedHashSet::new));
 
         return organisations;
+    }
+
+    @RequestMapping("/findById/{organisationId}")
+    public Organisation findById(@PathVariable("organisationId") final Long organisationId) {
+
+        return organisationRepository.findOne(organisationId);
     }
 
 }

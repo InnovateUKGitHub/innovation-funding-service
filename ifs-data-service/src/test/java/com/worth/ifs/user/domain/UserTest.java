@@ -28,7 +28,7 @@ public class UserTest {
         imageUrl = "/image/url/test";
         token = "testtoken123abc";
 
-        processRoles = new ArrayList<ProcessRole>();
+        processRoles = new ArrayList<>();
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());

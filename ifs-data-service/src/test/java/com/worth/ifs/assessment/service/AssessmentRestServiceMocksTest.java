@@ -44,7 +44,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
         long competitionId = 456L;
 
         List<Assessment> assessments = newAssessment().build(3);
-        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[]{}), OK);
+        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[assessments.size()]), OK);
         when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(GET), any(HttpEntity.class), eq(Assessment[].class))).thenReturn(mockResponse);
 
         List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);
@@ -126,7 +126,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
                 put("suitableValue", "Very suitable value").
                 put("suitableFeedback", "Nice feedback").
                 put("comments", "Some comments").
-                put("overallScore", Double.valueOf(50.56));
+                put("overallScore", 50.56);
 
         when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(toUpdate), Boolean.class)).thenReturn(new ResponseEntity<>(Boolean.TRUE, OK));
 
