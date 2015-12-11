@@ -19,21 +19,22 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
-
-    <a class="back" th:href="@{/application-form/{id}/section/1(id=${currentApplication.getId()})}">&lt; Back to application</a>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
     
-    <h1 class="heading-xlarge">Application Summary</h1>
-    <p class="subtitle">
+     <div class="page-title">
+        <h2 class="subtitle" th:text="${currentApplication.getName()} +' - Application number ' + ${currentApplication.getId()} "/>
+         <h1 class="heading-xlarge">Application Summary</h1>
+    </div>
+    <p class="subtitle extra-margin">
         Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
     </p>
 
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
-            <div th:remove="tag" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+            <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
                 <h2 th:text="${section.getName()}" class="heading-medium" />
                 <div class="collapsible" th:each="question : ${section.getQuestions()}">
                     <h3>
-                        <div th:text="${question.getName()}" th:remove="tag" />
+                        <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
                         <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
                         <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
                     </h3>
@@ -41,20 +42,21 @@
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
-            </div>
+            </section>
+            <section>
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances Summary</h3>
+                    <div class="question">
+                        <p>This is the overview of the finances provided by all partners in this project.</p>
+                        <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
 
-            <div class="collapsible">
-                <h3>Finances Summary</h3>
-                <div class="question">
-                    <p>This is the overview of the finances provided by all partners in this project.</p>
-                    <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
-
-                    <div th:replace="question-type/types :: application_finances_summary"></div>
-                    <h2 class="heading-medium">Funding breakdown</h2>
-                    <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+                        <div th:replace="question-type/types :: application_finances_summary"></div>
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+                    </div>
                 </div>
-            </div>
-            
+            </section>
         </form>
     <hr/>
     <div>

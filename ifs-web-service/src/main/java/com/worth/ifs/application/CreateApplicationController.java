@@ -3,6 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.organisation.resource.PostalAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,11 +83,14 @@ public class CreateApplicationController extends AbstractApplicationController {
         return "create-application/find-business";
     }
 
-    @RequestMapping("/selected-business/{companyId}")
-    public String selectedBusiness(Form form, Model model,
-                                      @PathVariable("companyId") final String companyId,
-                                      HttpServletRequest request,
-                                      HttpServletResponse response ) {
+
+    @RequestMapping(value="/selected-business/{companyId}", method = RequestMethod.GET)
+    public String confirmBusiness(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
+                                   BindingResult bindingResult,
+                                   Model model,
+                                   @PathVariable("companyId") final String companyId,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response ) {
         this.saveToCookie(request, response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
@@ -97,13 +102,75 @@ public class CreateApplicationController extends AbstractApplicationController {
         model.addAttribute("business", org);
         return "create-application/confirm-selected-organisation";
     }
+    @RequestMapping(value="/selected-business/{companyId}", method = RequestMethod.POST)
+    public String confirmBusinessSubmit(@Valid @ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
+                                   BindingResult bindingResult,
+                                   Model model,
+                                   @PathVariable("companyId") final String companyId,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response ) {
+        this.saveToCookie(request, response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        this.logState(request, response);
+
+        if(organisationService == null){
+            log.debug("companyHouseService is null");
+        }
+
+        if(!bindingResult.hasErrors()){
+            log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
+            confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
+
+            if(request.getParameter("select-address") != null){
+                if(confirmCompanyDetailsForm.getPostcodeOptions() == null){
+                    log.warn("NULL");
+                }else if(confirmCompanyDetailsForm.getPostcodeOptions().size() == 0){
+                    log.warn("zero size");
+                } else{
+                    PostalAddress address = confirmCompanyDetailsForm.getSelectedPostcode();
+                    log.info("selected a: "+ address.getAddressLine1());
+                }
+            }
+        }else{
+            log.info("has errors do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
+        }
+
+        CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
+        model.addAttribute("business", org);
+        return "create-application/confirm-selected-organisation";
+    }
+
+    private List<PostalAddress> searchPostcode(String postcodeInput) {
+        List<PostalAddress> addresses = new ArrayList<>();
+        addresses.add(new PostalAddress(
+                "Address line 2",
+                "2",
+                "careof",
+                "country",
+                "Bristol",
+                "po_bo",
+                "postal_code",
+                "region"
+        ));
+        addresses.add(new PostalAddress(
+                "Addresss line 1",
+                "2",
+                "careof",
+                "country",
+                "Bristol",
+                "po_bo",
+                "postal_code",
+                "region"
+        ));
+        return addresses;
+    }
+
 
     private List<CompanyHouseBusiness> searchCompanyHouse(String organisationName) {
         return organisationService.searchCompanyHouseOrganisations(organisationName);
     }
 
     private void saveToCookie(HttpServletRequest request, HttpServletResponse response, String fieldName, String fieldValue){
-        if(fieldName != null && fieldName != null){
+        if(fieldName != null){
             response.addCookie(new Cookie(fieldName, fieldValue));
         }
     }
