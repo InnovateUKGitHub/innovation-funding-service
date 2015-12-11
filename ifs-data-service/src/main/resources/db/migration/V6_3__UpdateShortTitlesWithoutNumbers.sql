@@ -1,7 +1,3 @@
-ALTER TABLE `question`
-DROP COLUMN `short_name`,
-ADD COLUMN `short_name` VARCHAR(255) NULL DEFAULT NULL AFTER `name`;
-
 UPDATE `question` SET `short_name`='Business opportunity' WHERE `id`='1';
 UPDATE `question` SET `short_name`='Potential market' WHERE `id`='2';
 UPDATE `question` SET `short_name`='Project exploitation' WHERE `id`='3';

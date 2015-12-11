@@ -1,4 +1,4 @@
-ALTER TABLE `ifs`.`question`
+ALTER TABLE `question`
 ADD COLUMN `short_name` VARCHAR(255) NULL DEFAULT NULL AFTER `name`;
 UPDATE `question` SET `short_name`='1. Business opportunity' WHERE `id`='1';
 UPDATE `question` SET `short_name`='2. Potential market' WHERE `id`='2';
