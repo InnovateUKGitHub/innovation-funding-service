@@ -33,6 +33,36 @@
 		<li>a maximum of 30% of total eligible project costs is available to research participants. Where there is more than one research participant, this maximum will be shared between them.</li>
 	</ul>
 
+	
+	<div class="eligibility" th:unless="${param.warning != null}">
+
+		<dl class="list-eligibility">
+			<dt>Maximum research participation</dt>
+			<dd>30%</dd>
+			<dt>Current research participation</dt>
+			<dd>11%</dd>
+		</dl>
+		
+		<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+	</div>
+
+
+
+	<div class="eligibility eligibility-warning" th:unless="${param.warning == null}">
+
+		<dl class="list-eligibility">
+			<dt>Maximum research participation</dt>
+			<dd>30%</dd>
+			<dt>Current research participation</dt>
+			<dd class="warning">45%</dd>
+		</dl>
+
+		<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-warning" th:remove="tag" />
+
+	</div>
+
+
 	<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
