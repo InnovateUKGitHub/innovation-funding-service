@@ -27,7 +27,7 @@ Verify that the Applicant can see the List with the sections
     Then the applicant should see six sections
 
 Verify that when Applicant clicks the "Scope" this section is expanded
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     #Given the Applicant is in the application overview page
     #Then the Applicant clicks the "Scope" section
     #Then the First section should not be expanded
@@ -38,27 +38,27 @@ Verify that when Applicant clicks the "Scope" this section is expanded
 
 Verify that only the main questions show and not the file uploads
     [Documentation]    INFUND-428
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     When the Applicant is in the application overview page
     Then the uploads should not be visible
 
 Verify the applicant can see the days left to submit
     [Documentation]    -INFUND-37
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     When the Applicant is in the application overview page
     The "Days left to submit" should be visible in the overview page
     The "days left to submit" should be correct in the overview page
 
 Verify the "Progress bar" is 0% when the application is empty
     [Documentation]    INFUND-32
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     When the Applicant is in the application overview page
     The Progress bar should be 0% in the overview page
     and the progress bar on the My applications page should be 0%
 
 Verify the "Progress bar" is 14% when the applicant marks as complete one question from each section
     [Documentation]    INFUND-32
-    [Tags]    Applicant
+    [Tags]    Applicant    Overview
     When the applicant completes one question from every section
     Then the Progress bar should be 14% in the overview page
     and the progress bar on the my applications page should be 14%
