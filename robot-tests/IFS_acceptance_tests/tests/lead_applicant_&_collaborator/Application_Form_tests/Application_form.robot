@@ -59,7 +59,7 @@ Verify that the word count is available
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
     Given the Applicant is in the application form
-    When the Applicant clicks the Funding section
+    When the Applicant clicks the Application questions section
     Then the word count should be available in the text areas
 
 Verify that the word count works
@@ -121,20 +121,14 @@ the guidance should be visible
     Element Should Be Visible    css=#details-content-0 p
 
 When the Applicant clicks the sections then the Applicant navigates to the correct sections
-    Click Element    link=Scope (Gateway question)
-    Location Should Be    ${SCOPE_SECTION_URL}
-    Click Element    Link=Your business proposition (Q1-Q4)
-    Location Should Be    ${YOUR_BUSINESS_URL}
-    Click Element    link=Your approach to the project (Q5-Q8)
-    Location Should Be    ${PROJECT_URL}
-    Click Element    link=Funding (Q9-Q10)
-    Location Should Be    ${FUNDING_URL}
+    Click Element    link=Application questions
+    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
     Click Element    link=Finances
     Location Should Be    ${FINANCES}
     Click Element    link=Your finances
 
-When the Applicant clicks the Funding section
-    Click Element    link=Funding (Q9-Q10)
+When the Applicant clicks the Application questions section
+    Click Element    link=Application questions
 
 the word count should be available in the text areas
     Page Should Contain Element    css=#form-input-15 .count-down

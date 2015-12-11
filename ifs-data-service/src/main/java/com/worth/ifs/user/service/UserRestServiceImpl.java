@@ -3,6 +3,7 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -89,5 +90,19 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         ResponseEntity<User[]> responseEntity = restGetEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
+    }
+
+    public UserDto createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
+        UserDto user = new UserDto();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setTitle(title);
+        user.setPhoneNumber(phoneNumber);
+
+        String url = userRestURL + "/createUserForOrganisationWithRole/" + organisationId +"/"+roleName;
+
+        return restPost(url, user, UserDto.class);
     }
 }

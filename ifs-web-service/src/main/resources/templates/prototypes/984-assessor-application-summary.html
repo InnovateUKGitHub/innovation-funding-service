@@ -1,336 +1,292 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
+  <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-</head>
-<body class="assessment-overview">
-
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
-
-
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
-
-
-	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Assessment summary'})" th:remove="tag" />
-	
-	<h2 class="heading-medium">Overall scores</h2>
-
-    <table>
-    	<tbody>
-            <tr>
-                <th>Question</th>
-                <td><a href="/prototypes/984-assessor-question1">1</a></td>
-                <td><a href="/prototypes/984-assessor-question2">2</a></td>
-                <td><a href="/prototypes/984-assessor-question3">3</a></td>
-                <td><a href="/prototypes/984-assessor-question4">4</a></td>
-                <td><a href="#">5</a></td>
-                <td><a href="#">6</a></td>
-                <td><a href="#">7</a></td>
-                <td><a href="#">8</a></td>
-                <td><a href="#">9</a></td>
-                <td><a href="#">10</a></td>
-            </tr>
-            <tr>
-                <th>Score</th>
-                <td>3</td>
-                <td>7</td>
-                <td>3</td>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
-
-  	<div class="extra-margin alignright">
-  		<p class="no-margin"><strong>Total: 21/100</strong></p>
-  		<p><strong>21%</strong></p>
-  	</div>
-
-	<h2 class="heading-medium">Review assessment</h2>
-
-	<div class="collapsible section-overview">
-        
-       	<h2 class="section-complete">Scope</h2>
-
-		<div id="collapsible-1" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					<div class="grid-row">
-                      <div class="column-three-quarters">
-                        <h4 class="heading-medium">How does your project align with the scope of this competition?</h4>
-                        <p>This is the feedback text here. </p>
-
-                        <p><a href="/prototypes/984-assessor-question-scope">Return to this question in the application</a></p>
-                      </div>
-                      <div class="column-quarter">
-                        <p class="assessor-score alignright">
-                          <span class="score">In scope: <strong>Yes</strong></span>
-
-                        </p>
+      <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="assessment-overview">
+      <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+          <div th:include="fragments/layout :: global-header" th:remove="tag" />
+            <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+              <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+                <!-- HARDCODED PROTOTYPE HTML -->
+                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Assessment summary'})" th:remove="tag" />
+                  
+                  <h2 class="heading-medium">Overall scores</h2>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Question</th>
+                        <td><a href="/prototypes/984-assessor-question1">1</a></td>
+                        <td><a href="/prototypes/984-assessor-question2">2</a></td>
+                        <td><a href="/prototypes/984-assessor-question3">3</a></td>
+                        <td><a href="/prototypes/984-assessor-question4">4</a></td>
+                        <td><a href="#">5</a></td>
+                        <td><a href="#">6</a></td>
+                        <td><a href="#">7</a></td>
+                        <td><a href="#">8</a></td>
+                        <td><a href="#">9</a></td>
+                        <td><a href="#">10</a></td>
+                      </tr>
+                      <tr>
+                        <th>Score</th>
+                        <td>3</td>
+                        <td>7</td>
+                        <td>3</td>
+                        <td>3</td>
+                        <td></td>
+                        <td></td>
+                        <td>5</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="extra-margin alignright">
+                    <p class="no-margin"><strong>Total: 21/100</strong></p>
+                    <p><strong>21%</strong></p>
+                  </div>
+                  <h2 class="heading-medium">Review assessment</h2>
+                  <div class="collapsible section-overview">
+                    
+                    <h2>Scope
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-1" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          <div class="grid-row">
+                            <div class="column-three-quarters">
+                              <h4 class="heading-medium">How does your project align with the scope of this competition?</h4>
+                              <p>This is the feedback text here. </p>
+                              <p><a href="/prototypes/984-assessor-question-scope">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                              <p class="assessor-score alignright">
+                                <span class="score">In scope: <strong>Yes</strong></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-complete">1. Business opportunity</h2>
-
-		<div id="collapsible-2" aria-hidden="false">
-			<div class="question" >
-				<div class="form-group">
-					<div class="grid-row">
-                      <div class="column-three-quarters">
-                        <h4 class="heading-medium">What is the business opportunity that your project addresses?</h4>
-                        <p>This is the feedback text here. </p>
-
-                        <p><a href="/prototypes/984-assessor-question1">Return to this question in the application</a></p>
-                      </div>
-                      <div class="column-quarter">
-                        <p class="assessor-score alignright">
-                          <span class="score">Score: <strong>3</strong></span>
-
-                        </p>
+                    <h2>1. Business opportunity
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-2" aria-hidden="false">
+                      <div class="question" >
+                        <div class="form-group">
+                          <div class="grid-row">
+                            <div class="column-three-quarters">
+                              <h4 class="heading-medium">What is the business opportunity that your project addresses?</h4>
+                              <p>This is the feedback text here. </p>
+                              <p><a href="/prototypes/984-assessor-question1">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                              <p class="assessor-score alignright">
+                                <span class="score">Score: <strong>3</strong></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-complete">2. Potential market</h2>
-
-		<div id="collapsible-3" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					<div class="grid-row">
-                      <div class="column-three-quarters">
-                        <h4 class="heading-medium">What is the size of the potential market for your project?</h4>
-                        <p>This is the feedback text here. </p>
-
-                        <p><a href="/prototypes/984-assessor-question2">Return to this question in the application</a></p>
-                      </div>
-                      <div class="column-quarter">
-                        <p class="assessor-score alignright">
-                          <span class="score">Score: <strong>7</strong></span>
-
-                        </p>
+                    <h2>2. Potential market
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-3" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          <div class="grid-row">
+                            <div class="column-three-quarters">
+                              <h4 class="heading-medium">What is the size of the potential market for your project?</h4>
+                              <p>This is the feedback text here. </p>
+                              <p><a href="/prototypes/984-assessor-question2">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                              <p class="assessor-score alignright">
+                                <span class="score">Score: <strong>7</strong></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-complete">3. Project exploitation</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					<div class="grid-row">
-                      <div class="column-three-quarters">
-                        <h4 class="heading-medium">How will you exploit and market your project?</h4>
-                        <p>This is the feedback text here? </p>
-
-                        <p><a href="/prototypes/984-assessor-question3">Return to this question in the application</a></p>
-                      </div>
-                      <div class="column-quarter">
-                        <p class="assessor-score alignright">
-                          <span class="score">Score: <strong>7</strong></span>
-
-                        </p>
+                    <h2>3. Project exploitation
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          <div class="grid-row">
+                            <div class="column-three-quarters">
+                              <h4 class="heading-medium">How will you exploit and market your project?</h4>
+                              <p>This is the feedback text here? </p>
+                              <p><a href="/prototypes/984-assessor-question3">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                              <p class="assessor-score alignright">
+                                <span class="score">Score: <strong>7</strong></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-complete">4. Economic benefit</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					<div class="grid-row">
-                      <div class="column-three-quarters">
-                        <h4 class="heading-medium">What economic, social and environmental benefits do you expect your project to deliver and when?</h4>
-                        <p>This is the feedback text here? </p>
-
-                        <p><a href="/prototypes/984-assessor-question4">Return to this question in the application</a></p>
-                      </div>
-                      <div class="column-quarter">
-                        <p class="assessor-score alignright">
-                          <span class="score">Score: <strong>3</strong></span>
-
-                        </p>
+                    <h2>4. Economic benefit
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          <div class="grid-row">
+                            <div class="column-three-quarters">
+                              <h4 class="heading-medium">What economic, social and environmental benefits do you expect your project to deliver and when?</h4>
+                              <p>This is the feedback text here? </p>
+                              <p><a href="/prototypes/984-assessor-question4">Return to this question in the application</a></p>
+                            </div>
+                            <div class="column-quarter">
+                              <p class="assessor-score alignright">
+                                <span class="score">Score: <strong>3</strong></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-incomplete">5. Technical approach</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Technical content
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-incomplete">6. Innovate</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Innovation content
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-complete">7. Risks</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Risks content
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-incomplete">8. Project team</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Project team content
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-incomplete">9. Funding</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Funding content
-				</div>
-			</div>
-    	</div>
-
-
-    	<h2 class="section-incomplete">10. Adding value</h2>
-
-		<div id="collapsible-4" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Adding value content
-				</div>
-			</div>
-    	</div>
-
-    </div>
-
-    <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
-    <fieldset class="inline">
-        <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
-        <div class="form-group">
-            <label class="block-label" for="assessor-question-confirmation-yes">
-            <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
-                Yes
-            </label>
-            <label class="block-label" for="assessor-question-confirmation-no">
-            <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
-                No
-            </label>
-        </div>
-    </fieldset>
-
-     <fieldset>
-        <legend class="visuallyhidden">Question feedback</legend>
-        <div class="form-group">
-            <div class="form-group">
-                
-                 <label class="form-label form-label-bold" for="assessor-application-feedback-text">Your feedback
-                    <span class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</span>
-                 </label>
-                
-                <div class="textarea-wrapped word-count">
-        
-                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-
-                    <div class="textarea-footer">
+                    <h2>5. Technical approach
+                      <div class="section-status section-incomplete">Incomplete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Technical content
+                        </div>
+                      </div>
+                    </div>
+                    <h2>6. Innovate
+                      <div class="section-status section-incomplete">Incomplete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Innovation content
+                        </div>
+                      </div>
+                    </div>
+                    <h2>7. Risks
+                      <div class="section-status section-complete">Complete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Risks content
+                        </div>
+                      </div>
+                    </div>
+                    <h2>8. Project team
+                      <div class="section-status section-incomplete">Incomplete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Project team content
+                        </div>
+                      </div>
+                    </div>
+                    <h2>9. Funding
+                      <div class="section-status section-incomplete">Incomplete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Funding content
+                        </div>
+                      </div>
+                    </div>
+                    <h2>10. Adding value
+                      <div class="section-status section-incomplete">Incomplete</div>
+                    </h2>
+                    <div id="collapsible-4" aria-hidden="false">
+                      <div class="question">
+                        <div class="form-group">
+                          Adding value content
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
+                  <fieldset class="inline">
+                    <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
+                    <div class="form-group">
+                      <label class="block-label" for="assessor-question-confirmation-yes">
+                        <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                        Yes
+                      </label>
+                      <label class="block-label" for="assessor-question-confirmation-no">
+                        <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                        No
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <legend class="visuallyhidden">Question feedback</legend>
+                    <div class="form-group">
+                      <div class="form-group">
                         
-                        <span class="count-label">
-                                <span class="count-message">Words remaining:</span>
-                                <span class="count-down positive" aria-live="polite">349</span>
-                        </span>
-                
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-group">
-                
-                 <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)
-                 </label>
-                
-                <div class="textarea-wrapped word-count">
-        
-                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-
-                    <div class="textarea-footer">
+                        <label class="form-label form-label-bold" for="assessor-application-feedback-text">Your feedback
+                          <span class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</span>
+                        </label>
                         
-                        <span class="count-label">
-                                <span class="count-message">Words remaining:</span>
-                                <span class="count-down positive" aria-live="polite">349</span>
-                        </span>
-                
+                        <div class="textarea-wrapped word-count">
+                          
+                          <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                          <div class="textarea-footer">
+                            
+                            <span class="count-label">
+                              <span class="count-message">Words remaining:</span>
+                              <span class="count-down positive" aria-live="polite">349</span>
+                            </span>
+                            
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-		<p class="icon-info">
-            You'll still be able to make changes after this point.<br />All assessments need to be submitted through the dashboard.
-        </p>
-
-        <div class="alignright">
-        	<button class="button button-large" name="confirm-submission" id="assessment-summary-submit" type="submit">Save assessment</button>
-        </div>
-
-    </fieldset>
-
-	
-
-
-
-
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
-
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-</body>
-</html>
+                    <div class="form-group">
+                      <div class="form-group">
+                        
+                        <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)
+                        </label>
+                        
+                        <div class="textarea-wrapped word-count">
+                          
+                          <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                          <div class="textarea-footer">
+                            
+                            <span class="count-label">
+                              <span class="count-message">Words remaining:</span>
+                              <span class="count-down positive" aria-live="polite">349</span>
+                            </span>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="icon-info">
+                      You'll still be able to make changes after this point.<br />All assessments need to be submitted through the dashboard.
+                    </p>
+                    <div class="alignright">
+                      <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" type="submit">Save assessment</button>
+                    </div>
+                  </fieldset>
+                  
+                  <!-- END OFHARDCODED PROTOTYPE HTML -->
+                  <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+                    </main>
+                    <div th:include="fragments/layout :: footer" th:remove="tag" />
+                      <div th:include="fragments/layout :: body-end" th:remove="tag" />
+                      </body>
+                    </html>

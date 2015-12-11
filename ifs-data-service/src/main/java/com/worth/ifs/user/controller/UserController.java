@@ -1,8 +1,14 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.dto.UserDto;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,6 +33,10 @@ public class UserController {
     UserRepository repository;
     @Autowired
     ProcessRoleRepository processRoleRepository;
+    @Autowired
+    OrganisationRepository organisationRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -102,5 +113,57 @@ public class UserController {
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
         return users;
+    }
+
+    @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
+    public UserDto createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserDto userDto) {
+
+        User newUser = assembleUserFromDto(userDto);
+        addOrganisationToUser(newUser, organisationId);
+        addRoleToUser(newUser, roleName);
+
+        User createdUser = repository.save(newUser);
+
+        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
+
+        repository.save(createdUserWithToken);
+
+        return userDto;
+    }
+
+    private void addRoleToUser(User user, String roleName) {
+        List<Role> userRoles = roleRepository.findByName(roleName);
+        user.setRoles(userRoles);
+    }
+
+    private void addOrganisationToUser(User user, Long organisationId) {
+        Organisation userOrganisation = organisationRepository.findOne(organisationId);
+        List<Organisation> userOrganisationList = new ArrayList<>();
+        userOrganisationList.add(userOrganisation);
+        user.setOrganisations(userOrganisationList);
+    }
+
+    private User assembleUserFromDto(UserDto userDto) {
+        User newUser = new User();
+        newUser.setFirstName(userDto.getFirstName());
+        newUser.setLastName(userDto.getLastName());
+        newUser.setPassword(userDto.getPassword());
+        newUser.setEmail(userDto.getEmail());
+        newUser.setTitle(userDto.getTitle());
+
+        String fullName = concatenateFullName(userDto.getFirstName(), userDto.getLastName());
+        newUser.setName(fullName);
+
+        return newUser;
+    }
+
+    private String concatenateFullName(String firstName, String lastName) {
+        return firstName+" "+lastName;
+    }
+
+    private User addTokenBasedOnIdToUser(User user) {
+        String userToken = user.getId() + "abc123";
+        user.setToken(userToken);
+        return user;
     }
 }

@@ -39,4 +39,10 @@ public class OrganisationController {
         return organisations;
     }
 
+    @RequestMapping("/findById/{organisationId}")
+    public Organisation findById(@PathVariable("organisationId") final Long organisationId) {
+
+        return organisationRepository.findOne(organisationId);
+    }
+
 }

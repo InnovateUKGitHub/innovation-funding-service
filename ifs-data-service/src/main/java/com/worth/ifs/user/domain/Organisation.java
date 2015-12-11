@@ -24,6 +24,9 @@ public class Organisation {
     @OneToMany(mappedBy="organisation")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
+    @ManyToMany(mappedBy="organisations")
+    private List<User> users = new ArrayList<>();
+
     public Organisation() {
 
     }
