@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -49,28 +49,17 @@ public class ApplicantController {
     public String dashboard(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        log.debug("++++++++++++++++++++++");
-        log.debug(user.getName());
-        log.debug(user.getId());
-        log.debug(user.getEmail());
-        log.debug("++++++++++++++++++++++");
-
-
         model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
 
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
-        Map<Long, Competition> competitions = new HashMap<>();
-        Stream.concat(inProgress.stream(), finished.stream())
-            .forEach(application -> {
-                log.debug(application.getId());
-                log.debug(application.getName());
-                log.debug(application.getCompetitionId());
-                    competitions.put(
-                        application.getId(),
-                        competitionService.getById(application.getCompetitionId())
-                    );
-                }
+
+        Map<Long, Competition> competitions = combineLists(inProgress, finished).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> competitionService.getById(application.getCompetitionId())
+                )
             );
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));

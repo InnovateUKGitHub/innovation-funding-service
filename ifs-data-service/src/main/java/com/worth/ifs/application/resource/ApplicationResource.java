@@ -10,9 +10,10 @@ import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 
 @Relation(value="application", collectionRelation="applications")
 public class ApplicationResource {
@@ -37,12 +38,13 @@ public class ApplicationResource {
     public ApplicationResource(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
         this.competitionId = competition.getId();
         this.name = name;
-        this.processRoleIds = processRoles.stream().map(ProcessRole::getId).collect(Collectors.toList());
+        this.processRoleIds = simpleMap(processRoles,ProcessRole::getId);
         this.applicationStatus = applicationStatus;
         this.id = id;
     }
 
     public ApplicationResource(Application application){
+        //TODO make this work without conditionals
         if(application.getCompetition()==null){
             this.competitionId = null;
         }else {
@@ -52,7 +54,7 @@ public class ApplicationResource {
         if (application.getProcessRoles() == null) {
             this.processRoleIds = new ArrayList<>();
         }else {
-            this.processRoleIds = application.getProcessRoles().stream().map(ProcessRole::getId).collect(Collectors.toList());
+            this.processRoleIds = simpleMap(application.getProcessRoles(),ProcessRole::getId);
         }
         this.applicationStatus = application.getApplicationStatus();
         this.id = application.getId();
@@ -131,7 +133,7 @@ public class ApplicationResource {
         if(this.processRoleIds == null){
             this.processRoleIds = new ArrayList<>();
         }
-        this.processRoleIds.addAll(Arrays.asList(processRoles).stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        this.processRoleIds.addAll(simpleMap(asList(processRoles),ProcessRole::getId));
     }
 
     public LocalDate getStartDate() {
