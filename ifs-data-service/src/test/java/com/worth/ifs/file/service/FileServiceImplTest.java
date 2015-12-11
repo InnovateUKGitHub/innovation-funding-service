@@ -10,6 +10,7 @@ import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,10 +23,13 @@ import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
+import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FOLDERS;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,9 +49,14 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     private List<String> tempFolderPaths;
 
     @Before
-    public void setup() {
+    public void setupTempFolders() {
         File tempFolderPath = Files.createTempDir();
         tempFolderPaths = asList(tempFolderPath.getPath().substring(1).split(File.separator));
+    }
+
+    @After
+    public void teardown() {
+
     }
 
     @Test
@@ -198,5 +207,41 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals("samefilename", secondFile.getName());
         String expectedPath2 = fullPathsToNewFiles.get(1).stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
         assertEquals(expectedPath2 + File.separator + "samefilename", secondFile.getPath());
+    }
+
+    @Test
+    public void testCreateFileFailureToCreateFoldersHandledGracefully() {
+
+        FileEntryResource fileResource = newFileEntryResource().
+                with(id(null)).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry();
+
+        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("cantcreatethisfolder"));
+
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        // make the temp folder readonly so that the subfolder creation fails
+        File tempFolder = new File(tempFolderPaths.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment));
+        tempFolder.setReadOnly();
+
+        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FOLDERS));
+    }
+
+    @Test
+    public void testCreateFileWithUnexpectedExceptionsHandlesFailureGracefully() {
+
+        RuntimeException exception = new RuntimeException("you shall not pass!");
+        when(fileEntryRepository.save(isA(FileEntry.class))).thenThrow(exception);
+
+        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(newFileEntryResource().with(id(null)).build());
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
     }
 }

@@ -4,8 +4,8 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -75,7 +75,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ServiceLocator serviceLocator = new ServiceLocator();
 
     @Before
-    public void setUp() {
+    public void setupMockInjection() {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
     }

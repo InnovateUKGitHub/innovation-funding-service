@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_APPLICATION;
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.PROCESS_ROLE_INCORRECT_TYPE;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_APPLICATION;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_TYPE;
 import static com.worth.ifs.util.Either.right;
 
 /**
@@ -35,7 +35,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(AssessorServiceImpl.class);
 
-    public enum Failures {
+    public enum ServiceFailures {
         UNEXPECTED_ERROR, //
         RESPONSE_NOT_FOUND, //
         PROCESS_ROLE_NOT_FOUND, //

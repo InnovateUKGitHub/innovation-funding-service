@@ -14,4 +14,6 @@ import java.io.File;
 public interface FileService {
 
     Either<ServiceFailure, ServiceSuccess<File>> createFile(FileEntryResource file);
+
+    Either<ServiceFailure, ServiceSuccess<File>> getFileByFileEntryId(Long fileEntryId);
 }
