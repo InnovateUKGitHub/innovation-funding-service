@@ -238,6 +238,31 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void testCreateFileFailureToCreateFileHandledGracefully() {
+
+        FileEntryResource fileResource = newFileEntryResource().
+                with(id(null)).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry();
+
+        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+        List<String> fullPathToNewFile = tempFolderPaths;
+
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        // make the target folder readonly so that the subfolder creation fails
+        File targetFolder = pathElementsToAbsoluteFile(fullPathToNewFile);
+        targetFolder.setReadOnly();
+
+        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+    }
+
+    @Test
     public void testCreateFileWithUnexpectedExceptionsHandlesFailureGracefully() {
 
         RuntimeException exception = new RuntimeException("you shall not pass!");
