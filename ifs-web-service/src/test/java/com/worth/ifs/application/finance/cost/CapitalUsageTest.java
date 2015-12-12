@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CapitalUsageTest {
 
@@ -16,7 +16,7 @@ public class CapitalUsageTest {
     private String existing = "New";
     private BigDecimal npv = new BigDecimal(20000);
     private BigDecimal residualValue = new BigDecimal(15000);
-    private Integer utilisation = new Integer(25);
+    private Integer utilisation = 25;
     private CapitalUsage capitalUsage;
 
     @Before
@@ -37,7 +37,7 @@ public class CapitalUsageTest {
     @Test
     public void testGetTotal() throws Exception {
         initCapitalUsage();
-        assertEquals(BigDecimal.valueOf(1250).setScale(2), capitalUsage.getTotal());
+        assertEquals(BigDecimal.valueOf(1250).setScale(2,BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
     @Test
     public void testGetTotalNullNPV() throws Exception {
@@ -61,18 +61,18 @@ public class CapitalUsageTest {
     public void testGetTotalZeroNPV() throws Exception {
         npv = BigDecimal.ZERO;
         initCapitalUsage();
-        assertEquals(BigDecimal.valueOf(-3750).setScale(2), capitalUsage.getTotal());
+        assertEquals(BigDecimal.valueOf(-3750).setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
     @Test
     public void testGetTotalZeroResidualVal() throws Exception {
         residualValue = BigDecimal.ZERO;
         initCapitalUsage();
-        assertEquals(BigDecimal.valueOf(5000).setScale(2), capitalUsage.getTotal());
+        assertEquals(BigDecimal.valueOf(5000).setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
     @Test
     public void testGetTotalZeroUtilisation() throws Exception {
         utilisation = 0;
         initCapitalUsage();
-        assertEquals(BigDecimal.ZERO, capitalUsage.getTotal());
+        assertEquals(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
 }

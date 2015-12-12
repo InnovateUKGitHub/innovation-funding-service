@@ -112,6 +112,7 @@ public abstract class BaseTransactionalService  {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (NoTransactionException e) {
             log.trace("No transaction to roll back");
+            log.error(e);
         }
     }
 

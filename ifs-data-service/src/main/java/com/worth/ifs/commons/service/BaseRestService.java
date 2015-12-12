@@ -137,7 +137,9 @@ public abstract class BaseRestService {
 
     protected <T> HttpEntity<T> jsonEntity(T entity){
         HttpHeaders headers = getHeaders();
-        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (SecurityContextHolder.getContext() != null &&
+            SecurityContextHolder.getContext().getAuthentication() != null &&
+            SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
         return new HttpEntity<>(entity, headers);

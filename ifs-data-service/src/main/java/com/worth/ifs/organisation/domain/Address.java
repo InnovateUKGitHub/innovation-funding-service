@@ -1,9 +1,21 @@
-package com.worth.ifs.organisation.resource;
+package com.worth.ifs.organisation.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Resource object to store the address details, from the company, from the company house api.
  */
-public class PostalAddress {
+//@Entity
+public class Address {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private String addressLine1;
     private String addressLine2;
     private String careOf;
@@ -14,10 +26,10 @@ public class PostalAddress {
     private String region;
 
 
-    public PostalAddress() {
+    public Address() {
     }
 
-    public PostalAddress(String addressLine1, String addressLine2, String careOf, String country, String locality, String po_box, String postal_code, String region) {
+    public Address(String addressLine1, String addressLine2, String careOf, String country, String locality, String po_box, String postal_code, String region) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.careOf = careOf;
@@ -90,5 +102,19 @@ public class PostalAddress {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    @JsonIgnore
+    public String getCombinedString(){
+        String[] location = new String[3];
+        location[0] = getPostalCode();
+        location[1] = getAddressLine1();
+        location[2] = getLocality();
+        return String.join(", ", location);
+
+    }
+
+    public Long getId() {
+        return id;
     }
 }

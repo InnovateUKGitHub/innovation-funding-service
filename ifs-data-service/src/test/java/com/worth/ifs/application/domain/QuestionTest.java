@@ -68,4 +68,14 @@ public class QuestionTest {
         Assert.assertEquals(question.getPriority(), priority);
     }
 
+    @Test
+    public void equalsShouldWorkCorrect() throws Exception{
+
+    }
+
+    @Test
+    public void hashCodeShouldWorkCorrectly() throws Exception{
+
+    }
+
 }

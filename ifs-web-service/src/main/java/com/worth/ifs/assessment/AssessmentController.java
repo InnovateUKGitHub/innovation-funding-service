@@ -163,7 +163,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Assessment assessment, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
-        addApplicationDetails(new ApplicationResource(assessment.getApplication()).getId(), userId, sectionId, model, true, null);
+        addApplicationDetails(new ApplicationResource(assessment.getApplication()).getId(), userId, sectionId, model, null, true);
 
         List<Response> questionResponses = responseService.getByApplication(new ApplicationResource(assessment.getApplication()).getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
@@ -186,9 +186,9 @@ public class AssessmentController extends AbstractApplicationController {
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         List<Long> processRoleIds = application.getProcessRoleIds();
         Set<String> partners = processRoleIds.stream()
-            .map(id -> processRoleService.getById(id))
-            .map(ProcessRole::getOrganisation)
-            .map(Organisation::getName)
+                .map(id -> processRoleService.getById(id))
+                .map(ProcessRole::getOrganisation)
+                .map(Organisation::getName)
             .collect(Collectors.toSet());
         model.addAttribute("partners", partners);
 

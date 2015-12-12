@@ -24,8 +24,8 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.springframework.hateoas.client.Hop.rel;
 
@@ -58,7 +58,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)
                                             .toObject(typeReference);
         List<ProcessRole> roles = new ArrayList<>(roleResources.getContent());
-        application.setProcessRoleIds(roles.stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        application.setProcessRoleIds(simpleMap(roles,ProcessRole::getId));
         return application;
 
     }
@@ -124,8 +124,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
-//        http://localhost:8090/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=1&assigneeId=9
-
         String count = restGet("/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=" + applicationId + "&assigneeId=" + assigneeId, String.class);
         return Integer.valueOf(count);
     }

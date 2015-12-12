@@ -46,6 +46,33 @@ Large message panel
 	}
 }
 
+
+.success-alert{
+	background: $grey-4 url('../images/field/tick-icon.png') 20px 50% no-repeat;
+	padding: 20px 20px 10px 60px;
+	border-left: 5px solid $green;
+	color: $green;
+	margin: 10px 0;
+	clear: both;
+
+	h2,h3{
+		border: none !important;
+	}
+}
+
+.warning-alert{
+	background: $grey-4 url('../images/warning-icon.png') 20px 50% no-repeat;
+	padding: 20px 20px 10px 60px;
+	border-left: 5px solid $red;
+	color: $red;
+	margin: 10px 0;
+	clear: both;
+
+	h2,h3{
+		border: none !important; 
+	}
+}
+
 .icon-info{
 	background: url(../images/icons/icon-information-2x.png) no-repeat;
 	clear: both;
@@ -53,6 +80,8 @@ Large message panel
     min-height: 54px;
     padding-left: 70px;
 }
+
+
 
 
 /*

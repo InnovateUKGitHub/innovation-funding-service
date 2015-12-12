@@ -38,8 +38,9 @@
     <form action="#" method="post" class="application-overview">
             <div th:remove="tag" th:each="section : ${sections.values()}">
                 <section th:id="'section-'+${section.getId()}">
-                <h2 th:text="${section.getName()}" class="heading-medium"/>
-                <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
+                <h2 th:text="${section.name}" class="heading-medium no-margin-bottom"/>
+                    <p th:text="${section.description}"></p>
+                    <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:case="${0}" th:remove="tag">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
@@ -49,7 +50,7 @@
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
                                     <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}"
-                                       th:text="${section.getName()}" />
+                                       th:text="${section.name}" />
                                 </h3>
                             </div>
                         </li>

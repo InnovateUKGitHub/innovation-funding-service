@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Verify that the assign button is visible in the overview page
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Overview
     When the Applicant is in the overview page
     Then the assign button should be visible in the overview page
 
@@ -34,7 +34,7 @@ Verify the field is disabled for other collaborators
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Overview
     When the Collaborator is in the Application details section
     Then the Collaborator gets the assigned notification
     and the public description question should be assigned to the collaborator
@@ -92,7 +92,7 @@ the Collaborator gets the assigned notification
 
 and the collaborator can see the 'assigned to you' in the overview page
     Applicant goes to the Overview page
-    Element Should Contain    css=#section-1 .list-overview > li:nth-child(3) div.assign-button button    You
+    Element Should Contain    css=#form-input-12 .assign-container    You
 
 the public description question should not be editable
     Element Should Be Disabled    id=12

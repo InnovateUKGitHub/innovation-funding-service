@@ -27,4 +27,8 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         return asList(restGet(organisationRestURL + "/findByApplicationId/" + applicationId, Organisation[].class));
     }
 
+    public Organisation getOrganisationById(Long organisationId) {
+        return restGet(organisationRestURL + "/findById/"+organisationId, Organisation.class);
+    }
+
 }

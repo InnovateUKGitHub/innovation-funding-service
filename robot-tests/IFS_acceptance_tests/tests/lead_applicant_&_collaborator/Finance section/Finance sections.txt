@@ -30,12 +30,12 @@ Verify the text guidance in the "Your Finance section"
 *** Keywords ***
 the Applicant should see all the "Your Finance" Sections
     Page Should Contain Element    css=h2:nth-child(1) button
-    Page Should Contain Element    css=#question-20 > div > h2:nth-child(3) > button
-    Page Should Contain Element    css=#question-20 > div > h2:nth-child(5) > button
-    Page Should Contain Element    css=#collapsible-2+ h2 button
-    Page Should Contain Element    css=#question-20 > div > h2:nth-child(9) > button
-    Page Should Contain Element    css=#question-20 > div > h2:nth-child(11) > button
-    Page Should Contain Element    css=#question-20 > div > h2:nth-child(13) > button
+    Page Should Contain Element    css=h2:nth-child(3) button
+    Page Should Contain Element    css=h2:nth-child(5) button
+    Page Should Contain Element    css=h2:nth-child(7) button
+    Page Should Contain Element    css=h2:nth-child(9) button
+    Page Should Contain Element    css=h2:nth-child(11) button
+    Page Should Contain Element    css=h2:nth-child(13) button
 
 the Applicant is in the Labour sub-section
     Click Element    css=h2:nth-child(1) button

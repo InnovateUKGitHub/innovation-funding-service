@@ -30,3 +30,26 @@
 	}
 
 }
+
+
+table{
+	.section-complete{
+		th{
+			@extend %icon-tick;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+
+	.section-incomplete{
+		th{
+			@extend %icon-incomplete;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+}

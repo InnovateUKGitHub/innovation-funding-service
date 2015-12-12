@@ -65,7 +65,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
-                .andExpect(model().attribute("incompletedSections", Arrays.asList(3L, 4L)))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetitionId())))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }

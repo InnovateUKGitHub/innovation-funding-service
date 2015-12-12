@@ -156,10 +156,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         Organisation organisation = new Organisation(1L , "testOrganisation");
+        List<Organisation> organisations = new ArrayList<>();
+        organisations.add(organisation);
         User user = new User();
 
-        ProcessRole processRole = new ProcessRole(1L, user, null, role, organisation);
+        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
         user.addUserApplicationRole(processRole);
+        user.setOrganisations(organisations);
 
         ApplicationStatus applicationStatus = new ApplicationStatus();
         applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());

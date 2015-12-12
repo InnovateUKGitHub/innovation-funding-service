@@ -9,10 +9,10 @@ import com.worth.ifs.user.domain.ProcessRole;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -53,6 +53,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoleIds(asList(processRoles).stream().map(ProcessRole::getId).collect(Collectors.toList())));
+        return with(application -> application.setProcessRoleIds(simpleMap(asList(processRoles),ProcessRole::getId)));
     }
 }
