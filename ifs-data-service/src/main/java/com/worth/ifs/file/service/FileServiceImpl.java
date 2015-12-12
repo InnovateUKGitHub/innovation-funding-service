@@ -51,6 +51,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 map(file -> successResponse(file)),
                 UNABLE_TO_CREATE_FILE);
     }
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<File>> getFileByFileEntryId(Long fileEntryId) {
+        return handlingErrors(() ->
+                findFileEntry(fileEntryId).
+                map(fileEntry -> findFile(fileEntry)).
+                map(file -> successResponse(file)),
+                UNABLE_TO_FIND_FILE);
+    }
 
     private Either<ServiceFailure, File> doCreateFile(FileEntry savedFileEntry) {
         Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
@@ -62,15 +70,6 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
         FileEntry fileEntry = FileEntryResourceAssembler.valueOf(resource);
         return right(fileEntryRepository.save(fileEntry));
-    }
-
-    @Override
-    public Either<ServiceFailure, ServiceSuccess<File>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(() ->
-                findFileEntry(fileEntryId).
-                map(fileEntry -> findFile(fileEntry)).
-                map(file -> successResponse(file)),
-                UNABLE_TO_FIND_FILE);
     }
 
     private Either<ServiceFailure, FileEntry> findFileEntry(Long fileEntryId) {

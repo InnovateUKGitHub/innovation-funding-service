@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
@@ -245,5 +246,27 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(newFileEntryResource().with(id(null)).build());
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+    }
+
+    @Test
+    public void testGetFileByFileEntryId() throws IOException {
+
+        // start by creating a new File to retrieve
+        List<String> fullPathToNewFile = tempFolderPaths;
+        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
+        pathElementsToAbsoluteFile(fullPathPlusFilename).createNewFile();
+
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(existingFileEntry)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        Either<ServiceFailure, ServiceSuccess<File>> file = service.getFileByFileEntryId(123L);
+        assertTrue(file.isRight());
+
+        File retrievedFile = file.getRight().getResult();
+        assertTrue(retrievedFile.exists());
+        assertEquals(pathElementsToAbsolutePathString(fullPathPlusFilename), retrievedFile.getPath());
+        assertEquals("thefilename", retrievedFile.getName());
     }
 }
