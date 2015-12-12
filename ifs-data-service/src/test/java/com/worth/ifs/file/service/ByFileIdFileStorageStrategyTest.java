@@ -1,19 +1,22 @@
 package com.worth.ifs.file.service;
 
 import com.google.common.io.Files;
+import com.worth.ifs.file.domain.FileEntry;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 /**
  * Test the storage strategy of ByFileIdFileStorageStrategy
  */
-public class ByFileIdStorageStrategyTest {
+public class ByFileIdFileStorageStrategyTest {
 
     private File tempFolderPath;
 
@@ -29,6 +32,16 @@ public class ByFileIdStorageStrategyTest {
 
         assertEquals(asList("BaseFolder", "000000000_999999999", "000000_999999", "000_999"), strategy.getFilePathAndName(0L).getLeft());
         assertEquals("0", strategy.getFilePathAndName(0L).getRight());
+    }
+
+    @Test
+    public void testGetAbsoluteFilePathAndName() {
+
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPath.getPath(), "BaseFolder");
+
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        assertEquals(asList("BaseFolder", "000000000_999999999", "000000_999999", "000_999"), strategy.getAbsoluteFilePathAndName(fileEntry).getLeft());
+        assertEquals("3", strategy.getFilePathAndName(3L).getRight());
     }
 
     @Test

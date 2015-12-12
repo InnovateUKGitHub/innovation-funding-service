@@ -59,7 +59,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @After
     public void teardown() {
-
+        File tempFolder = pathElementsToAbsoluteFile(tempFolderPaths);
+        tempFolder.setWritable(true);
+        tempFolder.delete();
     }
 
     @Test
