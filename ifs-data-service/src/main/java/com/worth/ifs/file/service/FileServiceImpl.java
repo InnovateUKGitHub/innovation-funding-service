@@ -22,6 +22,8 @@ import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePath;
+import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
@@ -73,7 +75,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
             List<String> pathElements = filePathAndName.getLeft();
             String filename = filePathAndName.getRight();
-            return new File(getFoldersPath(pathElements).toString(), filename);
+            return new File(pathElementsToAbsolutePathString(pathElements), filename);
 
         }, fileNotFoundError);
 
@@ -86,17 +88,13 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename) {
 
-        Path foldersPath = getFoldersPath(pathElements);
+        Path foldersPath = pathElementsToAbsolutePath(pathElements);
 
         return createFolders(foldersPath).map(createdFolders -> {
 
             File fileToCreate = new File(createdFolders.toString(), filename);
             return !fileToCreate.exists() ? createFileOrFail(fileToCreate) : errorResponse(DUPLICATE_FILE_CREATED);
         });
-    }
-
-    private Path getFoldersPath(List<String> pathElements) {
-        return new File(pathElements.stream().reduce("", (pathSoFar, nextPathSegment) -> pathSoFar + File.separator + nextPathSegment)).toPath();
     }
 
     private Either<ServiceFailure, Path> createFolders(Path path) {

@@ -27,6 +27,8 @@ import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_
 import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FOLDERS;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
+import static com.worth.ifs.util.FileFunctions.pathElementsToAbsoluteFile;
+import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
@@ -86,7 +88,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(newFileResult.exists());
         assertEquals("thefilename", newFileResult.getName());
 
-        String expectedPath = fullPathToNewFile.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
+        String expectedPath = pathElementsToAbsolutePathString(fullPathToNewFile);
         assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
     }
 
@@ -129,7 +131,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(secondFile.exists());
         assertEquals("thefilename2", secondFile.getName());
 
-        String expectedPath = fullPathToNewFile.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
+        String expectedPath = pathElementsToAbsolutePathString(fullPathToNewFile);
         assertEquals(expectedPath + File.separator + "thefilename1", firstFile.getPath());
         assertEquals(expectedPath + File.separator + "thefilename2", secondFile.getPath());
     }
@@ -199,13 +201,13 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         File firstFile = result1.getRight().getResult();
         assertTrue(firstFile.exists());
         assertEquals("samefilename", firstFile.getName());
-        String expectedPath1 = fullPathsToNewFiles.get(0).stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
+        String expectedPath1 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(0));
         assertEquals(expectedPath1 + File.separator + "samefilename", firstFile.getPath());
 
         File secondFile = result2.getRight().getResult();
         assertTrue(secondFile.exists());
         assertEquals("samefilename", secondFile.getName());
-        String expectedPath2 = fullPathsToNewFiles.get(1).stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment);
+        String expectedPath2 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(1));
         assertEquals(expectedPath2 + File.separator + "samefilename", secondFile.getPath());
     }
 
@@ -226,7 +228,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         // make the temp folder readonly so that the subfolder creation fails
-        File tempFolder = new File(tempFolderPaths.stream().reduce("", (accumulatedPathSoFar, nextPathSegment) -> accumulatedPathSoFar + File.separator + nextPathSegment));
+        File tempFolder = pathElementsToAbsoluteFile(tempFolderPaths);
         tempFolder.setReadOnly();
 
         Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
