@@ -10,6 +10,7 @@ import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
  * store and retrieve files.
  */
+@Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
     enum ServiceFailures {
