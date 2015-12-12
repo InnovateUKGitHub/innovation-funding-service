@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Function;
 
 import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
@@ -35,7 +34,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         UNABLE_TO_CREATE_FOLDERS, //
         UNABLE_TO_CREATE_FILE, //
         DUPLICATE_FILE_CREATED, //
-        FILE_NOT_FOUND, //
+        UNABLE_TO_FIND_FILE, //
     }
 
     @Autowired
@@ -46,44 +45,48 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<File>> createFile(FileEntryResource resource) {
+        return handlingErrors(() ->
+                saveFileEntry(resource).
+                map(savedFileEntry -> doCreateFile(savedFileEntry)).
+                map(file -> successResponse(file)),
+                UNABLE_TO_CREATE_FILE);
+    }
 
-        return handlingErrors(() -> {
+    private Either<ServiceFailure, File> doCreateFile(FileEntry savedFileEntry) {
+        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
+        List<String> pathElements = filePathAndName.getLeft();
+        String filename = filePathAndName.getRight();
+        return doCreateFile(pathElements, filename);
+    }
 
-            FileEntry fileEntry = FileEntryResourceAssembler.valueOf(resource);
-            FileEntry savedFileEntry = fileEntryRepository.save(fileEntry);
-
-            Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
-            List<String> pathElements = filePathAndName.getLeft();
-            String filename = filePathAndName.getRight();
-
-            Either<ServiceFailure, File> createdFile = doCreateFile(pathElements, filename);
-            return createdFile.map(file -> successResponse(file));
-
-        }, UNABLE_TO_CREATE_FILE);
+    private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
+        FileEntry fileEntry = FileEntryResourceAssembler.valueOf(resource);
+        return right(fileEntryRepository.save(fileEntry));
     }
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<File>> getFileByFileEntryId(Long fileEntryId) {
+        return handlingErrors(() ->
+                findFileEntry(fileEntryId).
+                map(fileEntry -> findFile(fileEntry)).
+                map(file -> successResponse(file)),
+                UNABLE_TO_FIND_FILE);
+    }
 
-        ServiceFailure fileNotFoundError = error(FILE_NOT_FOUND);
+    private Either<ServiceFailure, FileEntry> findFileEntry(Long fileEntryId) {
+        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), error(UNABLE_TO_FIND_FILE));
+    }
 
-        Either<ServiceFailure, FileEntry> findFileEntry = getOrFail(() -> fileEntryRepository.findOne(fileEntryId), fileNotFoundError);
-
-        Function<FileEntry, Either<ServiceFailure, File>> findFile = fileEntry ->
-                getOrFail(() -> {
+    private Either<ServiceFailure, File> findFile(FileEntry fileEntry) {
+        return getOrFail(() -> {
 
             Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
             List<String> pathElements = filePathAndName.getLeft();
             String filename = filePathAndName.getRight();
-            return new File(pathElementsToAbsolutePathString(pathElements), filename);
+            File expectedFile = new File(pathElementsToAbsolutePathString(pathElements), filename);
+            return expectedFile.exists() ? expectedFile : null;
 
-        }, fileNotFoundError);
-
-        Function<File, Either<ServiceFailure, File>> checkFileExists = file ->
-                file.exists() ? right(file) : errorResponse(FILE_NOT_FOUND);
-
-        return findFileEntry.map(findFile).map(checkFileExists).map(file -> successResponse(file));
-
+        }, error(UNABLE_TO_FIND_FILE));
     }
 
     private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename) {
