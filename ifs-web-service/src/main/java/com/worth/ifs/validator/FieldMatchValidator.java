@@ -2,12 +2,16 @@ package com.worth.ifs.validator;
 
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object>
 {
+    private final Log log = LogFactory.getLog(getClass());
+
     private String firstFieldName;
     private String secondFieldName;
     private String message;
@@ -33,7 +37,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         }
         catch (final Exception ignore)
         {
-            // ignore
+            log.error(ignore);
         }
 
         if (!matches) {

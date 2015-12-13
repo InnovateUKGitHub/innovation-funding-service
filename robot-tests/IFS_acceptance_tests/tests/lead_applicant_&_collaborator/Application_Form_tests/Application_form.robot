@@ -162,7 +162,7 @@ the Applicant will navigate to the summary page
     Location Should Be    ${SUMMARY_URL}
 
 the text box should turn to green
-    Page Should Contain Element    css=#form-input-12 .marked-as-complete
+    Page Should Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete
     Element Should Be Disabled    css=#form-input-12 textarea
 
 the button state should change to 'Edit'
@@ -174,11 +174,11 @@ the word count for the scope question should be correct
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Hi, I’m a robot @#$@#$@#$
-    Click Button    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
+    Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
-    Page Should Contain Element    css=#form-input-12.marked-as-complete    Question is marked-as-complete
+    Page Should Contain Element    css=#form-input-12 .complete
 
 the Applicant marks as incomplete 'Public description'
     Click Button    css=#form-input-12 div.textarea-footer > button[name="mark_as_incomplete"]
@@ -192,7 +192,7 @@ the button state should change to 'Mark as complete'
 the question should not be marked as complete on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
-    Page Should Not Contain Element    css=#question-12.marked-as-complete    Mark as complete class is not found, that's correct
+    Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
 the last update date of question 1 is a date in the past
     Page Should Contain Element    css=#question-1

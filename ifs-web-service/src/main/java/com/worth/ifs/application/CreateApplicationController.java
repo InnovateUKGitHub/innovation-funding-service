@@ -2,8 +2,8 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
+import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.organisation.resource.PostalAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,14 +121,15 @@ public class CreateApplicationController extends AbstractApplicationController {
             confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
 
             if(request.getParameter("select-address") != null){
-                if(confirmCompanyDetailsForm.getPostcodeOptions() == null){
-                    log.warn("NULL");
-                }else if(confirmCompanyDetailsForm.getPostcodeOptions().size() == 0){
-                    log.warn("zero size");
-                } else{
-                    PostalAddress address = confirmCompanyDetailsForm.getSelectedPostcode();
-                    log.info("selected a: "+ address.getAddressLine1());
+                if(confirmCompanyDetailsForm.getPostcodeOptions() != null && confirmCompanyDetailsForm.getPostcodeOptions().size() != 0){
+                    int indexInt = Integer.parseInt(confirmCompanyDetailsForm.getSelectedPostcodeIndex());
+                    if(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt) != null){
+                        confirmCompanyDetailsForm.setSelectedPostcode(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt));
+                    }
                 }
+            }else if(request.getParameter("save-company-details") != null){
+                log.info("Save company details ");
+                log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
             }
         }else{
             log.info("has errors do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
@@ -139,27 +140,35 @@ public class CreateApplicationController extends AbstractApplicationController {
         return "create-application/confirm-selected-organisation";
     }
 
-    private List<PostalAddress> searchPostcode(String postcodeInput) {
-        List<PostalAddress> addresses = new ArrayList<>();
-        addresses.add(new PostalAddress(
-                "Address line 2",
-                "2",
-                "careof",
-                "country",
-                "Bristol",
+    @RequestMapping("/your-details")
+    public String checkEligibility(Form form, Model model,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response){
+
+        return "create-application/your-details";
+    }
+
+    private List<Address> searchPostcode(String postcodeInput) {
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(new Address(
+                "Montrose House 1",
+                "Clayhill Park",
+                "Cheshire West and Chester",
+                "England",
+                "Neston",
                 "po_bo",
-                "postal_code",
-                "region"
+                "CH64 3RU",
+                "Cheshire"
         ));
-        addresses.add(new PostalAddress(
-                "Addresss line 1",
-                "2",
-                "careof",
-                "country",
-                "Bristol",
+        addresses.add(new Address(
+                "Montrose House",
+                "Clayhill Park",
+                "Cheshire West and Chester",
+                "England",
+                "Neston",
                 "po_bo",
-                "postal_code",
-                "region"
+                "CH64 3RU",
+                "Cheshire"
         ));
         return addresses;
     }
@@ -170,7 +179,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     private void saveToCookie(HttpServletRequest request, HttpServletResponse response, String fieldName, String fieldValue){
-        if(fieldName != null && fieldName != null){
+        if(fieldName != null){
             response.addCookie(new Cookie(fieldName, fieldValue));
         }
     }

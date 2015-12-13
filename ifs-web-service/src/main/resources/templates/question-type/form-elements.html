@@ -223,12 +223,14 @@
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
-            <!-- if not readonly we show mark as complete buttons and the question should be assigned to you or-->
-            <div th:unless="${readonly} or (${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
-                 th:remove="tag"/>
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
+            <!--  we show mark as complete buttons and the question should be assigned to you or-->
+            <div th:unless="(${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+                 th:remove="tag"/>
+
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
 
 
@@ -292,12 +294,24 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}" type="submit"
-            name="mark_as_complete" th:value="${question.getId()}" class="buttonlink"
+    <!--/* 
+            TODO: the marks as complete button is hidden when in readonly,
+            this because the controller on the readonly pages doesn't handle mark as complete yet, 
+            if the controller is fixed remove 'hidden' from th:class 
+     */-->
+    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
+            type="submit"
+            name="mark_as_complete" 
+            th:value="${question.getId()}"
+            th:class="${readonly}? 'button hidden' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
-    <button th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" type="submit"
-            name="mark_as_incomplete" th:value="${question.getId()}" class="buttonlink"
+    <button th:unless="${readonly}" 
+            th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" 
+            type="submit"
+            name="mark_as_incomplete"
+            th:value="${question.getId()}"
+            class="buttonlink"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
 </div>

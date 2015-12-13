@@ -42,7 +42,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
@@ -50,6 +49,7 @@ import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -262,6 +262,7 @@ public class BaseUnitTest {
         ProcessRole processRole7 = new ProcessRole(7L, assessor, new Application(app3), assessorRole, organisation1);
         ProcessRole processRole8 = new ProcessRole(8L, assessor, new Application(app1), assessorRole, organisation1);
 
+        List<ProcessRole> processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
@@ -269,13 +270,13 @@ public class BaseUnitTest {
         competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
         app1.setCompetitionId(competition.getId());
-        app1.setProcessRoleIds(asList(processRole1, processRole5).stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        app1.setProcessRoleIds(simpleMap(asList(processRole1, processRole5),ProcessRole::getId));
         app2.setCompetitionId(competition.getId());
-        app2.setProcessRoleIds(singletonList(processRole2).stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        app2.setProcessRoleIds(simpleMap(singletonList(processRole2),ProcessRole::getId));
         app3.setCompetitionId(competition.getId());
-        app3.setProcessRoleIds(asList(processRole3, processRole7, processRole8).stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        app3.setProcessRoleIds(simpleMap(asList(processRole3, processRole7, processRole8),ProcessRole::getId));
         app4.setCompetitionId(competition.getId());
-        app4.setProcessRoleIds(singletonList(processRole4).stream().map(ProcessRole::getId).collect(Collectors.toList()));
+        app4.setProcessRoleIds(simpleMap(singletonList(processRole4),ProcessRole::getId));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(1).addUserApplicationRole(processRole5);
@@ -307,15 +308,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
-        //when(organisationService.getOrganisationsByApplicationId(app1.getId())).thenReturn(organisations);
-        when(processRoleService.getById(1L)).thenReturn(processRole1);
-        when(processRoleService.getById(2L)).thenReturn(processRole2);
-        when(processRoleService.getById(3L)).thenReturn(processRole3);
-        when(processRoleService.getById(4L)).thenReturn(processRole4);
-        when(processRoleService.getById(5L)).thenReturn(processRole5);
-        when(processRoleService.getById(6L)).thenReturn(processRole6);
-        when(processRoleService.getById(7L)).thenReturn(processRole7);
-        when(processRoleService.getById(8L)).thenReturn(processRole8);
+        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
 
     }
 
@@ -373,9 +366,6 @@ public class BaseUnitTest {
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(1).getId())).thenReturn(assessment2);
         when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(2).getId())).thenReturn(assessment3);
-
-
-
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));

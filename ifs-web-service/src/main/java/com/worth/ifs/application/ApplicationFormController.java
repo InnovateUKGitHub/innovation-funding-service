@@ -428,8 +428,10 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setStartDate(startDate);
             applicationService.save(application);
         }catch(DateTimeException e){
+            log.error(e);
             errors.add("Please enter a valid date.");
         }catch(NumberFormatException e){
+            log.error(e);
             errors.add("Please enter a valid date.");
         }
         return errors;

@@ -115,6 +115,16 @@ public class Section implements Comparable<Section> {
         return this.getId().compareTo(o.getId());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public Integer getPriority() {
         return priority;
     }
