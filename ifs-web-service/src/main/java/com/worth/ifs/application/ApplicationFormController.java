@@ -13,6 +13,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
  * This controller will handle all requests that are related to the application form.
  */
 @Controller
-@RequestMapping("/application-form")
+@RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
@@ -55,7 +56,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     CompetitionService competitionService;
 
-    @RequestMapping("/{applicationId}")
+    @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -63,7 +64,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
@@ -78,16 +79,37 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}")
+    @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
+    public String showQuestion(@ModelAttribute("form") ApplicationForm form, Model model,
+                               @PathVariable("applicationId") final Long applicationId,
+                               @PathVariable("questionId") final Long questionId,
+                                  HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addQuestionDetails(questionId, model);
+        return "application-form";
+    }
+
+    private void addQuestionDetails(Long questionId, Model model) {
+        Question question = questionService.findById(questionId);
+        Question previousQuestion = questionService.findPreviousQuestion(questionId);
+        Question nextQuestion = questionService.findNextQuestion(questionId);
+
+        model.addAttribute("question", question);
+        model.addAttribute("previousQuestion", previousQuestion);
+        model.addAttribute("nextQuestion", nextQuestion);
+    }
+
+    @RequestMapping(value = "/deletecost/{sectionId}/{costId}")
     public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("costId") final Long costId, HttpServletRequest request) {
 
         doDeleteCost(costId);
-        return "redirect:/application-form/" + applicationId + "/section/" + sectionId;
+        return "redirect:/application/" + applicationId + "/form" + "/section/" + sectionId;
     }
 
-    @RequestMapping(value = "/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
+    @RequestMapping(value = "/deletecost/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
     public @ResponseBody JsonStatusResponse deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("sectionId") final Long sectionId,
                                           @PathVariable("costId") final Long costId,
@@ -102,7 +124,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         costService.delete(costId);
     }
 
-    @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
+    @RequestMapping(value = "/addcost/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
     public String addAnotherWithFragmentResponse(@Valid @ModelAttribute("form") ApplicationForm form, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
@@ -123,14 +145,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "single-question";
     }
 
-    @RequestMapping(value = "/addcost/{applicationId}/{sectionId}/{questionId}")
+    @RequestMapping(value = "/addcost/{sectionId}/{questionId}")
     public String addAnother(@ModelAttribute("form") ApplicationForm form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
         addCost(applicationId, questionId, request);
-        return "redirect:/application-form/" + applicationId + "/section/" + sectionId;
+        return "redirect:/application/" + applicationId + "/form" +  "/section/" + sectionId;
     }
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
@@ -195,7 +217,7 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This method is for the post request when the users clicks the input[type=submit] button.
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.POST)
     public String applicationFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
                                         BindingResult bindingResult,
                                         Model model,
@@ -222,7 +244,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application-form/"+applicationId + "/section/" + sectionId;
+            return "redirect:/application/"+applicationId + "/form" + "/section/" + sectionId;
         }
     }
 
@@ -296,7 +318,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
     public @ResponseBody JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                              @RequestParam("value") String value,
-                             @RequestParam("applicationId") Long applicationId,
+                             @PathVariable("applicationId") Long applicationId,
                              HttpServletRequest request,
                              HttpServletResponse response) {
 

@@ -135,7 +135,7 @@ public abstract class AbstractApplicationController {
         return application;
     }
 
-    private void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
+    protected  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
         if(form == null){
             form = new Form();
         }
@@ -160,6 +160,22 @@ public abstract class AbstractApplicationController {
         leadOrganisation.ifPresent(org -> {
             model.addAttribute("leadOrganisation", org);
         });
+    }
+
+    protected void addQuestionsDetails(Model model, ApplicationResource application, Question question, Form form) {
+        List<FormInputResponse> responses = getFormInputResponses(application);
+        Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
+        model.addAttribute("responses",mappedResponses);
+
+        if(form == null){
+            form = new Form();
+        }
+        Map<String, String> values = form.getFormInput();
+        mappedResponses.forEach((k, v) ->
+                        values.put(k.toString(), v.getValue())
+        );
+        form.setFormInput(values);
+        model.addAttribute("form", form);
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
@@ -202,14 +218,15 @@ public abstract class AbstractApplicationController {
     }
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
-        model.addAttribute("questionAssignees", questionAssignees);
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
-        model.addAttribute("notifications", notifications);
         questionService.removeNotifications(notifications);
         Competition competition = competitionService.getById(application.getCompetitionId());
         List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
+
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
+        model.addAttribute("questionAssignees", questionAssignees);
+        model.addAttribute("notifications", notifications);
         model.addAttribute("assignedSections", assignedSections);
     }
 
@@ -249,12 +266,6 @@ public abstract class AbstractApplicationController {
         addSectionDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
     }
 
-    protected void addSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        addSectionDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
-        Competition competition = competitionService.getById(application.getCompetitionId());
-        List<Section> sections = sectionService.getParentSections(competition.getSections());
-        model.addAttribute("sections", sections);
-    }
     private void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
         Competition competition = competitionService.getById(application.getCompetitionId());
         Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);

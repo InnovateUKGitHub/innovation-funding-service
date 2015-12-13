@@ -57,12 +57,12 @@
                         <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}')}" th:errors="*{postcodeInput}"></span>
                         <button type="submit" id="postcode-lookup" class="button">Find UK address</button>
                     </div>
-                    <div class="form-group" id="select-address-block" th:unless="${postcodeLookup.postcodeOptions == null || postcodeLookup.postcodeOptions.size()}">
+                    <div class="form-group" id="select-address-block" th:unless="*{postcodeOptions == null || postcodeOptions.size()>0}">
                         <label class="form-label" for="title">
                             <span class="form-label-bold">Select your address</span>
                         </label>
                         <select class="form-control" id="select-address" th:field="*{selectedPostcodeIndex}">
-                            <option th:value="${status.index}" th:each="address,status : ${postcodeLookup.postcodeOptions}" th:text="${address.addressLine1}"></option>
+                            <option th:value="${status.index}" th:each="address,status : *{postcodeOptions}" th:text="${address.addressLine1}"></option>
                         </select>
                         <button type="submit" class="button" name="select-address">Use selected address</button>
                     </div>

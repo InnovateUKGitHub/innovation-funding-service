@@ -200,7 +200,6 @@
                  title="This field is assigned to you"
                  class="assigned-to-me" />
 
-            <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
         </div>
@@ -218,6 +217,8 @@
         </div>
 
         <div class="textarea-footer">
+            <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
 
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
@@ -228,7 +229,6 @@
             <!-- if  readonly we show the edit form button-->
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
 
 
@@ -306,7 +306,7 @@
 <div th:fragment="form-edit-question-button">
     <a tabindex="0"
        class="button-secondary"
-       th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
+       th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
        th:text="Edit"/>
 </div>
 

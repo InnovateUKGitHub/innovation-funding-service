@@ -46,7 +46,7 @@ public class ConfirmCompanyDetailsForm extends Form{
     }
 
     public PostalAddress getSelectedPostcode() {
-        if(getSelectedPostcodeIndex() == null || getSelectedPostcodeIndex() == ""){
+        if(getSelectedPostcodeIndex() == null || getSelectedPostcodeIndex().equals("")){
             return null;
         }
         int indexInt = Integer.parseInt(getSelectedPostcodeIndex());

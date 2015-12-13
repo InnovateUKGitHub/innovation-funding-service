@@ -2,6 +2,8 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInput;
 
 import java.util.ArrayList;
@@ -60,6 +62,14 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withFormInputs(List<FormInput> formInputs) {
         return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
+    }
+
+    public QuestionBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
+        return with(question -> {
+            question.setCompetition(competition);
+            question.setSection(section);
+            setField("priority", priority, question);
+        });
     }
 
     @Override

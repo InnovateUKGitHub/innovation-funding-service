@@ -1,6 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
 
@@ -86,6 +87,11 @@ public class Section implements Comparable<Section> {
 
     public void setCompetition(Competition competition) {
         this.competition = competition;
+    }
+
+    @JsonIgnore
+    public Competition getCompetition() {
+        return competition;
     }
 
     public void setChildSections(List<Section> childSections) {
