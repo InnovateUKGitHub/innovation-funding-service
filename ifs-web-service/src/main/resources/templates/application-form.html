@@ -12,14 +12,12 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},url='/application/'+${currentApplication.id},urlText='Application Overview'" th:remove="tag" />
     <div th:include="fragments/elements :: notification" th:remove="tag" />
- <div class="grid-row">
-    <div class="column-two-thirds">
-        <div class="hgroup">
-            <p class="subtitle no-margin" th:text="${currentCompetition.name + ' - Application number: ' + currentApplication.id}"></p>
-            <h1 class="heading-large" th:text="${question.shortName}"></h1>
+         
+        <div class="page-title">
+            <h2 class="subtitle" th:text="${currentCompetition.name + ' - Application number: ' + currentApplication.id}" />
+            <h1 class="heading-xlarge"  th:text="${question.shortName}" />
         </div>
-    </div>
-    <div class="form-group extra-margin" id="0">
+
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js">
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                 <h1 class="heading-medium error-summary-heading">
@@ -32,7 +30,6 @@
                     <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                 </ul>
             </div>
-
 
             <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
                  th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
@@ -64,9 +61,6 @@
                 <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
             </div>
         </form>
-
-    </div>
-  </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

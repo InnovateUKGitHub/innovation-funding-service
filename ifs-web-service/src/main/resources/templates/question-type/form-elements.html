@@ -218,8 +218,6 @@
 
         <div class="textarea-footer">
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
-
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
