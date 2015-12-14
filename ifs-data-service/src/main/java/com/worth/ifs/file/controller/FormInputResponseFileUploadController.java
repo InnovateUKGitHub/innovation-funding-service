@@ -106,7 +106,7 @@ public class FormInputResponseFileUploadController {
 
     private Either<JsonStatusResponse, MimeType> validMimeType(String contentType, HttpServletResponse response) {
         if (!validMimeTypes.contains(contentType)) {
-            return left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMimeTypes.stream().collect(joining(",")), response));
+            return left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMimeTypes.stream().collect(joining(", ")), response));
         }
         return right(MimeType.valueOf(contentType));
     }

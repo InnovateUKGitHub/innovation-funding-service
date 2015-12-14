@@ -31,6 +31,9 @@ public class Application extends SpringBootServletInitializer {
         log.info("======== Application.onStartup()");
     }
 
+    /**
+     * DefaultFormattingConversionService registered to allow the injection of properties lists into @Value fields
+     */
     @Bean
     public static ConversionService conversionService() {
         return new DefaultFormattingConversionService();
