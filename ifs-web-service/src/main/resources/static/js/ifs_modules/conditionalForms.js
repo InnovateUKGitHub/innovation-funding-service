@@ -12,22 +12,32 @@ IFS.conditionalForms = (function(){
                 var dataTarget = label.attr('data-target');
                 var dataTargetEl = jQuery('#'+dataTarget);
                 var inputEl = label.find('input[type="radio"],input[type="checkbox"]');
-
+                
+                //for having inverted show/hide
+                var isInverted = false;
+                if(label.attr('data-target-inverted')){
+                    isInverted = true;
+                }
                 if(inputEl && dataTarget && dataTargetEl){
                     var groupName = inputEl.attr('name');
                     inputEl.attr('aria-controls',dataTarget);
                     //execute on pageload
-                    IFS.conditionalForms.toggleVisibility(inputEl,dataTargetEl); 
+                    IFS.conditionalForms.toggleVisibility(inputEl,dataTargetEl,isInverted); 
 
                     //execute on click
                     jQuery('input[name="'+groupName+'"]').on('click',function(){
-                        IFS.conditionalForms.toggleVisibility(inputEl,dataTargetEl); 
+                        IFS.conditionalForms.toggleVisibility(inputEl,dataTargetEl,isInverted); 
                     });
                 }
             });
         },
-        toggleVisibility : function(input,target){
-            if(input.is(':checked')){
+        toggleVisibility : function(input,target,isInverted){
+            var radioStatus = input.is(':checked');
+            if(isInverted) {
+                radioStatus = !radioStatus;
+            }
+
+            if(radioStatus){
               input.attr('aria-expanded','true');
               target.attr('aria-hidden','false').removeClass('js-hidden');
             }

@@ -14,4 +14,8 @@ import java.util.List;
 public interface SectionRepository extends PagingAndSortingRepository<Section, Long> {
     List<Section> findAll();
     Section findByName(@Param("name") String name);
+    Section findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
+    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
+    Section findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Integer priority);
+    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
 }

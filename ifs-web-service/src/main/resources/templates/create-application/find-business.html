@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag"/>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create an application'" th:remove="tag"/>
 </head>
-<body class="app-dashboard">
+<body class="create-application-find-business">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
@@ -12,10 +12,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
 
-        <!-- HARDCODED PROTOTYPE HTML -->
-
         <h1 class="heading-large">Create your account</h1>
-
         <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
 
         <h2 class="heading-medium">Business organisation</h2>
@@ -35,7 +32,7 @@
                     <button type="submit" id="org-search" class="button">Search</button>
                 </div>
 
-                <ul id="org-results" class="results-list panel-indent">
+                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseList.size()}">
                     <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
                         <h3>
                             <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
