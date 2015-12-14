@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_assign() {
+    public void assignTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/assign/1/2/3/4";
 
         // now run the method under test
@@ -43,7 +44,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_findByCompetition() {
+    public void findByCompetitionTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/findByCompetition/1";
 
         Question[] questions = newQuestion().buildArray(3, Question.class);
@@ -62,7 +63,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_findById() {
+    public void indByIdTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/id/1";
 
         Question question = newQuestion().build();
@@ -78,7 +79,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_getMarkedAsComplete() {
+    public void getMarkedAsCompleteTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/getMarkedAsComplete/1/2";
 
         Long[] questionIds = new Long[]{3L, 4L, 5L};
@@ -95,7 +96,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_markAsComplete() {
+    public void markAsCompleteTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/markAsComplete/1/2/3";
 
         service.markAsComplete(1L, 2L, 3L);
@@ -103,7 +104,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_markAsInComplete() {
+    public void markAsInCompleteTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/markAsInComplete/1/2/3";
 
         service.markAsInComplete(1L, 2L, 3L);
@@ -111,9 +112,33 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void test_updateNotification() {
+    public void updateNotificationTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/updateNotification/1/true";
         service.updateNotification(1L, true);
         verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+    }
+
+    @Test
+    public void getNextQuestionTest() {
+        String expectedUrl = dataServicesUrl + questionRestURL + "/getNextQuestion/1";
+        Question question = newQuestion().build();
+
+        ResponseEntity<Question> response = new ResponseEntity<>(question, HttpStatus.OK);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question.class)).thenReturn(response);
+
+        Question nextQuestion = service.getNextQuestion(1L);
+        assertEquals(question, nextQuestion);
+    }
+
+    @Test
+    public void getPreviousQuestionTest() {
+        String expectedUrl = dataServicesUrl + questionRestURL + "/getPreviousQuestion/2";
+        Question question = newQuestion().build();
+
+        ResponseEntity<Question> response = new ResponseEntity<>(question, HttpStatus.OK);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question.class)).thenReturn(response);
+
+        Question nextQuestion = service.getPreviousQuestion(2L);
+        assertEquals(question, nextQuestion);
     }
 }

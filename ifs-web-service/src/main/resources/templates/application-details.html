@@ -49,7 +49,7 @@
                         <li class="grid-row" th:classappend="section">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}"
+                                    <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${section.getId()}"
                                        th:text="${section.name}" />
                                 </h3>
                             </div>
@@ -57,7 +57,7 @@
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${section.getChildSections()}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${childSection.getId()}"
+                                    <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>

@@ -109,7 +109,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(processRoleService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
 
-        mockMvc.perform(get("/application-form/1"))
+        mockMvc.perform(get("/application/1/form"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentSectionId", 1L));
@@ -123,7 +123,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(application.getId())).thenReturn(application);
 
-        mockMvc.perform(get("/application-form/1/section/1"))
+        mockMvc.perform(get("/application/1/form/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
@@ -140,24 +140,23 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         doNothing().when(costService).delete(costId);
 
-        mockMvc.perform(get("/application-form/deletecost/" + application.getId() + "/" + sectionId + "/0"))
-//                .andExpect(matchUrl("/application-form/10/section/20"))
+        mockMvc.perform(get("/application/" + application.getId() + "/form/deletecost/" + sectionId + "/0"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application-form/" + application.getId() + "/section/" + sectionId));;
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));;
     }
 
     @Test
     public void testAddAnother() throws Exception {
         mockMvc.perform(
                 get(
-                        "/application-form/addcost/{applicationId}/{sectionId}/{questionId}",
+                        "/application/{applicationId}/form/addcost/{sectionId}/{questionId}",
                         application.getId(),
                         sectionId,
                         questionId
                 )
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application-form/"+application.getId()+"/section/" + sectionId));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
 
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinance.getId(), questionId);
@@ -168,7 +167,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
                         .param("formInput[2]", "Question 2 Response")
                         .param("formInput[3]", "Question 3 Response")
@@ -181,7 +180,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("mark_as_incomplete", "13")
                         .param("submit-section", "Save")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application-form/" + application.getId() + "/section/" + sectionId + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "applicationSaved"))
                 .andReturn();
@@ -195,7 +194,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("formInput[2]", "Question 2 Response")
                         .param("submit-section", "Save")
@@ -218,7 +217,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("mark_as_complete", "1")
         ).andExpect(status().isOk())
@@ -231,14 +230,14 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testApplicationFormSubmitAssignQuestion() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/application-form/{applicationId}/section/{sectionId}", application.getId(), sectionId)
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
                         .param("formInput[2]", "Question 2 Response")
                         .param("formInput[3]", "Question 3 Response")
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application-form/" + application.getId() + "/section/" + sectionId + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "assignedQuestion"))
                 .andReturn();
@@ -251,11 +250,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String value = "Form Input "+formInputId+" Response";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput["+formInputId+"]")
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -268,11 +266,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -289,11 +286,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -309,11 +305,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/"+application.getId().toString()+"/form/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -329,11 +324,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -350,11 +344,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -370,11 +363,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String questionId = "cost-subcontracting-13-subcontractingCost";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "subcontracting_costs-cost-13")
                         .param("value", value)
-                        .param("applicationId", "1")
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -391,11 +383,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String fieldName = "application.startDate.dayOfMonth";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/1/form/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", "1")
         ).andExpect(status().isOk())
                 .andReturn();
 
@@ -417,11 +408,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String value = "35";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
@@ -440,11 +430,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String value = "13";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
@@ -464,11 +453,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String value = "2015";
 
         MvcResult result = mockMvc.perform(
-                post("/application-form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "question[" + questionId + "]")
                         .param("value", value)
-                        .param("applicationId", application.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
@@ -481,14 +469,14 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         mockMvc.perform(
                 get(
-                        "/application-form/deletecost/{applicationId}/{sectionId}/{costId}",
+                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}",
                         application.getId(),
                         sectionId,
                         costId
                 )
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application-form/"+application.getId()+"/section/" + sectionId));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
 
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(costService).verify(costService, calls(1)).delete(costId);
@@ -498,7 +486,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testDeleteCostWithFragmentResponse() throws Exception {
         mockMvc.perform(
                 get(
-                        "/application-form/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}",
+                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}/{renderQuestionId}",
                         application.getId(),
                         sectionId,
                         costId,
@@ -517,7 +505,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testDeleteCostWithFragmentResponseNullValue() throws Exception {
         mockMvc.perform(
                 get(
-                        "/application-form/deletecost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}",
+                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}/{renderQuestionId}",
                         application.getId(),
                         sectionId,
                         null,
@@ -534,7 +522,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testAddAnotherWithFragmentResponse() throws Exception {
         mockMvc.perform(
                 get(
-                        "/application-form/addcost/{applicationId}/{sectionId}/{costId}/{renderQuestionId}",
+                        "/application/{applicationId}/form/addcost/{sectionId}/{costId}/{renderQuestionId}",
                         application.getId(),
                         sectionId,
                         costId,
