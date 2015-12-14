@@ -1,5 +1,6 @@
 package com.worth.ifs.file.controller;
 
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryJsonStatusResponse;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -22,14 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.*;
 import static com.worth.ifs.util.JsonStatusResponse.*;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
-import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -37,7 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  *
  */
 @RestController
-@RequestMapping("/forminputresponse/fileupload")
+@RequestMapping("/forminputresponse")
 public class FormInputResponseFileUploadController {
 
     private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadController.class);
@@ -51,10 +54,14 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private FileService fileService;
 
-    @RequestMapping(method = POST, produces = "application/json")
+    @Autowired
+    private ApplicationService applicationService;
+
+    @RequestMapping(value = "/{formInputResponseId}/fileupload", method = POST, produces = "application/json")
     public JsonStatusResponse createFile(
             @RequestHeader("Content-Type") String contentType,
             @RequestHeader("Content-Length") String contentLength,
+            @PathParam(value = "formInputResponseId") long formInputResponseId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -65,7 +72,7 @@ public class FormInputResponseFileUploadController {
             validFilename(originalFilename, response).map(filename ->
             validContentLength(length, response).map(l ->
             validMimeType(type, response).map(mimeType ->
-            doCreateFile(mimeType, length, originalFilename, request, response).map(fileEntry ->
+            createFormInputResponseFile(mimeType, length, originalFilename, formInputResponseId, request, response).map(fileEntry ->
             returnFileEntryId(fileEntry)
         ))))));
 
@@ -76,24 +83,27 @@ public class FormInputResponseFileUploadController {
         return right(FileEntryJsonStatusResponse.fileEntryCreated(fileEntry));
     }
 
-    private Either<JsonStatusResponse, FileEntry> doCreateFile(MimeType mimeType, long length, String originalFilename, HttpServletRequest request, HttpServletResponse response) {
+    private Either<JsonStatusResponse, FileEntry> createFormInputResponseFile(MimeType mimeType, long length, String originalFilename, long formInputResponseId, HttpServletRequest request, HttpServletResponse response) {
 
-        try {
-            final String fileContents = request.getReader().lines().collect(joining(lineSeparator()));
+        LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mimeType + "; Content Length - " + length);
 
-            LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mimeType + "; Content Length - " + length + "; Contents - " + StringUtils.abbreviate(fileContents, 100));
+        FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mimeType, length);
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> creationResult = applicationService.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier(request));
 
-            FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mimeType, length);
-            Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> creationResult = fileService.createFile(fileEntry);
+        return creationResult.mapLeftOrRight(
+                failure -> left(internalServerError("Error creating file", response)),
+                success -> right(success.getResult().getValue()));
+    }
 
-            return creationResult.mapLeftOrRight(
-                    failure -> left(internalServerError("Error creating file", response)),
-                    success -> right(success.getResult().getValue()));
-
-        } catch (IOException e) {
-            return left(internalServerError("Error reading file from request body", response));
-        }
-
+    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
+        return () -> {
+            try {
+                return request.getInputStream();
+            } catch (IOException e) {
+                LOG.error("Unable to open an input stream from request", e);
+                throw new RuntimeException("Unable to open an input stream from request", e);
+            }
+        };
     }
 
     private Either<JsonStatusResponse, Long> validContentLengthHeader(String contentLengthHeader, HttpServletResponse response) {

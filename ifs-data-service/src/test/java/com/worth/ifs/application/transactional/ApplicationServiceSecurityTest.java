@@ -2,17 +2,28 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.util.Either;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
@@ -86,6 +97,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         @Override
         public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
             return newApplication().with(name(applicationName)).build();
+        }
+
+        @Override
+        public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
+            return right(new ServiceSuccess(Pair.of(new File("", ""), newFileEntry().build())));
         }
     }
 }

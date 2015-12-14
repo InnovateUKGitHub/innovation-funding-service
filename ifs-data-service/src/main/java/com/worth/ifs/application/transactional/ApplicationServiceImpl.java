@@ -4,19 +4,33 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.util.Either;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -54,5 +68,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         processRoleRepository.save(processRole);
 
         return application;
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
+        return fileService.createFile(fileEntry, inputStreamSupplier);
     }
 }
