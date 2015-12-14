@@ -45,7 +45,6 @@ IFS.autoSave = (function(){
              }
 
              if(typeof(applicationId) !== 'undefined') {
-                    console.log(applicationId);
                  jQuery.ajax({
                      type: 'POST',
                      url: '/application/'+applicationId+'/form/saveFormElement',
