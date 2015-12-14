@@ -1,4 +1,4 @@
-package com.worth.ifs.file.controller;
+package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.file.domain.FileEntry;
