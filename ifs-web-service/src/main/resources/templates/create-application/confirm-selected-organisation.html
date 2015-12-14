@@ -40,13 +40,13 @@
             <fieldset>
                 <legend class="visuallyhidden">Operating address</legend>
                 <div class="form-block">
-                    <label class="block-label" for="address-same">
-                        <input id="address-same" type="checkbox" value="address-same"/>
+                    <label class="block-label" for="address-same" data-target="manual-company-input" data-target-inverted="true">
+                        <input id="address-same" th:field="*{useCompanyHouseAddress}" type="checkbox" value="yes"/>
                         The registered address is the same as the operating address
                     </label>
                 </div>
             </fieldset>
-            <div id="manual-company-input" class="extra-margin" style="display: block">
+            <div id="manual-company-input" class="extra-margin">
                 <fieldset>
                     <legend class="visuallyhidden">Organisation details</legend>
                     <div class="form-group">
@@ -118,15 +118,15 @@
                 <p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
                 <div class="form-block">
                     <label class="block-label" for="radio-1">
-                        <input id="radio-1" type="radio" th:field="*{organisationSize}" value="Micro"/>
+                        <input id="radio-1" type="radio" th:field="*{organisationSize}" value="SMALL"/>
                         Micro / small
                     </label>
                     <label class="block-label" for="radio-2">
-                        <input id="radio-2" type="radio" th:field="*{organisationSize}" value="Medium"/>
+                        <input id="radio-2" type="radio" th:field="*{organisationSize}" value="MEDIUM"/>
                         Medium
                     </label>
                     <label class="block-label" for="radio-3">
-                        <input id="radio-3" type="radio" th:field="*{organisationSize}" value="Large"/>
+                        <input id="radio-3" type="radio" th:field="*{organisationSize}" value="LARGE"/>
                         Large
                     </label>
                 </div>

@@ -4,6 +4,9 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +118,8 @@ public class CreateApplicationController extends AbstractApplicationController {
         if(organisationService == null){
             log.debug("companyHouseService is null");
         }
+        CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
+        model.addAttribute("business", org);
 
         if(!bindingResult.hasErrors()){
             log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
@@ -130,13 +135,25 @@ public class CreateApplicationController extends AbstractApplicationController {
             }else if(request.getParameter("save-company-details") != null){
                 log.info("Save company details ");
                 log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
+
+                String name = org.getName();
+                String companyHouseNumber = org.getCompanyNumber();
+                Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
+
+                OrganisationResource organisationResource = organisationService.save(organisation);
+                log.info("Organisation CREATED");
+                if(confirmCompanyDetailsForm.isUseCompanyHouseAddress()){
+                    organisationResource = organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+                }else{
+                    organisationResource = organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+                    organisationResource = organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
+                }
             }
         }else{
             log.info("has errors do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
         }
 
-        CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
-        model.addAttribute("business", org);
+
         return "create-application/confirm-selected-organisation";
     }
 
