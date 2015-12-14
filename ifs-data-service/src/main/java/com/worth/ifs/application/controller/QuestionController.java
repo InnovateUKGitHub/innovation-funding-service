@@ -3,6 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
@@ -36,6 +37,10 @@ public class QuestionController {
 
     @Autowired
     ApplicationRepository applicationRepository;
+
+    @Autowired
+    SectionController sectionController;
+
 
     @RequestMapping("/id/{id}")
     public Question getQuestionById(@PathVariable("id") final Long id) {
@@ -142,6 +147,44 @@ public class QuestionController {
     @RequestMapping(value="/findByCompetition/{competitionId}")
     public List<Question> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionRepository.findByCompetitionId(competitionId);
+    }
+
+    @RequestMapping(value="/getNextQuestion/{questionId}")
+    public Question getNextQuestion(@PathVariable("questionId") final Long questionId) {
+        Question question = questionRepository.findOne(questionId);
+        Question nextQuestion = null;
+        if(question!=null) {
+            nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+
+            if(nextQuestion==null) {
+                Section nextSection = sectionController.getNextSection(question.getSection());
+                if (nextSection != null) {
+                    nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(question.getCompetition().getId(), nextSection.getId());
+                }
+            }
+        }
+
+        return nextQuestion;
+    }
+
+    @RequestMapping(value="/getPreviousQuestion/{questionId}")
+    public Question getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
+        Question question = questionRepository.findOne(questionId);
+        Question previousQuestion = null;
+        if(question!=null) {
+            previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+
+            if(previousQuestion==null) {
+                Section previousSection = sectionController.getPreviousSection(question.getSection());
+                if(previousSection!=null) {
+                    previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(question.getCompetition().getId(), previousSection.getId());
+                }
+            }
+        }
+
+        return previousQuestion;
     }
 
     public Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {

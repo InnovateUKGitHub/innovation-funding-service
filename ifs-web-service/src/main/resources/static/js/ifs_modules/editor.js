@@ -33,7 +33,7 @@ IFS.editor = (function(){
                 el.before('<div class="readonly"></div>');
             }
             else {
-                el.before('<div class="editor"></div>');
+                el.before('<div class="editor" spellcheck="true"></div>');
             }
             el.attr('aria-hidden','true');
             IFS.editor.processMarkdownToHtml(el,el.prev());

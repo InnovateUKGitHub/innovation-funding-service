@@ -1,7 +1,12 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +34,18 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     public Organisation getOrganisationById(Long organisationId) {
         return restGet(organisationRestURL + "/findById/"+organisationId, Organisation.class);
+    }
+
+    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
+    @Override
+    public OrganisationResource save(Organisation organisation) {
+        return restPost(organisationRestURL + "/save", organisation, OrganisationResource.class);
+    }
+
+    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
+    @Override
+    public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type) {
+        return restPost(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 
 }
