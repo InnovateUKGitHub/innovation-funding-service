@@ -93,6 +93,12 @@ Used to define input widths, so they can be more specific to digits that need to
     width: 100%;
 }
 
+input.form-control + button.button,
+select.form-control + button.button {
+    line-height:1;
+}
+
+
 table td{
     
     &.numeric{
@@ -205,4 +211,5 @@ select{
         border: 1px solid $border-colour;
     
 }
+
 
