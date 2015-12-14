@@ -12,7 +12,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.SmartValidator;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +39,9 @@ public class CreateApplicationController extends AbstractApplicationController {
     public final static String COMPETITION_ID = "competitionId";
     public final static String COMPANY_HOUSE_COMPANY_ID = "companyId";
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    Validator validator;
 
     @Autowired
     OrganisationService organisationService;
@@ -106,7 +112,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         return "create-application/confirm-selected-organisation";
     }
     @RequestMapping(value="/selected-business/{companyId}", method = RequestMethod.POST)
-    public String confirmBusinessSubmit(@Valid @ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
+    public String confirmBusinessSubmit(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
                                    BindingResult bindingResult,
                                    Model model,
                                    @PathVariable("companyId") final String companyId,
@@ -121,38 +127,39 @@ public class CreateApplicationController extends AbstractApplicationController {
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
 
-        if(!bindingResult.hasErrors()){
-            log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
-            confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
-
-            if(request.getParameter("select-address") != null){
-                if(confirmCompanyDetailsForm.getPostcodeOptions() != null && confirmCompanyDetailsForm.getPostcodeOptions().size() != 0){
-                    int indexInt = Integer.parseInt(confirmCompanyDetailsForm.getSelectedPostcodeIndex());
-                    if(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt) != null){
-                        confirmCompanyDetailsForm.setSelectedPostcode(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt));
-                    }
-                }
-            }else if(request.getParameter("save-company-details") != null){
-                log.info("Save company details ");
-                log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
-
-                String name = org.getName();
-                String companyHouseNumber = org.getCompanyNumber();
-                Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
-
-                OrganisationResource organisationResource = organisationService.save(organisation);
-                log.info("Organisation CREATED");
-                if(confirmCompanyDetailsForm.isUseCompanyHouseAddress()){
-                    organisationResource = organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
-                }else{
-                    organisationResource = organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
-                    organisationResource = organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
+        if(request.getParameter("search-address") != null){
+            validator.validate(confirmCompanyDetailsForm, bindingResult);
+            if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())){
+                log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
+                confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
+            }else{
+                bindingResult.rejectValue("postcodeInput", "NotEmpty", "NotEmpty");
+            }
+        }else if(request.getParameter("select-address") != null){
+            if(confirmCompanyDetailsForm.getPostcodeOptions() != null && confirmCompanyDetailsForm.getPostcodeOptions().size() != 0){
+                int indexInt = Integer.parseInt(confirmCompanyDetailsForm.getSelectedPostcodeIndex());
+                if(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt) != null){
+                    confirmCompanyDetailsForm.setSelectedPostcode(confirmCompanyDetailsForm.getPostcodeOptions().get(indexInt));
                 }
             }
-        }else{
-            log.info("has errors do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
-        }
+        }else if(request.getParameter("save-company-details") != null){
+            log.info("Save company details ");
+            log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
 
+            String name = org.getName();
+            String companyHouseNumber = org.getCompanyNumber();
+            Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
+
+            OrganisationResource organisationResource = organisationService.save(organisation);
+            if(!confirmCompanyDetailsForm.isUseCompanyHouseAddress()){
+                //Save address manually entered.
+                organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
+            }
+            // Save address from company house api
+            organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+
+            return "redirect:/registration/register?organisationId="+organisationResource.getId();
+        }
 
         return "create-application/confirm-selected-organisation";
     }

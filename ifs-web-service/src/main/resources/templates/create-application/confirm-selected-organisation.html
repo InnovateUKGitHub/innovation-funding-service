@@ -55,7 +55,7 @@
                         </label>
                         <input class="form-control" id="postcode-check" th:field="*{postcodeInput}" type="text" value="" />
                         <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}')}" th:errors="*{postcodeInput}"></span>
-                        <button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+                        <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
                     </div>
                     <div class="form-group" id="select-address-block" th:if="${confirmCompanyDetailsForm.postcodeOptions.size() != 0}">
                         <label class="form-label" for="title">
