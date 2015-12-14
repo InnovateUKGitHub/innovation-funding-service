@@ -1,5 +1,7 @@
 package com.worth.ifs.file.resource;
 
+import org.springframework.util.MimeType;
+
 /**
  * A Resource representation of a FileEntry.  Subclasses of this class will be the representations
  * of subclasses of FileEntry.
@@ -19,6 +21,10 @@ public class FileEntryResource {
         this.name = name;
         this.mimeType = mimeType;
         this.filesizeBytes = filesizeBytes;
+    }
+
+    public FileEntryResource(Long id, String name, MimeType mimeType, long filesizeBytes) {
+        this(id, name, mimeType.getType(), filesizeBytes);
     }
 
     public Long getId() {

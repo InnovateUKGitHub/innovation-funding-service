@@ -56,6 +56,10 @@ public class JsonStatusResponse {
         return getJsonStatusResponse(message, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
+    public static JsonStatusResponse unsupportedMediaType(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+    }
+
     public String getMessage() {
         return message;
     }
