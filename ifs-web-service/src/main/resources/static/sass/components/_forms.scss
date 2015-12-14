@@ -125,8 +125,7 @@ table td{
     position: relative;
 
     .textarea-header {
-        padding:10px;
-        text-align:right;
+        padding:20px 0 0 55px;
         font-size:14px;
         border-top:  1px solid $border-colour;
         border-left:  1px solid $border-colour;
@@ -207,32 +206,3 @@ select{
     
 }
 
-    //    .form-group_header-status {
-    //     color: #666;
-    //     font-size: 16px;
-    //     margin: 0;
-
-    //     &--assigned {
-    //         background: url(../images/flag-icon.png) no-repeat 0 0.15em;
-    //         margin-top: 10px;
-    //         padding-left: 25px;
-    //     }
-    // }
-
-
-    // &--locked {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-locked.png);
-    //         }
-    //     }
-    // }
-
-    // &--assigned {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-assigned.png);
-    //         }
-    //     }
-    // }
-// }

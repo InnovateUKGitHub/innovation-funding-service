@@ -238,7 +238,7 @@
 <div th:fragment="current-assignee">
     <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
         <span>This question is assigned to</span>
-        <div th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"></div>
+        <strong th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
