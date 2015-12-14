@@ -3,9 +3,9 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
@@ -71,7 +71,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-        return fileService.createFile(fileEntry, inputStreamSupplier);
+    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createdFile = fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
+        return createdFile;
     }
 }
