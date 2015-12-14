@@ -19,11 +19,11 @@ public class JsonStatusResponse {
     private String message;
 
     @SuppressWarnings("unused")
-    private JsonStatusResponse() {
+    protected JsonStatusResponse() {
         // for JSON marshalling
     }
 
-    private JsonStatusResponse(String message) {
+    protected JsonStatusResponse(String message) {
         this.message = message;
     }
 

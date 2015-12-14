@@ -1,10 +1,15 @@
 package com.worth.ifs.file.controller;
 
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryJsonStatusResponse;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileService;
+import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -59,27 +65,35 @@ public class FormInputResponseFileUploadController {
             validFilename(originalFilename, response).map(filename ->
             validContentLength(length, response).map(l ->
             validMimeType(type, response).map(mimeType ->
-            doCreateFile(mimeType, length, originalFilename, request, response)
-        )))));
+            doCreateFile(mimeType, length, originalFilename, request, response).map(fileEntry ->
+            returnFileEntryId(fileEntry)
+        ))))));
 
         return getLeftOrRight(result);
     }
 
-    private Either<JsonStatusResponse, JsonStatusResponse> doCreateFile(MimeType mimeType, long length, String originalFilename, HttpServletRequest request, HttpServletResponse response) {
+    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryId(FileEntry fileEntry) {
+        return right(FileEntryJsonStatusResponse.fileEntryCreated(fileEntry));
+    }
 
-        final String fileContents;
+    private Either<JsonStatusResponse, FileEntry> doCreateFile(MimeType mimeType, long length, String originalFilename, HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            fileContents = request.getReader().lines().collect(joining(lineSeparator()));
+            final String fileContents = request.getReader().lines().collect(joining(lineSeparator()));
+
+            LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mimeType + "; Content Length - " + length + "; Contents - " + StringUtils.abbreviate(fileContents, 100));
+
             FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mimeType, length);
-            fileService.createFile(fileEntry);
+            Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> creationResult = fileService.createFile(fileEntry);
+
+            return creationResult.mapLeftOrRight(
+                    failure -> left(internalServerError("Error creating file", response)),
+                    success -> right(success.getResult().getValue()));
+
         } catch (IOException e) {
-            return left(internalServerError("Error reading request", response));
+            return left(internalServerError("Error reading file from request body", response));
         }
 
-        LOG.debug("Filename - " + originalFilename + "; Content Type - " + mimeType + "; Content Length - " + length + "; Contents - " + StringUtils.abbreviate(fileContents, 100));
-
-        return right(ok());
     }
 
     private Either<JsonStatusResponse, Long> validContentLengthHeader(String contentLengthHeader, HttpServletResponse response) {

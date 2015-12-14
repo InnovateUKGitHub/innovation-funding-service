@@ -81,12 +81,12 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
-        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.createFile(fileResource);
 
         assertNotNull(result);
         assertTrue(result.isRight());
 
-        File newFileResult = result.getRight().getResult();
+        File newFileResult = result.getRight().getResult().getKey();
 
         assertTrue(newFileResult.exists());
         assertEquals("thefilename", newFileResult.getName());
@@ -120,17 +120,17 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         });
 
 
-        Either<ServiceFailure, ServiceSuccess<File>> result1 = service.createFile(fileResources.get(0));
-        Either<ServiceFailure, ServiceSuccess<File>> result2 = service.createFile(fileResources.get(1));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result1 = service.createFile(fileResources.get(0));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result2 = service.createFile(fileResources.get(1));
 
         assertTrue(result1.isRight());
         assertTrue(result2.isRight());
 
-        File firstFile = result1.getRight().getResult();
+        File firstFile = result1.getRight().getResult().getKey();
         assertTrue(firstFile.exists());
         assertEquals("thefilename1", firstFile.getName());
 
-        File secondFile = result2.getRight().getResult();
+        File secondFile = result2.getRight().getResult().getKey();
         assertTrue(secondFile.exists());
         assertEquals("thefilename2", secondFile.getName());
 
@@ -159,8 +159,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             when(fileStorageStrategyMock.getAbsoluteFilePathAndName(file)).thenReturn(Pair.of(fullPathToNewFile, "samefilename"));
         });
 
-        Either<ServiceFailure, ServiceSuccess<File>> result1 = service.createFile(fileResources.get(0));
-        Either<ServiceFailure, ServiceSuccess<File>> result2 = service.createFile(fileResources.get(1));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result1 = service.createFile(fileResources.get(0));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result2 = service.createFile(fileResources.get(1));
 
         assertTrue(result1.isRight());
         assertTrue(result2.isLeft());
@@ -195,19 +195,19 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         });
 
 
-        Either<ServiceFailure, ServiceSuccess<File>> result1 = service.createFile(fileResources.get(0));
-        Either<ServiceFailure, ServiceSuccess<File>> result2 = service.createFile(fileResources.get(1));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result1 = service.createFile(fileResources.get(0));
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result2 = service.createFile(fileResources.get(1));
 
         assertTrue(result1.isRight());
         assertTrue(result2.isRight());
 
-        File firstFile = result1.getRight().getResult();
+        File firstFile = result1.getRight().getResult().getKey();
         assertTrue(firstFile.exists());
         assertEquals("samefilename", firstFile.getName());
         String expectedPath1 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(0));
         assertEquals(expectedPath1 + File.separator + "samefilename", firstFile.getPath());
 
-        File secondFile = result2.getRight().getResult();
+        File secondFile = result2.getRight().getResult().getKey();
         assertTrue(secondFile.exists());
         assertEquals("samefilename", secondFile.getName());
         String expectedPath2 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(1));
@@ -234,7 +234,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         File tempFolder = pathElementsToAbsoluteFile(tempFolderPaths);
         tempFolder.setReadOnly();
 
-        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.createFile(fileResource);
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FOLDERS));
     }
@@ -259,7 +259,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         File targetFolder = pathElementsToAbsoluteFile(fullPathToNewFile);
         targetFolder.setReadOnly();
 
-        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(fileResource);
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.createFile(fileResource);
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
     }
@@ -270,7 +270,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         RuntimeException exception = new RuntimeException("you shall not pass!");
         when(fileEntryRepository.save(isA(FileEntry.class))).thenThrow(exception);
 
-        Either<ServiceFailure, ServiceSuccess<File>> result = service.createFile(newFileEntryResource().with(id(null)).build());
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.createFile(newFileEntryResource().with(id(null)).build());
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
     }
