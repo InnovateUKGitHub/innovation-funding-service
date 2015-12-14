@@ -13,7 +13,7 @@
 
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
-                        <a th:href="'/application-form/'+${currentApplication.getId()}+'/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
+                        <a th:href="'/application/'+${currentApplication.getId()}+'/form/question/'+${question.getId()}"
                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                     </h3>
                 </div>

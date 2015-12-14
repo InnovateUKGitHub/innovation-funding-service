@@ -3,6 +3,7 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,21 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
     public SectionBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
         return with(section -> setField("displayInAssessmentApplicationSummary", displayInSummary, section));
+    }
+
+    public SectionBuilder withCompetitionAndPriority(Competition competition, Integer priority) {
+        return with(section -> {
+            section.setCompetition(competition);
+            setField("priority", priority, section);
+        });
+    }
+
+    public SectionBuilder withCompetitionAndPriorityAndParent(Competition competition, Integer priority, Section parentSection) {
+        return with(section -> {
+            section.setParentSection(parentSection);
+            section.setCompetition(competition);
+            setField("priority", priority, section);
+        });
     }
 
     @Override

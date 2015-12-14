@@ -51,7 +51,7 @@ public class ConfirmCompanyDetailsForm extends Form{
 
     public Address getSelectedPostcode() {
         if(selectedPostcode == null){
-            if(getSelectedPostcodeIndex() == null || getSelectedPostcodeIndex() == ""){
+            if(getSelectedPostcodeIndex() == null || getSelectedPostcodeIndex().equals("")){
                 log.warn("Returning new postcode a");
                 selectedPostcode = new Address();
             }else{
