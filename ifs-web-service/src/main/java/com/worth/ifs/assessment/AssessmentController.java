@@ -2,8 +2,6 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.Form;
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ResponseService;
@@ -14,7 +12,6 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -34,14 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.empty;
-import static java.util.stream.Collectors.summingInt;
+import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -93,8 +86,19 @@ public class AssessmentController extends AbstractApplicationController {
 
 
         model.addAttribute("competition", competition);
-        model.addAttribute("assessments", assessments);
-        model.addAttribute("submittedAssessments", submittedAssessments);
+        model.addAttribute("assessments", assessments); // TODO qqRP remove
+        model.addAttribute("submittedAssessments", submittedAssessments); // TODO qqRP remove
+
+
+        Map<Assessment, ApplicationResource> assessmentsToApplications = allAssessments.stream()
+                .filter(a -> !submittedAssessments.contains(a))
+                .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
+        Map<Assessment, ApplicationResource> submittedAssessmentsToApplications =
+                allAssessments.stream()
+                        .filter(Assessment::isSubmitted)
+                        .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
+        model.addAttribute("assessmentsToApplications", assessmentsToApplications);
+        model.addAttribute("submittedAssessmentsToApplications", submittedAssessmentsToApplications);
 
         return competitionAssessments;
     }

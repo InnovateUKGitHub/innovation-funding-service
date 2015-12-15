@@ -3,14 +3,10 @@ package com.worth.ifs.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -149,5 +145,15 @@ public class CollectionFunctions {
      */
     public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
         return list.stream().map(mappingFn).collect(toList());
+    }
+
+
+
+
+    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper)
+    {
+        return Collectors.toMap(keyMapper, valueMapper, (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new);
     }
 }

@@ -20,7 +20,7 @@
     <header class="page-header group no-pad">
         <h1 class="heading-xlarge">Competition Details</h1>
     </header>
-    
+
     <div class="grid-row">
         <div class="row">
             <div class="message-alert">
@@ -72,11 +72,13 @@
                          submitText='Yes, I want to submit the applications',
                          cancelText='Cancel')"
                                              th:remove="tag" />
-                    <li th:each="assessment : ${assessments}" th:unless="${assessment.getProcessStatus().equals('rejected')}">
+                    <li th:each="assessmentAndApplication : ${assessmentsToApplications}"
+                        th:unless="${assessmentAndApplication.key.getProcessStatus().equals('rejected')}"
+                        th:with="assessment=${assessmentAndApplication.key}, application=${assessmentAndApplication.value}" >
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium">
-                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${assessment.processRole.competition.id},aid=${application.id})}" th:text="${assessment.processRole.id}">link for application assessment</a>
+                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${application.id})}" th:text="${application.name}">link for application assessment</a>
                             </h4>
                             <div><p th:text="${assessment.processRole.organisation.name}" /></div>
                         </div>
