@@ -199,6 +199,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         addresses.add(new Address(
                 "Montrose House 1",
                 "Clayhill Park",
+                "",
                 "Cheshire West and Chester",
                 "England",
                 "Neston",
@@ -209,6 +210,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         addresses.add(new Address(
                 "Montrose House",
                 "Clayhill Park",
+                "",
                 "Cheshire West and Chester",
                 "England",
                 "Neston",

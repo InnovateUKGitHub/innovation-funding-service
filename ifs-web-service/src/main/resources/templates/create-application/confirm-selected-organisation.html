@@ -86,7 +86,7 @@
                         <label class="form-label" for="street-2">
                             <span class="form-label-bold visuallyhidden">Street line 3</span>
                         </label>
-                        <input class="form-control" id="street-3" name="street-2" type="text" />
+                        <input class="form-control" id="street-3" th:field="*{selectedPostcode.addressLine3}" name="street-2" type="text" />
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="town">

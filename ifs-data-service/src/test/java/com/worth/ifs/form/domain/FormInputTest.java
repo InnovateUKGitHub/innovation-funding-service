@@ -8,7 +8,8 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class FormInputTest {
 

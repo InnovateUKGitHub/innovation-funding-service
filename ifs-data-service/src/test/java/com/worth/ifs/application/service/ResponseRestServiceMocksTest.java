@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
