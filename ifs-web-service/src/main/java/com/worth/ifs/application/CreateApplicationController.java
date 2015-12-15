@@ -1,5 +1,7 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
@@ -46,6 +48,9 @@ public class CreateApplicationController extends AbstractApplicationController {
     @Autowired
     OrganisationService organisationService;
 
+    @Autowired
+    ApplicationService applicationService;
+
 
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Form form, Model model,
@@ -63,14 +68,15 @@ public class CreateApplicationController extends AbstractApplicationController {
     public String initializeApplication(Model model,
                                    HttpServletRequest request,
                                    HttpServletResponse response){
-        String competitionId = getFromCookie(request, COMPETITION_ID);
-        String userId = getFromCookie(request, USER_ID);
+        Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
+        Long userId = Long.valueOf(getFromCookie(request, USER_ID));
 
-        log.info("Init application with: "+ competitionId);
-        log.info("Init application with: "+ userId);
-
-        return "/application/create/initialize-application";
-
+        ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
+        if(application == null || application.getId() == null){
+            log.error("Application not created with competitionID: " + competitionId);
+            log.error("Application not created with userId: " + userId);
+        }
+        return ApplicationController.redirectToApplication(application);
     }
 
 
