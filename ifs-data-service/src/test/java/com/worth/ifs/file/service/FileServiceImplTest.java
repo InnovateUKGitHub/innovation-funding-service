@@ -118,6 +118,32 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void testCreateFileNonBase64DecodingOnWayIn() throws IOException {
+
+        FileEntryResource fileResource = newFileEntryResource().
+                with(id(null)).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry();
+
+        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.createFile(fileResource, fakeInputStreamSupplier, false);
+
+        assertNotNull(result);
+        assertTrue(result.isRight());
+
+        File newFileResult = result.getRight().getResult().getKey();
+        assertEquals(new String(Base64.getEncoder().encode("Fake Input Stream".getBytes())), Files.readFirstLine(newFileResult, Charset.defaultCharset()));
+    }
+
+    @Test
     public void testCreateFileWithTwoDifferentlyNamedFilesInSameFolder() {
 
         List<FileEntryResource> fileResources = newFileEntryResource().
@@ -321,6 +347,33 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 String returnedBase64EncodedStream = buffer.lines().collect(joining("\n"));
                 String base64DecodedString = new String(Base64.getDecoder().decode(returnedBase64EncodedStream));
                 assertEquals("Plain decoded text", base64DecodedString);
+            }
+        }
+    }
+
+    @Test
+    public void testGetFileByFileEntryIdNotBase64DecodingOnWayOut() throws IOException {
+
+        // start by creating a new File to retrieve
+        List<String> fullPathToNewFile = tempFolderPaths;
+        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
+        pathElementsToAbsoluteFile(fullPathPlusFilename).createNewFile();
+
+        Files.write("Plain decoded text",
+                pathElementsToAbsoluteFile(fullPathPlusFilename), Charset.defaultCharset());
+
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(existingFileEntry)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> inputStreamResult = service.getFileByFileEntryId(123L, false);
+        assertTrue(inputStreamResult.isRight());
+
+        try (InputStream retrievedInputStream = inputStreamResult.getRight().getResult().get()) {
+            try (BufferedReader buffer = new BufferedReader(new InputStreamReader(retrievedInputStream))) {
+                String returnedNonBase64EncodedStream = buffer.lines().collect(joining("\n"));
+                assertEquals("Plain decoded text", returnedNonBase64EncodedStream);
             }
         }
     }

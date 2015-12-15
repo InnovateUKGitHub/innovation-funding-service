@@ -164,11 +164,17 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private Either<ServiceFailure, File> updateFileWithContents(File createdFile, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
 
         try {
-            InputStream sourceInputStream = decodeBase64 ? new Base64InputStream(inputStreamSupplier.get()) : inputStreamSupplier.get();
-            Files.copy(sourceInputStream, createdFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            return right(createdFile);
+            try (InputStream sourceInputStream = decodeBase64 ? new Base64InputStream(inputStreamSupplier.get()) : inputStreamSupplier.get()) {
+                try {
+                    Files.copy(sourceInputStream, createdFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    return right(createdFile);
+                } catch (IOException e) {
+                    LOG.error("Could not write data to file " + createdFile.getPath(), e);
+                    return errorResponse(UNABLE_TO_CREATE_FILE, e);
+                }
+            }
         } catch (IOException e) {
-            LOG.error("Could not write data to file " + createdFile.getPath(), e);
+            LOG.error("Error closing file stream for file " + createdFile.getPath(), e);
             return errorResponse(UNABLE_TO_CREATE_FILE, e);
         }
     }
