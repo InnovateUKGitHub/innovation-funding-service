@@ -33,7 +33,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
-    protected FormInputResponseRepository formInputResponseRepository;
+    protected FormInputResponseRepository formInputResponseRepositoryMock;
 
     @Mock
     protected UserRepository userRepositoryMock;

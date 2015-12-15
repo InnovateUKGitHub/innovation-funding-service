@@ -109,6 +109,24 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
 
+    @Test
+    public void testCreateFormInputResponseFileUploadDenied() {
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
+
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+
+        try {
+            service.createFormInputResponseFileUpload(file, () -> null);
+            fail("Should not have been able to create the file upload, as access was denied");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+
+        verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
+    }
+
     @Override
     protected Class<? extends ApplicationService> getServiceClass() {
         return TestApplicationService.class;

@@ -61,13 +61,13 @@ public class FormInputResponseFileUploadController {
             HttpServletResponse response) throws IOException {
 
         Either<JsonStatusResponse, JsonStatusResponse> result =
-            validContentLengthHeader(contentLength, response).map(length ->
-            validContentTypeHeader(contentType, response).map(type ->
-            validFilename(originalFilename, response).map(filename ->
-            validContentLength(length, response).map(l ->
-            validMimeType(type, response).map(mimeType ->
-            createFormInputResponseFile(mimeType, length, originalFilename, formInputResponseId, request, response).map(fileEntry ->
-            returnFileEntryId(fileEntry, formInputResponseId)
+            validContentLengthHeader(contentLength, response).
+            map(lengthFromHeader -> validContentTypeHeader(contentType, response).
+            map(typeFromHeader -> validFilename(originalFilename, response).
+            map(filenameParameter -> validContentLength(lengthFromHeader, response).
+            map(validLength -> validMimeType(typeFromHeader, response).
+            map(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputResponseId, request, response).
+            map(fileEntry -> returnFileEntryId(fileEntry, formInputResponseId)
         ))))));
 
         return getLeftOrRight(result);

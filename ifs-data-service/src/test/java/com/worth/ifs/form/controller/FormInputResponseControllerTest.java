@@ -41,8 +41,8 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         FormInputResponse[] consortiumResponses = newFormInputResponse().withFormInputs(formInput).buildArray(2, FormInputResponse.class);
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
+        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
+        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
 
         mockMvc.perform(post("/forminputresponse/findResponsesByApplication/123")
                 .contentType(MediaType.APPLICATION_JSON)
