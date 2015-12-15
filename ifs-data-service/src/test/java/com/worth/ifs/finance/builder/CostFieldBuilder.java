@@ -6,9 +6,7 @@ import com.worth.ifs.finance.domain.CostField;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedTitles;
-import static com.worth.ifs.BuilderAmendFunctions.idBasedTypes;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 /**

@@ -153,7 +153,9 @@ public class CreateApplicationController extends AbstractApplicationController {
             confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
         }
 
-        if(request.getParameter("search-address") != null){
+        if(request.getParameter("manual-address") != null){
+            confirmCompanyDetailsForm.setManualAddress(true);
+        }else if(request.getParameter("search-address") != null){
             validator.validate(confirmCompanyDetailsForm, bindingResult);
             if(!StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
                 bindingResult.rejectValue("postcodeInput", "NotEmpty", "NotEmpty");
@@ -197,6 +199,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         addresses.add(new Address(
                 "Montrose House 1",
                 "Clayhill Park",
+                "",
                 "Cheshire West and Chester",
                 "England",
                 "Neston",
@@ -207,6 +210,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         addresses.add(new Address(
                 "Montrose House",
                 "Clayhill Park",
+                "",
                 "Cheshire West and Chester",
                 "England",
                 "Neston",
