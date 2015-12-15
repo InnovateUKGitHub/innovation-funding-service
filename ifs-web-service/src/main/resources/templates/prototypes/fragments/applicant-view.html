@@ -188,7 +188,7 @@
 <div th:fragment="prototype-eligibility-success">
     <div class="success-alert">
         <h2 class="heading-small no-margin">The participation levels of this project are within the required range.</h2>
-        <p>This application can be submitted with these projct costs.</p>
+        <p>This application can be submitted with these project costs.</p>
     </div>
 </div>
 
@@ -210,6 +210,137 @@
             <li><a href="/prototypes/631-finances-overview">Return to finances section to complete your finances</a></li>
         </ul>
     </div>
+</div>
+
+<!-- =============================Appendix content question 5============================== -->
+<div th:fragment="appendix-question5" th:remove="tag" >
+    <h3 class="heading-small no-margin">Project management appendix</h3>
+    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
+    <details>
+        <summary><span class="summary">What should I include in the project management appendix?</span></summary>
+        <div class="panel-indent">
+          <p>
+            You should include only supporting information in the appendix. You shouldn’t use it to provide responses to the question.
+          </p>
+          <p>
+            You can include a Gantt chart of your proposed project
+          </p>
+          <p>The appendix must:</p>
+            <ul class="list-bullet">
+                <li>be in a Portable Document Format (.pdf)</li>
+                <li>be legible at 100% magnification</li>
+                <li>display the application number and project title at the top of the document.</li>
+                <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+            </ul>
+        </div>
+     </details>
+</div>
+
+<!-- =============================Appendix content question 6============================== -->
+<div th:fragment="appendix-question6" th:remove="tag" >
+    <h3 class="heading-small no-margin">Innovate appendix</h3>
+    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a diagram of your innovation</p>
+    <details>
+        <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
+        <div class="panel-indent">
+          <p>
+            You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
+          </p>
+          <p>The appendix must:</p>
+            <ul class="list-bullet">
+                <li>be in a Portable Document Format (.pdf)</li>
+                <li>be legible at 100% magnification</li>
+                <li>display the application number and project title at the top of the document.</li>
+                <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+                <li>Upload a file, for instance, a diagram of innovation</li>
+            </ul>
+        </div>
+     </details>
+</div>
+
+<!-- =============================Appendix content question 8============================== -->
+<div th:fragment="appendix-question8" th:remove="tag" >
+    <h3 class="heading-small no-margin">Project team appendix</h3>
+    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. details of subcontractors</p>
+    <details>
+        <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
+        <div class="panel-indent">
+          <p>
+            You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
+          </p>
+          <p>You can describe the expertise and track record of project partners and sub-contractors. Academic collaborators can include details of their research achievements.</p>
+          <p>The appendix must:</p>
+            <ul class="list-bullet">
+                <li>be in a Portable Document Format (.pdf)</li>
+                <li>be legible at 100% magnification</li>
+                <li>display the application number and project title at the top of the document.</li>
+                <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+            </ul>
+        </div>
+     </details>
+</div>
+
+<!-- =============================Appendix content question 8 jes============================== -->
+<div th:fragment="appendix-question8-jes" th:remove="tag" >
+    <h3 class="heading-small no-margin">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h3>
+    <details>
+        <summary><span class="summary">How do I create my Je-S output?</span></summary>
+        <div class="panel-indent">
+          <p>
+            You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
+          </p>
+          <p>Guidance for this section needs to be created</p>
+        </div>
+     </details>
+</div>
+
+
+
+
+<!-- ===================Finances elibility warning============================== -->
+<div th:fragment="appendix-upload(page, user, permission)">
+    <div class="upload-section">
+
+        <div th:if="${page == 'question-5'}" th:remove="tag">
+            <div th:include="prototypes/fragments/applicant-view :: appendix-question5" th:remove="tag" />
+        </div>
+
+        <div th:if="${page == 'question-6'}" th:remove="tag">
+            <div th:include="prototypes/fragments/applicant-view :: appendix-question6" th:remove="tag" />
+        </div>
+
+        <div th:if="${page == 'question-8'}" th:remove="tag">
+            <div th:include="prototypes/fragments/applicant-view :: appendix-question8" th:remove="tag" />
+        </div>
+
+         <div th:if="${page == 'question-8-jes'}" th:remove="tag">
+            <div th:include="prototypes/fragments/applicant-view :: appendix-question8-jes" th:remove="tag" />
+        </div>
+
+            <div th:if="${param.uploaded == null}" th:remove="tag">
+                <div th:if="${permission == 'assigned'}" th:remove="tag">
+                    <input type="file" name="file" id="file" class="inputfile" />
+                    <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                </div>
+                <div th:if="${permission == 'not-assigned'}" th:remove="tag">
+                    <p class="uploaded-file">No file currently uploaded</p>
+                </div>
+            </div>
+            
+            <div th:if="${param.uploaded != null}" th:remove="tag">
+                <div th:if="${param.uploaded[0] == 'yes'}">
+                    <a href="#" class="uploaded-file">The-uploaded-file-example.pdf</a>
+                    <div th:if="${user == 'lead'}" th:remove="tag">
+                        <div class="alignright"><a href="#">Remove file</a></div>
+                    </div>
+                </div>
+
+                <div th:if="${param.uploaded[0] == 'no'}" th:remove="tag">
+                    <p class="uploaded-file">No file currently uploaded</p>
+                </div>
+             </div>
+
+        </div>
 </div>
 
 

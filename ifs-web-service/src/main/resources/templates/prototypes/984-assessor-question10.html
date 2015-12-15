@@ -16,32 +16,27 @@
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Economic benefit'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
 
 	<form action="#" method="post">
 		<div class="form-group">
 			
-			<h2 class="heading-medium no-margin">4. What economic, social and environmental benefits do you expect your project to deliver and when?</h2>
+			<h2 class="heading-medium no-margin">10. How does financial support from Innovate UK and its funding partners add value?</h2>
 			
-			<p>The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution. The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field. Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+			<p>Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project. UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
 
 		</div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback"  />
 
 	</form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question2">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question9">
             <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">2. Project exploitation</span>
-        </a>
-    </li>
-    <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question5">
-            <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">5. Technical approach</span>
+            <span class="pagination-part-title">9. Funding</span>
         </a>
     </li>
 </ul>

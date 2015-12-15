@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -114,28 +114,28 @@
 
 		</div>
 
-		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
-	
+		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'collab'}, ${'assigned'})" th:remove="tag" />
+
 		<!-- if  readonly we show the edit form button-->
 	</div>
 </form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question4">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question4-collaborator">
             <span class="pagination-label">Previous</span>
             <span class="pagination-part-title">4. Economic benefit</span>
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question6">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question6-collaborator">
             <span class="pagination-label">Next</span>
             <span class="pagination-part-title">6. Innovation</span>
         </a>
     </li>
 </ul>
 
-<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

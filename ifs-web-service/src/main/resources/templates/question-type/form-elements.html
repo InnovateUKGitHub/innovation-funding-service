@@ -194,7 +194,12 @@
                  alt="This field is marked as done"
                  title="This field is marked as done" 
                  class="marked-as-complete" />
-          <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+            
+            <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
+                  <span>This question is <strong>marked as complete</strong></span>
+            </div>
+
+            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
                  src="/images/field/field-assigned.png"
                  alt="This field is assigned to you"
                  title="This field is assigned to you"
@@ -238,7 +243,7 @@
 <div th:fragment="current-assignee">
     <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
         <span>This question is assigned to</span>
-        <strong th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+        <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
