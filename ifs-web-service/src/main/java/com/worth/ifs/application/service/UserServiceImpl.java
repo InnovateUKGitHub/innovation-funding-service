@@ -4,7 +4,7 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.dto.UserDto;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
-    public UserDto createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
+    public UserResource createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
         return userRestService.createUserForOrganisationWithRole(firstName, lastName, password, email, title, phoneNumber, organisationId, roleName);
     }
 }

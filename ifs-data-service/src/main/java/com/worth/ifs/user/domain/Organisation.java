@@ -58,6 +58,10 @@ public class Organisation {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;

@@ -1,14 +1,13 @@
 package com.worth.ifs.registration;
 
+import com.worth.ifs.application.CreateApplicationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.login.LoginForm;
+import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.dto.UserDto;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +34,16 @@ public class RegistrationController {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private TokenAuthenticationService tokenAuthenticationService;
+
+
     private final Log log = LogFactory.getLog(getClass());
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
 
-    @RequestMapping(value="/register", method= RequestMethod.GET)
-    public String register(Model model, HttpServletRequest request) {
+    @RequestMapping(value="/register", method=RequestMethod.GET)
+    public String registerForm(Model model, HttpServletRequest request) {
         String destination = "registration-register";
 
         Organisation organisation = getOrganisation(request);
@@ -57,11 +60,11 @@ public class RegistrationController {
     }
 
     @RequestMapping(value="/register", method=RequestMethod.POST)
-    public String register(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
+    public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
         String destination = "registration-register";
 
         if(!bindingResult.hasErrors()) {
-            UserDto user = userService.createUserForOrganisation(registrationForm.getFirstName(),
+            UserResource user = userService.createUserForOrganisation(registrationForm.getFirstName(),
                     registrationForm.getLastName(),
                     registrationForm.getPassword(),
                     registrationForm.getEmail(),
@@ -70,7 +73,10 @@ public class RegistrationController {
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
             if(user!=null) {
-                destination = "redirect:/login";
+                CreateApplicationController.saveToCookie(response, "userId", String.valueOf(user.getId()));
+                // loggin user directly
+                tokenAuthenticationService.addAuthentication(response, user);
+                destination = "redirect:/application/create/initialize-application/";
             }
         }
         else {
