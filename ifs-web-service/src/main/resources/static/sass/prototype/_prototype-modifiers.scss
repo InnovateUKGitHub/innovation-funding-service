@@ -9,6 +9,13 @@
 		margin-top: 5px;
 	}
 }
+
+/*--- Boxed content ---*/
+
+.boxed{
+	border: 1px solid $border-colour;
+	padding: 20px;
+}
 		
 /*--- Controlling visibility of hidden panels for js and non-js ---*/
 
