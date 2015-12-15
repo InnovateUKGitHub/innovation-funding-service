@@ -53,3 +53,19 @@ table{
 		}
 	}
 }
+
+
+
+.textarea-wrapped{
+	&.assigned-to-me{
+		.textarea-header{
+			@extend %mark-assigned-left;
+		}
+	}
+
+	&.marked-as-complete{
+		.textarea-header{
+			@extend %mark-done-left;
+		}
+	}
+}

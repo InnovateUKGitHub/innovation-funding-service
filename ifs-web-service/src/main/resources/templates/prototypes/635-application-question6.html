@@ -22,14 +22,13 @@
 		<div class="column-two-thirds">
 			<div class="hgroup">
 				<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
-				<h1 class="heading-large">Technical approach</h1>
+				<h1 class="heading-large">Innovation</h1>
 			</div>
 		</div>
 	</div>
 	<div class="form-group extra-margin" id="0">
 		
-		<label class="form-label form-label-bold" for="1">5. What technical approach will you use and how will you manage your project?
-		</label>
+		<label class="form-label form-label-bold" for="1">6. What is innovative about your project?</label>
 		
 		<div class="validation-messages">
 			
@@ -37,30 +36,27 @@
 		
 		<details role="group">
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
-		<span class="summary">What should I include in the business technical approach section?</span>
+		<span class="summary">What should I include in the project innovation section?</span>
 		</summary>
-		<div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
-			<p>You should:</p>
-			<ul class="list-bullet">
-				<li>describe your technical approach including the main objectives of the work</li>
-				<li>explain how and why your approach is appropriate</li>
-				<li>tell us how you will ensure that the innovative steps in your project are achievable</li>
-				<li>describe rival technologies and alternative Ramp;D strategies</li>
-				<li>explain why your proposed approach will offer a better outcome</li>
-			</ul>
-
-		</div>
+		<div class="panel-indent" id="details-content-0" aria-hidden="false" style="display: block;">
+			<p>You should show how your project will:</p>
+				<ul class="list-bullet">
+					<li>push boundaries beyond current leading-edge science and technology</li>
+					<li>apply existing technologies in new areas</li>
+				</ul>
+				<p>Explain the novelty of the research in an industrial and/or academic context.</p>
+				<p>You should provide evidence that your proposed work is innovative. This could include patent search results, competitor analyses or literature surveys. If relevant, you should also outline your own intellectual property rights.</p>
+			</div>
 		</details>
-		<div class="textarea-wrapped assigned-to-me word-count">
+		<div class="textarea-wrapped word-count">
 			<div class="textarea-header" id="formInput[1]">
 				<div class="assignee  assigned-to-me ">
-			        This question is assigned to 
-			        <strong>you</strong>
+			        This question is assigned to
+			        <strong>Jesssica Doe</strong>
 			    </div>
 			</div>
-			<div class="editor" contenteditable="true">
-				<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm. </p>
-				<p>We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
+			<div class="readonly" contenteditable="false">
+				<p>The project is based on Manchester’s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 			</div>
 		</div>
 		<div class="textarea-footer">
@@ -108,34 +104,32 @@
 					</div>
 				</div>
 
-				<button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-1" value="1">Mark as complete</button>
-
 			</div>
 
 		</div>
 
-		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
-	
-		<!-- if  readonly we show the edit form button-->
+		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-6'}, ${'lead'}, ${'not-assigned'})" th:remove="tag" />
+
 	</div>
+
 </form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question4">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question5">
             <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">4. Economic benefit</span>
+            <span class="pagination-part-title">5. Technical approach</span>
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question6">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question7">
             <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">6. Innovation</span>
+            <span class="pagination-part-title">7. Risks</span>
         </a>
     </li>
 </ul>
 
-<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

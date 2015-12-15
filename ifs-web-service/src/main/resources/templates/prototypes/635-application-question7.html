@@ -22,13 +22,14 @@
 		<div class="column-two-thirds">
 			<div class="hgroup">
 				<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
-				<h1 class="heading-large">Technical approach</h1>
+				<h1 class="heading-large">Risks</h1>
 			</div>
 		</div>
 	</div>
 	<div class="form-group extra-margin" id="0">
 		
-		<label class="form-label form-label-bold" for="1">5. What technical approach will you use and how will you manage your project?
+		<label class="form-label form-label-bold" for="1">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?
+			<span class="form-hint">We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.</span>
 		</label>
 		
 		<div class="validation-messages">
@@ -37,30 +38,39 @@
 		
 		<details role="group">
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
-		<span class="summary">What should I include in the business technical approach section?</span>
+		<span class="summary">What should I include in the project risks section?</span>
 		</summary>
-		<div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
-			<p>You should:</p>
-			<ul class="list-bullet">
-				<li>describe your technical approach including the main objectives of the work</li>
-				<li>explain how and why your approach is appropriate</li>
-				<li>tell us how you will ensure that the innovative steps in your project are achievable</li>
-				<li>describe rival technologies and alternative Ramp;D strategies</li>
-				<li>explain why your proposed approach will offer a better outcome</li>
-			</ul>
+		<div class="panel-indent" id="details-content-0" aria-hidden="false" style="display: block;">
+			<p>Please describe your plans for limiting and managing risk. You need to:</p>
+				<ul class="list-bullet">
+					<li>identify the project's main risks and uncertainties</li>
+					<li>detail specific technical, commercial, managerial and environmental risks</li>
+					<li>list any other uncertainties such as ethical issues associated with the project</li>
+					<li>provide a detailed risk analysis</li>
+					<li>rate the main risks as high/medium/low</li>
+					<li>show how you'll limit the main risks</li>
+					<li>identify the project management tools and mechanisms you'll use to minimise operational risk</li>
+					<li>include arrangements for managing the project team and its partners</li>
+				</ul>
 
-		</div>
+			</div>
 		</details>
-		<div class="textarea-wrapped assigned-to-me word-count">
+		<div class="textarea-wrapped word-count">
 			<div class="textarea-header" id="formInput[1]">
 				<div class="assignee  assigned-to-me ">
-			        This question is assigned to 
-			        <strong>you</strong>
+			        This question is assigned to
+			        <strong>Jesssica Doe</strong>
 			    </div>
 			</div>
-			<div class="editor" contenteditable="true">
-				<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm. </p>
-				<p>We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
+			<div class="readonly" contenteditable="false">
+				<p>Three principal risks exist at this stage:</p>
+				<ul class="list-number">
+					<li>The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identify if the method needs to be altered during scale up to replicate results. In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase</li>
+					<li>During the phase to engineer a technique to isolate the issue we anticipate that there are inherent safety issues. We have consulted an independent firm to ensure that suitable equipment and measures have been put in place to minimise the risk to staff.</li>
+					<li>Although we are confident that our fabrication partner is the best option for the prototype solution there is an indication that a particular piece of heavy machinery, currently unavailable in the UK will be required. Our Fabrication partner has already investigated options for accessing this equipment in the Far East and an appropriate budget has been set aside to be used for this purpose if required.</li>
+				</ul>
+
+
 			</div>
 		</div>
 		<div class="textarea-footer">
@@ -108,34 +118,30 @@
 					</div>
 				</div>
 
-				<button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-1" value="1">Mark as complete</button>
-
 			</div>
 
 		</div>
 
-		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
-	
-		<!-- if  readonly we show the edit form button-->
 	</div>
+
 </form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question4">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question6">
             <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">4. Economic benefit</span>
+            <span class="pagination-part-title">6. Innovation</span>
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question6">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question8">
             <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">6. Innovation</span>
+            <span class="pagination-part-title">8. Project team</span>
         </a>
     </li>
 </ul>
 
-<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

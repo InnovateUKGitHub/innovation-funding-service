@@ -1,19 +1,19 @@
 package com.worth.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.Organisation;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Resource object to store the address details, from the company, from the company house api.
  */
-//@Entity
+@Entity
 public class Address {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String addressLine1;
@@ -25,6 +25,9 @@ public class Address {
     private String postalCode;
     private String region;
 
+    @OneToMany(mappedBy = "address",
+            cascade = CascadeType.ALL)
+    private List<OrganisationAddress> organisations = new ArrayList<>();
 
     public Address() {
     }
@@ -116,5 +119,14 @@ public class Address {
 
     public Long getId() {
         return id;
+    }
+
+    @JsonIgnore
+    public List<OrganisationAddress> getOrganisations() {
+        return organisations;
+    }
+
+    public void setOrganisations(List<OrganisationAddress> organisations) {
+        this.organisations = organisations;
     }
 }

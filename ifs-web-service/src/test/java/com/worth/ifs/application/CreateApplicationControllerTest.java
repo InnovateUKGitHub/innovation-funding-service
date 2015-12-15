@@ -12,8 +12,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.validation.SmartValidator;
+import org.springframework.validation.Validator;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CreateApplicationControllerTest  extends BaseUnitTest {
     @InjectMocks
     private CreateApplicationController createApplicationController;
+
+    @Mock
+    private Validator validator;
 
     @Mock
     private Model model;
@@ -117,6 +123,7 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
     public void testConfirmBusinessInvalidSubmit() throws Exception {
         mockMvc.perform(post("/application/create/selected-business/" + COMPANY_ID)
                         .param("postcodeInput", "")
+                        .param("search-address", "")
         )
                 .andExpect(view().name("create-application/confirm-selected-organisation"))
                 .andExpect(model().attributeExists("confirmCompanyDetailsForm"))
