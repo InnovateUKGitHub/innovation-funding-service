@@ -1,12 +1,10 @@
 package com.worth.ifs.registration;
 
+import com.worth.ifs.application.CreateApplicationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.dto.UserDto;
 import org.apache.commons.logging.Log;
@@ -70,7 +68,8 @@ public class RegistrationController {
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
             if(user!=null) {
-                destination = "redirect:/login";
+                CreateApplicationController.saveToCookie(response, "userId", String.valueOf(user.getId()));
+                destination = "redirect:/application/create/initialize-application/";
             }
         }
         else {
