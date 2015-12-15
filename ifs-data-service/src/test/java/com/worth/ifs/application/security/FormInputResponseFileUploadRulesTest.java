@@ -19,6 +19,9 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -48,6 +51,63 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
         when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
 
-        fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user);
+        assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
     }
+
+    @Test
+    public void testApplicantCanUploadFilesInResponsesForOwnApplicationButNotAMemberOfApplication() {
+
+        User user = newUser().build();
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
+
+        assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+    }
+
+    @Test
+    public void testApplicantCanUploadFilesInResponsesForOwnApplicationButApplicantOnDifferentApplication() {
+
+        Application application = newApplication().build();
+        Application differentApplication = newApplication().build();
+
+        User user = newUser().build();
+        Role applicantRole = newRole().withType(APPLICANT).build();
+
+        ProcessRole applicantProcessRole = newProcessRole().
+                withUser(user).
+                withRole(applicantRole).
+                withApplication(differentApplication).build();
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
+
+        FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
+        when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
+
+        assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+    }
+
+    @Test
+    public void testApplicantCanUploadFilesInResponsesForOwnApplicationButHasDifferentRoleOnApplication() {
+
+        Application application = newApplication().build();
+
+        User user = newUser().build();
+        Role anotherRole = newRole().withType(ASSESSOR).build();
+
+        ProcessRole applicantProcessRole = newProcessRole().
+                withUser(user).
+                withRole(anotherRole).
+                withApplication(application).build();
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
+
+        FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
+        when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
+
+        assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+    }
+
 }
