@@ -1,6 +1,5 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.application.domain.ApplicationStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.viewmodel;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
