@@ -27,3 +27,4 @@ ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
 ${LOG_OUT}        ${SERVER}/logout
 ${APPLICATION_QUESTIONS_SECTION_URL}    http://localhost/application-form/1/section/2/
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
+${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
