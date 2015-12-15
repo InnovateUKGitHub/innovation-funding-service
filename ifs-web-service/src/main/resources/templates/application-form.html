@@ -36,7 +36,16 @@
                 <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
             </div>
 
+             <!--/* <div class="alignright-button">
+
+              <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
+                    Review &amp; submit
+                </a> 
+
+            </div>*/-->
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+            <button type="submit" class="button-secondary" name="submit-section">Save and return to application overview</button>
+
 
             <ul class="pagination">
                 <li class="prev" th:if="${previousQuestion}">
@@ -53,13 +62,7 @@
                 </li>
             </ul>
 
-            <div class="alignright-button">
-                <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">
-                    Review &amp; submit
-                </a>
 
-                <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
-            </div>
         </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
