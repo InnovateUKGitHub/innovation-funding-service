@@ -42,6 +42,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     public final static String COMPANY_HOUSE_COMPANY_ID = "companyId";
     private final Log log = LogFactory.getLog(getClass());
 
+
     @Autowired
     Validator validator;
 
@@ -148,13 +149,14 @@ public class CreateApplicationController extends AbstractApplicationController {
         }
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
+        if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
+            log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
+            confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
+        }
 
         if(request.getParameter("search-address") != null){
             validator.validate(confirmCompanyDetailsForm, bindingResult);
-            if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())){
-                log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
-                confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
-            }else{
+            if(!StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
                 bindingResult.rejectValue("postcodeInput", "NotEmpty", "NotEmpty");
             }
         }else if(request.getParameter("select-address") != null){
