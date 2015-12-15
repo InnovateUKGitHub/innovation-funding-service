@@ -12,7 +12,8 @@ import java.util.List;
  */
 public class CompanyHouseForm  extends Form{
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9_\\&-]+$", message = "Please enter valid characters")
+    // on empty value don't check pattern since then there already is a validation message.
+    @Pattern(regexp = "^$|^[A-Za-z0-9_\\&-,.:;\\@]+$", message = "Please enter valid characters")
     private String organisationName;
     private List<CompanyHouseBusiness> companyHouseList;
 
