@@ -16,14 +16,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.MimeType;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +55,7 @@ public class FormInputResponseFileUploadController {
     public JsonStatusResponse createFile(
             @RequestHeader("Content-Type") String contentType,
             @RequestHeader("Content-Length") String contentLength,
-            @PathParam(value = "formInputResponseId") long formInputResponseId,
+            @PathVariable("formInputResponseId") long formInputResponseId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {

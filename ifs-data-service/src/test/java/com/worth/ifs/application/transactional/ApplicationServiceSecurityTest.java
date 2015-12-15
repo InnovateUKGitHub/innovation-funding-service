@@ -3,12 +3,15 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -20,6 +23,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
@@ -28,11 +32,20 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing the security annotations on the ApplicationService interface
  */
 public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
+
+    private FormInputResponseFileUploadRules fileUploadRules;
+
+    @Before
+    public void lookupPermissionRules() {
+        fileUploadRules = getMockPermissionRulesBean(FormInputResponseFileUploadRules.class);
+    }
 
     @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
@@ -81,6 +94,19 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 // expected behaviour
             }
         });
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUpload() {
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
+
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
+
+        service.createFormInputResponseFileUpload(file, () -> null);
+
+        verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
 
     @Override
