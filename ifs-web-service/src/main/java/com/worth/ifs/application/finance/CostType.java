@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**

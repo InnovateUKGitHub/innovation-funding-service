@@ -23,7 +23,12 @@
                 </div>
             </div>
         </div>
-        <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+        <div th:if="${url == ''}" th:remove="tag">
+            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Some link text</h2>
+        </div>
+        <div th:if="${url != ''}" th:remove="tag">
+             <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+        </div>
     </div>
 </div>
 
@@ -105,6 +110,227 @@
     </fieldset>
 </div>
 
+
+<!-- ===================Assessor dashboard============================== -->
+<div th:fragment="prototype-assessor-dashboard-invites">
+    <div class="invite-to-assess">
+        <h2 class="heading-medium">Invitations to assess (<span>1</span>)</h2>
+        <ul class="boxed-list">
+            <li>
+                <div class="grid-row">
+                    <div class="column-assessment-details">
+                        <h3 class="heading-medium">
+                        <a href="/prototypes/865-assessor-comp-invite">Technology inspired</a>
+                        </h3>
+                        <p>Please respond to this request for you to assess on this new competition.</p>
+                    </div>
+                    <div class="column-assessment-status navigation-right">
+                        <div class="application-status invite">
+                            <h4 class="subtitle no-margin">Assessment period:</h4>
+                            <h5 class="heading-medium no-margin">15th - 25th April</h5>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div th:fragment="prototype-assessor-dashboard-invite-accepted">
+    <div class="invite-to-assess">
+        <h2 class="heading-medium">Upcoming competions to assess</h2>
+        <ul class="boxed-list">
+            <li>
+                <div class="grid-row">
+                    <div class="column-assessment-details">
+                        <h3 class="heading-medium">Technology inspired</h3>
+                        <p class="form-hint">Upcoming application</p>
+                        <p class="no-margin">Applications allocated 15th April</p>
+                    </div>
+                    <div class="column-assessment-status navigation-right">
+                        <div class="application-status invite">
+                            <h4 class="subtitle no-margin">Assessment period:</h4>
+                            <h5 class="heading-medium no-margin">15th - 25th April</h5>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div th:fragment="prototype-assessor-dashboard-competitions">
+    <h2 class="heading-medium">Competitions for assessment (<span>1</span>)</h2>
+    <ul class="boxed-list">
+        <li>
+            <div class="grid-row">
+                <div class="column-half">
+                    <h2 class="heading-medium">
+                    <a href="#">Solving urban challenges with data</a>
+                    </h2>
+                    <p class="form-hint">Assessment progress:</p>
+                    <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
+                </div>
+                <div class="column-half">
+                    
+                    <div class="competition-deadline">
+                        <div class="day">
+                            31<span>st</span>
+                        </div>
+                        <div class="month">December deadline</div>
+                        <div class="time">
+                            <!--<span th:text="${#temporals.format(endDate, 'HH:mm')}" />-->
+                        </div>
+                    </div>
+                    
+                    <div class="pie-container">
+                        <div class="pie"><svg viewBox="0 0 32 32"><title>67%</title><circle r="16" cx="16" cy="16" stroke-dasharray="67 100"></circle></svg></div>
+                        <div class="pie-overlay">
+                            <div>16</div>
+                            <span>Days left</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+
+<!-- ===================Assessor applications============================== -->
+<div th:fragment="prototype-assessor-application">
+    <div class="my-applications">
+        <div class="in-progress">
+            <h3 class="heading-large">Applications for Assessment (<span>3</span>)</h3>
+            <ul class="boxed-list bulk-select">
+                <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST">
+                    
+                    <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
+                        
+                        <button class="js-close close" aria-label="Close Popup">X</button>
+                        <h2 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h2>
+                        <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
+                        <div>
+                            <button role="button" tabindex="0" class="button large" type="submit" name="submit_assessments">Yes, I want to submit the applications</button>
+                            <button class="js-close button buttonlink large">Cancel</button>
+                        </div>
+                    </div>
+                    <li>
+                        <div class="grid-row">
+                            <div class="column-assessment-details">
+                                <h4 class="heading-medium">
+                                <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
+                                <!--">-->
+                                </h4>
+                                <div><p>Empire Ltd</p></div>
+                            </div>
+                            <div class="column-assessment-status navigation-right">
+                                <div class="application-status pending empty">
+                                    <p>Pending</p>
+                                    <!--if assessment is pending acceptance-->
+                                    <p class="application-listing_pending">
+                                        <a href="/prototypes/868-accept-reject-application">accept / reject assessment</a>
+                                    </p>
+                                    <!--otherwise shows the overall score -->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <label>
+                            
+                        </label>
+                    </li>
+                    <li>
+                        <div class="grid-row">
+                            <div class="column-assessment-details">
+                                <h4 class="heading-medium">
+                                <a href="#">Security for the Internet of Things</a>
+                                <!--">-->
+                                </h4>
+                                <div><p>Ludlow</p></div>
+                            </div>
+                            <div class="column-assessment-status navigation-right">
+                                <div class="application-status pending empty">
+                                    <p>Pending</p>
+                                    <!--if assessment is pending acceptance-->
+                                    <p class="application-listing_pending">
+                                        <a href="#">accept / reject assessment</a>
+                                    </p>
+                                    <!--otherwise shows the overall score -->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <label>
+                            
+                        </label>
+                    </li>
+                    <li>
+                        <div class="grid-row">
+                            <div class="column-assessment-details">
+                                <h4 class="heading-medium">
+                                <a href="#">A new innovative solution</a>
+                                <!--">-->
+                                </h4>
+                                <div><p>Empire Ltd</p></div>
+                            </div>
+                            <div class="column-assessment-status navigation-right">
+                                <div class="application-status assessed yes">
+                                    <p>Assessed</p>
+                                    <!--if assessment is pending acceptance-->
+                                    
+                                    <!--otherwise shows the overall score -->
+                                    <p class="application-listing_pending">
+                                        </p><h3 class="score"><span>21.0</span> %</h3>
+                                        <small>Overall score</small>
+                                        <div class="recommend-container">
+                                            <p class="recommend yes"> <span>Recommended</span> </p>
+                                            
+                                        </div>
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <label>
+                                <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
+                            </label>
+                        </li>
+                        <div class="alignright">
+                            <input type="hidden" name="competitionId" value="1" />
+                            <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit">Submit applications</a>
+                        </div>
+                    </form>
+            </ul>
+        </div>
+        <!--all the submitted assessments-->
+        <div class="submitted">
+            <h4 class="heading-medium">Submitted Assessment (<span>1</span>)</h4>
+            <ul class="boxed-list bulk-select">
+                <li>
+                    <div class="grid-row">
+                        <div class="column-assessment-details">
+                            <h4 class="heading-medium">Mobile Phone Data for Logistics Analytics</h4>
+                            <div><p>Empire Ltd</p></div>
+                        </div>
+                        <div class="column-assessment-status navigation-right">
+                            <div class="application-status submitted yes">
+                                <p>Submitted</p>
+                                <!-- shows the overall score -->
+                                <h3 class="score"><span>72.0</span>%</h3>
+                                <small>Overall score</small>
+                                <div class="recommend-container">
+                                    <p class="recommend yes"> <span>Recommended</span> </p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 
 

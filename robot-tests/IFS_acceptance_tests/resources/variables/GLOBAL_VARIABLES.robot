@@ -32,3 +32,4 @@ ${ADDING_VALUE_URL}    ${SERVER}/application/1/form/question/16
 ${FINANCES_URL}    ${SERVER}/application/1/form/section/6
 ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/1/form/section/8
+${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1

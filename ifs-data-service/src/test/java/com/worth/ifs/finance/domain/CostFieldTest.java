@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.domain;
 
-        import org.junit.Assert;
-        import org.junit.Before;
-        import org.junit.Test;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CostFieldTest {
     Long id;
