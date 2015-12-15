@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     @Autowired
     private CredentialsValidator credentialsValidator;
+
 
 
     /**
@@ -58,13 +60,19 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     /**
      * For every request a token needs to be added, which is used for authentication
      */
-    public void addAuthentication(HttpServletResponse response, User user) {
-        Cookie cookie = new Cookie(AUTH_TOKEN, user.getToken());
+    private void addAuthentication(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(AUTH_TOKEN, token);
         cookie.setHttpOnly(false);
         cookie.setSecure(false);
         cookie.setMaxAge(ONE_DAY);
         cookie.setPath("/");
         response.addCookie(cookie);
+    }
+    public void addAuthentication(HttpServletResponse response, User user) {
+        this.addAuthentication(response, user.getToken());
+    }
+    public void addAuthentication(HttpServletResponse response, UserResource user) {
+        this.addAuthentication(response, user.getToken());
     }
 
     public void removeAuthentication(HttpServletResponse response) {

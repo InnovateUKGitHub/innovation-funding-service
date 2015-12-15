@@ -2,7 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.dto.UserDto;
+import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 
@@ -21,5 +21,5 @@ public interface UserRestService {
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
     public ProcessRole findProcessRoleById(Long processRoleId);
-    public UserDto createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
+    public UserResource createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
 }

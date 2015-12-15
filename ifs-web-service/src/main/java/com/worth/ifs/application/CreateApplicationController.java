@@ -1,5 +1,7 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import java.util.List;
 @RequestMapping("/application/create")
 public class CreateApplicationController extends AbstractApplicationController {
     public final static String COMPETITION_ID = "competitionId";
+    public final static String USER_ID = "userId";
     public final static String COMPANY_HOUSE_COMPANY_ID = "companyId";
     private final Log log = LogFactory.getLog(getClass());
 
@@ -45,6 +47,9 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     @Autowired
     OrganisationService organisationService;
+
+    @Autowired
+    ApplicationService applicationService;
 
 
     @RequestMapping("/check-eligibility/{competitionId}")
@@ -55,9 +60,26 @@ public class CreateApplicationController extends AbstractApplicationController {
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
 
-        this.saveToCookie(request, response, COMPETITION_ID, String.valueOf(competitionId));
+        this.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";
     }
+
+    @RequestMapping("/initialize-application")
+    public String initializeApplication(Model model,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response){
+        Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
+        Long userId = Long.valueOf(getFromCookie(request, USER_ID));
+
+        ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
+        if(application == null || application.getId() == null){
+            log.error("Application not created with competitionID: " + competitionId);
+            log.error("Application not created with userId: " + userId);
+        }
+        return ApplicationController.redirectToApplication(application);
+    }
+
+
 
     @RequestMapping("/create-organisation-type")
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model, HttpServletRequest request) {
@@ -100,7 +122,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                    @PathVariable("companyId") final String companyId,
                                    HttpServletRequest request,
                                    HttpServletResponse response ) {
-        this.saveToCookie(request, response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
         if(organisationService == null){
@@ -118,7 +140,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                    @PathVariable("companyId") final String companyId,
                                    HttpServletRequest request,
                                    HttpServletResponse response ) {
-        this.saveToCookie(request, response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
         if(organisationService == null){
@@ -202,9 +224,12 @@ public class CreateApplicationController extends AbstractApplicationController {
         return organisationService.searchCompanyHouseOrganisations(organisationName);
     }
 
-    private void saveToCookie(HttpServletRequest request, HttpServletResponse response, String fieldName, String fieldValue){
+    public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue){
         if(fieldName != null){
-            response.addCookie(new Cookie(fieldName, fieldValue));
+            Cookie cookie = new Cookie(fieldName, fieldValue);
+            cookie.setPath("/");
+            cookie.setMaxAge(3600);
+            response.addCookie(cookie);
         }
     }
 

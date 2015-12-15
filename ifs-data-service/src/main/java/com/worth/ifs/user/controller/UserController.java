@@ -1,15 +1,14 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.dto.UserDto;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,9 +115,9 @@ public class UserController {
     }
 
     @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
-    public UserDto createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserDto userDto) {
+    public UserResource createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
 
-        User newUser = assembleUserFromDto(userDto);
+        User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, roleName);
 
@@ -126,9 +125,8 @@ public class UserController {
 
         User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
 
-        repository.save(createdUserWithToken);
-
-        return userDto;
+        User user = repository.save(createdUserWithToken);
+        return new UserResource(user);
     }
 
     private void addRoleToUser(User user, String roleName) {
@@ -143,7 +141,7 @@ public class UserController {
         user.setOrganisations(userOrganisationList);
     }
 
-    private User assembleUserFromDto(UserDto userDto) {
+    private User assembleUserFromResource(UserResource userDto) {
         User newUser = new User();
         newUser.setFirstName(userDto.getFirstName());
         newUser.setLastName(userDto.getLastName());
