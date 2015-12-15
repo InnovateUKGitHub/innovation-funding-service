@@ -10,34 +10,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},url='/application/'+${currentApplication.id},urlText='Application Overview'" th:remove="tag" />
     <div th:include="fragments/elements :: notification" th:remove="tag" />
+         
+        <div class="page-title">
+            <h2 class="subtitle" th:text="${currentCompetition.name + ' - Application number: ' + currentApplication.id}" />
+            <h1 class="heading-xlarge"  th:text="${question.shortName}" />
+        </div>
 
- <div class="grid-row">
-    <div class="column-third">
-            <nav role="navigation" class="app-sidebar">
-                <ul>
-                    <li>
-                        <a th:href="@{/application/{id}(id=${currentApplication.getId()})}">Overview</a>
-                    </li>
-                    <li th:each="sectionEntry : ${sections}"  th:class="((${sectionEntry.key} == ${currentSectionId}) ? 'active ':'') +
-                            ((${completedSections.contains(sectionEntry.key)}) ? 'section-status complete ':'') +
-                            ((${assignedSections?.contains(sectionEntry.key)}) ? 'section-status assigned ': '')">
-                        <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sectionEntry.key})}"
-                            th:text="${sectionEntry.value.getName()}" th:if="${sectionEntry.value.parentSection}==null"></a>
-                        <ul th:unless="${sectionEntry.value.getChildSections()}==null or ${sectionEntry.value.getChildSections().isEmpty()}">
-                            <li th:each="subSection : ${sectionEntry.value.getChildSections()}" th:class="((${subSection.getId()} == ${currentSectionId}) ? 'active':'') + ' ' + ((${completedSections.contains(subSection.getId())}) ? 'section-status complete ':'')">
-                                <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${subSection.getId()})}"
-                                    th:text="${subSection.getName()}"></a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-    </div>
-
-    <div class="column-two-thirds">
-        
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js">
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                 <h1 class="heading-medium error-summary-heading">
@@ -51,44 +31,24 @@
                 </ul>
             </div>
 
-
-            <div th:each="sectionEntry : ${sections}"  th:remove="tag">
-                 <div th:if="(${sectionEntry.key} == ${currentSectionId})" th:remove="tag">
-                      <h1 class="heading-xlarge" th:text="${sectionEntry.value.getName()}"></h1>
-                      <p class="subtitle" th:text="${sectionEntry.value.getDescription()}"></p>
-                </div>
-
-                <div th:each="subSection : ${sectionEntry.value.getChildSections()}" th:if="${sectionEntry.value.getChildSections()}!=null and ${sectionEntry.key} != ${currentSectionId}"  th:remove="tag">
-                    <div th:if="(${subSection.getId()} == ${currentSectionId})" th:remove="tag">
-                        <h1 class="heading-xlarge" th:text="${subSection.getName()}"></h1>
-                        <p class="subtitle" th:text="${subSection.getDescription()}"></p>
-                    </div>
-                </div>
-            </div>
-
-            <h1 class="heading-large" th:if="${currentSection.getName() == 'Finances' }">Funding rules for this competition</h1>
-
-            <div th:each="question : ${currentSection.getQuestions()}" th:remove="tag">
-
-                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
-                     th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                    <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
-                </div>
+            <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
 
             <ul class="pagination">
-                <li class="prev" th:if="${sections.containsKey(currentSectionId-1)}">
-                    <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId-1).getId()})}" rel="prev" title="Navigate to previous part">
+                <li class="prev" th:if="${previousQuestion}">
+                    <a th:href="@{/application/{id}/form/question/{questionId}/(id=${currentApplication.getId()},questionId=${previousQuestion.id})}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${sections.get(currentSectionId-1).getName()}">Business proposition</span>
+                        <span class="pagination-part-title" th:text="${previousQuestion.shortName}">Business proposition</span>
                     </a>
                 </li>
-                <li class="next" th:if="${sections.containsKey(currentSectionId+1)}">
-                    <a th:href="@{/application-form/{id}/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${sections.get(currentSectionId+1).getId()})}" rel="next" title="Navigate to next part">
+                <li class="next" th:if="${nextQuestion}">
+                    <a th:href="@{/application/{id}/form/question/{questionId}/(id=${currentApplication.getId()},questionId=${nextQuestion.id})}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${sections.get(currentSectionId+1).getName()}">Funding</span>
+                        <span class="pagination-part-title" th:text="${nextQuestion.shortName}">Funding</span>
                     </a>
                 </li>
             </ul>
@@ -101,9 +61,6 @@
                 <input class="button app-submit-btn"  type="submit" name="submit-section" value="Save" />
             </div>
         </form>
-
-    </div>
-  </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

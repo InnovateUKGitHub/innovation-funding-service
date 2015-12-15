@@ -3,7 +3,7 @@ package com.worth.ifs.organisation.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.organisation.resource.PostalAddress;
+import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.security.NotSecured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * This class communicates with the Company House API.
  * This is used to get information abouts companies.
+ *
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
  */
 @Service
@@ -37,16 +38,17 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public List<CompanyHouseBusiness> searchOrganisationsByName(String name){
+    public List<CompanyHouseBusiness> searchOrganisations(String searchText) {
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
-        JsonNode companiesResources = restGet("search/companies?items_per_page="+ SEARCH_ITEMS_MAX +"&q=" + name, JsonNode.class);
+        JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + searchText, JsonNode.class);
         JsonNode companyItems = companiesResources.path("items");
         List<CompanyHouseBusiness> results = new ArrayList<>();
         companyItems.forEach(i -> results.add(companySearchMapper(i)));
         return results;
     }
-    private CompanyHouseBusiness companySearchMapper(JsonNode jsonNode){
-        PostalAddress officeAddress = getPostalAddress(jsonNode, "address");
+
+    private CompanyHouseBusiness companySearchMapper(JsonNode jsonNode) {
+        Address officeAddress = getAddress(jsonNode, "address");
         return new CompanyHouseBusiness(
                 jsonNode.path("company_number").asText(),
                 jsonNode.path("title").asText(),
@@ -57,28 +59,28 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public CompanyHouseBusiness getOrganisationById(String id){
-        log.debug("getOrganisationById "+ id);
+    public CompanyHouseBusiness getOrganisationById(String id) {
+        log.debug("getOrganisationById " + id);
         this.setDataRestServiceUrl(COMPANY_HOUSE_API);
 
         JsonNode jsonNode = null;
-        try{
+        try {
             jsonNode = restGet("company/" + id, JsonNode.class);
-        }catch(Exception e){
-            log.error("Exception: " + e.getMessage());
+        } catch (Exception e) {
+            log.error(e);
             jsonNode = null;
         }
 
-        if (jsonNode == null){
+        if (jsonNode == null) {
             return null;
-        }else{
+        } else {
             return companyProfileMapper(jsonNode);
         }
     }
 
-    private CompanyHouseBusiness companyProfileMapper(JsonNode jsonNode){
+    private CompanyHouseBusiness companyProfileMapper(JsonNode jsonNode) {
         String description = null;
-        PostalAddress officeAddress = getPostalAddress(jsonNode, "registered_office_address");
+        Address officeAddress = getAddress(jsonNode, "registered_office_address");
         return new CompanyHouseBusiness(
                 jsonNode.path("company_number").asText(),
                 jsonNode.path("company_name").asText(),
@@ -88,8 +90,8 @@ public class CompanyHouseApi extends BaseRestService {
                 officeAddress);
     }
 
-    private PostalAddress getPostalAddress(JsonNode jsonNode, String path) {
-        PostalAddress address = new PostalAddress(
+    private Address getAddress(JsonNode jsonNode, String path) {
+        Address address = new Address(
                 jsonNode.path(path).path("address_line_1").asText(),
                 jsonNode.path(path).path("address_line_2").asText(),
                 jsonNode.path(path).path("care_of").asText(),
@@ -102,14 +104,14 @@ public class CompanyHouseApi extends BaseRestService {
         return address;
     }
 
-    @NotSecured("")
-    public HttpHeaders getHeaders(){
+    @NotSecured("Because its just overwriting the methods from the baseclass, no authorization check needed.")
+    public HttpHeaders getHeaders() {
         log.debug("Adding authorization headers");
         HttpHeaders headers = super.getHeaders();
 
         String auth = COMPANY_HOUSE_KEY + ":";
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-        String authHeader = "Basic " + new String( encodedAuth );
+        String authHeader = "Basic " + new String(encodedAuth);
 
         headers.add("Authorization", authHeader);
         return headers;

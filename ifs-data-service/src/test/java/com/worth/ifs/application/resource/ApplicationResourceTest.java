@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicationResourceTest {
     ApplicationResource applicationResource;
@@ -29,10 +30,10 @@ public class ApplicationResourceTest {
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
-        processRoles = new ArrayList<ProcessRole>();
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
+        processRoles = new ArrayList<>();
+        processRoles.add(new ProcessRole(1L,null,null,null,null));
+        processRoles.add(new ProcessRole(2L,null,null,null,null));
+        processRoles.add(new ProcessRole(3L,null,null,null,null));
 
         applicationResource = new ApplicationResource(competition, name, processRoles, applicationStatus, id);
     }
@@ -42,8 +43,13 @@ public class ApplicationResourceTest {
         Assert.assertEquals(applicationResource.getId(), id);
         Assert.assertEquals(applicationResource.getName(), name);
         Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus);
-        Assert.assertEquals(applicationResource.getProcessRoles(), processRoles);
+        Assert.assertEquals(applicationResource.getProcessRoleIds(), processRoles.stream().map(ProcessRole::getId).collect(Collectors.toList()));
         Assert.assertEquals(applicationResource.getCompetitionId(), competition.getId());
         Assert.assertEquals(applicationResource.getApplicationFinances(), applicationFinances);
+    }
+
+    @Test
+    public void equalsShouldReturnFalseOnNull() throws Exception{
+        Assert.assertFalse(applicationResource.equals(null));
     }
 }

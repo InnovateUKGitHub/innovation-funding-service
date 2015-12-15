@@ -27,10 +27,25 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     }
 
     @Test
-    public void testSearchCompanyHouse() throws Exception {
+    public void testSearchCompanyHouseName() throws Exception {
         List<CompanyHouseBusiness> companies = controller.searchCompanyHouse("Batman Robin");
         assertEquals(1, companies.size());
+    }
+    @Test
+    public void testSearchCompanyHouseNumber() throws Exception {
+        List<CompanyHouseBusiness> companies = controller.searchCompanyHouse(COMPANY_ID);
+        assertEquals(1, companies.size());
+        CompanyHouseBusiness company = companies.get(0);
 
+        assertNotNull(company);
+        assertEquals(COMPANY_NAME, company.getName());
+        assertEquals(COMPANY_ID, company.getCompanyNumber());
+        assertEquals("ltd", company.getType());
+        assertEquals("Montrose House", company.getOfficeAddress().getAddressLine1());
+        assertEquals("Clayhill Park", company.getOfficeAddress().getAddressLine2());
+        assertEquals("Neston", company.getOfficeAddress().getLocality());
+        assertEquals("Cheshire", company.getOfficeAddress().getRegion());
+        assertEquals("CH64 3RU", company.getOfficeAddress().getPostalCode());
     }
 
     @Test
@@ -39,7 +54,12 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
         assertEquals(COMPANY_ID, company.getCompanyNumber());
-
+        assertEquals("ltd", company.getType());
+        assertEquals("Montrose House", company.getOfficeAddress().getAddressLine1());
+        assertEquals("Clayhill Park", company.getOfficeAddress().getAddressLine2());
+        assertEquals("Neston", company.getOfficeAddress().getLocality());
+        assertEquals("Cheshire", company.getOfficeAddress().getRegion());
+        assertEquals("CH64 3RU", company.getOfficeAddress().getPostalCode());
     }
 
     @Test

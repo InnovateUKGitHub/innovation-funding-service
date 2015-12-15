@@ -12,7 +12,7 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class QuestionTest {
     Question question;
@@ -50,8 +50,8 @@ public class QuestionTest {
                 withPriority(priority).
                 build();
 
-        responses = newResponse().withQuestions(asList(question)).build(3);
-        section = newSection().withQuestions(asList(question)).build();
+        responses = newResponse().withQuestions(singletonList(question)).build(3);
+        section = newSection().withQuestions(singletonList(question)).build();
     }
 
     @Test
@@ -66,6 +66,16 @@ public class QuestionTest {
         Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
         Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getPriority(), priority);
+    }
+
+    @Test
+    public void equalsShouldWorkCorrect() throws Exception{
+
+    }
+
+    @Test
+    public void hashCodeShouldWorkCorrectly() throws Exception{
+
     }
 
 }

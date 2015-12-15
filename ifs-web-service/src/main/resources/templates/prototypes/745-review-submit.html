@@ -29,8 +29,10 @@
     <h2 class="heading-medium">Details</h2>
 
 	<div class="collapsible section-overview">
-        
-       	<h2 class="section-complete">Application details</h2>
+       
+       	<h2>Application details
+			<div class="section-status section-complete">Complete</div>
+       	</h2>
 
 		<div id="collapsible-1" aria-hidden="false">
 			<div class="question">
@@ -41,7 +43,9 @@
     	</div>
 
 
-    	<h2 class="section-complete">Project summary</h2>
+    	<h2>Project summary
+    		<div class="section-status section-complete">Complete</div>
+    	</h2>
 
 		<div id="collapsible-2" aria-hidden="false">
 			<div class="question" >
@@ -52,7 +56,9 @@
     	</div>
 
 
-    	<h2 class="section-complete">Public description</h2>
+    	<h2>Public description
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
 		<div id="collapsible-3" aria-hidden="false">
 			<div class="question">
@@ -63,7 +69,9 @@
     	</div>
 
 
-    	<h2 class="section-complete">Scope</h2>
+    	<h2>Scope
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
 		<div id="collapsible-4" aria-hidden="false">
 			<div class="question">
@@ -80,7 +88,9 @@
 
 	<div class="collapsible section-overview">
 		
-		<h2 class="section-incomplete">1. Business opportunity</h2>
+		<h2>1. Business opportunity
+			<div class="section-status section-incomplete">Incomplete</div>
+		</h2>
 
 		<div id="collapsible-5" aria-hidden="false">
 					
@@ -117,7 +127,9 @@ We propose to tackle the situation head on and develop a tool that will circumve
     	</div>
 
 
-    	<h2 class="section-incomplete">2. Potential market</h2>
+    	<h2>2. Potential market
+			<div class="section-status section-incomplete">Incomplete</div>
+    	</h2>
 
     	<div id="collapsible-6" aria-hidden="false">
 
@@ -156,7 +168,9 @@ Manufacture and development could remain in the United Kingdom with an internati
     	</div>
 
 
-    	<h2 class="section-complete">3. Project exploitation</h2>
+    	<h2>3. Project exploitation
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-7" aria-hidden="false">
 			<div class="question" id="question-3">
@@ -192,7 +206,9 @@ Manufacture and development could remain in the United Kingdom with an internati
     	</div>
 
 
-    	<h2 class="section-complete">4. Economic benefit</h2>
+    	<h2>4. Economic benefit
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-8" aria-hidden="false">
 			<div class="question" id="question-4">
@@ -228,7 +244,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-complete">5. Technical approach</h2>
+    	<h2>5. Technical approach
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-9" aria-hidden="false">
 			<div class="question">
@@ -239,7 +257,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-incomplete">6. Innovation</h2>
+    	<h2>6. Innovation
+			<div class="section-status section-incomplete">Incomplete</div>
+    	</h2>
 
     	<div id="collapsible-10" aria-hidden="false">
 			<div class="question">
@@ -250,7 +270,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-incomplete">7. Risks</h2>
+    	<h2>7. Risks
+			<div class="section-status section-incomplete">Incomplete</div>
+    	</h2>
 
     	<div id="collapsible-11" aria-hidden="false">
 			<div class="question">
@@ -261,7 +283,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-complete">8. Project team</h2>
+    	<h2>8. Project team
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-12" aria-hidden="false">
 			<div class="question">
@@ -272,7 +296,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-complete">9. Funding</h2>
+    	<h2>9. Funding
+			<div class="section-status section-complete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-13" aria-hidden="false">
 			<div class="question">
@@ -283,7 +309,9 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
     	</div>
 
 
-    	<h2 class="section-complete">10. Adding value</h2>
+    	<h2>10. Adding value
+			<div class="section-status section-incomplete">Complete</div>
+    	</h2>
 
     	<div id="collapsible-13" aria-hidden="false">
 			<div class="question">
@@ -299,16 +327,42 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 
 	<div class="collapsible section-overview">
 
-    	<h2 class="section-complete">Finances overview</h2>
+		<!-- Finances not complete -->
+		<div th:unless="${param.warning == null}" th:remove="tag"> 
 
-    	<div id="collapsible-15" aria-hidden="false">
-			<div class="question">
-				<div class="form-group">
-					Finances overview
-				</div>
+			<h2>Finances overview
+				<div class="section-status section-incomplete">Incomplete</div>
+    		</h2>
+
+			<div class="question"> 
+				<div th:include="prototypes/fragments/applicant-view :: prototype-warning-incomplete" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="incomplete=true" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
 			</div>
-    	</div>
-    	
+		</div>
+		
+		<!-- Finances complete -->
+		<div th:unless="${param.warning != null}" th:remove="tag"> 
+
+			<h2>Finances overview
+				<div class="section-status section-complete">Complete</div>
+			</h2>
+
+			<div class="question">
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+			</div>	
+
+		</div>
+	
 	</div>
 
 	<hr />

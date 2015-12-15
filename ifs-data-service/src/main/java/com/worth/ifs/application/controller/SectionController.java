@@ -163,4 +163,53 @@ public class SectionController {
 
         return allSectionsWithSubsectionsAreComplete;
     }
+
+    public Section getNextSection(Long sectionId) {
+        Section section = sectionRepository.findOne(sectionId);
+
+        return getNextSection(section);
+    }
+
+    public Section getNextSection(Section section) {
+        if(section.getParentSection()!=null) {
+            return getNextSiblingSection(section);
+        } else {
+            return sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
+        }
+    }
+
+    private Section getNextSiblingSection(Section section) {
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
+
+        if(sibling == null) {
+            return getNextSection(section.getParentSection());
+        } else {
+            return sibling;
+        }
+    }
+
+    public Section getPreviousSection(Long sectionId) {
+        Section section = sectionRepository.findOne(sectionId);
+        return getPreviousSection(section);
+    }
+
+    public Section getPreviousSection(Section section) {
+        if(section.getParentSection()!=null) {
+            return getPreviousSiblingSection(section);
+        } else {
+            return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority());
+        }
+    }
+
+    private Section getPreviousSiblingSection(Section section) {
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(
+                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
+
+        if(sibling == null) {
+            return getPreviousSection(section.getParentSection());
+        } else {
+            return sibling;
+        }
+    }
 }

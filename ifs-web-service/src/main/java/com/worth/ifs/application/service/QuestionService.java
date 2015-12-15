@@ -21,4 +21,6 @@ public interface QuestionService {
     public void removeNotifications(List<QuestionStatus> questionStatuses);
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);
     public Question findById(Long questionId);
+    public Question findNextQuestion(Long questionId);
+    public Question findPreviousQuestion(Long questionId);
 }

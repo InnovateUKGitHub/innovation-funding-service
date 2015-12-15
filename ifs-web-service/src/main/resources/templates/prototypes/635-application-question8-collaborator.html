@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-form">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+<form method="post" class="form-serialize-js">
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="hgroup">
+				<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+				<h1 class="heading-large">Project team</h1>
+			</div>
+		</div>
+	</div>
+	<div class="form-group extra-margin" id="0">
+		
+		<label class="form-label form-label-bold" for="1">8. Does your project team have the skills, experience and facilities to deliver this project?
+			<span class="form-hint">Describe your capability to develop and exploit this technology. Include details of your team's track record in managing research and development projects.</span>
+		</label>
+		
+		<div class="validation-messages">
+			
+		</div>
+		
+		<details role="group">
+		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+		<span class="summary">What should I include in the project skills section?</span>
+		</summary>
+		<div class="panel-indent" id="details-content-2" aria-hidden="false" style="display: block;">
+			<p>You should show your project team:</p>
+			<ul class="list-bullet">
+				<li>has the right mix of skills and experience to complete the project</li>
+				<li>has clear objectives</li>
+				<li>how it would have been formed even without Innovate UK investment</li>
+			</ul>
+			<p>If you are part of a consortium, describe the benefits of the collaboration. For example, increased knowledge transfer.</p>
+
+		</div>
+		</details>
+		<div class="textarea-wrapped marked-as-complete word-count">
+			<div class="textarea-header" id="formInput[1]">
+				<div class="assignee">
+			        This question is <strong>marked as complete</strong>
+			    </div>
+			</div>
+			<div class="readonly">
+				<p>The team consists of: Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field. We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.</p>
+				<p>Academic – the principal investigator and his team have been studying the issue for a number of years and have qualifications across the spectrum that apply to the field. Together they have already identified several efficiencies that can be made within the industry.</p>
+				<p>The Fabricators – Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years’ experience in a range of industries</p>
+			</div>
+		</div>
+		<div class="textarea-footer">
+			
+			<div class="assign-container">
+				<small><span>Last updated: </span>
+					<span>
+						<span>15 November 02:31PM</span>
+					</span>
+					by
+					<span>you</span>
+				</small>
+			</div>
+		
+			
+			<span class="count-label">
+				<small>
+					<span class="count-message">Words remaining:</span>
+					<span class="count-down positive" aria-live="polite">446</span>
+				</small>
+			</span>
+			
+		</div>
+
+		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-8'}, ${'lead'}, ${'not-assigned'})" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-8-jes'}, ${'lead'}, ${'not-assigned'})" th:remove="tag" />
+
+
+	</div>
+
+</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question7-collaborator">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">7. Risks</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question9-collaborator">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">9. Funding</span>
+        </a>
+    </li>
+</ul>
+
+	<a href="/prototypes/635-application-overview-collaborator" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

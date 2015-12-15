@@ -97,6 +97,7 @@ public abstract class BaseTransactionalService  {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (NoTransactionException e) {
             log.trace("No transaction to roll back");
+            log.error(e);
         }
     }
 
@@ -108,7 +109,7 @@ public abstract class BaseTransactionalService  {
      */
     protected Either<ServiceFailure, Response> getResponse(Long responseId) {
         return getResponseById(responseId, responseRepository, () -> error(RESPONSE_NOT_FOUND));
-    };
+    }
 
     /**
      * Code to get a ProcessRole and return a Left of ServiceFailure when it's not found.
@@ -118,7 +119,7 @@ public abstract class BaseTransactionalService  {
      */
     protected Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
         return getProcessRoleById(processRoleId, processRoleRepository, () -> error(PROCESS_ROLE_NOT_FOUND));
-    };
+    }
 
     /**
      * Create a Right of T, to indicate a success.

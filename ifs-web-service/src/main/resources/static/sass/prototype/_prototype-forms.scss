@@ -50,7 +50,7 @@
 
 		&.totals{
 			border: 1px solid $border-colour;
-			background: $panel-colour;
+			background: $panel-colour; 
 			padding: 10px 5px;
 
 			.form-control{
@@ -71,5 +71,44 @@
 
 	.form-control{
 		float: left;
+	}
+}
+
+/*----- File upload / download styling ----*/
+
+.upload-section{
+	border: 1px solid $border-colour;
+	background: $grey-4;
+	padding: 16px 16px 8px 16px;
+	margin-top: 16px;
+
+	.inputfile{
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+
+		& + label{
+			margin-top: 20px;
+		}
+	}
+
+	.uploaded-file{
+		display: block;
+		background: $panel-colour;
+		padding: 20px;
+		font-weight: bold;
+		margin: 10px 0;
+	}
+
+}
+
+
+.form-group{
+	&.download{
+		padding: 5px 0 0 50px;
+		background: url(../images/icons/icon-download.png) no-repeat;
 	}
 }

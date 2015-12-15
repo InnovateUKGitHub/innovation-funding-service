@@ -25,8 +25,8 @@ public interface AssessmentRestService {
 
     public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments);
 
-    public void acceptAssessmentInvitation(Long processId, Assessment assessment);
+    public void acceptAssessmentInvitation(Long processRoleId, Assessment assessment);
 
-    public void rejectAssessmentInvitation(Long processId, ProcessOutcome processOutcome);
+    public void rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);
 
 }

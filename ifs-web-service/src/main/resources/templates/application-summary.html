@@ -19,38 +19,44 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
-
-    <a class="back" th:href="@{/application-form/{id}/section/1(id=${currentApplication.getId()})}">&lt; Back to application</a>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
     
-    <h1 class="heading-xlarge">Application Summary</h1>
-    <p class="subtitle">
+     <div class="page-title">
+        <h2 class="subtitle" th:text="${currentApplication.getName()} +' - Application number ' + ${currentApplication.getId()} "/>
+         <h1 class="heading-xlarge">Application Summary</h1>
+    </div>
+    <p class="subtitle extra-margin">
         Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
     </p>
 
-        <form action="#"  method="post" th:object="${form}" class="form-serialize-js collapsible section-overview">
-            <div th:remove="tag" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-                <h2 th:class="((${section.getId()} == ${currentSectionId}) ? 'open':'')">
-                    <div th:text="${section.getName()}" th:remove="tag" />
-                    <div class="section-status section-complete" th:if="${completedSections.contains(section.getId())}">Complete</div>
-                    <div class="section-status section-incomplete" th:if="${incompletedSections.contains(section.getId())}">Section Incomplete</div>
-                </h2>
-
-                    <div th:each="question : ${section.getQuestions()}">
-                        <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})" th:id="'form-input-'+${formInput.getId()}" >
-                            <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
-                        </div>
+        <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
+            <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+                <h2 th:text="${section.getName()}" class="heading-medium" />
+                <div class="collapsible" th:each="question : ${section.getQuestions()}">
+                    <h3>
+                        <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
+                        <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
+                        <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
+                    </h3>
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
-            </div>
-            <h2>Finances Summary</h2>
-            <div class="question">
-                <p>This is the overview of the finances provided by all partners in this project.</p>
-                <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application-form/"+currentApplication.id+"/section/7/"}'>your finances</a> section.</p>
+                </div>
+            </section>
+            <section>
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances Summary</h3>
+                    <div class="question">
+                        <p>This is the overview of the finances provided by all partners in this project.</p>
+                        <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>
 
-                <div th:replace="question-type/types :: application_finances_summary"></div>
-                <h2 class="heading-medium">Funding breakdown</h2>
-                <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
-            </div>
+                        <div th:replace="question-type/types :: application_finances_summary"></div>
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
+                    </div>
+                </div>
+            </section>
         </form>
     <hr/>
     <div>

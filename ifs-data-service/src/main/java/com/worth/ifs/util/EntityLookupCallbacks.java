@@ -53,9 +53,7 @@ public class EntityLookupCallbacks {
                 .map(role -> {
                     return getProcessRoleForRoleUserAndApplication(role, userId, applicationId,
                             serviceLocator.getProcessRoleRepository(), noProcessRoleAvailable)
-                            .map(processRole -> {
-                                return doWithProcessRoleFn.apply(processRole);
-                            });
+                            .map(doWithProcessRoleFn::apply);
                 });
     }
 

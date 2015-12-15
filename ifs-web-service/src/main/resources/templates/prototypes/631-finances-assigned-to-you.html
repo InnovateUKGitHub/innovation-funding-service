@@ -17,14 +17,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
-	<h1 class="heading-xlarge no-margin-top">Empire Ltd Finances</h1>
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
+		<h1 class="heading-xlarge no-margin">Empire Ltd Finances</h1>
+	</div>
 
-	<h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
+	<h2 class="heading-medium extra-margin">Provide your organisation's finances</h2>
 
 	<p>Only your organisation can see this level of detail.
 		All members of your organisation can acesss and edit your finances
@@ -122,7 +123,46 @@
         </div>
     </div>
 
+    <h2 class="heading-medium no-margin-bottom">Organisation size</h2>
+	<fieldset>
+		<legend class="visuallyhidden">Organisation size and funding level</legend>
+		<p class="form-hint">To determine the level of funding you are eligible to receive please provide you r business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a> for guidance.</p>
+		<div class="form-block">
+			<label class="block-label" for="radio-1">
+				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+				Micro / small - claim up to 70%
+			</label>
+			<label class="block-label" for="radio-2">
+				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+				Medium - claim up to 60%
+			</label>
+			<label class="block-label" for="radio-3">
+				<input id="radio-3" type="radio" name="radio-group" value="Large"/>
+				Large - claim up to 50%
+			</label>
+		</div>
 
+		<div class="form-group extra-margin">
+			<label class="form-label" for="other-funding">
+				<span class="heading-medium">Funding level</span>
+				<span class="form-hint">Please enter the funding level that you would like to apply for in this application</span>
+			</label>
+			<details>
+			    <summary><span class="summary">What funding level should I enter?</span></summary>
+			    <div class="panel-indent">
+			    	Help text required
+			    </div>
+			</details>
+			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %
+		</div>
+	</fieldset>
+		
+	<div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
+	
+	<div class="alignright-button extra-margin">
+		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
+		</button>
+	</div>
 
 	<ul class="pagination">
 	    <li class="next">
@@ -143,5 +183,25 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	
+	jQuery('input#funding-yes').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#finance-other-funding").show();
+		}else{
+			jQuery("#finance-other-funding").hide();
+		}
+	});
+
+	jQuery('input#funding-no').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#finance-other-funding").hide();
+		}else{
+			jQuery("#finance-other-funding").show();
+		}
+	});
+</script>
 </body>
 </html>

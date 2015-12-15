@@ -16,4 +16,6 @@ public interface QuestionRestService {
     public void updateNotification(Long questionStatusId, Boolean notify);
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);
     public Question findById(Long questionId);
+    public Question getNextQuestion(Long questionId);
+    public Question getPreviousQuestion(Long questionId);
 }

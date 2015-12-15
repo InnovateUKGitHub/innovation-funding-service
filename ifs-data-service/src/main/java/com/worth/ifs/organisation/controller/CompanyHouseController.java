@@ -8,15 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * CompanyHouseController exposes CompanyHouse data and operations through a REST API.
+ */
 @RestController
 @RequestMapping("/companyhouse")
 public class CompanyHouseController {
     @Autowired
     CompanyHouseApi companyHouseService;
 
-    @RequestMapping("/searchCompanyHouse/{name}")
-     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("name") final String name) {
-        List<CompanyHouseBusiness> companies = companyHouseService.searchOrganisationsByName(name);
+    @RequestMapping("/searchCompanyHouse/{searchText}")
+     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
+        List<CompanyHouseBusiness> companies = companyHouseService.searchOrganisations(searchText);
         return companies;
     }
 
@@ -25,5 +28,4 @@ public class CompanyHouseController {
         CompanyHouseBusiness company = companyHouseService.getOrganisationById(id);
         return company;
     }
-
 }

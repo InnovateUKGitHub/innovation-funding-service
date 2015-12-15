@@ -212,7 +212,7 @@
                                        th:class="${'width-small-medium'}"
                                        th:id="${'cost-labour-'+labourCost.id+'-labourTotalCost'}"
                                        th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"/>
-                                        <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                        <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                                 </td>
                             </tr>
                         </div>
@@ -220,7 +220,7 @@
                     </table>
 
                     <p class="alignright">
-                        <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                        <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
 
@@ -231,7 +231,7 @@
                                data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
-                               readonly="" type="text" id="cost-labour-total-field"
+                               readonly="readonly" type="text" id="cost-labour-total-field"
                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
                             <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
@@ -305,7 +305,7 @@
                            th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
                            th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}"
                            class="form-control"
-                           readonly=""
+                           readonly="readonly"
                            data-binding-input="subsection-total-9"
                            data-calculation-operations=""
                            data-calculation-input="overhead-calculated"
@@ -318,7 +318,7 @@
                     <input type="text"
                            th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
                            class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            id="id_overheads-totalCosts"
                            data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                            data-calculation-operations="*"
@@ -374,11 +374,11 @@
                                        th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
                                        th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
                                        data-calculation-operations="*"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
                             <td class="alignright remove"> 
-                                <a class="delete-row" th:attr="data-cost-row=${materialCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${materialCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -386,14 +386,14 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
+                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total materials costs
                     <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
-                           readonly="" type="text" id="material-costs-total-field"
+                           readonly="readonly" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.total}"
@@ -423,7 +423,7 @@
 
                         <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${capitalUsage.id}, name='item', value=${capitalUsage.getDescription()})" th:remove="tag" />
 
-                        <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                        <a class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                     </div>
 
                     <div class="form-group inline">
@@ -506,13 +506,13 @@
                 </div>
             </div>
             <p class="alignright">
-                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
+                <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
             </p>
             <hr/>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-capital-usage-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="cost-capital-usage-costs-total-field"
                            data-calculation-fields="[id*=netCost]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -539,7 +539,7 @@
                 <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                     <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
                     <input type="text" th:name="${type +'-name-' + subContractingCost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}" th:value="${subContractingCost.name}" />
-                    <a class="delete-row" th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                    <a class="delete-row" th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                 </div>
 
                 <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
@@ -565,13 +565,13 @@
                 </div>
             </div>
             <p class="alignright">
-                <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
+                <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
             </p>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total subcontracting costs
                     <input class="form-control form-control-1-4 alignright"
-                           readonly=""
+                           readonly="readonly"
                            type="text"
                            id="cost-subcontracting-total"
                            data-calculation-fields="[id*=subcontractingCost]"
@@ -622,14 +622,14 @@
                                 <input type="text"
                                        th:name="${type +'-travelCostTotal-' + travelCost.id}"
                                        class="form-finances-travel-total"
-                                       readonly=""
+                                       readonly="readonly"
                                        th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostTotal'}"
                                        th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}+',#'+${'cost-'+type+'-'+travelCost.id+'-travelNumTimes'},data-calculation-rawValue=${travelCost.getTotal()}"
                                        data-calculation-operations="*"
                                        th:value="'£ ' + ${#numbers.formatDecimal(travelCost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                             </td>
                             <td>
-                                <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -637,13 +637,13 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
+                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total travel &amp; subsistence costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="travel-costs-total-field"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
@@ -685,7 +685,7 @@
                                 <input type="number" th:name="${type +'-otherCost-' + otherCost.id}" class="form-control form-control-1-1 form-finances-other-cost" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
                             </td>
                             <td>
-                                <a class="delete-row" th:attr="data-cost-row=${otherCost.id}" th:href="@{/application-form/deletecost/{applicationId}/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <a class="delete-row" th:attr="data-cost-row=${otherCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
                     </div>
@@ -693,13 +693,13 @@
                 </table>
 
                 <p class="alignright">
-                    <a th:href="@{/application-form/addcost/{applicationId}/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
+                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
                 </p>
             </div>
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total other costs
-                    <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="other-costs-total-field"
                            th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            data-calculation-fields="[id*=otherCost]"
                            data-calculation-operations="+"
@@ -794,7 +794,7 @@
     <div th:fragment="financial_summary" th:if="${financeTotalPerType}">
         <h2 class="heading-medium">Finances Summary</h2>
         <div th:include="question-type/types :: application_finances_summary" th:remove="tag" />
-        <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application-form/{id}/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span>
+        <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span>
         <h2 class="heading-medium">Project cost breakdown</h2>
         <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>

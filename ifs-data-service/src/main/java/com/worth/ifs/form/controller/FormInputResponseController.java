@@ -6,7 +6,6 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.ServiceLocator;
@@ -21,11 +20,7 @@ import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -34,7 +29,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 
@@ -106,9 +100,6 @@ public class FormInputResponseController {
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
     public List<String> saveQuestionResponse(@RequestBody JsonNode jsonObj, HttpServletResponse servletResponse) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();

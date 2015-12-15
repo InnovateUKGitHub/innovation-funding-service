@@ -3,7 +3,11 @@ package com.worth.ifs.organisation.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
+import com.worth.ifs.organisation.domain.Address;
 
+/**
+ * Resource object to store the company details, from the company house api.
+ */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     private String companyNumber;
@@ -11,18 +15,27 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     private String type;
     private String dateOfCreation;
     private String description;
-    private PostalAddress officeAddress;
+    private Address officeAddress;
 
     public CompanyHouseBusiness() {
     }
 
-    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, PostalAddress officeAddress) {
+    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, Address officeAddress) {
         this.companyNumber = companyNumber;
         this.name = name;
         this.type = type;
         this.dateOfCreation = dateOfCreation;
         this.description = description;
         this.officeAddress = officeAddress;
+    }
+
+    @JsonIgnore
+    public String getLocation() {
+        String locationString = "";
+        locationString +=  officeAddress.getAddressLine1();
+        locationString +=  ", "+ officeAddress.getLocality();
+        locationString +=  ", "+ officeAddress.getPostalCode();
+        return locationString;
     }
 
     public String getName() {
@@ -65,22 +78,11 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
         this.description = description;
     }
 
-    public PostalAddress getOfficeAddress() {
+    public Address getOfficeAddress() {
         return officeAddress;
     }
 
-    public void setOfficeAddress(PostalAddress officeAddress) {
+    public void setOfficeAddress(Address officeAddress) {
         this.officeAddress = officeAddress;
     }
-
-    @JsonIgnore
-    public String getLocation() {
-        String locationString = "";
-        locationString +=  officeAddress.getAddressLine1();
-        locationString +=  ", "+ officeAddress.getLocality();
-        locationString +=  ", "+ officeAddress.getPostalCode();
-        return locationString;
-    }
-
-
 }

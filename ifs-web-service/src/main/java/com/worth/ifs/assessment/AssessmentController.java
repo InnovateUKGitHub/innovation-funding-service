@@ -14,6 +14,7 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -85,7 +86,7 @@ public class AssessmentController extends AbstractApplicationController {
         Map<Long, ProcessRole> applicationOwners;
 
         //filters the assessments to just have the submitted assessments here
-        List<Assessment> submittedAssessments = allAssessments.stream().filter(a -> a.isSubmitted()).collect(toList());
+        List<Assessment> submittedAssessments = allAssessments.stream().filter(Assessment::isSubmitted).collect(toList());
 
         //filters the assessments to just the not submmited assessments
         List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(toList());
@@ -170,14 +171,14 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
-        addApplicationDetails(assessorProcessRole.getApplication().getId(), userId, sectionId, model, true, null);
+        addApplicationDetails(new ApplicationResource(assessorProcessRole.getApplication()).getId(), userId, sectionId, model, null, true);
 
         List<Response> questionResponses = responseService.getByApplication(assessorProcessRole.getApplication().getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
 
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        addFinanceDetails(model, assessorProcessRole.getApplication());
+        addFinanceDetails(model, new ApplicationResource(assessorProcessRole.getApplication()));
         return assessmentDetails;
     }
 
@@ -190,9 +191,9 @@ public class AssessmentController extends AbstractApplicationController {
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ProcessRole assessorProcessRole) {
         getAndPassAssessmentDetails(competitionId, assessorProcessRole.getApplication().getId(), userId, model);
-        Set<String> partners =  assessorProcessRole.getApplication().getProcessRoles().stream().map(pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
+        Set<String> partners =  assessorProcessRole.getApplication().getProcessRoles().stream().map(
+                pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
         model.addAttribute("partners", partners);
-
         return applicationReview;
     }
 
@@ -221,7 +222,7 @@ public class AssessmentController extends AbstractApplicationController {
                                             User user) {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId());
-        List<Response> responses = getResponses(assessorProcessRole.getApplication());
+        List<Response> responses = getResponses(new ApplicationResource(assessorProcessRole.getApplication()));
 
         if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
             throw new IllegalStateException("User is not an Assessor on this application");

@@ -82,7 +82,7 @@ public class AssessmentController {
             Assessment assessment = assessmentHandler.getOne(assessmentId);
             assessmentWorkflowEventHandler.submit(assessment);
         }
-        return new Boolean(true);
+        return true;
     }
 
     private Set<Long> fromArrayNodeToSet(ArrayNode array) {

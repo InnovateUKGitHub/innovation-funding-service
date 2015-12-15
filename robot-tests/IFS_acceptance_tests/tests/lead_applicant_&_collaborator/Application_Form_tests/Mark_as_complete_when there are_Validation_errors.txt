@@ -14,7 +14,7 @@ Verify that the user can't mark as complete empty text areas
     [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the "Project Summary" question is empty
-    and the applicant marks the question as complete
+    and the applicant marks the public description question as complete
     Then the applicant should get a warning to enter data in the "Project Summary" question
     And the applicant should get an alert with the description of the error
 
@@ -23,7 +23,7 @@ Verify that the user doesn't get the error when the text area is not empty anymo
     [Tags]    Applicant    Validations
     Given Applicant goes to the Application form
     When the "Project Summary" question is empty
-    and the applicant marks the question as complete
+    and the applicant marks the public description question as complete
     and the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
 
@@ -32,11 +32,11 @@ the "Project Summary" question is empty
     Clear Element Text    css=#form-input-11 .editor
     Click Element    css=.bold_button
 
-the applicant marks the question as complete
+the applicant marks the public description question as complete
     Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]
 
 the applicant should get an alert with the description of the error
-    Wait Until Page Contains Element    css=#content > div.grid-row > div.column-two-thirds > form > div.error-summary
+    Wait Until Element Is Visible    css=#content > div.grid-row > div.column-two-thirds > form > div.error-summary
 
 the applicant should get a warning to enter data in the "Project Summary" question
     Wait Until Element Is Visible    css=#form-input-11 .error-message

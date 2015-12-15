@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-details">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
+
+	<form action="#" method="post">
+		<div class="form-group">
+			
+			<h2 class="heading-medium no-margin">6. What is innovative about your project?</h2>
+			
+			<p>The project is based on Manchester’s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
+
+		</div>
+
+        <div class="form-group download">
+            <h3 class="heading-medium no-margin">Download innovation appendix:</h3>
+            <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
+        </div>
+
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:remove="tag" />
+
+	</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question5">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">5. Technical approach</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question7">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">7. Risks</span>
+        </a>
+    </li>
+</ul>
+
+<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -55,8 +55,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        ApplicationController applicationController = new ApplicationController(new ApplicationResourceAssembler());
-        return applicationController;
+        return new ApplicationController(new ApplicationResourceAssembler());
     }
 
     @Test
@@ -76,7 +75,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoles").description("processRoles"),
+                                fieldWithPath("processRoleIds").description("processRoles"),
                                 fieldWithPath("applicationStatus").description("Application Status Id"),
                                 fieldWithPath("competitionId").description("Competition Id"))));
         mockMvc.perform(get("/application/normal/2"))
@@ -157,12 +156,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         Organisation organisation = new Organisation(1L , "testOrganisation");
+        List<Organisation> organisations = new ArrayList<>();
+        organisations.add(organisation);
         User user = new User();
 
         ProcessRole processRole = new ProcessRole(user, null, role, organisation);
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
         user.addUserApplicationRole(processRole);
+        user.setOrganisations(organisations);
 
         ApplicationStatus applicationStatus = new ApplicationStatus();
         applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());
@@ -182,10 +184,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.processRoles[0]", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].user", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].organisation", notNullValue()))
-                .andExpect(jsonPath("$.processRoles[0].role", notNullValue()))
+                .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
     }
 }

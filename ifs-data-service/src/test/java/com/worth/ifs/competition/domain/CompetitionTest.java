@@ -33,7 +33,7 @@ public class CompetitionTest {
         startDate = LocalDateTime.now();
         endDate = LocalDateTime.now().plusDays(5);
 
-        sections = new ArrayList<Section>();
+        sections = new ArrayList<>();
         sections.add(new Section());
         sections.add(new Section());
         sections.add(new Section());

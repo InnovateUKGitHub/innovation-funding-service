@@ -12,10 +12,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
@@ -33,7 +30,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     public void testFindAssessmentsByProcessRole() throws Exception {
         Assessment assessment = new Assessment();
 
-        List<Assessment> assessments = new ArrayList<Assessment>();
+        List<Assessment> assessments = new ArrayList<>();
         assessments.add(assessment);
 
         assessment.setId(123L);
@@ -67,7 +64,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("3"))
-                .andDo(document("assessment/total-assigned-assessments"));;
+                .andDo(document("assessment/total-assigned-assessments"));
     }
 
     @Test
@@ -77,7 +74,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalSubmittedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("35"))
-                .andDo(document("assessment/total-submitted-assessments"));;
+                .andDo(document("assessment/total-submitted-assessments"));
     }
 
     @Test

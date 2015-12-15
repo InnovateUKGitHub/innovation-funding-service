@@ -93,6 +93,12 @@ Used to define input widths, so they can be more specific to digits that need to
     width: 100%;
 }
 
+input.form-control + button.button,
+select.form-control + button.button {
+    line-height:1;
+}
+
+
 table td{
     
     &.numeric{
@@ -125,8 +131,7 @@ table td{
     position: relative;
 
     .textarea-header {
-        padding:10px;
-        text-align:right;
+        padding:20px 0 0 55px;
         font-size:14px;
         border-top:  1px solid $border-colour;
         border-left:  1px solid $border-colour;
@@ -165,7 +170,7 @@ table td{
         font-size:16px;
         padding: 10px 0px;
     }
-    .textarea-footer button {
+    .textarea-footer .buttonlink {
         vertical-align:top;
         padding: 0 10px 0 0;
     }
@@ -207,32 +212,4 @@ select{
     
 }
 
-    //    .form-group_header-status {
-    //     color: #666;
-    //     font-size: 16px;
-    //     margin: 0;
 
-    //     &--assigned {
-    //         background: url(../images/flag-icon.png) no-repeat 0 0.15em;
-    //         margin-top: 10px;
-    //         padding-left: 25px;
-    //     }
-    // }
-
-
-    // &--locked {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-locked.png);
-    //         }
-    //     }
-    // }
-
-    // &--assigned {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-assigned.png);
-    //         }
-    //     }
-    // }
-// }

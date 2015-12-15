@@ -10,10 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static java.util.Collections.singletonList;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -21,7 +21,7 @@ import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOK
 public abstract class BaseRestService {
     private final Log log = LogFactory.getLog(getClass());
 
-    private Supplier<RestTemplate> restTemplateSupplier = () -> new RestTemplate();
+    private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
 
     protected String dataRestServiceURL;
 
@@ -125,7 +125,7 @@ public abstract class BaseRestService {
         //set your headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setAccept(singletonList(MediaType.APPLICATION_JSON));
         return headers;
     }
 
@@ -137,7 +137,9 @@ public abstract class BaseRestService {
 
     protected <T> HttpEntity<T> jsonEntity(T entity){
         HttpHeaders headers = getHeaders();
-        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (SecurityContextHolder.getContext() != null &&
+            SecurityContextHolder.getContext().getAuthentication() != null &&
+            SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
         return new HttpEntity<>(entity, headers);

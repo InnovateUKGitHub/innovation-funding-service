@@ -32,7 +32,7 @@ public class ApplicationResourceHateoas extends ResourceWithEmbeddeds {
     @JsonDeserialize(using= LocalDateDeserializer.class)
     private LocalDate startDate;
     private Long durationInMonths; // in months
-    private List<ProcessRole> processRoles = new ArrayList<ProcessRole>();
+    private List<ProcessRole> processRoles = new ArrayList<>();
     private ApplicationStatus applicationStatus;
     private Competition competition;
 
@@ -77,7 +77,7 @@ public class ApplicationResourceHateoas extends ResourceWithEmbeddeds {
     }
 
     public String getName() {
-        return "name";
+        return this.name;
     }
 
     public LocalDate getStartDate() {

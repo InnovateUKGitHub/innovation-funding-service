@@ -1,6 +1,7 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.form.domain.FormInputResponse;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class ValidatedResponse {
 
     public ValidatedResponse(BindingResult result, FormInputResponse response) {
         errorCount = result.getErrorCount();
-        allErrors = result.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
+        allErrors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         this.response = response;
     }
 

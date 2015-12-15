@@ -30,3 +30,42 @@
 	}
 
 }
+
+
+table{
+	.section-complete{
+		th{
+			@extend %icon-tick;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+
+	.section-incomplete{
+		th{
+			@extend %icon-incomplete;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+}
+
+
+
+.textarea-wrapped{
+	&.assigned-to-me{
+		.textarea-header{
+			@extend %mark-assigned-left;
+		}
+	}
+
+	&.marked-as-complete{
+		.textarea-header{
+			@extend %mark-done-left;
+		}
+	}
+}

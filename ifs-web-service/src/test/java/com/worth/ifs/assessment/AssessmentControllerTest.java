@@ -207,9 +207,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Ignore
     @Test
     public void testGetAssessmentSubmitReview() throws Exception {
-        ApplicationResource application = applications.get(1);
-
-        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), application.getId()))
+        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/summary", competition.getId(), 1L))
                 .andExpect(view().name(assessmentSubmitReview))
                 .andExpect(model().attributeExists("model"));
     }
@@ -235,21 +233,21 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testInvitationAnswerAccept() throws Exception {
-        Application application = applications.get(1);
+        ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
-        log.info("Application we use for assessment test: " + assessorProcessRole.getApplication().getId());
+        log.info("Application we use for assessment test: " + application.getId());
 
         mockMvc.perform(
                 post("/assessor/invitation_answer")
                         .param("accept", "a")
                         .param("competitionId", "1")
-                        .param("applicationId", String.valueOf(assessorProcessRole.getApplication().getId()))
+                        .param("applicationId", String.valueOf(application.getId()))
         ).andExpect(status().is3xxRedirection());
         Mockito.inOrder(assessmentRestService)
                 .verify(assessmentRestService, calls(1))
-                .acceptAssessmentInvitation(eq(assessorProcessRole.getId()), any(Assessment.class));
+                .acceptAssessmentInvitation(eq(assessment.getProcessRole().getId()), any(Assessment.class));
     }
 
     @Test
@@ -292,8 +290,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
         Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments);
     }
 
-    private Assessment getAssessment(Application application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getApplication().equals(application)).findFirst();
+    private Assessment getAssessment(ApplicationResource application) {
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> new ApplicationResource(a.getProcessRole().getApplication()).equals(application)).findFirst();
         Assert.assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }

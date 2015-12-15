@@ -47,7 +47,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
         long competitionId = 456L;
 
         List<Assessment> assessments = newAssessment().build(3);
-        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[]{}), OK);
+        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[assessments.size()]), OK);
         when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(GET), any(HttpEntity.class), eq(Assessment[].class))).thenReturn(mockResponse);
 
         List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);

@@ -12,6 +12,7 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -52,6 +53,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoles(asList(processRoles)));
+        return with(application -> application.setProcessRoleIds(simpleMap(asList(processRoles),ProcessRole::getId)));
     }
 }

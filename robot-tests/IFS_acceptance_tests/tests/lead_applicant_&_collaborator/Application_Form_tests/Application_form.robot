@@ -19,7 +19,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
-    [Tags]    Applicant
+    [Tags]    Applicant    Autosave    Form
     Given the Applicant is in the application form
     When the Applicant enters some text
     and the Applicant refreshes the page
@@ -27,21 +27,21 @@ Verify the Autosave for the form text areas
 
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
-    [Tags]    Applicant
+    [Tags]    Applicant    Form
     Given the Applicant is in the application form
     When the applicant clicks the "What should I include in project summary?" question
     Then the guidance should be visible
 
-Verify the navigation for the "Rovel additive..." form
+Verify the navigation in the form sections
     [Documentation]    INFUND-189
-    [Tags]    Applicant
+    [Tags]    Applicant    Form
     Given the Applicant is in the application form
     When the Applicant clicks the sections then the Applicant navigates to the correct sections
 
 Verify the last update metadata
     [Documentation]    INFUND-283
     ...    This test case has been commented because of the changes in the overview page
-    [Tags]    Applicant
+    [Tags]    Applicant    Form
     #Given the applicant is on the application overview page
     #and opens the 'Your business proposition' section
     #Then the last update date of question 1 is a date in the past
@@ -57,22 +57,22 @@ Verify the last update metadata
 
 Verify that the word count is available
     [Documentation]    INFUND-198
-    [Tags]    Applicant
+    [Tags]    Applicant    Word count    Form
     Given the Applicant is in the application form
-    When the Applicant clicks the Funding section
+    When the Applicant clicks the Application questions section
     Then the word count should be available in the text areas
 
 Verify that the word count works
     [Documentation]    INFUND-198
-    [Tags]    Applicant
+    [Tags]    Applicant    Word count    Form
     Given the Applicant is in the application form
-    When the Applicant edits project summary
+    When the Applicant edits the Public description
     Then the word count should be correct for the project summary
     And when the Applicant edits the Project scope Question
     Then the word count for the scope question should be correct
 
 Verify the "review and submit" button
-    [Tags]    Applicant
+    [Tags]    Applicant    Review and submit    Form
     Given the Applicant is in the application form
     When the Applicant clicks the "Review and submit" button
     Then the Applicant will navigate to the summary page
@@ -80,9 +80,9 @@ Verify the "review and submit" button
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant
+    [Tags]    Applicant    Mark as complete    Form
     Given the Applicant is in the application form
-    When the Applicant edits 'Public description'
+    When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     and the button state should change to 'Edit'
     and the question should be marked as complete on the application overview page
@@ -90,7 +90,7 @@ Verify that when the Applicant marks as complete the text box should be green an
 Verify that when the Applicant marks as incomplete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant
+    [Tags]    Applicant    Mark as complete    Form
     Given the Applicant is in the application form
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
@@ -121,33 +121,30 @@ the guidance should be visible
     Element Should Be Visible    css=#details-content-0 p
 
 When the Applicant clicks the sections then the Applicant navigates to the correct sections
-    Click Element    link=Scope (Gateway question)
-    Location Should Be    ${SCOPE_SECTION_URL}
-    Click Element    Link=Your business proposition (Q1-Q4)
-    Location Should Be    ${YOUR_BUSINESS_URL}
-    Click Element    link=Your approach to the project (Q5-Q8)
-    Location Should Be    ${PROJECT_URL}
-    Click Element    link=Funding (Q9-Q10)
-    Location Should Be    ${FUNDING_URL}
+    Click Element    link=Application questions
+    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
     Click Element    link=Finances
     Location Should Be    ${FINANCES}
     Click Element    link=Your finances
 
-When the Applicant clicks the Funding section
-    Click Element    link=Funding (Q9-Q10)
+When the Applicant clicks the Application questions section
+    Click Element    link=Application questions
 
 the word count should be available in the text areas
     Page Should Contain Element    css=#form-input-15 .count-down
     Page Should Contain Element    css=#form-input-16 .count-down
 
-When the Applicant edits project summary
+When the Applicant edits the Public description
     Clear Element Text    css=#form-input-12 .editor
-    Wait Until Page Contains Element    css=#form-input-12 .count-down    499
+    Focus    css=.app-submit-btn
+    Sleep    1s
+    Wait Until Element Contains    css=#form-input-12 .count-down    500
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
-    Sleep    2s
+    Sleep    1s
 
 the word count should be correct for the project summary
+    sleep    1s
     Element Should Contain    css=#form-input-12 .count-down    469
 
 And when the Applicant edits the Project scope Question
@@ -165,7 +162,7 @@ the Applicant will navigate to the summary page
     Location Should Be    ${SUMMARY_URL}
 
 the text box should turn to green
-    Page Should Contain Element    css=#form-input-12 .marked-as-complete
+    Page Should Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete
     Element Should Be Disabled    css=#form-input-12 textarea
 
 the button state should change to 'Edit'
@@ -174,14 +171,14 @@ the button state should change to 'Edit'
 the word count for the scope question should be correct
     Element Should Contain    css=#form-input-13 span.count-down    0
 
-the Applicant edits 'Public description'
+the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Hi, I’m a robot @#$@#$@#$
-    Click Button    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
+    Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
-    Page Should Contain Element    css=#form-input-12.marked-as-complete    Question is marked-as-complete
+    Page Should Contain Element    css=#form-input-12 .complete
 
 the Applicant marks as incomplete 'Public description'
     Click Button    css=#form-input-12 div.textarea-footer > button[name="mark_as_incomplete"]
@@ -195,7 +192,7 @@ the button state should change to 'Mark as complete'
 the question should not be marked as complete on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
-    Page Should Not Contain Element    css=#question-12.marked-as-complete    Mark as complete class is not found, that's correct
+    Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
 the last update date of question 1 is a date in the past
     Page Should Contain Element    css=#question-1

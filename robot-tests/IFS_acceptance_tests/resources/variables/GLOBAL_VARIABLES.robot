@@ -1,6 +1,7 @@
 *** Variables ***
 ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
+${SERVER_BASE}    localhost
 ${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/login
@@ -22,3 +23,7 @@ ${APPLICATION_DETAILS_URL}    ${SERVER}/application-form/1/section/1/#question-9
 ${APPLICATION_COLLABORATION_QUESTION}    ${SERVER}/application-form/1/section/2/#question-13
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
+${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
+${LOG_OUT}        ${SERVER}/logout
+${APPLICATION_QUESTIONS_SECTION_URL}    http://localhost/application-form/1/section/2/
+${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
