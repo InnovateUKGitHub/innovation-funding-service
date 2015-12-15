@@ -93,7 +93,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     }
 
-    @Test
+    //@Test
     public void userControllerReturnUserDTOAfterUserCreation() throws Exception {
         UserResource userDto = new UserResource();
         userDto.setEmail("testemail@email.email");
