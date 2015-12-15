@@ -3,6 +3,7 @@ package com.worth.ifs.user.resource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.springframework.hateoas.core.Relation;
@@ -16,6 +17,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class OrganisationResource {
     private Long id;
     private String name;
+    private String companyHouseNumber;
+    private OrganisationSize organisationSize;
     private List<Long> processRoleIds = new ArrayList<>();
     private List<Long> applicationFinanceIds = new ArrayList<>();
     private List<Long> userIds = new ArrayList<>();
@@ -29,6 +32,8 @@ public class OrganisationResource {
     public OrganisationResource(Organisation organisation) {
         id=organisation.getId();
         name = organisation.getName();
+        companyHouseNumber = organisation.getCompanyHouseNumber();
+        organisationSize = organisation.getOrganisationSize();
 
         addressIds = simpleMap(organisation.getAddresses(), OrganisationAddress::getId);
         processRoleIds = simpleMap(organisation.getProcessRoles(), ProcessRole::getId);
@@ -82,5 +87,21 @@ public class OrganisationResource {
 
     public void setAddressIds(List<Long> addressIds) {
         this.addressIds = addressIds;
+    }
+
+    public String getCompanyHouseNumber() {
+        return companyHouseNumber;
+    }
+
+    public void setCompanyHouseNumber(String companyHouseNumber) {
+        this.companyHouseNumber = companyHouseNumber;
+    }
+
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
+    }
+
+    public void setOrganisationSize(OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
     }
 }

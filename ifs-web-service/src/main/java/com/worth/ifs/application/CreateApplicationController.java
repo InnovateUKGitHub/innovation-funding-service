@@ -145,12 +145,11 @@ public class CreateApplicationController extends AbstractApplicationController {
         this.logState(request, response);
 
         if(organisationService == null){
-            log.debug("companyHouseService is null");
+            log.error("companyHouseService is null");
         }
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
         if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
-            log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
             confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
         }
 
@@ -167,9 +166,6 @@ public class CreateApplicationController extends AbstractApplicationController {
                 }
             }
         }else if(request.getParameter("save-company-details") != null){
-            log.info("Save company details ");
-            log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
-
             String name = org.getName();
             String companyHouseNumber = org.getCompanyNumber();
             Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
