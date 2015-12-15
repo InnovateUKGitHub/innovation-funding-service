@@ -192,8 +192,8 @@ Assigned to me
 	img.marked-as-complete,
 	img.assigned-to-me {
 		position:absolute;
-		left:0;
-		top: 0;
+		left:1px;
+		top: 1px;
 	}
 	// &.marked-as-complete .textarea-header {
 	// 	@extend %mark-done-left;
@@ -209,6 +209,18 @@ Assigned to me
         border-color: $button-colour;
         background-color:$grey-4;
     }
+	&.assigned-to-me .editor,
+	&.assigned-to-me textarea,
+	&.assigned-to-me .textarea-header {
+		border:2px solid $govuk-blue;
+    }
+    &.assigned-to-me .textarea-header + .editor,
+    &.assigned-to-me .textarea-header + textarea {
+    	border-top:none;
+    }
+   	&.assigned-to-me .textarea-header {
+   		border-bottom:none;
+   }
 
 }
 
@@ -239,10 +251,6 @@ Assigned to me
 
 //Assignees
 
-.assignee.assigned-to-me{
-	span{
-		padding-left: 20px;
-		@extend %icon-assigned-to-me;
-		background-position: left center;
-	}
-} 
+// .assignee.assigned-to-me{
+// 	font-weight:bold
+// } 

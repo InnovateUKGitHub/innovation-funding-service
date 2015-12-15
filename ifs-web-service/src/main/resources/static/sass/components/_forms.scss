@@ -93,6 +93,12 @@ Used to define input widths, so they can be more specific to digits that need to
     width: 100%;
 }
 
+input.form-control + button.button,
+select.form-control + button.button {
+    line-height:1;
+}
+
+
 table td{
     
     &.numeric{
@@ -125,20 +131,20 @@ table td{
     position: relative;
 
     .textarea-header {
-        padding:10px;
-        text-align:right;
         font-size:14px;
-        border-top:  1px solid $border-colour;
-        border-left:  1px solid $border-colour;
-        border-right:  1px solid $border-colour;
+        border:  1px solid $border-colour;
+        border-bottom:none;
         background: $grey-4 0 0 no-repeat;
-        min-height:40px;
-
-        .form-hint{
-            color: $black;
-        }
-
+        min-height:60px;
     } 
+
+    .assignee {
+        padding:20px 15px  5px;
+    }
+    img + .assignee {
+        padding:20px 15px 0 55px;
+    }
+    
 
     .textarea-header + textarea,
     .textarea-header + [contenteditable="true"],
@@ -207,32 +213,4 @@ select{
     
 }
 
-    //    .form-group_header-status {
-    //     color: #666;
-    //     font-size: 16px;
-    //     margin: 0;
 
-    //     &--assigned {
-    //         background: url(../images/flag-icon.png) no-repeat 0 0.15em;
-    //         margin-top: 10px;
-    //         padding-left: 25px;
-    //     }
-    // }
-
-
-    // &--locked {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-locked.png);
-    //         }
-    //     }
-    // }
-
-    // &--assigned {
-    //     .form-group_header {
-    //         background: {
-    //             image: url(/images/field/field-assigned.png);
-    //         }
-    //     }
-    // }
-// }

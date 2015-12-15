@@ -37,7 +37,7 @@
 		
 		<details role="group">
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
-		<span class="summary">What should I include in the business techniocal approach section?</span>
+		<span class="summary">What should I include in the business technical approach section?</span>
 		</summary>
 		<div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
 			<p>You should:</p>
@@ -54,8 +54,8 @@
 		<div class="textarea-wrapped assigned-to-me word-count">
 			<div class="textarea-header" id="formInput[1]">
 				<div class="assignee  assigned-to-me ">
-			        This question has been reassigned to you by
-			        <strong>Jessica Doe</strong>
+			        This question is assigned to 
+			        <strong>you</strong>
 			    </div>
 			</div>
 			<div class="editor" contenteditable="true">
@@ -108,15 +108,14 @@
 					</div>
 				</div>
 
-				<button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-1" value="1">Mark as complete
-		</button>
+				<button type="submit" name="mark_as_complete" class="buttonlink" formaction="#question-1" value="1">Mark as complete</button>
 
 			</div>
 
 		</div>
 
-		
-		
+		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
+	
 		<!-- if  readonly we show the edit form button-->
 	</div>
 </form>
@@ -129,7 +128,7 @@
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="#">
+        <a rel="next" title="Navigate to next part" href="/prototypes/635-application-question6">
             <span class="pagination-label">Next</span>
             <span class="pagination-part-title">6. Innovation</span>
         </a>

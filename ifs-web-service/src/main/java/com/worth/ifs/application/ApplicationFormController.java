@@ -13,7 +13,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;

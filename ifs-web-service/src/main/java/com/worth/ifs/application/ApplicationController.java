@@ -33,6 +33,12 @@ public class ApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
     private boolean selectFirstSectionIfNoneCurrentlySelected = false;
 
+
+    public static String redirectToApplication(ApplicationResource application){
+        return "redirect:/application/"+application.getId();
+
+    }
+
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
