@@ -22,6 +22,7 @@ public class ConfirmCompanyDetailsForm extends Form{
     private List<Address> postcodeOptions;
     private OrganisationSize organisationSize;
     private boolean useCompanyHouseAddress = false;
+    private boolean manualAddress = false;
 
     public ConfirmCompanyDetailsForm() {
         postcodeOptions = new ArrayList<>();
@@ -90,5 +91,13 @@ public class ConfirmCompanyDetailsForm extends Form{
 
     public void setUseCompanyHouseAddress(boolean useCompanyHouseAddress) {
         this.useCompanyHouseAddress = useCompanyHouseAddress;
+    }
+
+    public boolean isManualAddress() {
+        return manualAddress;
+    }
+
+    public void setManualAddress(boolean manualAddress) {
+        this.manualAddress = manualAddress;
     }
 }

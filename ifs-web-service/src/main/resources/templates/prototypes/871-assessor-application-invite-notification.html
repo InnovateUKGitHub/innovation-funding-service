@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<h1 style="text-align: center"><strong>EXAMPLE EMAIL CLIENT</strong></h1>
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="extra-margin" style="padding-top: 30px">
+		
+		<p>From: <a href="#">competitionsteam@innovateuk.com</a><br />
+			To: me@theassessor.com </p>
+
+		<h2 class="heading-medium"><strong>Applications ready for assessment</strong></h2>
+
+		<p>Your applications for the competition 'Technology Inspired' are ready for you to assess.</p>
+		
+		<p>You have been allocated 5 assessments within this competition. Before completing your scoring and written feedback, you are required to accept each application to confirm that you have no conflict of interest.</p>
+
+		<p>The overall assessment period is 10 days.</p>
+
+		<a href="/prototypes/871-assessor-comp-dashboard">Visit the online Innovation Funding Service system to begin this process.</a>
+
+		<h2 class="heading-medium">Key dates to consider:</h2>
+		
+		<p><strong>20th April</strong> - Accept/Reject deadline for all applications<br />
+		<strong>25th April</strong> - Assessment deadline for all applications</p>
+
+		<p>If you do not accept these applications within the required time then these will be automatically reallocated to another assessor.</p>
+
+		<p>To accept the applications currently allocated to you - <a href="/prototypes/871-assessor-comp-dashboard">please visit our new online Innovation Funding Service</a>.</p>
+
+		<p>If you have any questions around the assessments you have been allocated then please contact the Competitions team at Innovate UK at <a href="#">*competitions@innovateuk.gov.uk*</a></p>
+
+		<p>Many thanks,</p>
+		<p>The Innovate UK team</p>
+		
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    
+</main>
+
+
+
+</body>
+</html>

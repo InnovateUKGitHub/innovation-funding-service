@@ -11,10 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * {@code FinanceServiceImpl} implements {@link FinanceService} handles the finances for each of the organisations.

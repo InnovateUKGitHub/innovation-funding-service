@@ -141,6 +141,9 @@ table td{
     .assignee {
         padding:20px 15px  5px;
     }
+    .assignee span + span {
+        font-weight:bold;
+    }
     img + .assignee {
         padding:20px 15px 0 55px;
     }

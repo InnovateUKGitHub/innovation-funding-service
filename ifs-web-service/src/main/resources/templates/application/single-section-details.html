@@ -31,15 +31,15 @@
                      src="/images/field/field-done-right.png"
                      width="30"
                      height="30"
-                     th:alt="'The &quot;'+${question.getName()}+'&quot; section is marked as done'"
-                     th:title="'The &quot;'+${question.getName()}+'&quot; section is marked as done'"
+                     th:alt="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
+                     th:title="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
                      th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" />
                 <img class="section-status assigned"
                      src="/images/field/field-assigned-right.png"
                      width="30"
                      height="30"
-                     th:alt="'The &quot;'+${question.getName()}+'&quot; section is assigned to you'"
-                     th:title="'The &quot;'+${question.getName()}+'&quot; section is assigned to you'"
+                     th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
+                     th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
                      th:if="${(currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId())}"/>
         </li>
     </div>
