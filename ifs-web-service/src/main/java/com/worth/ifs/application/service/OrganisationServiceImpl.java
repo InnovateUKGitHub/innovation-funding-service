@@ -1,18 +1,22 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
+import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
-import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -21,7 +25,7 @@ import java.util.stream.Collectors;
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
  */
 @Service
-public class OrganisationServiceImpl implements OrganisationService {
+public class OrganisationServiceImpl  implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
 
@@ -81,6 +85,16 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     public Organisation getOrganisationById(Long organisationId) {
         return organisationRestService.getOrganisationById(organisationId);
+    }
+
+    @Override
+    public OrganisationResource save(Organisation organisation) {
+        return organisationRestService.save(organisation);
+    }
+
+    @Override
+    public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType addressType) {
+        return organisationRestService.addAddress(organisation, address, addressType);
     }
 
 }

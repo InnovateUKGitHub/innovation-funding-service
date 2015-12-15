@@ -23,7 +23,6 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private String name;
     private LocalDate startDate;
     @Min(0)

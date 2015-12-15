@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<h1 style="text-align: center"><strong>EXAMPLE EMAIL CLIENT</strong></h1>
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="extra-margin" style="padding-top: 30px">
+		
+		<p>From: <a href="#">competitionsteam@innovateuk.com</a><br />
+			To: me@theassessor.com </p>
+
+		<h2 class="heading-medium"><strong>Invitation to assess competition 'Technology Inspired'</strong></h2>
+
+		<p>You have been invited by the Innovate UK team to to assess applications within the Collaborative research &amp; development competition 'Technology Inspired'.</p>
+		
+		<p>We recognise your expertise in specific areas of this call and would greatly appreciate your comments on the scientific/business merit of the applications. Please see the attached brief for further details of this competition.</p>
+
+		<h2 class="heading-medium">Key dates to consider:</h2>
+		 
+		<p><strong>21st March 2016</strong> - Assessor briefing (1 hour webinar)<br/>
+		<strong>15th April - 25th April 2016</strong> - Assessment period</p>
+		 
+		<p>To respond to this invitation - please visit our new <a href="#">online Innovation Funding Service here</a>.</p>
+		<p>Many thanks,</p>
+		<p>The Innovate UK team</p>
+		
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    
+</main>
+
+
+
+</body>
+</html>

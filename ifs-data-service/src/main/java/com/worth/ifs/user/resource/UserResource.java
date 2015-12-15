@@ -1,9 +1,11 @@
-package com.worth.ifs.user.dto;
+package com.worth.ifs.user.resource;
+
+import com.worth.ifs.user.domain.User;
 
 /**
  * User Data Transfer Object
  */
-public class UserDto {
+public class UserResource {
     private Long id;
     private String title;
     private String name;
@@ -15,6 +17,23 @@ public class UserDto {
     private String token;
     private String email;
     private String password;
+
+    public UserResource() {
+    }
+
+    public UserResource(User user) {
+        id = user.getId();
+        title = user.getTitle();
+        name = user.getName();
+        firstName = user.getFirstName();
+        lastName = user.getLastName();
+        inviteName = user.getInviteName();
+        phoneNumber = user.getPhoneNumber();
+        imageUrl = user.getImageUrl();
+        token = user.getToken();
+        email = user.getEmail();
+        password = user.getEmail();
+    }
 
     public Long getId() {
         return id;

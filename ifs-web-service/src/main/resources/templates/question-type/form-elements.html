@@ -194,7 +194,12 @@
                  alt="This field is marked as done"
                  title="This field is marked as done" 
                  class="marked-as-complete" />
-          <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+            
+            <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
+                  <span>This question is <strong>marked as complete</strong></span>
+            </div>
+
+            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
                  src="/images/field/field-assigned.png"
                  alt="This field is assigned to you"
                  title="This field is assigned to you"
@@ -217,7 +222,10 @@
         </div>
 
         <div class="textarea-footer">
+          <p>
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+          </p>
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
@@ -228,7 +236,6 @@
             <div th:unless="(${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
 
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
         </div>
 
 
@@ -238,7 +245,7 @@
 <div th:fragment="current-assignee">
     <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
         <span>This question is assigned to</span>
-        <strong th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+        <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
@@ -278,7 +285,7 @@
 <!-- ========================= Last update info =========================== -->
 
 <div  th:fragment="last-update-info">
-        <p th:if="${response?.getUpdateDate()}"><small><span>Last updated: </span>
+        <div th:if="${response?.getUpdateDate()}" th:remove="tag"><small><span>Last updated: </span>
             <div th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"
                  th:remove="tag"/>
 
@@ -286,7 +293,7 @@
             <span th:if="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="you"/>
             <span th:unless="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
 
-        </small></p>
+        </small></div>
 </div>
 
 <!-- ========================= Mark as complete buttons =========================== -->
@@ -318,7 +325,7 @@
 <div th:fragment="form-edit-question-button">
     <a tabindex="0"
        class="button-secondary"
-       th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${section.getId()}+'/&#35;question-'+${question.getId()}"
+       th:href="'/application/'+${currentApplication.getId()}+'/form/question/'+${question.getId()}"
        th:text="Edit"/>
 </div>
 

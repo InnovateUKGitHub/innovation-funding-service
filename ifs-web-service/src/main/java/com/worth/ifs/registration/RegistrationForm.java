@@ -6,11 +6,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-/**
- * This object is used for the loginForm. When the form is submitted the data is
- * injected into a LoginForm instance, so it is easy to use and you don't need to
- * read all the request attributes to get to the form data. It is also use when
- * you want to prefill a form.
+/**a
+ * This object is used for the account registration form. When the form is submitted the data is
+ * injected into a RegistrationForm instance, so it is easy to use and you don't need to
+ * read all the request attributes to get to the form data.
  */
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
