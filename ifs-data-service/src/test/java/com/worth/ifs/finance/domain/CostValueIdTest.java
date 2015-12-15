@@ -31,11 +31,6 @@ public class CostValueIdTest {
     }
 
     @Test
-    public void hashMethodShouldReturnCorrectHash() throws Exception {
-        Assert.assertEquals(costValueId.hashCode(), hash);
-    }
-
-    @Test
     public void equalsMethodShouldCheckForEquality() throws Exception {
         CostValueId equalObject = new CostValueId(cost,costField);
         CostValueId inequalObject = new CostValueId(cost+1L,costField-1L);
@@ -43,5 +38,6 @@ public class CostValueIdTest {
         Assert.assertEquals(costValueId, equalObject);
         Assert.assertNotEquals(costValueId, inequalObject);
         Assert.assertNotEquals(costValueId, differentObject);
+        Assert.assertNotEquals(costValueId, null);
     }
 }
