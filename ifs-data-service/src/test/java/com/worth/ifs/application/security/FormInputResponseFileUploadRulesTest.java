@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import static com.worth.ifs.BuilderAmendFunctions.application;
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
@@ -22,6 +23,7 @@ import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -39,26 +41,23 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         User user = newUser().build();
         Role applicantRole = newRole().withType(APPLICANT).build();
-
-        ProcessRole applicantProcessRole = newProcessRole().
-                withUser(user).
-                withRole(applicantRole).
-                withApplication(application).build();
+        newProcessRole().withUser(user).withRole(applicantRole).withApplication(application).build();
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
 
-        FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
-        when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
+        FormInputResponse formInputResponse = newFormInputResponse().with(id(123L)).with(application(application)).build();
+        when(formInputResponseRepository.findOne(formInputResponse.getId())).thenReturn(formInputResponse);
 
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+
+        verify(formInputResponseRepository).findOne(formInputResponse.getId());
     }
 
     @Test
     public void testApplicantCanUploadFilesInResponsesForOwnApplicationButNotAMemberOfApplication() {
 
         User user = newUser().build();
-
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
 
@@ -82,10 +81,12 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
 
-        FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
-        when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
+        FormInputResponse formInputResponse = newFormInputResponse().with(id(123L)).with(application(application)).build();
+        when(formInputResponseRepository.findOne(formInputResponse.getId())).thenReturn(formInputResponse);
 
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+
+        verify(formInputResponseRepository).findOne(formInputResponse.getId());
     }
 
     @Test
@@ -104,10 +105,12 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
 
-        FormInputResponse formInputResponse = newFormInputResponse().with(application(application)).build();
-        when(formInputResponseRepository.findOne(applicantProcessRole.getId())).thenReturn(formInputResponse);
+        FormInputResponse formInputResponse = newFormInputResponse().with(id(123L)).with(application(application)).build();
+        when(formInputResponseRepository.findOne(formInputResponse.getId())).thenReturn(formInputResponse);
 
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+
+        verify(formInputResponseRepository).findOne(formInputResponse.getId());
     }
 
 }
