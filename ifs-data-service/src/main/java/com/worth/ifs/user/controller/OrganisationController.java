@@ -1,7 +1,6 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.AddressRepository;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
@@ -15,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;

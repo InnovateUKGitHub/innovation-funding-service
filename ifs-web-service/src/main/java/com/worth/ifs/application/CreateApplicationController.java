@@ -42,6 +42,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     public final static String COMPANY_HOUSE_COMPANY_ID = "companyId";
     private final Log log = LogFactory.getLog(getClass());
 
+
     @Autowired
     Validator validator;
 
@@ -144,17 +145,17 @@ public class CreateApplicationController extends AbstractApplicationController {
         this.logState(request, response);
 
         if(organisationService == null){
-            log.debug("companyHouseService is null");
+            log.error("companyHouseService is null");
         }
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
+        if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
+            confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
+        }
 
         if(request.getParameter("search-address") != null){
             validator.validate(confirmCompanyDetailsForm, bindingResult);
-            if(StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())){
-                log.info("do postcodelookup : " + confirmCompanyDetailsForm.getPostcodeInput());
-                confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
-            }else{
+            if(!StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
                 bindingResult.rejectValue("postcodeInput", "NotEmpty", "NotEmpty");
             }
         }else if(request.getParameter("select-address") != null){
@@ -165,9 +166,6 @@ public class CreateApplicationController extends AbstractApplicationController {
                 }
             }
         }else if(request.getParameter("save-company-details") != null){
-            log.info("Save company details ");
-            log.info("c " +confirmCompanyDetailsForm.getOrganisationSize());
-
             String name = org.getName();
             String companyHouseNumber = org.getCompanyNumber();
             Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
