@@ -5,7 +5,6 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
@@ -72,11 +71,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         User user = newUser().build();
         Role applicantRole = newRole().withType(APPLICANT).build();
-
-        ProcessRole applicantProcessRole = newProcessRole().
-                withUser(user).
-                withRole(applicantRole).
-                withApplication(differentApplication).build();
+        newProcessRole().withUser(user).withRole(applicantRole).withApplication(differentApplication).build();
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
@@ -96,11 +91,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         User user = newUser().build();
         Role anotherRole = newRole().withType(ASSESSOR).build();
-
-        ProcessRole applicantProcessRole = newProcessRole().
-                withUser(user).
-                withRole(anotherRole).
-                withApplication(application).build();
+        newProcessRole().withUser(user).withRole(anotherRole).withApplication(application).build();
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L);
