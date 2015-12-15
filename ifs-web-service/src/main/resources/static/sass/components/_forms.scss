@@ -131,19 +131,20 @@ table td{
     position: relative;
 
     .textarea-header {
-        padding:20px 0 0 55px;
         font-size:14px;
-        border-top:  1px solid $border-colour;
-        border-left:  1px solid $border-colour;
-        border-right:  1px solid $border-colour;
+        border:  1px solid $border-colour;
+        border-bottom:none;
         background: $grey-4 0 0 no-repeat;
-        min-height:40px;
-
-        .form-hint{
-            color: $black;
-        }
-
+        min-height:60px;
     } 
+
+    .assignee {
+        padding:20px 15px  5px;
+    }
+    img + .assignee {
+        padding:20px 15px 0 55px;
+    }
+    
 
     .textarea-header + textarea,
     .textarea-header + [contenteditable="true"],
