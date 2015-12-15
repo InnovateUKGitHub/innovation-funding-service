@@ -72,7 +72,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createdFile = fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createdFile = fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, true);
         return createdFile;
     }
 }

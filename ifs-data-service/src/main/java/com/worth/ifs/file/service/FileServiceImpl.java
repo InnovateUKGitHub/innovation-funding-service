@@ -8,6 +8,7 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,27 +52,50 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private FileEntryRepository fileEntryRepository;
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
         return handlingErrors(() ->
                 saveFileEntry(resource).
-                map(savedFileEntry -> doCreateFile(savedFileEntry, inputStreamSupplier)).
+                map(savedFileEntry -> doCreateFile(savedFileEntry, inputStreamSupplier, decodeBase64)).
                 map(fileAndFileEntry -> successResponse(fileAndFileEntry)),
                 UNABLE_TO_CREATE_FILE);
     }
+
     @Override
-    public Either<ServiceFailure, ServiceSuccess<File>> getFileByFileEntryId(Long fileEntryId) {
+    public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId, boolean encodeBase64) {
         return handlingErrors(() ->
                 findFileEntry(fileEntryId).
                 map(fileEntry -> findFile(fileEntry)).
-                map(file -> successResponse(file)),
+                map(fileEntry -> getInputStreamSuppier(fileEntry)).
+                map(inputStream -> encodeInputStreamIfNecessary(inputStream, encodeBase64)).
+                map(encodedStream -> successResponse(encodedStream)),
                 UNABLE_TO_FIND_FILE);
     }
 
-    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, Supplier<InputStream> inputStreamSupplier) {
+    private Either<ServiceFailure, Supplier<InputStream>> getInputStreamSuppier(File file) {
+        return right(() -> {
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                LOG.error("Unable to supply FileInputStream for file " + file, e);
+                throw new IllegalStateException("Unable to supply FileInputStream for file " + file, e);
+            }
+        });
+    }
+
+    private Either<ServiceFailure, Supplier<InputStream>> encodeInputStreamIfNecessary(Supplier<InputStream> originalInputStream, boolean encodeBase64) {
+
+        if (!encodeBase64) {
+            return right(originalInputStream);
+        }
+
+        return right(() -> new Base64InputStream(originalInputStream.get(), true));
+    }
+
+    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
         Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
-        return doCreateFile(pathElements, filename, inputStreamSupplier).map(file -> right(Pair.of(file, savedFileEntry)));
+        return doCreateFile(pathElements, filename, inputStreamSupplier, decodeBase64).map(file -> right(Pair.of(file, savedFileEntry)));
     }
 
     private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -101,13 +125,13 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, Supplier<InputStream> inputStreamSupplier) {
+    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
 
         Path foldersPath = pathElementsToAbsolutePath(pathElements);
 
         return createFolders(foldersPath).map(createdFolders ->
                createNewFile(createdFolders.toString(), filename).map(newFile ->
-               updateFileWithContents(newFile, inputStreamSupplier)
+               updateFileWithContents(newFile, inputStreamSupplier, decodeBase64)
            ));
     }
 
@@ -137,10 +161,11 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private Either<ServiceFailure, File> updateFileWithContents(File createdFile, Supplier<InputStream> inputStreamSupplier) {
+    private Either<ServiceFailure, File> updateFileWithContents(File createdFile, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
 
         try {
-            Files.copy(inputStreamSupplier.get(), createdFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            InputStream sourceInputStream = decodeBase64 ? new Base64InputStream(inputStreamSupplier.get()) : inputStreamSupplier.get();
+            Files.copy(sourceInputStream, createdFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             return right(createdFile);
         } catch (IOException e) {
             LOG.error("Could not write data to file " + createdFile.getPath(), e);
