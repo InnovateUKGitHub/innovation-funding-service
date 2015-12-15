@@ -46,14 +46,6 @@
                     </div>
                     <!--/* sections with children like the finance */--> 
                     <div th:case="*" th:remove="tag">
-                        <li class="grid-row" th:classappend="section">
-                            <div class="column-two-thirds">
-                                <h3 class="heading-small">
-                                    <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${section.getId()}"
-                                       th:text="${section.name}" />
-                                </h3>
-                            </div>
-                        </li>
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${section.getChildSections()}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">

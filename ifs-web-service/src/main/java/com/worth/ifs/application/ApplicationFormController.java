@@ -69,7 +69,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
-        ApplicationResource app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
@@ -80,22 +79,29 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
-    public String showQuestion(@ModelAttribute("form") ApplicationForm form, Model model,
+    public String showQuestion(@ModelAttribute("form") ApplicationForm form,
+                               BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        addQuestionDetails(questionId, model);
+        Question question = questionService.findById(questionId);
+        Section section = sectionService.getSectionByQuestionId(questionId);
+        Optional<Long> questionSectionId = Optional.of(section.getId());
+        super.addApplicationDetails(applicationId, user.getId(), questionSectionId , model, form, false);
+        addQuestionDetails(question, model);
+
+        form.bindingResult = bindingResult;
+        form.objectErrors = bindingResult.getAllErrors();
+
         return "application-form";
     }
 
-    private void addQuestionDetails(Long questionId, Model model) {
-        Question question = questionService.findById(questionId);
-        Question previousQuestion = questionService.findPreviousQuestion(questionId);
-        Question nextQuestion = questionService.findNextQuestion(questionId);
+    private void addQuestionDetails(Question question, Model model) {
+        Question previousQuestion = questionService.findPreviousQuestion(question.getId());
+        Question nextQuestion = questionService.findNextQuestion(question.getId());
 
-        model.addAttribute("question", question);
+        model.addAttribute("currentQuestion", question);
         model.addAttribute("previousQuestion", previousQuestion);
         model.addAttribute("nextQuestion", nextQuestion);
     }

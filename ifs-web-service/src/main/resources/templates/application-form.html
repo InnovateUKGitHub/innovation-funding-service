@@ -16,7 +16,7 @@
     <div class="column-two-thirds">
         <div class="hgroup">
             <p class="subtitle no-margin" th:text="${currentCompetition.name + ' - Application number: ' + currentApplication.id}"></p>
-            <h1 class="heading-large" th:text="${question.shortName}"></h1>
+            <h1 class="heading-large" th:text="${question?.shortName}"></h1>
         </div>
     </div>
     <div class="form-group extra-margin" id="0">
@@ -34,9 +34,21 @@
             </div>
 
 
-            <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
-                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+            <div class="question" th:each="formInput, status : ${currentQuestion?.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
                 <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+            </div>
+
+            <div th:if="${currentSection}" th:remove="tag">
+                <h1 class="heading-xlarge" th:text="${currentSection.getName()}"></h1>
+                <p class="subtitle" th:text="${currentSection.getDescription()}"></p>
+            </div>
+
+            <div th:each="question : ${currentSection?.questions}" th:remove="tag">
+                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:attr="data-question-id=${question.getId()}" th:id="'form-input-'+${formInput.getId()}"
+                     th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                    <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+                </div>
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
@@ -52,6 +64,19 @@
                     <a th:href="@{/application/{id}/form/question/{questionId}/(id=${currentApplication.getId()},questionId=${nextQuestion.id})}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
                         <span class="pagination-part-title" th:text="${nextQuestion.shortName}">Funding</span>
+                    </a>
+                </li>
+
+                <li class="prev" th:if="not ${previousQuestion} and ${previousSection}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${previousSection.id})}" rel="prev" title="Navigate to previous part">
+                        <span class="pagination-label">Previous</span>
+                        <span class="pagination-part-title" th:text="${previousSection.name}">Business proposition</span>
+                    </a>
+                </li>
+                <li class="next" th:if="not ${nextQuestion} and ${nextSection}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${nextSection.id})}" rel="next" title="Navigate to next part">
+                        <span class="pagination-label">Next</span>
+                        <span class="pagination-part-title" th:text="${nextSection.name}">Funding</span>
                     </a>
                 </li>
             </ul>

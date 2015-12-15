@@ -159,7 +159,7 @@ public class QuestionController {
 
             if(nextQuestion==null) {
                 Section nextSection = sectionController.getNextSection(question.getSection());
-                if (nextSection != null) {
+                if (nextSection != null && !nextSection.isQuestionGroup()) {
                     nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(question.getCompetition().getId(), nextSection.getId());
                 }
             }
@@ -178,7 +178,7 @@ public class QuestionController {
 
             if(previousQuestion==null) {
                 Section previousSection = sectionController.getPreviousSection(question.getSection());
-                if(previousSection!=null) {
+                if(previousSection!=null && !previousSection.isQuestionGroup()) {
                     previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(question.getCompetition().getId(), previousSection.getId());
                 }
             }

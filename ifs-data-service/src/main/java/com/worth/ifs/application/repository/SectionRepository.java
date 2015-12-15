@@ -18,4 +18,5 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
     Section findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Integer priority);
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
+    Section findByQuestionsId(Long questionId);
 }

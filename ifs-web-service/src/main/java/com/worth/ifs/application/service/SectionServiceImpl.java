@@ -2,12 +2,15 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SectionServiceImpl implements SectionService {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     SectionRestService sectionRestService;
 
@@ -79,4 +84,26 @@ public class SectionServiceImpl implements SectionService {
         return userAssignedSections;
     }
 
+    @Override
+    public Section getPreviousSection(Optional<Long> sectionId) {
+        if(sectionId.isPresent()) {
+            return sectionRestService.getPreviousSection(sectionId.get());
+        }
+        return null;
+    }
+
+    @Override
+    public Section getNextSection(Optional<Long> sectionId) {
+        if(sectionId.isPresent()) {
+            Section nextSection = sectionRestService.getNextSection(sectionId.get());
+            log.debug("NEXT SECION : " + nextSection);
+            return nextSection;
+        }
+        return null;
+    }
+
+    @Override
+    public Section getSectionByQuestionId(Long questionId) {
+        return sectionRestService.getSectionByQuestionId(questionId);
+    }
 }

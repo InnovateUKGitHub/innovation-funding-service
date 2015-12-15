@@ -2,6 +2,8 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.service.BaseRestService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class SectionRestServiceImpl extends BaseRestService implements SectionRestService {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Value("${ifs.data.service.rest.section}")
     String sectionRestURL;
 
@@ -32,5 +36,22 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public Section getSection(String name) {
         return restGet(sectionRestURL + "/findByName/" + name, Section.class);
+    }
+
+    @Override
+    public Section getPreviousSection(Long sectionId) {
+        return restGet(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
+    }
+
+    @Override
+    public Section getNextSection(Long sectionId) {
+        Section section = restGet(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
+        log.debug("SECTION sectio 2 :" + section);
+        return section;
+    }
+
+    @Override
+    public Section getSectionByQuestionId(Long questionId) {
+        return restGet(sectionRestURL + "/getSectionByQuestionId/" + questionId, Section.class);
     }
 }

@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -38,6 +39,8 @@ public class SectionController {
     SectionRepository sectionRepository;
     @Autowired
     QuestionController questionController;
+    @Autowired
+    QuestionRepository questionRepository;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -120,7 +123,7 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
-            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING")){
+            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection()!=null) {
                 if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
@@ -164,13 +167,20 @@ public class SectionController {
         return allSectionsWithSubsectionsAreComplete;
     }
 
-    public Section getNextSection(Long sectionId) {
+    @RequestMapping("/getNextSection/{sectionId}")
+    public Section getNextSection(@PathVariable("sectionId") final Long sectionId) {
+        if(sectionId==null) {
+            return null;
+        }
         Section section = sectionRepository.findOne(sectionId);
-
         return getNextSection(section);
     }
 
     public Section getNextSection(Section section) {
+        if(section==null) {
+            return null;
+        }
+
         if(section.getParentSection()!=null) {
             return getNextSiblingSection(section);
         } else {
@@ -189,12 +199,20 @@ public class SectionController {
         }
     }
 
-    public Section getPreviousSection(Long sectionId) {
+    @RequestMapping("/getPreviousSection/{sectionId}")
+    public Section getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
+        if(sectionId==null) {
+            return null;
+        }
         Section section = sectionRepository.findOne(sectionId);
         return getPreviousSection(section);
     }
 
     public Section getPreviousSection(Section section) {
+        if(section==null) {
+            return null;
+        }
+
         if(section.getParentSection()!=null) {
             return getPreviousSiblingSection(section);
         } else {
@@ -211,5 +229,10 @@ public class SectionController {
         } else {
             return sibling;
         }
+    }
+
+    @RequestMapping("/getSectionByQuestionId/{questionId}")
+    public Section getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
+        return sectionRepository.findByQuestionsId(questionId);
     }
 }
