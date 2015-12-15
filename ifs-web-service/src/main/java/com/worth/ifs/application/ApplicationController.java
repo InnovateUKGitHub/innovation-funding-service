@@ -180,7 +180,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
 
-        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
+        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), applicationId);
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 

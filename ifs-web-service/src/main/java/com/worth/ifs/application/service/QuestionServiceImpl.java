@@ -24,6 +24,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionRestService questionRestService;
 
+    @Autowired
+    QuestionStatusRestService questionStatusRestService;
+
     @Override
     public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
         questionRestService.assign(questionId, applicationId, assigneeId, assignedById);
@@ -50,6 +53,26 @@ public class QuestionServiceImpl implements QuestionService {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
         for(Question question : questions) {
             for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
+                if(questionStatus.getAssignee()==null)
+                    continue;
+                boolean multipleStatuses = question.hasMultipleStatuses();
+                boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+
+                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
+                    questionAssignees.put(question.getId(), questionStatus);
+                    break;
+                }
+            }
+        }
+        return questionAssignees;
+    }
+
+    @Override
+    public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
+        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+        for(Question question : questions) {
+        final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
+            for(QuestionStatus questionStatus : questionStatuses) {
                 if(questionStatus.getAssignee()==null)
                     continue;
                 boolean multipleStatuses = question.hasMultipleStatuses();

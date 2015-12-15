@@ -14,7 +14,8 @@ import java.util.List;
 public interface QuestionStatusRepository extends CrudRepository<QuestionStatus, Long> {
     QuestionStatus findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(Long questionId, Long applicationId, Long markAsCompleteById);
     QuestionStatus findByQuestionIdAndApplicationIdAndAssigneeId(Long questionId, Long applicationId, Long assigneeId);
-    List<QuestionStatus> findByQuestionIdAndApplicationId(Long questionId, Long applicationId);
+
+    List<QuestionStatus> findByQuestionIdAndApplicationId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId);
 
     List<QuestionStatus> findByApplicationId(@Param("applicationId") Long applicationId);
 
