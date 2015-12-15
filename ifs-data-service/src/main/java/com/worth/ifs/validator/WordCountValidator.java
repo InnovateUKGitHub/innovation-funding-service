@@ -4,7 +4,6 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 
 /**

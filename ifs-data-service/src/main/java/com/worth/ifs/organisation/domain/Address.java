@@ -1,7 +1,6 @@
 package com.worth.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import java.util.ArrayList;
