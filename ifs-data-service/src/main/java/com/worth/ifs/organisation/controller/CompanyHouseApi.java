@@ -94,6 +94,7 @@ public class CompanyHouseApi extends BaseRestService {
         Address address = new Address(
                 jsonNode.path(path).path("address_line_1").asText(),
                 jsonNode.path(path).path("address_line_2").asText(),
+                jsonNode.path(path).path("address_line_3").asText(),
                 jsonNode.path(path).path("care_of").asText(),
                 jsonNode.path(path).path("country").asText(),
                 jsonNode.path(path).path("locality").asText(),

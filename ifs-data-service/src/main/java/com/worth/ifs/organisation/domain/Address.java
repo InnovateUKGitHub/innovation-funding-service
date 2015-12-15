@@ -18,6 +18,7 @@ public class Address {
 
     private String addressLine1;
     private String addressLine2;
+    private String addressLine3;
     private String careOf;
     private String country;
     private String locality;
@@ -32,9 +33,10 @@ public class Address {
     public Address() {
     }
 
-    public Address(String addressLine1, String addressLine2, String careOf, String country, String locality, String po_box, String postal_code, String region) {
+    public Address(String addressLine1, String addressLine2, String addressLine3, String careOf, String country, String locality, String po_box, String postal_code, String region) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
+        this.addressLine3 = addressLine3;
         this.careOf = careOf;
         this.country = country;
         this.locality = locality;
@@ -57,6 +59,14 @@ public class Address {
 
     public void setAddressLine2(String addressLine2) {
         this.addressLine2 = addressLine2;
+    }
+
+    public String getAddressLine3() {
+        return addressLine3;
+    }
+
+    public void setAddressLine3(String addressLine3) {
+        this.addressLine3 = addressLine3;
     }
 
     public String getCareOf() {
@@ -129,4 +139,6 @@ public class Address {
     public void setOrganisations(List<OrganisationAddress> organisations) {
         this.organisations = organisations;
     }
+
+
 }
