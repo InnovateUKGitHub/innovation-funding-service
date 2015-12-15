@@ -19,3 +19,5 @@ project.ext['flyway.placeholderSuffix']='}'
 ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
 ext.testIfsDatasourcePassword=""
+
+ext.ifsFileStorageLocation="/tmp"

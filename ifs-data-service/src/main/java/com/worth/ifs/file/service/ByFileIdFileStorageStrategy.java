@@ -1,6 +1,7 @@
 package com.worth.ifs.file.service;
 
 import com.worth.ifs.file.domain.FileEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
+import static java.io.File.separator;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
@@ -54,7 +57,12 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
             return startOfPartitionPadded + "_" + endForThisPartition;
         };
 
-        List<String> path = combineLists(asList(containingFolder), range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList()));
-        return Pair.of(path, id + "");
+        return Pair.of(getFullPathToContainingFolderAsSegments(folderNameFunction), id + "");
+    }
+
+    private List<String> getFullPathToContainingFolderAsSegments(IntFunction<String> folderNameFunction) {
+        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(asList(pathToStorageBase.split(separator)), asList(containingFolder));
+        List<String> fullPathToContainingFolder = simpleFilterNot(fullPathToContainingFolderWithEmptyElements, StringUtils::isBlank);
+        return combineLists(fullPathToContainingFolder, range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList()));
     }
 }
