@@ -16,32 +16,33 @@
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Economic benefit'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
 
 	<form action="#" method="post">
 		<div class="form-group">
 			
-			<h2 class="heading-medium no-margin">4. What economic, social and environmental benefits do you expect your project to deliver and when?</h2>
+			<h2 class="heading-medium no-margin">9. What will your project cost?</h2>
 			
-			<p>The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution. The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field. Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+			<p>The amount of money needed to complete this project is large. The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly. The Materials and use of the fabricators equipment will account for approximately some of the budget. The time and expertise required across all 3 partners to complete each phase will amount to the lion share of the cost.</p>
 
 		</div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback"  />
 
 	</form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question2">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question8">
             <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">2. Project exploitation</span>
+            <span class="pagination-part-title">8. Project team</span>
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question5">
+        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question10">
             <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">5. Technical approach</span>
+            <span class="pagination-part-title">10. Adding value</span>
         </a>
     </li>
 </ul>

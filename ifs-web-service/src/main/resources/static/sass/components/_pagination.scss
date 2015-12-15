@@ -31,8 +31,7 @@
     line-height: 1.25;
     font-weight: 400;
     overflow:hidden;
-    border-bottom: 1px solid $grey-2;
-    padding-bottom:2px;
+    border-top: 1px solid $grey-2;
     clear: both;
 
     li {
@@ -50,41 +49,35 @@
     .prev {
         float: left;
         text-align: left;
-
-        a {
-            padding: 0.75em 0px 0.75em 3em;
-
-            &:before {
-                background: transparent url("../images/arrow-sprite.png") no-repeat scroll -20px -11px;
-                margin: -4px 0px 0px -32px;
-                display: block;
-                float: left;
-                width: 30px;
-                height: 38px;
-                content: " ";
-            }
-        }
     }
-
+    .prev a {
+        padding: 1.2em 0px 1.2em 3em;
+    }
+    .prev a:before {
+        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -20px -11px;
+        margin: -4px 0px 0px -32px;
+        display: block;
+        float: left;
+        width: 30px;
+        height: 38px;
+        content: " ";
+    }
     .next {
         float: right;
         text-align: right;
-
-        a {
-            padding: 0.75em 3em 0.75em 0px;
-
-            &:before {
-                background: transparent url("../images/arrow-sprite.png") no-repeat scroll -102px -11px;
-                margin: -4px -32px 0px 0px;
-                display: block;
-                float: right;
-                width: 30px;
-                height: 38px;
-                content: " ";
-            }
-        }
     }
-
+    .next a {
+        padding: 1.2em 3em 1.2em 0px;
+    }
+    .next a:before {
+        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -102px -11px;
+        margin: -4px -32px 0px 0px;
+        display: block;
+        float: right;
+        width: 30px;
+        height: 38px;
+        content: " ";
+    }
     .pagination-label {
         font-size: 27px;
         line-height: 1.25;

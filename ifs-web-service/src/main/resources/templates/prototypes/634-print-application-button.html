@@ -6,6 +6,7 @@
 
 </head>
 <body>
+	<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
     <div th:include="fragments/layout :: body-start" th:remove="tag" />	
     <div th:include="fragments/layout :: global-header" th:remove="tag" />
 

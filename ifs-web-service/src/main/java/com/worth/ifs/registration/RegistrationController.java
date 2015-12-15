@@ -42,8 +42,8 @@ public class RegistrationController {
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
 
-    @RequestMapping(value="/register", method= RequestMethod.GET)
-    public String register(Model model, HttpServletRequest request) {
+    @RequestMapping(value="/register", method=RequestMethod.GET)
+    public String registerForm(Model model, HttpServletRequest request) {
         String destination = "registration-register";
 
         Organisation organisation = getOrganisation(request);
@@ -60,7 +60,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value="/register", method=RequestMethod.POST)
-    public String register(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
+    public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
         String destination = "registration-register";
 
         if(!bindingResult.hasErrors()) {

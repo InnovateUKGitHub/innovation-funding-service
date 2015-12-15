@@ -16,32 +16,37 @@
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Economic benefit'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
 
 	<form action="#" method="post">
 		<div class="form-group">
 			
-			<h2 class="heading-medium no-margin">4. What economic, social and environmental benefits do you expect your project to deliver and when?</h2>
+			<h2 class="heading-medium no-margin">5. What technical approach will you use and how will you manage your project?</h2>
 			
-			<p>The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution. The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field. Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+			<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm. We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
 		</div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3" th:remove="tag" />
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Download project management appendix:</h3>
+            <a href="#">Project-plan.pdf (161.96 KB)</a>
+        </div>
+
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:remove="tag" />
 
 	</form>
 
 <ul class="pagination">
     <li class="prev">
-        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question2">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question4">
             <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">2. Project exploitation</span>
+            <span class="pagination-part-title">4. Economical benefit</span>
         </a>
     </li>
     <li class="next">
-        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question5">
+        <a rel="next" title="Navigate to next part" href="/prototypes/984-assessor-question6">
             <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">5. Technical approach</span>
+            <span class="pagination-part-title">6. Innovation</span>
         </a>
     </li>
 </ul>
