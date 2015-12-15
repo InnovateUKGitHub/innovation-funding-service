@@ -1,4 +1,4 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;

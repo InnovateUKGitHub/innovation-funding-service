@@ -6,7 +6,8 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.service.FileService;
+import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.FORM_INPUT_RESPONSE_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+
 /**
  * Transactional and secured service focused around the processing of Applications
  */
@@ -31,6 +36,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private FormInputResponseRepository formInputResponseRepository;
 
     @Override
     public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -72,7 +80,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createdFile = fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, true);
-        return createdFile;
+        return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, true);
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(long formInputResponseId) {
+        return getOrFail(() -> formInputResponseRepository.findOne(formInputResponseId), () -> error(FORM_INPUT_RESPONSE_NOT_FOUND)).
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getId(), true));
     }
 }

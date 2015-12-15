@@ -39,6 +39,7 @@ public abstract class BaseTransactionalService  {
     public enum Failures {
         UNEXPECTED_ERROR, //
         RESPONSE_NOT_FOUND, //
+        FORM_INPUT_RESPONSE_NOT_FOUND, //
         PROCESS_ROLE_NOT_FOUND, //
         PROCESS_ROLE_INCORRECT_TYPE, //
         PROCESS_ROLE_INCORRECT_APPLICATION, //

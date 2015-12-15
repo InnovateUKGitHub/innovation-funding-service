@@ -1,4 +1,4 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
@@ -22,8 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePath;
@@ -106,7 +105,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private Either<ServiceFailure, FileEntry> findFileEntry(Long fileEntryId) {
         return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), () -> {
             LOG.error("Could not find FileEntry for id " + fileEntryId);
-            return error(UNABLE_TO_FIND_FILE);
+            return ServiceFailure.error(UNABLE_TO_FIND_FILE);
         });
     }
 
@@ -121,7 +120,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         }, () -> {
             LOG.error("Could not find File for FileEntry with id " + fileEntry.getId());
-            return error(UNABLE_TO_FIND_FILE);
+            return ServiceFailure.error(UNABLE_TO_FIND_FILE);
         });
     }
 

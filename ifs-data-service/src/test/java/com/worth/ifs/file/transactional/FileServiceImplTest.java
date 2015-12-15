@@ -1,4 +1,4 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.google.common.io.Files;
 import com.worth.ifs.BaseUnitTestMocksTest;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.file.service.FileServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static com.worth.ifs.util.FileFunctions.pathElementsToAbsoluteFile;

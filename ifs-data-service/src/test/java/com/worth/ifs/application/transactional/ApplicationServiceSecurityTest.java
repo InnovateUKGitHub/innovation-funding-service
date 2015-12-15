@@ -147,5 +147,10 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
             return right(new ServiceSuccess(Pair.of(new File("", ""), newFileEntry().build())));
         }
+
+        @Override
+        public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(long formInputResponseId) {
+            return null;
+        }
     }
 }

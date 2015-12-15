@@ -1,4 +1,4 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 /**
  * Represents a component that, given a FileEntry to store, decides how best to store it and stores it on the filesystem.

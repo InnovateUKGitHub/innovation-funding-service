@@ -34,6 +34,15 @@ public class FormInputResponseFileUploadRules {
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
+        return userIsApplicantOnThisApplication(fileEntry, user);
+    }
+
+    @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
+    public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponse formInputResponse, User user) {
+        return userIsApplicantOnThisApplication(formInputResponse, user);
+    }
+
+    private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, User user) {
 
         FormInputResponse response = formInputResponseRepository.findOne(fileEntry.getFormInputResponseId());
 
@@ -41,6 +50,11 @@ public class FormInputResponseFileUploadRules {
             LOG.warn("Unable to locate FormInputResponse with id " + fileEntry.getFormInputResponseId());
             return false;
         }
+
+        return userIsApplicantOnThisApplication(response, user);
+    }
+
+    private boolean userIsApplicantOnThisApplication(FormInputResponse response, User user) {
 
         Long applicationId = response.getApplication().getId();
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserId(user.getId());

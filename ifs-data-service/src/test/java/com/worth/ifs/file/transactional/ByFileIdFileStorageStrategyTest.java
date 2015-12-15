@@ -1,4 +1,4 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.google.common.io.Files;
 import com.worth.ifs.file.domain.FileEntry;

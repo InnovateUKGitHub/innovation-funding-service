@@ -15,6 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +28,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.application.resource.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
+import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
 import static com.worth.ifs.util.Either.*;
 import static com.worth.ifs.util.JsonStatusResponse.*;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
 import static java.util.stream.Collectors.joining;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -51,7 +54,7 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private ApplicationService applicationService;
 
-    @RequestMapping(value = "/{formInputResponseId}/fileupload", method = POST, produces = "application/json")
+    @RequestMapping(value = "/{formInputResponseId}/file", method = POST, produces = "application/json")
     public JsonStatusResponse createFile(
             @RequestHeader("Content-Type") String contentType,
             @RequestHeader("Content-Length") String contentLength,
@@ -71,6 +74,26 @@ public class FormInputResponseFileUploadController {
         ))))));
 
         return getLeftOrRight(result);
+    }
+
+    @RequestMapping(value = "/{formInputResponseId}/file", method = GET)
+    public @ResponseBody ResponseEntity<?> getFile(
+            @PathVariable("formInputResponseId") long formInputResponseId,
+            HttpServletResponse response) throws IOException {
+
+        Either<JsonStatusResponse, Supplier<InputStream>> result = doGetFile(formInputResponseId, response);
+        return result.mapLeftOrRight(
+                failure -> new ResponseEntity<>(failure, HttpStatus.INTERNAL_SERVER_ERROR),
+                success -> new ResponseEntity<>("hi", HttpStatus.OK)
+        );
+    }
+
+    private Either<JsonStatusResponse, Supplier<InputStream>> doGetFile(long formInputResponseId, HttpServletResponse response) {
+        Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> file = applicationService.getFormInputResponseFileUpload(formInputResponseId);
+        return file.mapLeftOrRight(
+                failure -> left(internalServerError("Error retrieving file", response)),
+                success -> right(success.getResult())
+        );
     }
 
     private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryId(FileEntry fileEntry, long formInputResponseId) {

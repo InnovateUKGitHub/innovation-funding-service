@@ -24,4 +24,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+
+    @PreAuthorize("hasPermission(#formInputResponseId, 'com.worth.ifs.form.domain.FormInputResponse', 'READ')")
+    Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(@P("formInputResponseId") long formInputResponseId);
 }

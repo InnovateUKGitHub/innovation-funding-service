@@ -1,5 +1,6 @@
-package com.worth.ifs.application.resource;
+package com.worth.ifs.application.controller;
 
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.util.JsonStatusResponse;
 
 /**
