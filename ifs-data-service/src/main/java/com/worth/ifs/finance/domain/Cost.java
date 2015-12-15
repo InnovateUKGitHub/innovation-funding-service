@@ -3,6 +3,7 @@ package com.worth.ifs.finance.domain;
 import com.worth.ifs.application.domain.Question;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Cost defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Cost {
+public class Cost implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

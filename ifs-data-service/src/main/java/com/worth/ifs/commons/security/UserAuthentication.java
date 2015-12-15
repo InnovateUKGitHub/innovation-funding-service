@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
  * Representation of an authenticated user, where its roles, name,etc can be obtained.
  */
 public class UserAuthentication implements Authentication {
-    private final Log log = LogFactory.getLog(getClass());
+    private transient final Log log = LogFactory.getLog(getClass());
 
 
-    private final User user;
+    transient private final User user;
     private boolean authenticated = true;
 
     public UserAuthentication(User user) {
