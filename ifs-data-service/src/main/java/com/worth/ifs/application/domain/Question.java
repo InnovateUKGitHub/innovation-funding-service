@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInput;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -72,6 +74,7 @@ public class Question {
     private String questionNumber;
 
     public Question() {
+        //default constructor
     }
 
     public String getName() {
@@ -134,7 +137,7 @@ public class Question {
     }
 
     public Boolean isMarkAsCompletedEnabled() {
-        return (markAsCompletedEnabled == null ? false : markAsCompletedEnabled);
+        return markAsCompletedEnabled == null ? false : markAsCompletedEnabled;
     }
 
     public Boolean hasMultipleStatuses() {
@@ -151,7 +154,7 @@ public class Question {
 
     public Boolean isAssignEnabled() {
         // never return a null value.. it is enabled or disabled.
-        return (assignEnabled == null ? true : assignEnabled);
+        return assignEnabled == null ? true : assignEnabled;
     }
 
     public void setAssignEnabled(Boolean assignEnabled) {
@@ -184,61 +187,60 @@ public class Question {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (o == null) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        if (o.getClass() != getClass()) {
+            return false;
+        }
         Question question = (Question) o;
-
-        if (needingAssessorScore != question.needingAssessorScore) return false;
-        if (needingAssessorFeedback != question.needingAssessorFeedback) return false;
-        if (id != null ? !id.equals(question.id) : question.id != null) return false;
-        if (name != null ? !name.equals(question.name) : question.name != null) return false;
-        if (description != null ? !description.equals(question.description) : question.description != null)
-            return false;
-        if (guidanceQuestion != null ? !guidanceQuestion.equals(question.guidanceQuestion) : question.guidanceQuestion != null)
-            return false;
-        if (guidanceAnswer != null ? !guidanceAnswer.equals(question.guidanceAnswer) : question.guidanceAnswer != null)
-            return false;
-        if (markAsCompletedEnabled != null ? !markAsCompletedEnabled.equals(question.markAsCompletedEnabled) : question.markAsCompletedEnabled != null)
-            return false;
-        if (assignEnabled != null ? !assignEnabled.equals(question.assignEnabled) : question.assignEnabled != null)
-            return false;
-        if (multipleStatuses != null ? !multipleStatuses.equals(question.multipleStatuses) : question.multipleStatuses != null)
-            return false;
-        if (priority != null ? !priority.equals(question.priority) : question.priority != null) return false;
-        if (assessorConfirmationQuestion != null ? !assessorConfirmationQuestion.equals(question.assessorConfirmationQuestion) : question.assessorConfirmationQuestion != null)
-            return false;
-        if (competition != null ? !competition.equals(question.competition) : question.competition != null)
-            return false;
-        if (section != null ? !section.equals(question.section) : question.section != null) return false;
-        if (responses != null ? !responses.equals(question.responses) : question.responses != null) return false;
-        if (questionStatuses != null ? !questionStatuses.equals(question.questionStatuses) : question.questionStatuses != null)
-            return false;
-        if (costs != null ? !costs.equals(question.costs) : question.costs != null) return false;
-        return !(questionNumber != null ? !questionNumber.equals(question.questionNumber) : question.questionNumber != null);
+        return new EqualsBuilder()
+            .append(id, question.id)
+            .append(name, question.name)
+            .append(description, question.description)
+            .append(guidanceQuestion, question.guidanceQuestion)
+            .append(guidanceAnswer, question.guidanceAnswer)
+            .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
+            .append(assignEnabled, question.assignEnabled)
+            .append(multipleStatuses, question.multipleStatuses)
+            .append(priority, question.priority)
+            .append(needingAssessorScore, question.needingAssessorScore)
+            .append(needingAssessorFeedback, question.needingAssessorFeedback)
+            .append(assessorConfirmationQuestion, question.assessorConfirmationQuestion)
+            .append(competition, question.competition)
+            .append(section, question.section)
+            .append(responses, question.responses)
+            .append(questionStatuses, question.questionStatuses)
+            .append(costs, question.costs)
+            .append(questionNumber, question.questionNumber)
+            .isEquals();
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (guidanceQuestion != null ? guidanceQuestion.hashCode() : 0);
-        result = 31 * result + (guidanceAnswer != null ? guidanceAnswer.hashCode() : 0);
-        result = 31 * result + (markAsCompletedEnabled != null ? markAsCompletedEnabled.hashCode() : 0);
-        result = 31 * result + (assignEnabled != null ? assignEnabled.hashCode() : 0);
-        result = 31 * result + (multipleStatuses != null ? multipleStatuses.hashCode() : 0);
-        result = 31 * result + (priority != null ? priority.hashCode() : 0);
-        result = 31 * result + (needingAssessorScore ? 1 : 0);
-        result = 31 * result + (needingAssessorFeedback ? 1 : 0);
-        result = 31 * result + (assessorConfirmationQuestion != null ? assessorConfirmationQuestion.hashCode() : 0);
-        result = 31 * result + (competition != null ? competition.hashCode() : 0);
-        result = 31 * result + (section != null ? section.hashCode() : 0);
-        result = 31 * result + (responses != null ? responses.hashCode() : 0);
-        result = 31 * result + (questionStatuses != null ? questionStatuses.hashCode() : 0);
-        result = 31 * result + (costs != null ? costs.hashCode() : 0);
-        result = 31 * result + (questionNumber != null ? questionNumber.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(id)
+            .append(name)
+            .append(description)
+            .append(guidanceQuestion)
+            .append(guidanceAnswer)
+            .append(markAsCompletedEnabled)
+            .append(assignEnabled)
+            .append(multipleStatuses)
+            .append(priority)
+            .append(needingAssessorScore)
+            .append(needingAssessorFeedback)
+            .append(assessorConfirmationQuestion)
+            .append(competition)
+            .append(section)
+            .append(responses)
+            .append(questionStatuses)
+            .append(costs)
+            .append(questionNumber)
+            .toHashCode();
     }
 }
