@@ -175,12 +175,10 @@ public class QuestionController {
 
     @RequestMapping(value="/getPreviousQuestionBySection/{sectionId}")
     public Question getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
-        log.debug("GEt PRV QUEST BY SEC " + sectionId );
         Section section = sectionController.getById(sectionId);
         if(section!=null) {
             if(section.getParentSection()!=null) {
                 Section previousSection = sectionController.getPreviousSection(section, false, true);
-                log.debug("PREVIOUS QUESTON: " + previousSection );
                 Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                         .stream()
                         .max(Comparator.comparing(question -> question.getPriority()));
