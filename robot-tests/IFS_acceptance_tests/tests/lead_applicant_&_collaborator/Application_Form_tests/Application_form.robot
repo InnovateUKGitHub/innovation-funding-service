@@ -185,15 +185,11 @@ When the Applicant clicks a section then the Applicant navigates to the correct 
     Location Should Be    ${ADDING_VALUE_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
-    Click Element    link=Finances
-    Location Should Be    ${FINANCES_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
     Click Element    link=Your finances
     Location Should Be    ${YOUR_FINANCES_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
-    Click Element    link=Finances Overview
+    Click Element    link=Finances overview
     Location Should Be    ${FINANCES_OVERVIEW_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
