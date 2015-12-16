@@ -79,7 +79,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addQuestionDetails(Long sectionId, Model model) {
-        log.debug("Get previous question by section");
         Question previousQuestion = questionService.getPreviousQuestionBySection(sectionId);
         model.addAttribute("previousQuestion", previousQuestion);
     }
