@@ -62,8 +62,8 @@
     <div class="my-applications">
 
         <div class="in-progress">
-            <h3 class="heading-large">Applications for Assessment (<span th:text="${assessments.size()}"/>)</h3>
-            <ul class="boxed-list bulk-select" th:unless="${assessments.size() == 0 }" >
+            <h3 class="heading-large">Applications for Assessment (<span th:text="${assessmentsToApplications.size()}"/>)</h3>
+            <ul class="boxed-list bulk-select" th:unless="${assessmentsToApplications.size() == 0 }" >
                 <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST">
                     <div th:include="fragments/modals :: modal-confirm-submit-post
                         (messageTitle='This is your final chance to make changes to the assessments. ',
@@ -96,8 +96,8 @@
                                     <h3 class="score"><span th:text="70"/> %</h3>
                                     <small>Overall score</small>
                                     <div class="recommend-container">
-                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO.toString()}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                     </div>
                                 </p>
                             </div>
@@ -120,26 +120,27 @@
 
 
         <!--all the submitted assessments-->
-        <div class="submitted" th:unless="${submittedAssessments.size() == 0 }" >
-            <h4 class="heading-medium">Submitted Assessment (<span th:text="${submittedAssessments.size()}"/>)</h4>
+        <div class="submitted" th:unless="${submittedAssessmentsToApplications.size() == 0 }" >
+            <h4 class="heading-medium">Submitted Assessment (<span th:text="${submittedAssessmentsToApplications.size()}"/>)</h4>
             <ul class="boxed-list bulk-select" >
-                <li th:each="assessment : ${submittedAssessments}">
+                <li th:each="assessmentAndApplication : ${submittedAssessmentsToApplications}"
+                    th:with="assessment=${assessmentAndApplication.key}, application=${assessmentAndApplication.value}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium" th:text="${application.name}"/>
 
-                            <div><p th:text="${application.getProcessRoles().get(0).getOrganisation().getName()}" /></div>
+                            <div><p th:text="${assessment.processRole.organisation.name}" /></div>
                         </div>
                         <div class="column-assessment-status navigation-right">
-                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment..lastOutcome?.outcome)}">
+                            <div th:class="${'application-status ' + #strings.toLowerCase(assessment.getProcessStatus()) + ' ' + #strings.toLowerCase(assessment.lastOutcome?.outcome)}">
                                 <p th:text="${#strings.capitalizeWords(assessment.getProcessStatus().toLowerCase())}">Assessment Status</p>
 
                                 <!-- shows the overall score -->
                                 <h3 class="score"><span th:text="60"/>%</h3>
                                 <small>Overall score</small>
                                 <div class="recommend-container">
-                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO.toString()}"  th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                 </div>
                             </div>
                         </div>

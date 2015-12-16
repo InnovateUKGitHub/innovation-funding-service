@@ -76,7 +76,6 @@ public class AssessmentController extends AbstractApplicationController {
         /* gets all the assessments assigned to this assessor in this competition */
         List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
         allAssessments.sort(new AssessmentStatusComparator());
-        Map<Long, ProcessRole> applicationOwners;
 
         //filters the assessments to just have the submitted assessments here
         List<Assessment> submittedAssessments = allAssessments.stream().filter(Assessment::isSubmitted).collect(toList());
@@ -84,11 +83,7 @@ public class AssessmentController extends AbstractApplicationController {
         //filters the assessments to just the not submmited assessments
         List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(toList());
 
-
         model.addAttribute("competition", competition);
-        model.addAttribute("assessments", assessments); // TODO qqRP remove
-        model.addAttribute("submittedAssessments", submittedAssessments); // TODO qqRP remove
-
 
         Map<Assessment, ApplicationResource> assessmentsToApplications = allAssessments.stream()
                 .filter(a -> !submittedAssessments.contains(a))
