@@ -37,4 +37,8 @@ public class LoginForm {
         return actionUrl;
     }
 
+    public void setActionUrl(String actionUrl) {
+        this.actionUrl = actionUrl;
+    }
+
 }
