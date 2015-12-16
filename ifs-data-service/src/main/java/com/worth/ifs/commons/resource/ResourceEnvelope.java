@@ -9,6 +9,12 @@ public class ResourceEnvelope<T> {
 
     public ResourceEnvelope() {}
 
+    public ResourceEnvelope(ResourceEnvelope<T> resourceEnvelope) {
+        this(resourceEnvelope.getStatus(),
+                resourceEnvelope.getErrors(),
+                resourceEnvelope.getEntity());
+    }
+
     public ResourceEnvelope(String status, List<ResourceError> errors, T entity) {
         this.status = status;
         this.errors = errors;
