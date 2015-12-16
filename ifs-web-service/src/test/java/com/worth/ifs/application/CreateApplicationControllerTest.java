@@ -2,8 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.security.CookieFlashMessageFilter;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,18 +10,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations="classpath:application.properties")
@@ -80,6 +73,16 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
                 .andExpect(model().attributeHasFieldErrors("companyHouseLookup", "organisationName"))
                 .andExpect(model().attributeErrorCount("companyHouseLookup", 1))
                 .andExpect(model().attributeHasFieldErrorCode("companyHouseLookup", "organisationName", "NotEmpty"));
+    }
+
+    @Test
+    public void testCreateOrganisationBusinessInvalidCharacters() throws Exception {
+        mockMvc.perform(post("/application/create/find-business")
+                .param("organisationName", "a{}a"))
+                .andExpect(view().name("create-application/find-business"))
+                .andExpect(model().attributeHasFieldErrors("companyHouseLookup", "organisationName"))
+                .andExpect(model().attributeErrorCount("companyHouseLookup", 1))
+                .andExpect(model().attributeHasFieldErrorCode("companyHouseLookup", "organisationName", "Pattern"));
     }
 
     @Test

@@ -2,7 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

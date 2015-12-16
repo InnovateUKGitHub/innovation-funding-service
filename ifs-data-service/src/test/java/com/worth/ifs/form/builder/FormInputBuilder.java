@@ -1,13 +1,10 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;

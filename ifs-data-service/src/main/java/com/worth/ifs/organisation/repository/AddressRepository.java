@@ -1,10 +1,7 @@
 package com.worth.ifs.organisation.repository;
 
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 
 /**
  * This interface is used to generate Spring Data Repositories.

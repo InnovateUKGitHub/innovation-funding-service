@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import org.junit.Test;
 
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

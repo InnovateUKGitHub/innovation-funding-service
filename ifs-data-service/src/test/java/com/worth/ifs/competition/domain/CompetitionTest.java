@@ -3,7 +3,6 @@ package com.worth.ifs.competition.domain;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

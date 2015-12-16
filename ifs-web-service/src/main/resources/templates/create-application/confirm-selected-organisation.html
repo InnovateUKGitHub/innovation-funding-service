@@ -66,9 +66,9 @@
                         </select>
                         <button type="submit" class="button" name="select-address">Use selected address</button>
                     </div>
-                    <a href="#" id="enter-address-manually">Enter address manually</a>
+                    <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
                 </fieldset>
-                <fieldset id="address-details" class="extra-margin">
+                <fieldset id="address-details" class="extra-margin" th:if="${confirmCompanyDetailsForm.selectedPostcodeIndex != null or confirmCompanyDetailsForm.manualAddress}">
                     <legend class="visuallyhidden">Address details</legend>
                     <div class="form-group">
                         <label class="form-label" for="street">
@@ -86,7 +86,7 @@
                         <label class="form-label" for="street-2">
                             <span class="form-label-bold visuallyhidden">Street line 3</span>
                         </label>
-                        <input class="form-control" id="street-3" name="street-2" type="text" />
+                        <input class="form-control" id="street-3" th:field="*{selectedPostcode.addressLine3}" name="street-2" type="text" />
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="town">
