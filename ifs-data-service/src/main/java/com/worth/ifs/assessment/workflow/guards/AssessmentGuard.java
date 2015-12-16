@@ -15,12 +15,10 @@ public class AssessmentGuard implements Guard<String, String> {
     @Override
     public boolean evaluate(StateContext<String, String> context) {
         Object assessmentObject = context.getMessageHeader("assessment");
-        Object applicationId = context.getMessageHeader("applicationId");
-        Object assessorId = context.getMessageHeader("assessorId");
+        Object processRoleId = context.getMessageHeader("processRoleId");
 
         if(isAssessment(assessmentObject) &&
-                isTypeOfLong(applicationId) &&
-                isTypeOfLong(assessorId)) {
+                isTypeOfLong(processRoleId)) {
             return true;
         }
         return false;
