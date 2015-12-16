@@ -8,10 +8,17 @@ import com.worth.ifs.file.resource.FileEntryResource;
 public class FormInputResponseFileEntryResource {
 
     private FileEntryResource fileEntryResource;
-    private long formInputResponseId;
+    private FormInputResponseFileEntryId compoundId;
+    private Long formInputResponseId;
 
-    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputResponseId) {
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId) {
         this.fileEntryResource = fileEntryResource;
+        this.compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+    }
+
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId, long formInputResponseId) {
+        this.fileEntryResource = fileEntryResource;
+        this.compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
         this.formInputResponseId = formInputResponseId;
     }
 
@@ -19,7 +26,11 @@ public class FormInputResponseFileEntryResource {
         return fileEntryResource;
     }
 
-    public long getFormInputResponseId() {
+    public FormInputResponseFileEntryId getCompoundId() {
+        return compoundId;
+    }
+
+    public Long getFormInputResponseId() {
         return formInputResponseId;
     }
 }

@@ -3,6 +3,7 @@ package com.worth.ifs.form.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -45,6 +46,9 @@ public class FormInputResponse {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @ManyToOne
+    @JoinColumn(name="fileEntryId", referencedColumnName="id")
+    private FileEntry fileEntry;
 
 
     public FormInputResponse() {
@@ -54,6 +58,14 @@ public class FormInputResponse {
     public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.value = value;
+        this.updatedBy = updatedBy;
+        this.formInput = formInput;
+        this.application = application;
+    }
+
+    public FormInputResponse(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+        this.updateDate = updateDate;
+        this.fileEntry = fileEntry;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
@@ -118,27 +130,11 @@ public class FormInputResponse {
         this.updatedBy = updatedBy;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FormInputResponse response = (FormInputResponse) o;
-
-        if (id != null ? !id.equals(response.id) : response.id != null) return false;
-        if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
-        if (value != null ? !value.equals(response.value) : response.value != null) return false;
-        if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
-        return (formInput != null ? !formInput.equals(response.formInput) : response.formInput != null);
+    public FileEntry getFileEntry() {
+        return fileEntry;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
-        result = 31 * result + (formInput != null ? formInput.hashCode() : 0);
-        return result;
+    public void setFileEntry(FileEntry fileEntry) {
+        this.fileEntry = fileEntry;
     }
 }
