@@ -1,8 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
@@ -46,11 +44,6 @@ public class CreateApplicationController extends AbstractApplicationController {
     @Autowired
     Validator validator;
 
-    @Autowired
-    OrganisationService organisationService;
-
-    @Autowired
-    ApplicationService applicationService;
 
 
     @RequestMapping("/check-eligibility/{competitionId}")
@@ -61,7 +54,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
 
-        this.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";
     }
 
@@ -123,7 +116,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                    @PathVariable("companyId") final String companyId,
                                    HttpServletRequest request,
                                    HttpServletResponse response ) {
-        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
         if(organisationService == null){
@@ -141,7 +134,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                    @PathVariable("companyId") final String companyId,
                                    HttpServletRequest request,
                                    HttpServletResponse response ) {
-        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         this.logState(request, response);
 
         if(organisationService == null){

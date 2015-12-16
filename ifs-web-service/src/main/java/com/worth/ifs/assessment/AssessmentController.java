@@ -4,14 +4,11 @@ import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.Form;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -45,22 +42,15 @@ public class AssessmentController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
 
     /* pages */
-    private final String competitionAssessments = "assessor-competition-applications";
-    private final String assessorDashboard = "assessor-dashboard";
-    private final String assessmentDetails = "assessment-details";
-    private final String assessmentSubmitReview = "assessment-submit-review";
-    private final String applicationReview = "application-assessment-review";
-    private final String rejectInvitation = "reject-assessment-invitation";
+    private static final String competitionAssessments = "assessor-competition-applications";
+    private static final String assessorDashboard = "assessor-dashboard";
+    private static final String assessmentDetails = "assessment-details";
+    private static final String assessmentSubmitReview = "assessment-submit-review";
+    private static final String applicationReview = "application-assessment-review";
+    private static final String rejectInvitation = "reject-assessment-invitation";
 
-
-    @Autowired
-    CompetitionsRestService competitionService;
     @Autowired
     AssessmentRestService assessmentRestService;
-    @Autowired
-    UserAuthenticationService userAuthenticationService;
-    @Autowired
-    ResponseService responseService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -70,7 +60,7 @@ public class AssessmentController extends AbstractApplicationController {
     public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
                                                  HttpServletRequest request) {
 
-        Competition competition = competitionService.getCompetitionById(competitionId);
+        Competition competition = competitionService.getById(competitionId);
 
         /* gets all the assessments assigned to this assessor in this competition */
         List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
@@ -175,7 +165,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showInvalidAssessmentView(Model model, Long competitionId, Assessment assessment) {
-        Competition competition = competitionService.getCompetitionById(competitionId);
+        Competition competition = competitionService.getById(competitionId);
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
         return assessorDashboard;
@@ -341,7 +331,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     private Pair<Competition, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
         //gets
-        Competition competition = competitionService.getCompetitionById(competitionId);
+        Competition competition = competitionService.getById(competitionId);
         Assessment assessment = assessmentRestService.getOneByAssessorAndApplication(userId, applicationId);
 
         //pass to view
