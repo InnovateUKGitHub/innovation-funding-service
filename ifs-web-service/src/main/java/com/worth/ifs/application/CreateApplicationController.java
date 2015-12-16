@@ -322,7 +322,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         return null;
     }
 
-    private static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
+    public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
         if (fieldName != null) {
             Cookie cookie = new Cookie(fieldName, fieldValue);
             cookie.setPath("/");
