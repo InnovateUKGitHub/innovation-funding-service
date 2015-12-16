@@ -15,7 +15,7 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 *** Test Cases ***
 Verify the confirmation page page
     [Documentation]    INFUND-669
-    [Tags]    Applicant
+    [Tags]    Applicant    New application
     When the applicant goes to the confirm competition url
     Then the applicant should get the confirm competition page
     and when the applicant confirms this page
@@ -23,14 +23,14 @@ Verify the confirmation page page
 
 Verify the validation errors for the new application input
     [Documentation]    INFUND-669
-    [Tags]    Applicant
+    [Tags]    Applicant    New application
     Given the user is in the "Create application" page
     When the applicant leaves the new application title empty
     Then the applicant should get a validation error(new application)
 
 Verify the creation of a new application
     [Documentation]    INFUND-669
-    [Tags]    Applicant
+    [Tags]    Applicant    New application
     Given the user is in the "Create application" page
     When the applicant inserts a valid competition title
     and the applicant creates the new application

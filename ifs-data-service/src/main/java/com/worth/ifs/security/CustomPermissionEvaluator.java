@@ -238,13 +238,13 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
         return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyPermissions()).keySet().stream().filter(
                 permission -> hasPermission(authentication, targetDomainObject, permission)
-        ).collect(toList());
+        ).sorted().collect(toList());
     }
 
     public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
         return rulesMap.getOrDefault(dtoClazz, emptyPermissions()).keySet().stream().filter(
                 permission -> hasPermission(authentication, key, dtoClazz, permission)
-        ).collect(toList());
+        ).sorted().collect(toList());
     }
 
     private static ListOfMethods emptyMethods() {

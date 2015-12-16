@@ -29,12 +29,15 @@ import javax.validation.Valid;
 public class LoginController {
     private final Log log = LogFactory.getLog(getClass());
 
+    private final static String REDIRECT_URL_PARAMETER = "redirect_url";
+
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login( Model model, HttpServletRequest request) {
         LoginForm loginForm = new LoginForm();
+        loginForm.setActionUrl(getActionUrl(request));
         model.addAttribute("loginForm", loginForm);
         return "login";
     }
@@ -67,14 +70,24 @@ public class LoginController {
             }
         }
 
+        loginForm.setActionUrl(getActionUrl(request));
+
         return destination;
     }
 
+    private String getActionUrl(HttpServletRequest request) {
+        String actionUrl = "/login";
+        if(getRedirectUrl(request)!=null){
+            actionUrl="/login?"+REDIRECT_URL_PARAMETER+"="+getRedirectUrl(request);
+        }
+
+        return actionUrl;
+    }
 
     private String getRedirectUrl(HttpServletRequest request){
         String redirectUrl =null;
-        if(request.getParameter("redirect_url") != null && StringUtils.hasText(request.getParameter("redirect_url"))){
-            redirectUrl = request.getParameter("redirect_url");
+        if(request.getParameter(REDIRECT_URL_PARAMETER) != null && StringUtils.hasText(request.getParameter(REDIRECT_URL_PARAMETER))){
+            redirectUrl = request.getParameter(REDIRECT_URL_PARAMETER);
 
             if(!redirectUrl.startsWith("/") || redirectUrl.contains("http")){
                 log.error("Login tried to redirect to not allowed URL: "+ redirectUrl);

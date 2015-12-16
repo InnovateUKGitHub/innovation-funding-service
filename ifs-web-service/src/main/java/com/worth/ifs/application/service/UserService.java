@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -15,6 +16,6 @@ public interface UserService {
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     public Set<User> getAssignableUsers(ApplicationResource application);
     public Set<User> getApplicationUsers(ApplicationResource application);
-    public UserResource createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
+    public ResourceEnvelope<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
 
 }

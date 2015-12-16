@@ -48,11 +48,11 @@ public class AutosaveElementException extends RuntimeException {
         }
     }
 
-    private String errorMessage;
+    private final String errorMessage;
 
-    private String inputIdentifier;
-    private String value;
-    private Long applicationId;
+    private final String inputIdentifier;
+    private final String value;
+    private final Long applicationId;
     public AutosaveElementException(String inputIdentifier, String value, Long applicationId, Throwable originalException) {
         super(originalException);
 

@@ -1,11 +1,8 @@
 package com.worth.ifs.application;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
@@ -21,7 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -59,20 +59,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     @Autowired
     Validator validator;
 
-    @Autowired
-    OrganisationService organisationService;
 
-    @Autowired
-    ApplicationService applicationService;
-
-    public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
-        if (fieldName != null) {
-            Cookie cookie = new Cookie(fieldName, fieldValue);
-            cookie.setPath("/");
-            cookie.setMaxAge(3600);
-            response.addCookie(cookie);
-        }
-    }
 
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Form form, Model model,
@@ -82,7 +69,7 @@ public class CreateApplicationController extends AbstractApplicationController {
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
 
-        this.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";
     }
 
@@ -113,7 +100,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                                  Model model,
                                                  HttpServletRequest request,
                                                  HttpServletResponse response) {
-        this.logState(request, response);
+        logState(request, response);
 
 
         if (request.getParameter(NOT_IN_COMPANY_HOUSE) != null) {
@@ -126,15 +113,15 @@ public class CreateApplicationController extends AbstractApplicationController {
         } else if (request.getParameter(SEARCH_ADDRESS) != null) {
             validator.validate(companyHouseForm, bindingResult);
             companyHouseForm.setInCompanyHouse(false);
-            this.searchPostcodes(companyHouseForm);
+            searchPostcodes(companyHouseForm);
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
             companyHouseForm.setInCompanyHouse(false);
-            this.searchPostcodes(companyHouseForm);
-            this.selectPostcodeAddress(companyHouseForm);
+            searchPostcodes(companyHouseForm);
+            selectPostcodeAddress(companyHouseForm);
         } else if (request.getParameter(SEARCH_COMPANY_HOUSE) != null) {
             validator.validate(companyHouseForm, bindingResult);
             if (!bindingResult.hasFieldErrors("companyHouseName")) {
-                this.searchCompanyHouse(companyHouseForm);
+                searchCompanyHouse(companyHouseForm);
             }else{
                 log.info("has errors "+ bindingResult.getFieldErrors().size());
                 bindingResult.getFieldErrors().forEach(e -> log.error(e.getField() +"__"+ e.getDefaultMessage()));
@@ -153,9 +140,9 @@ public class CreateApplicationController extends AbstractApplicationController {
                     e.printStackTrace();
                 }
 
-                this.saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
-                this.saveToCookie(response, COMPANY_ADDRESS, jsonAddress);
-                this.saveToCookie(response, ORGANISATION_SIZE, String.valueOf(companyHouseForm.getOrganisationSize()));
+                saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
+                saveToCookie(response, COMPANY_ADDRESS, jsonAddress);
+                saveToCookie(response, ORGANISATION_SIZE, String.valueOf(companyHouseForm.getOrganisationSize()));
 
                 return "redirect:/application/create/confirm-company";
             } else {
@@ -179,7 +166,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     @RequestMapping(value = "/confirm-company", method = RequestMethod.GET)
     public String confirmCompany(Model model,
                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
-        this.logState(request, response);
+        logState(request, response);
 
         // Get data form cookie, convert json to Address object
         ObjectMapper mapper = new ObjectMapper();
@@ -201,7 +188,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                                              Model model,
                                              HttpServletRequest request,
                                              HttpServletResponse response) {
-        this.logState(request, response);
+        logState(request, response);
         return "create-application/find-business";
     }
 
@@ -212,8 +199,8 @@ public class CreateApplicationController extends AbstractApplicationController {
                                   @PathVariable(COMPANY_ID) final String companyId,
                                   HttpServletRequest request,
                                   HttpServletResponse response) {
-        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-        this.logState(request, response);
+        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        logState(request, response);
 
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
@@ -227,8 +214,8 @@ public class CreateApplicationController extends AbstractApplicationController {
                                         @PathVariable(COMPANY_ID) final String companyId,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
-        this.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-        this.logState(request, response);
+        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        logState(request, response);
 
         if (organisationService == null) {
             log.error("companyHouseService is null");
@@ -236,17 +223,17 @@ public class CreateApplicationController extends AbstractApplicationController {
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
         if (StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
-            confirmCompanyDetailsForm.setPostcodeOptions(this.searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
+            confirmCompanyDetailsForm.setPostcodeOptions(searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
         }
 
         if (request.getParameter(MANUAL_ADDRESS) != null) {
             confirmCompanyDetailsForm.setManualAddress(true);
         } else if (request.getParameter(SEARCH_ADDRESS) != null) {
             validator.validate(confirmCompanyDetailsForm, bindingResult);
-            this.searchPostcodes(confirmCompanyDetailsForm);
+            searchPostcodes(confirmCompanyDetailsForm);
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
-            this.searchPostcodes(confirmCompanyDetailsForm);
-            this.selectPostcodeAddress(confirmCompanyDetailsForm);
+            searchPostcodes(confirmCompanyDetailsForm);
+            selectPostcodeAddress(confirmCompanyDetailsForm);
         } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
             String name = org.getName();
             String companyHouseNumber = org.getCompanyNumber();
@@ -335,6 +322,16 @@ public class CreateApplicationController extends AbstractApplicationController {
         return null;
     }
 
+    private static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
+        if (fieldName != null) {
+            Cookie cookie = new Cookie(fieldName, fieldValue);
+            cookie.setPath("/");
+            cookie.setMaxAge(3600);
+            response.addCookie(cookie);
+        }
+    }
+
+
     private void logState(HttpServletRequest request, HttpServletResponse response) {
         log.debug("=== Logging cookie state === ");
         if (request.getCookies() == null || request.getCookies().length == 0) {
@@ -349,7 +346,7 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     private void searchPostcodes(CreateApplicationForm form) {
         if (StringUtils.hasText(form.getPostcodeInput())) {
-            form.setPostcodeOptions(this.searchPostcode(form.getPostcodeInput()));
+            form.setPostcodeOptions(searchPostcode(form.getPostcodeInput()));
         }
     }
 
