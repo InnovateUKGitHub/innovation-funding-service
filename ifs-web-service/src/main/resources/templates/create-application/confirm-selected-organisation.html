@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Create an application'" th:remove="tag"/>
 </head>
@@ -11,130 +11,36 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
-        <h1 class="heading-large">Create your account</h1>
+    <h1 class="heading-large">Create your account</h1>
 
-        <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from Innovate UK</p>
+    <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from Innovate UK</p>
 
-        <h2 class="heading-medium">Business Organisation</h2>
+    <h2 class="heading-medium">Business Organisation</h2>
 
-            <fieldset>
-                <legend class="visuallyhidden">Business Organisation</legend>
-                <div class="form-block">
-                    <h3 class="heading-small">Organisation name</h3>
-                    <p th:text="${business.name}">Nomensa</p>
-                    <h3 class="heading-small">Registration number</h3>
-                    <p th:text="${business.companyNumber}">0123456789</p>
-                    <h3 class="heading-small">Address</h3>
-                    <div>
-                        <div th:text="${business.officeAddress.addressLine1}"></div>
-                        <div th:text="${business.officeAddress.addressLine2}"></div>
-                        <div th:text="${business.officeAddress.locality}"></div>
-                        <div th:text="${business.officeAddress.postalCode}"></div>
-                    </div>
-                </div>
-            </fieldset>
+    <div th:include="create-application/fragments :: organisation-details" th:remove="tag"/>
 
-            <form action="#" th:object="${confirmCompanyDetailsForm}" method="POST">
+    <form action="#" th:object="${confirmCompanyDetailsForm}" method="POST">
 
-            <h2 class="heading-medium">Operating address</h2>
-            <fieldset>
-                <legend class="visuallyhidden">Operating address</legend>
-                <div class="form-block">
-                    <label class="block-label" for="address-same" data-target="manual-company-input" data-target-inverted="true">
-                        <input id="address-same" th:field="*{useCompanyHouseAddress}" type="checkbox" value="yes"/>
-                        The registered address is the same as the operating address
-                    </label>
-                </div>
-            </fieldset>
-            <div id="manual-company-input" class="extra-margin">
-                <fieldset>
-                    <legend class="visuallyhidden">Organisation details</legend>
-                    <div class="form-group">
-                        <label class="form-label" for="postcode-check">
-                            <span class="form-label-bold">Postcode</span>
-                        </label>
-                        <input class="form-control" id="postcode-check" th:field="*{postcodeInput}" type="text" value="" />
-                        <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}')}" th:errors="*{postcodeInput}"></span>
-                        <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
-                    </div>
-                    <div class="form-group" id="select-address-block" th:if="${confirmCompanyDetailsForm.postcodeOptions.size() != 0}">
-                        <label class="form-label" for="title">
-                            <span class="form-label-bold">Select your address</span>
-                        </label>
-                        <select class="form-control" id="select-address" th:field="*{selectedPostcodeIndex}">
-                            <option th:value="${status.index}" th:each="address,status : ${confirmCompanyDetailsForm.postcodeOptions}" th:text="${address.combinedString}"></option>
-                        </select>
-                        <button type="submit" class="button" name="select-address">Use selected address</button>
-                    </div>
-                    <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
-                </fieldset>
-                <fieldset id="address-details" class="extra-margin" th:if="${confirmCompanyDetailsForm.selectedPostcodeIndex != null or confirmCompanyDetailsForm.manualAddress}">
-                    <legend class="visuallyhidden">Address details</legend>
-                    <div class="form-group">
-                        <label class="form-label" for="street">
-                            <span class="form-label-bold">Street</span>
-                        </label>
-                        <input class="form-control" id="street" th:field="*{selectedPostcode.addressLine1}" name="street" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label visuallyhidden" for="street-2">
-                            <span class="form-label-bold">Street line 2</span>
-                        </label>
-                        <input class="form-control" id="street-2" th:field="*{selectedPostcode.addressLine2}" name="street-2" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="street-2">
-                            <span class="form-label-bold visuallyhidden">Street line 3</span>
-                        </label>
-                        <input class="form-control" id="street-3" th:field="*{selectedPostcode.addressLine3}" name="street-2" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="town">
-                            <span class="form-label-bold">Town</span>
-                        </label>
-                        <input class="form-control" id="town"  th:field="*{selectedPostcode.locality}" name="town" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="county">
-                            <span class="form-label-bold">County</span>
-                        </label>
-                        <input class="form-control" id="county" th:field="*{selectedPostcode.region}" name="county" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="postcode">
-                            <span class="form-label-bold">Postcode</span>
-                        </label>
-                        <input class="form-control" id="postcode" th:field="*{selectedPostcode.postalCode}" name="postcode" type="text" />
-                    </div>
-                </fieldset>
+        <h2 class="heading-medium">Operating address</h2>
+        <fieldset>
+            <legend class="visuallyhidden">Operating address</legend>
+            <div class="form-block">
+                <label class="block-label" for="address-same" data-target="manual-company-input"
+                       data-target-inverted="true">
+                    <input id="address-same" th:field="*{useCompanyHouseAddress}" type="checkbox" value="yes"/>
+                    The registered address is the same as the operating address
+                </label>
             </div>
+        </fieldset>
+        <div th:include="create-application/fragments :: company-address-details"
+             th:with="form=${confirmCompanyDetailsForm}" th:remove="tag"/>
+        <div th:include="create-application/fragments :: organisation-size" th:remove="tag"/>
 
 
-
-
-            <h2 class="heading-small">Organisation size</h2>
-            <fieldset>
-                <legend class="visuallyhidden">Organisation size</legend>
-                <p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
-                <div class="form-block">
-                    <label class="block-label" for="radio-1">
-                        <input id="radio-1" type="radio" th:field="*{organisationSize}" value="SMALL"/>
-                        Micro / small
-                    </label>
-                    <label class="block-label" for="radio-2">
-                        <input id="radio-2" type="radio" th:field="*{organisationSize}" value="MEDIUM"/>
-                        Medium
-                    </label>
-                    <label class="block-label" for="radio-3">
-                        <input id="radio-3" type="radio" th:field="*{organisationSize}" value="LARGE"/>
-                        Large
-                    </label>
-                </div>
-            </fieldset>
-
-
-                <button type="submit button-large extra-margin" name="save-company-details" class="button">Save organisation and continue</button>
-            </form>
+        <button type="submit button-large extra-margin" name="save-company-details" class="button">Save organisation and
+            continue
+        </button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>

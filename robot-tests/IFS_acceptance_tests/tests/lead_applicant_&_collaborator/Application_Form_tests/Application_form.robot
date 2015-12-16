@@ -20,7 +20,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
     [Tags]    Applicant    Autosave    Form
-    Given the Applicant is in the project summary question
+    Given Applicant goes to the 'project summary' question
     When the Applicant enters some text
     and the Applicant refreshes the page
     Then the text should be visible
@@ -28,14 +28,14 @@ Verify the Autosave for the form text areas
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
-    Given the Applicant is in the project summary question
+    Given Applicant goes to the 'project summary' question
     When the applicant clicks the "What should I include in project summary?" question
     Then the guidance should be visible
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
     [Tags]    Applicant    Form
-    Given the Applicant is on the applicaton overview page
+    Given Applicant goes to the Overview page
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
 Verify the last update metadata
@@ -58,13 +58,13 @@ Verify the last update metadata
 Verify that the word count is available
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
-    Given the Applicant is in the project summary question
+    Given Applicant goes to the 'project summary' question
     Then the word count should be available in the text area
 
 Verify that the word count works
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
-    Given the Applicant is in the public description question
+    Given Applicant goes to the 'public description' question
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
     And when the Applicant edits the Project description question (500 words)
@@ -80,7 +80,7 @@ Verify that when the Applicant marks as complete the text box should be green an
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the public description question
+    Given Applicant goes to the 'public description' question
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     and the button state should change to 'Edit'
@@ -90,24 +90,13 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the public description question
+    Given Applicant goes to the 'public description' question
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
     and the button state should change to 'Mark as complete'
     and the question should not be marked as complete on the application overview page
 
 *** Keywords ***
-the Applicant is in the application form
-    Applicant goes to the Application form
-
-the Applicant is in the project summary question
-    Applicant goes to the 'project summary' question
-
-the Applicant is in the public description question
-    Applicant goes to the 'public description' question
-
-the Applicant is on the applicaton overview page
-    Applicant goes to the Overview page
 
 the Applicant enters some text
     Applicant edits the 'Project Summary' question
@@ -212,10 +201,9 @@ the word count should be correct for the Public description
     Element Should Contain    css=#form-input-12 .count-down    469
 
 And when the Applicant edits the Project description question (500 words)
-    Click Element    css=[rel="next"]
-    Clear Element Text    css=#form-input-13 .editor
-    Press Key  css=#form-input-13 .editor   \\8
-    Input Text    css=#form-input-13 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
+    Clear Element Text    css=#form-input-12 .editor
+    Press Key  css=#form-input-12 .editor   \\8
+    Input Text    css=#form-input-12 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
     Focus    css=.app-submit-btn
     Sleep    2s
 
@@ -234,7 +222,7 @@ the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
 the word count for the Project description question should be correct (0 words)
-    Element Should Contain    css=#form-input-13 .count-down    0
+    Element Should Contain    css=#form-input-12 .count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor

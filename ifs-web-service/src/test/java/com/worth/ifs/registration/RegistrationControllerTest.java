@@ -66,6 +66,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .param("firstName", "")
                         .param("lastName", "")
                         .param("phoneNumber", "")
+                        .param("termsAndConditions", "")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
@@ -76,6 +77,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
         ;
     }
 
@@ -128,6 +130,20 @@ public class RegistrationControllerTest extends BaseUnitTest {
     }
 
     @Test
+    public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
+        ;
+    }
+
+    @Test
     public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
 
@@ -164,6 +180,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .param("firstName", userResource.getFirstName())
                         .param("lastName", userResource.getLastName())
                         .param("phoneNumber", userResource.getPhoneNumber())
+                        .param("termsAndConditions", "1")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().value("userId", "1"))
