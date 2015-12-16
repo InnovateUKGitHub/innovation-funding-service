@@ -25,7 +25,7 @@
                     <div class="grid-row" th:unless="${application.getApplicationStatus().getName() == 'submitted'}" >
                         <div class="column-half">
                             <h2 class="heading-medium">
-                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
                             </h2>
                             <p class="form-hint">Application number: <span th:text="${application.id}"></span></p>
                             <p class="form-hint">Current progress: </p>

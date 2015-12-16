@@ -1,17 +1,9 @@
 #!/bin/bash
 
-
 serverBase='localhost:8085'
-
-
-
 if [ -n "$1" ]; then
-  serverBase="$1"
+ serverBase="$1"
 fi
-
-
-
-
 
 pip install simplejson requests
 

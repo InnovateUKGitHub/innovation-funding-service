@@ -2,6 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
@@ -15,8 +16,9 @@ import javax.validation.constraints.Size;
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
 
 public class RegistrationForm {
-    @Email
+    @Email(message = "Please enter a valid email address")
     @NotEmpty(message = "Please enter your email")
+    @Size(max = 256, message = "Input for your email address has a maximum length of 256 characters")
     private String email;
 
     @NotEmpty(message = "Please enter your password")
@@ -24,19 +26,27 @@ public class RegistrationForm {
     private String password;
 
     @NotEmpty(message = "Please re-type your password")
+    @Size(max = 30, message = "Password size should be between 6 and 30 characters")
     private String retypedPassword;
 
-    @NotEmpty(message = "Please pick a title")
+    @NotEmpty(message = "Please select a title")
+    @Size(max = 5, message = "Last name input has a maximum input of 5 characters")
     private String title;
 
     @NotEmpty(message = "Please enter a first name")
+    @Size(max = 256, message = "Input for your first name has a maximum length of 256 characters")
     private String firstName;
 
     @NotEmpty(message = "Please enter a last name")
+    @Size(max = 256, message = "Input for your last name has a maximum length of 256 characters")
     private String lastName;
 
     @NotEmpty(message = "Please enter a phone number")
+    @Size(max = 256, message = "Input for your phone number has a maximum length of 256 characters")
     private String phoneNumber;
+
+    @NotBlank(message = "In order to register an account you have to agree to the Terms and Conditions")
+    private String termsAndConditions;
 
     private String actionUrl;
 
@@ -100,5 +110,13 @@ public class RegistrationForm {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(String termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }

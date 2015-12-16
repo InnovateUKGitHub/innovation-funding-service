@@ -1,0 +1,10 @@
+UPDATE `question` SET `name`='What is the business opportunity that your project addresses?' WHERE `id`='1';
+UPDATE `question` SET `name`='What is the size of the potential market for your project?' WHERE `id`='2';
+UPDATE `question` SET `name`='How will you exploit and market your project?' WHERE `id`='3';
+UPDATE `question` SET `name`='What economic, social and environmental benefits do you expect your project to deliver and when?' WHERE `id`='4';
+UPDATE `question` SET `name`='What technical approach will you use and how will you manage your project?' WHERE `id`='5';
+UPDATE `question` SET `name`='What is innovative about your project?' WHERE `id`='6';
+UPDATE `question` SET `name`='What are the risks (technical, commercial and environmental) to your project\'s success? What is your risk management strategy?' WHERE `id`='7';
+UPDATE `question` SET `name`='Does your project team have the skills, experience and facilities to deliver this project?' WHERE `id`='8';
+UPDATE `question` SET `name`='What will your project cost?' WHERE `id`='15';
+UPDATE `question` SET `name`='How does financial support from Innovate UK and its funding partners add value?' WHERE `id`='16';
