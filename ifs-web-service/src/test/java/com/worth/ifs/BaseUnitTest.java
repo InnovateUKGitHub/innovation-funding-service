@@ -14,6 +14,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.service.AssessmentRestService;
+import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
@@ -99,6 +100,8 @@ public class BaseUnitTest {
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
+    @Mock
+    public TokenAuthenticationService tokenAuthenticationService;
 
     public List<ApplicationResource> applications;
     public List<Section> sections;

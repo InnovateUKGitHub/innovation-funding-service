@@ -124,6 +124,8 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <div th:fragment="your_finance" th:remove="tag">
+        <h2 class="heading-medium no-margin" th:text="${question.name}"></h2>
+        <p th:text="${question.description}"></p>
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>

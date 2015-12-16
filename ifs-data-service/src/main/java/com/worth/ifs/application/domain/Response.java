@@ -2,6 +2,8 @@ package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -109,25 +111,34 @@ public class Response {
         });
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Response response = (Response) o;
-
-        if (id != null ? !id.equals(response.id) : response.id != null) return false;
-        else if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
-        else if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
-        else return application != null ? !application.equals(response.application) : response.application != null;
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Response rhs = (Response) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.updateDate, rhs.updateDate)
+            .append(this.updatedBy, rhs.updatedBy)
+            .append(this.application, rhs.application)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
-        result = 31 * result + (application != null ? application.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+            .append(id)
+            .append(updateDate)
+            .append(updatedBy)
+            .append(application)
+            .toHashCode();
     }
 }

@@ -3,6 +3,8 @@ package com.worth.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -97,28 +99,36 @@ public class ProcessRole {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProcessRole that = (ProcessRole) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
-        if (application != null ? !application.equals(that.application) : that.application != null) return false;
-        if (role != null ? !role.equals(that.role) : that.role != null) return false;
-        if (organisation != null ? !organisation.equals(that.organisation) : that.organisation != null) return false;
-
-        return true;
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        ProcessRole rhs = (ProcessRole) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.user, rhs.user)
+            .append(this.application, rhs.application)
+            .append(this.role, rhs.role)
+            .append(this.organisation, rhs.organisation)
+            .append(this.responses, rhs.responses)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (application != null ? application.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (organisation != null ? organisation.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+            .append(id)
+            .append(user)
+            .append(application)
+            .append(role)
+            .append(organisation)
+            .append(responses)
+            .toHashCode();
     }
 }

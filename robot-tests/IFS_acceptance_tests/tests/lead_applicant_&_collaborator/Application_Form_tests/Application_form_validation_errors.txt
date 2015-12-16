@@ -12,14 +12,14 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify the validation error when the Project title field is empty
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the application form
+    Given Applicant goes to the 'application details' question
     When the applicant clears the application title field
-    The applicant should get a validation error for the title field
+    Then The applicant should get a validation error for the title field
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Application form
+    Given Applicant goes to the 'application details' question
     When the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error for the date
     and then when the Year field is empty
@@ -30,7 +30,7 @@ Verify the validation error for an invalid date (Year)
 Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Application form
+    Given Applicant goes to the 'application details' question
     When the applicant inserts "32" in the day field
     Then the applicant should get a validation error for the date
     and when the applicant inserts "0" in the day field
@@ -45,7 +45,7 @@ Verify the validation error for an invalid date (day)
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Application form
+    Given Applicant goes to the 'application details' question
     When the applicant inserts "0" in the month field
     Then the applicant should get a validation error for the date
     and when the applicant inserts "13" in the month field
@@ -60,7 +60,7 @@ Verify the validation error for an invalid date (month)
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the application form
+    Given Applicant goes to the 'application details' question
     When the applicant inserts "0" in the duration field
     Then the applicant should get a validation error for the duration
     And when the applicant inserts "-1" in the duration field
@@ -73,7 +73,7 @@ Verify the validation error for the duration field
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Application form
+    Given Applicant goes to the 'project summary' question
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error
 
@@ -144,7 +144,9 @@ when the applicant inserts "-1" in the month field
     Input Text    id=application_details-startdate_month    -1
 
 the applicant clears the text area of the "Project Summary"
+    Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
+    Press Key  css=#form-input-11 .editor   \\8
     Focus    css=.app-submit-btn
     Click Element    css=.fa-bold
     sleep    1s
@@ -180,8 +182,8 @@ the applicant clears the application title field
     Clear Element Text    id=application_details-title
 
 The applicant should get a validation error for the title field
-    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages
+    Wait Until Element Is Visible    css=#form-input-9 > .form-group.error > div.validation-messages
 
 the applicant should get a validation error for the date
     Focus    css=.app-submit-btn
-    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages
+    Wait Until Element Is Visible    css=#form-input-9 > .form-group.error > div.validation-messages

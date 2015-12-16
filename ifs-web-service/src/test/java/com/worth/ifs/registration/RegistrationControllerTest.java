@@ -1,16 +1,23 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
+
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,6 +66,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .param("firstName", "")
                         .param("lastName", "")
                         .param("phoneNumber", "")
+                        .param("termsAndConditions", "")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
@@ -69,6 +77,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
         ;
     }
 
@@ -120,42 +129,64 @@ public class RegistrationControllerTest extends BaseUnitTest {
         ;
     }
 
-    //@Test
-    public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
+    @Test
+    public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
-
-        UserResource userDto = new UserResource();
-        userDto.setPassword("testtest");
-        userDto.setFirstName("firstName");
-        userDto.setLastName("lastName");
-        userDto.setTitle("Mr");
-        userDto.setPhoneNumber("0123456789");
-        userDto.setEmail("test@test.test");
-
-
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createUserForOrganisation(userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getPassword(),
-                userDto.getEmail(),
-                userDto.getTitle(),
-                userDto.getPhoneNumber(),
-                1L,
-                "applicant")).thenReturn(userDto);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("email", userDto.getEmail())
-                        .param("password", userDto.getPassword())
-                        .param("retypedPassword", userDto.getPassword())
-                        .param("title", userDto.getTitle())
-                        .param("firstName", userDto.getFirstName())
-                        .param("lastName", userDto.getLastName())
-                        .param("phoneNumber", userDto.getPhoneNumber())
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
+        ;
+    }
+
+    @Test
+    public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+
+        UserResource userResource = new UserResource();
+        userResource.setPassword("testtest");
+        userResource.setFirstName("firstName");
+        userResource.setLastName("lastName");
+        userResource.setTitle("Mr");
+        userResource.setPhoneNumber("0123456789");
+        userResource.setEmail("test@test.test");
+        userResource.setToken("testToken123abc");
+        userResource.setId(1L);
+
+
+        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
+
+
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(userService.createUserForOrganisation(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                1L,
+                "applicant")).thenReturn(envelope);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", userResource.getEmail())
+                        .param("password", userResource.getPassword())
+                        .param("retypedPassword", userResource.getPassword())
+                        .param("title", userResource.getTitle())
+                        .param("firstName", userResource.getFirstName())
+                        .param("lastName", userResource.getLastName())
+                        .param("phoneNumber", userResource.getPhoneNumber())
+                        .param("termsAndConditions", "1")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"))
+                .andExpect(cookie().value("userId", "1"))
+                .andExpect(view().name("redirect:/application/create/initialize-application/"))
         ;
+        verify(tokenAuthenticationService).addAuthentication(Matchers.isA(HttpServletResponse.class), Matchers.isA(UserResource.class));
     }
 
     @Test

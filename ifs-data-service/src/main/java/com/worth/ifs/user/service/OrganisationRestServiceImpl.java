@@ -31,6 +31,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         return asList(restGet(organisationRestURL + "/findByApplicationId/" + applicationId, Organisation[].class));
     }
 
+    @NotSecured("When registering a new user, this necessary for the registration form to show which organisation you signing up for")
     public Organisation getOrganisationById(Long organisationId) {
         return restGet(organisationRestURL + "/findById/"+organisationId, Organisation.class);
     }

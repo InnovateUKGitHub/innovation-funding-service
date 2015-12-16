@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
@@ -132,6 +133,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
+
+        when(applicationService.getById(anyLong())).thenReturn(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -242,7 +245,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testAssessmentsSubmissions() throws Exception {
-        Set assessmentSet = new HashSet<Long>();
+        Set<Long> assessmentSet = new HashSet<>();
         assessmentSet.add(assessments.get(0).getId());
         assessmentSet.add(assessments.get(1).getId());
 

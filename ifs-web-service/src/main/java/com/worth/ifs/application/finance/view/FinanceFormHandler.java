@@ -8,6 +8,7 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -23,8 +24,10 @@ public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
 
     private Object costItemsForType;
+
     private CostService costService;
 
+    @Autowired
     public FinanceFormHandler(CostService costService) {
         this.costService = costService;
     }

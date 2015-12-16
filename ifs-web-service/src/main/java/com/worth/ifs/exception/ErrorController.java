@@ -22,34 +22,28 @@ public class ErrorController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = AutosaveElementException.class)
-    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(HttpServletRequest req, AutosaveElementException e) throws Exception {
-
+    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(HttpServletRequest req, AutosaveElementException e) throws AutosaveElementException {
         log.debug("ErrorController jsonAutosaveResponseHandler", e);
         return e.createJsonResponse();
     }
 
     @ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-
         log.debug("ErrorController  defaultErrorHandler", e);
-
-        // Otherwise setup and send the user to a default error-view.
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e);
-        mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error");
-        return mav;
+        return createExceptionModelAndView(e, "error", req);
     }
 
     @ExceptionHandler(value = ObjectNotFoundException.class)
-    public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) throws ObjectNotFoundException {
         log.debug("ErrorController  objectNotFoundHandler", e);
+        return createExceptionModelAndView(e, "404", req);
+    }
 
-        // Otherwise setup and send the user to a default error-view.
+    private static ModelAndView createExceptionModelAndView(Exception e,String message, HttpServletRequest req){
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
         mav.addObject("url", req.getRequestURL());
-        mav.setViewName("404");
+        mav.setViewName(message);
         return mav;
     }
 }

@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
                 .antMatchers("/user/email/*/password/*").permitAll()
                 .antMatchers("/user/createUserForOrganisationWithRole/*/*").permitAll()
+                .antMatchers("/user/testUserOutput").permitAll()
+                .antMatchers("/user/testUserOutput2").permitAll()
                 .antMatchers("/user/token/*").permitAll()
                 .antMatchers("/organisation/findById/*").permitAll()
                 .antMatchers("/browser/**").permitAll()
