@@ -71,7 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
         for(Question question : questions) {
-        final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
+            final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
             for(QuestionStatus questionStatus : questionStatuses) {
                 if(questionStatus.getAssignee()==null)
                     continue;

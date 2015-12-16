@@ -15,9 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 
 public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionStatusRestServiceImpl> {
-
     private static final String questionStatusRestURL = "/questionStatus";
-
 
     @Override
     protected QuestionStatusRestServiceImpl registerRestServiceUnderTest() {
@@ -34,10 +32,8 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         ResponseEntity<QuestionStatus[]> response = new ResponseEntity<>(questionStatuses, HttpStatus.OK);
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), QuestionStatus[].class)).thenReturn(response);
 
-        // now run the method under test
         List<QuestionStatus> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L);
 
-        // verify
         assertNotNull(returnedQuestionStatuses);
         assertEquals(3, returnedQuestionStatuses.size());
         assertEquals(questionStatuses[0], returnedQuestionStatuses.get(0));

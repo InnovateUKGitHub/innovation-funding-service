@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * QuestionController exposes question data and operations through a REST API.
+ * QuestionStatusController exposes question status data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/questionStatus")

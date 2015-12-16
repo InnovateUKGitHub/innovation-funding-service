@@ -17,7 +17,8 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
   @Value("${ifs.data.service.rest.questionStatus}")
   String questionStatusRestURL;
 
-  @Override public List<QuestionStatus> findQuestionStatusesByQuestionAndApplicationId(final Long questionId, final Long applicationId) {
+  @Override
+  public List<QuestionStatus> findQuestionStatusesByQuestionAndApplicationId(final Long questionId, final Long applicationId) {
     return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionAndAplication/" + questionId + "/" + applicationId, QuestionStatus[].class));
   }
 }
