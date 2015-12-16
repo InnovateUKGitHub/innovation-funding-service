@@ -45,7 +45,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         FileEntry retrieved = repository.findOne(fileEntry.getId());
         assertFalse(saved == retrieved);
         assertEquals(saved.getId(), retrieved.getId());
-        assertEquals(saved.getMimeType(), retrieved.getMimeType());
+        assertEquals(saved.getMediaType(), retrieved.getMediaType());
         assertEquals(saved.getName(), retrieved.getName());
         assertEquals(saved.getFilesizeBytes(), retrieved.getFilesizeBytes());
 
@@ -53,7 +53,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         // Update
         //
         retrieved.setName("updatedfilename");
-        retrieved.setMimeType("image/png");
+        retrieved.setMediaType("image/png");
         retrieved.setFilesizeBytes(4321L);
         repository.save(retrieved);
         em.flush();
@@ -61,7 +61,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         FileEntry retrievedAgain = repository.findOne(fileEntry.getId());
         assertEquals(retrieved.getId(), retrievedAgain.getId());
-        assertEquals(retrieved.getMimeType(), retrievedAgain.getMimeType());
+        assertEquals(retrieved.getMediaType(), retrievedAgain.getMediaType());
         assertEquals(retrieved.getName(), retrievedAgain.getName());
         assertEquals(retrieved.getFilesizeBytes(), retrievedAgain.getFilesizeBytes());
 

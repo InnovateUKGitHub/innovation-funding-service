@@ -14,17 +14,17 @@ public class FileEntry {
 
     private String name;
 
-    private String mimeType;
+    private String mediaType;
 
     private long filesizeBytes;
 
     public FileEntry() {
     }
 
-    public FileEntry(Long id, String originalFilename, String mimeType, long filesizeBytes) {
+    public FileEntry(Long id, String originalFilename, String mediaType, long filesizeBytes) {
         this.id = id;
         this.name = originalFilename;
-        this.mimeType = mimeType;
+        this.mediaType = mediaType;
         this.filesizeBytes = filesizeBytes;
     }
 
@@ -36,8 +36,8 @@ public class FileEntry {
         return name;
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public String getMediaType() {
+        return mediaType;
     }
 
     public long getFilesizeBytes() {
@@ -48,8 +48,8 @@ public class FileEntry {
         this.name = name;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public void setFilesizeBytes(long filesizeBytes) {
@@ -67,7 +67,7 @@ public class FileEntry {
         if (id != null ? !id.equals(fileEntry.id) : fileEntry.id != null) return false;
         if (name != null ? !name.equals(fileEntry.name) : fileEntry.name != null)
             return false;
-        if (mimeType != null ? !mimeType.equals(fileEntry.mimeType) : fileEntry.mimeType != null) return false;
+        if (mediaType != null ? !mediaType.equals(fileEntry.mediaType) : fileEntry.mediaType != null) return false;
 
         return true;
     }
@@ -76,7 +76,7 @@ public class FileEntry {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (mimeType != null ? mimeType.hashCode() : 0);
+        result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
         result = 31 * result + (int) (filesizeBytes ^ (filesizeBytes >>> 32));
         return result;
     }

@@ -1,6 +1,6 @@
 package com.worth.ifs.file.resource;
 
-import org.springframework.util.MimeType;
+import org.springframework.http.MediaType;
 
 /**
  * A Resource representation of a FileEntry.  Subclasses of this class will be the representations
@@ -10,21 +10,21 @@ public class FileEntryResource {
 
     private Long id;
     private String name;
-    private String mimeType;
+    private String mediaType;
     private long filesizeBytes;
 
     public FileEntryResource() {
     }
 
-    public FileEntryResource(Long id, String name, String mimeType, long filesizeBytes) {
+    public FileEntryResource(Long id, String name, String mediaType, long filesizeBytes) {
         this.id = id;
         this.name = name;
-        this.mimeType = mimeType;
+        this.mediaType = mediaType;
         this.filesizeBytes = filesizeBytes;
     }
 
-    public FileEntryResource(Long id, String name, MimeType mimeType, long filesizeBytes) {
-        this(id, name, mimeType.getType(), filesizeBytes);
+    public FileEntryResource(Long id, String name, MediaType mediaType, long filesizeBytes) {
+        this(id, name, mediaType.getType() + "/" + mediaType.getSubtype(), filesizeBytes);
     }
 
     public Long getId() {
@@ -43,12 +43,12 @@ public class FileEntryResource {
         this.name = name;
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public String getMediaType() {
+        return mediaType;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public long getFilesizeBytes() {
@@ -69,7 +69,7 @@ public class FileEntryResource {
         if (filesizeBytes != that.filesizeBytes) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (mimeType != null ? !mimeType.equals(that.mimeType) : that.mimeType != null) return false;
+        if (mediaType != null ? !mediaType.equals(that.mediaType) : that.mediaType != null) return false;
 
         return true;
     }
@@ -78,7 +78,7 @@ public class FileEntryResource {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (mimeType != null ? mimeType.hashCode() : 0);
+        result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
         result = 31 * result + (int) (filesizeBytes ^ (filesizeBytes >>> 32));
         return result;
     }

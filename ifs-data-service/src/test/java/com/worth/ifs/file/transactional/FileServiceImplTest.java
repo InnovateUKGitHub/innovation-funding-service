@@ -159,7 +159,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
 
         forEachWithIndex(fileResources, (i, resource) -> {
-            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMimeType(), resource.getFilesizeBytes());
+            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
             when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
         });
 
@@ -199,7 +199,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
 
         forEachWithIndex(fileResources, (i, resource) -> {
-            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMimeType(), resource.getFilesizeBytes());
+            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
             when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
         });
 
@@ -234,7 +234,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 );
 
         forEachWithIndex(fileResources, (i, resource) -> {
-            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMimeType(), resource.getFilesizeBytes());
+            FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
             when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
         });
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -24,6 +25,6 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasPermission(#formInputResponseId, 'com.worth.ifs.form.domain.FormInputResponse', 'READ')")
-    Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(@P("formInputResponseId") long formInputResponseId);
+    @PreAuthorize("hasPermission(#fileEntry, 'READ')")
+    Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntry);
 }

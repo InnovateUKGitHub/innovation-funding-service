@@ -2,6 +2,7 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -148,7 +149,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(long formInputResponseId) {
+        public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId id) {
             return null;
         }
     }

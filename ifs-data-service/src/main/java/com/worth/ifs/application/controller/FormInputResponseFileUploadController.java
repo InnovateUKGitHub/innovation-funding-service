@@ -1,5 +1,6 @@
 package com.worth.ifs.application.controller;
 
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -13,9 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +49,8 @@ public class FormInputResponseFileUploadController {
     @Value("${ifs.data.service.file.storage.fileinputresponse.max.filesize.bytes}")
     private Long maxFilesizeBytes;
 
-    @Value("${ifs.data.service.file.storage.fileinputresponse.valid.mime.types}")
-    private List<String> validMimeTypes;
+    @Value("${ifs.data.service.file.storage.fileinputresponse.valid.media.types}")
+    private List<String> validMediaTypes;
 
     @Autowired
     private ApplicationService applicationService;
@@ -68,7 +71,7 @@ public class FormInputResponseFileUploadController {
             map(lengthFromHeader -> validContentTypeHeader(contentType, response).
             map(typeFromHeader -> validFilename(originalFilename, response).
             map(filenameParameter -> validContentLength(lengthFromHeader, response).
-            map(validLength -> validMimeType(typeFromHeader, response).
+            map(validLength -> validMediaType(typeFromHeader, response).
             map(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request, response).
             map(fileEntry -> returnFileEntryId(fileEntry)
         ))))));
@@ -76,20 +79,35 @@ public class FormInputResponseFileUploadController {
         return getLeftOrRight(result);
     }
 
-    @RequestMapping(value = "/{formInputResponseId}/file", method = GET)
+    @RequestMapping(value = "/file", method = GET)
     public @ResponseBody ResponseEntity<?> getFile(
-            @PathVariable("formInputResponseId") long formInputResponseId,
+            @RequestParam("formInputId") long formInputId,
+            @RequestParam("applicationId") long applicationId,
+            @RequestParam("processRoleId") long processRoleId,
             HttpServletResponse response) throws IOException {
 
-        Either<JsonStatusResponse, Supplier<InputStream>> result = doGetFile(formInputResponseId, response);
+        Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
+                doGetFile(formInputId, applicationId, processRoleId, response);
+
         return result.mapLeftOrRight(
                 failure -> new ResponseEntity<>(failure, HttpStatus.INTERNAL_SERVER_ERROR),
-                success -> new ResponseEntity<>("hi", HttpStatus.OK)
+                success -> {
+                    FormInputResponseFileEntryResource fileEntry = success.getKey();
+                    InputStream inputStream = success.getValue().get();
+                    InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
+                    HttpHeaders httpHeaders = new HttpHeaders();
+                    httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
+                    httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));
+                    return new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK);
+                }
         );
     }
 
-    private Either<JsonStatusResponse, Supplier<InputStream>> doGetFile(long formInputResponseId, HttpServletResponse response) {
-        Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> file = applicationService.getFormInputResponseFileUpload(formInputResponseId);
+    private Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId, HttpServletResponse response) {
+        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> file =
+                applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
+
         return file.mapLeftOrRight(
                 failure -> left(internalServerError("Error retrieving file", response)),
                 success -> right(success.getResult())
@@ -97,14 +115,14 @@ public class FormInputResponseFileUploadController {
     }
 
     private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryId(FormInputResponseFileEntryResource fileEntry) {
-        return right(fileEntryCreated(fileEntry.getFileEntryResource().getId(), fileEntry.getFormInputResponseId()));
+        return right(fileEntryCreated(fileEntry.getFileEntryResource().getId()));
     }
 
-    private Either<JsonStatusResponse, FormInputResponseFileEntryResource> createFormInputResponseFile(MimeType mimeType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
+    private Either<JsonStatusResponse, FormInputResponseFileEntryResource> createFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
 
-        LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mimeType + "; Content Length - " + length);
+        LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mediaType + "; Content Length - " + length);
 
-        FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mimeType, length);
+        FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
@@ -132,7 +150,7 @@ public class FormInputResponseFileUploadController {
 
     private Either<JsonStatusResponse, String> validContentTypeHeader(String contentTypeHeader, HttpServletResponse response) {
         return !StringUtils.isBlank(contentTypeHeader) ? right(contentTypeHeader) :
-                left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMimeTypes.stream().collect(joining(", ")), response));
+                left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMediaTypes.stream().collect(joining(", ")), response));
     }
 
     private Either<JsonStatusResponse, Long> validContentLength(long length, HttpServletResponse response) {
@@ -146,11 +164,11 @@ public class FormInputResponseFileUploadController {
         return checkParameterIsPresent(filename, "Please supply an original filename as a \"filename\" HTTP Request Parameter", response);
     }
 
-    private Either<JsonStatusResponse, MimeType> validMimeType(String contentType, HttpServletResponse response) {
-        if (!validMimeTypes.contains(contentType)) {
-            return left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMimeTypes.stream().collect(joining(", ")), response));
+    private Either<JsonStatusResponse, MediaType> validMediaType(String contentType, HttpServletResponse response) {
+        if (!validMediaTypes.contains(contentType)) {
+            return left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMediaTypes.stream().collect(joining(", ")), response));
         }
-        return right(MimeType.valueOf(contentType));
+        return right(MediaType.valueOf(contentType));
     }
 
     private Either<JsonStatusResponse, String> checkParameterIsPresent(String parameterValue, String failureMessage, HttpServletResponse response) {

@@ -4,9 +4,11 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.form.domain.FormInput;
@@ -109,7 +111,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             if (existingResponse != null) {
                 existingResponse.setFileEntry(fileEntry);
                 formInputResponseRepository.save(existingResponse);
-                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId, existingResponse.getId());
+                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
                 return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
             } else {
                 return getProcessRole(processRoleId).map(processRole ->
@@ -118,7 +120,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
                     FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
                     formInputResponseRepository.save(newFormInputResponse);
-                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId, newFormInputResponse.getId());
+                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
                     return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
                 })));
             }
@@ -134,8 +136,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFormInputResponseFileUpload(long formInputResponseId) {
-        return getOrFail(() -> formInputResponseRepository.findOne(formInputResponseId), () -> error(FORM_INPUT_RESPONSE_NOT_FOUND)).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getId(), true));
+    public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        return getFormInputResponse(fileEntryId).
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId(), true).
+                map(inputStreamSupplier -> {
+
+                    FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(formInputResponse.getFileEntry());
+
+                    FormInputResponseFileEntryResource formInputFileEntryResource =
+                            new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId());
+
+                    Pair<FormInputResponseFileEntryResource, Supplier<InputStream>> pair = Pair.of(formInputFileEntryResource, inputStreamSupplier.getResult());
+                    return successResponse(pair);
+                }));
+    }
+
+    private Either<ServiceFailure, FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
+        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), () -> error(FORM_INPUT_RESPONSE_NOT_FOUND));
     }
 }
