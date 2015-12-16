@@ -7,7 +7,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class QuestionStatusBuilder extends BaseBuilder<QuestionStatus, QuestionStatusBuilder> {
@@ -22,12 +22,7 @@ public class QuestionStatusBuilder extends BaseBuilder<QuestionStatus, QuestionS
     }
 
     public static QuestionStatusBuilder newQuestionStatus() {
-        return new QuestionStatusBuilder(emptyList())
-                .with(uniqueIds());
-    }
-
-    public QuestionStatusBuilder withQuestionNumber(String value) {
-        return with(question -> setField("questionNumber", value, question));
+        return new QuestionStatusBuilder(emptyList()).with(uniqueIds());
     }
 
     public QuestionStatusBuilder withApplication(Application application) {

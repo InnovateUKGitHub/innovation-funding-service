@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * QuestionStatusController exposes question status data and operations through a REST API.
+ * It is mainly used at present for getting question statuses for given question in given application.
  */
 @RestController
 @RequestMapping("/questionStatus")
