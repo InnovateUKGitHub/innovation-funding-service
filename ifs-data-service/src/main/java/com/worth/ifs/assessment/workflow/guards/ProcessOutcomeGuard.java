@@ -15,12 +15,10 @@ public class ProcessOutcomeGuard implements Guard<String, String> {
     @Override
     public boolean evaluate(StateContext<String, String> context) {
         Object processOutcomeObject = context.getMessageHeader("processOutcome");
-        Object applicationId = context.getMessageHeader("applicationId");
-        Object assessorId = context.getMessageHeader("assessorId");
+        Object processRoleId = context.getMessageHeader("processRoleId");
 
         if(isProcessOutcome(processOutcomeObject) &&
-                isTypeOfLong(applicationId) &&
-                isTypeOfLong(assessorId)) {
+                isTypeOfLong(processRoleId)) {
             return true;
         }
         return false;

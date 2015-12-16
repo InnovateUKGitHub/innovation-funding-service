@@ -12,6 +12,7 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -31,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -145,6 +146,9 @@ public class AssessmentController extends AbstractApplicationController {
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId());
+        ApplicationResource application = applicationService.getById(applicationId);
+        model.addAttribute("app", application); // TODO qqRP required here - or do we need a more specific place?
+
         if (assessment == null) {
             log.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
             return showInvalidAssessmentView(model, competitionId, assessment);
@@ -157,7 +161,7 @@ public class AssessmentController extends AbstractApplicationController {
 
         boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
         if (pendingApplication) {
-            return showApplicationReviewView(model, competitionId, userId, assessorProcessRole);
+            return showApplicationReviewView(model, competitionId, userId, application);
         }
 
         boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
@@ -166,18 +170,18 @@ public class AssessmentController extends AbstractApplicationController {
             return showInvalidAssessmentView(model, competitionId, assessment);
         }
 
-        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole);
+        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application);
     }
 
-    private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole) {
-        addApplicationDetails(new ApplicationResource(assessorProcessRole.getApplication()).getId(), userId, sectionId, model, null, true);
+    private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
+        addApplicationDetails(application.getId(), userId, sectionId, model, null, true);
 
-        List<Response> questionResponses = responseService.getByApplication(assessorProcessRole.getApplication().getId());
+        List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
 
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        addFinanceDetails(model, new ApplicationResource(assessorProcessRole.getApplication()));
+        addFinanceDetails(model, application);
         return assessmentDetails;
     }
 
@@ -188,10 +192,13 @@ public class AssessmentController extends AbstractApplicationController {
         return assessorDashboard;
     }
 
-    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ProcessRole assessorProcessRole) {
-        getAndPassAssessmentDetails(competitionId, assessorProcessRole.getApplication().getId(), userId, model);
-        Set<String> partners =  assessorProcessRole.getApplication().getProcessRoles().stream().map(
-                pc -> pc.getOrganisation().getName()).collect(Collectors.toSet());
+    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
+        getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
+        Set<String> partners = application.getProcessRoleIds().stream().
+                map(id -> processRoleService.getById(id)).
+                map(ProcessRole::getOrganisation).
+                map(Organisation::getName).
+                collect(toSet());
         model.addAttribute("partners", partners);
         return applicationReview;
     }
