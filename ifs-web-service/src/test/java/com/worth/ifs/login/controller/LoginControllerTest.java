@@ -168,7 +168,7 @@ public class LoginControllerTest extends BaseUnitTest {
     @Test
     public void testRedirectToCreateApplicationWithInvalidLogin() throws Exception {
         when(userAuthenticationService.authenticate("info@test.nl", "testFOUT")).thenThrow(new BadCredentialsException("Invalid username / password"));
-        mockMvc.perform(post("/login?applicationCreateCompetitionId=1")
+        mockMvc.perform(post("/login?redirect_url=/create-application/your-details")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", "info@test.nl")
                 .param("password", "testFOUT"))
@@ -176,5 +176,6 @@ public class LoginControllerTest extends BaseUnitTest {
                 .andExpect(view().name("/login"))
                 .andReturn();
     }
+
 
 }

@@ -4,7 +4,9 @@ import com.worth.ifs.application.CreateApplicationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,7 +67,7 @@ public class RegistrationController {
         String destination = "registration-register";
 
         if(!bindingResult.hasErrors()) {
-            UserResource user = userService.createUserForOrganisation(registrationForm.getFirstName(),
+            ResourceEnvelope<UserResource> userStatusWrapper = userService.createUserForOrganisation(registrationForm.getFirstName(),
                     registrationForm.getLastName(),
                     registrationForm.getPassword(),
                     registrationForm.getEmail(),
@@ -72,11 +75,22 @@ public class RegistrationController {
                     registrationForm.getPhoneNumber(),
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
-            if(user!=null) {
-                CreateApplicationController.saveToCookie(response, "userId", String.valueOf(user.getId()));
+
+            if(userStatusWrapper.getStatus().equals(ResourceEnvelopeConstants.OK.getName()) && userStatusWrapper.getEntity() != null) {
+                CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userStatusWrapper.getEntity().getId()));
                 // loggin user directly
-                tokenAuthenticationService.addAuthentication(response, user);
+                tokenAuthenticationService.addAuthentication(response, userStatusWrapper.getEntity());
                 destination = "redirect:/application/create/initialize-application/";
+            }
+            else {
+                userStatusWrapper.getErrors().forEach(
+                        error -> bindingResult.addError(
+                                new ObjectError(
+                                        error.getName(),
+                                        error.getDescription()
+                                )
+                        )
+                );
             }
         }
         else {

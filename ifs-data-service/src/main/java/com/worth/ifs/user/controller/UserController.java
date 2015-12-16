@@ -1,5 +1,8 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
+import com.worth.ifs.commons.resource.ResourceError;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -115,18 +118,26 @@ public class UserController {
     }
 
     @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
-    public UserResource createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
+    public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
 
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, roleName);
 
-        User createdUser = repository.save(newUser);
+        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<UserResource>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), userResource);
 
-        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
+        if(!repository.findByEmail(userResource.getEmail()).isEmpty()) {
+            resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
+            resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
+        }
+        else {
+            User createdUser = repository.save(newUser);
+            User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
+            User user = repository.save(createdUserWithToken);
+            resourceEnvelope.setEntity(new UserResource(user));
+        }
 
-        User user = repository.save(createdUserWithToken);
-        return new UserResource(user);
+        return resourceEnvelope;
     }
 
     private void addRoleToUser(User user, String roleName) {
