@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -59,7 +60,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
-    public UserResource createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
-        return userRestService.createUserForOrganisationWithRole(firstName, lastName, password, email, title, phoneNumber, organisationId, roleName);
+    public ResourceStatusEnvelope<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
+        ResourceStatusEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createUserForOrganisationWithRole(firstName, lastName, password, email, title, phoneNumber, organisationId, roleName);
+        userResourceResourceStatusEnvelope.setType(UserResource.class);
+        return userResourceResourceStatusEnvelope;
     }
 }

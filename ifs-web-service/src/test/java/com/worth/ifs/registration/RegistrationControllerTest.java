@@ -1,6 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -9,6 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import javax.annotation.Resource;
+
+import java.util.ArrayList;
 
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.mockito.Mockito.when;
@@ -134,6 +139,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
         userDto.setPhoneNumber("0123456789");
         userDto.setEmail("test@test.test");
 
+        ResourceStatusEnvelope<UserResource> envelope = new ResourceStatusEnvelope<>("OK", new ArrayList<>(), userDto);
+
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createUserForOrganisation(userDto.getFirstName(),
@@ -143,7 +150,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userDto.getTitle(),
                 userDto.getPhoneNumber(),
                 1L,
-                "applicant")).thenReturn(userDto);
+                "applicant")).thenReturn(envelope);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
