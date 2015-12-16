@@ -8,7 +8,6 @@ public class ResourceStatusEnvelope<T> {
     private String status;
     private List<ResourceStatusError> errors;
     private T entity;
-    private Class<T> type;
 
     public ResourceStatusEnvelope() {}
 
@@ -16,10 +15,6 @@ public class ResourceStatusEnvelope<T> {
         this.status = status;
         this.errors = errors;
         this.entity = entity;
-    }
-
-    public void setType(Class<T> type) {
-        this.type = type;
     }
 
     public String getStatus() {
@@ -43,7 +38,7 @@ public class ResourceStatusEnvelope<T> {
     }
 
     public T getEntity() {
-        return type.cast(entity);
+        return entity;
     }
 
     public void setEntity(T entity) {

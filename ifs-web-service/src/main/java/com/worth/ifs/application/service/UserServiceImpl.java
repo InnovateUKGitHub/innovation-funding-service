@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
 
     public ResourceStatusEnvelope<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
         ResourceStatusEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createUserForOrganisationWithRole(firstName, lastName, password, email, title, phoneNumber, organisationId, roleName);
-        userResourceResourceStatusEnvelope.setType(UserResource.class);
         return userResourceResourceStatusEnvelope;
     }
 }

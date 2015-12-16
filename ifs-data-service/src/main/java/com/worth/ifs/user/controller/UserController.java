@@ -124,7 +124,6 @@ public class UserController {
         addRoleToUser(newUser, roleName);
 
         ResourceStatusEnvelope<UserResource> resourceStatusEnvelope = new ResourceStatusEnvelope<UserResource>("OK", new ArrayList<>(), userResource);
-        resourceStatusEnvelope.setType(UserResource.class);
 
         if(!repository.findByEmail(userResource.getEmail()).isEmpty()) {
             resourceStatusEnvelope.setStatus("VALIDATION_ERROR");
