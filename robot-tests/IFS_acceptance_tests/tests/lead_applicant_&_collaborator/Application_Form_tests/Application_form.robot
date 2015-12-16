@@ -67,9 +67,9 @@ Verify that the word count works
     [Tags]    Applicant    Word count    Form
     Given the Applicant is in the application form
     When the Applicant edits the Public description
-    Then the word count should be correct for the project summary
-    And when the Applicant edits the Project scope Question
-    Then the word count for the scope question should be correct
+    Then the word count should be correct for the Public description
+    And when the Applicant edits the Project description question (500 words)
+    Then the word count for the Public description question should be correct (0 words)
 
 Verify the "review and submit" button
     [Tags]    Applicant    Review and submit    Form
@@ -135,7 +135,7 @@ the word count should be available in the text areas
     Page Should Contain Element    css=#form-input-16 .count-down
 
 When the Applicant edits the Public description
-    Clear Element Text    css=#form-input-12 .editor
+    Input Text    css=#form-input-12 .editor    &nbsp;
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
@@ -143,14 +143,14 @@ When the Applicant edits the Public description
     Focus    css=.app-submit-btn
     Sleep    1s
 
-the word count should be correct for the project summary
+the word count should be correct for the Public description
     sleep    1s
-    Element Should Contain    css=#form-input-12 .count-down    469
+    Element Should Contain    css=#form-input-12 .count-down    500
 
-And when the Applicant edits the Project scope Question
+And when the Applicant edits the Project description question (500 words)
     Click Element    link=Scope (Gateway question)
-    Clear Element Text    css=#form-input-13 .editor
-    Input Text    css=#form-input-13 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
+    Input Text    css=#form-input-12 .editor    &nbsp;
+    Input Text    css=#form-input-12 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
     Focus    css=.app-submit-btn
     Sleep    2s
 
@@ -168,8 +168,8 @@ the text box should turn to green
 the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
-the word count for the scope question should be correct
-    Element Should Contain    css=#form-input-13 span.count-down    0
+the word count for the Public description question should be correct (0 words)
+    Element Should Contain    css=#form-input-12 span.count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor
