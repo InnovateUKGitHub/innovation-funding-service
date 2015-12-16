@@ -96,7 +96,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> fileDetails =
-                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, true);
+                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, false);
 
         return fileDetails.map(successfulFile -> {
 
@@ -138,11 +138,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
         return getFormInputResponse(fileEntryId).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId(), true).
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId(), false).
                 map(inputStreamSupplier -> {
 
                     FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(formInputResponse.getFileEntry());
-
                     FormInputResponseFileEntryResource formInputFileEntryResource =
                             new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId());
 
