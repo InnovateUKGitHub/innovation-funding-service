@@ -24,6 +24,11 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     String sectionRestURL;
 
     @Override
+    public Section getById(Long sectionId) {
+        return restGet(sectionRestURL + "/getById/" + sectionId, Section.class);
+    }
+
+    @Override
     public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId) {
         return asList(restGet(sectionRestURL + "/getCompletedSections/"+applicationId+"/"+organisationId, Long[].class));
     }
@@ -46,7 +51,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public Section getNextSection(Long sectionId) {
         Section section = restGet(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
-        log.debug("SECTION sectio 2 :" + section);
         return section;
     }
 

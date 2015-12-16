@@ -44,6 +44,11 @@ public class SectionController {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    @RequestMapping("/getById/{sectionId}")
+    public Section getById(@PathVariable("sectionId") final Long sectionId) {
+        return sectionRepository.findOne(sectionId);
+    }
+
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("organisationId") final Long organisationId) {
@@ -184,12 +189,13 @@ public class SectionController {
         if(section.getParentSection()!=null) {
             return getNextSiblingSection(section);
         } else {
-            return sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
+            log.debug("SECTION ID: " + section.getId());
+            return sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
         }
     }
 
     private Section getNextSiblingSection(Section section) {
-        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
         if(sibling == null) {
@@ -205,27 +211,31 @@ public class SectionController {
             return null;
         }
         Section section = sectionRepository.findOne(sectionId);
-        return getPreviousSection(section);
+        return getPreviousSection(section, true, true);
     }
 
-    public Section getPreviousSection(Section section) {
+    public Section getPreviousSection(Section section, boolean isQuestionGroup, boolean searchRootParents) {
         if(section==null) {
             return null;
         }
 
         if(section.getParentSection()!=null) {
-            return getPreviousSiblingSection(section);
+            return getPreviousSiblingSection(section, isQuestionGroup, searchRootParents);
         } else {
-            return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority());
+            if(searchRootParents) {
+                return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullAndQuestionGroupOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority(), isQuestionGroup);
+            } else {
+                return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndQuestionGroupOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority(), isQuestionGroup);
+            }
         }
     }
 
-    private Section getPreviousSiblingSection(Section section) {
-        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(
+    private Section getPreviousSiblingSection(Section section, boolean isQuestionGroup, boolean searchRootParents) {
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
         if(sibling == null) {
-            return getPreviousSection(section.getParentSection());
+            return getPreviousSection(section.getParentSection(), isQuestionGroup, searchRootParents);
         } else {
             return sibling;
         }

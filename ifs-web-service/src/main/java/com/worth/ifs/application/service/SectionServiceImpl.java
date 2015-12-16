@@ -25,6 +25,11 @@ public class SectionServiceImpl implements SectionService {
     SectionRestService sectionRestService;
 
     @Override
+    public Section getById(Long sectionId) {
+        return sectionRestService.getById(sectionId);
+    }
+
+    @Override
     public List<Long> getInCompleted(Long applicationId) {
         return sectionRestService.getIncompletedSectionIds(applicationId);
     }
@@ -96,7 +101,6 @@ public class SectionServiceImpl implements SectionService {
     public Section getNextSection(Optional<Long> sectionId) {
         if(sectionId.isPresent()) {
             Section nextSection = sectionRestService.getNextSection(sectionId.get());
-            log.debug("NEXT SECION : " + nextSection);
             return nextSection;
         }
         return null;

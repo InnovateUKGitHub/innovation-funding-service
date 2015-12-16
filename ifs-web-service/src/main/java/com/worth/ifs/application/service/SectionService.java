@@ -11,6 +11,7 @@ import java.util.Optional;
  * Interface for CRUD operations on {@link Section} related data.
  */
 public interface SectionService {
+    public Section getById(Long sectionId);
     public List<Long> getCompleted(Long applicationId, Long organisationId);
     public List<Long> getInCompleted(Long applicationId);
     public List<Section> getParentSections(List<Section> sections);

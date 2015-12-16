@@ -70,11 +70,18 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addQuestionDetails(sectionId, model);
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
 
         return "application-form";
+    }
+
+    private void addQuestionDetails(Long sectionId, Model model) {
+        log.debug("Get previous question by section");
+        Question previousQuestion = questionService.getPreviousQuestionBySection(sectionId);
+        model.addAttribute("previousQuestion", previousQuestion);
     }
 
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
@@ -84,7 +91,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Question question = questionService.findById(questionId);
+        Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
         Optional<Long> questionSectionId = Optional.of(section.getId());
         super.addApplicationDetails(applicationId, user.getId(), questionSectionId , model, form, false);
@@ -97,13 +104,60 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addQuestionDetails(Question question, Model model) {
-        Question previousQuestion = questionService.findPreviousQuestion(question.getId());
-        Question nextQuestion = questionService.findNextQuestion(question.getId());
+        Question previousQuestion = questionService.getPreviousQuestion(question.getId());
+        Question nextQuestion = questionService.getNextQuestion(question.getId());
 
         model.addAttribute("currentQuestion", question);
         model.addAttribute("previousQuestion", previousQuestion);
         model.addAttribute("nextQuestion", nextQuestion);
     }
+
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
+                                        BindingResult bindingResult,
+                                        Model model,
+                                        @PathVariable("applicationId") final Long applicationId,
+                                        @PathVariable("questionId") final Long questionId,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response){
+        Map<String, String[]> params = request.getParameterMap();
+
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Question question = questionService.getById(questionId);
+
+        Map<Long, List<String>> errors = saveQuestionResponses(request, Arrays.asList(question), user.getId(), applicationId);
+        errors.forEach((k, errorsList) -> {
+            errorsList.forEach(e -> {
+                bindingResult.rejectValue("formInput["+ k +"]", e, e);
+            });
+        });
+
+        setApplicationDetails(application, form.getApplication());
+        applicationService.save(application);
+        markApplicationQuestions(application, user.getId(), request, response, errors);
+
+        if (params.containsKey("assign_question")) {
+            assignQuestion(model, applicationId, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+        }
+
+        form.bindingResult = bindingResult;
+        form.objectErrors = bindingResult.getAllErrors();
+
+        Section section = sectionService.getSectionByQuestionId(questionId);
+        Optional<Long> questionSectionId = Optional.of(section.getId());
+        super.addApplicationDetails(applicationId, user.getId(), questionSectionId, model, form, false);
+        addQuestionDetails(question, model);
+
+        if(bindingResult.hasErrors()){
+            return "application-form";
+        }else{
+            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
+            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+        }
+    }
+
 
     @RequestMapping(value = "/deletecost/{sectionId}/{costId}")
     public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
@@ -166,16 +220,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
+
+
     private BindingResult saveApplicationForm(ApplicationForm form, Model model,
-                                                        @PathVariable("applicationId") final Long applicationId,
-                                                        @PathVariable("sectionId") final Long sectionId,
-                                                        HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                                Long applicationId, Long sectionId,
+                                                HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetitionId());
-        Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
 
+        Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
         Map<Long, List<String>> errors = saveQuestionResponsesInSection(application, selectedSection, request, user.getId(), bindingResult);
+
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
@@ -237,7 +293,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey("assign_question")) {
-            assignQuestion(model, applicationId, sectionId, request);
+            assignQuestion(model, applicationId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
@@ -444,7 +500,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     public void assignQuestion(Model model,
                                @PathVariable("applicationId") final Long applicationId,
-                               @PathVariable("sectionId") final Long sectionId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
     }

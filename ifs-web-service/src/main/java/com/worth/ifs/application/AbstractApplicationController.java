@@ -107,7 +107,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
+    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, Boolean... hateoas) {
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
 
         application.setId(applicationId);
@@ -133,7 +133,7 @@ public abstract class AbstractApplicationController {
             addAssigneableDetails(model, application, org, userId)
         );
 
-        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation, selectFirstSectionIfNoneCurrentlySelected);
+        addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
 
         model.addAttribute("form", form);
         return application;
@@ -228,7 +228,6 @@ public abstract class AbstractApplicationController {
     protected void addFinanceDetails(Model model, ApplicationResource application) {
         Section section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
-        log.info("FINANCE DETAILS : " + section);
         model.addAttribute("financeSection", section);
 
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, application.getId());
@@ -238,7 +237,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("grantTotalPercentage", organisationFinanceOverview.getTotalGrantPercentage());
     }
 
-    protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
         Competition competition = competitionService.getById(application.getCompetitionId());
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSectionId);
@@ -290,7 +289,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
-        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form, selectFirstSectionIfNoneCurrentlySelected, hateoas);
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form, hateoas);
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);

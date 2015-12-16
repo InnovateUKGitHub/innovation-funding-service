@@ -9,12 +9,15 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     ProcessRoleRepository processRoleRepository;
 
@@ -168,6 +173,23 @@ public class QuestionController {
         return nextQuestion;
     }
 
+    @RequestMapping(value="/getPreviousQuestionBySection/{sectionId}")
+    public Question getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
+        log.debug("GEt PRV QUEST BY SEC " + sectionId );
+        Section section = sectionController.getById(sectionId);
+        if(section!=null) {
+            if(section.getParentSection()!=null) {
+                Section previousSection = sectionController.getPreviousSection(section, false, true);
+                log.debug("PREVIOUS QUESTON: " + previousSection );
+                Optional<Question> lastQuestionInSection = previousSection.getQuestions()
+                        .stream()
+                        .max(Comparator.comparing(question -> question.getPriority()));
+                return lastQuestionInSection.orElse(null);
+            }
+        }
+        return null;
+    }
+
     @RequestMapping(value="/getPreviousQuestion/{questionId}")
     public Question getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
         Question question = questionRepository.findOne(questionId);
@@ -177,14 +199,19 @@ public class QuestionController {
                     question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
             if(previousQuestion==null) {
-                Section previousSection = sectionController.getPreviousSection(question.getSection());
-                if(previousSection!=null && !previousSection.isQuestionGroup()) {
-                    previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(question.getCompetition().getId(), previousSection.getId());
-                }
+                getQuestionBySection(question.getSection(), question.getCompetition().getId());
             }
         }
 
         return previousQuestion;
+    }
+
+    private Question getQuestionBySection(Section section, Long competitionId) {
+        Section previousSection = sectionController.getPreviousSection(section,true, false);
+        if(previousSection!=null && !previousSection.isQuestionGroup()) {
+            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
+        }
+        return null;
     }
 
     public Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {

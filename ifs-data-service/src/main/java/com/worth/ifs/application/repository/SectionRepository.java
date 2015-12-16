@@ -13,10 +13,11 @@ import java.util.List;
  */
 public interface SectionRepository extends PagingAndSortingRepository<Section, Long> {
     List<Section> findAll();
-    Section findByName(@Param("name") String name);
-    Section findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
-    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
-    Section findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Integer priority);
-    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
+    Section findByName(String name);
+    Section findFirstByCompetitionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(Long competitionId, Integer priority);
+    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
+    Section findFirstByCompetitionIdAndPriorityLessThanAndQuestionGroupOrderByPriorityDesc(Long competitionId, Integer priority, boolean questionGroup);
+    Section findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullAndQuestionGroupOrderByPriorityDesc(Long competitionId, Integer priority, boolean questionGroup);
+    Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
     Section findByQuestionsId(Long questionId);
 }
