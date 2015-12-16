@@ -68,7 +68,7 @@ Verify that the word count works
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
     And when the Applicant edits the Project description question (500 words)
-    Then the word count for the Public description question should be correct (0 words)
+    Then the word count for the Project description question should be correct (0 words)
 
 Verify the "review and submit" button
     [Tags]    Applicant    Review and submit    Form
@@ -80,7 +80,7 @@ Verify that when the Applicant marks as complete the text box should be green an
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the application form
+    Given the Applicant is in the public description question
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     and the button state should change to 'Edit'
@@ -90,7 +90,7 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the application form
+    Given the Applicant is in the public description question
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
     and the button state should change to 'Mark as complete'
@@ -198,7 +198,8 @@ the word count should be available in the text area
     Page Should Contain Element    css=#form-input-11 .count-down
 
 When the Applicant edits the Public description
-    Input Text    css=#form-input-12 .editor    &nbsp;
+    Clear Element Text    css=#form-input-12 .editor
+    Press Key  css=#form-input-12 .editor   \\8
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
@@ -208,12 +209,13 @@ When the Applicant edits the Public description
 
 the word count should be correct for the Public description
     sleep    1s
-    Element Should Contain    css=#form-input-12 .count-down    500
+    Element Should Contain    css=#form-input-12 .count-down    469
 
 And when the Applicant edits the Project description question (500 words)
-    Click Element    link=Scope (Gateway question)
-    Input Text    css=#form-input-12 .editor    &nbsp;
-    Input Text    css=#form-input-12 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
+    Click Element    css=[rel="next"]
+    Clear Element Text    css=#form-input-13 .editor
+    Press Key  css=#form-input-13 .editor   \\8
+    Input Text    css=#form-input-13 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
     Focus    css=.app-submit-btn
     Sleep    2s
 
@@ -231,8 +233,8 @@ the text box should turn to green
 the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
-the word count for the Public description question should be correct (0 words)
-    Element Should Contain    css=#form-input-12 span.count-down    0
+the word count for the Project description question should be correct (0 words)
+    Element Should Contain    css=#form-input-13 .count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor

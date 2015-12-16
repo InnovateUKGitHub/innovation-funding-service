@@ -13,6 +13,13 @@ ${CREATE_YOUR_ACCOUNT_PAGE}    ${SERVER}/application/create/selected-business/05
 ${REGISTRATION_PAGE}    ${SERVER}registration/register?organisationId=13#
 
 *** Test Cases ***
+Enter address manually
+    [Documentation]    INFUND-891
+    [Tags]    Applicant    New application    Company size
+    Given the applicant is in the 'create your account' page
+    When the applicant clicks the "Enter address manually"
+    Then the address details form should be visible
+
 EU Definition link should navigate to the correct page
     [Documentation]    INFUND-891
     [Tags]    Applicant    New application    Company size
@@ -58,3 +65,10 @@ when the applicant selects the Large size and saves the page
     go to    ${CREATE_YOUR_ACCOUNT_PAGE}
     Select Radio Button    organisationSize    LARGE
     Click Element    css=#content > form > button
+
+the applicant clicks the "Enter address manually"
+    Click Element    css=#manual-company-input > fieldset:nth-child(1) > button
+
+the address details form should be visible
+    Element Should Be Visible    css=#address-details
+    Element Should Be Visible    id=street
