@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @InitBinder
@@ -68,7 +68,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
-        ApplicationResource app = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
@@ -198,7 +197,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
         // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> log.info("key " + key));
+        params.forEach((key, value) -> LOG.info("key " + key));
 
         boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
@@ -226,9 +225,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
 
-        bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult.getAllErrors().forEach((e) -> LOG.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
         bindingResult = saveApplicationForm(form, model, applicationId, sectionId, request, response, bindingResult);
-        bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult.getAllErrors().forEach((e) -> LOG.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, sectionId, request);
@@ -281,7 +280,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
                 List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
                 if (errors.size() != 0) {
-                    log.error("save failed. " + question.getId());
+                    LOG.error("save failed. " + question.getId());
                     errorMap.put(question.getId(), new ArrayList<>(errors));
                 }
             }
@@ -298,15 +297,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(updatedApplication.getName() != null){
-            log.error("setApplicationDetails: "+ updatedApplication.getName());
+            LOG.error("setApplicationDetails: "+ updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
         if(updatedApplication.getStartDate() != null) {
-            log.error("setApplicationDetails: "+ updatedApplication.getStartDate());
+            LOG.error("setApplicationDetails: "+ updatedApplication.getStartDate());
             application.setStartDate(updatedApplication.getStartDate());
         }
         if(updatedApplication.getDurationInMonths() != null){
-            log.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
+            LOG.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }
@@ -326,7 +325,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             String fieldName = request.getParameter("fieldName");
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
-            log.debug("INPUT ID: " + inputIdentifier);
+            LOG.debug("INPUT ID: " + inputIdentifier);
             errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
             if (errors.size() > 0) {
@@ -362,7 +361,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             if (fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
             }
-            log.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
+            LOG.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
         }
     }
@@ -373,7 +372,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         node.put("success", (success ? "true" : "false"));
         if(!success){
             ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(e -> errorsNode.add(e));
+            errors.stream().forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
         return node;
@@ -427,10 +426,10 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setStartDate(startDate);
             applicationService.save(application);
         }catch(DateTimeException e){
-            log.error(e);
+            LOG.error(e);
             errors.add("Please enter a valid date.");
         }catch(NumberFormatException e){
-            log.error(e);
+            LOG.error(e);
             errors.add("Please enter a valid date.");
         }
         return errors;

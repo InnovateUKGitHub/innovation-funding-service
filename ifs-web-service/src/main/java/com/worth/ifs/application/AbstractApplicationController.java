@@ -239,7 +239,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
 
         String formInputKey = "finance-grantclaim-" + organisationFinance.getGrantClaimPercentageId();
-        String formInputValue = (organisationFinance.getGrantClaimPercentage() != null ? organisationFinance.getGrantClaimPercentage().toString() : "") ;
+        String formInputValue = organisationFinance.getGrantClaimPercentage() != null ? organisationFinance.getGrantClaimPercentage().toString() : "";
         form.addFormInput(formInputKey, formInputValue);
     }
 
