@@ -107,7 +107,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             if (existingResponse != null) {
-                existingResponse .setFileEntry(fileEntry);
+                existingResponse.setFileEntry(fileEntry);
                 formInputResponseRepository.save(existingResponse);
                 FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId, existingResponse.getId());
                 return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));

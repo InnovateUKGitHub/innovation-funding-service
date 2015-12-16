@@ -5,8 +5,6 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -130,5 +128,13 @@ public class FormInputResponse {
 
     public void setUpdatedBy(ProcessRole updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public FileEntry getFileEntry() {
+        return fileEntry;
+    }
+
+    public void setFileEntry(FileEntry fileEntry) {
+        this.fileEntry = fileEntry;
     }
 }
