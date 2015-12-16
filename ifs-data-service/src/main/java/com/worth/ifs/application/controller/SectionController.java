@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -38,8 +39,15 @@ public class SectionController {
     SectionRepository sectionRepository;
     @Autowired
     QuestionController questionController;
+    @Autowired
+    QuestionRepository questionRepository;
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @RequestMapping("/getById/{sectionId}")
+    public Section getById(@PathVariable("sectionId") final Long sectionId) {
+        return sectionRepository.findOne(sectionId);
+    }
 
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
@@ -120,7 +128,7 @@ public class SectionController {
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for(Question question : section.getQuestions()) {
-            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING")){
+            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection()!=null) {
                 if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
@@ -164,22 +172,30 @@ public class SectionController {
         return allSectionsWithSubsectionsAreComplete;
     }
 
-    public Section getNextSection(Long sectionId) {
+    @RequestMapping("/getNextSection/{sectionId}")
+    public Section getNextSection(@PathVariable("sectionId") final Long sectionId) {
+        if(sectionId==null) {
+            return null;
+        }
         Section section = sectionRepository.findOne(sectionId);
-
         return getNextSection(section);
     }
 
     public Section getNextSection(Section section) {
+        if(section==null) {
+            return null;
+        }
+
         if(section.getParentSection()!=null) {
             return getNextSiblingSection(section);
         } else {
-            return sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
+            log.debug("SECTION ID: " + section.getId());
+            return sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
         }
     }
 
     private Section getNextSiblingSection(Section section) {
-        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
         if(sibling == null) {
@@ -189,27 +205,44 @@ public class SectionController {
         }
     }
 
-    public Section getPreviousSection(Long sectionId) {
+    @RequestMapping("/getPreviousSection/{sectionId}")
+    public Section getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
+        if(sectionId==null) {
+            return null;
+        }
         Section section = sectionRepository.findOne(sectionId);
-        return getPreviousSection(section);
+        return getPreviousSection(section, true, true);
     }
 
-    public Section getPreviousSection(Section section) {
+    public Section getPreviousSection(Section section, boolean isQuestionGroup, boolean searchRootParents) {
+        if(section==null) {
+            return null;
+        }
+
         if(section.getParentSection()!=null) {
-            return getPreviousSiblingSection(section);
+            return getPreviousSiblingSection(section, isQuestionGroup, searchRootParents);
         } else {
-            return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority());
+            if(searchRootParents) {
+                return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullAndQuestionGroupOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority(), isQuestionGroup);
+            } else {
+                return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndQuestionGroupOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority(), isQuestionGroup);
+            }
         }
     }
 
-    private Section getPreviousSiblingSection(Section section) {
-        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanOrderByPriorityDesc(
+    private Section getPreviousSiblingSection(Section section, boolean isQuestionGroup, boolean searchRootParents) {
+        Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
         if(sibling == null) {
-            return getPreviousSection(section.getParentSection());
+            return getPreviousSection(section.getParentSection(), isQuestionGroup, searchRootParents);
         } else {
             return sibling;
         }
+    }
+
+    @RequestMapping("/getSectionByQuestionId/{questionId}")
+    public Section getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
+        return sectionRepository.findByQuestionsId(questionId);
     }
 }

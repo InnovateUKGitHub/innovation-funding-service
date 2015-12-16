@@ -18,4 +18,5 @@ public interface QuestionRestService {
     public Question findById(Long questionId);
     public Question getNextQuestion(Long questionId);
     public Question getPreviousQuestion(Long questionId);
+    public Question getPreviousQuestionBySection(Long sectionId);
 }

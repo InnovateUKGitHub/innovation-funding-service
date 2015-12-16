@@ -51,8 +51,11 @@ Applicant edits the 'Project Summary' question
 Mark scope question 13 as editable
     Click Element    css=#question-13 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
-Mark question 11 as editable
-    Click Element    css=#form-input-11 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+Question should be editable
+    [Arguments]    ${Mark_question_as_incomplete}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_question_as_incomplete}
+    Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_question_as_incomplete}
+    sleep    2s
 
 Mark question 12 as editable
     click Element    css=#question-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button

@@ -102,17 +102,22 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question findById(Long questionId) {
+    public Question getById(Long questionId) {
         return questionRestService.findById(questionId);
     }
 
     @Override
-    public Question findNextQuestion(Long questionId) {
+    public Question getNextQuestion(Long questionId) {
         return questionRestService.getNextQuestion(questionId);
     }
 
     @Override
-    public Question findPreviousQuestion(Long questionId) {
+    public Question getPreviousQuestion(Long questionId) {
         return questionRestService.getPreviousQuestion(questionId);
+    }
+
+    @Override
+    public Question getPreviousQuestionBySection(Long sectionId) {
+        return questionRestService.getPreviousQuestionBySection(sectionId);
     }
 }

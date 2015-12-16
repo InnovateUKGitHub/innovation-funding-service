@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.competition.domain.Competition;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class Section implements Comparable<Section> {
     private String assessorGuidanceDescription;
 
     private Integer priority;
+
+    private boolean questionGroup;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
@@ -115,16 +119,6 @@ public class Section implements Comparable<Section> {
         return this.getId().compareTo(o.getId());
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
     public Integer getPriority() {
         return priority;
     }
@@ -135,5 +129,53 @@ public class Section implements Comparable<Section> {
 
     public boolean isDisplayInAssessmentApplicationSummary() {
         return displayInAssessmentApplicationSummary;
+    }
+
+    public boolean isQuestionGroup() {
+        return questionGroup;
+    }
+
+    public void setQuestionGroup(boolean questionGroup) {
+        this.questionGroup = questionGroup;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Section rhs = (Section) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.name, rhs.name)
+            .append(this.description, rhs.description)
+            .append(this.assessorGuidanceDescription, rhs.assessorGuidanceDescription)
+            .append(this.priority, rhs.priority)
+            .append(this.competition, rhs.competition)
+            .append(this.questions, rhs.questions)
+            .append(this.childSections, rhs.childSections)
+            .append(this.displayInAssessmentApplicationSummary, rhs.displayInAssessmentApplicationSummary)
+            .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(id)
+            .append(name)
+            .append(description)
+            .append(assessorGuidanceDescription)
+            .append(priority)
+            .append(competition)
+            .append(questions)
+            .append(childSections)
+            .append(displayInAssessmentApplicationSummary)
+            .toHashCode();
     }
 }

@@ -29,6 +29,7 @@ Verify that the user doesn't get the error when the text area is not empty anymo
 
 *** Keywords ***
 the "Project Summary" question is empty
+    Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
     Click Element    css=.bold_button
 
