@@ -27,9 +27,9 @@
 					<span class="form-hint">Enter your company name or registration number</span>
 					</span>
                     </label>
-                    <input class="form-control" id="org-name" th:field="*{organisationName}" type="text" value="" />
-                    <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}')}" th:errors="*{organisationName}"></span>
-                    <button type="submit" id="org-search" class="button">Search</button>
+                    <input class="form-control" id="org-name" th:field="*{companyHouseName}" type="text" value="" />
+                    <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}')}" th:errors="*{companyHouseName}"></span>
+                    <button type="submit" id="org-search" name="search-company-house" class="button">Search</button>
                 </div>
 
                 <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseList.size()}">
@@ -44,8 +44,14 @@
                 </ul>
 
             </fieldset>
-            <a href="#" id="manual-company-trigger">Not on companies House?</a>
+            <button type="submit" class="buttonlink" name="not-in-company-house">Not on companies House?</button>
 
+            <div th:unless="${companyHouseLookup.inCompanyHouse}" th:remove="tag">
+                <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
+                <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
+                <div th:include="create-application/fragments :: organisation-size"></div>
+                <button type="submit button-large extra-margin" name="confirm-company-details" class="button">Continue</button>
+            </div>
         </form>
 
 

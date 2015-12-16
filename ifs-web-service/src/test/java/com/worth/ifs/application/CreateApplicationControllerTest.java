@@ -61,28 +61,10 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
     @Test
     public void testCreateOrganisationBusinessPost() throws Exception {
         mockMvc.perform(post("/application/create/find-business")
-                .param("organisationName", "BusinessName"))
-                .andExpect(view().name("create-application/find-business"))
-                .andExpect(model().attributeErrorCount("companyHouseLookup", 0));
-    }
-    @Test
-    public void testCreateOrganisationBusinessInvalidPost() throws Exception {
-        mockMvc.perform(post("/application/create/find-business")
-                    .param("organisationName", ""))
-                .andExpect(view().name("create-application/find-business"))
-                .andExpect(model().attributeHasFieldErrors("companyHouseLookup", "organisationName"))
-                .andExpect(model().attributeErrorCount("companyHouseLookup", 1))
-                .andExpect(model().attributeHasFieldErrorCode("companyHouseLookup", "organisationName", "NotEmpty"));
-    }
-
-    @Test
-    public void testCreateOrganisationBusinessInvalidCharacters() throws Exception {
-        mockMvc.perform(post("/application/create/find-business")
-                .param("organisationName", "a{}a"))
-                .andExpect(view().name("create-application/find-business"))
-                .andExpect(model().attributeHasFieldErrors("companyHouseLookup", "organisationName"))
-                .andExpect(model().attributeErrorCount("companyHouseLookup", 1))
-                .andExpect(model().attributeHasFieldErrorCode("companyHouseLookup", "organisationName", "Pattern"));
+                        .param("companyHouseName", "BusinessName")
+                        .param("search-company-house", "")
+        )
+                .andExpect(view().name("create-application/find-business"));
     }
 
     @Test
