@@ -1,5 +1,8 @@
 package com.worth.ifs.transactional;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -17,7 +20,7 @@ public class ServiceFailure {
 
     public static class GlobalError {
 
-        private String message;
+        private final String message;
 
         private GlobalError(String message) {
             this.message = message;
@@ -27,20 +30,29 @@ public class ServiceFailure {
             return message;
         }
 
+
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            GlobalError that = (GlobalError) o;
-
-            return !(message != null ? !message.equals(that.message) : that.message != null);
-
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj == this) {
+                return true;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            GlobalError rhs = (GlobalError) obj;
+            return new EqualsBuilder()
+                .append(this.message, rhs.message)
+                .isEquals();
         }
 
         @Override
         public int hashCode() {
-            return message != null ? message.hashCode() : 0;
+            return new HashCodeBuilder()
+                .append(message)
+                .toHashCode();
         }
     }
 

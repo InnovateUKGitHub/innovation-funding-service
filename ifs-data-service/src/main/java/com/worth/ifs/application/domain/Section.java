@@ -30,6 +30,8 @@ public class Section implements Comparable<Section> {
 
     private Integer priority;
 
+    private boolean questionGroup;
+
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
@@ -127,6 +129,14 @@ public class Section implements Comparable<Section> {
 
     public boolean isDisplayInAssessmentApplicationSummary() {
         return displayInAssessmentApplicationSummary;
+    }
+
+    public boolean isQuestionGroup() {
+        return questionGroup;
+    }
+
+    public void setQuestionGroup(boolean questionGroup) {
+        this.questionGroup = questionGroup;
     }
 
     @Override
