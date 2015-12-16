@@ -76,7 +76,7 @@ public class RegistrationController {
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
 
-            if(userStatusWrapper.getStatus().equals(ResourceEnvelopeConstants.OK) && userStatusWrapper.getEntity() != null) {
+            if(userStatusWrapper.getStatus().equals(ResourceEnvelopeConstants.OK.getName()) && userStatusWrapper.getEntity() != null) {
                 CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userStatusWrapper.getEntity().getId()));
                 // loggin user directly
                 tokenAuthenticationService.addAuthentication(response, userStatusWrapper.getEntity());
