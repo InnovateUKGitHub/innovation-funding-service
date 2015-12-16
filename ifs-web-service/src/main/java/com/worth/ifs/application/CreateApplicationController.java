@@ -130,7 +130,7 @@ public class CreateApplicationController extends AbstractApplicationController {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
             validator.validate(companyHouseForm, bindingResult);
-            if (StringUtils.hasText(companyHouseForm.getOrganisationName())) {
+            if (StringUtils.hasText(companyHouseForm.getOrganisationName()) && companyHouseForm.getOrganisationSize() != null) {
                 // save state into cookie.
                 ObjectMapper mapper = new ObjectMapper();
                 String jsonAddress = "";
@@ -142,7 +142,7 @@ public class CreateApplicationController extends AbstractApplicationController {
 
                 saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
                 saveToCookie(response, COMPANY_ADDRESS, jsonAddress);
-                saveToCookie(response, ORGANISATION_SIZE, String.valueOf(companyHouseForm.getOrganisationSize()));
+                saveToCookie(response, ORGANISATION_SIZE, companyHouseForm.getOrganisationSize().name());
 
                 return "redirect:/application/create/confirm-company";
             } else {

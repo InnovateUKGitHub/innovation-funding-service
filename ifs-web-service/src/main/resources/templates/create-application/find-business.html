@@ -44,7 +44,7 @@
                 </ul>
 
             </fieldset>
-            <button type="submit" class="buttonlink" name="not-in-company-house">Not on companies House?</button>
+            <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
             <div th:unless="${companyHouseLookup.inCompanyHouse}" th:remove="tag">
                 <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
