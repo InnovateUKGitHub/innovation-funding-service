@@ -15,12 +15,14 @@ ${REGISTRATION_PAGE}    ${SERVER}registration/register?organisationId=13#
 *** Test Cases ***
 EU Definition link should navigate to the correct page
     [Documentation]    INFUND-891
+    [Tags]    Applicant    New application    Company size
     Given the applicant is in the 'create your account' page
     When the applicant clicks the 'EU definition' link
     The applicant should navigate to the correct page
 
 The applicant should be able to choose different organisation sizes
     [Documentation]    INFUND-891
+    [Tags]    Applicant    Company Size    New application
     Given the applicant is in the 'create your account' page
     When the applicant selects the Micro size and saves the page
     Then the Applicant should redirect to the create account page
