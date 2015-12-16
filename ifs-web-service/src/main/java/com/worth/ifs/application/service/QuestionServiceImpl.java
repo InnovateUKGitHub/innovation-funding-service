@@ -72,16 +72,24 @@ public class QuestionServiceImpl implements QuestionService {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
         for(Question question : questions) {
             final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
-            for(QuestionStatus questionStatus : questionStatuses) {
-                if(questionStatus.getAssignee()==null)
-                    continue;
-                boolean multipleStatuses = question.hasMultipleStatuses();
-                boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+            questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
+        }
+        return questionAssignees;
+    }
 
-                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
-                    questionAssignees.put(question.getId(), questionStatus);
-                    break;
-                }
+    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses){
+        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+
+        for(QuestionStatus questionStatus : questionStatuses) {
+            if(questionStatus.getAssignee()==null)
+                continue;
+            boolean multipleStatuses = question.hasMultipleStatuses();
+            boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+
+            // Checking that assignee is part of organisation when there are multiple statuses for a question
+            if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
+                questionAssignees.put(question.getId(), questionStatus);
+                break;
             }
         }
         return questionAssignees;
