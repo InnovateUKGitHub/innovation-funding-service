@@ -34,7 +34,6 @@ import javax.validation.Valid;
 import java.util.*;
 
 import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -78,16 +77,10 @@ public class AssessmentController extends AbstractApplicationController {
         List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
         allAssessments.sort(new AssessmentStatusComparator());
 
-        //filters the assessments to just have the submitted assessments here
-        List<Assessment> submittedAssessments = allAssessments.stream().filter(Assessment::isSubmitted).collect(toList());
-
-        //filters the assessments to just the not submmited assessments
-        List<Assessment> assessments = allAssessments.stream().filter(a -> ! submittedAssessments.contains(a)).collect(toList());
-
         model.addAttribute("competition", competition);
 
         Map<Assessment, ApplicationResource> assessmentsToApplications = allAssessments.stream()
-                .filter(a -> !submittedAssessments.contains(a))
+                .filter(a -> !a.isSubmitted())
                 .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
         Map<Assessment, ApplicationResource> submittedAssessmentsToApplications =
                 allAssessments.stream()

@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -20,12 +21,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
+import static com.worth.ifs.CustomMatchers.matchPred;
+import static java.util.stream.Collectors.toList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
@@ -71,15 +70,24 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testCompetitionAssessmentDashboard() throws Exception {
-        List<Assessment> nonSubmittedAssessments = assessments.stream().filter(assessment -> !assessment.isSubmitted()).collect(Collectors.toList());
+        List<Assessment> nonSubmittedAssessments = assessments.stream().filter(a -> !a.isSubmitted()).collect(toList());
+        nonSubmittedAssessments.sort(new AssessmentStatusComparator());
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competition.getId()))
                 .andExpect(view().name(competitionAssessments))
                 .andExpect(model().attribute("competition", competition))
-                .andExpect(model().attribute("assessments", Matchers.hasSize(nonSubmittedAssessments.size())))
-                .andExpect(model().attribute("assessments", Matchers.hasItems(nonSubmittedAssessments.get(0), nonSubmittedAssessments.get(1))))
-                .andExpect(model().attribute("submittedAssessments", submittedAssessments));
-
+                .andExpect(model().attribute(
+                        "assessmentsToApplications",
+                        matchPred((Map<?, ?> item) -> item.size() == 2)))
+                .andExpect(model().attribute(
+                        "assessmentsToApplications",
+                        matchPred((Map<Assessment, Application> item) ->
+                            item.entrySet().iterator().next().getKey().getId().equals(nonSubmittedAssessments.get(0).getId())
+                        )))
+                .andExpect(model().attribute("submittedAssessmentsToApplications",
+                        matchPred((Map<Assessment, Application> item) ->
+                            item.entrySet().iterator().next().getKey().getId().equals(submittedAssessments.get(0).getId())
+                        )));
     }
 
     @Test
@@ -150,7 +158,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetitionId())));
     }
-    
+
 
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
