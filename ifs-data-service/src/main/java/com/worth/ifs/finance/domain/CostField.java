@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Holds all the fields which do not belong to the defined general costs.
  */
 @Entity
-public class CostField {
+public class CostField implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

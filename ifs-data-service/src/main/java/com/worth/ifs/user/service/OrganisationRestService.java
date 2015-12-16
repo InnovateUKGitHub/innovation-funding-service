@@ -1,7 +1,6 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;

@@ -2,7 +2,6 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -80,7 +79,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
 
         when(questionRepository.findOne(1L)).thenReturn(question);
-        when(sectionController.getPreviousSection(question.getSection()))
+        when(sectionController.getPreviousSection(question.getSection(), true, false))
                 .thenReturn(previousQuestion.getSection());
         when(questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
                 question.getCompetition().getId(), question.getSection().getId()))

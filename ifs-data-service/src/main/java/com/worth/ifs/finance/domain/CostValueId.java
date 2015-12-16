@@ -1,5 +1,8 @@
 package com.worth.ifs.finance.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 public class CostValueId implements Serializable {
@@ -23,16 +26,30 @@ public class CostValueId implements Serializable {
         return costField;
     }
 
-    public boolean equals(Object object) {
-        if (object instanceof CostValueId) {
-            CostValueId cv = (CostValueId)object;
-            return cost.equals(cv.cost) && costField.equals(cv.costField);
-        } else {
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        CostValueId rhs = (CostValueId) obj;
+        return new EqualsBuilder()
+            .append(this.cost, rhs.cost)
+            .append(this.costField, rhs.costField)
+            .isEquals();
     }
 
+    @Override
     public int hashCode() {
-        return cost.hashCode() + costField.hashCode();
+        return new HashCodeBuilder()
+            .append(cost)
+            .append(costField)
+            .toHashCode();
     }
 }

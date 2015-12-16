@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:remove="tag" />
 </head>
-<body>
+<body class="error">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -32,7 +32,7 @@
            ${exception} or ${message} are set internally by Spring Boot. */-->
     <div 
             th:if="${exception} or (${message} and ${message.length() != 0})">
-        <pre style="padding:10px; white-space: pre-wrap;">
+        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
         <span th:if="${ex}" th:text="${ex}">exception ...</span>
         <span th:if="${exception}" th:text="${exception}">exception ...</span>
 		<span th:if="${message} and ${message.length() != 0}"

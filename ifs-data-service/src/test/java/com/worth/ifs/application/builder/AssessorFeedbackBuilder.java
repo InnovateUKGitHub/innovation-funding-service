@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.BuilderAmendFunctions.getId;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, AssessorFeedbackBuilder> {

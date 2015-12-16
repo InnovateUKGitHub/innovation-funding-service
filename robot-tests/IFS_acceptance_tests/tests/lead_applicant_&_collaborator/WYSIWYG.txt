@@ -41,8 +41,9 @@ Project summary section accepts Bullet format
 
 *** Keywords ***
 the Applicant clicks on Bold button in "Project summary"
+    Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
-    click element    css=.bold_button
+    click element    xpath=//*[@id="0f627cbb-be95-c456-1562-32204fa29166-bold"]
 
 text entered should be Bold
     Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.

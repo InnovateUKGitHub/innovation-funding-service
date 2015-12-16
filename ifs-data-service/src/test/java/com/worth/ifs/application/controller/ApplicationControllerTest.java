@@ -7,10 +7,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -145,7 +142,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Long competitionId = 1L;
         Long userId = 1L;
         String applicationName = "testApplication";
-        String roleName = "leadapplicant";
+        String roleName = UserRoleType.LEADAPPLICANT.getName();
 
         Application application = new Application();
         application.setName(applicationName);

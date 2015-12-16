@@ -15,7 +15,14 @@
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
     <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}"  th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+
+        <div th:unless="${readonly}">
+            <div th:include="question-type/form-elements :: form-label (name=${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        </div>
+        <div th:if="${readonly}">
+            <div th:include="question-type/form-elements :: form-label (name=${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        </div>
+
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
@@ -117,6 +124,8 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <div th:fragment="your_finance" th:remove="tag">
+        <h2 class="heading-medium no-margin" th:text="${question.name}"></h2>
+        <p th:text="${question.description}"></p>
         <div class="collapsible">
             <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
                 <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>

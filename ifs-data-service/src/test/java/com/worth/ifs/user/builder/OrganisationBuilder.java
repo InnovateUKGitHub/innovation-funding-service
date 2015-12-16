@@ -6,8 +6,7 @@ import com.worth.ifs.user.domain.Organisation;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 /**
@@ -33,5 +32,16 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
     @Override
     protected Organisation createInitial() {
         return new Organisation();
+    }
+
+    public OrganisationBuilder withId(Long... ids) {
+        return withArray((id, organisation) -> setField("id", id, organisation), ids);
+    }
+
+    public OrganisationBuilder withName(String... names) {
+        return withArray((name, organisation) -> setField("name", name, organisation), names);
+    }
+    public OrganisationBuilder withCompanyHouseNumber(String... numbers) {
+        return withArray((number, organisation) -> setField("companyHouseNumber", number, organisation), numbers);
     }
 }
