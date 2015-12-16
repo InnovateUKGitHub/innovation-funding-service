@@ -92,6 +92,13 @@
                     <input class="form-control" id="retypedPassword" name="retypedPassword" type="password" th:field="*{retypedPassword}"/>
                     <span class="error-message" th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></span>
                 </div>
+                <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
+                    <label class="block-label" for="termsAndConditions">
+                        <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}"/>
+                        I agree to the <a href="#">terms and conditions</a>
+                    </label>
+                    <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                </div>
             </fieldset>
             <button class="button button-large" name="create-account" type="submit">Create account</button>
         </form>
