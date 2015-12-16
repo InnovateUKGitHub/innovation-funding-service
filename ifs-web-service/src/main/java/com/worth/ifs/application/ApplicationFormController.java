@@ -9,7 +9,6 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -50,10 +49,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @Autowired
-    CostService costService;
+    private CostService costService;
 
-    @Autowired
-    CompetitionService competitionService;
 
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
@@ -248,11 +245,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private Map<Long, List<String>> saveQuestionResponsesInSection(ApplicationResource application, Section section, HttpServletRequest request, Long userId, BindingResult bindingResult) {
         Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), userId, application.getId());
-        errors.forEach((k, errorsList) -> {
-            errorsList.forEach(e -> {
-                bindingResult.rejectValue("formInput["+ k +"]", e, e);
-            });
-        });
+        errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput["+ k +"]", e, e)));
         return errors;
     }
 
@@ -443,13 +436,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if (fieldName.equals("application.name")) {
-            value = value.trim();
-            if(StringUtils.isEmpty(value)){
+        if ("application.name".equals(fieldName)) {
+            String trimmedValue = value.trim();
+            if(StringUtils.isEmpty(trimmedValue)){
                 errors.add("Please enter the full title of the project.");
             }else{
 
-                application.setName(value);
+                application.setName(trimmedValue);
                 applicationService.save(application);
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
@@ -487,10 +480,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             application.setStartDate(startDate);
             applicationService.save(application);
-        }catch(DateTimeException e){
-            LOG.error(e);
-            errors.add("Please enter a valid date.");
-        }catch(NumberFormatException e){
+        }catch(DateTimeException | NumberFormatException e){
             LOG.error(e);
             errors.add("Please enter a valid date.");
         }

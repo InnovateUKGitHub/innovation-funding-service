@@ -20,7 +20,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
     [Tags]    Applicant    Autosave    Form
-    Given the Applicant is in the application form
+    Given Applicant goes to the 'project summary' question
     When the Applicant enters some text
     and the Applicant refreshes the page
     Then the text should be visible
@@ -28,15 +28,15 @@ Verify the Autosave for the form text areas
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
-    Given the Applicant is in the application form
+    Given Applicant goes to the 'project summary' question
     When the applicant clicks the "What should I include in project summary?" question
     Then the guidance should be visible
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
     [Tags]    Applicant    Form
-    Given the Applicant is in the application form
-    When the Applicant clicks the sections then the Applicant navigates to the correct sections
+    Given Applicant goes to the Overview page
+    When the Applicant clicks a section then the Applicant navigates to the correct section
 
 Verify the last update metadata
     [Documentation]    INFUND-283
@@ -58,22 +58,21 @@ Verify the last update metadata
 Verify that the word count is available
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
-    Given the Applicant is in the application form
-    When the Applicant clicks the Application questions section
-    Then the word count should be available in the text areas
+    Given Applicant goes to the 'project summary' question
+    Then the word count should be available in the text area
 
 Verify that the word count works
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
-    Given the Applicant is in the application form
+    Given Applicant goes to the 'public description' question
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
     And when the Applicant edits the Project description question (500 words)
-    Then the word count for the Public description question should be correct (0 words)
+    Then the word count for the Project description question should be correct (0 words)
 
 Verify the "review and submit" button
     [Tags]    Applicant    Review and submit    Form
-    Given the Applicant is in the application form
+    Given the applicant is on the application overview page
     When the Applicant clicks the "Review and submit" button
     Then the Applicant will navigate to the summary page
 
@@ -81,7 +80,7 @@ Verify that when the Applicant marks as complete the text box should be green an
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the application form
+    Given Applicant goes to the 'public description' question
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     and the button state should change to 'Edit'
@@ -91,15 +90,13 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given the Applicant is in the application form
+    Given Applicant goes to the 'public description' question
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
     and the button state should change to 'Mark as complete'
     and the question should not be marked as complete on the application overview page
 
 *** Keywords ***
-the Applicant is in the application form
-    Applicant goes to the Application form
 
 the Applicant enters some text
     Applicant edits the 'Project Summary' question
@@ -120,22 +117,78 @@ the applicant clicks the "What should I include in project summary?" question
 the guidance should be visible
     Element Should Be Visible    css=#details-content-0 p
 
-When the Applicant clicks the sections then the Applicant navigates to the correct sections
-    Click Element    link=Application questions
-    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
-    Click Element    link=Finances
-    Location Should Be    ${FINANCES}
+When the Applicant clicks a section then the Applicant navigates to the correct section
+    Click Element    link=Application details
+    Location Should Be    ${APPLICATION_DETAILS_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=Project summary
+    Location Should Be    ${PROJECT_SUMMARY_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=Public description
+    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=Scope
+    Location Should Be    ${SCOPE_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=1. Business opportunity
+    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=2. Potential market
+    Location Should Be    ${POTENTIAL_MARKET_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=3. Project exploitation
+    Location Should Be    ${PROJECT_EXPLOITATION_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=4. Economic benefit
+    Location Should Be    ${ECONOMIC_BENEFIT_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=5. Technical approach
+    Location Should Be    ${TECHNICAL_APPROACH_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=6. Innovation
+    Location Should Be    ${INNOVATION_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=7. Risks
+    Location Should Be    ${RISKS_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=8. Project team
+    Location Should Be    ${PROJECT_TEAM_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=9. Funding
+    Location Should Be    ${FUNDING_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=10. Adding value
+    Location Should Be    ${ADDING_VALUE_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
     Click Element    link=Your finances
+    Location Should Be    ${YOUR_FINANCES_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
+    Click Element    link=Finances overview
+    Location Should Be    ${FINANCES_OVERVIEW_URL}
+    Page Should Not Contain Element    css=body.error
+    Click Element    link=Application Overview
 
-When the Applicant clicks the Application questions section
-    Click Element    link=Application questions
-
-the word count should be available in the text areas
-    Page Should Contain Element    css=#form-input-15 .count-down
-    Page Should Contain Element    css=#form-input-16 .count-down
+the word count should be available in the text area
+    Page Should Contain Element    css=#form-input-11 .count-down
 
 When the Applicant edits the Public description
-    Input Text    css=#form-input-12 .editor    &nbsp;
+    Clear Element Text    css=#form-input-12 .editor
+    Press Key  css=#form-input-12 .editor   \\8
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
@@ -145,11 +198,11 @@ When the Applicant edits the Public description
 
 the word count should be correct for the Public description
     sleep    1s
-    Element Should Contain    css=#form-input-12 .count-down    500
+    Element Should Contain    css=#form-input-12 .count-down    469
 
 And when the Applicant edits the Project description question (500 words)
-    Click Element    link=Scope (Gateway question)
-    Input Text    css=#form-input-12 .editor    &nbsp;
+    Clear Element Text    css=#form-input-12 .editor
+    Press Key  css=#form-input-12 .editor   \\8
     Input Text    css=#form-input-12 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
     Focus    css=.app-submit-btn
     Sleep    2s
@@ -168,8 +221,8 @@ the text box should turn to green
 the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
-the word count for the Public description question should be correct (0 words)
-    Element Should Contain    css=#form-input-12 span.count-down    0
+the word count for the Project description question should be correct (0 words)
+    Element Should Contain    css=#form-input-12 .count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor

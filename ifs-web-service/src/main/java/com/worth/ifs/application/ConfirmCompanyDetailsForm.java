@@ -6,13 +6,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Object to store the data that is use form the company house form, while creating a new application.
  */
-public class ConfirmCompanyDetailsForm extends Form{
+public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
     private final Log log = LogFactory.getLog(getClass());
 
     @NotEmpty
@@ -20,6 +21,7 @@ public class ConfirmCompanyDetailsForm extends Form{
     private String selectedPostcodeIndex;
     private Address selectedPostcode = null;
     private List<Address> postcodeOptions;
+    @NotNull
     private OrganisationSize organisationSize;
     private boolean useCompanyHouseAddress = false;
     private boolean manualAddress = false;
@@ -59,7 +61,7 @@ public class ConfirmCompanyDetailsForm extends Form{
                 selectedPostcode = new Address();
             }else{
                 int indexInt = Integer.parseInt(getSelectedPostcodeIndex());
-                if(postcodeOptions == null || postcodeOptions.get(indexInt) == null){
+                if(postcodeOptions == null || postcodeOptions.size() <= indexInt ||postcodeOptions.get(indexInt) == null){
                     log.warn("Returning new postcode b");
                     return new Address();
                 }else{

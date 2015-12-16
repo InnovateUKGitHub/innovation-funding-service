@@ -26,6 +26,7 @@ import java.util.*;
 import static com.worth.ifs.CustomMatchers.matchPred;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
@@ -140,11 +141,13 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     }
 
-    //@Test
+    @Test
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
         when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+
+        when(applicationService.getById(anyLong())).thenReturn(application);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
