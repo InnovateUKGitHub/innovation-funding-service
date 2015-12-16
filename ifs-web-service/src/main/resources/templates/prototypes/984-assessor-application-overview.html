@@ -158,10 +158,11 @@
 	<details>
 		<summary><span class="summary">Unable to assess this application?</span></summary>
 		<div class="panel-indent">
-			<a role="button" tabindex="0" class="button button-warning large" href="/prototypes/871-assessor-comp-dashboard">Reject this application</a>
+			<a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="modal-reject-assessment">Reject</a>
 		</div>
 	</details>
-
+	
+	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
 
 
 

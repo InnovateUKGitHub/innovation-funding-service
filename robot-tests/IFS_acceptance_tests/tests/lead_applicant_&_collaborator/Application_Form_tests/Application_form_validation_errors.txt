@@ -144,6 +144,7 @@ when the applicant inserts "-1" in the month field
     Input Text    id=application_details-startdate_month    -1
 
 the applicant clears the text area of the "Project Summary"
+    Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
     Focus    css=.app-submit-btn
     Click Element    css=.fa-bold

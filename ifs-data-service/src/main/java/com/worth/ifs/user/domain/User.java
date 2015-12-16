@@ -2,6 +2,8 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.persistence.*;
@@ -192,30 +194,52 @@ public class User {
     public void setToken(String token) { this.token = token; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (imageUrl != null ? !imageUrl.equals(user.imageUrl) : user.imageUrl != null) return false;
-        if (token != null ? !token.equals(user.token) : user.token != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        return !(password != null ? !password.equals(user.password) : user.password != null);
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        User rhs = (User) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.title, rhs.title)
+            .append(this.name, rhs.name)
+            .append(this.firstName, rhs.firstName)
+            .append(this.lastName, rhs.lastName)
+            .append(this.inviteName, rhs.inviteName)
+            .append(this.phoneNumber, rhs.phoneNumber)
+            .append(this.imageUrl, rhs.imageUrl)
+            .append(this.token, rhs.token)
+            .append(this.email, rhs.email)
+            .append(this.password, rhs.password)
+            .append(this.processRoles, rhs.processRoles)
+            .append(this.organisations, rhs.organisations)
+            .append(this.roles, rhs.roles)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+            .append(id)
+            .append(title)
+            .append(name)
+            .append(firstName)
+            .append(lastName)
+            .append(inviteName)
+            .append(phoneNumber)
+            .append(imageUrl)
+            .append(token)
+            .append(email)
+            .append(password)
+            .append(processRoles)
+            .append(organisations)
+            .append(roles)
+            .toHashCode();
     }
-
-
 }

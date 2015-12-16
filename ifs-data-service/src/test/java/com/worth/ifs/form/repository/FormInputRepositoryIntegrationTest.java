@@ -42,13 +42,13 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_findByCompetitionId() {
 
         List<FormInput> competitionInputs = repository.findByCompetitionId(1L);
-        assertEquals(37, competitionInputs.size());
+        assertEquals(35, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
 
-        FormInput last = competitionInputs.get(36);
-        assertEquals(Long.valueOf(39), last.getId());
+        FormInput last = competitionInputs.get(34);
+        assertEquals(Long.valueOf(38), last.getId());
     }
 
     @Test

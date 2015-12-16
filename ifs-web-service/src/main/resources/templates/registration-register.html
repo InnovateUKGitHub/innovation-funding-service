@@ -19,9 +19,9 @@
                 <h1 class="heading-medium error-summary-heading">
                     We were unable to create your account
                 </h1>
-                <p>
-                    Please check your input
-                </p>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
             </div>
 
             <div class="panel-indent">

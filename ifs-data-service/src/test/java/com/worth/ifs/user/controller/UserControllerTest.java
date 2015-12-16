@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.*;
@@ -91,18 +92,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     }
 
-    //@Test
-    public void userControllerReturnUserDTOAfterUserCreation() throws Exception {
-        UserResource userDto = new UserResource();
-        userDto.setEmail("testemail@email.email");
-        userDto.setFirstName("testFirstName");
-        userDto.setLastName("testLastName");
-        userDto.setPhoneNumber("testPhoneNumber");
-        userDto.setPassword("testPassword");
-        userDto.setTitle("Mr");
+    @Test
+    public void userControllerReturnUserResourceOfCreatedUserAfterUserCreation() throws Exception {
+        UserResource userResource = new UserResource();
+        userResource.setEmail("testemail@email.email");
+        userResource.setFirstName("testFirstName");
+        userResource.setLastName("testLastName");
+        userResource.setPhoneNumber("testPhoneNumber");
+        userResource.setPassword("testPassword");
+        userResource.setTitle("Mr");
 
         ObjectMapper mapper = new ObjectMapper();
-        String applicationJsonString = mapper.writeValueAsString(userDto);
+        String applicationJsonString = mapper.writeValueAsString(userResource);
 
         Long organisationId = 1L;
         Long roleId = 1L;
@@ -113,6 +114,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setLastName("testLastName");
         user.setPhoneNumber("testPhoneNumber");
         user.setPassword("testPassword");
+        user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 
         when(userRepositoryMock.save(Matchers.isA(User.class))).thenReturn(user);
@@ -121,21 +123,16 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", notNullValue()))
-                .andExpect(jsonPath("$.lastName", notNullValue()))
-                .andExpect(jsonPath("$.phoneNumber", notNullValue()))
-                .andExpect(jsonPath("$.title", notNullValue()))
-                .andExpect(jsonPath("$.password", notNullValue()))
-                .andExpect(jsonPath("$.email", notNullValue()));
+                .andExpect(jsonPath("$.status", is("OK")))
+                .andExpect(jsonPath("$.entity.firstName", notNullValue()))
+                .andExpect(jsonPath("$.entity.lastName", notNullValue()))
+                .andExpect(jsonPath("$.entity.phoneNumber", notNullValue()))
+                .andExpect(jsonPath("$.entity.title", notNullValue()))
+                .andExpect(jsonPath("$.entity.password", notNullValue()))
+                .andExpect(jsonPath("$.entity.email", notNullValue()))
+                .andExpect(jsonPath("$.entity.name", is(user.getFirstName()+" "+user.getLastName()))
+                        );
         
         verify(userRepositoryMock, times(2)).save(Matchers.isA(User.class));
-    }
-
-    @Test
-    public void userControllerShouldSaveUserWithToken() throws Exception {
-    }
-
-    @Test
-    public void userControllerShouldConcatenateFullNameBasedOnFirstAndLastName() throws Exception {
     }
 }
