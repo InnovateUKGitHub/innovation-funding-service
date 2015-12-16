@@ -18,7 +18,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     CompetitionsRestService competitionsRestService;
 
     @Override
-    public Competition getById(Long competitionId){ return competitionsRestService.getCompetitionById(competitionId);}
+    public Competition getById(Long competitionId){
+        return competitionsRestService.getCompetitionById(competitionId);
+    }
 
     @Override
     public List<Competition> getAllCompetitions() {

@@ -62,15 +62,17 @@ public abstract class AbstractApplicationController {
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
 
-    @Autowired OrganisationService organisationService;
-
-    @Autowired CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
+    protected OrganisationService organisationService;
 
     @Autowired
-    FinanceService financeService;
+    protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    CompetitionService competitionService;
+    protected FinanceService financeService;
+
+    @Autowired
+    protected CompetitionService competitionService;
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
