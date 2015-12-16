@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -22,5 +22,5 @@ public interface UserRestService {
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
     public ProcessRole findProcessRoleById(Long processRoleId);
-    public ResourceStatusEnvelope<UserResource> createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
+    public ResourceEnvelope<UserResource> createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
 }

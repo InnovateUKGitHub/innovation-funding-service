@@ -2,13 +2,13 @@ package com.worth.ifs.commons.resource;
 
 import javax.annotation.Resource;
 
-public class ResourceStatusError {
+public class ResourceError {
     private String name;
     private String description;
 
-    public ResourceStatusError() {}
+    public ResourceError() {}
 
-    public ResourceStatusError(String name, String description) {
+    public ResourceError(String name, String description) {
         this.name = name;
         this.description = description;
     }

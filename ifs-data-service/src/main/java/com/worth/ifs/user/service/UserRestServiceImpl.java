@@ -1,8 +1,9 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.commons.resource.UserResourceEnvelopeWrapper;
+import com.worth.ifs.user.resource.UserResourceEnvelope;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -94,8 +95,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return Arrays.asList(users);
     }
 
-
-    public ResourceStatusEnvelope<UserResource> createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
+    @NotSecured("Method should be able to be called by a guest user that is creating his account")
+    public ResourceEnvelope<UserResource> createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -107,6 +108,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url = userRestURL + "/createUserForOrganisationWithRole/" + organisationId +"/"+roleName;
 
-        return restPost(url, user, UserResourceEnvelopeWrapper.class);
+        return restPost(url, user, UserResourceEnvelope.class);
     }
 }

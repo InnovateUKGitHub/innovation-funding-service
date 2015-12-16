@@ -1,7 +1,8 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
-import com.worth.ifs.commons.resource.ResourceStatusError;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
+import com.worth.ifs.commons.resource.ResourceError;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -117,26 +118,26 @@ public class UserController {
     }
 
     @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
-    public ResourceStatusEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
+    public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
 
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, roleName);
 
-        ResourceStatusEnvelope<UserResource> resourceStatusEnvelope = new ResourceStatusEnvelope<UserResource>("OK", new ArrayList<>(), userResource);
+        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<UserResource>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), userResource);
 
         if(!repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            resourceStatusEnvelope.setStatus("VALIDATION_ERROR");
-            resourceStatusEnvelope.addError(new ResourceStatusError("email", "This email address is already in use"));
+            resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
+            resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
         }
         else {
             User createdUser = repository.save(newUser);
             User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
             User user = repository.save(createdUserWithToken);
-            resourceStatusEnvelope.setEntity(new UserResource(user));
+            resourceEnvelope.setEntity(new UserResource(user));
         }
 
-        return resourceStatusEnvelope;
+        return resourceEnvelope;
     }
 
     private void addRoleToUser(User user, String roleName) {

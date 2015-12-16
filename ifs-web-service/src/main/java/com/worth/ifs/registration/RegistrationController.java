@@ -4,9 +4,9 @@ import com.worth.ifs.application.CreateApplicationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.commons.resource.UserResourceEnvelopeWrapper;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
-import com.worth.ifs.commons.resource.ResourceStatusEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
@@ -67,7 +67,7 @@ public class RegistrationController {
         String destination = "registration-register";
 
         if(!bindingResult.hasErrors()) {
-            ResourceStatusEnvelope<UserResource> userStatusWrapper = userService.createUserForOrganisation(registrationForm.getFirstName(),
+            ResourceEnvelope<UserResource> userStatusWrapper = userService.createUserForOrganisation(registrationForm.getFirstName(),
                     registrationForm.getLastName(),
                     registrationForm.getPassword(),
                     registrationForm.getEmail(),
@@ -76,7 +76,7 @@ public class RegistrationController {
                     getOrganisationId(request),
                     UserRoleType.APPLICANT.getName());
 
-            if(userStatusWrapper.getErrors().isEmpty() && userStatusWrapper.getEntity() != null) {
+            if(userStatusWrapper.getStatus().equals(ResourceEnvelopeConstants.OK) && userStatusWrapper.getEntity() != null) {
                 CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userStatusWrapper.getEntity().getId()));
                 // loggin user directly
                 tokenAuthenticationService.addAuthentication(response, userStatusWrapper.getEntity());
