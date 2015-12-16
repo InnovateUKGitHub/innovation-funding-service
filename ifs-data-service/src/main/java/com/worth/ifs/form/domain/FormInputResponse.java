@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -118,27 +120,38 @@ public class FormInputResponse {
         this.updatedBy = updatedBy;
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FormInputResponse response = (FormInputResponse) o;
-
-        if (id != null ? !id.equals(response.id) : response.id != null) return false;
-        if (updateDate != null ? !updateDate.equals(response.updateDate) : response.updateDate != null) return false;
-        if (value != null ? !value.equals(response.value) : response.value != null) return false;
-        if (updatedBy != null ? !updatedBy.equals(response.updatedBy) : response.updatedBy != null) return false;
-        return (formInput != null ? !formInput.equals(response.formInput) : response.formInput != null);
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        FormInputResponse rhs = (FormInputResponse) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.updateDate, rhs.updateDate)
+            .append(this.value, rhs.value)
+            .append(this.updatedBy, rhs.updatedBy)
+            .append(this.formInput, rhs.formInput)
+            .append(this.application, rhs.application)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
-        result = 31 * result + (formInput != null ? formInput.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+            .append(id)
+            .append(updateDate)
+            .append(value)
+            .append(updatedBy)
+            .append(formInput)
+            .append(application)
+            .toHashCode();
     }
 }

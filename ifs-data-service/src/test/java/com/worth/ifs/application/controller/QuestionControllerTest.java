@@ -2,7 +2,6 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

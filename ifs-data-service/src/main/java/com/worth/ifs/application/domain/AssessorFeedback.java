@@ -2,6 +2,8 @@ package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -92,30 +94,38 @@ public class AssessorFeedback {
         return 350 - this.getWordCount();
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AssessorFeedback that = (AssessorFeedback) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        else if (response != null ? !response.equals(that.response) : that.response != null) return false;
-        else if (assessor != null ? !assessor.equals(that.assessor) : that.assessor != null) return false;
-        else if (assessorId != null ? !assessorId.equals(that.assessorId) : that.assessorId != null) return false;
-        else if (assessmentValue != null ? !assessmentValue.equals(that.assessmentValue) : that.assessmentValue != null) return false;
-        else return !(assessmentFeedback != null ? !assessmentFeedback.equals(that.assessmentFeedback) : that.assessmentFeedback != null);
-
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        AssessorFeedback rhs = (AssessorFeedback) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.response, rhs.response)
+            .append(this.assessor, rhs.assessor)
+            .append(this.assessorId, rhs.assessorId)
+            .append(this.assessmentValue, rhs.assessmentValue)
+            .append(this.assessmentFeedback, rhs.assessmentFeedback)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (response != null ? response.hashCode() : 0);
-        result = 31 * result + (assessor != null ? assessor.hashCode() : 0);
-        result = 31 * result + (assessorId != null ? assessorId.hashCode() : 0);
-        result = 31 * result + (assessmentValue != null ? assessmentValue.hashCode() : 0);
-        result = 31 * result + (assessmentFeedback != null ? assessmentFeedback.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+            .append(id)
+            .append(response)
+            .append(assessor)
+            .append(assessorId)
+            .append(assessmentValue)
+            .append(assessmentFeedback)
+            .toHashCode();
     }
 }

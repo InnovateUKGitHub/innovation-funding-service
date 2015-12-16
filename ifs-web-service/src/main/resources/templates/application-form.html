@@ -48,7 +48,7 @@
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
-            <button type="submit" class="button-secondary" name="submit-section">Save and return to application overview</button>
+            <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
 
             <ul class="pagination">
                 <li class="prev" th:if="${previousQuestion} and not ${previousSection}">

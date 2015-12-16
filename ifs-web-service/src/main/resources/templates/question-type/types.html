@@ -15,7 +15,14 @@
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
     <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}"  th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+
+        <div th:unless="${readonly}">
+            <div th:include="question-type/form-elements :: form-label (name=${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        </div>
+        <div th:if="${readonly}">
+            <div th:include="question-type/form-elements :: form-label (name=${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        </div>
+
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />

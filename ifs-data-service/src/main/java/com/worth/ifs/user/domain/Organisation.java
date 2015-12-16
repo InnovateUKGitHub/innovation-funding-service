@@ -6,7 +6,8 @@ import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Organisation defines database relations and a model to use client side and server side.
@@ -56,6 +57,10 @@ public class Organisation {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JsonIgnore

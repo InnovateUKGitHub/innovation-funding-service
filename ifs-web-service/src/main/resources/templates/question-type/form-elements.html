@@ -191,12 +191,12 @@
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
-                 alt="This field is marked as done"
-                 title="This field is marked as done" 
+                 alt="This field is marked as complete"
+                 title="This field is marked as complete" 
                  class="marked-as-complete" />
             
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
-                  <span>This question is <strong>marked as complete</strong></span>
+                  <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
             <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
