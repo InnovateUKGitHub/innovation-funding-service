@@ -2,8 +2,8 @@ package com.worth.ifs.organisation.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.security.NotSecured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,6 +94,7 @@ public class CompanyHouseApi extends BaseRestService {
         Address address = new Address(
                 jsonNode.path(path).path("address_line_1").asText(),
                 jsonNode.path(path).path("address_line_2").asText(),
+                jsonNode.path(path).path("address_line_3").asText(),
                 jsonNode.path(path).path("care_of").asText(),
                 jsonNode.path(path).path("country").asText(),
                 jsonNode.path(path).path("locality").asText(),

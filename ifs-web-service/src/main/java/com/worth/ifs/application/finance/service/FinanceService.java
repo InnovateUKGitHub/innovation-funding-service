@@ -1,12 +1,8 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.application.finance.CostCategory;
-import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 
-import java.util.EnumMap;
 import java.util.List;
 
 /**

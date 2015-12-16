@@ -17,13 +17,13 @@ public class PrototypeController {
 
     @RequestMapping
     public String getPrototypeIndex() {
-        log.warn("Serving up prototype index page");
+        log.debug("Serving up prototype index page");
         return "/prototypes/index";
     }
 
     @RequestMapping("/{templateName}")
     public String getPrototypePage(@PathVariable("templateName") String templateName) {
-        log.warn("Serving up prototype template " + templateName);
+        log.debug("Serving up prototype template " + templateName);
         return "/prototypes/" + templateName;
     }
 }

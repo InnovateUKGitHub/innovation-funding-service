@@ -6,6 +6,8 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
@@ -135,30 +137,34 @@ public class ApplicationResource {
         this.durationInMonths = durationInMonths;
     }
 
+
     @Override
-    public boolean equals(Object other){
-        if(!(other instanceof ApplicationResource)){
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
-        }else{
-            ApplicationResource that = (ApplicationResource) other;
-            if(this.name==null && that.name==null){
-                return true;
-            }
-            else if( this.name==null || that.name==null || ! this.name.equals(that.name)){
-                return false;
-            }
-            if(this.id==null && that.id==null){
-                return true;
-            }
-            else if( this.id == null || that.id == null || ! this.id.equals(that.id)){
-                return false;
-            }
+        }
+        if (obj == this) {
             return true;
         }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        ApplicationResource rhs = (ApplicationResource) obj;
+        return new EqualsBuilder()
+            .append(this.id, rhs.id)
+            .append(this.name, rhs.name)
+            .append(this.startDate, rhs.startDate)
+            .append(this.durationInMonths, rhs.durationInMonths)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return new HashCodeBuilder()
+            .append(id)
+            .append(name)
+            .append(startDate)
+            .append(durationInMonths)
+            .toHashCode();
     }
 }

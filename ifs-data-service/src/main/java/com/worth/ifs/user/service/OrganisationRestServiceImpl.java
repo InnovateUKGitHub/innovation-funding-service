@@ -2,7 +2,6 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;

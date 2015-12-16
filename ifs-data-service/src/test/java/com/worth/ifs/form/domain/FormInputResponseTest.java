@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FormInputResponseTest {
     private LocalDateTime updateDate = LocalDateTime.now();

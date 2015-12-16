@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.application.finance.cost.CostItem;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 
