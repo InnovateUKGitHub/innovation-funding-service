@@ -35,7 +35,7 @@ public class CompanyHouseApi extends BaseRestService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public String getDataRestServiceURL() {
+    protected String getDataRestServiceURL() {
         return COMPANY_HOUSE_API;
     }
 

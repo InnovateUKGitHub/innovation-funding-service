@@ -27,7 +27,7 @@ public abstract class BaseRestService {
 
     private String dataRestServiceURL;
 
-    public String getDataRestServiceURL() {
+    protected String getDataRestServiceURL() {
         return dataRestServiceURL;
     }
 
