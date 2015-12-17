@@ -68,9 +68,9 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-details";
     }
 
-    @RequestMapping("/{applicationId}/summary")
+    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
+                                     HttpServletRequest request) {
         List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
@@ -79,6 +79,15 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         
         return "application-summary";
+    }
+    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
+    public String applicationSummarySubmit(@RequestParam("mark_as_complete") Long markQuestionCompleteId, Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(markQuestionCompleteId!=null) {
+            questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
+        }
+        return "redirect:/application/" + applicationId + "/summary";
     }
 
     @RequestMapping("/{applicationId}/confirm-submit")
