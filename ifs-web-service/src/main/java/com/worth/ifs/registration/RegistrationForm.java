@@ -7,14 +7,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-/**a
+/**
+ * a
  * This object is used for the account registration form. When the form is submitted the data is
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
  * read all the request attributes to get to the form data.
  */
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
-
 public class RegistrationForm {
     @Email(message = "Please enter a valid email address")
     @NotEmpty(message = "Please enter your email")
@@ -53,6 +53,7 @@ public class RegistrationForm {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -60,6 +61,7 @@ public class RegistrationForm {
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }

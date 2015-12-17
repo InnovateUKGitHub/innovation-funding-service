@@ -3,10 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -117,27 +114,40 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
-    public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
-
+    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
+    public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
-        addRoleToUser(newUser, roleName);
+        addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
 
-        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<UserResource>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), userResource);
+        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
 
-        if(!repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
-            resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
+        if(repository.findByEmail(userResource.getEmail()).isEmpty()) {
+            UserResource createdUserResource = createUserWithToken(newUser, resourceEnvelope);
+            addUserResource(resourceEnvelope, createdUserResource);
         }
         else {
-            User createdUser = repository.save(newUser);
-            User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
-            User user = repository.save(createdUserWithToken);
-            resourceEnvelope.setEntity(new UserResource(user));
+            addDuplicateEmailError(resourceEnvelope);
         }
 
         return resourceEnvelope;
+    }
+
+    private void addUserResource(ResourceEnvelope<UserResource> resourceEnvelope, UserResource userResource) {
+        resourceEnvelope.setEntity(userResource);
+        resourceEnvelope.setStatus(ResourceEnvelopeConstants.OK.getName());
+    }
+
+    private void addDuplicateEmailError(ResourceEnvelope<UserResource> resourceEnvelope) {
+        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
+        resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
+    }
+
+    private UserResource createUserWithToken(User user, ResourceEnvelope<UserResource> resourceEnvelope) {
+        User createdUser = repository.save(user);
+        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
+        User finalUser = repository.save(createdUserWithToken);
+        return new UserResource(finalUser);
     }
 
     private void addRoleToUser(User user, String roleName) {

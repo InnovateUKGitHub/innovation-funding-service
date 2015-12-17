@@ -1,5 +1,9 @@
 package com.worth.ifs.commons.resource;
 
+/**
+ * ResourceEnvelopeConstants lists the states a ResourceEnvelope can be in
+ */
+
 public enum ResourceEnvelopeConstants {
     OK(1L, "OK"),
     ERROR(2L, "ERROR");

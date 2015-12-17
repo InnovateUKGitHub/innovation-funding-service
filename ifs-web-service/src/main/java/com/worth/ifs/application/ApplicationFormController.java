@@ -8,6 +8,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
+import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
@@ -89,7 +90,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        Optional<Long> questionSectionId = Optional.of(section.getId());
+        Optional<Long> questionSectionId = null;
+        if(section!=null) {
+            questionSectionId = Optional.ofNullable(section.getId());
+        }
         super.addApplicationDetails(applicationId, user.getId(), questionSectionId , model, form, false);
         addQuestionDetails(question, model);
 
@@ -100,6 +104,10 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addQuestionDetails(Question question, Model model) {
+        if(question==null) {
+            return;
+        }
+
         Question previousQuestion = questionService.getPreviousQuestion(question.getId());
         Question nextQuestion = questionService.getNextQuestion(question.getId());
 
@@ -117,21 +125,10 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         HttpServletRequest request,
                                         HttpServletResponse response){
         Map<String, String[]> params = request.getParameterMap();
-
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
         Question question = questionService.getById(questionId);
 
-        Map<Long, List<String>> errors = saveQuestionResponses(request, Arrays.asList(question), user.getId(), applicationId);
-        errors.forEach((k, errorsList) -> {
-            errorsList.forEach(e -> {
-                bindingResult.rejectValue("formInput["+ k +"]", e, e);
-            });
-        });
-
-        setApplicationDetails(application, form.getApplication());
-        applicationService.save(application);
-        markApplicationQuestions(application, user.getId(), request, response, errors);
+        bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, request);
@@ -142,7 +139,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
         Section section = sectionService.getSectionByQuestionId(questionId);
-        Optional<Long> questionSectionId = Optional.of(section.getId());
+        Long sectionId=null;
+        if(section!=null) {
+            sectionId = section.getId();
+        }
+        Optional<Long> questionSectionId = Optional.ofNullable(sectionId);
         super.addApplicationDetails(applicationId, user.getId(), questionSectionId, model, form, false);
         addQuestionDetails(question, model);
 
@@ -216,23 +217,25 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
-
-
-    private BindingResult saveApplicationForm(ApplicationForm form, Model model,
-                                                Long applicationId, Long sectionId,
+    private BindingResult saveApplicationForm(ApplicationForm form, Model model, Long userId,
+                                                Long applicationId, Long sectionId, Question question,
                                                 HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetitionId());
 
-        Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
-        Map<Long, List<String>> errors = saveQuestionResponsesInSection(application, selectedSection, request, user.getId(), bindingResult);
+        Map<Long, List<String>> errors = null;
+        if(question != null) {
+            errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
+        } else {
+            Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            errors = saveQuestionResponses(application, selectedSection.getQuestions(), request, user.getId(), bindingResult);
+        }
 
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, true);
         return bindingResult;
     }
 
@@ -243,8 +246,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponsesInSection(ApplicationResource application, Section section, HttpServletRequest request, Long userId, BindingResult bindingResult) {
-        Map<Long, List<String>> errors = saveQuestionResponses(request, section.getQuestions(), userId, application.getId());
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, HttpServletRequest request, Long userId, BindingResult bindingResult) {
+        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, application.getId());
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput["+ k +"]", e, e)));
         return errors;
     }
@@ -278,10 +281,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
                                         HttpServletResponse response){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
         bindingResult.getAllErrors().forEach((e) -> LOG.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-        bindingResult = saveApplicationForm(form, model, applicationId, sectionId, request, response, bindingResult);
+        bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, sectionId, null, request, response, bindingResult);
         bindingResult.getAllErrors().forEach((e) -> LOG.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey("assign_question")) {
@@ -292,6 +296,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
 
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
 
         if(bindingResult.hasErrors()){
             return "application-form";

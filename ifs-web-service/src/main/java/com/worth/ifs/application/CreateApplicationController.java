@@ -2,6 +2,10 @@ package com.worth.ifs.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.application.form.CompanyHouseForm;
+import com.worth.ifs.application.form.ConfirmCompanyDetailsForm;
+import com.worth.ifs.application.form.CreateApplicationForm;
+import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
@@ -35,6 +39,9 @@ import java.util.List;
  * This controller will handle all requests that are related to the create of a application.
  * This is used when the users want create a new application and that also includes the creation of the organisation.
  * These URLs are publicly available, since there user might not have a account yet.
+ *
+ * The user input is stored in cookies, so we can use the data after a page refresh / redirect.
+ * For user-account creation, have a look at {@link com.worth.ifs.registration.RegistrationController}
  */
 @Controller
 @RequestMapping("/application/create")
@@ -53,13 +60,14 @@ public class CreateApplicationController extends AbstractApplicationController {
     public static final String CONFIRM_COMPANY_DETAILS = "confirm-company-details";
     public static final String COMPANY_ADDRESS = "company_address";
     public static final String ORGANISATION_SIZE = "organisation_size";
+    public static final String ORGANISATION_NAME = "organisationName";
+    public static final String ORGANISATION_SIZE1 = "organisationSize";
+    public static final String COMPANY_HOUSE_NAME = "companyHouseName";
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     Validator validator;
-
-
 
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Form form, Model model,
@@ -74,9 +82,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping("/initialize-application")
-    public String initializeApplication(Model model,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
+    public String initializeApplication(HttpServletRequest request) {
         Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
         Long userId = Long.valueOf(getFromCookie(request, USER_ID));
 
@@ -89,9 +95,14 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping("/create-organisation-type")
-    public String createAccountOrganisationType(@ModelAttribute Form form, Model model, HttpServletRequest request) {
+    public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
         model.addAttribute("form", form);
         return "create-application/create-organisation-type";
+    }
+
+    @RequestMapping(value = "/find-business", method = RequestMethod.GET)
+    public String createOrganisationBusiness(@ModelAttribute("companyHouseLookup") CompanyHouseForm companyHouseForm) {
+        return "create-application/find-business";
     }
 
     @RequestMapping(value = "/find-business", method = RequestMethod.POST)
@@ -100,9 +111,6 @@ public class CreateApplicationController extends AbstractApplicationController {
                                                  Model model,
                                                  HttpServletRequest request,
                                                  HttpServletResponse response) {
-        logState(request, response);
-
-
         if (request.getParameter(NOT_IN_COMPANY_HOUSE) != null) {
             companyHouseForm.setInCompanyHouse(false);
         } else if (request.getParameter(MANUAL_ADDRESS) != null) {
@@ -120,17 +128,16 @@ public class CreateApplicationController extends AbstractApplicationController {
             selectPostcodeAddress(companyHouseForm);
         } else if (request.getParameter(SEARCH_COMPANY_HOUSE) != null) {
             validator.validate(companyHouseForm, bindingResult);
-            if (!bindingResult.hasFieldErrors("companyHouseName")) {
+            if (!bindingResult.hasFieldErrors(COMPANY_HOUSE_NAME)) {
                 searchCompanyHouse(companyHouseForm);
             }else{
-                log.info("has errors "+ bindingResult.getFieldErrors().size());
-                bindingResult.getFieldErrors().forEach(e -> log.error(e.getField() +"__"+ e.getDefaultMessage()));
+                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() + "__" + e.getDefaultMessage()));
             }
         } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
             validator.validate(companyHouseForm, bindingResult);
-            if (StringUtils.hasText(companyHouseForm.getOrganisationName()) && companyHouseForm.getOrganisationSize() != null) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
                 // save state into cookie.
                 ObjectMapper mapper = new ObjectMapper();
                 String jsonAddress = "";
@@ -146,8 +153,7 @@ public class CreateApplicationController extends AbstractApplicationController {
 
                 return "redirect:/application/create/confirm-company";
             } else {
-                log.info("has errors "+ bindingResult.getFieldErrors().size());
-                bindingResult.getFieldErrors().forEach(e -> log.error(e.getField() +"__"+e.getDefaultMessage()));
+                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() +"__"+e.getDefaultMessage()));
             }
         }
 
@@ -159,15 +165,10 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     /**
      * Confirm the company details (user input, not from company-house)
-     * @param request
-     * @param response
-     * @return
      */
     @RequestMapping(value = "/confirm-company", method = RequestMethod.GET)
     public String confirmCompany(Model model,
-                                 HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logState(request, response);
-
+                                 HttpServletRequest request) throws IOException {
         // Get data form cookie, convert json to Address object
         ObjectMapper mapper = new ObjectMapper();
         String jsonAddress = getFromCookie(request, COMPANY_ADDRESS);
@@ -182,25 +183,13 @@ public class CreateApplicationController extends AbstractApplicationController {
         return "create-application/confirm-company";
     }
 
-    @RequestMapping(value = "/find-business", method = RequestMethod.GET)
-    public String createOrganisationBusiness(@ModelAttribute("companyHouseLookup") CompanyHouseForm companyHouseForm,
-                                             BindingResult bindingResult,
-                                             Model model,
-                                             HttpServletRequest request,
-                                             HttpServletResponse response) {
-        logState(request, response);
-        return "create-application/find-business";
-    }
-
     @RequestMapping(value = "/selected-business/{companyId}", method = RequestMethod.GET)
     public String confirmBusiness(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
                                   BindingResult bindingResult,
                                   Model model,
                                   @PathVariable(COMPANY_ID) final String companyId,
-                                  HttpServletRequest request,
                                   HttpServletResponse response) {
         saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-        logState(request, response);
 
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
@@ -215,7 +204,6 @@ public class CreateApplicationController extends AbstractApplicationController {
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
         saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-        logState(request, response);
 
         if (organisationService == null) {
             log.error("companyHouseService is null");
@@ -275,10 +263,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping("/your-details")
-    public String checkEligibility(Form form, Model model,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response) {
-
+    public String checkEligibility() {
         return "create-application/your-details";
     }
 
@@ -331,19 +316,6 @@ public class CreateApplicationController extends AbstractApplicationController {
         }
     }
 
-
-    private void logState(HttpServletRequest request, HttpServletResponse response) {
-        log.debug("=== Logging cookie state === ");
-        if (request.getCookies() == null || request.getCookies().length == 0) {
-            return;
-        }
-        for (Cookie cookie : request.getCookies()) {
-            log.debug("COOKIE name: " + cookie.getName());
-            log.debug("COOKIE value: " + cookie.getValue());
-        }
-        log.debug("=== ==================== === ");
-    }
-
     private void searchPostcodes(CreateApplicationForm form) {
         if (StringUtils.hasText(form.getPostcodeInput())) {
             form.setPostcodeOptions(searchPostcode(form.getPostcodeInput()));
@@ -351,9 +323,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     private void searchCompanyHouse(CompanyHouseForm form) {
-        log.info("Search");
         if (StringUtils.hasText(form.getCompanyHouseName())) {
-            log.info("Search " + form.getCompanyHouseName());
             List<CompanyHouseBusiness> companies = searchCompanyHouse(form.getCompanyHouseName());
             form.setCompanyHouseList(companies);
         }

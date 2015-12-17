@@ -17,6 +17,7 @@ public interface QuestionService {
     public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
     public List<Question> findByCompetition(Long competitionId);
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId);
+    public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId);
     public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId);
     public void removeNotifications(List<QuestionStatus> questionStatuses);
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);

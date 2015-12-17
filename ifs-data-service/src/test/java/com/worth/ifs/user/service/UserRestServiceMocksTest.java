@@ -54,7 +54,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void createUserForOrganisationWithRole() {
+    public void createLeadApplicantForOrganisation() {
         UserResource userResource = newUserResource().withId(1L)
                 .withEmail("testemail@test.test")
                 .withTitle("testTitle")
@@ -64,22 +64,20 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .build();
 
         Long organisationId = 1L;
-        String applicantRoleName = "applicant";
 
         ResourceEnvelope<UserResource> userResourceEnvelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
         UserResourceEnvelope resourceEnvelope = new UserResourceEnvelope(userResourceEnvelope);
 
         ResponseEntity<UserResourceEnvelope> responseEntity = new ResponseEntity<>(resourceEnvelope, HttpStatus.OK);
-        when(mockRestTemplate.postForEntity(eq(dataServicesUrl + usersUrl + "/createUserForOrganisationWithRole/" + organisationId + "/" + applicantRoleName), isA(HttpEntity.class), eq(UserResourceEnvelope.class))).thenReturn(responseEntity);
+        when(mockRestTemplate.postForEntity(eq(dataServicesUrl + usersUrl + "/createLeadApplicantForOrganisation/" + organisationId), isA(HttpEntity.class), eq(UserResourceEnvelope.class))).thenReturn(responseEntity);
 
-        ResourceEnvelope<UserResource> receivedResourceEnvelope = service.createUserForOrganisationWithRole(userResource.getFirstName(),
+        ResourceEnvelope<UserResource> receivedResourceEnvelope = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                organisationId,
-                applicantRoleName
+                organisationId
                 );
 
         assertEquals(userResourceEnvelope.getEntity(),receivedResourceEnvelope.getEntity());
