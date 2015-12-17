@@ -26,6 +26,5 @@ the Applicant should see the "days left to submit" in the dashboard page
     Element Should Be Visible    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(2) > div.pie-container > div.pie-overlay
 
 the "days left to submit" should be correct in the dashboard page
-    #Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(2) > div.pie-container > div.pie-overlay > div    7
     ${DAYS_LEFT}=    Get Text    css=.pie-overlay div
     Should Be True    ${DAYS_LEFT}>=0
