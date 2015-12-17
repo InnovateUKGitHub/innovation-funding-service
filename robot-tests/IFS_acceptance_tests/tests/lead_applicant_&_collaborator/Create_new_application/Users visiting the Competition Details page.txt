@@ -25,6 +25,7 @@ When user is not logged in and later enters correct login
     And the Applicant will click on "Sign in to Apply" button
     And the Applicant will input correct login details
     And the Applicant will be in the "Create Application" page
+    And the Applicant will be in the "your details" page
 
 When user is not logged in and later enters incorrect login
     [Documentation]    INFUND-921 : As an applicant I want to be able to select a link from the competition web page to visit a competition further description page containing relevant links so that I can apply into the competition.
@@ -38,6 +39,7 @@ When user is not logged in and later enters incorrect login
     And the Applicant will input incorrect login details
     Then the Applicant will input correct login details
     And the Applicant will be in the "Create Application" page
+    And the Applicant will be in the "your details" page
 
 When user is logged in
     When the Applicant is in Competition details page
@@ -70,6 +72,7 @@ the Applicant will input correct login details
 
 the applicant is logged-out
     go to     ${LOG_OUT}
+    go to    ${LOG_OUT}
 
 the Applicant should see "Create Application" button
     Page Should Contain Element    css=.column-third a.button
