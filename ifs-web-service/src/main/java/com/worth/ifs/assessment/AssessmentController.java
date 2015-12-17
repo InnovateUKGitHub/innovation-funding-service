@@ -156,9 +156,10 @@ public class AssessmentController extends AbstractApplicationController {
         return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application);
     }
 
+
     private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
         addApplicationDetails(application.getId(), userId, sectionId, model, null);
-
+        addSectionDetails(model, application, sectionId, true);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
 

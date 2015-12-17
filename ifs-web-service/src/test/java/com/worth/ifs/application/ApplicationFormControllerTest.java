@@ -1,9 +1,11 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -133,6 +135,18 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("currentSectionId", 1L));
 
+    }
+
+    @Test
+    public void testQuestionSubmit() throws Exception {
+        Question question = new Question();
+        ApplicationResource application = applications.get(0);
+
+        when(questionService.getById(anyLong())).thenReturn(question);
+        when(applicationService.getById(application.getId(), false)).thenReturn(application);
+        when(competitionService.getById(anyLong())).thenReturn(competition);
+        mockMvc.perform(post("/application/1/form/question/1"))
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
