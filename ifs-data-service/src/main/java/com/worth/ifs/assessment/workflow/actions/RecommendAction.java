@@ -33,20 +33,25 @@ public class RecommendAction implements Action<String, String> {
         if(assessment!=null) {
             Optional<ProcessOutcome> processOutcome = assessment.getProcessOutcomes()
                     .stream()
-                    .filter(p -> AssessmentOutcomes.RECOMMEND.toString().equals(p.getOutcomeType()))
+                    .filter(p -> AssessmentOutcomes.RECOMMEND.getType().equals(p.getOutcomeType()))
                     .findFirst();
 
             ProcessOutcome assessmentOutcome = processOutcome.orElse(new ProcessOutcome());
+
             assessmentOutcome.setOutcome(updatedProcessOutcome.getOutcome());
             assessmentOutcome.setDescription(updatedProcessOutcome.getDescription());
             assessmentOutcome.setComment(updatedProcessOutcome.getComment());
+            assessmentOutcome.setOutcomeType(AssessmentOutcomes.RECOMMEND.getType());
 
             if(!RecommendedValue.EMPTY.toString().equals(assessmentOutcome)) {
                 assessment.setProcessStatus(context.getTransition().getTarget().getId());
             }
 
-            assessmentOutcome.setProcess(assessment);
-            assessment.getProcessOutcomes().add(assessmentOutcome);
+
+            if (assessmentOutcome.getId() == null) {
+                assessmentOutcome.setProcess(assessment);
+                assessment.getProcessOutcomes().add(assessmentOutcome);
+            }
             assessmentRepository.save(assessment);
         }
     }

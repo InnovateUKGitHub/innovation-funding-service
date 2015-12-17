@@ -66,4 +66,12 @@ public class ProcessOutcome {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public void setOutcomeType(String outcomeType) {
+        this.outcomeType = outcomeType;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

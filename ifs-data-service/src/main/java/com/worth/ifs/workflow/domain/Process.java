@@ -116,5 +116,4 @@ public abstract class Process {
     public ProcessRole getProcessRole() {
         return processRole;
     }
-
 }

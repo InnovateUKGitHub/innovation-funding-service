@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.OutcomeType;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
@@ -28,9 +29,18 @@ public class Assessment extends Process {
     }
 
     public ProcessOutcome getLastOutcome() {
-        if(this.processOutcomes != null && this.processOutcomes.size()>0) {
-            return this.processOutcomes.get(this.processOutcomes.size()-1);
+        if(this.processOutcomes != null) {
+            return this.processOutcomes.stream().findFirst().orElse(null);
         }
         return null;
     }
+
+    public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
+        if(this.processOutcomes != null) {
+            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).findFirst().orElse(null);
+        }
+        return null;
+    }
+
+
 }
