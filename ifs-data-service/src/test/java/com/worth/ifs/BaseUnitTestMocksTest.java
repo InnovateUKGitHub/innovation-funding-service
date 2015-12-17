@@ -71,6 +71,9 @@ public abstract class BaseUnitTestMocksTest {
     @Mock
     protected QuestionRepository questionRepository;
 
+    @Mock
+    protected QuestionStatusRepository questionStatusRepository;
+
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();
 

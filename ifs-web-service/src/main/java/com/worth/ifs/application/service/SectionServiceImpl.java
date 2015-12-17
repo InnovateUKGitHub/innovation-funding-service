@@ -91,7 +91,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public Section getPreviousSection(Optional<Long> sectionId) {
-        if(sectionId.isPresent()) {
+        if(sectionId!=null && sectionId.isPresent()) {
             return sectionRestService.getPreviousSection(sectionId.get());
         }
         return null;
@@ -99,7 +99,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public Section getNextSection(Optional<Long> sectionId) {
-        if(sectionId.isPresent()) {
+        if(sectionId!=null && sectionId.isPresent()) {
             Section nextSection = sectionRestService.getNextSection(sectionId.get());
             return nextSection;
         }

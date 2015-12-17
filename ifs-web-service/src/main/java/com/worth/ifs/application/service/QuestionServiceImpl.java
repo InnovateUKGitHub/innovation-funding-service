@@ -24,6 +24,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionRestService questionRestService;
 
+    @Autowired
+    QuestionStatusRestService questionStatusRestService;
+
     @Override
     public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
         questionRestService.assign(questionId, applicationId, assigneeId, assignedById);
@@ -59,6 +62,34 @@ public class QuestionServiceImpl implements QuestionService {
                     questionAssignees.put(question.getId(), questionStatus);
                     break;
                 }
+            }
+        }
+        return questionAssignees;
+    }
+
+    @Override
+    public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
+        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+        for(Question question : questions) {
+            final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
+            questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
+        }
+        return questionAssignees;
+    }
+
+    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses){
+        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+
+        for(QuestionStatus questionStatus : questionStatuses) {
+            if(questionStatus.getAssignee()==null)
+                continue;
+            boolean multipleStatuses = question.hasMultipleStatuses();
+            boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+
+            // Checking that assignee is part of organisation when there are multiple statuses for a question
+            if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
+                questionAssignees.put(question.getId(), questionStatus);
+                break;
             }
         }
         return questionAssignees;

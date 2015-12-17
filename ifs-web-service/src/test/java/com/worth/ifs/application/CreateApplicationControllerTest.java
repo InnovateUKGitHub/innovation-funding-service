@@ -87,8 +87,7 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
                         .param("postcodeInput", POSTCODE_LOOKUP)
         )
                 .andExpect(view().name("create-application/confirm-selected-organisation"))
-                .andExpect(model().attributeExists("confirmCompanyDetailsForm"))
-                .andExpect(model().attributeErrorCount("confirmCompanyDetailsForm", 0));
+                .andExpect(model().attributeExists("confirmCompanyDetailsForm"));
     }
 
     @Test
@@ -99,8 +98,7 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
                         .param("selectedPostcodeIndex", "0")
         )
                 .andExpect(view().name("create-application/confirm-selected-organisation"))
-                .andExpect(model().attributeExists("confirmCompanyDetailsForm"))
-                .andExpect(model().attributeErrorCount("confirmCompanyDetailsForm", 0));
+                .andExpect(model().attributeExists("confirmCompanyDetailsForm"));
         //TODO: check if the Address object is also added to the model
     }
 
@@ -112,7 +110,6 @@ public class CreateApplicationControllerTest  extends BaseUnitTest {
         )
                 .andExpect(view().name("create-application/confirm-selected-organisation"))
                 .andExpect(model().attributeExists("confirmCompanyDetailsForm"))
-                .andExpect(model().attributeErrorCount("confirmCompanyDetailsForm", 1))
                 .andExpect(model().attributeHasFieldErrorCode("confirmCompanyDetailsForm", "postcodeInput", "NotEmpty"));
     }
 }

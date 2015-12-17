@@ -207,7 +207,7 @@ public abstract class AbstractApplicationController {
     }
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
-        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
+        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
         Competition competition = competitionService.getById(application.getCompetitionId());
@@ -261,7 +261,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("sections", sections);
     }
 
-    private void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
         Competition competition = competitionService.getById(application.getCompetitionId());
         Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
