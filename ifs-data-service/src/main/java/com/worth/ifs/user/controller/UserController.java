@@ -119,7 +119,6 @@ public class UserController {
 
     @RequestMapping("/createUserForOrganisationWithRole/{organisationId}/{roleName}")
     public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("roleName") final String roleName, @RequestBody UserResource userResource) {
-
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, roleName);
