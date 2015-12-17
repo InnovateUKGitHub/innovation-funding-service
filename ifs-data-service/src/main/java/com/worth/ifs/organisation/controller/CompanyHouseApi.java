@@ -11,7 +11,9 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +40,9 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public List<CompanyHouseBusiness> searchOrganisations(String searchText) {
-        this.setDataRestServiceUrl(COMPANY_HOUSE_API);
+    public List<CompanyHouseBusiness> searchOrganisations(String searchText) throws UnsupportedEncodingException {
+        setDataRestServiceUrl(COMPANY_HOUSE_API);
+        searchText = UriUtils.decode(searchText, "UTF-8"); // encodes in the web-services.
         JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + searchText, JsonNode.class);
         JsonNode companyItems = companiesResources.path("items");
         List<CompanyHouseBusiness> results = new ArrayList<>();
