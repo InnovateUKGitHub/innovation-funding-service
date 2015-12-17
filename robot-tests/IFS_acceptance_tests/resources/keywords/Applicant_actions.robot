@@ -131,37 +131,37 @@ Applicant is on the 'potential market' question
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'project exploitation' page
+Applicant is on the 'project exploitation' question
     Location Should Be  ${PROJECT_EXPLOITATION_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'economic benefit' page
+Applicant is on the 'economic benefit' question
     Location Should Be  ${ECONOMIC_BENEFIT_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'technical approach' page
+Applicant is on the 'technical approach' question
     Location Should Be  ${TECHNICAL APPROACH_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'innovation' page
+Applicant is on the 'innovation' question
     Location Should Be  ${INNOVATION_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'risks' page
+Applicant is on the 'risks' question
     Location Should Be  ${RISKS_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'funding' page
+Applicant is on the 'funding' question
     Location Should Be  ${FUNDING_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
 
-Applicant is on the 'adding value' page
+Applicant is on the 'adding value' question
     Location Should Be  ${ADDING_VALUE_URL}
     Page Should Not Contain     error
     Page Should Not Contain     Error
@@ -182,6 +182,6 @@ Applicant is on the "Your approach..." section
     Page Should Not Contain     Error
 
 Applicant is on the Finances section
-    Location Should Be  ${PROJECT_SUMMARY_URL}
+    Location Should Be  ${FINANCES}
     Page Should Not Contain     error
     Page Should Not Contain     Error
