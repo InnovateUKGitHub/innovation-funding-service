@@ -29,6 +29,8 @@ public class AssessmentController {
 
     @Autowired
     AssessmentHandler assessmentHandler;
+
+    @Autowired
     ProcessRoleController processRoleController;
 
     @Autowired
@@ -104,7 +106,6 @@ public class AssessmentController {
 
         String suitableValue = formData.get("suitableValue").asText();
         String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
-        String overallScore =  HtmlUtils.htmlUnescape(formData.get("overallScore").asText());
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
@@ -117,7 +118,7 @@ public class AssessmentController {
         processOutcome.setComment(comments);
         newAssessment.setProcessStatus(assessment.getProcessStatus());
 
-        assessmentWorkflowEventHandler.recommend(processRole.getId(), newAssessment);
+        assessmentWorkflowEventHandler.recommend(processRole.getId(), newAssessment, processOutcome);
         return true;
     }
 

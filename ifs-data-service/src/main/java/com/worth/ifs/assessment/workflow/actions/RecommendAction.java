@@ -37,12 +37,11 @@ public class RecommendAction implements Action<String, String> {
                     .findFirst();
 
             ProcessOutcome assessmentOutcome = processOutcome.orElse(new ProcessOutcome());
-            String originalOutcome = assessmentOutcome.getOutcome();
             assessmentOutcome.setOutcome(updatedProcessOutcome.getOutcome());
             assessmentOutcome.setDescription(updatedProcessOutcome.getDescription());
             assessmentOutcome.setComment(updatedProcessOutcome.getComment());
 
-            if(!originalOutcome.equals(RecommendedValue.EMPTY)) {
+            if(!RecommendedValue.EMPTY.toString().equals(assessmentOutcome)) {
                 assessment.setProcessStatus(context.getTransition().getTarget().getId());
             }
             assessmentRepository.save(assessment);

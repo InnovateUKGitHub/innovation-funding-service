@@ -1,7 +1,12 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +34,7 @@ public class AssessmentSubmitReviewModel {
     private final Log log = LogFactory.getLog(getClass());
 
     private final Assessment assessment;
-    private final Application application;
+    private final ApplicationResource application;
     private final Competition competition;
     private final List<Question> questions;
     private final List<Question> scorableQuestions;
@@ -62,10 +67,10 @@ public class AssessmentSubmitReviewModel {
 
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition) {
         this.assessment = assessment;
-        this.application = assessorProcessRole.getApplication();
-        this.competition = assessorProcessRole.getApplication().getCompetition();
+        this.application = application;
+        this.competition = competition;
 
         questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
@@ -126,7 +131,7 @@ public class AssessmentSubmitReviewModel {
         return assessment;
     }
 
-    public Application getApplication() {
+    public ApplicationResource getApplication() {
         return application;
     }
 
@@ -161,5 +166,17 @@ public class AssessmentSubmitReviewModel {
     public AssessorFeedback getFeedbackForQuestion(Question question) {
         Optional<Response> responseOption = questionIdsAndResponses.get(question.getId());
         return responseOption.map(response -> responseIdsAndFeedback.get(response.getId())).orElse(null);
+    }
+
+    public String getRecommendedValue(){
+        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getOutcome() : RecommendedValue.EMPTY.toString();
+    }
+
+    public String getSuitableFeedback(){
+        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getDescription() : "";
+    }
+
+    public String getComments(){
+        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getComment() : "";
     }
 }

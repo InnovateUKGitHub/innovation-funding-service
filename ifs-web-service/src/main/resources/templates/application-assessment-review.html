@@ -10,7 +10,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content" th:with="application=${app}">
+<main id="content" th:with="application=${currentApplication}">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
             daysLeft=${competition.getAssessmentDaysLeft()},

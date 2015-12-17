@@ -16,6 +16,7 @@ public class AssessmentGuard implements Guard<String, String> {
     public boolean evaluate(StateContext<String, String> context) {
         Object assessmentObject = context.getMessageHeader("assessment");
         Object processRoleId = context.getMessageHeader("processRoleId");
+        // TODO qqRP do we need to check ProcessOutcome here?
 
         if(isAssessment(assessmentObject) &&
                 isTypeOfLong(processRoleId)) {

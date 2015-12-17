@@ -44,11 +44,12 @@ public class AssessmentWorkflowEventHandler {
                 .build(), currentProcessStatus);
     }
 
-    public void recommend(Long processRoleId, Assessment assessment) {
+    public void recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.RECOMMEND.getType())
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
+                .setHeader("processOutcome", processOutcome)
                 .build(), assessment.getProcessStatus());
     }
 
