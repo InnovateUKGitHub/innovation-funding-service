@@ -67,18 +67,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
+        Section section = sectionService.getById(sectionId);
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        addQuestionDetails(sectionId, model);
+
+        addNavigation(section, applicationId, model);
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
 
         return "application-form";
-    }
-
-    private void addQuestionDetails(Long sectionId, Model model) {
-        Question previousQuestion = questionService.getPreviousQuestionBySection(sectionId);
-        model.addAttribute("previousQuestion", previousQuestion);
     }
 
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
@@ -95,25 +92,71 @@ public class ApplicationFormController extends AbstractApplicationController {
             questionSectionId = Optional.ofNullable(section.getId());
         }
         super.addApplicationDetails(applicationId, user.getId(), questionSectionId , model, form, false);
-        addQuestionDetails(question, model);
+
+        addNavigation(question, applicationId, model);
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
+        model.addAttribute("currentQuestion", question);
 
         return "application-form";
     }
 
-    private void addQuestionDetails(Question question, Model model) {
+    private void addNavigation(Section section, Long applicationId, Model model) {
+        if(section==null) {
+            return;
+        }
+        Question previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
+        addPreviousQuestionToModel(previousQuestion, applicationId, model);
+        Question nextQuestion = questionService.getNextQuestionBySection(section.getId());
+        addNextQuestionToModel(nextQuestion, applicationId, model);
+    }
+    private void addNavigation(Question question, Long applicationId, Model model) {
         if(question==null) {
             return;
         }
-
         Question previousQuestion = questionService.getPreviousQuestion(question.getId());
+        addPreviousQuestionToModel(previousQuestion, applicationId, model);
         Question nextQuestion = questionService.getNextQuestion(question.getId());
+        addNextQuestionToModel(nextQuestion, applicationId, model);
+    }
 
-        model.addAttribute("currentQuestion", question);
-        model.addAttribute("previousQuestion", previousQuestion);
-        model.addAttribute("nextQuestion", nextQuestion);
+    private void addPreviousQuestionToModel(Question previousQuestion, Long applicationId, Model model) {
+        String previousUrl = "";
+        String previousText = "";
+
+        if(previousQuestion != null) {
+            Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
+            if(previousSection.isQuestionGroup()) {
+                previousUrl = "/application/" + applicationId + "/form/section/" + previousSection.getId();
+                previousText = previousSection.getName();
+            } else {
+                previousUrl = "/application/" + applicationId + "/form/question/" + previousQuestion.getId();
+                previousText = previousQuestion.getShortName();
+            }
+            model.addAttribute("previousUrl", previousUrl);
+            model.addAttribute("previousText", previousText);
+        }
+    }
+
+    private void addNextQuestionToModel(Question nextQuestion, Long applicationId, Model model) {
+        String nextUrl = "";
+        String nextText = "";
+
+        if(nextQuestion!=null) {
+            Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
+
+            if(nextSection.isQuestionGroup()) {
+                nextUrl = "/application/" + applicationId + "/form/section/" + nextSection.getId();
+                nextText = nextSection.getName();
+            } else {
+                nextUrl = "/application/" + applicationId + "/form/question/" + nextQuestion.getId();
+                nextText = nextQuestion.getShortName();
+            }
+
+            model.addAttribute("nextUrl", nextUrl);
+            model.addAttribute("nextText", nextText);
+        }
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
@@ -145,7 +188,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         Optional<Long> questionSectionId = Optional.ofNullable(sectionId);
         super.addApplicationDetails(applicationId, user.getId(), questionSectionId, model, form, false);
-        addQuestionDetails(question, model);
+        //addQuestionDetails(question, model);
 
         if(bindingResult.hasErrors()){
             return "application-form";

@@ -1,0 +1,12 @@
+UPDATE `question` SET `priority`='5' WHERE `id`='1';
+UPDATE `question` SET `priority`='6' WHERE `id`='2';
+UPDATE `question` SET `priority`='7' WHERE `id`='3';
+UPDATE `question` SET `priority`='8' WHERE `id`='4';
+UPDATE `question` SET `priority`='9' WHERE `id`='5';
+UPDATE `question` SET `priority`='10' WHERE `id`='6';
+UPDATE `question` SET `priority`='11' WHERE `id`='7';
+UPDATE `question` SET `priority`='12' WHERE `id`='8';
+UPDATE `question` SET `priority`='13' WHERE `id`='15';
+UPDATE `question` SET `priority`='14' WHERE `id`='16';
+UPDATE `question` SET `priority`='15' WHERE `id`='20';
+UPDATE `question` SET `priority`='16' WHERE `id`='36';
