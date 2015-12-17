@@ -25,6 +25,7 @@ Verify the Autosave for the form text areas
     and the Applicant refreshes the page
     Then the text should be visible
 
+
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
@@ -97,7 +98,6 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     and the question should not be marked as complete on the application overview page
 
 *** Keywords ***
-
 the Applicant enters some text
     Applicant edits the 'Project Summary' question
     Focus    css=.app-submit-btn
@@ -188,7 +188,7 @@ the word count should be available in the text area
 
 When the Applicant edits the Public description
     Clear Element Text    css=#form-input-12 .editor
-    Press Key  css=#form-input-12 .editor   \\8
+    Press Key    css=#form-input-12 .editor    \\8
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
@@ -202,7 +202,7 @@ the word count should be correct for the Public description
 
 And when the Applicant edits the Project description question (500 words)
     Clear Element Text    css=#form-input-12 .editor
-    Press Key  css=#form-input-12 .editor   \\8
+    Press Key    css=#form-input-12 .editor    \\8
     Input Text    css=#form-input-12 .editor    0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 90 1 2 3 4 5 6 7 8 9 10 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
     Focus    css=.app-submit-btn
     Sleep    2s
@@ -226,6 +226,7 @@ the word count for the Project description question should be correct (0 words)
 
 the Applicant edits 'Public description' and marks it as complete
     Clear Element Text    css=#form-input-12 .editor
+    Press Key    css=#form-input-12 .editor    \\8
     Input Text    css=#form-input-12 .editor    Hi, I’m a robot @#$@#$@#$
     Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
