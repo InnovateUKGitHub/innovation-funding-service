@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 
+import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.*;
 
@@ -169,14 +170,14 @@ public class AssessmentSubmitReviewModel {
     }
 
     public String getRecommendedValue(){
-        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getOutcome() : RecommendedValue.EMPTY.toString();
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getOutcome() : RecommendedValue.EMPTY.toString();
     }
 
     public String getSuitableFeedback(){
-        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getDescription() : "";
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getDescription() : "";
     }
 
     public String getComments(){
-        return assessment.getLastOutcome() != null ? assessment.getLastOutcome().getComment() : "";
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getComment() : "";
     }
 }
