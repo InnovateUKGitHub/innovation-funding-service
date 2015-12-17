@@ -152,15 +152,16 @@ public class UserController {
         user.setOrganisations(userOrganisationList);
     }
 
-    private User assembleUserFromResource(UserResource userDto) {
+    private User assembleUserFromResource(UserResource userResource) {
         User newUser = new User();
-        newUser.setFirstName(userDto.getFirstName());
-        newUser.setLastName(userDto.getLastName());
-        newUser.setPassword(userDto.getPassword());
-        newUser.setEmail(userDto.getEmail());
-        newUser.setTitle(userDto.getTitle());
+        newUser.setFirstName(userResource.getFirstName());
+        newUser.setLastName(userResource.getLastName());
+        newUser.setPassword(userResource.getPassword());
+        newUser.setEmail(userResource.getEmail());
+        newUser.setTitle(userResource.getTitle());
+        newUser.setPhoneNumber(userResource.getPhoneNumber());
 
-        String fullName = concatenateFullName(userDto.getFirstName(), userDto.getLastName());
+        String fullName = concatenateFullName(userResource.getFirstName(), userResource.getLastName());
         newUser.setName(fullName);
 
         return newUser;

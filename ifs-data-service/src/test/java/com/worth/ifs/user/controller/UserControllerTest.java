@@ -2,16 +2,19 @@ package com.worth.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Matchers;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.*;
@@ -93,14 +96,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void userControllerReturnUserResourceOfCreatedUserAfterUserCreation() throws Exception {
-        UserResource userResource = new UserResource();
-        userResource.setEmail("testemail@email.email");
-        userResource.setFirstName("testFirstName");
-        userResource.setLastName("testLastName");
-        userResource.setPhoneNumber("testPhoneNumber");
-        userResource.setPassword("testPassword");
-        userResource.setTitle("Mr");
+     public void userControllerReturnUserResourceOfCreatedUserAfterUserCreation() throws Exception {
+
+        UserResource userResource = newUserResource().withEmail("testemail@email.email")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPhoneNumber("1234567890")
+                .withPassword("testPassword")
+                .withTitle("Mr")
+                .build();
 
         ObjectMapper mapper = new ObjectMapper();
         String applicationJsonString = mapper.writeValueAsString(userResource);
@@ -123,16 +127,50 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is("OK")))
+                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andExpect(jsonPath("$.entity.firstName", notNullValue()))
                 .andExpect(jsonPath("$.entity.lastName", notNullValue()))
                 .andExpect(jsonPath("$.entity.phoneNumber", notNullValue()))
                 .andExpect(jsonPath("$.entity.title", notNullValue()))
                 .andExpect(jsonPath("$.entity.password", notNullValue()))
                 .andExpect(jsonPath("$.entity.email", notNullValue()))
-                .andExpect(jsonPath("$.entity.name", is(user.getFirstName()+" "+user.getLastName()))
-                        );
-        
+                .andExpect(jsonPath("$.entity.name", is(user.getFirstName() + " " + user.getLastName()))
+                );
+
         verify(userRepositoryMock, times(2)).save(Matchers.isA(User.class));
+    }
+
+    @Test
+    public void userControllerShouldReturnErrorWhenEmailAddressIsTaken() throws Exception {
+
+        UserResource userResource = newUserResource().withEmail("testemail@email.email")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPhoneNumber("1234567890")
+                .withPassword("testPassword")
+                .withTitle("Mr")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String applicationJsonString = mapper.writeValueAsString(userResource);
+
+        Long organisationId = 1L;
+        Long roleId = 1L;
+
+        User user = new User();
+
+        List<User> users = new ArrayList<User>();
+        users.add(user);
+
+        when(userRepositoryMock.findByEmail(userResource.getEmail())).thenReturn(users);
+
+        mockMvc.perform(post("/user/createUserForOrganisationWithRole/" + organisationId + "/" + roleId, "json")
+                .contentType(APPLICATION_JSON)
+                .content(applicationJsonString))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName()))
+                );
+
+        verify(userRepositoryMock, times(0)).save(Matchers.isA(User.class));
     }
 }

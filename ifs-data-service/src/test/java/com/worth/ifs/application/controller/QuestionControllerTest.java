@@ -2,10 +2,13 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.Arrays;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
@@ -86,6 +89,15 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
                 .thenReturn(previousQuestion);
 
         mockMvc.perform(get("/question/getPreviousQuestion/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getPreviousQuestionBySectionTest() throws Exception {
+        Section currentSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, newSection().build()).build();
+        when(sectionController.getById(1L)).thenReturn(currentSection);
+        when(sectionController.getPreviousSection(currentSection, false, true)).thenReturn(newSection().withQuestions(Arrays.asList(newQuestion().build())).build());
+        mockMvc.perform(get("/question/getPreviousQuestionBySection/1"))
                 .andExpect(status().isOk());
     }
 }
