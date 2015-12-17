@@ -126,14 +126,13 @@ public class RegistrationController {
     }
 
     private ResourceEnvelope<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceEnvelope = userService.createUserForOrganisation(registrationForm.getFirstName(),
+        ResourceEnvelope<UserResource> userResourceEnvelope = userService.createLeadApplicantForOrganisation(registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                organisationId,
-                UserRoleType.APPLICANT.getName());
+                organisationId);
         return userResourceEnvelope;
     }
 

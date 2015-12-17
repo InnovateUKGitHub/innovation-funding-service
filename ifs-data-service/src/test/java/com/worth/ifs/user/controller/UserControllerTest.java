@@ -123,7 +123,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userRepositoryMock.save(Matchers.isA(User.class))).thenReturn(user);
 
-        mockMvc.perform(post("/user/createUserForOrganisationWithRole/" + organisationId + "/" + roleId, "json")
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
@@ -164,7 +164,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userRepositoryMock.findByEmail(userResource.getEmail())).thenReturn(users);
 
-        mockMvc.perform(post("/user/createUserForOrganisationWithRole/" + organisationId + "/" + roleId, "json")
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
