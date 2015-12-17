@@ -117,6 +117,92 @@
 	</div>
 </div>
 
+<!-- ===========================Question - admin support  =========================== --> 
+
+<div th:fragment="finance-question-admin-support">
+	<div class="question">
+		<p>Administration support costs are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p>
+
+		<p>A common way of estimating overheads on InnovateUK projects is to use a flat rate of 20% of labour costs. This is the default rate.</p>
+
+		<p>If you want to use a different rate, please enter it, or use our calculator and we will assess your administration support costs on this basis. If your project is successful, you will need to justify this rate to our finance team. Three methods of declaring overheads are available, as well as the ability to select no administration support funding.</p>
+	</div>
+
+	<div class="form-block">
+		<label class="block-label" for="admin-support-radio-1">
+			<input id="admin-support-radio-1" type="radio" name="admin-support-radio-group" value="No admin funding" />
+			No administration support funding
+		</label>
+		<label class="block-label" for="admin-support-radio-2">
+			<input id="admin-support-radio-2" type="radio" name="admin-support-radio-group" value="20%" checked="checked" />
+			20% of labour costs
+		</label>
+		<label class="block-label" for="admin-support-radio-3">
+			<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="Custom" />
+			Custom administration support cost
+		</label>
+		<label class="block-label" for="admin-support-radio-4">
+			<input id="admin-support-radio-4" type="radio" name="admin-support-radio-group" value="Special rate" />
+			Special rate agreed with Innovate UK
+		</label>
+	</div>
+	
+	<fieldset class="question">
+
+		<div id="admin-support-1">
+				<h3 class="heading-medium">No Administration support cost funding</h3>
+				<p>You are not currently applying for administration support cost funding</p>
+			</div>
+
+			
+			<div id="admin-support-2">
+			<h3 class="heading-medium">20% of labour costs</h3>
+			<div class="form-group alignright">
+				<label>
+					Total administration support cost
+					<input type="number" name="admin-support-20" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-20" value="£ 0" />
+				</label>
+			</div>
+		</div>
+
+
+		<div id="admin-support-3">
+			<h3 class="heading-medium">Custom administration support costs</h3>
+			<p>To complete this section you will need to contact Innovate UK to calculate your Administration Support costs, who can be contacted by email, <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.</p>
+			<div class="form-group alignright">
+				<label>
+					Rate calculated (%)
+					<input type="number" name="admin-support-custom" class="form-control form-control-1-4 alignright"  id="id_admin-support-custom" value="£ 0" />
+				</label>
+			</div>
+			<div class="form-group alignright">
+				<label>
+					Total administration support cost
+					<input type="number" name="admin-support-custom-2" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-custom-2" value="£ 0" />
+				</label>
+			</div>
+		</div>
+
+		<div id="admin-support-4">
+			<h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
+			<p>I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
+			<div class="form-group alignright">
+				<label>
+					Rate agreed with Innovate UK (%)
+					<input type="number" name="admin-support-special" class="form-control form-control-1-4 alignright"  id="id_admin-support-special" value="£ 0" />
+				</label>
+			</div>
+			<div class="form-group alignright">
+				<label>
+					Total administration support cost
+					<input type="number" name="admin-support-special-2" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-special-2" value="£ 0" />
+				</label>
+			</div>
+		</div>
+
+	</fieldset>
+</div>
+
 <!-- ===========================Question - Overheads  =========================== --> 
 
 <div th:fragment="finance-question-overheads">
