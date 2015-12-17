@@ -60,6 +60,9 @@ public class CreateApplicationController extends AbstractApplicationController {
     public static final String CONFIRM_COMPANY_DETAILS = "confirm-company-details";
     public static final String COMPANY_ADDRESS = "company_address";
     public static final String ORGANISATION_SIZE = "organisation_size";
+    public static final String ORGANISATION_NAME = "organisationName";
+    public static final String ORGANISATION_SIZE1 = "organisationSize";
+    public static final String COMPANY_HOUSE_NAME = "companyHouseName";
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -125,17 +128,16 @@ public class CreateApplicationController extends AbstractApplicationController {
             selectPostcodeAddress(companyHouseForm);
         } else if (request.getParameter(SEARCH_COMPANY_HOUSE) != null) {
             validator.validate(companyHouseForm, bindingResult);
-            if (!bindingResult.hasFieldErrors("companyHouseName")) {
+            if (!bindingResult.hasFieldErrors(COMPANY_HOUSE_NAME)) {
                 searchCompanyHouse(companyHouseForm);
             }else{
-                log.info("has errors "+ bindingResult.getFieldErrors().size());
-                bindingResult.getFieldErrors().forEach(e -> log.error(e.getField() +"__"+ e.getDefaultMessage()));
+                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() + "__" + e.getDefaultMessage()));
             }
         } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
             validator.validate(companyHouseForm, bindingResult);
-            if (StringUtils.hasText(companyHouseForm.getOrganisationName()) && companyHouseForm.getOrganisationSize() != null) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
                 // save state into cookie.
                 ObjectMapper mapper = new ObjectMapper();
                 String jsonAddress = "";
@@ -151,8 +153,7 @@ public class CreateApplicationController extends AbstractApplicationController {
 
                 return "redirect:/application/create/confirm-company";
             } else {
-                log.info("has errors "+ bindingResult.getFieldErrors().size());
-                bindingResult.getFieldErrors().forEach(e -> log.error(e.getField() +"__"+e.getDefaultMessage()));
+                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() +"__"+e.getDefaultMessage()));
             }
         }
 

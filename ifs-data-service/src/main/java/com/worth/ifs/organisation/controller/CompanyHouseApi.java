@@ -11,7 +11,9 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +34,14 @@ public class CompanyHouseApi extends BaseRestService {
     private static final int SEARCH_ITEMS_MAX = 20;
     private final Log log = LogFactory.getLog(getClass());
 
-    public CompanyHouseApi() {
-        super();
-        this.setDataRestServiceUrl(COMPANY_HOUSE_API);
+    @Override
+    protected String getDataRestServiceURL() {
+        return COMPANY_HOUSE_API;
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public List<CompanyHouseBusiness> searchOrganisations(String searchText) {
-        this.setDataRestServiceUrl(COMPANY_HOUSE_API);
+    public List<CompanyHouseBusiness> searchOrganisations(String searchText) throws UnsupportedEncodingException {
+        searchText = UriUtils.decode(searchText, "UTF-8"); // encodes in the web-services.
         JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + searchText, JsonNode.class);
         JsonNode companyItems = companiesResources.path("items");
         List<CompanyHouseBusiness> results = new ArrayList<>();
@@ -61,7 +63,6 @@ public class CompanyHouseApi extends BaseRestService {
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
     public CompanyHouseBusiness getOrganisationById(String id) {
         log.debug("getOrganisationById " + id);
-        this.setDataRestServiceUrl(COMPANY_HOUSE_API);
 
         JsonNode jsonNode = null;
         try {

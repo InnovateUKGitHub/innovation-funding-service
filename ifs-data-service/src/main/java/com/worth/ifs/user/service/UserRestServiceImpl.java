@@ -90,7 +90,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     public List<User> findRelatedUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = restGetEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
+        ResponseEntity<User[]> responseEntity = restGetEntity(getDataRestServiceURL() + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
