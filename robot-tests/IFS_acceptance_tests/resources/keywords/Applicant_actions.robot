@@ -76,9 +76,6 @@ Applicant goes to the Application questions section
 Applicant goes to the "Your approach..." section
     Go to    ${PROJECT_URL}
 
-Applicant goes to the "Funding" section
-    Go to    ${FUNDING_URL}
-
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
 
