@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.application.form;
 
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;

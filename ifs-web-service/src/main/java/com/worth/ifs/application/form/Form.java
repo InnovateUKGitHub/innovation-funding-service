@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.application.form;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
