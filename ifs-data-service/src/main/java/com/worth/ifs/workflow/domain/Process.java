@@ -2,8 +2,11 @@ package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +34,8 @@ public abstract class Process {
     private LocalDate endDate;
 
     @OneToMany(mappedBy="process")
+    @OrderColumn(name = "process_index")
+    @Cascade(CascadeType.ALL)
     protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
 
     @ManyToOne

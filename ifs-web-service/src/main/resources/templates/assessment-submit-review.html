@@ -97,9 +97,9 @@
         <div class="form-group">
             <select name="is-suitable-for-funding" class="form-control" id="suitable-for-funding" >
 
-                <option value="" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY }"></option>
-                <option value="yes" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).YES }">Yes</option>
-                <option value="no" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).NO }">No</option>
+                <option value="" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).EMPTY.toString() }"></option>
+                <option value="yes" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).YES.toString() }">Yes</option>
+                <option value="no" th:selected="${model.recommendedValue == T(com.worth.ifs.assessment.domain.RecommendedValue).NO.toString() }">No</option>
             </select>
         </div>
 

@@ -33,7 +33,7 @@ public class RecommendAction implements Action<String, String> {
         if(assessment!=null) {
             Optional<ProcessOutcome> processOutcome = assessment.getProcessOutcomes()
                     .stream()
-                    .filter(p -> p.getOutcomeType().equals(AssessmentOutcomes.RECOMMEND))
+                    .filter(p -> AssessmentOutcomes.RECOMMEND.toString().equals(p.getOutcomeType()))
                     .findFirst();
 
             ProcessOutcome assessmentOutcome = processOutcome.orElse(new ProcessOutcome());
@@ -44,6 +44,9 @@ public class RecommendAction implements Action<String, String> {
             if(!RecommendedValue.EMPTY.toString().equals(assessmentOutcome)) {
                 assessment.setProcessStatus(context.getTransition().getTarget().getId());
             }
+
+            assessmentOutcome.setProcess(assessment);
+            assessment.getProcessOutcomes().add(assessmentOutcome);
             assessmentRepository.save(assessment);
         }
     }

@@ -7,15 +7,16 @@ CREATE TABLE `process_outcome` (
   `outcome` varchar(255) DEFAULT NULL,
   `outcome_type` varchar(255) DEFAULT NULL,
   `process_id` bigint(20) DEFAULT NULL,
+  `process_index` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_rm72g2d5hsse93bn54jimfkbw` (`process_id`),
   CONSTRAINT `FK_rm72g2d5hsse93bn54jimfkbw` FOREIGN KEY (`process_id`) REFERENCES `process` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT IGNORE INTO `process_outcome` (`id`, `description`, `outcome`, `outcome_type`, `process_id`) VALUES (1, 'hey', 'YES', 'assessment', '1');
-INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`) VALUES (2, 'YES', 'assessment', '2');
-INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`) VALUES (3, 'YES', 'assessment', '3');
-INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`) VALUES (4, 'YES', 'assessment', '7');
+INSERT IGNORE INTO `process_outcome` (`id`, `description`, `outcome`, `outcome_type`, `process_id`, `process_index`) VALUES (1, 'hey', 'YES', 'assessment', '1', 0);
+INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`, `process_index`) VALUES (2, 'YES', 'assessment', '2', 0);
+INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`, `process_index`) VALUES (3, 'YES', 'assessment', '3', 0);
+INSERT IGNORE INTO `process_outcome` (`id`, `outcome`, `outcome_type`, `process_id`, `process_index`) VALUES (4, 'YES', 'assessment', '7', 0);
 
 ALTER TABLE `process`
 ADD COLUMN `process_type` VARCHAR(31) NOT NULL AFTER `status`,

@@ -1,5 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -23,9 +25,19 @@ public class ProcessOutcome {
 
     @ManyToOne
     @JoinColumn(name="processId", referencedColumnName="id")
-    Process process;
+    private Process process;
+
+    @JsonIgnore
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
 
     private String outcomeType;
+
 
     public String getOutcome() {
         return outcome;
