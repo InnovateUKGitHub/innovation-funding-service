@@ -29,11 +29,15 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.FORM_INPUT_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -146,5 +150,128 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
     }
 
+    @Test
+    public void testCreateFormInputResponseFileUploadButProcessRoleNotFound() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
+        when(processRoleRepositoryMock.findOne(789L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(PROCESS_ROLE_NOT_FOUND));
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadButFormInputNotFound() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
+        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(FORM_INPUT_NOT_FOUND));
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadButApplicationNotFound() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
+        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
+        when(applicationRepositoryMock.findOne(456L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(APPLICATION_NOT_FOUND));
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadExistingFormInputResponseSaveThrowingExceptionHandledGracefully() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        FormInputResponse existingFormInputResponse = newFormInputResponse().build();
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+
+        when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenThrow(new RuntimeException("Surprise!"));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadNewFormInputResponseSaveThrowingExceptionHandledGracefully() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
+        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
+        when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
+
+        when(formInputResponseRepositoryMock.save(isA(FormInputResponse.class))).thenThrow(new RuntimeException("Surprise!"));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+    }
 
 }

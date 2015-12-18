@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -41,6 +42,10 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    enum ServiceFailures {
+        UNABLE_TO_CREATE_FILE, //
+    }
 
     @Autowired
     private FileService fileService;
@@ -98,7 +103,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> fileDetails =
                 fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
 
-        return fileDetails.map(successfulFile -> {
+        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> fileDetails.map(successfulFile -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -125,7 +130,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
                 })));
             }
-        });
+        }));
     }
 
     private Either<ServiceFailure, FormInput> getFormInput(long formInputId) {
