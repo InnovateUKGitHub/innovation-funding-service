@@ -76,7 +76,7 @@ public class FormInputResponseFileUploadController {
             map(fileEntry -> returnFileEntryId(fileEntry)
         ))))));
 
-        return getLeftOrRight(result);
+        return result.mapLeftOrRight(failure -> failure, success -> success);
     }
 
     @RequestMapping(value = "/file", method = GET)
