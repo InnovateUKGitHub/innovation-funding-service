@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.Organisation;
@@ -32,6 +33,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -101,7 +103,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
                 thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
 
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(123L, 456L, 789L)).thenReturn(null);
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
         when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
@@ -112,8 +114,36 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(result.isRight());
         Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
         assertEquals(fileFound, resultParts.getKey());
+        assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
         verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+
+        FormInputResponse existingFormInputResponse = newFormInputResponse().build();
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isRight());
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
+        assertEquals(fileFound, resultParts.getKey());
+        assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
+
+        assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
     }
 
 
