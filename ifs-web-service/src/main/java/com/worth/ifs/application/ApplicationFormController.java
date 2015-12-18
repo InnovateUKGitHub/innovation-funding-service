@@ -87,19 +87,57 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
+
+        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+
+        form.bindingResult = bindingResult;
+        form.objectErrors = bindingResult.getAllErrors();
+
+        return "application-form";
+    }
+
+    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
         Optional<Long> questionSectionId = null;
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
-        super.addApplicationDetails(applicationId, user.getId(), questionSectionId , model, form, false);
-
+        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form, false);
         addNavigation(question, applicationId, model);
+        model.addAttribute("currentQuestion", question);
+    }
+
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
+                                     BindingResult bindingResult,
+                                     Model model,
+                                     @PathVariable("applicationId") final Long applicationId,
+                                     @PathVariable("questionId") final Long questionId,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response){
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        Question question = questionService.getById(questionId);
+        Section section = sectionService.getSectionByQuestionId(questionId);
+        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+
+        /* Start save action */
+        bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
+
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey("assign_question")) {
+            assignQuestion(model, applicationId, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+        }
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
-        model.addAttribute("currentQuestion", question);
+        /* End save action */
 
-        return "application-form";
+        if(bindingResult.hasErrors()){
+            return "application-form";
+        }else{
+            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
+            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+        }
     }
 
     private void addNavigation(Section section, Long applicationId, Model model) {
@@ -158,46 +196,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             model.addAttribute("nextText", nextText);
         }
     }
-
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
-    public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
-                                        BindingResult bindingResult,
-                                        Model model,
-                                        @PathVariable("applicationId") final Long applicationId,
-                                        @PathVariable("questionId") final Long questionId,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response){
-        Map<String, String[]> params = request.getParameterMap();
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        Question question = questionService.getById(questionId);
-
-        bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
-
-        if (params.containsKey("assign_question")) {
-            assignQuestion(model, applicationId, request);
-            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        }
-
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
-
-        Section section = sectionService.getSectionByQuestionId(questionId);
-        Long sectionId=null;
-        if(section!=null) {
-            sectionId = section.getId();
-        }
-        Optional<Long> questionSectionId = Optional.ofNullable(sectionId);
-        super.addApplicationDetails(applicationId, user.getId(), questionSectionId, model, form, false);
-        //addQuestionDetails(question, model);
-
-        if(bindingResult.hasErrors()){
-            return "application-form";
-        }else{
-            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
-        }
-    }
-
 
     @RequestMapping(value = "/deletecost/{sectionId}/{costId}")
     public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
@@ -372,6 +370,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             success= true;
 
         }
+
         return success;
     }
 
@@ -400,15 +399,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(updatedApplication.getName() != null){
-            LOG.error("setApplicationDetails: "+ updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
         if(updatedApplication.getStartDate() != null) {
-            LOG.error("setApplicationDetails: "+ updatedApplication.getStartDate());
             application.setStartDate(updatedApplication.getStartDate());
         }
         if(updatedApplication.getDurationInMonths() != null){
-            LOG.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }

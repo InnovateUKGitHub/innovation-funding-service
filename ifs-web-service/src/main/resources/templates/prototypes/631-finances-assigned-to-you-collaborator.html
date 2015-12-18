@@ -129,14 +129,33 @@
 		<legend class="visuallyhidden">What role is your organisation taking in this application?</legend>
 		<p class="form-hint">Please select how your organisation will be involved in this consortium.</p>
 		<div class="form-block">
-			<label class="block-label" for="radio-1">
-				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+			<label class="block-label" for="org-role-1">
+				<input id="org-role-1" type="radio" name="org-role-group" value="Micro"/>
 				Business role (Economic activity)
 			</label>
-			<label class="block-label" for="radio-2">
-				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+			<label class="block-label" for="org-role-2">
+				<input id="org-role-2" type="radio" name="org-role-group" value="Medium"/>
 				Research role (Non- economic activity)
 			</label>
+		</div>
+		
+		<div id="org-role-size" class="form-block">
+			<h2 class="heading-medium no-margin-bottom">Organisation size</h2>
+			<p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a> for guidance.</p>
+			<div class="form-block">
+				<label class="block-label" for="radio-1">
+					<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+					Micro / small - claim up to 70%
+				</label>
+				<label class="block-label" for="radio-2">
+					<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+					Medium - claim up to 60%
+				</label>
+				<label class="block-label" for="radio-3">
+					<input id="radio-3" type="radio" name="radio-group" value="Large"/>
+					Large - claim up to 50%
+				</label>
+			</div>
 		</div>
 
 		<div class="form-group extra-margin">
@@ -197,6 +216,24 @@
 			jQuery("#finance-other-funding").hide();
 		}else{
 			jQuery("#finance-other-funding").show();
+		}
+	});
+
+	jQuery('input#org-role-1').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#org-role-size").show();
+		}else{
+			jQuery("#org-role-size").hide();
+		}
+	});
+
+	jQuery('input#org-role-2').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#org-role-size").hide();
+		}else{
+			jQuery("#org-role-size").show();
 		}
 	});
 </script>
