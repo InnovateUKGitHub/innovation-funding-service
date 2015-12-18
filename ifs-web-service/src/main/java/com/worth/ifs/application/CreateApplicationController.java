@@ -59,8 +59,6 @@ public class CreateApplicationController extends AbstractApplicationController {
     @Autowired
     Validator validator;
 
-
-
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Form form, Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,

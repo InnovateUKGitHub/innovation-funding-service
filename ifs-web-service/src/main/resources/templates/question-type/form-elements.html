@@ -274,13 +274,13 @@
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
-        Assigned to: <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+            Assigned to: <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
         </div>
+        <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">
-            Assigned to: Nobody
+            Assigned to: <strong th:text="${name}" th:with="name=${(leadApplicant?.getUser()?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getUser()?.getName()}" />
         </div>
 </div>
-
 
 <!-- ========================= Last update info =========================== -->
 

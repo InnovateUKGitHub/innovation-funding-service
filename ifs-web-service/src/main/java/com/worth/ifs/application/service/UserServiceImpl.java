@@ -41,6 +41,16 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
+        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoleIds(),id -> processRoleService.getById(id));
+        for(final ProcessRole processRole : userApplicationRoles){
+            if(processRole.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
+                return processRole;
+            }
+        }
+        return null;
+    }
+
     public Set<User> getAssignableUsers(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
             .map(id -> processRoleService.getById(id))
