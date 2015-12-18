@@ -23,7 +23,13 @@ public abstract class BaseRestService {
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
 
-    protected String dataRestServiceURL;
+
+
+    private String dataRestServiceURL;
+
+    protected String getDataRestServiceURL() {
+        return dataRestServiceURL;
+    }
 
     @NotSecured("")
     @Value("${ifs.data.service.rest.baseURL}")
@@ -59,7 +65,7 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.GET, jsonEntity(""), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
@@ -84,19 +90,19 @@ public abstract class BaseRestService {
     }
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
-        return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(""), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), c);
     }
 
     protected void restPut(String path, Object entity) {
-        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(entity), Void.class);
+        getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(entity), Void.class);
     }
 
     protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
-        return getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.PUT, jsonEntity(entity), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(entity), c);
     }
 
     protected void restDelete(String path) {
-        getRestTemplate().exchange(dataRestServiceURL + path, HttpMethod.DELETE, jsonEntity(""), Void.class);
+        getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.DELETE, jsonEntity(""), Void.class);
     }
 
 
@@ -117,7 +123,7 @@ public abstract class BaseRestService {
         }
 
         HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
-        return restTemplate.postForEntity(dataRestServiceURL + path, entity, c);
+        return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, c);
     }
 
     @NotSecured("")

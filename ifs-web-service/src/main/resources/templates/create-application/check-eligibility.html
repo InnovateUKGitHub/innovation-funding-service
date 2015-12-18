@@ -12,26 +12,36 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
 
-    <div class="check-eligibility">
-        <h1 class="heading-large">Check Eligibility</h1>
+      <div class="message-alert">
+                <h1 class="heading-medium">Competition eligibility</h1>
 
-        <ul>
+
+
+            <p>
+To being a new application for the competition 'Technology Inspired' you must meet the following criteria:
+            </p>
+
+<ul class="list-bullet">
             <li>
-                a
+                <h2>Create this application as the <strong>lead partner</strong> of the consortium</h2>
+                <p>If you are not the lead, please contact your lead partner to create the application</p>
             </li>
             <li>
-                b
+                <h2>Lead this application as a <strong>Business</strong></h2>
+                <p>Applications into this competition must be lead by a business</p>
             </li>
             <li>
-                c
+                <h2>Be based in the <strong>UK</strong></h2>
+                <p>Non UK organisations are not eligible to recieve funding from Innovate UK</p>
             </li>
         </ul>
+         </div>
 
         <div class="grid-row">
             <section class="column-half">
                 <h1 class="heading-large">Create Account</h1>
 
-                <p>If you haven’t used this service before you must <a href="/create-account">create an account</a>,
+                <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
                 even if you already have an existing account with "Innovate UK".</p>
 
                 <p>Creating an account allows you to:</p>
@@ -42,9 +52,7 @@
                     <li>Setup successful project</li>
                 </ul>
 
-                <a href="/application/create/find-business" class="button" value="create-account" type="submit">Create</a>
-
-            </section>
+                <a href="/application/create/find-business" class="button" value="create-account" type="submit">Create</a>            </section>
             <section class="column-half">
                 <h1 class="heading-large">Sign in</h1>
 
@@ -70,12 +78,7 @@
                     </fieldset>
                     <input class="button" value="Sign in" type="submit"></input>
                 </form>
-
-
-
             </section>
-
-        </div>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

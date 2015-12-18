@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
-    public ResourceEnvelope<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createUserForOrganisationWithRole(firstName, lastName, password, email, title, phoneNumber, organisationId, roleName);
+    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
         return userResourceResourceStatusEnvelope;
     }
 }

@@ -51,29 +51,16 @@
             <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
 
             <ul class="pagination">
-                <li class="prev" th:if="${previousQuestion} and not ${previousSection}">
-                    <a th:href="@{/application/{id}/form/question/{questionId}/(id=${currentApplication.getId()},questionId=${previousQuestion.id})}" rel="prev" title="Navigate to previous part">
+                <li class="prev" th:if="${previousUrl}">
+                    <a th:href="@{${previousUrl}}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${previousQuestion.shortName}">Business proposition</span>
+                        <span class="pagination-part-title" th:text="${previousText}">Business proposition</span>
                     </a>
                 </li>
-                <li class="next" th:if="${nextQuestion}">
-                    <a th:href="@{/application/{id}/form/question/{questionId}/(id=${currentApplication.getId()},questionId=${nextQuestion.id})}" rel="next" title="Navigate to next part">
+                <li class="next" th:if="${nextUrl}">
+                    <a th:href="@{${nextUrl}}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${nextQuestion.shortName}">Funding</span>
-                    </a>
-                </li>
-
-                <li class="prev" th:if="${previousSection}">
-                    <a th:href="@{/application/{id}/form/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${previousSection.id})}" rel="prev" title="Navigate to previous part">
-                        <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${previousSection.name}">Business proposition</span>
-                    </a>
-                </li>
-                <li class="next" th:if="not ${nextQuestion} and ${nextSection}">
-                    <a th:href="@{/application/{id}/form/section/{sectionId}/(id=${currentApplication.getId()},sectionId=${nextSection.id})}" rel="next" title="Navigate to next part">
-                        <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${nextSection.name}">Funding</span>
+                        <span class="pagination-part-title" th:text="${nextText}">Funding</span>
                     </a>
                 </li>
             </ul>

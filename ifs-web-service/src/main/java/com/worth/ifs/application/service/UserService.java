@@ -18,6 +18,6 @@ public interface UserService {
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     public Set<User> getAssignableUsers(ApplicationResource application);
     public Set<User> getApplicationUsers(ApplicationResource application);
-    public ResourceEnvelope<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName);
+    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
 
 }

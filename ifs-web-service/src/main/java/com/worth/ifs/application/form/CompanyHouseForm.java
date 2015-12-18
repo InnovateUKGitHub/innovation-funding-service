@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.application.form;
 
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
@@ -16,8 +16,9 @@ import java.util.List;
 public class CompanyHouseForm  extends CreateApplicationForm{
     @NotEmpty
     // on empty value don't check pattern since then there already is a validation message.
-    @Pattern(regexp = "^$|^[A-Za-z0-9_\\&-,.:;\\@]+$", message = "Please enter valid characters")
+    @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&-,.:;\\@]+$", message = "Please enter valid characters")
     private String companyHouseName;
+    private boolean companyHouseSearching;
     private List<CompanyHouseBusiness> companyHouseList;
 
     @NotEmpty
@@ -57,6 +58,7 @@ public class CompanyHouseForm  extends CreateApplicationForm{
     public List<CompanyHouseBusiness> getCompanyHouseList() {
         return companyHouseList;
     }
+
 
     public String getPostcodeInput() {
         return postcodeInput;
@@ -120,5 +122,13 @@ public class CompanyHouseForm  extends CreateApplicationForm{
 
     public void setCompanyHouseName(String companyHouseName) {
         this.companyHouseName = companyHouseName;
+    }
+
+    public boolean isCompanyHouseSearching() {
+        return companyHouseSearching;
+    }
+
+    public void setCompanyHouseSearching(boolean companyHouseSearching) {
+        this.companyHouseSearching = companyHouseSearching;
     }
 }

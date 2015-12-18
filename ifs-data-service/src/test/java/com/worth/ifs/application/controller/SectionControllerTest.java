@@ -70,7 +70,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section nextSection = newSection().build();
         when(sectionRepositoryMock.findOne(1L)).thenReturn(section);
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(
                 section.getCompetition().getId(), section.getPriority()
         )).thenReturn(nextSection);
 
@@ -83,8 +83,8 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section previousSection = newSection().build();
         when(sectionRepositoryMock.findOne(1L)).thenReturn(section);
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullAndQuestionGroupOrderByPriorityDesc(
-                section.getCompetition().getId(), section.getPriority(), true
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(
+                section.getCompetition().getId(), section.getPriority()
         )).thenReturn(previousSection);
 
         Section returnSection = controller.getPreviousSection(1L);

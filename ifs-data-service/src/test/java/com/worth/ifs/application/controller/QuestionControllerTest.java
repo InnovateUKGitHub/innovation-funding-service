@@ -82,7 +82,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
 
         when(questionRepository.findOne(1L)).thenReturn(question);
-        when(sectionController.getPreviousSection(question.getSection(), true, false))
+        when(sectionController.getPreviousSection(question.getSection()))
                 .thenReturn(previousQuestion.getSection());
         when(questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
                 question.getCompetition().getId(), question.getSection().getId()))
@@ -96,7 +96,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     public void getPreviousQuestionBySectionTest() throws Exception {
         Section currentSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, newSection().build()).build();
         when(sectionController.getById(1L)).thenReturn(currentSection);
-        when(sectionController.getPreviousSection(currentSection, false, true)).thenReturn(newSection().withQuestions(Arrays.asList(newQuestion().build())).build());
+        when(sectionController.getPreviousSection(currentSection)).thenReturn(newSection().withQuestions(Arrays.asList(newQuestion().build())).build());
         mockMvc.perform(get("/question/getPreviousQuestionBySection/1"))
                 .andExpect(status().isOk());
     }

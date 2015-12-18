@@ -1,6 +1,8 @@
 package com.worth.ifs.commons.resource;
 
-import javax.annotation.Resource;
+/**
+ * ResourceError is a simple class combining an error name to a description
+ */
 
 public class ResourceError {
     private String name;

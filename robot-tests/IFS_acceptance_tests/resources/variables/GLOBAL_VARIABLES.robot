@@ -32,3 +32,6 @@ ${ADDING_VALUE_URL}    ${SERVER}/application/1/form/question/16
 ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/1/form/section/8
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
+${CHECK_ELIGIBILITY}    ${SERVER}/application/create/check-eligibility/1
+${YOUR_DETAILS}    ${SERVER}/application/create/your-details
+${POSTCODE_LOOKUP_URL}    ${SERVER}/application/create/selected-business/05063042#

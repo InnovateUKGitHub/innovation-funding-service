@@ -21,18 +21,17 @@
             <fieldset>
                 <legend class="visuallyhidden">Business organisation</legend>
 
-                <div class="form-group">
+                <div th:class="${#fields.hasErrors('*{companyHouseName}') and !companyHouseLookup.triedToSave} ? 'form-group error' : 'form-group'">
                     <label class="form-label" for="org-name">
-					<span class="form-label-bold">Find your organisation on Companies House
-					<span class="form-hint">Enter your company name or registration number</span>
-					</span>
+                       <span class="form-label-bold">Find your organisation on Companies House</span>
+                       <span class="form-hint">Enter your company name or registration number</span>
+                        <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}') and !companyHouseLookup.triedToSave}" th:errors="*{companyHouseName}" />
                     </label>
                     <input class="form-control" id="org-name" th:field="*{companyHouseName}" type="text" value="" />
-                    <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}')}" th:errors="*{companyHouseName}"></span>
                     <button type="submit" id="org-search" name="search-company-house" class="button">Search</button>
                 </div>
 
-                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseList.size()}">
+                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
                     <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
                         <h3>
                             <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
@@ -41,15 +40,17 @@
                         <p class="meta crumbtrail" th:text="${company.description}"></p>
                         <p th:text="${company.location}"></p>
                     </li>
+                    <li th:unless="${companyHouseLookup.companyHouseList.size()}">
+                        <p>Sorry we couldn't find any results within Companies House.<br/> Are you sure you didn't make mistake?</p>
+                    </li>
                 </ul>
-
             </fieldset>
             <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
             <div th:unless="${companyHouseLookup.inCompanyHouse}" th:remove="tag">
                 <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
                 <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
-                <div th:include="create-application/fragments :: organisation-size"></div>
+                <div th:include="create-application/fragments :: organisation-size" th:with="form=${companyHouseLookup}"></div>
                 <button type="submit button-large extra-margin" name="confirm-company-details" class="button">Continue</button>
             </div>
         </form>

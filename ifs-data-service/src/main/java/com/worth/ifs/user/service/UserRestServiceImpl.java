@@ -90,13 +90,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     public List<User> findRelatedUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = restGetEntity(dataRestServiceURL + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
+        ResponseEntity<User[]> responseEntity = restGetEntity(getDataRestServiceURL() + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
     @NotSecured("Method should be able to be called by a guest user that is creating his account")
-    public ResourceEnvelope<UserResource> createUserForOrganisationWithRole(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, String roleName) {
+    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -106,7 +106,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
 
-        String url = userRestURL + "/createUserForOrganisationWithRole/" + organisationId +"/"+roleName;
+        String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
 
         return restPost(url, user, UserResourceEnvelope.class);
     }
