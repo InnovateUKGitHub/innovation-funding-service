@@ -80,7 +80,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode) {
-        return handlingErrors(serviceCode, UNEXPECTED_ERROR);
+        return handlingErrors(UNEXPECTED_ERROR, serviceCode);
     }
 
     /**
@@ -90,11 +90,11 @@ public abstract class BaseTransactionalService  {
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
      * type UNEXPECTED_ERROR.
      *
-     * @param serviceCode
      * @param <T>
+     * @param serviceCode
      * @return
      */
-    protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode, Enum<?> catchAllError) {
+    protected <T> Either<ServiceFailure, T> handlingErrors(Enum<?> catchAllError, Supplier<Either<ServiceFailure, T>> serviceCode) {
         try {
             Either<ServiceFailure, T> response = serviceCode.get();
 

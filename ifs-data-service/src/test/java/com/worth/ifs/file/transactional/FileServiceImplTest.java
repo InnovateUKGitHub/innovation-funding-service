@@ -10,6 +10,7 @@ import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,11 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     public void teardownTempFolder() {
         File tempFolder = pathElementsToAbsoluteFile(tempFolderPaths);
         tempFolder.setWritable(true);
-        tempFolder.delete();
+        try {
+            FileUtils.deleteDirectory(tempFolder);
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't clean up temp folder after test");
+        }
     }
 
     @After
@@ -322,6 +327,39 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 assertEquals("Plain text", buffer.readLine());
             }
         }
+    }
+
+    @Test
+    public void testGetFileByFileEntryIdButFileEntryEntityDoesntExist() throws IOException {
+
+        // start by creating a new File to retrieve
+        List<String> fullPathToNewFile = tempFolderPaths;
+        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
+        pathElementsToAbsoluteFile(fullPathPlusFilename).createNewFile();
+
+        Files.write("Plain text",
+                pathElementsToAbsoluteFile(fullPathPlusFilename), defaultCharset());
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> result = service.getFileByFileEntryId(123L);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+    }
+
+    @Test
+    public void testGetFileByFileEntryIdButFileDoesntExist() throws IOException {
+
+        // start by creating a new File to retrieve
+        List<String> fullPathToNewFile = tempFolderPaths;
+
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(existingFileEntry)).thenReturn(Pair.of(fullPathToNewFile, "nonexistent"));
+
+        Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> result = service.getFileByFileEntryId(123L);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
     }
 
     @Test
