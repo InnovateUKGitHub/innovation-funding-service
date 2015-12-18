@@ -4,6 +4,7 @@ import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -57,6 +58,8 @@ public class AssessmentSubmitReviewModelTest {
                 withCompetition(competition).
                 build();
 
+        ApplicationResource applicationResource = new ApplicationResource(application);
+
         ResponseBuilder responseBuilder = newResponse().
                 withApplication(application);
 
@@ -83,7 +86,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, assessorProcessRole, applicationResource, competition);
 
         Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
         IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
@@ -93,7 +96,7 @@ public class AssessmentSubmitReviewModelTest {
         // Test the top-level model attributes
         //
         assertNotNull(model);
-        assertEquals(application, model.getApplication());
+        assertEquals(applicationResource, model.getApplication());
         assertEquals(competition, model.getCompetition());
 
         originalQuestionToFeedback.entrySet().forEach(entry -> {
@@ -158,6 +161,7 @@ public class AssessmentSubmitReviewModelTest {
         Section section = newSection().withQuestions(questions).build();
         Competition competition = newCompetition().withSections(asList(section)).build();
         Application application = newApplication().withCompetition(competition).build();
+        ApplicationResource applicationResource = new ApplicationResource(application);
         Assessment assessment = newAssessment().build();
 
         assessorProcessRole.setApplication(application);
@@ -175,7 +179,7 @@ public class AssessmentSubmitReviewModelTest {
         // Build the model from the first Assessor's point of view
         //
         {
-            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
+            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, applicationResource, competition);
 
             //
             // test the questions and score sections
@@ -219,7 +223,7 @@ public class AssessmentSubmitReviewModelTest {
         // feedback)
         //
         {
-            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, differentAssessor);
+            AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, differentAssessor, new ApplicationResource(application), competition);
 
             //
             // test the questions and score sections
@@ -273,13 +277,14 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
+        ApplicationResource applicationResource = new ApplicationResource(application);
         Assessment assessment = newAssessment().build();
 
         assessorProcessRole.setApplication(application);
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), assessorProcessRole);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), assessorProcessRole, applicationResource, competition);
 
         //
         // test we only see the section marked to be included
@@ -310,6 +315,7 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
+        ApplicationResource applicationResource = new ApplicationResource(application);
         Assessment assessment = newAssessment().build();
 
         assessorProcessRole.setApplication(application);
@@ -325,7 +331,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, applicationResource, competition);
 
         //
         // Test the top-level model attributes
