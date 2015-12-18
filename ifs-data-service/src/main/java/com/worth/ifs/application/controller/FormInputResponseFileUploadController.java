@@ -104,13 +104,15 @@ public class FormInputResponseFileUploadController {
     }
 
     private Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId, HttpServletResponse response) {
+
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+
         Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> file =
                 applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
 
         return file.mapLeftOrRight(
-                failure -> left(internalServerError("Error retrieving file", response)),
-                success -> right(success.getResult())
+                failure -> Either.<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> left(internalServerError("Error retrieving file", response)),
+                success -> Either.<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> right(success.getResult())
         );
     }
 
@@ -127,8 +129,8 @@ public class FormInputResponseFileUploadController {
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
         return creationResult.mapLeftOrRight(
-                failure -> left(internalServerError("Error creating file", response)),
-                success -> right(success.getResult().getValue()));
+                failure -> Either.<JsonStatusResponse, FormInputResponseFileEntryResource> left(internalServerError("Error creating file", response)),
+                success -> Either.<JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getResult().getValue()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
