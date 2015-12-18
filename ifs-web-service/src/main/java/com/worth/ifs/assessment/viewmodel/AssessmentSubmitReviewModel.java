@@ -7,9 +7,9 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,14 +17,14 @@ import org.apache.commons.logging.LogFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 
 import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * A view model backing the Assessment Submit Review page.
@@ -39,40 +39,17 @@ public class AssessmentSubmitReviewModel {
     private final Competition competition;
     private final List<Question> questions;
     private final List<Question> scorableQuestions;
-    private final int totalScore;
-    private final int possibleScore;
+    private final Score score;
     private final Map<Long, AssessorFeedback> responseIdsAndFeedback;
     private final Map<Long, Optional<Response>> questionIdsAndResponses;
-    private final int scorePercentage;
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
-    private static <R, T> Predicate<Pair<R, Optional<T>>> rightPairIsPresent() {
-        return pair -> pair.getRight().isPresent();
-    }
 
-    private static <R, T> Function<Pair<R, Optional<T>>, T> presentRightPair() {
-        return pair -> pair.getRight().get();
-    }
-
-    private static <R, T> Function<Pair<R, T>, R> leftPair() {
-        return Pair::getLeft;
-    }
-
-    private static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return Map.Entry::getValue;
-    }
-
-    private static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
-        return toMap(Pair::getLeft, Pair::getRight);
-    }
-
-    private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
-
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition, int scorePercentage) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition, Score score) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
-        this.scorePercentage = scorePercentage;
+        this.score = score;
 
         questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
@@ -99,18 +76,6 @@ public class AssessmentSubmitReviewModel {
 
         responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
-
-        totalScore = questionsAndResponses.entrySet().stream().
-                filter(e -> e.getKey().getNeedingAssessorScore()).
-                map(mapEntryValue()).
-                map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(empty())).
-                map(optionalFeedback -> optionalFeedback.map(AssessorFeedback::getAssessmentValue).orElse("0")).
-                collect(summingInt(stringToInteger));
-
-        possibleScore = questions.stream().
-                filter(Question::getNeedingAssessorScore).
-                collect(summingInt(q -> 10));
-
 
         List<Section> sections = competition.getSections();
 
@@ -145,15 +110,15 @@ public class AssessmentSubmitReviewModel {
     }
 
     public int getTotalScore() {
-        return totalScore;
+        return score.getTotalScore();
     }
 
     public int getPossibleScore() {
-        return possibleScore;
+        return score.getPossibleScore();
     }
 
     public int getScorePercentage() {
-        return scorePercentage;
+        return score.getScorePercentage();
     }
 
     public List<AssessmentSummarySection> getAssessmentSummarySections() {

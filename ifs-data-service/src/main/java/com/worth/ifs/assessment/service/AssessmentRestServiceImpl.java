@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,8 +89,8 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public int getScore(Long id) {
-        return restGet(assessmentRestURL + "/" + id + "/score", Integer.class);
+    public Score getScore(Long id) {
+        return restGet(assessmentRestURL + "/" + id + "/score", Score.class);
     }
 
 

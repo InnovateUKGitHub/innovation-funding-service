@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.user.controller.ProcessRoleController;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -124,7 +125,7 @@ public class AssessmentController {
 
     // TODO qqRP
     @RequestMapping(value = "{assessmentId}/score")
-    public int scoreForAssessment(@PathVariable("assessmentId") Long id){
+    public Score scoreForAssessment(@PathVariable("assessmentId") Long id){
         return assessmentHandler.getScore(id);
     }
 

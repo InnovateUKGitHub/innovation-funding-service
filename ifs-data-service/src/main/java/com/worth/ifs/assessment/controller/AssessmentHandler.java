@@ -9,6 +9,7 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -21,12 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toMap;
@@ -97,37 +98,14 @@ public class AssessmentHandler {
         }
     }
 
-
-    // TODO qqRP move to common functional code
-    private static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
-        return toMap(Pair::getLeft, Pair::getRight);
-    }
-
-
-    private static <R, T> Predicate<Pair<R, Optional<T>>> rightPairIsPresent() {
-        return pair -> pair.getRight().isPresent();
-    }
-
-    private static <R, T> Function<Pair<R, Optional<T>>, T> presentRightPair() {
-        return pair -> pair.getRight().get();
-    }
-
-    private static <R, T> Function<Pair<R, T>, R> leftPair() {
-        return Pair::getLeft;
-    }
-
-    private static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return Map.Entry::getValue;
-    }
-
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
-    public int getScore(Long id) {
+    public Score getScore(Long id) {
         Assessment assessment = assessmentRepository.findById(id);
         Application application = assessment.getProcessRole().getApplication();
         List<Response> responses = responseController.findResponsesByApplication(application.getId());
         Competition competition = application.getCompetition();
-        ProcessRole assessorProcessRole = assessment.getProcessRole(); // TODO correct?
+        ProcessRole assessorProcessRole = assessment.getProcessRole();
 
         List<Question> questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
@@ -141,9 +119,6 @@ public class AssessmentHandler {
 
         Map<Question, Optional<Response>> questionsAndResponses =
                 questionsAndResponsePairs.stream().collect(pairsToMap());
-
-        Map<Long, Optional<Response>> questionIdsAndResponses = questionsAndResponses.entrySet().stream().
-                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
@@ -164,6 +139,6 @@ public class AssessmentHandler {
                 filter(Question::getNeedingAssessorScore).
                 collect(summingInt(q -> 10));
 
-        return possibleScore == 0 ? 0 : (totalScore * 100) / possibleScore;
+        return new Score(totalScore, possibleScore);
     }
 }

@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
 import java.util.List;
@@ -29,6 +30,6 @@ public interface AssessmentRestService {
 
     public void rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);
 
-    public int getScore(Long id);
+    public Score getScore(Long id);
 
 }

@@ -1,11 +1,12 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.competition.domain.Competition;
@@ -222,7 +223,7 @@ public class AssessmentController extends AbstractApplicationController {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
-        int score = assessmentRestService.getScore(assessment.getId());
+        Score score = assessmentRestService.getScore(assessment.getId());
         AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, application, competition, score);
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
