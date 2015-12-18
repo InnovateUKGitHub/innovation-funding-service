@@ -96,7 +96,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> fileDetails =
-                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier, false);
+                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
 
         return fileDetails.map(successfulFile -> {
 
@@ -138,16 +138,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
         return getFormInputResponse(fileEntryId).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId(), false).
-                map(inputStreamSupplier -> {
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier.getResult()))
+        ));
+    }
 
-                    FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(formInputResponse.getFileEntry());
-                    FormInputResponseFileEntryResource formInputFileEntryResource =
-                            new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId());
-
-                    Pair<FormInputResponseFileEntryResource, Supplier<InputStream>> pair = Pair.of(formInputFileEntryResource, inputStreamSupplier.getResult());
-                    return successResponse(pair);
-                }));
+    private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
+        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(fileEntry);
+        return new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId());
     }
 
     private Either<ServiceFailure, FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  */
 public interface FileService {
 
-    Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64);
+    Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier);
 
-    Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId, boolean encodeBase64);
+    Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId);
 }
