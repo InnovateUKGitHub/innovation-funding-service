@@ -77,6 +77,7 @@ public class AssessmentController extends AbstractApplicationController {
                 allAssessments.stream()
                         .filter(Assessment::isSubmitted)
                         .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
+
         model.addAttribute("assessmentsToApplications", assessmentsToApplications);
         model.addAttribute("submittedAssessmentsToApplications", submittedAssessmentsToApplications);
 
@@ -221,7 +222,8 @@ public class AssessmentController extends AbstractApplicationController {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
-        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, application, competition);
+        int score = assessmentRestService.getScore(assessment.getId());
+        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, application, competition, score);
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }

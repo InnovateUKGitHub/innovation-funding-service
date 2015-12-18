@@ -87,4 +87,10 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + processId, processOutcome, String.class);
     }
 
+    @Override
+    public int getScore(Long id) {
+        return restGet(assessmentRestURL + "/" + id + "/score", Integer.class);
+    }
+
+
 }

@@ -29,4 +29,6 @@ public interface AssessmentRestService {
 
     public void rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);
 
+    public int getScore(Long id);
+
 }

@@ -68,10 +68,11 @@ public class AssessmentSubmitReviewModel {
 
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition, int scorePercentage) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
+        this.scorePercentage = scorePercentage;
 
         questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
@@ -110,11 +111,6 @@ public class AssessmentSubmitReviewModel {
                 filter(Question::getNeedingAssessorScore).
                 collect(summingInt(q -> 10));
 
-        if (possibleScore == 0) {
-            scorePercentage = 0;
-        } else {
-            scorePercentage = (totalScore * 100) / possibleScore;
-        }
 
         List<Section> sections = competition.getSections();
 
