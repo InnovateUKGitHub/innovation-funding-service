@@ -18,6 +18,7 @@ public class CompanyHouseForm  extends CreateApplicationForm{
     // on empty value don't check pattern since then there already is a validation message.
     @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&-,.:;\\@]+$", message = "Please enter valid characters")
     private String companyHouseName;
+    private boolean companyHouseSearching;
     private List<CompanyHouseBusiness> companyHouseList;
 
     @NotEmpty
@@ -121,5 +122,13 @@ public class CompanyHouseForm  extends CreateApplicationForm{
 
     public void setCompanyHouseName(String companyHouseName) {
         this.companyHouseName = companyHouseName;
+    }
+
+    public boolean isCompanyHouseSearching() {
+        return companyHouseSearching;
+    }
+
+    public void setCompanyHouseSearching(boolean companyHouseSearching) {
+        this.companyHouseSearching = companyHouseSearching;
     }
 }

@@ -34,7 +34,7 @@
         </fieldset>
         <div th:include="create-application/fragments :: company-address-details"
              th:with="form=${confirmCompanyDetailsForm}" th:remove="tag"/>
-        <div th:include="create-application/fragments :: organisation-size" th:remove="tag"/>
+        <div th:include="create-application/fragments :: organisation-size" th:with="form=${confirmCompanyDetailsForm}" th:remove="tag"/>
 
 
         <button type="submit button-large extra-margin" name="save-company-details" class="button">Save organisation and
