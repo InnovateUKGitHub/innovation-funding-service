@@ -742,61 +742,57 @@
        
 
     <fieldset class="inline" id="otherCostsShowHideToggle">
-      <div class="form-group">
-        <label class="block-label" data-target="otherCostsForm" for="radio-indent-1">
-          <input id="otherCostsShowHideToggle-yes" name="radio-indent-group" value="Yes" type="radio" />
-          Yes
-        </label>
+        <div class="form-block inline">
+            <label class="block-label" for="funding-yes">
+                <input id="funding-yes" type="radio" name="funding-group" value="funding-yes"/>
+                Yes
+            </label>
+            <label class="block-label" for="funding-no">
+                <input id="funding-no" type="radio" name="funding-group" value="funding-no"/>
+                No
+            </label>
+        </div>
 
-        <label class="block-label" for="radio-indent-2">
-          <input id="otherCostsShowHideToggle-no" name="radio-indent-group" value="No" type="radio" />
-          No
-        </label>
-
-      </div>
-        <div class="form-group panel-indent js-hidden" id="otherCostsForm">
-            <table id="other-funding">
-                <thead>
-                <tr>
-                    <th scope="col">Source of Funding</th>
-                    <th scope="col">Date Applied for</th>
-                    <th scope="col" class="numeric">Amount Sought (£)</th>
-                    <th scope="col">Successful?</th>
-                    <th scope="col" class="numeric">Amount Secured or Still Sought</th>
-                    <th scope="col">Date of Decision</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td class="numeric">
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td class="numeric">
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <a href="#">Remove</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <p style="text-align: right;">
-        
-                <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
-            </p>
+        <div class="question" id="finance-other-funding">
+            <div data-finance-subsection-table-container="34">
+                <div class="form-group">
+                    <table id="other-costs-table">
+                        <thead>
+                        <tr>
+                            <th>Source of funding</th>
+                            <th class="width-medium">Date secured</th>
+                            <th class="numeric width-medium">Funding amount (&pound;)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="other-funding-source" class="visuallyhidden">Source of funding</label>
+                                <input type="text" id="other-funding-source" />
+                            </td>
+                            <td>
+                                <label for="other-funding-date" class="visuallyhidden">Date secured</label>
+                                <input type="text" id="other-funding-date" />
+                            </td>
+                            <td>
+                                <label for="other-funding-amount" class="visuallyhidden">Funding amount (&pound;)</label>
+                                <input type="text" id="other-funding-amount" class="numeric" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="alignright">
+                        <a class="add-another-row" data-clone-rows="0" href="#">Add another source of funding</a>
+                    </p>
+                    <p>Your updated funding level is <strong>60%</strong></p>
+                    <details>
+                        <summary><span class="summary">Why has this changed?</span></summary>
+                        <div class="panel-indent">
+                            Help text required
+                        </div>
+                    </details>
+                </div>
+            </div>
         </div>
     </fieldset>
         
