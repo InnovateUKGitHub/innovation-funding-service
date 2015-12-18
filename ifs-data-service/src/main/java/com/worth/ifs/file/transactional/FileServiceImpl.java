@@ -13,11 +13,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
@@ -42,6 +44,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         UNABLE_TO_CREATE_FILE, //
         DUPLICATE_FILE_CREATED, //
         UNABLE_TO_FIND_FILE, //
+        UNSUPPORTED_MEDIA_TYPE, //
     }
 
     @Autowired
@@ -53,10 +56,55 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
         return handlingErrors(() ->
-                saveFileEntry(resource).
-                map(savedFileEntry -> doCreateFile(savedFileEntry, inputStreamSupplier, decodeBase64)).
-                map(fileAndFileEntry -> successResponse(fileAndFileEntry)),
-                UNABLE_TO_CREATE_FILE);
+                validateMimeTypeInTemporaryFile(resource, inputStreamSupplier, decodeBase64).
+                map(tempFile -> saveFileEntry(resource).
+                map(savedFileEntry -> doCreateFile(savedFileEntry, tempFile)).
+                map(fileAndFileEntry -> successResponse(fileAndFileEntry))
+                ), UNABLE_TO_CREATE_FILE);
+    }
+
+    private Either<ServiceFailure, File> validateMimeTypeInTemporaryFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
+
+        return createTemporaryFolder("filevalidation", UNABLE_TO_CREATE_FILE).
+                map(tempFolder -> createTemporaryFile(tempFolder, "mimetypevalidation", UNABLE_TO_CREATE_FILE)).
+                map(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier, decodeBase64)).
+                map(writtenFile -> validateMediaType(writtenFile, resource.getMediaType())).
+                map(validatedFile -> pathToFile(validatedFile));
+    }
+
+    private Either<ServiceFailure, Path> validateMediaType(Path file, MediaType mediaType) {
+        final String contentType;
+        try {
+            contentType = Files.probeContentType(file);
+        } catch (IOException e) {
+            LOG.error("Unable to probe file for Content Type", e);
+            return errorResponse(UNSUPPORTED_MEDIA_TYPE);
+        }
+
+        if (mediaType.toString().equals(contentType)) {
+            return right(file);
+        } else {
+            LOG.warn("Content Type of file has been detected as " + contentType + " but was reported as being " + mediaType);
+            return errorResponse(UNSUPPORTED_MEDIA_TYPE);
+        }
+    }
+
+    private Either<ServiceFailure, Path> createTemporaryFolder(String prefix, Enum<?> errorMessage) {
+        try {
+            return right(Files.createTempDirectory(prefix));
+        } catch (IOException e) {
+            LOG.error("Error creating temporary folder for " + prefix, e);
+            return errorResponse(errorMessage);
+        }
+    }
+
+    private Either<ServiceFailure, Path> createTemporaryFile(Path temporaryFolder, String prefix, Enum<?> errorMessage) {
+        try {
+            return right(Files.createTempFile(temporaryFolder, prefix, ""));
+        } catch (IOException e) {
+            LOG.error("Error creating temporary file for " + prefix, e);
+            return errorResponse(errorMessage);
+        }
     }
 
     @Override
@@ -90,11 +138,11 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         return right(() -> new Base64InputStream(originalInputStream.get(), true));
     }
 
-    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
+    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, File tempFile) {
         Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
-        return doCreateFile(pathElements, filename, inputStreamSupplier, decodeBase64).map(file -> right(Pair.of(file, savedFileEntry)));
+        return doCreateFile(pathElements, filename, tempFile).map(file -> right(Pair.of(file, savedFileEntry)));
     }
 
     private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -124,14 +172,29 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
+    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, File tempFile) {
 
         Path foldersPath = pathElementsToAbsolutePath(pathElements);
 
-        return createFolders(foldersPath).map(createdFolders ->
-               createNewFile(createdFolders.toString(), filename).map(newFile ->
-               updateFileWithContents(newFile, inputStreamSupplier, decodeBase64)
-           ));
+        return createFolders(foldersPath).
+                map(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
+    }
+
+    private Either<ServiceFailure, File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            File fileToCreate = new File(targetFolder.toString(), targetFilename);
+
+            if (fileToCreate.exists()) {
+                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
+                return errorResponse(DUPLICATE_FILE_CREATED);
+            }
+
+            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
+            return right(targetFile.toFile());
+        } catch (IOException e) {
+            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
+            return errorResponse(UNABLE_TO_CREATE_FILE);
+        }
     }
 
     private Either<ServiceFailure, Path> createFolders(Path path) {
@@ -160,20 +223,28 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private Either<ServiceFailure, File> updateFileWithContents(File createdFile, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
+    private Either<ServiceFailure, File> pathToFile(Path path) {
+        return right(path.toFile());
+    }
+
+    private Either<ServiceFailure, Path> fileToPath(File file) {
+        return right(file.toPath());
+    }
+
+    private Either<ServiceFailure, Path> updateFileWithContents(Path file, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {
 
         try {
             try (InputStream sourceInputStream = decodeBase64 ? new Base64InputStream(inputStreamSupplier.get()) : inputStreamSupplier.get()) {
                 try {
-                    Files.copy(sourceInputStream, createdFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    return right(createdFile);
+                    Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
+                    return right(file);
                 } catch (IOException e) {
-                    LOG.error("Could not write data to file " + createdFile.getPath(), e);
+                    LOG.error("Could not write data to file " + file, e);
                     return errorResponse(UNABLE_TO_CREATE_FILE, e);
                 }
             }
         } catch (IOException e) {
-            LOG.error("Error closing file stream for file " + createdFile.getPath(), e);
+            LOG.error("Error closing file stream for file " + file, e);
             return errorResponse(UNABLE_TO_CREATE_FILE, e);
         }
     }

@@ -1,6 +1,11 @@
 package com.worth.ifs.file.domain;
 
-import javax.persistence.*;
+import org.springframework.http.MediaType;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Represents a File on the filesystem that can be referenced in the application.
@@ -21,7 +26,11 @@ public class FileEntry {
     public FileEntry() {
     }
 
-    public FileEntry(Long id, String originalFilename, String mediaType, long filesizeBytes) {
+    public FileEntry(Long id, String originalFilename, MediaType mediaType, long filesizeBytes) {
+        this(id, originalFilename, mediaType.toString(), filesizeBytes);
+    }
+
+    private FileEntry(Long id, String originalFilename, String mediaType, long filesizeBytes) {
         this.id = id;
         this.name = originalFilename;
         this.mediaType = mediaType;

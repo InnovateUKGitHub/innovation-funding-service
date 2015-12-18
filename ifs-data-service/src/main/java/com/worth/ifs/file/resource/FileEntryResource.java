@@ -10,21 +10,21 @@ public class FileEntryResource {
 
     private Long id;
     private String name;
-    private String mediaType;
+    private MediaType mediaType;
     private long filesizeBytes;
 
     public FileEntryResource() {
     }
 
     public FileEntryResource(Long id, String name, String mediaType, long filesizeBytes) {
+        this(id, name, MediaType.parseMediaType(mediaType), filesizeBytes);
+    }
+
+    public FileEntryResource(Long id, String name, MediaType mediaType, long filesizeBytes) {
         this.id = id;
         this.name = name;
         this.mediaType = mediaType;
         this.filesizeBytes = filesizeBytes;
-    }
-
-    public FileEntryResource(Long id, String name, MediaType mediaType, long filesizeBytes) {
-        this(id, name, mediaType.getType() + "/" + mediaType.getSubtype(), filesizeBytes);
     }
 
     public Long getId() {
@@ -43,11 +43,11 @@ public class FileEntryResource {
         this.name = name;
     }
 
-    public String getMediaType() {
+    public MediaType getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
+    public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 

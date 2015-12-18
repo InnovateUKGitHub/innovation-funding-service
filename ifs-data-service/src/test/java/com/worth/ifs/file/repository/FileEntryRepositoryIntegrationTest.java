@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
+import static org.springframework.http.MediaType.parseMediaType;
 
 /**
  * Repository Integration tests for Form Inputs.
@@ -32,7 +33,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         //
         // Create
         //
-        FileEntry fileEntry = new FileEntry(null, "originalfilename", "image/jpeg", 1234L);
+        FileEntry fileEntry = new FileEntry(null, "originalfilename", parseMediaType("image/jpeg"), 1234L);
         FileEntry saved = repository.save(fileEntry);
         assertTrue(saved == fileEntry);
         assertNotNull(saved.getId());

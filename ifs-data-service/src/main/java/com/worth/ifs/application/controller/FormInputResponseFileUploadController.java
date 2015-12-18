@@ -97,7 +97,7 @@ public class FormInputResponseFileUploadController {
                     InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
                     HttpHeaders httpHeaders = new HttpHeaders();
                     httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
-                    httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));
+                    httpHeaders.setContentType(fileEntry.getFileEntryResource().getMediaType());
                     return new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK);
                 }
         );
