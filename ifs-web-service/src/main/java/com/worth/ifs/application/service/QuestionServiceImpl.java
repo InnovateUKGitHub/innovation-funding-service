@@ -128,4 +128,9 @@ public class QuestionServiceImpl implements QuestionService {
     public Question getPreviousQuestionBySection(Long sectionId) {
         return questionRestService.getPreviousQuestionBySection(sectionId);
     }
+
+    @Override
+    public Question getNextQuestionBySection(Long sectionId) {
+        return questionRestService.getNextQuestionBySection(sectionId);
+    }
 }

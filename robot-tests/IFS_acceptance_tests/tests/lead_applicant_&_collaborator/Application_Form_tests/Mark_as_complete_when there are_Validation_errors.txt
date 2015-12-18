@@ -30,7 +30,7 @@ Verify that the user doesn't get the error when the text area is not empty anymo
 *** Keywords ***
 the "Project Summary" question is empty
     Clear Element Text    css=#form-input-11 .editor
-    Press Key  css=#form-input-11 .editor   \\8
+    Press Key    css=#form-input-11 .editor    \\8
     Click Element    css=.bold_button
 
 the applicant marks the public description question as complete
@@ -50,3 +50,4 @@ applicant should be able to mark the question as complete
     Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]
     Wait Until Element Is Not Visible    css=#form-input-11 .error-message
     Wait Until Element Is Not Visible    css=.error-summary li
+    Click Element    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]

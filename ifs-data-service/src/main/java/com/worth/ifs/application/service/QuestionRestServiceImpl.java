@@ -70,4 +70,8 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
         return restGet(questionRestURL + "/getPreviousQuestionBySection/"+sectionId, Question.class);
     }
 
+    @Override
+    public Question getNextQuestionBySection(Long sectionId) {
+        return restGet(questionRestURL + "/getNextQuestionBySection/"+sectionId, Question.class);
+    }
 }
