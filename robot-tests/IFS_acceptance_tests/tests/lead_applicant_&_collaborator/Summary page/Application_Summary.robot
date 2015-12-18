@@ -31,7 +31,7 @@ Verify that clicking the edit link in the summary redirects the applicant to the
     Given the Applicant is in the Summary page
     When the Applicant clicks the "Project Summary" section
     And the user clicks the edit link in the summary section
-    Then the applicant should redirect to the Application form
+    Then the applicant should redirect to the project summary
 
 *** Keywords ***
 the Applicant is in the Summary page
@@ -50,7 +50,7 @@ all the questions should be visible
 the user clicks the edit link in the summary section
     Click Element    css=#form-input-11 .textarea-footer a
 
-the applicant should redirect to the Application form
+the applicant should redirect to the project summary
     Location Should Be    ${QUESTION11_URL}
 
 the Applicant clicks the "Scope" section
