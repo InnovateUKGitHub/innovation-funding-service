@@ -117,7 +117,13 @@
 
     <div th:fragment="finance">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title=${question.getName()}, field='formInput['+${'finance-grantclaim-'+organisationgrantClaimPercentageId}+']')" th:remove="tag" />
+            <label class="form-label" for="other-funding">
+                <span class="heading-medium" th:text="${question.name}"></span>
+                <span class="form-hint" th:text="${question.description}"></span>
+            </label>
+
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title='', field='formInput['+${'finance-grantclaim-'+organisationgrantClaimPercentageId}+']')" th:remove="tag" />
             <span>%</span>
         </div>
     </div>

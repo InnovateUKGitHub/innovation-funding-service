@@ -162,14 +162,13 @@ public class RegistrationControllerTest extends BaseUnitTest {
 
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createUserForOrganisation(userResource.getFirstName(),
+        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L,
-                "applicant")).thenReturn(envelope);
+                1L)).thenReturn(envelope);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

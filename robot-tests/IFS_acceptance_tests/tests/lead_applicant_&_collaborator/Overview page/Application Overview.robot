@@ -115,4 +115,4 @@ the progress bar on the my applications page should be 14%
     Element Text Should Be    css=#content > div > section.in-progress > ul > li:nth-child(1) > div > div:nth-child(1) > div > div > div.progress > div    14%
 
 The "days left to submit" should be correct in the overview page
-    Element Text Should Be    css=.sub-header .deadline .pie-overlay > div    8
+    Element Text Should Be    css=.sub-header .deadline .pie-overlay > div    0

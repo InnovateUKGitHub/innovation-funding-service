@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.Form;
+import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;

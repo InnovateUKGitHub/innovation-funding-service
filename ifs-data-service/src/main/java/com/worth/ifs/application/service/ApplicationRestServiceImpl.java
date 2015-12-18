@@ -55,7 +55,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
             new ParameterizedTypeReference<Resources<ProcessRole>>(){};
         HttpHeaders headers = new HttpHeaders();
         headers.add("IFS_AUTH_TOKEN","123abc");
-        Traverson traverson = new Traverson(URI.create(dataRestServiceURL + applicationRestURL + "/" + applicationId), MediaTypes.HAL_JSON);
+        Traverson traverson = new Traverson(URI.create(getDataRestServiceURL() + applicationRestURL + "/" + applicationId), MediaTypes.HAL_JSON);
         ApplicationResource application = new ApplicationResource(traverson.follow(rel("self")).withHeaders(headers)
                                             .toObject(ApplicationResourceHateoas.class).toApplication());
         Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)

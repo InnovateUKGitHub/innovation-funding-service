@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class CompanyHouseController {
     CompanyHouseApi companyHouseService;
 
     @RequestMapping("/searchCompanyHouse/{searchText}")
-     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
+     public List<CompanyHouseBusiness> searchCompanyHouse(@PathVariable("searchText") final String searchText) throws UnsupportedEncodingException {
         List<CompanyHouseBusiness> companies = companyHouseService.searchOrganisations(searchText);
         return companies;
     }

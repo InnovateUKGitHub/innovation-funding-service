@@ -2,15 +2,20 @@ package com.worth.ifs.commons.resource;
 
 import java.util.List;
 
+/**
+ * ResourceEnvelope can be used as a class wrap around a resource adding a status and an error list
+ */
+
 public class ResourceEnvelope<T> {
     private String status;
     private List<ResourceError> errors;
     private T entity;
 
-    public ResourceEnvelope() {}
+    public ResourceEnvelope() {
+    }
 
     public ResourceEnvelope(ResourceEnvelope<T> resourceEnvelope) {
-        this(resourceEnvelope.getStatus(),
+        this(   resourceEnvelope.getStatus(),
                 resourceEnvelope.getErrors(),
                 resourceEnvelope.getEntity());
     }
