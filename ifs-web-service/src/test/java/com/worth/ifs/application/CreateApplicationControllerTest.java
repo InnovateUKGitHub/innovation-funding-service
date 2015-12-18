@@ -212,6 +212,7 @@ public class CreateApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testSelectedBusinessSaveBusiness() throws Exception {
         mockMvc.perform(post("/application/create/selected-business/" + COMPANY_ID)
+                        .param("organisationSize", OrganisationSize.LARGE.name())
                         .param("save-company-details", "true")
         )
                 .andExpect(view().name("redirect:/registration/register?organisationId=5"));
