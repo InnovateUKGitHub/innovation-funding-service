@@ -16,12 +16,16 @@ public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
     }
 
     public static FileEntryBuilder newFileEntry() {
-        return new FileEntryBuilder(emptyList()).with(uniqueIds());
+        return new FileEntryBuilder(emptyList()).with(uniqueIds()).withMediaType("text/plain");
     }
 
     @Override
     protected FileEntryBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FileEntry>> actions) {
         return new FileEntryBuilder(actions);
+    }
+
+    public FileEntryBuilder withMediaType(String mediaType) {
+        return with(file -> file.setMediaType(mediaType));
     }
 
     @Override

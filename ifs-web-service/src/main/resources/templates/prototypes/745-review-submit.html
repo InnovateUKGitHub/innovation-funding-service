@@ -330,7 +330,7 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 		<!-- Finances not complete -->
 		<div th:unless="${param.warning == null}" th:remove="tag"> 
 
-			<h2>Finances overview
+			<h2>Finances summary
 				<div class="section-status section-incomplete">Incomplete</div>
     		</h2>
 
@@ -348,7 +348,7 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 		<!-- Finances complete -->
 		<div th:unless="${param.warning != null}" th:remove="tag"> 
 
-			<h2>Finances overview
+			<h2>Finances summary
 				<div class="section-status section-complete">Complete</div>
 			</h2>
 

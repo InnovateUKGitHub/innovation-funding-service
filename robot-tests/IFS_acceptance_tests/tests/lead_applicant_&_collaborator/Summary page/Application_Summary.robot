@@ -51,7 +51,7 @@ the user clicks the edit link in the summary section
     Click Element    css=#form-input-11 .textarea-footer a
 
 the applicant should redirect to the project summary
-    Location Should Be    ${PROJECT_SUMMARY_URL}
+    Location Should Be    ${QUESTION11_URL}
 
 the Applicant clicks the "Scope" section
     [Documentation]    1. click second section

@@ -74,8 +74,7 @@ public class FileEntry {
 
         if (filesizeBytes != fileEntry.filesizeBytes) return false;
         if (id != null ? !id.equals(fileEntry.id) : fileEntry.id != null) return false;
-        if (name != null ? !name.equals(fileEntry.name) : fileEntry.name != null)
-            return false;
+        if (name != null ? !name.equals(fileEntry.name) : fileEntry.name != null) return false;
         if (mediaType != null ? !mediaType.equals(fileEntry.mediaType) : fileEntry.mediaType != null) return false;
 
         return true;

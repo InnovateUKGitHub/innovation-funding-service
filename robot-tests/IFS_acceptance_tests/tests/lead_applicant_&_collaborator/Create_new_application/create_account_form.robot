@@ -18,7 +18,7 @@ ${correct_password}     password
 ${incorrect_password}   wrongpassword
 ${long_password}        passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}       pass
-${valid_email}          john_smith@wor.systems
+${valid_email}          ewan@worth.systems
 ${invalid_email}        notavalidemail
 
 
@@ -226,6 +226,7 @@ the user re-enters the long password
     Input Password    id=retypedPassword    ${long_password}
 
 the user submits their information
+    Select Checkbox     termsAndConditions
     Submit Form
 
 the user should see an error
@@ -268,13 +269,14 @@ the user cannot login with either password
     Input Password  id=id_password      ${correct_password}
     Submit Form
     Page Should Contain     Please try again
+    go to   ${LOGIN_URL}
     Input Text  id=id_email     ${valid_email}
     Input Password  id=id_password      ${incorrect_password}
     Submit Form
     Page Should Contain     Please try again
 
 the user should be redirected to the login page
-    Location Should Be    ${LOGIN_URL}
+    go to    ${LOGIN_URL}
 
 the user can login with their new details
     go to   ${LOGIN_URL}

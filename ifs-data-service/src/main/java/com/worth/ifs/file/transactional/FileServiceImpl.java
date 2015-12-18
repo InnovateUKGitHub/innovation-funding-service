@@ -206,29 +206,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private Either<ServiceFailure, File> createNewFile(String pathToFile, String filename) {
-
-        File fileToCreate = new File(pathToFile, filename);
-
-        if (fileToCreate.exists()) {
-            LOG.error("File " + filename + " already existed in target path " + pathToFile + ".  Cannot create a new one here.");
-            return errorResponse(DUPLICATE_FILE_CREATED);
-        }
-
-        try {
-            return fileToCreate.createNewFile() ? right(fileToCreate) : errorResponse(UNABLE_TO_CREATE_FILE);
-        } catch (IOException e) {
-            LOG.error("Could not create new file " + filename + " in target path " + pathToFile, e);
-            return errorResponse(UNABLE_TO_CREATE_FILE, e);
-        }
-    }
-
     private Either<ServiceFailure, File> pathToFile(Path path) {
         return right(path.toFile());
-    }
-
-    private Either<ServiceFailure, Path> fileToPath(File file) {
-        return right(file.toPath());
     }
 
     private Either<ServiceFailure, Path> updateFileWithContents(Path file, Supplier<InputStream> inputStreamSupplier, boolean decodeBase64) {

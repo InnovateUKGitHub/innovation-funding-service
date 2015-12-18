@@ -159,30 +159,59 @@ public class QuestionController {
         Question question = questionRepository.findOne(questionId);
         Question nextQuestion = null;
         if(question!=null) {
+            // retrieve next question within current section
             nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
                     question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
-            if(nextQuestion==null) {
-                Section nextSection = sectionController.getNextSection(question.getSection());
-                if (nextSection != null && !nextSection.isQuestionGroup()) {
-                    nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(question.getCompetition().getId(), nextSection.getId());
-                }
+            // retrieve next question in following section
+            if(nextQuestion == null) {
+                nextQuestion = getNextQuestionBySection(question.getSection(), question.getCompetition().getId());
+            }
+
+            // retrieve next question in any other section, but with higher priority
+            if(nextQuestion == null) {
+                nextQuestion = questionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                    question.getCompetition().getId(), question.getPriority());
             }
         }
 
         return nextQuestion;
     }
 
+    private Question getNextQuestionBySection(Section section, Long competitionId) {
+        Section nextSection = sectionController.getNextSection(section);
+        if(nextSection!=null) {
+            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
+        }
+        return null;
+
+    }
+
     @RequestMapping(value="/getPreviousQuestionBySection/{sectionId}")
     public Question getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         Section section = sectionController.getById(sectionId);
-        if(section!=null) {
-            if(section.getParentSection()!=null) {
-                Section previousSection = sectionController.getPreviousSection(section, false, true);
+        if(section!=null && section.getParentSection()!=null) {
+            Section previousSection = sectionController.getPreviousSection(section);
+            if(previousSection!=null) {
                 Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                         .stream()
                         .max(Comparator.comparing(question -> question.getPriority()));
                 return lastQuestionInSection.orElse(null);
+            }
+        }
+        return null;
+    }
+
+    @RequestMapping(value="/getNextQuestionBySection/{sectionId}")
+    public Question getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
+        Section section = sectionController.getById(sectionId);
+        if(section!=null && section.getParentSection()!=null) {
+            Section nextSection = sectionController.getNextSection(section);
+            if(nextSection!=null) {
+                Optional<Question> firstQuestionInSection = nextSection.getQuestions()
+                        .stream()
+                        .min(Comparator.comparing(question -> question.getPriority()));
+                return firstQuestionInSection.orElse(null);
             }
         }
         return null;
@@ -197,16 +226,17 @@ public class QuestionController {
                     question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
             if(previousQuestion==null) {
-                getQuestionBySection(question.getSection(), question.getCompetition().getId());
+                previousQuestion = getPreviousQuestionBySection(question.getSection(), question.getCompetition().getId());
             }
         }
 
         return previousQuestion;
     }
 
-    private Question getQuestionBySection(Section section, Long competitionId) {
-        Section previousSection = sectionController.getPreviousSection(section,true, false);
-        if(previousSection!=null && !previousSection.isQuestionGroup()) {
+    private Question getPreviousQuestionBySection(Section section, Long competitionId) {
+        Section previousSection = sectionController.getPreviousSection(section);
+
+        if(previousSection!=null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
         }
         return null;

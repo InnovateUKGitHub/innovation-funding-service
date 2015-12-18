@@ -19,23 +19,23 @@ Verify that the assign button is visible in the overview page
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration
-    Given the Applicant is in the application details section
+    Given Applicant goes to the 'public description' question
     When the Applicant assigns the public description question to the collaborator    Jessica Doe
     Then the success message should show
     and the field of the public description question should be disabled
-    and the last update should show the collaborators name
+    and the question should show the assigned persons name
 
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     Given the second Collaborator is logged in
-    When the second Collaborator is in the application overview page
+    When the second Collaborator is in the public description question
     Then the public description question should not be editable
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
     [Tags]    Collaboration    Overview
-    When the Collaborator is in the Application details section
+    When the Collaborator is in the public description section
     Then the Collaborator gets the assigned notification
     and the public description question should be assigned to the collaborator
     and the collaborator can see the 'assigned to you' in the overview page
@@ -61,8 +61,7 @@ Verify the Lead applicant can assign a question back to him self
     and the lead applicant re-assign the question to him self    Steve Smith
 
 *** Keywords ***
-the Applicant is in the application details section
-    Applicant goes to the Application form
+
 
 When the Applicant assigns the public description question to the collaborator
     [Arguments]    ${assignee_name}
@@ -79,12 +78,13 @@ the field of the public description question should be disabled
     sleep    2
     Element Should Be Disabled    id=12
 
-the Collaborator is in the Application details section
+the Collaborator is in the public description section
     The guest user opens the browser
     Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
     Click Element    css=input.button
-    Applicant goes to the Application form
+    Applicant goes to the 'public description' question
+
 
 the Collaborator gets the assigned notification
     Wait Until Element Is Visible    css=#content > div.event-alert
@@ -118,8 +118,8 @@ the public description question should be assigned to the collaborator
     Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count > div.textarea-header > div
     Element Should Be Enabled    id=12
 
-the second Collaborator is in the application overview page
-    Applicant goes to the Application form
+the second Collaborator is in the public description question
+    Applicant goes to the 'public description' question
 
 the collaborator marks the public description question as complete
     Applicant goes to the Application form
@@ -136,8 +136,8 @@ the Applicant is in the overview page
 the assign button should be visible in the overview page
     Page Should Contain Element    css=#section-1 .list-overview > li:nth-child(3) div.assign-button button
 
-the last update should show the collaborators name
-    Element Should Contain    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-header > p > small    Last updated: Today by you
+the question should show the assigned persons name
+    Element Should Contain    css=#form-input-12 .assignee span+span   Jessica Doe
 
 the lead applicant re-assign the question to him self
     [Arguments]    ${assignee_name}

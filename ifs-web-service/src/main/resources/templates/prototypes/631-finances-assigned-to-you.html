@@ -44,14 +44,14 @@
 		</div>
 
 
-    	<h2>Overheads
+    	<h2>Administration support costs
 			<span style="" data-subsection-id="2" class="section-status place-in-header">
 	            <span data-binding-output="subsection-total-91">£ 0</span>
 	        </span>
        	</h2>
 
 		<div id="collapsible-2" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-overheads" th:remove="tag" />
+			<div th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:remove="tag" />
     	</div>
 
 
@@ -202,6 +202,43 @@
 			jQuery("#finance-other-funding").show();
 		}
 	});
+
+	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").show();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").show();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").show();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").show();
+		}
+	});
+
 </script>
 </body>
 </html>

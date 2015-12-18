@@ -4,6 +4,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -67,9 +68,9 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-details";
     }
 
-    @RequestMapping("/{applicationId}/summary")
+    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
+                                     HttpServletRequest request) {
         List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
@@ -78,6 +79,15 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         
         return "application-summary";
+    }
+    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
+    public String applicationSummarySubmit(@RequestParam("mark_as_complete") Long markQuestionCompleteId, Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(markQuestionCompleteId!=null) {
+            questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
+        }
+        return "redirect:/application/" + applicationId + "/summary";
     }
 
     @RequestMapping("/{applicationId}/confirm-submit")
@@ -163,8 +173,6 @@ public class ApplicationController extends AbstractApplicationController {
     private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response, ApplicationForm form) {
         doAssignQuestion(applicationId, request, response);
 
-        // (* question, * questionAssignee, * questionAssignees, * responses, * currentUser, * userIsLeadApplicant, * section, * currentApplication)
-
         ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
@@ -180,7 +188,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
 
-        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestion(questions, userOrganisation.getId());
+        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), applicationId);
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 

@@ -1,6 +1,6 @@
 package com.worth.ifs.competition;
 
-import com.worth.ifs.application.Form;
+import com.worth.ifs.application.form.Form;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

@@ -8,8 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object>
-{
+/**
+ * A validator that tests two fields to be equal to each other
+ */
+
+public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
     private final Log log = LogFactory.getLog(getClass());
 
     private String firstFieldName;
@@ -17,36 +20,39 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     private String message;
 
     @Override
-    public void initialize(final FieldMatch constraintAnnotation)
-    {
+    public void initialize(final FieldMatch constraintAnnotation) {
         firstFieldName = constraintAnnotation.first();
         secondFieldName = constraintAnnotation.second();
         message = constraintAnnotation.message();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context)
-    {
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         boolean matches = false;
-        try
-        {
-            final Object firstObj = PropertyUtils.getProperty(value, firstFieldName);
-            final Object secondObj = PropertyUtils.getProperty(value, secondFieldName);
+        try {
+            final Object firstObject = PropertyUtils.getProperty(value, firstFieldName);
+            final Object secondObject = PropertyUtils.getProperty(value, secondFieldName);
 
-            matches = firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
-        }
-        catch (final Exception ignore)
-        {
+            matches = objectsMatch(firstObject, secondObject);
+        } catch(final Exception ignore) {
             log.error(ignore);
         }
 
         if (!matches) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(secondFieldName)
-                    .addConstraintViolation();
+            addConstraintViolationMessageToField(context, message, secondFieldName);
         }
 
         return matches;
+    }
+
+    private boolean objectsMatch(Object firstObject, Object secondObject) {
+        return firstObject == null && secondObject == null || firstObject != null && firstObject.equals(secondObject);
+    }
+
+    private void addConstraintViolationMessageToField(ConstraintValidatorContext context, String message, String fieldName) {
+        context.disableDefaultConstraintViolation();
+        context.buildConstraintViolationWithTemplate(message)
+                .addPropertyNode(fieldName)
+                .addConstraintViolation();
     }
 }

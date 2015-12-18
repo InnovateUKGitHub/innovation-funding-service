@@ -3,7 +3,7 @@ package com.worth.ifs.file.resource;
 import com.worth.ifs.file.domain.FileEntry;
 
 /**
- *
+ * Convert between a FileEntry entity and a FileEntryResource.  This is a standin for a true Hateoas resource assembler
  */
 public class FileEntryResourceAssembler {
 

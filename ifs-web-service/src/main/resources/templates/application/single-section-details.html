@@ -27,21 +27,20 @@
                         </div>
                     </div>
                 </div>
-                <img class="section-status complete" 
+                <img class="section-status complete"
                      src="/images/field/field-done-right.png"
                      width="30"
-                     height="30" 
+                     height="30"
                      th:alt="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
                      th:title="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
-                     th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}" />
-                <img class="section-status assigned" 
+                     th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" />
+                <img class="section-status assigned"
                      src="/images/field/field-assigned-right.png"
                      width="30"
-                     height="30" 
+                     height="30"
                      th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
                      th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
-                     th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
-                     th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}" />
+                     th:if="${(currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId())}"/>
         </li>
     </div>
 </ul>

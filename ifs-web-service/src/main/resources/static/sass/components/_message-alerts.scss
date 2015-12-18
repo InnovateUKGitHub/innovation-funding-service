@@ -44,6 +44,9 @@ Large message panel
 		margin-top: 0;
 		margin-bottom: 30px;
 	}
+	h1.heading-medium {
+		margin:10px 0 0 0;
+	}
 }
 
 
@@ -54,10 +57,6 @@ Large message panel
 	color: $green;
 	margin: 10px 0;
 	clear: both;
-
-	h2,h3{
-		border: none !important;
-	}
 }
 
 .warning-alert{
@@ -67,14 +66,10 @@ Large message panel
 	color: $red;
 	margin: 10px 0;
 	clear: both;
-
-	h2,h3{
-		border: none !important; 
-	}
 }
 
 .icon-info{
-	background: url(../images/icons/icon-information-2x.png) no-repeat;
+	background: url('../images/icons/icon-information-2x.png') no-repeat;
 	clear: both;
     display: block;
     min-height: 54px;
