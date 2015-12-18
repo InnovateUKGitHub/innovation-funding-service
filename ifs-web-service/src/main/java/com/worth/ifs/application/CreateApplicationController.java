@@ -127,6 +127,7 @@ public class CreateApplicationController extends AbstractApplicationController {
             searchPostcodes(companyHouseForm);
             selectPostcodeAddress(companyHouseForm);
         } else if (request.getParameter(SEARCH_COMPANY_HOUSE) != null) {
+            companyHouseForm.setCompanyHouseSearching(true);
             validator.validate(companyHouseForm, bindingResult);
             if (!bindingResult.hasFieldErrors(COMPANY_HOUSE_NAME)) {
                 searchCompanyHouse(companyHouseForm);

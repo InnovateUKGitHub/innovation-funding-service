@@ -31,7 +31,7 @@
                     <button type="submit" id="org-search" name="search-company-house" class="button">Search</button>
                 </div>
 
-                <ul id="org-results" class="results-list panel-indent" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
+                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
                     <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
                         <h3>
                             <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
