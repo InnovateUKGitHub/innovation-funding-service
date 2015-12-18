@@ -28,6 +28,10 @@ public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
         return with(file -> file.setMediaType(mediaType));
     }
 
+    public FileEntryBuilder withFilesizeBytes(long filesizeBytes) {
+        return with(resource -> resource.setFilesizeBytes(filesizeBytes));
+    }
+
     @Override
     protected FileEntry createInitial() {
         return new FileEntry();

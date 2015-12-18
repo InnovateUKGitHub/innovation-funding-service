@@ -29,6 +29,10 @@ public class FileEntryResourceBuilder extends BaseBuilder<FileEntryResource, Fil
         return with(resource -> resource.setMediaType(parseMediaType(mediaType)));
     }
 
+    public FileEntryResourceBuilder withFilesizeBytes(long filesizeBytes) {
+        return with(resource -> resource.setFilesizeBytes(filesizeBytes));
+    }
+
     @Override
     protected FileEntryResource createInitial() {
         return new FileEntryResource();

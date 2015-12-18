@@ -43,7 +43,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         UNABLE_TO_CREATE_FILE, //
         DUPLICATE_FILE_CREATED, //
         UNABLE_TO_FIND_FILE, //
-        UNSUPPORTED_MEDIA_TYPE, //
+        INCORRECTLY_REPORTED_MEDIA_TYPE, //
+        INCORRECTLY_REPORTED_FILESIZE, //
     }
 
     @Autowired
@@ -55,7 +56,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
         return handlingErrors(() ->
-                validateMimeTypeInTemporaryFile(resource, inputStreamSupplier).
+                validateMimeTypeInTemporaryFile(resource.getMediaType(), inputStreamSupplier).
+                map(tempFile -> validateContentLengthInTemporaryFile(resource.getFilesizeBytes(), tempFile)).
                 map(tempFile -> saveFileEntry(resource).
                 map(savedFileEntry -> doCreateFile(savedFileEntry, tempFile)).
                 map(fileAndFileEntry -> successResponse(fileAndFileEntry))
@@ -72,13 +74,23 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 UNABLE_TO_FIND_FILE);
     }
 
-    private Either<ServiceFailure, File> validateMimeTypeInTemporaryFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+    private Either<ServiceFailure, File> validateMimeTypeInTemporaryFile(MediaType mediaType, Supplier<InputStream> inputStreamSupplier) {
 
         return createTemporaryFolder("filevalidation", UNABLE_TO_CREATE_FILE).
                 map(tempFolder -> createTemporaryFile(tempFolder, "mimetypevalidation", UNABLE_TO_CREATE_FILE)).
                 map(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier)).
-                map(writtenFile -> validateMediaType(writtenFile, resource.getMediaType())).
+                map(writtenFile -> validateMediaType(writtenFile, mediaType)).
                 map(validatedFile -> pathToFile(validatedFile));
+    }
+
+    private Either<ServiceFailure, File> validateContentLengthInTemporaryFile(long filesizeBytes, File temporaryFile) {
+
+        if (temporaryFile.length() == filesizeBytes) {
+            return right(temporaryFile);
+        } else {
+            LOG.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + temporaryFile.length() + " bytes");
+            return errorResponse(INCORRECTLY_REPORTED_FILESIZE);
+        }
     }
 
     private Either<ServiceFailure, Path> validateMediaType(Path file, MediaType mediaType) {
@@ -87,14 +99,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             contentType = Files.probeContentType(file);
         } catch (IOException e) {
             LOG.error("Unable to probe file for Content Type", e);
-            return errorResponse(UNSUPPORTED_MEDIA_TYPE);
+            return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
 
         if (mediaType.toString().equals(contentType)) {
             return right(file);
         } else {
             LOG.warn("Content Type of file has been detected as " + contentType + " but was reported as being " + mediaType);
-            return errorResponse(UNSUPPORTED_MEDIA_TYPE);
+            return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
     }
 
