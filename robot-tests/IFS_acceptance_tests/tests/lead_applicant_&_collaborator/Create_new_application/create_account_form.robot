@@ -8,23 +8,17 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
-
-
-
 *** Variables ***
-
-
-${correct_password}     password
-${incorrect_password}   wrongpassword
-${long_password}        passwordpasswordpasswordpasswordpasswordpasswordpassword
-${short_password}       pass
-${valid_email}          john_smith@wor.systems
-${invalid_email}        notavalidemail
-
-
+${correct_password}    password
+${incorrect_password}    wrongpassword
+${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
+${short_password}    pass
+${valid_email}    john_smith@wor.systems
+${invalid_email}    notavalidemail
 
 *** Test Cases ***
 First name left blank
+    [Documentation]    -INFUND-885:
     [Tags]    Account
     Given the user is on the account creation page
     When the user leaves the first name field blank
@@ -38,6 +32,7 @@ First name left blank
     And the user cannot login with their new details
 
 Last name left blank
+    [Documentation]    -INFUND-885:
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -51,6 +46,7 @@ Last name left blank
     And the user cannot login with their new details
 
 Phone number left blank
+    [Documentation]    -INFUND-885:
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -64,6 +60,7 @@ Phone number left blank
     And the user cannot login with their new details
 
 Email left blank
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -76,6 +73,7 @@ Email left blank
     Then the user should see an error
 
 Password left blank
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -89,6 +87,7 @@ Password left blank
     And the user cannot login with their new details
 
 Re-type password left blank
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user leaves the first name field blank
@@ -102,6 +101,7 @@ Re-type password left blank
     And the user cannot login with their new details
 
 Invalid email used
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -115,6 +115,7 @@ Invalid email used
     And the user cannot login with the invalid email
 
 Password and re-typed password do not match
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -128,6 +129,7 @@ Password and re-typed password do not match
     And the user cannot login with either password
 
 Password is too short
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -141,6 +143,7 @@ Password is too short
     And the user cannot login with the short password
 
 Password is too long
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -154,6 +157,7 @@ Password is too long
     And the user cannot login with the long password
 
 Valid account creation
+    [Documentation]    -INFUND-885
     [Tags]    Account
     Given the user is on the account creation page
     When the user inputs a first name
@@ -229,59 +233,56 @@ the user submits their information
     Submit Form
 
 the user should see an error
-    Page Should Contain     We were unable to create your account
+    Page Should Contain    We were unable to create your account
 
 the user cannot login with their new details
     go to    ${LOGIN_URL}
-    Input Text  id=id_email  ${valid_email}
-    Input Password  id=id_password      ${correct_password}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Contain     Please try again
-
-
+    Page Should Contain    Please try again
 
 the user cannot login with the invalid email
     go to    ${LOGIN_URL}
-    Input Text   id=id_email    ${invalid_email}
-    Input Password  id=id_password      ${correct_password}
+    Input Text    id=id_email    ${invalid_email}
+    Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Contain     Please try again
+    Page Should Contain    Please try again
 
 the user cannot login with the short password
-    go to      ${LOGIN_URL}
-    Input Text   id=id_email    ${valid_email}
-    Input Password  id=id_password      ${short_password}
+    go to    ${LOGIN_URL}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${short_password}
     Submit Form
-    Page Should Contain     Please try again
-
+    Page Should Contain    Please try again
 
 the user cannot login with the long password
     go to    ${LOGIN_URL}
-    Input Text   id=id_email    ${valid_email}
-    Input Password  id=id_password      ${long_password}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${long_password}
     Submit Form
-    Page Should Contain     Please try again
+    Page Should Contain    Please try again
 
 the user cannot login with either password
-    go to   ${LOGIN_URL}
-    Input Text  id=id_email     ${valid_email}
-    Input Password  id=id_password      ${correct_password}
+    go to    ${LOGIN_URL}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Contain     Please try again
-    Input Text  id=id_email     ${valid_email}
-    Input Password  id=id_password      ${incorrect_password}
+    Page Should Contain    Please try again
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${incorrect_password}
     Submit Form
-    Page Should Contain     Please try again
+    Page Should Contain    Please try again
 
 the user should be redirected to the login page
     Location Should Be    ${LOGIN_URL}
 
 the user can login with their new details
-    go to   ${LOGIN_URL}
-    Input Text  id=id_email    ${valid_email}
-    Input Password  id=id_password      ${correct_password}
+    go to    ${LOGIN_URL}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${correct_password}
     Submit Form
 
 the user can see the organisation they are associated with
-    go to   ${ACCOUNT_CREATION_FORM_URL}
-    Page Should Contain     Nomensa
+    go to    ${ACCOUNT_CREATION_FORM_URL}
+    Page Should Contain    Nomensa
