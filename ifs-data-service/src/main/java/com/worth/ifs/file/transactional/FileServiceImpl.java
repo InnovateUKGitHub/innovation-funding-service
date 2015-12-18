@@ -106,18 +106,21 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private Either<ServiceFailure, File> validateMediaType(File file, MediaType mediaType) {
-        final String contentType;
+        final String detectedContentType;
         try {
-            contentType = Files.probeContentType(file.toPath());
+            detectedContentType = Files.probeContentType(file.toPath());
         } catch (IOException e) {
             LOG.error("Unable to probe file for Content Type", e);
             return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
 
-        if (mediaType.toString().equals(contentType)) {
+        if (detectedContentType == null) {
+            LOG.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
+            return right(file);
+        } else if (mediaType.toString().equals(detectedContentType)) {
             return right(file);
         } else {
-            LOG.warn("Content Type of file has been detected as " + contentType + " but was reported as being " + mediaType);
+            LOG.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
             return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
     }

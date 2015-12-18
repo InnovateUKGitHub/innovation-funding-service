@@ -32,6 +32,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
@@ -390,6 +391,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateFileWithIncorrectContentType() throws IOException {
 
+        assumeNotOsx();
+
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
                 withFilesizeBytes(17).
@@ -414,5 +417,13 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     private Supplier<InputStream> fakeInputStreamSupplier() {
         ByteArrayInputStream fakeInputStream = new ByteArrayInputStream("Fake Input Stream".getBytes(defaultCharset()));
         return () -> fakeInputStream;
+    }
+
+    private boolean isNotOsx() {
+        return !System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    private void assumeNotOsx() {
+        assumeTrue(isNotOsx());
     }
 }
