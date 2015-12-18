@@ -3,6 +3,7 @@ package com.worth.ifs;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -25,6 +26,9 @@ import org.mockito.MockitoAnnotations;
  * Created by dwatson on 02/10/15.
  */
 public abstract class BaseUnitTestMocksTest {
+
+    @Mock
+    protected ResponseService responseService;
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;

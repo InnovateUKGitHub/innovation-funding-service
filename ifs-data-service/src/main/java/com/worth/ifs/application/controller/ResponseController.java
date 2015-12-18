@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.security.CustomPermissionEvaluator;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +58,8 @@ public class ResponseController {
     AssessorService assessorService;
     @Autowired
     CustomPermissionEvaluator permissionEvaluator;
+    @Autowired
+    ResponseService responseService;
 
     @Autowired
     ServiceLocator serviceLocator;
@@ -68,14 +70,7 @@ public class ResponseController {
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        Application app = applicationRepository.findOne(applicationId);
-        List<ProcessRole> userAppRoles = app.getProcessRoles();
-
-        List<Response> responses = new ArrayList<>();
-        for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(responseRepository.findByUpdatedBy(userAppRole));
-        }
-        return responses;
+        return responseService.findResponsesByApplication(applicationId);
     }
 
     private Response getOrCreateResponse(Long applicationId, Long userId,  Long questionId){

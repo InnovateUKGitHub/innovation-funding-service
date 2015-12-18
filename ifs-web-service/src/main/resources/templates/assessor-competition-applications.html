@@ -77,7 +77,7 @@
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h4 class="heading-medium">
-                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${application.id})}" th:text="${application.name}">link for application assessment</a>
+                                <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${model.competition.id},aid=${application.id})}" th:text="${application.name}">link for application assessment</a>
                             </h4>
                             <div><p th:text="${assessment.processRole.organisation.name}" /></div>
                         </div>
@@ -87,7 +87,7 @@
 
                                 <!--if assessment is pending acceptance-->
                                 <p class="application-listing_pending" th:unless="${assessment.processStatus} neq 'pending'">
-                                    <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${competition.id},aid=${application.id})}">accept / reject assessment</a>
+                                    <a th:href="@{/assessor/competitions/{cid}/applications/{aid}(cid=${model.competition.id},aid=${application.id})}">accept / reject assessment</a>
                                 </p>
 
                                 <!--otherwise shows the overall score -->
@@ -109,7 +109,7 @@
                 </li>
 
                     <div class="alignright">
-                        <input type="hidden" name="competitionId" th:value="${competition.id}" />
+                        <input type="hidden" name="competitionId" th:value="${model.competition.id}" />
                         <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit">Submit applications</a>
                     </div>
                 </form>

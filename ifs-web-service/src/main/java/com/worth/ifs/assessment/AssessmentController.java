@@ -71,8 +71,6 @@ public class AssessmentController extends AbstractApplicationController {
         List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId());
         allAssessments.sort(new AssessmentStatusComparator());
 
-        model.addAttribute("competition", competition);
-
         List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
                 .map(a -> {

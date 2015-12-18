@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
@@ -128,6 +129,13 @@ public class BaseUnitTest {
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");
         return viewResolver;
+    }
+
+    public <T> T attributeFromMvcResultModel(MvcResult result, String key){
+        return (T)result.getModelAndView().getModel().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(key))
+                .map(entry -> entry.getValue())
+                .findFirst().orElse(null);
     }
 
     public void setup(){

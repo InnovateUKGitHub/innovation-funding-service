@@ -12,8 +12,6 @@ public class CustomMatchers {
         return new PredicateMatcher<T>(predicate);
     }
 
-
-
     private static class PredicateMatcher<T> extends BaseMatcher<T> {
 
         private Predicate<T> predicate;

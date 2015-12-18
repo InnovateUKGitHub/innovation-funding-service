@@ -1,11 +1,11 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.controller.ResponseController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.domain.RecommendedValue;
@@ -46,9 +46,8 @@ public class AssessmentHandler {
     @Autowired
     private AssessmentRepository assessmentRepository;
 
-    // TODO qqRP change to a service.
     @Autowired
-    private ResponseController responseController;
+    private ResponseService responseService;
 
     public AssessmentHandler(){}
 
@@ -103,7 +102,7 @@ public class AssessmentHandler {
     public Score getScore(Long id) {
         Assessment assessment = assessmentRepository.findById(id);
         Application application = assessment.getProcessRole().getApplication();
-        List<Response> responses = responseController.findResponsesByApplication(application.getId());
+        List<Response> responses = responseService.findResponsesByApplication(application.getId());
         Competition competition = application.getCompetition();
         ProcessRole assessorProcessRole = assessment.getProcessRole();
 

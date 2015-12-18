@@ -123,7 +123,6 @@ public class AssessmentController {
         return true;
     }
 
-    // TODO qqRP
     @RequestMapping(value = "{assessmentId}/score")
     public Score scoreForAssessment(@PathVariable("assessmentId") Long id){
         return assessmentHandler.getScore(id);

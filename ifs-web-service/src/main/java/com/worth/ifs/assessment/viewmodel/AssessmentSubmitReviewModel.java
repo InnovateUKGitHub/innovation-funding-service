@@ -31,6 +31,8 @@ import static java.util.stream.Collectors.toMap;
  * Created by dwatson on 07/10/15.
  */
 public class AssessmentSubmitReviewModel {
+
+    @SuppressWarnings("unused")
     private final Log log = LogFactory.getLog(getClass());
 
     private final Assessment assessment;
@@ -44,6 +46,9 @@ public class AssessmentSubmitReviewModel {
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
 
+    // TODO this logic should live in the data layer and we should return a dto instead.
+    // TODO Note there is code commonality with AssessmentHandler.getScore.
+    // TODO make these changes when converting to dtos.
     public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, Competition competition, Score score) {
         this.assessment = assessment;
         this.application = application;

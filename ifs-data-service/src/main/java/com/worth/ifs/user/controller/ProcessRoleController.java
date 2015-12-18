@@ -73,7 +73,6 @@ public class ProcessRoleController {
         return assignableProcessRoles;
     }
 
-    // TODO qqRP
     @RequestMapping("{id}/application")
     public ApplicationResource findByProcessRole(@PathVariable("id") final Long id){
         ProcessRole processRole = processRoleRepository.findOne(id);
