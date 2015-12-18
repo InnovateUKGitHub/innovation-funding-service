@@ -226,6 +226,7 @@ the user re-enters the long password
     Input Password    id=retypedPassword    ${long_password}
 
 the user submits their information
+    Select Checkbox     termsAndConditions
     Submit Form
 
 the user should see an error
