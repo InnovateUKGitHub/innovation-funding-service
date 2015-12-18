@@ -4,6 +4,7 @@ import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -60,7 +61,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ApplicationStatusRepository applicationStatusRepositoryMock;
 
     @Mock
-    protected FormInputRepository formInputRepository;
+    protected FormInputRepository formInputRepositoryMock;
 
     @Mock
     protected SectionRepository sectionRepositoryMock;
@@ -73,6 +74,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected QuestionStatusRepository questionStatusRepository;
+
+    @Mock
+    protected FileService fileServiceMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

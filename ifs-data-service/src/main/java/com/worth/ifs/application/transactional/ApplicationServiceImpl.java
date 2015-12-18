@@ -114,9 +114,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
                 return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
             } else {
-                return getProcessRole(processRoleId).map(processRole ->
-                       getFormInput(formInputId).map(formInput ->
-                       getApplication(applicationId).map(application -> {
+                return getProcessRole(processRoleId).
+                        map(processRole -> getFormInput(formInputId).
+                        map(formInput -> getApplication(applicationId).
+                        map(application -> {
 
                     FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
                     formInputResponseRepository.save(newFormInputResponse);

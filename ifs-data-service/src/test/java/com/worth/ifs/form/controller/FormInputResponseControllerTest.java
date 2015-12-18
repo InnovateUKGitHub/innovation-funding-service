@@ -61,7 +61,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInput formInput = newFormInput().with(id(789L)).build();
 
-        when(formInputRepository.findOne(789L)).thenReturn(formInput);
+        when(formInputRepositoryMock.findOne(789L)).thenReturn(formInput);
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
         when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(singletonList(applicantProcessRole));
