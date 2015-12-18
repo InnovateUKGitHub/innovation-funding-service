@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify the questions status for the "Application details" section
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the Application form
+    Given Applicant goes to the 'project summary' question
     When the Applicant edits the "Project summary" question
     and the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
     # Then the "last update" date should be correct for the "Project summary" question
@@ -21,7 +21,7 @@ Verify the questions status for the "Application details" section
 Verify the question status for the "Scope" section
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the Scope section
+    Given Applicant goes to the 'scope' question
     When the Applicant edits the "Scope" question
     and the applicant assigns the "Scope" question to Jessica Doe    Jessica Doe
     #Then the "last update" date should be correct for the "Scope" question
@@ -30,7 +30,7 @@ Verify the question status for the "Scope" section
 Verify the question status for the "Your business proposition" section
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the Your business proposition section
+    Given Applicant goes to the 'business opportunity' question
     When the Applicant edits the question 1
     and the applicant assigns the question 1 to Jessica Doe    Jessica Doe
     #Then the "last update" date should be correct for the question 1
@@ -48,7 +48,7 @@ Verify the question status for the "Your approach to the project" section
 Verify the question status for the "Funding" section
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the "Funding" section
+    Given Applicant goes to the 'funding' question
     When the Applicant edits question 9
     and the applicant assigns question 9 to Jessica Doe    Jessica Doe
     #Then the "last update" date should be correct for the question 9
@@ -57,7 +57,7 @@ Verify the question status for the "Funding" section
 Verify the blue flag when the question is assigned to the applicant
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the application form
+    Given Applicant goes to the 'project summary' question
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     #Then the applicant should see a blue flag in the Application details section(overview page)
     And the applicant should see a blue flag in the Public description (overview page)
