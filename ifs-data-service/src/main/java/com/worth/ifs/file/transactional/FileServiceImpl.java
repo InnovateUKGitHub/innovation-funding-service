@@ -31,7 +31,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
- * store and retrieve files.
+ * validate, store and retrieve files.
  */
 @Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
