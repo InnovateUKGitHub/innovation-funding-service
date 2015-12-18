@@ -102,6 +102,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @RequestMapping(value="/question/edit/{questionId}", method = RequestMethod.GET)
+    public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
+                               BindingResult bindingResult, Model model,
+                               @PathVariable("applicationId") final Long applicationId,
+                               @PathVariable("questionId") final Long questionId,
+                               HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        if (processRole != null) {
+            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+        } else {
+            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+        }
+        return showQuestion(form, bindingResult, model, applicationId, questionId, request);
+    }
+
     private void addNavigation(Section section, Long applicationId, Model model) {
         if(section==null) {
             return;
@@ -159,7 +175,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    @RequestMapping(value = {"/question/{questionId}", "/question/edit/{questionId}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
                                         BindingResult bindingResult,
                                         Model model,
