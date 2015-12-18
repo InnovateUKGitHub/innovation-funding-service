@@ -8,6 +8,8 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
+import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
+import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel.AssessmentWithApplicationAndScore;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
@@ -31,8 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
-import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -60,7 +62,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
-    public String competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
+    public ModelAndView competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
                                                  HttpServletRequest request) {
 
         Competition competition = competitionService.getById(competitionId);
@@ -71,18 +73,26 @@ public class AssessmentController extends AbstractApplicationController {
 
         model.addAttribute("competition", competition);
 
-        Map<Assessment, ApplicationResource> assessmentsToApplications = allAssessments.stream()
+        List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
-                .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
-        Map<Assessment, ApplicationResource> submittedAssessmentsToApplications =
-                allAssessments.stream()
-                        .filter(Assessment::isSubmitted)
-                        .collect(toLinkedMap(a -> a, a -> applicationService.findByProcessRoleId(a.getProcessRole().getId())));
+                .map(a -> {
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId());
+                    Score score = assessmentRestService.getScore(a.getId());
+                    return new AssessmentWithApplicationAndScore(a, ar, score);
+                }).collect(toList());
 
-        model.addAttribute("assessmentsToApplications", assessmentsToApplications);
-        model.addAttribute("submittedAssessmentsToApplications", submittedAssessmentsToApplications);
+        List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
+                .filter(Assessment::isSubmitted)
+                .map(a -> {
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId());
+                    Score score = assessmentRestService.getScore(a.getId());
+                    return new AssessmentWithApplicationAndScore(a, ar, score);
+                })
+                .collect(toList());
 
-        return competitionAssessments;
+        AssessmentDashboardModel viewModel = new AssessmentDashboardModel(assessments, submittedAssessments, competition);
+
+        return new ModelAndView(competitionAssessments, "model", viewModel);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}", method = RequestMethod.GET)
@@ -224,7 +234,7 @@ public class AssessmentController extends AbstractApplicationController {
         }
 
         Score score = assessmentRestService.getScore(assessment.getId());
-        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, assessorProcessRole, application, competition, score);
+        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score);
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }

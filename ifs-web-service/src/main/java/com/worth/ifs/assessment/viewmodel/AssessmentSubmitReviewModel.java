@@ -9,7 +9,6 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +44,7 @@ public class AssessmentSubmitReviewModel {
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
 
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole, ApplicationResource application, Competition competition, Score score) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, Competition competition, Score score) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
@@ -70,7 +69,7 @@ public class AssessmentSubmitReviewModel {
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
-                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
+                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessment.getProcessRole()))).
                 filter(rightPairIsPresent()).
                 collect(toMap(leftPair(), presentRightPair()));
 
@@ -110,15 +109,15 @@ public class AssessmentSubmitReviewModel {
     }
 
     public int getTotalScore() {
-        return score.getTotalScore();
+        return score.getTotal();
     }
 
     public int getPossibleScore() {
-        return score.getPossibleScore();
+        return score.getPossible();
     }
 
     public int getScorePercentage() {
-        return score.getScorePercentage();
+        return score.getPercentage();
     }
 
     public List<AssessmentSummarySection> getAssessmentSummarySections() {

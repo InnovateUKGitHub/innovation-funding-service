@@ -2,25 +2,29 @@ package com.worth.ifs.assessment.dto;
 
 
 public class Score {
-    private final int totalScore;
-    private final int possibleScore;
-    private final int scorePercentage;
+    private int total;
+    private int possible;
+    private int percentage;
 
-    public Score(int possibleScore, int totalScore) {
-        this.possibleScore = possibleScore;
-        this.totalScore = totalScore;
-        this.scorePercentage = possibleScore == 0 ? 0 : (totalScore * 100) / possibleScore;
+    public Score(int possible, int total) {
+        this.possible = possible;
+        this.total = total;
+        this.percentage = possible == 0 ? 0 : (total * 100) / possible;
     }
 
-    public int getTotalScore() {
-        return totalScore;
+    public Score(){
+
     }
 
-    public int getPossibleScore() {
-        return possibleScore;
+    public int getTotal() {
+        return total;
     }
 
-    public int getScorePercentage() {
-        return scorePercentage;
+    public int getPossible() {
+        return possible;
+    }
+
+    public int getPercentage() {
+        return percentage;
     }
 }

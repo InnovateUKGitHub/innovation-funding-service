@@ -128,17 +128,17 @@ public class AssessmentHandler {
         Map<Long, AssessorFeedback> responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
-        int totalScore = questionsAndResponses.entrySet().stream().
+        int total = questionsAndResponses.entrySet().stream().
                 filter(e -> e.getKey().getNeedingAssessorScore()).
                 map(mapEntryValue()).
                 map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(empty())).
                 map(optionalFeedback -> optionalFeedback.map(AssessorFeedback::getAssessmentValue).orElse("0")).
                 collect(summingInt(stringToInteger));
 
-        int possibleScore = questions.stream().
+        int possible = questions.stream().
                 filter(Question::getNeedingAssessorScore).
                 collect(summingInt(q -> 10));
 
-        return new Score(totalScore, possibleScore);
+        return new Score(possible, total);
     }
 }
