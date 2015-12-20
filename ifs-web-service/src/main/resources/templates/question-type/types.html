@@ -255,8 +255,10 @@
                         </span>
                     </label>
                 </div>
+                <div class="alignright-button">
+                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                </div>
             </div>
-            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
         </div>
     </div>
 
@@ -348,8 +350,9 @@
                     </span>
                 </label>
             </div>
-            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
         </div>
     </div>
 
@@ -805,7 +808,10 @@
                         </div>
                     </details>
                 </div>
-        </fieldset>
+            </fieldset>
+            <div class="alignright-button extra-margin">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
         </div>
     </div>
     <!-- ===========================Form: financial summary (question type) =========================== -->

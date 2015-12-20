@@ -308,7 +308,7 @@
             type="submit"
             name="mark_as_complete" 
             th:value="${question.getId()}"
-            th:class="${readonly}? 'button' : 'buttonlink'"
+            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
     <button th:unless="${readonly}"
@@ -316,9 +316,10 @@
             type="submit"
             name="mark_as_incomplete"
             th:value="${question.getId()}"
-            class="buttonlink"
+            th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
+
 </div>
 <!-- ========================= edit link =========================== -->
 

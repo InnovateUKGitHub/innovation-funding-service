@@ -106,7 +106,7 @@ public class CostItemMapper {
 
     private String getSecuredDate(String securedDateMonth, String securedDateYear) {
         String securedDate = null;
-        if (securedDateMonth != null) {
+        if (securedDateMonth != null && !securedDateMonth.isEmpty()) {
             int securedMonthNumber = Integer.parseInt(securedDateMonth);
             if(securedMonthNumber >= 1 && securedMonthNumber <= 12) {
                 securedDate = securedDateMonth;
@@ -118,7 +118,7 @@ public class CostItemMapper {
         if(securedDateMonth != null || securedDateYear != null) {
             securedDate += "-";
         }
-        if (securedDateYear != null) {
+        if (securedDateYear != null || !securedDateYear.isEmpty()) {
             securedDate += securedDateYear;
         }
         return securedDate;
