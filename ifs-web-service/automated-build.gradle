@@ -3,3 +3,5 @@ ext.serverPort=""
 ext.tomcatWebAppsDir=""
 ext.ifsDataServiceRestBaseURL=""
 ext.thymeleafCacheEnabled="false"
+ext.cookieSecure=true
+ext.cookieHTTPOnly=false
