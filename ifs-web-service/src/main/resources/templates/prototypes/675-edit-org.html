@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your profile'}, ${'/prototypes/675-profile-details'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Organisation details</h1>
+	<p class="form-hint">You cannot change the organisation you are applying on behalf of within this profile. If you wish to apply on behalf of a new organisation, please create a new account.</p>
+
+	<h3 class="heading-small">Organisation name</h3>
+	<p>Nomensa</p>
+	<h3 class="heading-small">Registration number</h3>
+	<p>0123456789</p>
+	<h3 class="heading-small">Address</h3>
+	<p>13 Queens Square <br />
+		Bristol <br />
+		BS1 4NT
+	</p>
+
+	<hr />
+
+	<h2 class="heading-medium no-margin-bottom">Operating address</h2>
+
+	<form>
+		<fieldset class="extra-margin">
+			<legend class="visuallyhidden">Address details</legend>
+			<div class="form-group">
+				<label class="form-label" for="street">
+					<span class="form-label-bold">Street</span>
+				</label>
+				<input class="form-control" id="street" name="street" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label visuallyhidden" for="street-2">
+					<span class="form-label-bold">Street line 2</span>
+				</label>
+				<input class="form-control" id="street-2" name="street-2" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="street-2">
+					<span class="form-label-bold visuallyhidden">Street line 3</span>
+				</label>
+				<input class="form-control" id="street-3" name="street-2" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="town">
+					<span class="form-label-bold">Town</span>
+				</label>
+				<input class="form-control" id="town" name="town" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="county">
+					<span class="form-label-bold">County</span>
+				</label>
+				<input class="form-control" id="county" name="county" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="postcode">
+					<span class="form-label-bold">Postcode</span>
+				</label>
+				<input class="form-control" id="postcode" name="postcode" type="text" />
+			</div>
+		</fieldset>
+
+		<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/675-profile-details">Save changes</button>
+	</form>
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	
+	jQuery('input#address-same').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#manual-company-input").hide();
+		}else{
+			jQuery("#manual-company-input").show();
+		}
+
+	});
+
+	jQuery('#manual-company-trigger').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#manual-company-input").show();
+		jQuery("#org-results").hide();
+
+	});
+
+	jQuery('#postcode-lookup').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#select-address-block").show();
+
+	});
+
+	jQuery('#select-address').on('change',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#street").val("King William House");
+		jQuery("#street-2").val("13 Queens Square");
+		jQuery("#town").val("Bristol");
+		jQuery("#postcode").val("BS1 4NT");
+
+	});
+
+	jQuery('#enter-address-manually').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#select-address-block").hide();
+	});
+</script>
+</body>
+</html>
