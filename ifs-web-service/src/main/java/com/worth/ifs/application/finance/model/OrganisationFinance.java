@@ -54,6 +54,8 @@ public class OrganisationFinance {
         switch(costType) {
             case LABOUR:
                 return new LabourCostCategory();
+            case OTHER_FUNDING:
+                return new OtherFundingCostCategory();
             default:
                 return new DefaultCostCategory();
         }

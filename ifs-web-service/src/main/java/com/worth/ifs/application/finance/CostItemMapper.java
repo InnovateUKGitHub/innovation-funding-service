@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,9 @@ public class CostItemMapper {
             case FINANCE:
                 GrantClaim grantClaim = (GrantClaim) costItem;
                 return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+            case OTHER_FUNDING:
+                return mapOtherFunding(costItem);
+
         }
         log.error("Not a valid CostType: " + costType);
         throw new IllegalArgumentException("Not a valid CostType: " + costType);
@@ -89,4 +93,34 @@ public class CostItemMapper {
         return cost;
     }
 
+    private Cost mapOtherFunding(CostItem costItem) {
+        OtherFunding otherFunding = (OtherFunding) costItem;
+        String item = null;
+        if(otherFunding.getOtherPublicFunding()!=null) {
+            item = otherFunding.getOtherPublicFunding();
+        } else {
+            item = getSecuredDate(otherFunding.getSecuredDateMonth(), otherFunding.getSecuredDateYear());
+        }
+        return new Cost(otherFunding.getId(), item, otherFunding.getFundingSource(), 0, otherFunding.getTotal(), null, null);
+    }
+
+    private String getSecuredDate(String securedDateMonth, String securedDateYear) {
+        String securedDate = null;
+        if (securedDateMonth != null) {
+            int securedMonthNumber = Integer.parseInt(securedDateMonth);
+            if(securedMonthNumber >= 1 && securedMonthNumber <= 12) {
+                securedDate = securedDateMonth;
+            } else {
+                securedDate = null;
+            }
+        }
+
+        if(securedDateMonth != null || securedDateYear != null) {
+            securedDate += "-";
+        }
+        if (securedDateYear != null) {
+            securedDate += securedDateYear;
+        }
+        return securedDate;
+    }
 }
