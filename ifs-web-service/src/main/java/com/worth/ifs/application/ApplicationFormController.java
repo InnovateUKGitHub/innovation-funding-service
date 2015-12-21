@@ -176,8 +176,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addPreviousQuestionToModel(Question previousQuestion, Long applicationId, Model model) {
-        String previousUrl = "";
-        String previousText = "";
+        String previousUrl;
+        String previousText;
 
         if(previousQuestion != null) {
             Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
@@ -194,8 +194,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNextQuestionToModel(Question nextQuestion, Long applicationId, Model model) {
-        String nextUrl = "";
-        String nextText = "";
+        String nextUrl;
+        String nextText;
 
         if(nextQuestion!=null) {
             Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
@@ -372,7 +372,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
 
-            if(errors.containsKey(questionId) && errors.get(questionId).size() > 0){
+            if(errors.containsKey(questionId) && !errors.get(questionId).isEmpty()){
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             }else{
@@ -445,7 +445,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             LOG.debug("INPUT ID: " + inputIdentifier);
             errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors);
             } else {
                 return this.createJsonObjectNode(true, null);

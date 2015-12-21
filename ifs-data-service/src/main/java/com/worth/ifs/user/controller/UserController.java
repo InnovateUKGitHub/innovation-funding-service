@@ -50,11 +50,11 @@ public class UserController {
     @RequestMapping("/token/{token}")
      public User getUserByToken(@PathVariable("token") final String token) {
         List<User> users = repository.findByToken(token);
-        if (users.size() > 0){
             log.debug("+++++++++++++++++++++++");
             log.debug(users.get(0).getName());
             log.debug(users.get(0).getId());
             log.debug("+++++++++++++++++++++++");
+        if (!users.isEmpty()){
             return users.get(0);
         }else{
             return null;
@@ -65,7 +65,7 @@ public class UserController {
     public User getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
         List<User> users = repository.findByEmail(email);
 
-        if (users.size() > 0 ){
+        if (!users.isEmpty()){
             User user = users.get(0);
             if(user.passwordEquals(password)){
                 return user;

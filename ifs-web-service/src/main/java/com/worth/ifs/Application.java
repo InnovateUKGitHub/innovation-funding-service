@@ -10,16 +10,16 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    private static final Log log = LogFactory.getLog(Application.class);
+    private static final Log LOG = LogFactory.getLog(Application.class);
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        log.info("IFS Application builder configure method");
+        LOG.info("IFS Application builder configure method");
         return application.sources(Application.class);
     }
 
     public static void main(String[] args) throws Exception {
-        log.info("IFS boot Application main method");
+        LOG.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
 }
