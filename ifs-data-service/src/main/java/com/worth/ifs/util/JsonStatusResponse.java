@@ -43,7 +43,7 @@ public class JsonStatusResponse {
         return getJsonStatusResponse(message, response, HttpServletResponse.SC_LENGTH_REQUIRED);
     }
 
-    public static JsonStatusResponse requestEntityTooLarge(String message, HttpServletResponse response) {
+    public static JsonStatusResponse payloadTooLarge(String message, HttpServletResponse response) {
         return getJsonStatusResponse(message, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
     }
 

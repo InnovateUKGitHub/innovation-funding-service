@@ -44,7 +44,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
 
-    enum ServiceFailures {
+    public enum ServiceFailures {
         UNABLE_TO_CREATE_FILE, //
         UNABLE_TO_FIND_FILE, //
     }
