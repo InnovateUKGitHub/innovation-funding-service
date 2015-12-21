@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
  */
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
-
-    private Object costItemsForType;
-
     private CostService costService;
 
     @Autowired
@@ -49,7 +46,7 @@ public class FinanceFormHandler {
     private List<Cost> mapCostItems(HttpServletRequest request, List<CostField> costFields) {
         CostItemMapper costItemMapper = new CostItemMapper(costFields);
         List<Cost> costs = new ArrayList<>();
-        for (CostType costType : CostType.values()) {
+        for(CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
                     filter(k -> k.startsWith(costType.getType())).collect(Collectors.toList());
             Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
@@ -67,14 +64,14 @@ public class FinanceFormHandler {
     private Map<Long, List<CostFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
         // make sure that we have the fields together acting on one cost
         Map<Long, List<CostFormField>> costKeyMap = new HashMap<>();
-        for (String costTypeKey : costTypeKeys) {
+        for(String costTypeKey : costTypeKeys) {
             String value = request.getParameter(costTypeKey);
             CostFormField costFormField = getCostFormField(costTypeKey, value);
-            if(costFormField==null)
+            if (costFormField == null)
                 continue;
 
             Long id = Long.valueOf(costFormField.getId());
-            if (costKeyMap.containsKey(id)) {
+            if(costKeyMap.containsKey(id)) {
                 costKeyMap.get(id).add(costFormField);
             } else {
                 List<CostFormField> costKeyValues = new ArrayList<>();
@@ -113,12 +110,11 @@ public class FinanceFormHandler {
     }
 
 
-
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
-        if (keyParts.length > 2) {
+        if(keyParts.length > 2) {
             return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
-        }else if(keyParts.length == 2){
+        } else if (keyParts.length == 2) {
             log.info("id == null");
             return new CostFormField(costTypeKey, value, null, keyParts[1], keyParts[0]);
         }
@@ -127,7 +123,7 @@ public class FinanceFormHandler {
 
     private CostItem getCostItem(CostType costType, Long id, List<CostFormField> costFields) {
         CostItem costItem = null;
-        switch (costType) {
+        switch(costType) {
             case LABOUR:
                 costItem = getLabourCost(id, costFields);
                 break;
@@ -152,15 +148,18 @@ public class FinanceFormHandler {
             case OTHER_COSTS:
                 costItem = getOtherCost(id, costFields);
                 break;
+            case OTHER_FUNDING:
+                costItem = getOtherFunding(id, costFields);
+                break;
             default:
-                log.error("getCostItem, unsupported type: "+ costType);
+                log.error("getCostItem, unsupported type: " + costType);
                 break;
         }
         return costItem;
     }
 
     private CostItem getCapitalUsage(Long id, List<CostFormField> costFields) {
-        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        costFields.stream().forEach(c -> log.debug("CostField: " + c.getCostName()));
         Integer deprecation = null;
         String description = null;
         String existing = null;
@@ -169,39 +168,39 @@ public class FinanceFormHandler {
         Integer utilisation = null;
 
         for(CostFormField costFormField : costFields) {
-            if (costFormField.getCostName().equals("item")) {
+            if(costFormField.getCostName().equals("item")) {
                 description = costFormField.getValue();
-            }else if (costFormField.getCostName().equals("existing")) {
+            } else if (costFormField.getCostName().equals("existing")) {
                 existing = costFormField.getValue();
-            }else if (costFormField.getCostName().equals("deprecation_period")) {
+            } else if (costFormField.getCostName().equals("deprecation_period")) {
                 deprecation = Integer.valueOf(costFormField.getValue());
-            }else if (costFormField.getCostName().equals("npv")) {
+            } else if (costFormField.getCostName().equals("npv")) {
                 npv = getBigDecimalValue(costFormField.getValue(), 0d);
-            }else if (costFormField.getCostName().equals("residual_value")) {
+            } else if (costFormField.getCostName().equals("residual_value")) {
                 residualValue = getBigDecimalValue(costFormField.getValue(), 0d);
-            }else if (costFormField.getCostName().equals("utilisation")) {
+            } else if (costFormField.getCostName().equals("utilisation")) {
                 utilisation = Integer.valueOf(costFormField.getValue());
-            }else{
-                log.info("Unused costField: "+costFormField.getCostName());
+            } else {
+                log.info("Unused costField: " + costFormField.getCostName());
             }
         }
 
-        return new CapitalUsage( id,  deprecation,  description,  existing,
-                 npv,  residualValue,  utilisation );
+        return new CapitalUsage(id, deprecation, description, existing,
+                npv, residualValue, utilisation);
     }
 
     private CostItem getOverheadsCosts(Long id, List<CostFormField> costFields) {
-        costFields.stream().forEach(c -> log.debug("CostField: "+ c.getCostName()));
+        costFields.stream().forEach(c -> log.debug("CostField: " + c.getCostName()));
         Integer customRate = null;
         String acceptRate = null;
 
         for(CostFormField costFormField : costFields) {
-            if (costFormField.getCostName().equals("acceptRate")) {
+            if(costFormField.getCostName().equals("acceptRate")) {
                 acceptRate = costFormField.getValue();
-            }else if (costFormField.getCostName().equals("customRate")) {
+            } else if (costFormField.getCostName().equals("customRate")) {
                 customRate = Integer.valueOf(costFormField.getValue());
-            }else{
-                log.info("Unused costField: "+costFormField.getCostName());
+            } else {
+                log.info("Unused costField: " + costFormField.getCostName());
             }
         }
         return new Overhead(id, acceptRate, customRate);
@@ -215,16 +214,16 @@ public class FinanceFormHandler {
 
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
-            if (fieldValue != null) {
-                if (costFormField.getCostName().equals("grossAnnualSalary")) {
+            if(fieldValue != null) {
+                if(costFormField.getCostName().equals("grossAnnualSalary")) {
                     grossAnnualSalary = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
                 } else if (costFormField.getCostName().equals("labourDays") ||
                         costFormField.getCostName().equals("workingDays")) {
                     labourDays = getIntegerValue(fieldValue, 0);
-                }else{
-                    log.info("Unused costField: "+costFormField.getCostName());
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
@@ -237,15 +236,15 @@ public class FinanceFormHandler {
         Integer quantity = null;
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
-            if (fieldValue != null) {
-                if (costFormField.getCostName().equals("item")) {
+            if(fieldValue != null) {
+                if(costFormField.getCostName().equals("item")) {
                     item = fieldValue;
                 } else if (costFormField.getCostName().equals("cost")) {
                     cost = getBigDecimalValue(fieldValue, 0D);
                 } else if (costFormField.getCostName().equals("quantity")) {
                     quantity = getIntegerValue(fieldValue, 0);
-                }else{
-                    log.info("Unused costField: "+costFormField.getCostName());
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
@@ -260,7 +259,7 @@ public class FinanceFormHandler {
 
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
-            if(fieldValue!=null) {
+            if (fieldValue != null) {
                 if (costFormField.getCostName().equals("country")) {
                     country = fieldValue;
                 } else if (costFormField.getCostName().equals("subcontractingCost")) {
@@ -269,8 +268,8 @@ public class FinanceFormHandler {
                     name = fieldValue;
                 } else if (costFormField.getCostName().equals("role")) {
                     role = fieldValue;
-                }else{
-                    log.info("Unused costField: "+costFormField.getCostName());
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
@@ -285,15 +284,15 @@ public class FinanceFormHandler {
 
         for(CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
-            if(fieldValue!=null) {
-                if (costFormField.getCostName().equals("travelPurpose")) {
+            if(fieldValue != null) {
+                if(costFormField.getCostName().equals("travelPurpose")) {
                     item = fieldValue;
                 } else if (costFormField.getCostName().equals("travelNumTimes")) {
                     quantity = getIntegerValue(fieldValue, 0);
                 } else if (costFormField.getCostName().equals("travelCostEach")) {
                     costPerItem = getBigDecimalValue(fieldValue, 0d);
-                }else{
-                    log.info("Unused costField: "+costFormField.getCostName());
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
@@ -304,25 +303,51 @@ public class FinanceFormHandler {
         String description = null;
         BigDecimal cost = null;
 
-        for(CostFormField costFormField : costFormFields) {
+        for (CostFormField costFormField : costFormFields) {
             String fieldValue = costFormField.getValue();
-            if(fieldValue!=null) {
-                if (costFormField.getCostName().equals("description")) {
+            if (fieldValue != null) {
+                if(costFormField.getCostName().equals("description")) {
                     description = fieldValue;
                 } else if (costFormField.getCostName().equals("otherCost")) {
                     cost = getBigDecimalValue(fieldValue, 0d);
-                }else{
-                    log.info("Unused costField: "+costFormField.getCostName());
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
         return new OtherCost(id, cost, description);
     }
 
+    private CostItem getOtherFunding(Long id, List<CostFormField> costFormFields) {
+        String otherPublicFunding = null;
+        String fundingSource = null;
+        String dateSecured = null;
+        BigDecimal fundingAmount = null;
+
+        for (CostFormField costFormField : costFormFields) {
+            String fieldValue = costFormField.getValue();
+            if (fieldValue != null) {
+                if (costFormField.getCostName().equals("otherPublicFunding")) {
+                    otherPublicFunding = fieldValue;
+                } else if (costFormField.getCostName().equals("fundingAmount")) {
+                    fundingAmount = getBigDecimalValue(fieldValue, 0d);
+                } else if (costFormField.getCostName().equals("fundingSource")) {
+                    fundingSource = fieldValue;
+                } else if (costFormField.getCostName().equals("dateSecured")) {
+                    dateSecured = fieldValue;
+                } else {
+                    log.info("Unused costField: " + costFormField.getCostName());
+                }
+            }
+        }
+
+        return new OtherFunding(id, otherPublicFunding, fundingSource, dateSecured, fundingAmount);
+    }
+
     private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {
         Optional<CostFormField> grantClaimPercentageField = costFormFields.stream().findFirst();
         Integer grantClaimPercentage = 0;
-        if(grantClaimPercentageField.isPresent()) {
+        if (grantClaimPercentageField.isPresent()) {
             grantClaimPercentage = getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
         }
         return new GrantClaim(id, grantClaimPercentage);
@@ -331,7 +356,7 @@ public class FinanceFormHandler {
     private BigDecimal getBigDecimalValue(String value, Double defaultValue) {
         try {
             return new BigDecimal(value);
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             return new BigDecimal(defaultValue);
         }
     }
@@ -339,7 +364,7 @@ public class FinanceFormHandler {
     private Integer getIntegerValue(String value, Integer defaultValue) {
         try {
             return Integer.valueOf(value);
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             return defaultValue;
         }
     }
@@ -351,16 +376,16 @@ public class FinanceFormHandler {
 
     private Cost updateCost(Cost cost) {
         Cost originalCost = costService.getById(cost.getId());
-        if(cost.getCost()!=null) {
+        if (cost.getCost() != null) {
             originalCost.setCost(cost.getCost());
         }
-        if(cost.getDescription()!=null) {
+        if (cost.getDescription() != null) {
             originalCost.setDescription(cost.getDescription());
         }
-        if(cost.getItem()!=null) {
+        if (cost.getItem() != null) {
             originalCost.setItem(cost.getItem());
         }
-        if(cost.getQuantity()!=null) {
+        if (cost.getQuantity() != null) {
             originalCost.setQuantity(cost.getQuantity());
         }
 

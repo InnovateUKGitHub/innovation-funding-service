@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,9 @@ public class CostItemMapper {
             case FINANCE:
                 GrantClaim grantClaim = (GrantClaim) costItem;
                 return new Cost(grantClaim.getId(), "", OrganisationFinance.GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+            case OTHER_FUNDING:
+                return mapOtherFunding(costItem);
+
         }
         log.error("Not a valid CostType: " + costType);
         throw new IllegalArgumentException("Not a valid CostType: " + costType);
@@ -89,4 +93,14 @@ public class CostItemMapper {
         return cost;
     }
 
+    private Cost mapOtherFunding(CostItem costItem) {
+        OtherFunding otherFunding = (OtherFunding) costItem;
+        String item = null;
+        if(otherFunding.getOtherPublicFunding()!=null) {
+            item = otherFunding.getOtherPublicFunding();
+        } else {
+            item = otherFunding.getSecuredDate();
+        }
+        return new Cost(otherFunding.getId(), item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+    }
 }
