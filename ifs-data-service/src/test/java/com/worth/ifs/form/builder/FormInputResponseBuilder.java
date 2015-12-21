@@ -1,6 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 
@@ -39,6 +40,10 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
 
     public FormInputResponseBuilder withFormInputs(List<FormInput> owningFormInputs) {
         return withList(owningFormInputs, (formInput, formInputResponse) -> formInputResponse.setFormInput(formInput));
+    }
+
+    public FormInputResponseBuilder withFileEntry(FileEntry fileEntry) {
+        return with(response -> response.setFileEntry(fileEntry));
     }
 
     @Override

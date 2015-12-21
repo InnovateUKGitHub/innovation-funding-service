@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -45,6 +46,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     enum ServiceFailures {
         UNABLE_TO_CREATE_FILE, //
+        UNABLE_TO_FIND_FILE, //
     }
 
     @Autowired
@@ -133,20 +135,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }));
     }
 
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        return handlingErrors(UNABLE_TO_FIND_FILE, () -> getFormInputResponse(fileEntryId).
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier.getResult()))
+        )));
+    }
+
     private Either<ServiceFailure, FormInput> getFormInput(long formInputId) {
         return getOrFail(() -> formInputRepository.findOne(formInputId), () -> error(FORM_INPUT_NOT_FOUND));
     }
 
     private Either<ServiceFailure, Application> getApplication(long applicationId) {
         return getOrFail(() -> applicationRepository.findOne(applicationId), () -> error(APPLICATION_NOT_FOUND));
-    }
-
-    @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
-        return getFormInputResponse(fileEntryId).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier.getResult()))
-        ));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
