@@ -34,6 +34,16 @@
 	<hr />
 
 	<h2 class="heading-medium no-margin-bottom">Operating address</h2>
+	<p class="form-hint">This is the address your organisation works from</p>
+	<fieldset>
+		<legend class="visuallyhidden">Operating address</legend>
+		<div class="form-block">
+			<label class="block-label" for="address-same">
+				<input id="address-same" type="checkbox" value="address-same"/>
+				The operating address is the same as the registered company address
+			</label> 
+		</div>
+	</fieldset>
 
 	<form>
 		<fieldset class="extra-margin">
@@ -42,7 +52,7 @@
 				<label class="form-label" for="street">
 					<span class="form-label-bold">Street</span>
 				</label>
-				<input class="form-control" id="street" name="street" type="text" />
+				<input class="form-control" id="street" name="street" type="text" value="34 Example street" />
 			</div>
 			<div class="form-group">
 				<label class="form-label visuallyhidden" for="street-2">
@@ -60,19 +70,19 @@
 				<label class="form-label" for="town">
 					<span class="form-label-bold">Town</span>
 				</label>
-				<input class="form-control" id="town" name="town" type="text" />
+				<input class="form-control" id="town" name="town" type="text" value="Bristol" />
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="county">
 					<span class="form-label-bold">County</span>
 				</label>
-				<input class="form-control" id="county" name="county" type="text" />
+				<input class="form-control" id="county" name="county" type="text"/>
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="postcode">
 					<span class="form-label-bold">Postcode</span>
 				</label>
-				<input class="form-control" id="postcode" name="postcode" type="text" />
+				<input class="form-control" id="postcode" name="postcode" type="text" value="BS7 8QY" />
 			</div>
 		</fieldset>
 
