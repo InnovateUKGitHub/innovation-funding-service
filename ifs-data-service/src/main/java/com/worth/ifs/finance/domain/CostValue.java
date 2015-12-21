@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @IdClass(CostValueId.class)
-public class CostValue implements Serializable {
+public class CostValue {
     String value;
 
     @Id

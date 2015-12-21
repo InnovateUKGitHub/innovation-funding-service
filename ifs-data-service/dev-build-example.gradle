@@ -21,3 +21,6 @@ ext.testIfsDatasourceUsername=""
 ext.testIfsDatasourcePassword=""
 
 ext.ifsFileStorageLocation="/tmp"
+
+ext.cookieSecure=false
+ext.cookieHTTPOnly=false
