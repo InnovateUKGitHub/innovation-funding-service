@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
+@Ignore
 public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks

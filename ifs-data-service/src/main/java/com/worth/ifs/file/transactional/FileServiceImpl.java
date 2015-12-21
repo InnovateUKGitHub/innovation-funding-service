@@ -75,6 +75,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Files.delete(file.toPath());
         } catch (IOException e) {
             log.error("Unable to delete " + file);
+            log.error(e);
         }
     }
 
@@ -200,6 +201,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             return right(targetFile.toFile());
         } catch (IOException e) {
             log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
+            log.error(e);
             return errorResponse(UNABLE_TO_CREATE_FILE);
         }
     }

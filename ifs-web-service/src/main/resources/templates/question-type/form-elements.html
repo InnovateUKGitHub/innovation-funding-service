@@ -308,7 +308,7 @@
             type="submit"
             name="mark_as_complete" 
             th:value="${question.getId()}"
-            th:class="${readonly}? 'button' : 'buttonlink'"
+            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
     <button th:unless="${readonly}"
@@ -316,9 +316,10 @@
             type="submit"
             name="mark_as_incomplete"
             th:value="${question.getId()}"
-            class="buttonlink"
+            th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
+
 </div>
 <!-- ========================= edit link =========================== -->
 
@@ -335,8 +336,8 @@
     <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
-				<span class="count-down" aria-live="polite"
-                      th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
+				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
+				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:text="${maxWords}" th:classappend="${maxWords &lt; 0}? negative : positive" >0</span>
 		</span>
     </div>
 </div>
