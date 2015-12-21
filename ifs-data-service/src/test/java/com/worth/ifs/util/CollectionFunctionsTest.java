@@ -249,4 +249,49 @@ public class CollectionFunctionsTest {
             // expected behaviour
         }
     }
+
+    @Test
+    public void test_simpleMap() {
+        assertEquals(asList("123 string", "456 string"), CollectionFunctions.simpleMap(asList(123, 456), i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleMap_nullList() {
+        assertEquals(asList(), CollectionFunctions.simpleMap(null, i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleMap_nullElements() {
+        assertEquals(asList("123 string", "null string"), CollectionFunctions.simpleMap(asList(123, null), i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleFilter() {
+        assertEquals(asList(789), CollectionFunctions.simpleFilter(asList(123, 456, 789), i -> i > 456));
+    }
+
+    @Test
+    public void test_simpleFilter_nullList() {
+        assertEquals(asList(), CollectionFunctions.simpleFilter(null, i -> false));
+    }
+
+    @Test
+    public void test_simpleFilter_nullElements() {
+        assertEquals(asList(789), CollectionFunctions.simpleFilter(asList(123, null, 456, 789), i -> i != null && i > 456));
+    }
+
+    @Test
+    public void test_simpleFilterNot() {
+        assertEquals(asList(123, 456), CollectionFunctions.simpleFilterNot(asList(123, 456, 789), i -> i > 456));
+    }
+
+    @Test
+    public void test_simpleFilterNot_nullList() {
+        assertEquals(asList(), CollectionFunctions.simpleFilterNot(null, i -> false));
+    }
+
+    @Test
+    public void test_simpleFilterNot_nullElements() {
+        assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
+    }
 }

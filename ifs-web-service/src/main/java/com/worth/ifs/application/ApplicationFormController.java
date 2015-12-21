@@ -106,7 +106,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("currentQuestion", question);
     }
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    @RequestMapping(value = {"/question/{questionId}", "/question/edit/{questionId}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
                                      BindingResult bindingResult,
                                      Model model,
@@ -138,6 +138,22 @@ public class ApplicationFormController extends AbstractApplicationController {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             return "redirect:/application/"+applicationId + "/form/question/" + questionId;
         }
+    }
+
+    @RequestMapping(value="/question/edit/{questionId}", method = RequestMethod.GET)
+    public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
+                               BindingResult bindingResult, Model model,
+                               @PathVariable("applicationId") final Long applicationId,
+                               @PathVariable("questionId") final Long questionId,
+                               HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        if (processRole != null) {
+            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+        } else {
+            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+        }
+        return showQuestion(form, bindingResult, model, applicationId, questionId, request);
     }
 
     private void addNavigation(Section section, Long applicationId, Model model) {
@@ -370,7 +386,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             success= true;
 
         }
-
         return success;
     }
 
@@ -399,12 +414,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(updatedApplication.getName() != null){
+            LOG.error("setApplicationDetails: "+ updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
         if(updatedApplication.getStartDate() != null) {
+            LOG.error("setApplicationDetails: "+ updatedApplication.getStartDate());
             application.setStartDate(updatedApplication.getStartDate());
         }
         if(updatedApplication.getDurationInMonths() != null){
+            LOG.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }

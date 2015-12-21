@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.service.BaseRestService;
+import org.junit.Before;
 import org.mockito.Mock;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,10 +33,8 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     private static final String VALID_AUTH_TOKEN = "VALID_AUTH_TOKEN";
 
-    @Override
-    public void setUp() {
-
-        super.setUp();
+    @Before
+    public void setupServiceWithMockTemplateAndSpringSecurity() {
 
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);

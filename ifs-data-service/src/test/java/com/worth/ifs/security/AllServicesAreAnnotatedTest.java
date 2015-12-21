@@ -9,6 +9,7 @@ import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
+import com.worth.ifs.file.transactional.FileServiceImpl;
 import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
@@ -61,7 +62,8 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     ApplicationResourceAssembler.class,
                     ProcessRoleResourceAssembler.class,
                     CompetitionResourceAssembler.class,
-                    QuestionStatusRestServiceImpl.class
+                    QuestionStatusRestServiceImpl.class,
+                    FileServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations

@@ -18,7 +18,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.Failures.*;
+import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
@@ -39,6 +39,9 @@ public abstract class BaseTransactionalService  {
     public enum Failures {
         UNEXPECTED_ERROR, //
         RESPONSE_NOT_FOUND, //
+        FORM_INPUT_RESPONSE_NOT_FOUND, //
+        APPLICATION_NOT_FOUND, //
+        FORM_INPUT_NOT_FOUND, //
         PROCESS_ROLE_NOT_FOUND, //
         PROCESS_ROLE_INCORRECT_TYPE, //
         PROCESS_ROLE_INCORRECT_APPLICATION, //
@@ -77,6 +80,21 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode) {
+        return handlingErrors(UNEXPECTED_ERROR, serviceCode);
+    }
+
+    /**
+     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+     * response (an Either with a left of ServiceFailure).
+     *
+     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+     * type UNEXPECTED_ERROR.
+     *
+     * @param <T>
+     * @param serviceCode
+     * @return
+     */
+    protected <T> Either<ServiceFailure, T> handlingErrors(Enum<?> catchAllError, Supplier<Either<ServiceFailure, T>> serviceCode) {
         try {
             Either<ServiceFailure, T> response = serviceCode.get();
 
@@ -88,7 +106,7 @@ public abstract class BaseTransactionalService  {
         } catch (Exception e) {
             log.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
             rollbackTransaction();
-            return errorResponse(UNEXPECTED_ERROR);
+            return errorResponse(catchAllError);
         }
     }
 
@@ -128,8 +146,19 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, T> successResponse(T response) {
+    protected static <T> Either<ServiceFailure, T> successBody(T response) {
         return Either.<ServiceFailure, T> right(response);
+    }
+
+    /**
+     * Create a Right of T, to indicate a success.
+     *
+     * @param response
+     * @param <T>
+     * @return
+     */
+    protected static <T> Either<ServiceFailure, ServiceSuccess<T>> successResponse(T response) {
+        return Either.<ServiceFailure, ServiceSuccess<T>> right(new ServiceSuccess(response));
     }
 
     /**
@@ -141,5 +170,18 @@ public abstract class BaseTransactionalService  {
      */
     protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error) {
         return left(error(error));
+    }
+
+
+
+    /**
+     * Create a Left of ServiceFailure, to indicate a failure.
+     *
+     * @param error
+     * @param <T>
+     * @return
+     */
+    protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error, Throwable e) {
+        return left(error(error, e));
     }
 }

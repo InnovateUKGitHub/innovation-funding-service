@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
@@ -23,15 +24,13 @@ public class RejectAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
-        Long applicationId = (Long) context.getMessageHeader("applicationId");
-        Long assessorId = (Long) context.getMessageHeader("assessorId");
+        ProcessOutcome processOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
+        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
 
-        Assessment assessment = assessmentRepository.findOneByAssessorAndApplication(assessorId, applicationId);
+        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
         if (assessment != null) {
             assessment.setProcessStatus(context.getTransition().getTarget().getId());
-            assessment.setDecisionReason(updatedAssessment.getDecisionReason());
-            assessment.setObservations(updatedAssessment.getObservations());
+            assessment.getProcessOutcomes().add(processOutcome);
             assessmentRepository.save(assessment);
         }
     }

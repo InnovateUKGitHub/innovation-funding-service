@@ -10,11 +10,11 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
+<main id="content" th:with="application=${currentApplication}">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${assessment.application.competition.getAssessmentDaysLeftPercentage()},
-            daysLeft=${assessment.application.competition.getAssessmentDaysLeft()},
-            title = ${assessment.application.name},
+    <div th:include="fragments/layout :: header-sub-generic" th:with="daysPercentage = ${competition.getAssessmentDaysLeftPercentage()},
+            daysLeft=${competition.getAssessmentDaysLeft()},
+            title = ${application.name},
             deadlineText='Days left to accept'" th:remove="tag" />
 
     <header class="page-header group no-pad">
@@ -46,7 +46,7 @@
 
     <div class="application-summary">
         <div class="in-progress">
-            <h2 class="heading-large" th:text="${assessment.application.name}">Application Title</h2>
+            <h2 class="heading-large" th:text="${application.name}">Application Title</h2>
             <h3 class="heading-medium">Partners</h3>
             <ul class="list-bullet">
                  <li th:each="partner : ${partners}" >
@@ -64,14 +64,14 @@
             <h3 class="heading-medium">Are you able to assess this application?</h3>
             <p class="form-hint">If you are unsure whether you are able to assess, accept to review the full application.</p>
             <form  method="post" action="/assessor/invitation_answer" >
-                <input type="hidden" name="applicationId" th:value="${assessment.application.id}"/>
-                <input type="hidden" name="competitionId" th:value="${assessment.application.competition.id}"/>
+                <input type="hidden" name="applicationId" th:value="${application.id}"/>
+                <input type="hidden" name="competitionId" th:value="${competition.id}"/>
                 <button class="button large" name="accept" value="accepted" type="submit">Accept</button>
                 <a role="button" tabindex="0" class="button button-warning large" data-js-modal="modal-reject-assessment"
-                   th:href="@{/assessor/competitions/{cid}/applications/{aid}/reject-invitation(cid=${competition.id},aid=${assessment.application.id})}">Reject</a>
+                   th:href="@{/assessor/competitions/{cid}/applications/{aid}/reject-invitation(cid=${competition.id},aid=${application.id})}">Reject</a>
             </form>
 
-            <div th:include="fragments/modals :: modal-reject-assessment" th:remove="tag" />
+            <div th:include="fragments/modals :: modal-reject-assessment (competition = ${competition}, application = ${application})" th:remove="tag" />
 
 
         </div>

@@ -3,9 +3,8 @@ package com.worth.ifs.form.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,6 +46,9 @@ public class FormInputResponse {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @ManyToOne
+    @JoinColumn(name="fileEntryId", referencedColumnName="id")
+    private FileEntry fileEntry;
 
 
     public FormInputResponse() {
@@ -56,6 +58,14 @@ public class FormInputResponse {
     public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.value = value;
+        this.updatedBy = updatedBy;
+        this.formInput = formInput;
+        this.application = application;
+    }
+
+    public FormInputResponse(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+        this.updateDate = updateDate;
+        this.fileEntry = fileEntry;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
@@ -120,38 +130,11 @@ public class FormInputResponse {
         this.updatedBy = updatedBy;
     }
 
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        FormInputResponse rhs = (FormInputResponse) obj;
-        return new EqualsBuilder()
-            .append(this.id, rhs.id)
-            .append(this.updateDate, rhs.updateDate)
-            .append(this.value, rhs.value)
-            .append(this.updatedBy, rhs.updatedBy)
-            .append(this.formInput, rhs.formInput)
-            .append(this.application, rhs.application)
-            .isEquals();
+    public FileEntry getFileEntry() {
+        return fileEntry;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(id)
-            .append(updateDate)
-            .append(value)
-            .append(updatedBy)
-            .append(formInput)
-            .append(application)
-            .toHashCode();
+    public void setFileEntry(FileEntry fileEntry) {
+        this.fileEntry = fileEntry;
     }
 }

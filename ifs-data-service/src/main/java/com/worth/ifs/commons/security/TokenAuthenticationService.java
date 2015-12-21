@@ -3,6 +3,7 @@ package com.worth.ifs.commons.security;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,12 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     public static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
     private static final int ONE_DAY = 60 * 60 * 24;
+
+    @Value("${server.session.cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${server.session.cookie.http-only}")
+    private boolean cookieHttpOnly;
 
     @Autowired
     private TokenSupplier tokenSupplier;
@@ -62,9 +69,9 @@ public class TokenAuthenticationService implements UserAuthenticationService {
      */
     private void addAuthentication(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(AUTH_TOKEN, token);
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
         cookie.setMaxAge(ONE_DAY);
+        cookie.setSecure(cookieSecure);
+        cookie.setHttpOnly(cookieHttpOnly);
         cookie.setPath("/");
         response.addCookie(cookie);
     }
@@ -78,9 +85,10 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     public void removeAuthentication(HttpServletResponse response) {
         Cookie cookie = new Cookie(AUTH_TOKEN, null);
         cookie.setMaxAge(0);
+        cookie.setSecure(cookieSecure);
+        cookie.setHttpOnly(cookieHttpOnly);
         response.addCookie(cookie);
     }
-
 
     public static String getAuthenticationCookieName() {
         return AUTH_TOKEN;
