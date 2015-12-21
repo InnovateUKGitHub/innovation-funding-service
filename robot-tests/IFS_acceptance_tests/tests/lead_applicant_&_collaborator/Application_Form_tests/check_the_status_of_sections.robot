@@ -47,7 +47,7 @@ Check that status is updated on the summary page after editing a section so it i
 
 
 the applicant adds some content and marks this section as complete
-    Input Text          css=#form-input-5 .editor      This is some random text
+    Input Text          css=#form-input-4 .editor      This is some random text
     Click Element      name=mark_as_complete
 
 the applicant can see that the 'economics benefit' section is marked as complete
