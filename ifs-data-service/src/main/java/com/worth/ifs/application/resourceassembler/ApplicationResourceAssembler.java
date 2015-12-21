@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     private Class<ApplicationController> controllerClass = ApplicationController.class;
 
     @Autowired
-    private ProcessRoleResourceAssembler processRoleResourceAssembler;
+    private com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler processRoleResourceAssembler;
 
     @Autowired
     private CompetitionResourceAssembler competitionResourceAssembler;

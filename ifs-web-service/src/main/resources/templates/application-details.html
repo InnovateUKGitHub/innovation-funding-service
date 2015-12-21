@@ -42,7 +42,7 @@
                     <p th:text="${section.description}"></p>
                     <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:case="${0}" th:remove="tag">
-                        <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
+                        <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
                     <!--/* sections with children like the finance */--> 
                     <div th:case="*" th:remove="tag">

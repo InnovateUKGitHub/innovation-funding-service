@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -33,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
@@ -50,6 +52,7 @@ import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -113,18 +116,27 @@ public class BaseUnitTest {
     public List<Organisation> organisations;
     TreeSet<Organisation> organisationSet;
     public List<Assessment> assessments;
+    public List<ProcessRole> assessorProcessRoles;
     public List<Assessment> submittedAssessments;
     public ApplicationStatus submittedApplicationStatus;
     public ApplicationStatus createdApplicationStatus;
     public ApplicationStatus approvedApplicationStatus;
     public ApplicationStatus rejectedApplicationStatus;
     public ApplicationFinance applicationFinance;
+    public List<ProcessRole> processRoles;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");
         return viewResolver;
+    }
+
+    public <T> T attributeFromMvcResultModel(MvcResult result, String key){
+        return (T)result.getModelAndView().getModel().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(key))
+                .map(entry -> entry.getValue())
+                .findFirst().orElse(null);
     }
 
     public void setup(){
@@ -241,10 +253,17 @@ public class BaseUnitTest {
         approvedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
         rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
 
-        ApplicationResource app1 = new ApplicationResource(1L, "Rovel Additive Manufacturing Process", createdApplicationStatus);
-        ApplicationResource app2 = new ApplicationResource(2L, "Providing sustainable childcare", submittedApplicationStatus);
-        ApplicationResource app3 = new ApplicationResource(3L, "Mobile Phone Data for Logistics Analytics", approvedApplicationStatus);
-        ApplicationResource app4 = new ApplicationResource(4L, "Using natural gas to heat homes", rejectedApplicationStatus);
+        // Build the backing applications.
+        Application application1 = ApplicationBuilder.newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).build();
+        Application application2 = ApplicationBuilder.newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).build();
+        Application application3 = ApplicationBuilder.newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).build();
+        Application application4 = ApplicationBuilder.newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).build();
+        ApplicationResource app1 = new ApplicationResource(application1);
+        ApplicationResource app2 = new ApplicationResource(application2);
+        ApplicationResource app3 = new ApplicationResource(application3);
+        ApplicationResource app4 = new ApplicationResource(application4);
+        Map<Long, ApplicationResource> idsToApplicationResources = asList(app1, app2, app3, app4).stream().collect(toMap(a -> a.getId(), a -> a));
+
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
@@ -256,16 +275,17 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRole processRole1 = new ProcessRole(1L, loggedInUser, new Application(app1), role1, organisation1);
-        ProcessRole processRole2 = new ProcessRole(2L, loggedInUser, new Application(app2), role1, organisation1);
-        ProcessRole processRole3 = new ProcessRole(3L, loggedInUser, new Application(app3), role1, organisation1);
-        ProcessRole processRole4 = new ProcessRole(4L, loggedInUser, new Application(app4), role1, organisation1);
-        ProcessRole processRole5 = new ProcessRole(5L, users.get(1), new Application(app1), role2, organisation2);
-        ProcessRole processRole6 = new ProcessRole(6L, assessor, new Application(app2), assessorRole, organisation1);
-        ProcessRole processRole7 = new ProcessRole(7L, assessor, new Application(app3), assessorRole, organisation1);
-        ProcessRole processRole8 = new ProcessRole(8L, assessor, new Application(app1), assessorRole, organisation1);
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application1).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(application1).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(application3).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(application4).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(application1).withUser(loggedInUser).withRole(role2).withOrganisation(organisation2).build();
+        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(application2).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(application3).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(application1).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
 
-        List<ProcessRole> processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
+        assessorProcessRoles = asList(processRole6, processRole7, processRole8);
+        processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
@@ -296,6 +316,9 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), app3.getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), app1.getId())).thenReturn(processRole8);
+
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(idsToApplicationResources.get(pr.getApplication().getId())));
+
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app1.getId())).thenReturn(app1);
         when(applicationService.getById(app2.getId())).thenReturn(app2);
@@ -308,6 +331,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(app3)).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(app4)).thenReturn(organisationSet);
         when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app1)).thenReturn(processRole1);
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
@@ -348,13 +372,15 @@ public class BaseUnitTest {
     }
 
     public void setupAssessment(){
-        Assessment assessment1 = new Assessment(assessor, new Application(applications.get(0)));
+        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
+        Organisation organisation1 = organisations.get(0);
+
+        Assessment assessment1 = new Assessment(assessorProcessRoles.get(2));
         assessment1.setId(1L);
-        Assessment assessment2 = new Assessment(assessor, new Application(applications.get(1)));
+        Assessment assessment2 = new Assessment(assessorProcessRoles.get(0));
         assessment2.setId(2L);
-        Assessment assessment3 = new Assessment(assessor, new Application(applications.get(2)));
+        Assessment assessment3 = new Assessment(assessorProcessRoles.get(1));
         assessment3.setId(3L);
-        assessment3.submit();
 
         when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(3);
         when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(1);
@@ -366,9 +392,11 @@ public class BaseUnitTest {
         submittedAssessments = singletonList(assessment3);
         assessments = asList(assessment1, assessment2, assessment3);
         when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
-        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(0).getId())).thenReturn(assessment1);
-        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(1).getId())).thenReturn(assessment2);
-        when(assessmentRestService.getOneByAssessorAndApplication(assessor.getId(), applications.get(2).getId())).thenReturn(assessment3);
+
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment1);
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment2);
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment3);
+
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));

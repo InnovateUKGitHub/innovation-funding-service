@@ -1,8 +1,8 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.user.domain.ProcessRole;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -35,12 +35,12 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((id, assessment) -> setField("id", id, assessment), ids);
     }
 
-    public AssessmentBuilder withApplication(Application... applications) {
-        return withArray((application, assessment) -> setField("application", application, assessment), applications);
-    }
-
     public AssessmentBuilder withProcessState(String... processStates) {
         return withArray((processState, assessment) -> assessment.setProcessStatus(processState), processStates);
+    }
+
+    public AssessmentBuilder withProcessRole(ProcessRole processRole) {
+        return with(assessment -> assessment.setProcessRole(processRole));
     }
 
 }

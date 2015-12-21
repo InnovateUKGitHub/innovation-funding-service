@@ -85,4 +85,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void save(ApplicationResource application) {
         applicationRestService.saveApplication(application);
     }
+
+    @Override
+    public ApplicationResource findByProcessRoleId(Long id) {
+        return applicationRestService.findByProcessRoleId(id);
+    }
+
 }

@@ -36,7 +36,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
 @Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
-    private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
+    private static final Log log = LogFactory.getLog(FileServiceImpl.class);
 
     enum ServiceFailures {
         UNABLE_TO_CREATE_FOLDERS, //
@@ -74,7 +74,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             Files.delete(file.toPath());
         } catch (IOException e) {
-            LOG.error("Unable to delete " + file);
+            log.error("Unable to delete " + file);
         }
     }
 
@@ -100,24 +100,27 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         if (tempFile.length() == filesizeBytes) {
             return right(tempFile);
         } else {
-            LOG.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
+            log.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
             return errorResponse(INCORRECTLY_REPORTED_FILESIZE);
         }
     }
 
     private Either<ServiceFailure, File> validateMediaType(File file, MediaType mediaType) {
-        final String contentType;
+        final String detectedContentType;
         try {
-            contentType = Files.probeContentType(file.toPath());
+            detectedContentType = Files.probeContentType(file.toPath());
         } catch (IOException e) {
-            LOG.error("Unable to probe file for Content Type", e);
+            log.error("Unable to probe file for Content Type", e);
             return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
 
-        if (mediaType.toString().equals(contentType)) {
+        if (detectedContentType == null) {
+            log.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
+            return right(file);
+        } else if (mediaType.toString().equals(detectedContentType)) {
             return right(file);
         } else {
-            LOG.warn("Content Type of file has been detected as " + contentType + " but was reported as being " + mediaType);
+            log.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
             return errorResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
         }
     }
@@ -126,7 +129,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             return right(Files.createTempFile(prefix, ""));
         } catch (IOException e) {
-            LOG.error("Error creating temporary file for " + prefix, e);
+            log.error("Error creating temporary file for " + prefix, e);
             return errorResponse(errorMessage);
         }
     }
@@ -136,7 +139,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                LOG.error("Unable to supply FileInputStream for file " + file, e);
+                log.error("Unable to supply FileInputStream for file " + file, e);
                 throw new IllegalStateException("Unable to supply FileInputStream for file " + file, e);
             }
         });
@@ -156,7 +159,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private Either<ServiceFailure, FileEntry> findFileEntry(Long fileEntryId) {
         return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), () -> {
-            LOG.error("Could not find FileEntry for id " + fileEntryId);
+            log.error("Could not find FileEntry for id " + fileEntryId);
             return ServiceFailure.error(UNABLE_TO_FIND_FILE);
         });
     }
@@ -171,7 +174,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             return expectedFile.exists() ? expectedFile : null;
 
         }, () -> {
-            LOG.error("Could not find File for FileEntry with id " + fileEntry.getId());
+            log.error("Could not find File for FileEntry with id " + fileEntry.getId());
             return ServiceFailure.error(UNABLE_TO_FIND_FILE);
         });
     }
@@ -189,14 +192,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
 
             if (fileToCreate.exists()) {
-                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
+                log.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
                 return errorResponse(DUPLICATE_FILE_CREATED);
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
             return right(targetFile.toFile());
         } catch (IOException e) {
-            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
+            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
             return errorResponse(UNABLE_TO_CREATE_FILE);
         }
     }
@@ -205,7 +208,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             return right(Files.createDirectories(path));
         } catch (IOException e) {
-            LOG.error("Error creating folders " + path, e);
+            log.error("Error creating folders " + path, e);
             return errorResponse(UNABLE_TO_CREATE_FOLDERS, e);
         }
     }
@@ -222,12 +225,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                     Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
                     return right(file);
                 } catch (IOException e) {
-                    LOG.error("Could not write data to file " + file, e);
+                    log.error("Could not write data to file " + file, e);
                     return errorResponse(UNABLE_TO_CREATE_FILE, e);
                 }
             }
         } catch (IOException e) {
-            LOG.error("Error closing file stream for file " + file, e);
+            log.error("Error closing file stream for file " + file, e);
             return errorResponse(UNABLE_TO_CREATE_FILE, e);
         }
     }

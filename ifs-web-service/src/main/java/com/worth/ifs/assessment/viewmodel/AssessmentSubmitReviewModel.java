@@ -1,22 +1,29 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.RecommendedValue;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.ProcessRole;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 
+import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * A view model backing the Assessment Submit Review page.
@@ -25,45 +32,28 @@ import static java.util.stream.Collectors.*;
  */
 public class AssessmentSubmitReviewModel {
 
+    @SuppressWarnings("unused")
+    private final Log log = LogFactory.getLog(getClass());
+
     private final Assessment assessment;
-    private final Application application;
+    private final ApplicationResource application;
     private final Competition competition;
     private final List<Question> questions;
     private final List<Question> scorableQuestions;
-    private final int totalScore;
-    private final int possibleScore;
+    private final Score score;
     private final Map<Long, AssessorFeedback> responseIdsAndFeedback;
     private final Map<Long, Optional<Response>> questionIdsAndResponses;
-    private final int scorePercentage;
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
-    private static <R, T> Predicate<Pair<R, Optional<T>>> rightPairIsPresent() {
-        return pair -> pair.getRight().isPresent();
-    }
 
-    private static <R, T> Function<Pair<R, Optional<T>>, T> presentRightPair() {
-        return pair -> pair.getRight().get();
-    }
-
-    private static <R, T> Function<Pair<R, T>, R> leftPair() {
-        return Pair::getLeft;
-    }
-
-    private static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return Map.Entry::getValue;
-    }
-
-    private static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
-        return toMap(Pair::getLeft, Pair::getRight);
-    }
-
-    private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
-
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ProcessRole assessorProcessRole) {
-
+    // TODO this logic should live in the data layer and we should return a dto instead.
+    // TODO Note there is code commonality with AssessmentHandler.getScore.
+    // TODO make these changes when converting to dtos.
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, Competition competition, Score score) {
         this.assessment = assessment;
-        this.application = assessment.getApplication();
-        this.competition = assessment.getApplication().getCompetition();
+        this.application = application;
+        this.competition = competition;
+        this.score = score;
 
         questions = competition.getSections().stream().
                 flatMap(section -> section.getQuestions().stream()).
@@ -84,29 +74,12 @@ public class AssessmentSubmitReviewModel {
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
-                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).
+                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessment.getProcessRole()))).
                 filter(rightPairIsPresent()).
                 collect(toMap(leftPair(), presentRightPair()));
 
         responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
-
-        totalScore = questionsAndResponses.entrySet().stream().
-                filter(e -> e.getKey().getNeedingAssessorScore()).
-                map(mapEntryValue()).
-                map(response -> response.map(r -> Optional.ofNullable(responseIdsAndFeedback.get(r.getId()))).orElse(empty())).
-                map(optionalFeedback -> optionalFeedback.map(AssessorFeedback::getAssessmentValue).orElse("0")).
-                collect(summingInt(stringToInteger));
-
-        possibleScore = questions.stream().
-                filter(Question::getNeedingAssessorScore).
-                collect(summingInt(q -> 10));
-
-        if (possibleScore == 0) {
-            scorePercentage = 0;
-        } else {
-            scorePercentage = (totalScore * 100) / possibleScore;
-        }
 
         List<Section> sections = competition.getSections();
 
@@ -124,7 +97,7 @@ public class AssessmentSubmitReviewModel {
         return assessment;
     }
 
-    public Application getApplication() {
+    public ApplicationResource getApplication() {
         return application;
     }
 
@@ -141,15 +114,15 @@ public class AssessmentSubmitReviewModel {
     }
 
     public int getTotalScore() {
-        return totalScore;
+        return score.getTotal();
     }
 
     public int getPossibleScore() {
-        return possibleScore;
+        return score.getPossible();
     }
 
     public int getScorePercentage() {
-        return scorePercentage;
+        return score.getPercentage();
     }
 
     public List<AssessmentSummarySection> getAssessmentSummarySections() {
@@ -159,5 +132,17 @@ public class AssessmentSubmitReviewModel {
     public AssessorFeedback getFeedbackForQuestion(Question question) {
         Optional<Response> responseOption = questionIdsAndResponses.get(question.getId());
         return responseOption.map(response -> responseIdsAndFeedback.get(response.getId())).orElse(null);
+    }
+
+    public String getRecommendedValue(){
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getOutcome() : RecommendedValue.EMPTY.toString();
+    }
+
+    public String getSuitableFeedback(){
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getDescription() : "";
+    }
+
+    public String getComments(){
+        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getComment() : "";
     }
 }

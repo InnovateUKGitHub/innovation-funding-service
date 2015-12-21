@@ -1,12 +1,13 @@
 package com.worth.ifs.assessment.workflow;
 
-import com.worth.ifs.assessment.domain.AssessmentEvents;
+import com.worth.ifs.assessment.domain.AssessmentOutcomes;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.workflow.actions.AcceptAction;
 import com.worth.ifs.assessment.workflow.actions.RecommendAction;
 import com.worth.ifs.assessment.workflow.actions.RejectAction;
 import com.worth.ifs.assessment.workflow.actions.SubmitAction;
 import com.worth.ifs.assessment.workflow.guards.AssessmentGuard;
+import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.assessment.workflow.guards.SubmitGuard;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,31 +40,31 @@ public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String
         transitions
                 .withExternal()
                     .source(AssessmentStates.PENDING.getState()).target(AssessmentStates.REJECTED.getState())
-                    .event(AssessmentEvents.REJECT.getEvent())
+                    .event(AssessmentOutcomes.REJECT.getType())
                     .action(rejectAction())
-                    .guard(assessmentExistsGuard())
+                    .guard(processOutcomeExistsGuard())
                     .and()
                 .withExternal()
                     .source(AssessmentStates.PENDING.getState()).target(AssessmentStates.OPEN.getState())
-                    .event(AssessmentEvents.ACCEPT.getEvent())
+                    .event(AssessmentOutcomes.ACCEPT.getType())
                     .action(acceptAction())
                     .guard(assessmentExistsGuard())
                     .and()
                 .withExternal()
                     .source(AssessmentStates.OPEN.getState()).target(AssessmentStates.ASSESSED.getState())
-                    .event(AssessmentEvents.RECOMMEND.getEvent())
+                    .event(AssessmentOutcomes.RECOMMEND.getType())
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
                 .and()
                 .withExternal()
                     .source(AssessmentStates.ASSESSED.getState()).target(AssessmentStates.ASSESSED.getState())
-                    .event(AssessmentEvents.RECOMMEND.getEvent())
+                    .event(AssessmentOutcomes.RECOMMEND.getType())
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
                     .and()
                 .withExternal()
                     .source(AssessmentStates.ASSESSED.getState()).target(AssessmentStates.SUBMITTED.getState())
-                    .event(AssessmentEvents.SUBMIT.getEvent())
+                    .event(AssessmentOutcomes.SUBMIT.getType())
                     .action(submitAction())
                     .guard(submitGuard());
     }
@@ -91,6 +92,11 @@ public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String
     @Bean
     public AssessmentGuard assessmentExistsGuard() {
         return new AssessmentGuard();
+    }
+
+    @Bean
+    public ProcessOutcomeGuard processOutcomeExistsGuard() {
+        return new ProcessOutcomeGuard();
     }
 
     @Bean

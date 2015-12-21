@@ -1,141 +1,46 @@
 package com.worth.ifs.assessment.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.OutcomeType;
 import com.worth.ifs.workflow.domain.Process;
-import com.worth.ifs.workflow.domain.ProcessEvent;
-import org.hibernate.annotations.Polymorphism;
-import org.hibernate.annotations.PolymorphismType;
-import org.hibernate.annotations.Type;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 
-import javax.persistence.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.persistence.Entity;
 
-/**
- * Assessment defines database relations and a model to use client side and server side.
- */
 @Entity
-@Table(name = "Assessment", uniqueConstraints = @UniqueConstraint(columnNames = {"assessor", "application"}))
-@Polymorphism(type= PolymorphismType.EXPLICIT)
-@PrimaryKeyJoinColumn(name="process_id", referencedColumnName="id")
 public class Assessment extends Process {
 
-
-    @ManyToOne
-    @JoinColumn(name = "assessor", referencedColumnName = "id")
-    private User assessor;
-
-    @ManyToOne
-    @JoinColumn(name = "application", referencedColumnName = "id")
-    private Application application;
-
-    //@OneToMany
-    @Transient
-    private Map<Long, ResponseAssessment> responseAssessments;
-
-
-    /* ****** TEMPORARY ******* */
-
-    @Column(name="temp_totalScore")
-    private Double overallScore;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="temp_RecommendedValue")
-    private RecommendedValue recommendedValue;
-
-    @Column(name="recommendation_feedback")
-    private String suitableFeedback;
-    @Column(name="comments")
-    private String comments;
-
-    /* ****** END TEMPORARY ******* */
-
-
-    @Type(type = "yes_no")
-    private Boolean submitted = false;
-
     public Assessment() {
-        if (responseAssessments == null)
-            responseAssessments = new LinkedHashMap<>();
+        super();
     }
 
-    public Assessment(User assessor, Application application) {
-        super(ProcessEvent.ASSESSMENT.name(), AssessmentStates.PENDING.name());
-        this.assessor = assessor;
-        this.application = application;
-        responseAssessments = new HashMap<>();
-        recommendedValue = RecommendedValue.EMPTY;
-    }
-
-    public void setSummary(RecommendedValue value, String feedback, String comments, Double overallScore) {
-        this.recommendedValue = value;
-        this.suitableFeedback = feedback;
-        this.comments = comments;
-        this.overallScore = overallScore;
-    }
-
-    public void submit() {
-        submitted = true;
-    }
-
-    @Override
-    public String getProcessStatus() {
-        return status;
-    }
-
-    public Map<Long, ResponseAssessment> getResponseAssessments() {
-        return responseAssessments;
+    public Assessment(ProcessRole processRole) {
+        super(processRole);
     }
 
     public Boolean hasAssessmentStarted() {
-        return  ! recommendedValue.equals(RecommendedValue.EMPTY) ;
+        return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
     }
 
-
-    public RecommendedValue getRecommendedValue() {
-        return recommendedValue;
-    }
-
-    public String getSuitableFeedback() {
-        return suitableFeedback;
-    }
-    public String getComments() {
-        return comments;
-    }
-    /******* TEMPORARY ********/
-
-    public Double getOverallScore() {
-        // nItems cant be 0 - math indetermination
-        //Integer nItems = Math.max(1, responseAssessments.size());
-        //Double.valueOf(getTotalScore() / nItems);
-        return overallScore;
-    }
-
-//    private Integer getTotalScore() {
-//        return responseAssessments.values().stream().mapToInt(i -> i.getScore()).sum();
-//    }
-
-    public void addResponseAssessment(ResponseAssessment responseAssessment) {
-        this.responseAssessments.put(responseAssessment.getResponseId(), responseAssessment);
-    }
-
-    public boolean hasAssessments() {
-        return this.responseAssessments != null && this.responseAssessments.size() > 0;
-    }
-
+    @JsonIgnore
     public Boolean isSubmitted() {
-        return this.submitted;
+        return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
     }
 
-    public User getAssessor() {
-        return assessor;
+    public ProcessOutcome getLastOutcome() {
+        if(this.processOutcomes != null) {
+            return this.processOutcomes.stream().findFirst().orElse(null);
+        }
+        return null;
     }
 
-    public Application getApplication() {
-        return application;
+    public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
+        if(this.processOutcomes != null) {
+            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).findFirst().orElse(null);
+        }
+        return null;
     }
+
 
 }
-

@@ -70,7 +70,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     Validator validator;
 
     @RequestMapping("/check-eligibility/{competitionId}")
-    public String checkEligibility(Form form, Model model,
+    public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
@@ -145,7 +145,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                 try {
                     jsonAddress = mapper.writeValueAsString(companyHouseForm.getSelectedPostcode());
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
 
                 saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));

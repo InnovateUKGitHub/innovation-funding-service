@@ -9,6 +9,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -73,6 +74,18 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
             User user = processRole.getUser();
             if (user != null && !user.getProcessRoles().contains(processRole)) {
                 user.addUserApplicationRole(processRole);
+            }
+        });
+
+        built.forEach(processRole -> {
+            Application application = processRole.getApplication();
+            if (application != null){
+                if (application.getProcessRoles() == null){
+                    application.setProcessRoles(new ArrayList<>());
+                }
+                if (!application.getProcessRoles().contains(processRole)){
+                    application.addUserApplicationRole(processRole);
+                }
             }
         });
 

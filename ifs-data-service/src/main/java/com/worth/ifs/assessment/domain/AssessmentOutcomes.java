@@ -1,8 +1,8 @@
 package com.worth.ifs.assessment.domain;
 
-import com.worth.ifs.workflow.domain.Events;
+import com.worth.ifs.workflow.domain.OutcomeType;
 
-public enum AssessmentEvents implements Events {
+public enum AssessmentOutcomes implements OutcomeType {
     ACCEPT("accept"),
     REJECT("reject"),
     RECOMMEND("recommend"),
@@ -10,13 +10,12 @@ public enum AssessmentEvents implements Events {
 
     String event;
 
-    AssessmentEvents(String event) {
+    AssessmentOutcomes(String event) {
         this.event = event;
     }
 
-
     @Override
-    public String getEvent() {
+    public String getType() {
         return event;
     }
 }
