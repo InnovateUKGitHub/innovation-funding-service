@@ -8,6 +8,12 @@ Applicant goes to the Application form
 Applicant goes to the 'application details' question
     Go To    ${APPLICATION_DETAILS_URL}
 
+Applicant goes to the 'application summary' page for application 2
+    Go To   ${APPLICATION_2_SUMMARY_URL}
+
+Applicant goes to the 'economic benefits' question for application 2
+    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
+
 Applicant goes to the 'project summary' question
     Go To    ${PROJECT_SUMMARY_URL}
 
@@ -26,7 +32,7 @@ Applicant goes to the 'potential market' question
 Applicant goes to the 'project exploitation' question
     Go To    ${PROJECT_EXPLOITATION_URL}
 
-Applicant goes to the 'economic benefit' question
+Applicant goes to the 'economic benefits' question
     Go To    ${ECONOMIC_BENEFIT_URL}
 
 Applicant goes to the 'technical approach' question

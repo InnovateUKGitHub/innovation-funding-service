@@ -109,7 +109,7 @@ public class LoginController {
     private String redirectionForUser(User user) {
         String roleName = "";
 
-        if(user.getRoles().size() > 0) {
+        if(!user.getRoles().isEmpty()) {
             roleName = user.getRoles().get(0).getName();
         }
 
