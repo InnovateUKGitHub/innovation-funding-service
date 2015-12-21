@@ -176,4 +176,12 @@ public class FormInputResponseFileUploadController {
     private Either<JsonStatusResponse, String> checkParameterIsPresent(String parameterValue, String failureMessage, HttpServletResponse response) {
         return !StringUtils.isBlank(parameterValue) ? right(parameterValue) : left(badRequest(failureMessage, response));
     }
+
+    void setMaxFilesizeBytes(Long maxFilesizeBytes) {
+        this.maxFilesizeBytes = maxFilesizeBytes;
+    }
+
+    void setValidMediaTypes(List<String> validMediaTypes) {
+        this.validMediaTypes = validMediaTypes;
+    }
 }
