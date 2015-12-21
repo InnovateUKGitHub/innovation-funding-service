@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="app-dashboard">
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Your dashboard</h1>
+
+	<h2 class="heading-large">In progess</h2>
+	<ul class="boxed-list">
+	    <li>
+	        <div class="grid-row">
+	            <div class="column-two-thirds">
+	                <h2 class="heading-medium">
+	                <a href="#">Providing sustainable childcare</a>
+	                </h2>
+	                <p class="form-hint">Application number: <span>2</span></p>
+	                <strong class="greentext">Application submitted</strong>
+	            </div>
+	            <div class="column-third">
+	                <div class="awaiting-assessment">
+	                    Awaiting <br /> assessment
+	                </div>
+	            </div>
+	        </div>
+	    </li>
+	    <li>
+	        
+	        <div class="grid-row">
+	            <div class="column-two-thirds">
+	                <h2 class="heading-medium">
+	                <a href="#">A new innovative solution</a>
+	                </h2>
+	                <p class="form-hint">Application number: <span>5</span></p>
+	                <strong class="greentext">Application submitted</strong>
+	            </div>
+	            <div class="column-third">
+	                <div class="awaiting-assessment">
+	                    Awaiting <br /> assessment
+	                </div>
+	            </div>
+	        </div>
+	    </li>
+	</ul>
+
+	<h2 class="heading-large">Previous applications</h2>
+
+	<ul class="boxed-list">
+	    <li>
+	        <div class="grid-row">
+	            <div class="column-assessment-details">
+	                <h2 class="heading-medium">Mobile Phone Data for Logistics Analytics</h2>
+	                <p class="form-hint">Application number: <span>3</span></p>
+	            </div>
+	            <div class="column-assessment-status navigation-right">
+	                <div class="yes application-status assessed">
+	                    
+	                    <h3 class="results-status">Successful</h3>
+	                </div>
+	            </div>
+	        </div>
+	    </li>
+	    <li>
+	        <div class="grid-row">
+	            <div class="column-assessment-details">
+	                <h2 class="heading-medium">Using natural gas to heat homes</h2>
+	                <p class="form-hint">Application number: <span>4</span></p>
+	            </div>
+	            <div class="column-assessment-status navigation-right">
+	                <div class="no application-status assessed">
+	                    <h3 class="results-status">Unsuccessful</h3>
+	                    
+	                </div>
+	            </div>
+	        </div>
+	    </li>
+	</ul>
+
+	<h2 class="heading-large">Your profile</h2>
+	
+
+	<ul class="list-bullet">
+		<li>
+			<a href="/prototypes/675-profile-details">View and edit your profile details</a>
+		</li>
+		<li>
+			<a href="/prototypes/675-change-password">Change your password</a>
+		</li>
+	</ul>
+		
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	
+	jQuery('input#address-same').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#manual-company-input").hide();
+		}else{
+			jQuery("#manual-company-input").show();
+		}
+
+	});
+
+	jQuery('#manual-company-trigger').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#manual-company-input").show();
+		jQuery("#org-results").hide();
+
+	});
+
+	jQuery('#postcode-lookup').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#select-address-block").show();
+
+	});
+
+	jQuery('#select-address').on('change',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#street").val("King William House");
+		jQuery("#street-2").val("13 Queens Square");
+		jQuery("#town").val("Bristol");
+		jQuery("#postcode").val("BS1 4NT");
+
+	});
+
+	jQuery('#enter-address-manually').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#select-address-block").hide();
+	});
+</script>
+</body>
+</html>

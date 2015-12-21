@@ -3,14 +3,21 @@ package com.worth.ifs.application.finance;
 import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostValue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * Creates specific costs for each category and maps the cost to cost items, which
  * can be used in the view.
  */
 public class CostItemFactory {
+    private final Log log = LogFactory.getLog(getClass());
+
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
     public static final String COST_FIELD_UTILISATION = "utilisation";
@@ -32,6 +39,8 @@ public class CostItemFactory {
                 return createSubcontractingCost(cost);
             case TRAVEL:
                 return new TravelCost(cost.getId(), cost.getCost(), cost.getItem(), cost.getQuantity());
+            case OTHER_FUNDING:
+                return createOtherFunding(cost);
         }
         return null;
     }
@@ -67,4 +76,7 @@ public class CostItemFactory {
         return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
     }
 
+    private CostItem createOtherFunding(Cost cost) {
+        return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
+    }
 }
