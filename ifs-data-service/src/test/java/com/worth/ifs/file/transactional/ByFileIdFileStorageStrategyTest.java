@@ -3,6 +3,7 @@ package com.worth.ifs.file.transactional;
 import com.google.common.io.Files;
 import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the storage strategy of ByFileIdFileStorageStrategy
@@ -31,6 +33,11 @@ public class ByFileIdFileStorageStrategyTest {
         tempFolderPath = Files.createTempDir();
         tempPathSegments = simpleFilterNot(asList(tempFolderPath.getPath().split(separator)), StringUtils::isBlank);
         fullPathToTempFolder = combineLists(tempPathSegments, asList("BaseFolder"));
+    }
+
+    @After
+    public void teardownTempFolder() {
+        assertTrue(tempFolderPath.delete());
     }
 
     @Test
