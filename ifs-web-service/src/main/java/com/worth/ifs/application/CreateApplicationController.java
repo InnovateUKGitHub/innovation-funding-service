@@ -17,6 +17,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -65,6 +66,12 @@ public class CreateApplicationController extends AbstractApplicationController {
     public static final String COMPANY_HOUSE_NAME = "companyHouseName";
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Value("${server.session.cookie.secure}")
+    private static boolean cookieSecure;
+
+    @Value("${server.session.cookie.http-only}")
+    private static boolean cookieHttpOnly;
 
     @Autowired
     Validator validator;
@@ -315,6 +322,8 @@ public class CreateApplicationController extends AbstractApplicationController {
     public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
         if (fieldName != null) {
             Cookie cookie = new Cookie(fieldName, fieldValue);
+            cookie.setSecure(cookieSecure);
+            cookie.setHttpOnly(cookieHttpOnly);
             cookie.setPath("/");
             cookie.setMaxAge(3600);
             response.addCookie(cookie);
