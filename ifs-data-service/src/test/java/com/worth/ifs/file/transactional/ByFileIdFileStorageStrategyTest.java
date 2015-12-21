@@ -4,6 +4,7 @@ import com.google.common.io.Files;
 import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test the storage strategy of ByFileIdFileStorageStrategy
  */
+@Ignore
 public class ByFileIdFileStorageStrategyTest {
 
     private File tempFolderPath;
