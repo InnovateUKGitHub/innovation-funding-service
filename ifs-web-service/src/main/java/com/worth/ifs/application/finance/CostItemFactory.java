@@ -77,23 +77,6 @@ public class CostItemFactory {
     }
 
     private CostItem createOtherFunding(Cost cost) {
-        String securedDateMonth = null;
-        String securedDateYear = null;
-
-        if(cost.getItem()!=null && !cost.getItem().isEmpty()) {
-            String [] date = cost.getItem().split("-");
-            if(date.length > 0 && !date[0].equals("null")) {
-                securedDateMonth = date[0];
-            } else {
-                securedDateMonth = "";
-            }
-            if(date.length > 1 && !date[1].equals("null")) {
-                securedDateYear = date[1];
-            } else {
-                securedDateYear = "";
-            }
-        }
-
-        return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), securedDateMonth, securedDateYear, cost.getCost());
+        return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
     }
 }

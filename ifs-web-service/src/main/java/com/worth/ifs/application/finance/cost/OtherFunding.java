@@ -7,19 +7,17 @@ public class OtherFunding implements CostItem {
     private Long id;
     private String otherPublicFunding;
     private String fundingSource;
-    private String securedDateMonth;
-    private String securedDateYear;
+    private String securedDate;
     private BigDecimal fundingAmount;
 
     public OtherFunding() {
     }
 
-    public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDateMonth, String securedDateYear, BigDecimal fundingAmount) {
+    public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
         this.id = id;
         this.otherPublicFunding = otherPublicFunding;
         this.fundingSource = fundingSource;
-        this.securedDateMonth = securedDateMonth;
-        this.securedDateYear = securedDateYear;
+        this.securedDate = securedDate;
         this.fundingAmount = fundingAmount;
     }
 
@@ -41,12 +39,8 @@ public class OtherFunding implements CostItem {
         return fundingSource;
     }
 
-    public String getSecuredDateYear() {
-        return securedDateYear;
-    }
-
-    public String getSecuredDateMonth() {
-        return securedDateMonth;
+    public String getSecuredDate() {
+        return securedDate;
     }
 
     public BigDecimal getFundingAmount() {

@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
  */
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
-
-    private Object costItemsForType;
-
     private CostService costService;
 
     @Autowired
@@ -324,8 +321,7 @@ public class FinanceFormHandler {
     private CostItem getOtherFunding(Long id, List<CostFormField> costFormFields) {
         String otherPublicFunding = null;
         String fundingSource = null;
-        String dateSecuredMonth = null;
-        String dateSecuredYear = null;
+        String dateSecured = null;
         BigDecimal fundingAmount = null;
 
         for (CostFormField costFormField : costFormFields) {
@@ -337,17 +333,15 @@ public class FinanceFormHandler {
                     fundingAmount = getBigDecimalValue(fieldValue, 0d);
                 } else if (costFormField.getCostName().equals("fundingSource")) {
                     fundingSource = fieldValue;
-                } else if (costFormField.getCostName().equals("dateSecuredMonth")) {
-                    dateSecuredMonth = fieldValue;
-                } else if (costFormField.getCostName().equals("dateSecuredYear")) {
-                    dateSecuredYear = fieldValue;
+                } else if (costFormField.getCostName().equals("dateSecured")) {
+                    dateSecured = fieldValue;
                 } else {
                     log.info("Unused costField: " + costFormField.getCostName());
                 }
             }
         }
 
-        return new OtherFunding(id, otherPublicFunding, fundingSource, dateSecuredMonth, dateSecuredYear, fundingAmount);
+        return new OtherFunding(id, otherPublicFunding, fundingSource, dateSecured, fundingAmount);
     }
 
     private CostItem getClaimGrantPercentage(Long id, List<CostFormField> costFormFields) {

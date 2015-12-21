@@ -99,28 +99,8 @@ public class CostItemMapper {
         if(otherFunding.getOtherPublicFunding()!=null) {
             item = otherFunding.getOtherPublicFunding();
         } else {
-            item = getSecuredDate(otherFunding.getSecuredDateMonth(), otherFunding.getSecuredDateYear());
+            item = otherFunding.getSecuredDate();
         }
-        return new Cost(otherFunding.getId(), item, otherFunding.getFundingSource(), 0, otherFunding.getTotal(), null, null);
-    }
-
-    private String getSecuredDate(String securedDateMonth, String securedDateYear) {
-        String securedDate = null;
-        if (securedDateMonth != null && !securedDateMonth.isEmpty()) {
-            int securedMonthNumber = Integer.parseInt(securedDateMonth);
-            if(securedMonthNumber >= 1 && securedMonthNumber <= 12) {
-                securedDate = securedDateMonth;
-            } else {
-                securedDate = null;
-            }
-        }
-
-        if(securedDateMonth != null || securedDateYear != null) {
-            securedDate += "-";
-        }
-        if (securedDateYear != null || !securedDateYear.isEmpty()) {
-            securedDate += securedDateYear;
-        }
-        return securedDate;
+        return new Cost(otherFunding.getId(), item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 }
