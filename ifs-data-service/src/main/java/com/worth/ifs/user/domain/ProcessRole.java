@@ -3,8 +3,6 @@ package com.worth.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -96,39 +94,5 @@ public class ProcessRole {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        ProcessRole rhs = (ProcessRole) obj;
-        return new EqualsBuilder()
-            .append(this.id, rhs.id)
-            .append(this.user, rhs.user)
-            .append(this.application, rhs.application)
-            .append(this.role, rhs.role)
-            .append(this.organisation, rhs.organisation)
-            .append(this.responses, rhs.responses)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(id)
-            .append(user)
-            .append(application)
-            .append(role)
-            .append(organisation)
-            .append(responses)
-            .toHashCode();
     }
 }

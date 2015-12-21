@@ -49,7 +49,7 @@ public class LabourCostCategory implements CostCategory {
             LabourCost labourCost = (LabourCost) costItem;
             if (labourCost.getDescription().equals(WORKING_DAYS_PER_YEAR)) {
                 workingDaysPerYear = (LabourCost) costItem;
-            } else if (costItem != null) {
+            } else {
                 costs.add(costItem);
             }
         }

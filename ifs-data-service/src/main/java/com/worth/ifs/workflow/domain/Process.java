@@ -1,27 +1,29 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.ProcessRole;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Process defines database relations and a model to use client side and server side.
  * This is used for multiple types of events/processes.
  */
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Process {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name="event")
     protected String event;
-
-    @Column(name="status")
     protected String status;
 
     @Version
@@ -29,17 +31,23 @@ public abstract class Process {
     private Calendar lastModified;
 
     private LocalDate startDate;
-
     private LocalDate endDate;
-    @Column(name = "observations")
-    private String observations;
 
-    @Column(name="decision_reason")
-    private String decisionReason;
+    @OneToMany(mappedBy="process")
+    @OrderColumn(name = "process_index")
+    @Cascade(CascadeType.ALL)
+    protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="processRole", referencedColumnName = "id")
+    ProcessRole processRole;
 
     public Process() {
     }
 
+    public Process(ProcessRole processRole) {
+        this.processRole = processRole;
+    }
 
     public Process(String event, String status) {
         this.event = event;
@@ -50,12 +58,6 @@ public abstract class Process {
         this(event, status);
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-
-    public Process(String event, String status, LocalDate startDate, LocalDate endDate, String observations) {
-        this(event, status, startDate, endDate);
-        this.observations = observations;
     }
 
     public LocalDate getStartDate() {
@@ -98,24 +100,20 @@ public abstract class Process {
         this.event = event;
     }
 
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public String getDecisionReason() {
-        return decisionReason;
-    }
-
-    public void setDecisionReason(String reason) {
-        this.decisionReason = reason;
+    public List<ProcessOutcome> getProcessOutcomes() {
+        return processOutcomes;
     }
 
     @JsonIgnore
     public Calendar getVersion() {
         return lastModified;
+    }
+
+    public void setProcessRole(ProcessRole processRole) {
+        this.processRole = processRole;
+    }
+
+    public ProcessRole getProcessRole() {
+        return processRole;
     }
 }

@@ -18,4 +18,6 @@ public interface ApplicationService {
     public void save(ApplicationResource application);
     Map<Long, Integer> getProgress(Long userId);
     public int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
+
+    ApplicationResource findByProcessRoleId(Long id);
 }

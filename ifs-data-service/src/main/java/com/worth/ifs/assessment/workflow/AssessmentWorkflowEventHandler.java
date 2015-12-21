@@ -1,7 +1,8 @@
 package com.worth.ifs.assessment.workflow;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentEvents;
+import com.worth.ifs.assessment.domain.AssessmentOutcomes;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.messaging.Message;
@@ -27,36 +28,34 @@ public class AssessmentWorkflowEventHandler {
         this.stateHandler.addPersistStateChangeListener(listener);
     }
 
-    public void acceptInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+    public void acceptInvitation(Long processRoleId, Assessment assessment) {
         stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(AssessmentEvents.ACCEPT.getEvent())
+                .withPayload(AssessmentOutcomes.ACCEPT.getType())
                 .setHeader("assessment", assessment)
-                .setHeader("applicationId", applicationId)
-                .setHeader("assessorId", assessorId)
+                .setHeader("processRoleId", processRoleId)
                 .build(), assessment.getProcessStatus());
     }
 
-    public void rejectInvitation(Long applicationId, Long assessorId, Assessment assessment) {
+    public void rejectInvitation(Long processRoleId, String currentProcessStatus, ProcessOutcome processOutcome) {
         stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(AssessmentEvents.REJECT.getEvent())
-                .setHeader("assessment", assessment)
-                .setHeader("applicationId", applicationId)
-                .setHeader("assessorId", assessorId)
-                .build(), assessment.getProcessStatus());
+                .withPayload(AssessmentOutcomes.REJECT.getType())
+                .setHeader("processOutcome", processOutcome)
+                .setHeader("processRoleId", processRoleId)
+                .build(), currentProcessStatus);
     }
 
-    public void recommend(Long applicationId, Long assessorId, Assessment assessment) {
+    public void recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
         stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(AssessmentEvents.RECOMMEND.getEvent())
+                .withPayload(AssessmentOutcomes.RECOMMEND.getType())
                 .setHeader("assessment", assessment)
-                .setHeader("applicationId", applicationId)
-                .setHeader("assessorId", assessorId)
+                .setHeader("processRoleId", processRoleId)
+                .setHeader("processOutcome", processOutcome)
                 .build(), assessment.getProcessStatus());
     }
 
     public void submit(Assessment assessment) {
         stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(AssessmentEvents.SUBMIT.getEvent())
+                .withPayload(AssessmentOutcomes.SUBMIT.getType())
                 .setHeader("assessment", assessment)
                 .build(), assessment.getProcessStatus());
     }

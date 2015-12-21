@@ -1,13 +1,17 @@
 package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentOutcomes;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
+
+import java.util.Optional;
 
 /**
  * The {@code RecommendAction} is used by the assessor. It handles the recommendation
@@ -22,19 +26,31 @@ public class RecommendAction implements Action<String, String> {
 
     @Override
     public void execute(StateContext<String, String> context) {
-        Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
-        Long applicationId = (Long) context.getMessageHeader("applicationId");
-        Long assessorId = (Long) context.getMessageHeader("assessorId");
-        Assessment assessment = assessmentRepository.findOneByAssessorAndApplication(assessorId, applicationId);
+        ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
+        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
+        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
 
         if(assessment!=null) {
-            assessment.setSummary(updatedAssessment.getRecommendedValue(),
-                    updatedAssessment.getSuitableFeedback(),
-                    updatedAssessment.getComments(),
-                    updatedAssessment.getOverallScore());
+            Optional<ProcessOutcome> processOutcome = assessment.getProcessOutcomes()
+                    .stream()
+                    .filter(p -> AssessmentOutcomes.RECOMMEND.getType().equals(p.getOutcomeType()))
+                    .findFirst();
 
-            if(!assessment.getRecommendedValue().equals(RecommendedValue.EMPTY)) {
+            ProcessOutcome assessmentOutcome = processOutcome.orElse(new ProcessOutcome());
+
+            assessmentOutcome.setOutcome(updatedProcessOutcome.getOutcome());
+            assessmentOutcome.setDescription(updatedProcessOutcome.getDescription());
+            assessmentOutcome.setComment(updatedProcessOutcome.getComment());
+            assessmentOutcome.setOutcomeType(AssessmentOutcomes.RECOMMEND.getType());
+
+            if(!RecommendedValue.EMPTY.toString().equals(assessmentOutcome)) {
                 assessment.setProcessStatus(context.getTransition().getTarget().getId());
+            }
+
+
+            if (assessmentOutcome.getId() == null) {
+                assessmentOutcome.setProcess(assessment);
+                assessment.getProcessOutcomes().add(assessmentOutcome);
             }
             assessmentRepository.save(assessment);
         }

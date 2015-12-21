@@ -41,40 +41,44 @@ public class EntityLookupCallbacks {
      * @param serviceLocator
      * @return
      */
-    public static Either<JsonStatusResponse, JsonStatusResponse> withProcessRoleReturnJsonResponse(Long userId, UserRoleType roleType, Long applicationId, HttpServletResponse httpResponse,
-                                                                       ServiceLocator serviceLocator, Function<ProcessRole, Either<JsonStatusResponse, JsonStatusResponse>> doWithProcessRoleFn) {
+    public static Either<JsonStatusResponse, JsonStatusResponse> withProcessRoleReturnJsonResponse(Long userId,
+            UserRoleType roleType, Long applicationId, HttpServletResponse httpResponse,
+            ServiceLocator serviceLocator, Function<ProcessRole,
+            Either<JsonStatusResponse, JsonStatusResponse>> doWithProcessRoleFn) {
 
         Supplier<JsonStatusResponse> noRoleAvailable = () -> JsonStatusResponse.badRequest("No role of type " + roleType + " set up on Application " + applicationId, httpResponse);
         Supplier<JsonStatusResponse> noProcessRoleAvailable = () -> JsonStatusResponse.badRequest("No process role of type " + roleType + " set up on Application " + applicationId, httpResponse);
 
         return getRoleForRoleType(roleType, serviceLocator.getRoleRepository(), noRoleAvailable)
-            .map(role -> getProcessRoleForRoleUserAndApplication(role, userId, applicationId, serviceLocator.getProcessRoleRepository(), noProcessRoleAvailable)
-                .map(doWithProcessRoleFn::apply)
-            );
+                .map(role -> {
+                    return getProcessRoleForRoleUserAndApplication(role, userId, applicationId,
+                            serviceLocator.getProcessRoleRepository(), noProcessRoleAvailable)
+                            .map(doWithProcessRoleFn::apply);
+                });
     }
 
-    public static <FailureType> Either<FailureType, Role> getRoleForRoleType(UserRoleType type, RoleRepository roleRepository, Supplier<FailureType> noAssessorRoleOnApplication) {
+    public static <FailureType> Either<FailureType, Role> getRoleForRoleType(UserRoleType type,
+             RoleRepository roleRepository, Supplier<FailureType> noAssessorRoleOnApplication) {
         Optional<Role> matchingRole = roleRepository.findByName(type.getName()).stream().findFirst();
         return matchingRole.map(Either::<FailureType, Role>right).orElseGet(toSuppliedLeft(noAssessorRoleOnApplication));
     }
 
-    public static <FailureType> Either<FailureType, ProcessRole> getProcessRoleForRoleUserAndApplication(Role role, Long userId, Long applicationId, ProcessRoleRepository processRoleRepository,
-                                                                                                         Supplier<FailureType> noAssessorProcessRole) {
+    public static <FailureType> Either<FailureType, ProcessRole> getProcessRoleForRoleUserAndApplication(Role role, Long userId,
+            Long applicationId, ProcessRoleRepository processRoleRepository,
+            Supplier<FailureType> noAssessorProcessRole) {
         Optional<ProcessRole> matchingRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId).stream().findFirst();
         return matchingRole.map(Either::<FailureType, ProcessRole> right).orElseGet(toSuppliedLeft(noAssessorProcessRole));
     }
 
     public static <FailureType> Either<FailureType, ProcessRole> getProcessRoleById(Long processRoleId,
-                                                                                    ProcessRoleRepository processRoleRepository,
-                                                                                    Supplier<FailureType> noProcessRole) {
-
+            ProcessRoleRepository processRoleRepository,
+            Supplier<FailureType> noProcessRole) {
         return getOrFail(() -> processRoleRepository.findOne(processRoleId), noProcessRole);
     }
 
     public static <FailureType> Either<FailureType, Response> getResponseById(Long responseId,
-                                                                          ResponseRepository responseRepository,
-                                                                          Supplier<FailureType> noResponse) {
-
+          ResponseRepository responseRepository,
+          Supplier<FailureType> noResponse) {
         return getOrFail(() -> responseRepository.findOne(responseId), noResponse);
     }
 
@@ -90,7 +94,6 @@ public class EntityLookupCallbacks {
     public static <FailureType, SuccessType> Either<FailureType, SuccessType> getOrFail(
             Supplier<SuccessType> getterFn,
             FailureType failureResponse) {
-
         return getOrFail(getterFn, () -> failureResponse);
     }
 }

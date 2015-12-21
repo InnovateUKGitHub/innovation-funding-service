@@ -12,7 +12,7 @@ import java.util.List;
  * Cost defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Cost implements Serializable{
+public class Cost {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
