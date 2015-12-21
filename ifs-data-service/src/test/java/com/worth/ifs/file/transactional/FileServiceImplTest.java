@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
@@ -323,11 +324,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> inputStreamResult = service.getFileByFileEntryId(123L);
         assertTrue(inputStreamResult.isRight());
 
-        try (InputStream retrievedInputStream = inputStreamResult.getRight().getResult().get()) {
-            try (BufferedReader buffer = new BufferedReader(new InputStreamReader(retrievedInputStream))) {
-                assertEquals("Plain text", buffer.readLine());
-            }
-        }
+        assertInputStreamContents(inputStreamResult.getRight().getResult().get(), "Plain text");
     }
 
     @Test

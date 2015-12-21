@@ -12,9 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.Either.right;
@@ -22,7 +24,6 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +60,9 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
             return true;
         }));
 
-        when(applicationService.createFormInputResponseFileUpload(resourceExpectations, isA(Supplier.class))).thenReturn(successResponse);
+        Supplier<InputStream> inputStreamExpectations = argThat(lambdaMatches(inputStreamSupplier -> assertInputStreamContents(inputStreamSupplier.get(), "My PDF content")));
+
+        when(applicationService.createFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
         MvcResult response = mockMvc.
                 perform(
@@ -69,7 +72,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("processRoleId", "789").
                                 param("filename", "original.pdf").
                                 header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000")).
+                                header("Content-Length", "1000").
+                                content("My PDF content")).
                 andExpect(status().isOk()).
                 andReturn();
 

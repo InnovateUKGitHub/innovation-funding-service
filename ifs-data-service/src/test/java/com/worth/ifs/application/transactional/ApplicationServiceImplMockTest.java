@@ -295,7 +295,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void testGetFormInputResponseFileUpload() {
 
-        FileEntry fileEntry = newFileEntry().build();
+        FileEntry fileEntry = newFileEntry().with(id(321L)).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
@@ -308,7 +308,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(result.isRight());
         assertEquals(inputStreamSupplier, result.getRight().getResult().getValue());
 
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(321L)).build();
         FormInputResponseFileEntryResource formInputResponseFile = result.getRight().getResult().getKey();
 
         assertEquals(fileEntryResource.getId(), formInputResponseFile.getFileEntryResource().getId());
