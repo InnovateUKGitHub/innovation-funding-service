@@ -261,10 +261,10 @@
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                            th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
                             th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink"/>
-                    <div th:if="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                    <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
             </ul>
