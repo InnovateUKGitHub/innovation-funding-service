@@ -82,6 +82,12 @@
 	padding: 16px 16px 8px 16px;
 	margin-top: 16px;
 
+	&.error{
+		@extend .warning-alert;
+		background: none;
+		padding-left: 16px;
+	}
+
 	.inputfile{
 		width: 0.1px;
 		height: 0.1px;
