@@ -784,16 +784,15 @@
                             <tr>
                                 <td>
                                     <label th:for="${'cost-'+type+'-'+otherFunding.id+'-source'}" class="visuallyhidden">Source of funding</label>
-                                    <input type="text" th:name="${type +'-fundingSource-' + otherFunding.id}" class="form-control form-control-1-1 form-finances-otherfunding-source" th:id="${'cost-'+type+'-'+otherFunding.id+'-source'}" th:value="${otherFunding.fundingSource}" />
+                                    <input type="text" th:name="${type +'-fundingSource-' + otherFunding.id}" class="width-full" th:id="${'cost-'+type+'-'+otherFunding.id+'-source'}" th:value="${otherFunding.fundingSource}" />
                                 </td>
                                 <td>
-                                    <label th:for="${'cost-'+type+'-'+otherFunding.id+'-date-m'}" class="visuallyhidden">Date secured</label>
-                                    <input type="text" th:name="${type +'-dateSecuredMonth-' + otherFunding.id}" class="width-small form-finances-otherfunding-datesecured-m" th:id="${'cost-'+type+'-'+otherFunding.id+'-date-m'}" placeholder="MM" th:value="${otherFunding.securedDateMonth}" />
-                                    <input type="text" th:name="${type +'-dateSecuredYear-' + otherFunding.id}" class="width-small form-finances-otherfunding-datesecured-y" th:id="${'cost-'+type+'-'+otherFunding.id+'-date-y'}" placeholder="YYYY" th:value="${otherFunding.securedDateYear}" />
+                                    <label th:for="${'cost-'+type+'-'+otherFunding.id+'-date'}" class="visuallyhidden">Date secured</label>
+                                    <input type="text" th:name="${type +'-dateSecured-' + otherFunding.id}" class="width-medium" th:id="${'cost-'+type+'-'+otherFunding.id+'-date'}" placeholder="MM-YYYY" th:value="${otherFunding.securedDateMonth}" />
                                 </td>
                                 <td>
                                     <label th:for="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" class="visuallyhidden">Funding amount (£)</label>
-                                    <input type="number" th:name="${type +'-fundingAmount-' + otherFunding.id}" class="numeric" th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
+                                    <input type="number" th:name="${type +'-fundingAmount-' + otherFunding.id}"  th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
                                 </td>
                             </tr>
                             </div>
