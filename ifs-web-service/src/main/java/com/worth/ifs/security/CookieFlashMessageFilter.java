@@ -3,6 +3,7 @@ package com.worth.ifs.security;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -35,16 +36,20 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
     private final Log log = LogFactory.getLog(getClass());
     public static final String COOKIE_NAME = "flashMessage";
 
+    @Value("${server.session.cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${server.session.cookie.http-only}")
+    private boolean cookieHttpOnly;
     /**
      * Cookie is set, just for after redirecting, so the lifetime should be short.
      */
     public void setFlashMessage(HttpServletResponse response, String name){
         Cookie cookie = new Cookie(COOKIE_NAME, name);
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
         cookie.setMaxAge(60); // in seconds
+        cookie.setSecure(cookieSecure);
+        cookie.setHttpOnly(cookieHttpOnly);
         cookie.setPath("/");
-
         response.addCookie(cookie);
     }
 

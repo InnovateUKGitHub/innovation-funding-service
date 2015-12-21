@@ -10,7 +10,7 @@ import java.util.List;
  * Holds all the fields which do not belong to the defined general costs.
  */
 @Entity
-public class CostField implements Serializable{
+public class CostField {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

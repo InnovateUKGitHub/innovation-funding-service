@@ -31,6 +31,8 @@ public class FeedbackRules {
     private boolean isAssessorForApplication(Feedback dto, User user) {
         ProcessRole processRole = processRoleRepository.findOne(dto.getAssessorProcessRoleId());
         return processRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName()) &&
-                processRole.getUser().equals(user);
+                processRole.getUser() != null &&
+                user != null &&
+                processRole.getUser().getId().equals(user.getId());
     }
 }
