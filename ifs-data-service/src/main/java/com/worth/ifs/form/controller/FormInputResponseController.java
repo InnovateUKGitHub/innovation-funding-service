@@ -26,7 +26,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,14 +59,8 @@ public class FormInputResponseController {
     private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
-    public List<FormInputResponse> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId) {
-        Application app = applicationRepository.findOne(applicationId);
-        List<ProcessRole> userAppRoles = app.getProcessRoles();
-
-        List<FormInputResponse> responses = new ArrayList<>();
-        for (ProcessRole userAppRole : userAppRoles) {
-            responses.addAll(formInputResponseRepository.findByUpdatedById(userAppRole.getId()));
-        }
+    public List<FormInputResponse> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationId(applicationId);
         return responses;
     }
 
@@ -106,7 +99,7 @@ public class FormInputResponseController {
         String value = jsonObj.get("value").asText("");
         value = HtmlUtils.htmlUnescape(value);
 
-        log.debug("Save response: " + applicationId + "/" + formInputId + "/" + userId);
+        log.debug(String.format("Save response: %d/%d/%d", applicationId, formInputId, userId));
 
         User user = userRepository.findOne(userId);
         Application application = applicationRepository.findOne(applicationId);

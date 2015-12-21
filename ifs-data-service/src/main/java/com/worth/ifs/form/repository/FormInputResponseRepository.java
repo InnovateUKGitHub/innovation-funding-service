@@ -14,6 +14,7 @@ import java.util.List;
 public interface FormInputResponseRepository extends PagingAndSortingRepository<FormInputResponse, Long> {
     List<FormInputResponse> findByUpdatedById(@Param("updatedById") Long updatedById);
     List<FormInputResponse> findByApplicationIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("formInputId") Long formInputId);
+    List<FormInputResponse> findByApplicationId(@Param("applicationId") Long applicationId);
     FormInputResponse findByApplicationIdAndUpdatedByIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("updatedById") Long updatedById, @Param("formInputId") Long formInputId);
     List<FormInputResponse> findAll();
 }
