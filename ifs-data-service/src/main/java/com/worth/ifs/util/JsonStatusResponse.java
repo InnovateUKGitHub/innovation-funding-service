@@ -19,11 +19,11 @@ public class JsonStatusResponse {
     private String message;
 
     @SuppressWarnings("unused")
-    private JsonStatusResponse() {
+    protected JsonStatusResponse() {
         // for JSON marshalling
     }
 
-    private JsonStatusResponse(String message) {
+    protected JsonStatusResponse(String message) {
         this.message = message;
     }
 
@@ -36,8 +36,28 @@ public class JsonStatusResponse {
     }
 
     public static JsonStatusResponse badRequest(String message, HttpServletResponse response) {
-        sendHttpResponseCode(response, HttpServletResponse.SC_BAD_REQUEST);
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_BAD_REQUEST);
+    }
+
+    public static JsonStatusResponse lengthRequired(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_LENGTH_REQUIRED);
+    }
+
+    public static JsonStatusResponse requestEntityTooLarge(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
+    }
+
+    private static JsonStatusResponse getJsonStatusResponse(String message, HttpServletResponse response, int scRequestEntityTooLarge) {
+        sendHttpResponseCode(response, scRequestEntityTooLarge);
         return new JsonStatusResponse(message);
+    }
+
+    public static JsonStatusResponse internalServerError(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+
+    public static JsonStatusResponse unsupportedMediaType(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
     }
 
     public String getMessage() {

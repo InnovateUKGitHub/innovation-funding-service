@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
  */
@@ -101,6 +103,11 @@ public class User {
     @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;
+    }
+
+    @JsonIgnore
+    public List<ProcessRole> getProcessRolesForRole(UserRoleType role) {
+        return processRoles.stream().filter(processRole -> processRole.getRole().getName().equals(role.getName())).collect(toList());
     }
 
     @JsonIgnore

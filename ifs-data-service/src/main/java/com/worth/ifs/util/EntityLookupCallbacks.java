@@ -73,18 +73,27 @@ public class EntityLookupCallbacks {
     public static <FailureType> Either<FailureType, ProcessRole> getProcessRoleById(Long processRoleId,
             ProcessRoleRepository processRoleRepository,
             Supplier<FailureType> noProcessRole) {
-
-        return ofNullable(processRoleRepository.findOne(processRoleId))
-                .map(Either::<FailureType, ProcessRole> right)
-                .orElse(left(noProcessRole.get()));
+        return getOrFail(() -> processRoleRepository.findOne(processRoleId), noProcessRole);
     }
 
     public static <FailureType> Either<FailureType, Response> getResponseById(Long responseId,
           ResponseRepository responseRepository,
           Supplier<FailureType> noResponse) {
+        return getOrFail(() -> responseRepository.findOne(responseId), noResponse);
+    }
 
-        return ofNullable(responseRepository.findOne(responseId))
-                .map(Either::<FailureType, Response> right)
-                .orElse(left(noResponse.get()));
+    public static <FailureType, SuccessType> Either<FailureType, SuccessType> getOrFail(
+            Supplier<SuccessType> getterFn,
+            Supplier<FailureType> failureResponse) {
+
+        return ofNullable(getterFn.get()).
+                map(Either::<FailureType, SuccessType> right).
+                orElse(left(failureResponse.get()));
+    }
+
+    public static <FailureType, SuccessType> Either<FailureType, SuccessType> getOrFail(
+            Supplier<SuccessType> getterFn,
+            FailureType failureResponse) {
+        return getOrFail(getterFn, () -> failureResponse);
     }
 }

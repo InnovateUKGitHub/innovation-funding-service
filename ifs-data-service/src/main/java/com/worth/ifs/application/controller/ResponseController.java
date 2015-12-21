@@ -111,7 +111,7 @@ public class ResponseController {
             return right(JsonStatusResponse.ok());
         });
 
-        return getLeftOrRight(result);
+        return result.mapLeftOrRight(failure -> failure, success -> success);
     }
 
     @RequestMapping(value= "/assessorFeedback/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")

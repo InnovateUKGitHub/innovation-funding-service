@@ -28,8 +28,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setupMockMvc() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .apply(documentationConfiguration(this.restDocumentation)
                         .uris()

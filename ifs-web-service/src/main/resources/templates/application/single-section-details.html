@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, section, currentApplication)" th:remove="tag">
+<ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
 
     <div th:each="question : ${section.getQuestions()}" th:remove="tag">
 

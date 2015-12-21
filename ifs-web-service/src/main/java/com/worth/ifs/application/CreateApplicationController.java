@@ -70,7 +70,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     Validator validator;
 
     @RequestMapping("/check-eligibility/{competitionId}")
-    public String checkEligibility(Form form, Model model,
+    public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
@@ -132,7 +132,7 @@ public class CreateApplicationController extends AbstractApplicationController {
             if (!bindingResult.hasFieldErrors(COMPANY_HOUSE_NAME)) {
                 searchCompanyHouse(companyHouseForm);
             }else{
-                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() + "__" + e.getDefaultMessage()));
+                bindingResult.getFieldErrors().forEach(e -> log.info("Validation error: " + e.getField() + "__" + e.getDefaultMessage()));
             }
         } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
             companyHouseForm.setInCompanyHouse(false);
@@ -145,7 +145,7 @@ public class CreateApplicationController extends AbstractApplicationController {
                 try {
                     jsonAddress = mapper.writeValueAsString(companyHouseForm.getSelectedPostcode());
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
 
                 saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
@@ -154,7 +154,8 @@ public class CreateApplicationController extends AbstractApplicationController {
 
                 return "redirect:/application/create/confirm-company";
             } else {
-                bindingResult.getFieldErrors().forEach(e -> log.debug("Validation error: " + e.getField() +"__"+e.getDefaultMessage()));
+                companyHouseForm.setTriedToSave(true);
+                bindingResult.getFieldErrors().forEach(e -> log.info("Validation error: " + e.getField() + "__" + e.getDefaultMessage()));
             }
         }
 
@@ -218,25 +219,28 @@ public class CreateApplicationController extends AbstractApplicationController {
         if (request.getParameter(MANUAL_ADDRESS) != null) {
             confirmCompanyDetailsForm.setManualAddress(true);
         } else if (request.getParameter(SEARCH_ADDRESS) != null) {
-            validator.validate(confirmCompanyDetailsForm, bindingResult);
             searchPostcodes(confirmCompanyDetailsForm);
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
             searchPostcodes(confirmCompanyDetailsForm);
             selectPostcodeAddress(confirmCompanyDetailsForm);
         } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
-            String name = org.getName();
-            String companyHouseNumber = org.getCompanyNumber();
-            Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
+            if (!bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
+                String name = org.getName();
+                String companyHouseNumber = org.getCompanyNumber();
+                Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
 
-            OrganisationResource organisationResource = organisationService.save(organisation);
-            if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
-                //Save address manually entered.
-                organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
+                OrganisationResource organisationResource = organisationService.save(organisation);
+                if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
+                    //Save address manually entered.
+                    organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
+                }
+                // Save address from company house api
+                organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+
+                return "redirect:/registration/register?organisationId=" + organisationResource.getId();
+            }else{
+                confirmCompanyDetailsForm.setTriedToSave(true);
             }
-            // Save address from company house api
-            organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
-
-            return "redirect:/registration/register?organisationId=" + organisationResource.getId();
         }
 
         return "create-application/confirm-selected-organisation";

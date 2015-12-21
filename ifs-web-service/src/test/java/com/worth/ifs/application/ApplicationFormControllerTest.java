@@ -5,7 +5,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.CostCategory;
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -133,6 +132,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("userIsLeadApplicant", true))
+                .andExpect(model().attribute("leadApplicant", processRoles.get(0)))
                 .andExpect(model().attribute("currentSectionId", 1L));
 
     }

@@ -4,12 +4,20 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+<<<<<<< HEAD
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collector;
+=======
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.*;
+>>>>>>> development
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -148,9 +156,11 @@ public class CollectionFunctions {
      * @return
      */
     public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
         return list.stream().map(mappingFn).collect(toList());
     }
-
 
     /**
      * A map collector that preserves order
@@ -187,5 +197,30 @@ public class CollectionFunctions {
         return Map.Entry::getValue;
     }
 
+    /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(List<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list.stream().filter(filterFn).collect(toList());
+    }
 
+    /**
+     * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
+        return simpleFilter(list, element -> !filterFn.test(element));
+    }
 }

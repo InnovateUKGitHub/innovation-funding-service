@@ -3,10 +3,10 @@
     <div id="manual-company-input" class="extra-margin">
         <fieldset>
             <legend class="visuallyhidden">Organisation details</legend>
-            <div th:class="${#fields.hasErrors('*{postcodeInput}')} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{postcodeInput}') and !form.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="postcode-check">
                     <span class="form-label-bold">Postcode</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}')}" th:errors="*{postcodeInput}"></span>
+                    <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}') and !form.triedToSave}" th:errors="*{postcodeInput}"></span>
                 </label>
                 <input class="form-control" id="postcode-check" th:field="*{postcodeInput}" type="text" value="" />
                 <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
@@ -68,12 +68,12 @@
 
 <div th:fragment="organisation-size">
     <h2 class="heading-small">Organisation size</h2>
-    <div th:class="${#fields.hasErrors('*{organisationSize}')} ? 'form-group error' : 'form-group'">
+    <div th:class="${#fields.hasErrors('*{organisationSize}') and form.triedToSave} ? 'form-group error' : 'form-group'">
         <fieldset>
             <legend>
                 <span class="visuallyhidden">Organisation size</span>
                 <p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
-                <span class="error-message" th:if="${#fields.hasErrors('*{organisationSize}')}" th:errors="*{organisationSize}"></span>
+                <span class="error-message" th:if="${#fields.hasErrors('*{organisationSize}') and form.triedToSave}" th:errors="*{organisationSize}"></span>
             </legend>
             <div class="form-block">
                 <label class="block-label" for="radio-1">
@@ -117,10 +117,10 @@
 </div>
 
 <div th:fragment="organisation-name">
-    <div th:class="${#fields.hasErrors('*{organisationName}')} ? 'form-group error' : 'form-group'">
+    <div th:class="${#fields.hasErrors('*{organisationName}') and form.triedToSave} ? 'form-group error' : 'form-group'">
         <label class="form-label" for="org-name">
             <span class="form-label-bold">Organisation name</span>
-            <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}')}" th:errors="*{organisationName}"></span>
+            <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.triedToSave}" th:errors="*{organisationName}"></span>
         </label>
         <input class="form-control" id="org-name" th:field="*{organisationName}" type="text" value="" />
     </div>

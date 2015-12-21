@@ -5,6 +5,7 @@ import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -37,7 +38,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
-    protected FormInputResponseRepository formInputResponseRepository;
+    protected FormInputResponseRepository formInputResponseRepositoryMock;
 
     @Mock
     protected UserRepository userRepositoryMock;
@@ -64,7 +65,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ApplicationStatusRepository applicationStatusRepositoryMock;
 
     @Mock
-    protected FormInputRepository formInputRepository;
+    protected FormInputRepository formInputRepositoryMock;
 
     @Mock
     protected SectionRepository sectionRepositoryMock;
@@ -78,11 +79,14 @@ public abstract class BaseUnitTestMocksTest {
     @Mock
     protected QuestionStatusRepository questionStatusRepository;
 
+    @Mock
+    protected FileService fileServiceMock;
+
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();
 
     @Before
-    public void setUp() {
+    public void setupMockInjection() {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
     }

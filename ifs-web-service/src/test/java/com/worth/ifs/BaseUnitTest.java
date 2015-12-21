@@ -123,6 +123,7 @@ public class BaseUnitTest {
     public ApplicationStatus approvedApplicationStatus;
     public ApplicationStatus rejectedApplicationStatus;
     public ApplicationFinance applicationFinance;
+    public List<ProcessRole> processRoles;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -284,7 +285,7 @@ public class BaseUnitTest {
         ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(application1).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8);
-        List<ProcessRole> processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
+        processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
@@ -330,6 +331,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(app3)).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(app4)).thenReturn(organisationSet);
         when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app1)).thenReturn(processRole1);
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
