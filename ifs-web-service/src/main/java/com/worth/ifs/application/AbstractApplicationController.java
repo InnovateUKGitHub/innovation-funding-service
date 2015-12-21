@@ -255,9 +255,7 @@ public abstract class AbstractApplicationController {
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
                         Function.identity()));
 
-        userOrganisation.ifPresent(org -> {
-            model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId()));
-        });
+        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
         model.addAttribute("previousSection", previousSection);
         model.addAttribute("nextSection", nextSection);
@@ -280,7 +278,7 @@ public abstract class AbstractApplicationController {
             return sections.stream().filter(x -> x.getId().equals(id)).findFirst();
 
         } else if (selectFirstSectionIfNoneCurrentlySelected) {
-            return sections.size() > 0 ? Optional.of(sections.get(0)) : Optional.empty();
+            return sections.isEmpty() ? Optional.empty() : Optional.of(sections.get(0));
         }
 
         return Optional.empty();

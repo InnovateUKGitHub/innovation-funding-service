@@ -231,6 +231,7 @@
                 <li>be legible at 100% magnification</li>
                 <li>display the application number and project title at the top of the document.</li>
                 <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+                <li>be less than 1mb in size</li>
             </ul>
         </div>
      </details>
@@ -252,7 +253,8 @@
                 <li>be legible at 100% magnification</li>
                 <li>display the application number and project title at the top of the document.</li>
                 <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
-                <li>Upload a file, for instance, a diagram of innovation</li>
+                <li>upload a file, for instance, a diagram of innovation</li>
+                <li>be less than 1mb in size</li>
             </ul>
         </div>
      </details>
@@ -275,6 +277,7 @@
                 <li>be legible at 100% magnification</li>
                 <li>display the application number and project title at the top of the document.</li>
                 <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+                <li>be less than 1mb in size</li>
             </ul>
         </div>
      </details>
@@ -312,7 +315,7 @@
 
 <!-- ===================Finances elibility warning============================== -->
 <div th:fragment="appendix-upload(page, user, permission)">
-    <div class="upload-section">
+    <div th:class="${param.error} ? 'upload-section error' :upload-section">
 
         <div th:if="${page == 'question-5'}" th:remove="tag">
             <div th:include="prototypes/fragments/applicant-view :: appendix-question5" th:remove="tag" />
@@ -351,7 +354,19 @@
                 <div th:if="${param.uploaded[0] == 'no'}" th:remove="tag">
                     <p class="uploaded-file">No file currently uploaded</p>
                 </div>
-             </div>
+            </div>
+            
+            <p th:if="${param.error != null}">
+                <ul class="list-bullet">
+                    <li th:if="${param.size != null}">
+                        <strong>Please upload a file less than 1mb in size</strong>
+                    </li>
+                    <li th:if="${param.file != null}">
+                        <strong>Please upload a file in .pdf format only</strong>
+                    </li>
+                </ul>
+            </p>
+
 
         </div>
 </div>

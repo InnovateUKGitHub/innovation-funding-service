@@ -9,6 +9,8 @@ ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/1
 ${APPLICATION_SUBMITTED_URL}    ${SERVER}/application/1/submit
+${APPLICATION_2_SUMMARY_URL}      ${SERVER}/application/2/summary
+${ECONOMIC_BENEFIT_URL_APPLICATION_2}    ${SERVER}/application/2/form/question/4
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
