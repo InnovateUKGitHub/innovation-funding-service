@@ -749,18 +749,20 @@
                      ,type=${formInputType.title}">
         <fieldset class="inline" id="otherFundingShowHideToggle">
             <div class="form-block inline">
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}" th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherFunding-yes'}">
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}" 
+                       th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                       data-target="other-funding-table">
                     <input type="radio"
-                           th:class="${'width-small'}"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                            th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
                            th:value="Yes"
-                           th:checked="${costCategory.otherFunding?.equals('Yes')}"/>
+                           th:checked="${costCategory.otherFunding?.equals('Yes')}" 
+                           />
                     Yes
                 </label>
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}" th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherFunding-no'}">
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}" 
+                       th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                     <input type="radio"
-                           th:class="${'width-small'}"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
                            th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
                            th:value="No"
@@ -768,8 +770,8 @@
                     No
                 </label>
             </div>
-                <div class="form-group">
-                    <table id="other-funding-table">
+                <div class="form-group"  id="other-funding-table">
+                    <table>
                         <thead>
                         <tr>
                             <th>Source of funding</th>
