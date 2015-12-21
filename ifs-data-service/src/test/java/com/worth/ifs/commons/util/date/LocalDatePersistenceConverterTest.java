@@ -16,7 +16,6 @@ public class LocalDatePersistenceConverterTest {
 
     @Test
     public void test_convertToDatabaseColumn() {
-
         LocalDate originalDate = LocalDate.of(2015, 3, 5);
         Date convertedDate = new LocalDatePersistenceConverter().convertToDatabaseColumn(originalDate);
         Calendar cal = Calendar.getInstance();
@@ -29,7 +28,6 @@ public class LocalDatePersistenceConverterTest {
 
     @Test
     public void test_convertToDatabaseColumn_nullSafe() {
-
         LocalDate originalDate = null;
         Date convertedDate = new LocalDatePersistenceConverter().convertToDatabaseColumn(originalDate);
         assertNull(convertedDate);
@@ -37,7 +35,6 @@ public class LocalDatePersistenceConverterTest {
 
     @Test
     public void test_convertToEntityAttribute() {
-
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DATE, 5);
         cal.set(Calendar.MONTH, 2);
@@ -53,7 +50,6 @@ public class LocalDatePersistenceConverterTest {
 
     @Test
     public void test_convertToEntityAttribute_nullSafe() {
-
         LocalDate originalDate = null;
         Date convertedDate = new LocalDatePersistenceConverter().convertToDatabaseColumn(originalDate);
         assertNull(convertedDate);

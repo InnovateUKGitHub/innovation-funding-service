@@ -14,8 +14,8 @@ ${correct_password}     password
 ${incorrect_password}   wrongpassword
 ${long_password}        passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}       pass
-${valid_email}          ewan@worth.systems
-${invalid_email}        notavalidemail
+${valid_email}          ___ewan_@worth.systems
+
 
 
 
@@ -104,19 +104,6 @@ Re-type password left blank
     Then the user should see an error
     And the user cannot login with their new details
 
-Invalid email used
-    [Documentation]    -INFUND-885
-    [Tags]    Account
-    Given the user is on the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs an invalid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
-    And the user submits their information
-    Then the user should see an error
-    And the user cannot login with the invalid email
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
@@ -175,6 +162,21 @@ Valid account creation
     And the user can login with their new details
     And the user can see the organisation they are associated with
 
+
+Email duplication check
+    [Documentation]     -INFUND-885 & INFUND 1012 Note that this must be run after 'valid account creation', and simply duplicates that account creation and looks for an error
+    [Tags]  Account
+    Given the user is on the account creation page
+    When the user inputs a first name
+    And the user inputs a last name
+    And the user inputs a phone number
+    And the user inputs a valid email address
+    And the user inputs a valid password
+    And the user retypes the password correctly
+    And the user submits their information
+    Then the user should see an error
+
+
 *** Keywords ***
 the user is on the account creation page
     go to    ${ACCOUNT_CREATION_FORM_URL}
@@ -208,9 +210,6 @@ the user leaves the phone number field blank
 
 the user leaves the email address field blank
     Input Text    id=email    ${EMPTY}
-
-the user inputs an invalid email address
-    Input Text    id=email    notavalidemailaddress
 
 the user leaves the password field blank
     Input Password    id=password    ${EMPTY}

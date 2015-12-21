@@ -147,7 +147,6 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setup() {
-        super.setUp();
 
         List<Object> allPermissionBeans = asList(rulesBeans1, rulesBeans2, rulesBeans3);
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));

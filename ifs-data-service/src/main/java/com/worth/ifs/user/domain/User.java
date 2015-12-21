@@ -2,14 +2,14 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -106,6 +106,11 @@ public class User {
     }
 
     @JsonIgnore
+    public List<ProcessRole> getProcessRolesForRole(UserRoleType role) {
+        return processRoles.stream().filter(processRole -> processRole.getRole().getName().equals(role.getName())).collect(toList());
+    }
+
+    @JsonIgnore
     public List<Organisation> getOrganisations() {
         return organisations;
     }
@@ -185,54 +190,4 @@ public class User {
     }
 
     public void setToken(String token) { this.token = token; }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        User rhs = (User) obj;
-        return new EqualsBuilder()
-            .append(this.id, rhs.id)
-            .append(this.title, rhs.title)
-            .append(this.name, rhs.name)
-            .append(this.firstName, rhs.firstName)
-            .append(this.lastName, rhs.lastName)
-            .append(this.inviteName, rhs.inviteName)
-            .append(this.phoneNumber, rhs.phoneNumber)
-            .append(this.imageUrl, rhs.imageUrl)
-            .append(this.token, rhs.token)
-            .append(this.email, rhs.email)
-            .append(this.password, rhs.password)
-            .append(this.processRoles, rhs.processRoles)
-            .append(this.organisations, rhs.organisations)
-            .append(this.roles, rhs.roles)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(id)
-            .append(title)
-            .append(name)
-            .append(firstName)
-            .append(lastName)
-            .append(inviteName)
-            .append(phoneNumber)
-            .append(imageUrl)
-            .append(token)
-            .append(email)
-            .append(password)
-            .append(processRoles)
-            .append(organisations)
-            .append(roles)
-            .toHashCode();
-    }
 }

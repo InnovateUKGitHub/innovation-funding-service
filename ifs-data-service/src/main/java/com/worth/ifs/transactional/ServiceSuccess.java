@@ -5,12 +5,18 @@ package com.worth.ifs.transactional;
  *
  * Created by dwatson on 06/10/15.
  */
-public class ServiceSuccess {
+public class ServiceSuccess<T> {
 
     private String message;
+    private T result;
 
     public ServiceSuccess() {
 
+    }
+
+
+    public ServiceSuccess(T result) {
+        this.result = result;
     }
 
     public ServiceSuccess(String message) {
@@ -19,5 +25,9 @@ public class ServiceSuccess {
 
     public String getMessage() {
         return message;
+    }
+
+    public T getResult() {
+        return result;
     }
 }

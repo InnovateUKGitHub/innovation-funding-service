@@ -16,8 +16,6 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         this.controller = controller;
     }
 
-    //private MockHttpServletRequest request;
-
     @Test
     @Rollback
     public void test_updateApplication() {

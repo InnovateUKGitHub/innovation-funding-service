@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Assessment Feedback etc).
+ * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
  *
  * A single FormInput would represent an input field under, for example, an Application Form Question, and will have one
  * or more FOrmInputResponses for that input field (so that more than one parties can respond to the same FormInput in,

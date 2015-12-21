@@ -1,5 +1,6 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -70,5 +71,14 @@ public class ProcessRoleController {
                 .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
                 .collect(Collectors.toSet());
         return assignableProcessRoles;
+    }
+
+    @RequestMapping("{id}/application")
+    public ApplicationResource findByProcessRole(@PathVariable("id") final Long id){
+        ProcessRole processRole = processRoleRepository.findOne(id);
+        if (processRole != null && processRole.getApplication() != null){
+               return new ApplicationResource(processRole.getApplication());
+        }
+        return null;
     }
 }

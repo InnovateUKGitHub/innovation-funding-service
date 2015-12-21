@@ -2,6 +2,8 @@ package com.worth.ifs.organisation.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
@@ -15,7 +17,9 @@ import static java.util.Arrays.asList;
  * Class to expose methods to communicate with the company house api.
  */
 @Service
-public class CompanyHouseRestServiceImpl  extends BaseRestService implements CompanyHouseRestService{
+public class CompanyHouseRestServiceImpl  extends BaseRestService implements CompanyHouseRestService {
+    private static final Log log = LogFactory.getLog(CompanyHouseRestServiceImpl.class);
+
     @Value("${ifs.data.service.rest.companyhouse}")
     String companyHouseRestUrl;
 
@@ -23,7 +27,7 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
         try {
             searchText = UriUtils.encode(searchText, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchText, CompanyHouseBusiness[].class));
     }

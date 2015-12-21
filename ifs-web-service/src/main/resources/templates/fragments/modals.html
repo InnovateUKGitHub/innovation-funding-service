@@ -39,7 +39,7 @@
 </div>
 
  <!--assessment invitation rejection window -->
-<div th:fragment="modal-reject-assessment">
+<div th:fragment="modal-reject-assessment (competition, application)">
     <div class="modal-reject-assessment" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
@@ -47,8 +47,8 @@
 
 
                 <form  method="post" action="/assessor/invitation_answer" >
-                    <input type="hidden" name="applicationId" th:value="${assessment.application.id}"/>
-                    <input type="hidden" name="competitionId" th:value="${assessment.application.competition.id}"/>
+                    <input type="hidden" name="applicationId" th:value="${application.id}"/>
+                    <input type="hidden" name="competitionId" th:value="${competition.id}"/>
 
                     <div class="form-group">
                    

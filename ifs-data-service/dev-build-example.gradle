@@ -10,7 +10,7 @@ ext.ifsDataServiceRestBaseURL="http://localhost:8090"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
-project.ext['flyway.schemas']='ifs'
+project.ext['flyway.schemas']='ifs,ifs_test'
 project.ext['flyway.user']=''
 project.ext['flyway.password']=""
 project.ext['flyway.placeholderPrefix']='_${'
@@ -19,3 +19,8 @@ project.ext['flyway.placeholderSuffix']='}'
 ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
 ext.testIfsDatasourcePassword=""
+
+ext.ifsFileStorageLocation="/tmp"
+
+ext.cookieSecure=false
+ext.cookieHTTPOnly=false

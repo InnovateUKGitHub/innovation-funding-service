@@ -1,19 +1,24 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.*;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
@@ -148,6 +153,71 @@ public class CollectionFunctions {
      * @return
      */
     public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
         return list.stream().map(mappingFn).collect(toList());
+    }
+
+    /**
+     * A map collector that preserves order
+     * @param keyMapper
+     * @param valueMapper
+     * @param <T>
+     * @param <K>
+     * @param <U>
+     * @return
+     */
+    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
+        return toMap(keyMapper, valueMapper, (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new);
+    }
+
+    /**
+     * A collector that maps a collection of pairs into a map.
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
+        return toMap(Pair::getLeft, Pair::getRight);
+    }
+
+    /**
+     * Function that takes a map entry and returns the value. Useful for collecting over collections of entry sets
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
+        return Map.Entry::getValue;
+    }
+
+    /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(List<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list.stream().filter(filterFn).collect(toList());
+    }
+
+    /**
+     * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
+        return simpleFilter(list, element -> !filterFn.test(element));
     }
 }

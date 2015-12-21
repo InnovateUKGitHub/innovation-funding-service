@@ -23,7 +23,7 @@ The guest user clicks the log-in button
     Click Button    css=input.button
 
 The guest user opens the browser
-    Open browser  about:  ${BROWSER}
+    Open browser  ${PROTOCOL}${SERVER_BASE}  ${BROWSER}
     ...  remote_url=${REMOTE_URL}
     ...  desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if  '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
@@ -31,11 +31,11 @@ The guest user opens the browser
 
 
 TestTeardown User closes the browser
-    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run keyword if  '${REMOTE_URL}' != ''    Report Sauce status  'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
     Close all browsers
 
 User closes the browser
-    Run keyword if  '${SERVER_AUTH}' != ''    Report Sauce status  'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
+    Run keyword if  '${REMOTE_URL}' != ''    Report Sauce status  'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
     Close all browsers
 
 Logout as user

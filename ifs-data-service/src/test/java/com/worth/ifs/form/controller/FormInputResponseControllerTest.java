@@ -41,8 +41,8 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         FormInputResponse[] consortiumResponses = newFormInputResponse().withFormInputs(formInput).buildArray(2, FormInputResponse.class);
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
-        when(formInputResponseRepository.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
+        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
+        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
 
         mockMvc.perform(post("/forminputresponse/findResponsesByApplication/123")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInput formInput = newFormInput().with(id(789L)).build();
 
-        when(formInputRepository.findOne(789L)).thenReturn(formInput);
+        when(formInputRepositoryMock.findOne(789L)).thenReturn(formInput);
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
         when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(singletonList(applicantProcessRole));
