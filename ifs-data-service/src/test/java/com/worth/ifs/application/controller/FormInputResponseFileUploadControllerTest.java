@@ -2,6 +2,7 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.function.Supplier;
@@ -25,11 +27,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- *
+ * Tests for the FormInputResponseFileUploadController, for uploading and downloading files related to FormInputResponses
  */
 public class FormInputResponseFileUploadControllerTest extends BaseControllerMockMVCTest<FormInputResponseFileUploadController> {
 
@@ -43,10 +46,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testUploadFile() throws Exception {
-
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> successResponse =
-                right(new ServiceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L))));
+    public void testCreateFile() throws Exception {
 
         FormInputResponseFileEntryResource resourceExpectations = argThat(lambdaMatches(resource -> {
             assertEquals(123L, resource.getCompoundId().getFormInputId());
@@ -60,7 +60,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
             return true;
         }));
 
-        Supplier<InputStream> inputStreamExpectations = argThat(lambdaMatches(inputStreamSupplier -> assertInputStreamContents(inputStreamSupplier.get(), "My PDF content")));
+        Supplier<InputStream> inputStreamExpectations = argThat(lambdaMatches(inputStreamSupplier ->
+                assertInputStreamContents(inputStreamSupplier.get(), "My PDF content")));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> successResponse =
+                right(new ServiceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L))));
 
         when(applicationService.createFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
@@ -80,5 +84,32 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         String content = response.getResponse().getContentAsString();
         FormInputResponseFileEntryJsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, FormInputResponseFileEntryJsonStatusResponse.class);
         assertEquals(1111L, jsonResponse.getFileEntryId());
+    }
+
+    @Test
+    public void testGetFile() throws Exception {
+
+        FormInputResponseFileEntryId fileEntryIdExpectations = argThat(lambdaMatches(fileEntryId -> {
+            assertEquals(123L, fileEntryId.getFormInputId());
+            assertEquals(456L, fileEntryId.getApplicationId());
+            assertEquals(789L, fileEntryId.getProcessRoleId());
+            return true;
+        }));
+
+        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned InputStream".getBytes());
+
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(new ServiceSuccess(Pair.of(fileEntryResource, inputStreamSupplier))));
+
+        MvcResult response = mockMvc.
+                perform(
+                        get("/forminputresponse/file").
+                                param("formInputId", "123").
+                                param("applicationId", "456").
+                                param("processRoleId", "789")).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("The returned InputStream", response.getResponse().getContentAsString());
     }
 }
