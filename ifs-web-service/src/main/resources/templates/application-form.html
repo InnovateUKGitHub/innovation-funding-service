@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},url='/application/'+${currentApplication.id},urlText='Application Overview'" th:remove="tag" />
     <div th:include="fragments/elements :: notification" th:remove="tag" />
 	<div class="page-title">
-            <h2 class="subtitle" th:text="${currentCompetition.name + ' - Application number: ' + currentApplication.id}" />
+            <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${currentQuestion?.shortName}" />
         </div>
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js">

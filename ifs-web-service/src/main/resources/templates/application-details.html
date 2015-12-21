@@ -15,7 +15,7 @@
     <div th:include="fragments/elements :: notification" th:remove="tag"></div>
 
     <div class="page-title">
-        <h2 class="subtitle" th:text="${currentApplication.getName()} +' - Application number ' + ${currentApplication.getId()} "/>
+        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
