@@ -17,11 +17,12 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Assessment overview'})" th:remove="tag" />
 
 	<form action="#" method="post" class="application-overview">
 
-		<h2 class="heading-medium">Details</h2>
+		<h2 class="heading-medium no-margin-bottom">Details</h2>
+		<p class="form-hint">These sections of the application should be read for background information about the project - but do not require scoring.</p>
 		<ul class="list-overview">
 			<li class="section-status">
 				<div class="grid-row">
@@ -65,7 +66,8 @@
 			</li>
 		</ul>
 		
-		<h2 class="heading-medium">Application questions</h2>
+		<h2 class="heading-medium no-margin-bottom">Application questions</h2>
+		<p class="form-hint">Each of these questions should be scored out of 10 and written feedback provided.</p>
 		<ul class="list-overview">
 			<li class="section-status marked-as-complete">
 				<div class="grid-row">
