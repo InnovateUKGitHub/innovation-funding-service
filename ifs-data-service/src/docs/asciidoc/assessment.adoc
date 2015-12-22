@@ -58,3 +58,32 @@ include::{snippets}/assessment/reject-invitation-assessment/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/assessment/reject-invitation-assessment/curl-request.adoc[]
 
+=== Submit assessments
+==== Request
+include::{snippets}/assessment/submit-assessments-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/submit-assessments-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/submit-assessments-assessment/curl-request.adoc[]
+
+=== Accept assessment
+==== Request
+include::{snippets}/assessment/accept-invitation-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/accept-invitation-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/accept-invitation-assessment/curl-request.adoc[]
+
+=== Recommend assessment
+==== Request
+include::{snippets}/assessment/submit-assessment-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/submit-assessment-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/submit-assessment-assessment/curl-request.adoc[]
