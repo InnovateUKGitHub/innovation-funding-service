@@ -233,6 +233,10 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private void deleteFile(File file) {
-        file.delete();
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
+            log.error("Error deleting file", e);
+        }
     }
 }
