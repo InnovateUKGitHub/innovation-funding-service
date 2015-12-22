@@ -20,20 +20,31 @@ include::{snippets}/assessment/find-application-user-assessment/curl-request.ado
 
 === Retrieve total assigned assessments for competition
 ==== Request
-include::{snippets}/assessment/total-assigned-assessments/http-request.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/http-request.adoc[]
 
 ==== Response
-include::{snippets}/assessment/total-assigned-assessments/http-response.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/total-assigned-assessments/curl-request.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/curl-request.adoc[]
 
 === Retrieve total submitted assessments for competition
 ==== Request
-include::{snippets}/assessment/total-submitted-assessments/http-request.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/http-request.adoc[]
 
 ==== Response
-include::{snippets}/assessment/total-submitted-assessments/http-response.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/total-submitted-assessments/curl-request.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/curl-request.adoc[]
+
+=== Retrieve total assessor score for assessments
+==== Request
+include::{snippets}/assessment/find-assessment-score-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-assessment-score-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-assessment-score-assessment/curl-request.adoc[]
+

@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.dto.Score;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -40,7 +41,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(123)))
-                .andDo(document("recommendation/find-competition-recommendation"));
+                .andDo(document("assessment/find-competition-assessment"));
     }
 
     @Test
@@ -54,7 +55,21 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/findAssessmentByProcessRole/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(456)))
-                .andDo(document("recommendation/find-application-user-recommendation"));;
+                .andDo(document("assessment/find-application-user-assessment"));;
+    }
+
+    @Test
+    public void testGetScore() throws Exception {
+        Score score = new Score(200, 20);
+        long assessmentId = 1L;
+        when(assessmentHandler.getScore(assessmentId)).thenReturn(score);
+
+        mockMvc.perform(get(applicationControllerPath+"/"+assessmentId+"/score"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("percentage", is(10)))
+                .andExpect(jsonPath("total", is(20)))
+                .andExpect(jsonPath("possible", is(200)))
+                .andDo(document("assessment/find-assessment-score-assessment"));;
     }
 
     @Test
@@ -64,7 +79,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("3"))
-                .andDo(document("assessment/total-assigned-assessments"));
+                .andDo(document("assessment/total-assigned-assessment"));
     }
 
     @Test
@@ -74,7 +89,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         mockMvc.perform(get(applicationControllerPath+"/totalSubmittedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("35"))
-                .andDo(document("assessment/total-submitted-assessments"));
+                .andDo(document("assessment/total-submitted-assessment"));
     }
 
     @Test
