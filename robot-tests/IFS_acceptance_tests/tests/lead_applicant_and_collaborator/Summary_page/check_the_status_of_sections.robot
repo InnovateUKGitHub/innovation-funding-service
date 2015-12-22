@@ -16,18 +16,18 @@ Check that status is updated on the summary page after marking a section as comp
     [Tags]    Applicant    Summary    Application
     Given applicant goes to the 'application summary' page for application 2
     And none of the sections are marked as complete
-    When applicant goes to the 'economic benefits' question for application 2
+    When applicant goes to the 'economic benefit' question for application 2
     And the applicant adds some content and marks this section as complete
     And applicant goes to the 'application summary' page for application 2
-    Then the applicant can see that the 'economics benefit' section is marked as complete
+    Then the applicant can see that the 'economic benefit' section is marked as complete
 
 Check that status is updated on the summary page after editing a section so it is no longer complete
     [Documentation]    INFUND-544
     [Tags]    Applicant    Summary    Application
     Given applicant goes to the 'application summary' page for application 2
-    And the applicant can see that the 'economics benefit' section is marked as complete
-    When applicant goes to the 'economic benefits' question for application 2
-    And the applicant edits the "economic benefits" question
+    And the applicant can see that the 'economic benefit' section is marked as complete
+    When applicant goes to the 'economic benefit' question for application 2
+    And the applicant edits the 'economic benefit' question
     And applicant goes to the 'application summary' page for application 2
     Then none of the sections are marked as complete
 
@@ -36,10 +36,10 @@ the applicant adds some content and marks this section as complete
     Input Text    css=#form-input-4 .editor    This is some random text
     Click Element    name=mark_as_complete
 
-the applicant can see that the 'economics benefit' section is marked as complete
+the applicant can see that the 'economic benefit' section is marked as complete
     Page Should Contain    Complete
 
-the applicant edits the "economic benefits" question
+the applicant edits the 'economic benefit' question
     Click Element    name=mark_as_incomplete
 
 none of the sections are marked as complete
