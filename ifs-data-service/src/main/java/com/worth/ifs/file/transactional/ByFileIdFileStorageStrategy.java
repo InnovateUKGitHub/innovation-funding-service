@@ -33,7 +33,8 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     private int partitionLevels = 3;
 
     @Autowired
-    public ByFileIdFileStorageStrategy(@Value("${ifs.data.service.file.storage.base}") String pathToStorageBase, @Value("${ifs.data.service.file.storage.containing.folder}") String containingFolder) {
+    public ByFileIdFileStorageStrategy(@Value("${ifs.data.service.file.storage.base}") String pathToStorageBase,
+                                       @Value("${ifs.data.service.file.storage.containing.folder}") String containingFolder) {
         super(pathToStorageBase, containingFolder);
     }
 

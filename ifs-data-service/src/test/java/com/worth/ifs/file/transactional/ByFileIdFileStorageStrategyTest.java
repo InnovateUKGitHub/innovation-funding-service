@@ -27,8 +27,8 @@ public class ByFileIdFileStorageStrategyTest {
 
         ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
 
-        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "000_999")), strategy.getFilePathAndName(0L).getLeft());
-        assertEquals("0", strategy.getFilePathAndName(0L).getRight());
+        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "000_999")), strategy.getFilePathAndName(0L).getKey());
+        assertEquals("0", strategy.getFilePathAndName(0L).getValue());
     }
 
     @Test
@@ -37,8 +37,8 @@ public class ByFileIdFileStorageStrategyTest {
         ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
 
         FileEntry fileEntry = newFileEntry().with(id(123L)).build();
-        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "000_999")), strategy.getAbsoluteFilePathAndName(fileEntry).getLeft());
-        assertEquals("3", strategy.getFilePathAndName(3L).getRight());
+        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "000_999")), strategy.getAbsoluteFilePathAndName(fileEntry).getKey());
+        assertEquals("123", strategy.getAbsoluteFilePathAndName(fileEntry).getValue());
     }
 
     @Test
@@ -47,16 +47,16 @@ public class ByFileIdFileStorageStrategyTest {
         ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
 
         // test a number that is within the middle of the deepest set of partitions
-        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "5000_5999")), strategy.getFilePathAndName(5123L).getLeft());
-        assertEquals("5123", strategy.getFilePathAndName(5123L).getRight());
+        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "000000_999999", "5000_5999")), strategy.getFilePathAndName(5123L).getKey());
+        assertEquals("5123", strategy.getFilePathAndName(5123L).getValue());
 
         // test a number that is within the middle of the deepest and next deepest set of partitions
-        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "5000000_5999999", "5123000_5123999")), strategy.getFilePathAndName(5123123L).getLeft());
-        assertEquals("5123123", strategy.getFilePathAndName(5123123L).getRight());
+        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("000000000_999999999", "5000000_5999999", "5123000_5123999")), strategy.getFilePathAndName(5123123L).getKey());
+        assertEquals("5123123", strategy.getFilePathAndName(5123123L).getValue());
 
         // test a number that is within the middle of the deepest, next deepest and least deepest set of partitions
-        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("5000000000_5999999999", "5526000000_5526999999", "5526359000_5526359999")), strategy.getFilePathAndName(5526359849L).getLeft());
-        assertEquals("5526359849", strategy.getFilePathAndName(5526359849L).getRight());
+        assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("5000000000_5999999999", "5526000000_5526999999", "5526359000_5526359999")), strategy.getFilePathAndName(5526359849L).getKey());
+        assertEquals("5526359849", strategy.getFilePathAndName(5526359849L).getValue());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ByFileIdFileStorageStrategyTest {
 
         ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
 
-        List<String> folderPaths = strategy.getFilePathAndName(5526359849L).getLeft();
+        List<String> folderPaths = strategy.getFilePathAndName(5526359849L).getKey();
         assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, asList("5000000000_5999999999", "5526000000_5526999999", "5526359000_5526359999")), folderPaths);
 
         //

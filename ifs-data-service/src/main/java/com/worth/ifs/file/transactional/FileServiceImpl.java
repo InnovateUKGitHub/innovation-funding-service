@@ -55,28 +55,22 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+
         return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
+
             createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                 try {
-                    return validateMediaType(validationFile, resource.getMediaType()).
-                            map(tempFile -> validateContentLength(resource.getFilesizeBytes(), tempFile)).
-                            map(tempFile -> saveFileEntry(resource).
-                                    map(savedFileEntry -> doCreateFile(savedFileEntry, tempFile)).
-                                    map(fileAndFileEntry -> successResponse(fileAndFileEntry))
-                            );
+                    return validateMediaType(validationFile, resource.getMediaType()).map(tempFile ->
+                           validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
+                           saveFileEntry(resource).map(savedFileEntry ->
+                           createFileForFileEntry(savedFileEntry, tempFile)).map(fileAndFileEntry ->
+                           successResponse(fileAndFileEntry))
+                    );
                 } finally {
                     deleteFile(validationFile);
                 }
-            }));
-    }
-
-    private void deleteFile(File file) {
-        try {
-            Files.delete(file.toPath());
-        } catch (IOException e) {
-            log.error("Unable to delete " + file);
-            log.error(e);
-        }
+            })
+        );
     }
 
     @Override
@@ -146,11 +140,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, File tempFile) {
+    private Either<ServiceFailure, Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
+
         Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
-        return doCreateFile(pathElements, filename, tempFile).map(file -> right(Pair.of(file, savedFileEntry)));
+        return createFileForFileEntry(pathElements, filename, tempFile).map(file -> right(Pair.of(file, savedFileEntry)));
     }
 
     private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -180,7 +175,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, File tempFile) {
+    private Either<ServiceFailure, File> createFileForFileEntry(List<String> pathElements, String filename, File tempFile) {
 
         Path foldersPath = pathElementsToAbsolutePath(pathElements);
 
@@ -235,5 +230,9 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             log.error("Error closing file stream for file " + file, e);
             return errorResponse(UNABLE_TO_CREATE_FILE, e);
         }
+    }
+
+    private void deleteFile(File file) {
+        file.delete();
     }
 }

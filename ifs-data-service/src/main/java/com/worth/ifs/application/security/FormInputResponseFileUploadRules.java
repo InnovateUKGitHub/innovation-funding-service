@@ -2,7 +2,6 @@ package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -34,9 +33,6 @@ public class FormInputResponseFileUploadRules {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
-    private FormInputResponseRepository formInputResponseRepository;
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {

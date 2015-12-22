@@ -20,7 +20,7 @@ ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
 ext.testIfsDatasourcePassword=""
 
-ext.ifsFileStorageLocation="/tmp"
+ext.ifsFileStorageLocation="/tmp or c:\\temp, depending on whether you're on a *nix OS or a Windows OS"
 
 ext.cookieSecure=false
 ext.cookieHTTPOnly=false
