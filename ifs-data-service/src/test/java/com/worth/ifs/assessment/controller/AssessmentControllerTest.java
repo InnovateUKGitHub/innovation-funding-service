@@ -1,18 +1,26 @@
 package com.worth.ifs.assessment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.BuilderAmendFunctions.description;
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssessmentControllerTest extends BaseControllerMockMVCTest {
@@ -21,6 +29,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Mock
     AssessmentHandler assessmentHandler;
+
+    @Mock
+    AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
     @Override
     protected AssessmentController supplyControllerUnderTest() {
@@ -94,11 +105,26 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testAcceptAssessmentInvitation() throws Exception {
+
     }
 
     @Test
     public void testRejectAssessmentInvitation() throws Exception {
+        ProcessOutcome processOutcome = newProcessOutcome()
+                .with(description("a description"))
+                .withOutcome("conflict-of-interest")
+                .build();
+        long processRoleId = 1L;
+        String processState = "test";
+        Assessment a = newAssessment().withProcessState(processState).build();
+        when(assessmentHandler.getOneByProcessRole(processRoleId)).thenReturn(a);
 
+        String json = new ObjectMapper().writeValueAsString(processOutcome);
+        mockMvc.perform(post(applicationControllerPath + "/rejectAssessmentInvitation/" + processRoleId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/reject-invitation-assessment"));
     }
 
     @Test
