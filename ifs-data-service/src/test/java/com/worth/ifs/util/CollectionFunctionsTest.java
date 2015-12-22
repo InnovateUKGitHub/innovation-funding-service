@@ -294,4 +294,9 @@ public class CollectionFunctionsTest {
     public void test_simpleFilterNot_nullElements() {
         assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
     }
+
+    @Test
+    public void test_simpleJoiner() {
+        assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
+    }
 }
