@@ -208,7 +208,7 @@ CREATE TABLE `competition` (
 
 LOCK TABLES `competition` WRITE;
 /*!40000 ALTER TABLE `competition` DISABLE KEYS */;
-INSERT INTO `competition` VALUES (1,'2015-12-31','2015-11-12','Innovate UK is to invest up to ?9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.','2015-12-16','Technology Inspired','2015-06-24');
+INSERT INTO `competition` VALUES (1,'2015-12-31','2015-11-12','Innovate UK is to invest up to ?9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.','2016-03-16','Technology Inspired','2015-06-24');
 /*!40000 ALTER TABLE `competition` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ CREATE TABLE `cost` (
   KEY `FK_3ocl28vkv3coj1t5hmgixvl6` (`question_id`),
   CONSTRAINT `FK_14n47e1gx72ud7hj3t2yscu1v` FOREIGN KEY (`application_finance_id`) REFERENCES `application_finance` (`id`),
   CONSTRAINT `FK_3ocl28vkv3coj1t5hmgixvl6` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,6 +285,7 @@ INSERT INTO `cost` VALUES (50,0,'Grant Claim','',70,3,38);
 INSERT INTO `cost` VALUES (51,0,'Accept Rate','Yes',23,1,29);
 INSERT INTO `cost` VALUES (52,0,'Accept Rate','Yes',24,2,29);
 INSERT INTO `cost` VALUES (53,0,'Accept Rate','Yes',25,3,29);
+INSERT INTO `cost` VALUES (54,0,'Other Funding','Yes',NULL,1,35);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -862,7 +863,7 @@ INSERT INTO `question` VALUES (5,NULL,'','Describe the areas of work and your o
 INSERT INTO `question` VALUES (6,NULL,'','Explain how your project is innovative in both a commercial and technical sense.','<p>You should show how your project will:</p><ul class=\"list-bullet\">         <li>push boundaries beyond current leading-edge science and technology</li><li>apply existing technologies in new areas</li></ul><p>Explain the novelty of the research in an industrial and/or academic context.</p><p>You should provide evidence that your proposed work is innovative. This could include patent search results, competitor analyses or literature surveys. If relevant, you should also outline your own intellectual property rights.</p>','What should I include in the project innovation section?','','\0','What is innovative about your project?','Innovation','','',10,'6',1,2);
 INSERT INTO `question` VALUES (7,NULL,'','We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.','<p>Please describe your plans for limiting and managing risk. You need to:</p><ul class=\"list-bullet\">         <li>identify the project\'s main risks and uncertainties</li><li>detail specific technical, commercial, managerial and environmental risks</li><li>list any other uncertainties such as ethical issues associated with the project</li><li>provide a detailed risk analysis</li><li>rate the main risks as high/medium/low</li><li>show how you\'ll limit the main risks</li><li>identify the project management tools and mechanisms you\'ll use to minimise operational risk</li><li>include arrangements for managing the project team and its partners</li></ul>','What should I include in the project risks section?','','\0','What are the risks (technical, commercial and environmental) to your project\'s success? What is your risk management strategy?','Risks','','',11,'7',1,2);
 INSERT INTO `question` VALUES (8,NULL,'','Describe your capability to develop and exploit this technology. Include details of your team\'s track record in managing research and development projects.','<p>You should show your project team:</p><ul class=\"list-bullet\">         <li>has the right mix of skills and experience to complete the project</li><li>has clear objectives</li><li>how it would have been formed even without Innovate UK investment</li></ul><p>If you are part of a consortium, describe the benefits of the collaboration. For example, increased knowledge transfer.</p>','What should I include in the project skills section?','','\0','Does your project team have the skills, experience and facilities to deliver this project?','Project team','','',12,'8',1,2);
-INSERT INTO `question` VALUES (9,NULL,'\0','Enter the full title of the project',NULL,NULL,'\0','\0','Application details','Application details','\0','\0',1,NULL,1,1);
+INSERT INTO `question` VALUES (9,NULL,'','Enter the full title of the project',NULL,NULL,'','\0','Application details','Application details','\0','\0',1,NULL,1,1);
 INSERT INTO `question` VALUES (11,NULL,'','Please provide a short summary of your project. Make sure you include what is innovative about it.','<p>We will not score this summary, but it will give the assessors a useful introduction to your project. It should provide a clear overview of the whole project, including:</p> <ul class=\"list-bullet\">         <li>your vision for the project</li><li>key objectives</li><li>main areas of focus</li><li>details of how it is innovative</li></ul>','What should I include in the project summary?','','\0','Project summary','Project summary\n','\0','\0',2,NULL,1,1);
 INSERT INTO `question` VALUES (12,NULL,'','Please provide a brief description of your project. If your application is successful, we will publish this description. This question is mandatory but we will not assess this content as part of your application.','<p>Innovate UK publishes information about projects we have funded. This is in line with government practice on openness and transparency of public-funded activities.</p><p>Describe your project in a way that will be easy for a non-specialist to understand. Don\'t include any information that is confidential, for example, intellectual property or patent details.</p> ','What should I include in the project public description?','','\0','Public description','Public description\n','\0','\0',3,NULL,1,1);
 INSERT INTO `question` VALUES (13,'Is this application in scope?','','If your application doesn\'t align with the scope, we will reject it.','<p>It is important that you read the following guidance.</p><p>To show how your project aligns with the scope of this competition, you need to:</p><ul class=\"list-bullet\">         <li>read the competition brief in full</li><li>understand the background, challenge and scope of the competition</li><li>address the research objectives in your application</li><li>match your project\'s objectives and activities to these</li></ul> <p>Once you have submitted your application, you should not change this section unless:</p><ul class=\"list-bullet\">         <li>we ask you to provide more information</li><li>we ask you to make it clearer</li></ul> ','What should I include in the project scope?','','\0','How does your project align with the scope of this competition?','Scope','','\0',4,NULL,1,1);
@@ -883,7 +884,7 @@ INSERT INTO `question` VALUES (31,NULL,'','Please provide a breakdown of the ca
 INSERT INTO `question` VALUES (32,NULL,'','Please provide details of any work that you expect to subcontract for your project.',NULL,NULL,'','','Sub-contracting costs',NULL,'\0','\0',2,NULL,1,13);
 INSERT INTO `question` VALUES (33,NULL,'',NULL,NULL,NULL,'','','Travel and subsistence',NULL,'\0','\0',2,NULL,1,14);
 INSERT INTO `question` VALUES (34,NULL,'','Please note that legal or project audit and accountancy fees are not eligible and should not be included as an \'other cost\'.Patent filing costs of NEW IP relating to the project are limited to ?5,000 for SME applicants only.\n\nPlease provide estimates of other costs that do not fit within any other cost headings.',NULL,NULL,'','','Other costs',NULL,'\0','\0',2,NULL,1,15);
-INSERT INTO `question` VALUES (35,NULL,'','Please tell us if you have every applied for or received any other public sector funding for this project? You should also include details of any offers of funding you\'ve received.','You don\'t need to include completed grants for projects that have helped you develop earlier passes of your idea. You should note that we count other public sector support as part of the grant you can receive for your project.','What should I include in the other public funding section?','\0','','Other funding',NULL,'\0','\0',18,NULL,1,7);
+INSERT INTO `question` VALUES (35,NULL,'','Please tell us if you have every applied for or received any other public sector funding for this project? You should also include details of any offers of funding you\'ve received.','Please tell us if you have received, or will receive any other public sector funding for this project.','What should I include in the other public funding section?','','','Other funding',NULL,'\0','\0',18,NULL,1,7);
 INSERT INTO `question` VALUES (36,NULL,'',NULL,NULL,NULL,'\0','\0','FINANCE_SUMMARY_INDICATOR_STRING',NULL,'\0','\0',16,NULL,1,8);
 INSERT INTO `question` VALUES (38,NULL,'\0','Please enter the funding level that you would like to apply for in this application',NULL,'What funding level should I enter?','\0','','Funding level',NULL,'\0','\0',17,NULL,1,7);
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
@@ -1176,44 +1177,47 @@ CREATE TABLE `schema_version` (
 
 LOCK TABLES `schema_version` WRITE;
 /*!40000 ALTER TABLE `schema_version` DISABLE KEYS */;
-INSERT INTO `schema_version` VALUES (1,1,'1','Base version','SQL','V1__Base_version.sql',1613992993,'root','2015-12-21 15:16:53',478,1);
-INSERT INTO `schema_version` VALUES (2,2,'2.1','Add Form Input Tables','SQL','V2_1__Add_Form_Input_Tables.sql',1182368876,'root','2015-12-21 15:16:53',52,1);
-INSERT INTO `schema_version` VALUES (11,11,'2.10','MakeOriginalFirstPriorityQuestionsAssessable','SQL','V2_10__MakeOriginalFirstPriorityQuestionsAssessable.sql',-350651558,'root','2015-12-21 15:16:53',5,1);
-INSERT INTO `schema_version` VALUES (3,3,'2.2','Migrate Questions To Form Inputs','SQL','V2_2__Migrate_Questions_To_Form_Inputs.sql',1067513257,'root','2015-12-21 15:16:53',8,1);
-INSERT INTO `schema_version` VALUES (4,4,'2.3','Migrate Responses To Form Input Responses','SQL','V2_3__Migrate_Responses_To_Form_Input_Responses.sql',-876851300,'root','2015-12-21 15:16:53',6,1);
-INSERT INTO `schema_version` VALUES (5,5,'2.4','RemoveChildQuestions','SQL','V2_4__RemoveChildQuestions.sql',1799033600,'root','2015-12-21 15:16:53',7,1);
-INSERT INTO `schema_version` VALUES (6,6,'2.5','RemoveQuestionTypes','SQL','V2_5__RemoveQuestionTypes.sql',875814196,'root','2015-12-21 15:16:53',61,1);
-INSERT INTO `schema_version` VALUES (7,7,'2.6','DropChildQuestions','SQL','V2_6__DropChildQuestions.sql',829955878,'root','2015-12-21 15:16:53',65,1);
-INSERT INTO `schema_version` VALUES (8,8,'2.7','RemoveValuesFromQuestionsAndResponses','SQL','V2_7__RemoveValuesFromQuestionsAndResponses.sql',395469415,'root','2015-12-21 15:16:53',174,1);
-INSERT INTO `schema_version` VALUES (9,9,'2.8','AddIncludedInApplicationSummaryColumn','SQL','V2_8__AddIncludedInApplicationSummaryColumn.sql',689541774,'root','2015-12-21 15:16:53',29,1);
-INSERT INTO `schema_version` VALUES (10,10,'2.9','AddDescriptionColumnToFormInput','SQL','V2_9__AddDescriptionColumnToFormInput.sql',299512244,'root','2015-12-21 15:16:53',31,1);
-INSERT INTO `schema_version` VALUES (12,12,'3.1','Add Form Input Validator Tables','SQL','V3_1__Add_Form_Input_Validator_Tables.sql',-2024327682,'root','2015-12-21 15:16:53',21,1);
-INSERT INTO `schema_version` VALUES (13,13,'3.2','Add Validators For Textarea','SQL','V3_2__Add_Validators_For_Textarea.sql',623679638,'root','2015-12-21 15:16:53',6,1);
-INSERT INTO `schema_version` VALUES (14,14,'3.3','Refactor Validator Link Table','SQL','V3_3__Refactor_Validator_Link_Table.sql',599640107,'root','2015-12-21 15:16:53',22,1);
-INSERT INTO `schema_version` VALUES (15,15,'3.4','Add Textarea Validations','SQL','V3_4__Add_Textarea_Validations.sql',-1741635849,'root','2015-12-21 15:16:53',6,1);
-INSERT INTO `schema_version` VALUES (16,16,'3.5','SetQuestionNameForCustomFinanceSummaryCompleteHandling','SQL','V3_5__SetQuestionNameForCustomFinanceSummaryCompleteHandling.sql',-146831348,'root','2015-12-21 15:16:53',4,1);
-INSERT INTO `schema_version` VALUES (17,17,'4.1','Add finances default values','SQL','V4_1__Add_finances_default_values.sql',1230154785,'root','2015-12-21 15:16:53',5,1);
-INSERT INTO `schema_version` VALUES (18,18,'4.2','Add finances cost fields','SQL','V4_2__Add_finances_cost_fields.sql',-1006528488,'root','2015-12-21 15:16:53',5,1);
-INSERT INTO `schema_version` VALUES (19,19,'4.3','Add finances default values','SQL','V4_3__Add_finances_default_values.sql',1412732844,'root','2015-12-21 15:16:53',1,1);
-INSERT INTO `schema_version` VALUES (20,20,'5.1','Update section names','SQL','V5_1__Update_section_names.sql',-1783932958,'root','2015-12-21 15:16:53',5,1);
-INSERT INTO `schema_version` VALUES (21,21,'5.2','Update competition startdate','SQL','V5_2__Update_competition_startdate.sql',1719325543,'root','2015-12-21 15:16:53',5,1);
-INSERT INTO `schema_version` VALUES (22,22,'5.3','AddWordCountValidatorToFormInputs','SQL','V5_3__AddWordCountValidatorToFormInputs.sql',-1171581430,'root','2015-12-21 15:16:53',7,1);
-INSERT INTO `schema_version` VALUES (23,23,'5.4','AddShortTitlesForQuestions','SQL','V5_4__AddShortTitlesForQuestions.sql',1728597710,'root','2015-12-21 15:16:53',33,1);
-INSERT INTO `schema_version` VALUES (24,24,'5.5','UpdateQuestionsAssignmentToSections','SQL','V5_5__UpdateQuestionsAssignmentToSections.sql',1572284607,'root','2015-12-21 15:16:53',14,1);
-INSERT INTO `schema_version` VALUES (25,25,'6.1','AddDirectUserOrganisationRelationship','SQL','V6_1__AddDirectUserOrganisationRelationship.sql',1180414685,'root','2015-12-21 15:16:53',25,1);
-INSERT INTO `schema_version` VALUES (26,26,'6.2','AddColumnsToUser','SQL','V6_2__AddColumnsToUser.sql',-63797487,'root','2015-12-21 15:16:54',32,1);
-INSERT INTO `schema_version` VALUES (27,27,'6.3','UpdateShortTitlesWithoutNumbers','SQL','V6_3__UpdateShortTitlesWithoutNumbers.sql',-873596848,'root','2015-12-21 15:16:54',7,1);
-INSERT INTO `schema_version` VALUES (28,28,'6.4','UpdateQuestionsAssignmentToSections','SQL','V6_4__UpdateQuestionsAssignmentToSections.sql',-1229957953,'root','2015-12-21 15:16:54',8,1);
-INSERT INTO `schema_version` VALUES (29,29,'6.5','GroupQuestionsBySection','SQL','V6_5__GroupQuestionsBySection.sql',-1385693899,'root','2015-12-21 15:16:54',32,1);
-INSERT INTO `schema_version` VALUES (30,30,'7.1','Create organisation address table','SQL','V7_1__Create_organisation_address_table.sql',792433218,'root','2015-12-21 15:16:54',83,1);
-INSERT INTO `schema_version` VALUES (31,31,'7.2','Add address attribute','SQL','V7_2__Add_address_attribute.sql',1240572776,'root','2015-12-21 15:16:54',35,1);
-INSERT INTO `schema_version` VALUES (32,32,'7.3','Assign questions correctly','SQL','V7_3__Assign_questions_correctly.sql',-926276851,'root','2015-12-21 15:16:54',8,1);
-INSERT INTO `schema_version` VALUES (33,33,'7.4','Remove question numbers','SQL','V7_4__Remove_question_numbers.sql',1053837292,'root','2015-12-21 15:16:54',6,1);
-INSERT INTO `schema_version` VALUES (34,34,'7.5','Update Grant Percentage Question','SQL','V7_5__Update_Grant_Percentage_Question.sql',1437703137,'root','2015-12-21 15:16:54',6,1);
-INSERT INTO `schema_version` VALUES (35,35,'7.6','Update Questions Priority','SQL','V7_6__Update_Questions_Priority.sql',297101555,'root','2015-12-21 15:16:54',8,1);
-INSERT INTO `schema_version` VALUES (36,36,'8.1','Add FileEntry Table','SQL','V8_1__Add_FileEntry_Table.sql',519721898,'root','2015-12-21 15:16:54',11,1);
-INSERT INTO `schema_version` VALUES (37,37,'8.2','Add FileEntryId Column To FormInputResponse','SQL','V8_2__Add_FileEntryId_Column_To_FormInputResponse.sql',-564902485,'root','2015-12-21 15:16:54',62,1);
-INSERT INTO `schema_version` VALUES (38,38,'9.1','RefactorProcesses','SQL','V9_1__RefactorProcesses.sql',1349902590,'root','2015-12-21 15:16:54',51,1);
+INSERT INTO `schema_version` VALUES (1,1,'1','Base version','SQL','V1__Base_version.sql',1613992993,'root','2015-12-22 10:13:28',466,1);
+INSERT INTO `schema_version` VALUES (2,2,'2.1','Add Form Input Tables','SQL','V2_1__Add_Form_Input_Tables.sql',1182368876,'root','2015-12-22 10:13:28',64,1);
+INSERT INTO `schema_version` VALUES (11,11,'2.10','MakeOriginalFirstPriorityQuestionsAssessable','SQL','V2_10__MakeOriginalFirstPriorityQuestionsAssessable.sql',-350651558,'root','2015-12-22 10:13:28',5,1);
+INSERT INTO `schema_version` VALUES (3,3,'2.2','Migrate Questions To Form Inputs','SQL','V2_2__Migrate_Questions_To_Form_Inputs.sql',1067513257,'root','2015-12-22 10:13:28',13,1);
+INSERT INTO `schema_version` VALUES (4,4,'2.3','Migrate Responses To Form Input Responses','SQL','V2_3__Migrate_Responses_To_Form_Input_Responses.sql',-876851300,'root','2015-12-22 10:13:28',12,1);
+INSERT INTO `schema_version` VALUES (5,5,'2.4','RemoveChildQuestions','SQL','V2_4__RemoveChildQuestions.sql',1799033600,'root','2015-12-22 10:13:28',6,1);
+INSERT INTO `schema_version` VALUES (6,6,'2.5','RemoveQuestionTypes','SQL','V2_5__RemoveQuestionTypes.sql',875814196,'root','2015-12-22 10:13:28',64,1);
+INSERT INTO `schema_version` VALUES (7,7,'2.6','DropChildQuestions','SQL','V2_6__DropChildQuestions.sql',829955878,'root','2015-12-22 10:13:28',55,1);
+INSERT INTO `schema_version` VALUES (8,8,'2.7','RemoveValuesFromQuestionsAndResponses','SQL','V2_7__RemoveValuesFromQuestionsAndResponses.sql',395469415,'root','2015-12-22 10:13:28',126,1);
+INSERT INTO `schema_version` VALUES (9,9,'2.8','AddIncludedInApplicationSummaryColumn','SQL','V2_8__AddIncludedInApplicationSummaryColumn.sql',689541774,'root','2015-12-22 10:13:28',56,1);
+INSERT INTO `schema_version` VALUES (10,10,'2.9','AddDescriptionColumnToFormInput','SQL','V2_9__AddDescriptionColumnToFormInput.sql',299512244,'root','2015-12-22 10:13:28',29,1);
+INSERT INTO `schema_version` VALUES (12,12,'3.1','Add Form Input Validator Tables','SQL','V3_1__Add_Form_Input_Validator_Tables.sql',-2024327682,'root','2015-12-22 10:13:28',22,1);
+INSERT INTO `schema_version` VALUES (13,13,'3.2','Add Validators For Textarea','SQL','V3_2__Add_Validators_For_Textarea.sql',623679638,'root','2015-12-22 10:13:28',5,1);
+INSERT INTO `schema_version` VALUES (14,14,'3.3','Refactor Validator Link Table','SQL','V3_3__Refactor_Validator_Link_Table.sql',599640107,'root','2015-12-22 10:13:28',23,1);
+INSERT INTO `schema_version` VALUES (15,15,'3.4','Add Textarea Validations','SQL','V3_4__Add_Textarea_Validations.sql',-1741635849,'root','2015-12-22 10:13:28',5,1);
+INSERT INTO `schema_version` VALUES (16,16,'3.5','SetQuestionNameForCustomFinanceSummaryCompleteHandling','SQL','V3_5__SetQuestionNameForCustomFinanceSummaryCompleteHandling.sql',-146831348,'root','2015-12-22 10:13:28',4,1);
+INSERT INTO `schema_version` VALUES (17,17,'4.1','Add finances default values','SQL','V4_1__Add_finances_default_values.sql',1230154785,'root','2015-12-22 10:13:28',4,1);
+INSERT INTO `schema_version` VALUES (18,18,'4.2','Add finances cost fields','SQL','V4_2__Add_finances_cost_fields.sql',-1006528488,'root','2015-12-22 10:13:28',4,1);
+INSERT INTO `schema_version` VALUES (19,19,'4.3','Add finances default values','SQL','V4_3__Add_finances_default_values.sql',1412732844,'root','2015-12-22 10:13:28',1,1);
+INSERT INTO `schema_version` VALUES (20,20,'5.1','Update section names','SQL','V5_1__Update_section_names.sql',-1783932958,'root','2015-12-22 10:13:28',4,1);
+INSERT INTO `schema_version` VALUES (21,21,'5.2','Update competition startdate','SQL','V5_2__Update_competition_startdate.sql',1719325543,'root','2015-12-22 10:13:28',5,1);
+INSERT INTO `schema_version` VALUES (22,22,'5.3','AddWordCountValidatorToFormInputs','SQL','V5_3__AddWordCountValidatorToFormInputs.sql',-1171581430,'root','2015-12-22 10:13:28',5,1);
+INSERT INTO `schema_version` VALUES (23,23,'5.4','AddShortTitlesForQuestions','SQL','V5_4__AddShortTitlesForQuestions.sql',1728597710,'root','2015-12-22 10:13:28',41,1);
+INSERT INTO `schema_version` VALUES (24,24,'5.5','UpdateQuestionsAssignmentToSections','SQL','V5_5__UpdateQuestionsAssignmentToSections.sql',1572284607,'root','2015-12-22 10:13:28',7,1);
+INSERT INTO `schema_version` VALUES (25,25,'6.1','AddDirectUserOrganisationRelationship','SQL','V6_1__AddDirectUserOrganisationRelationship.sql',1180414685,'root','2015-12-22 10:13:28',18,1);
+INSERT INTO `schema_version` VALUES (26,26,'6.2','AddColumnsToUser','SQL','V6_2__AddColumnsToUser.sql',-63797487,'root','2015-12-22 10:13:28',26,1);
+INSERT INTO `schema_version` VALUES (27,27,'6.3','UpdateShortTitlesWithoutNumbers','SQL','V6_3__UpdateShortTitlesWithoutNumbers.sql',-873596848,'root','2015-12-22 10:13:28',7,1);
+INSERT INTO `schema_version` VALUES (28,28,'6.4','UpdateQuestionsAssignmentToSections','SQL','V6_4__UpdateQuestionsAssignmentToSections.sql',-1229957953,'root','2015-12-22 10:13:28',13,1);
+INSERT INTO `schema_version` VALUES (29,29,'6.5','GroupQuestionsBySection','SQL','V6_5__GroupQuestionsBySection.sql',-1385693899,'root','2015-12-22 10:13:29',57,1);
+INSERT INTO `schema_version` VALUES (30,30,'7.1','Create organisation address table','SQL','V7_1__Create_organisation_address_table.sql',792433218,'root','2015-12-22 10:13:29',84,1);
+INSERT INTO `schema_version` VALUES (31,31,'7.2','Add address attribute','SQL','V7_2__Add_address_attribute.sql',1240572776,'root','2015-12-22 10:13:29',22,1);
+INSERT INTO `schema_version` VALUES (32,32,'7.3','Assign questions correctly','SQL','V7_3__Assign_questions_correctly.sql',-926276851,'root','2015-12-22 10:13:29',7,1);
+INSERT INTO `schema_version` VALUES (33,33,'7.4','Remove question numbers','SQL','V7_4__Remove_question_numbers.sql',1053837292,'root','2015-12-22 10:13:29',6,1);
+INSERT INTO `schema_version` VALUES (34,34,'7.5','Update Grant Percentage Question','SQL','V7_5__Update_Grant_Percentage_Question.sql',1437703137,'root','2015-12-22 10:13:29',5,1);
+INSERT INTO `schema_version` VALUES (35,35,'7.6','Update Questions Priority','SQL','V7_6__Update_Questions_Priority.sql',297101555,'root','2015-12-22 10:13:29',6,1);
+INSERT INTO `schema_version` VALUES (36,36,'8.1','Add FileEntry Table','SQL','V8_1__Add_FileEntry_Table.sql',519721898,'root','2015-12-22 10:13:29',15,1);
+INSERT INTO `schema_version` VALUES (37,37,'8.2','Add FileEntryId Column To FormInputResponse','SQL','V8_2__Add_FileEntryId_Column_To_FormInputResponse.sql',-564902485,'root','2015-12-22 10:13:29',71,1);
+INSERT INTO `schema_version` VALUES (38,38,'8.3','Update Other Funding','SQL','V8_3__Update_Other_Funding.sql',-545244305,'root','2015-12-22 10:13:29',11,1);
+INSERT INTO `schema_version` VALUES (39,39,'8.5','UpdateCompetitionDeadline','SQL','V8_5__UpdateCompetitionDeadline.sql',733388169,'root','2015-12-22 10:13:29',4,1);
+INSERT INTO `schema_version` VALUES (40,40,'9.1','RefactorProcesses','SQL','V9_1__RefactorProcesses.sql',1349902590,'root','2015-12-22 10:13:29',48,1);
+INSERT INTO `schema_version` VALUES (41,41,'9.2','Update question mark as done','SQL','V9_2__Update_question_mark_as_done.sql',318372711,'root','2015-12-22 10:13:29',5,1);
 /*!40000 ALTER TABLE `schema_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1379,4 +1383,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-21 15:22:12
+-- Dump completed on 2015-12-22 10:15:57
