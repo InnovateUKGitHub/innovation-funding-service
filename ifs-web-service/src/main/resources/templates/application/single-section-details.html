@@ -40,7 +40,7 @@
                      height="30"
                      th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
                      th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
-                     th:if="${(currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId()))}"/>
+                     th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"/>
         </li>
     </div>
 </ul>
