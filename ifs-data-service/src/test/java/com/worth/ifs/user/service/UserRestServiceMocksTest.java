@@ -1,13 +1,13 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
-import org.springframework.http.HttpMethod;
 
 
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
@@ -43,7 +43,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         User user2 = new User();
         user2.setPassword("user2");
 
-        User[] userList = new User[] { user1, user2 };
+        User[] userList = new User[]{user1, user2};
         ResponseEntity<User[]> responseEntity = new ResponseEntity<>(userList, HttpStatus.OK);
         when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findAll/", HttpMethod.GET, httpEntityForRestCall(), User[].class)).thenReturn(responseEntity);
 
@@ -51,6 +51,43 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    public void findExistingUserByEmailShouldReturnUserResource() {
+        UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
+
+        UserResource[] userResourceList = new UserResource[]{userResource};
+        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
+        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + userResource.getEmail() + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
+
+        List<UserResource> users = service.findUserByEmail(userResource.getEmail());
+        assertEquals(1, users.size());
+        assertEquals(userResource, users.get(0));
+    }
+
+    @Test
+    public void findingNonExistingUserByEmailShouldReturnEmptyList() {
+        String email = "email@test.test";
+
+        UserResource[] userResourceList = new UserResource[]{};
+        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
+        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + email + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
+
+        List<UserResource> users = service.findUserByEmail(email);
+        assertTrue(users.isEmpty());
+    }
+
+    @Test
+    public void searchingByEmptyUserEmailShouldReturnNull() {
+        String email = "";
+
+        UserResource[] userResourceList = new UserResource[]{};
+        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
+        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + email + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
+
+        List<UserResource> users = service.findUserByEmail(email);
+        assertTrue(users == null);
     }
 
     @Test
@@ -78,8 +115,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 organisationId
-                );
+        );
 
-        assertEquals(userResourceEnvelope.getEntity(),receivedResourceEnvelope.getEntity());
+        assertEquals(userResourceEnvelope.getEntity(), receivedResourceEnvelope.getEntity());
     }
 }

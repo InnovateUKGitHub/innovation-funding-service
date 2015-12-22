@@ -6,6 +6,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.Map;
 
 /**
@@ -28,15 +29,23 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         Map<String, String[]> parameterMap = webRequest.getParameterMap();
 
         // should validate these...
-        Integer year = Integer.valueOf(parameterMap.get("application.startDate.year")[0]);
-        Integer month = Integer.valueOf(parameterMap.get("application.startDate.monthValue")[0]);
-        Integer day = Integer.valueOf(parameterMap.get("application.startDate.dayOfMonth")[0]);
+        Integer year = returnZeroWhenNotValid(parameterMap, "application.startDate.year", ChronoField.YEAR);
+        Integer month = returnZeroWhenNotValid(parameterMap, "application.startDate.monthValue", ChronoField.MONTH_OF_YEAR);
+        Integer day = returnZeroWhenNotValid(parameterMap, "application.startDate.dayOfMonth", ChronoField.DAY_OF_MONTH);
 
         try {
             setValue(LocalDate.of(year, month, day));
         } catch (Exception ex) {
             log.error(ex);
             setValue(null);
+        }
+    }
+
+    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField) {
+        try {
+            return chronoField.checkValidIntValue(Long.valueOf(parameterMap.get(parameterName)[0]));
+        } catch (Exception e){
+            return (int)chronoField.range().getMinimum();
         }
     }
 }

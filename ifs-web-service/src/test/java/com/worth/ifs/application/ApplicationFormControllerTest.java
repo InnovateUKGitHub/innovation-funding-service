@@ -180,6 +180,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
+        // without assign or mark as complete, just redirect to application overview.
+
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
@@ -190,13 +192,37 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("formInput[application_details-startdate_month]", "11")
                         .param("formInput[application_details-title]", "New Application Title")
                         .param("formInput[application_details-duration]", "12")
-                        .param("mark_as_complete", "12")
-                        .param("mark_as_incomplete", "13")
                         .param("submit-section", "Save")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "applicationSaved"))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkAsComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("mark_as_complete", "12")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId+"**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkAsInComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("mark_as_complete", "12")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId +"**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
     }
 
@@ -251,7 +277,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/"+sectionId+"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "assignedQuestion"))
                 .andReturn();
