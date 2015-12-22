@@ -226,6 +226,7 @@ public abstract class AbstractApplicationController {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
+        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
         model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
 
         String formInputKey = "finance-grantclaim-" + organisationFinance.getGrantClaimPercentageId();

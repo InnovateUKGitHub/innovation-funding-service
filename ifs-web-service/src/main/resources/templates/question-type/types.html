@@ -104,6 +104,10 @@
                 </li>
             </ul>
         </div>
+
+        <p>
+            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+        </p>
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
@@ -123,7 +127,11 @@
             </label>
 
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title='', field='formInput['+${'finance-grantclaim-'+organisationgrantClaimPercentageId}+']')" th:remove="tag" />
+            <input type="number"
+                   class="width-small"
+                   id="cost-financegrantclaim"
+                   th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
+                   th:value="${organisationGrantClaimPercentage}" />
             <span>%</span>
         </div>
     </div>
