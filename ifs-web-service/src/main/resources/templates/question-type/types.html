@@ -106,6 +106,7 @@
         </div>
 
         <p>
+            <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
         </p>
     </div>
