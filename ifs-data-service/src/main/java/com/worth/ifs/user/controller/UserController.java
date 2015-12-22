@@ -50,13 +50,9 @@ public class UserController {
     @RequestMapping("/token/{token}")
      public User getUserByToken(@PathVariable("token") final String token) {
         List<User> users = repository.findByToken(token);
-            log.debug("+++++++++++++++++++++++");
-            log.debug(users.get(0).getName());
-            log.debug(users.get(0).getId());
-            log.debug("+++++++++++++++++++++++");
-        if (!users.isEmpty()){
+        if(users!=null && !users.isEmpty()) {
             return users.get(0);
-        }else{
+        } else {
             return null;
         }
     }
