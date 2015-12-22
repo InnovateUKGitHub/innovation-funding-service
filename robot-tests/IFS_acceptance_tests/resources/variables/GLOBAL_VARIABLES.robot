@@ -19,6 +19,7 @@ ${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9
 ${PROJECT_SUMMARY_URL}    ${SERVER}/application/1/form/question/11
+${PROJECT_SUMMARY_EDIT_URL}    ${SERVER}/application/1/form/question/edit/11
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/1/form/question/12
 ${SCOPE_URL}      ${SERVER}/application/1/form/question/13
 ${BUSINESS_OPPORTUNITY_URL}    ${SERVER}/application/1/form/question/1

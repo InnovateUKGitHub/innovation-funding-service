@@ -135,7 +135,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(bindingResult.hasErrors()){
             return "application-form";
         }else{
+            return getRedirectUrl(request, applicationId);
+        }
+    }
+
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId){
+        if(
+                request.getParameter("assign_question") != null ||
+                request.getParameter("mark_as_incomplete") != null ||
+                request.getParameter("mark_as_complete") != null
+        ){
+            // user did a action, just display the same page.
+            log.info("redirect: "+ request.getRequestURL().toString());
+            return "redirect:"+ request.getRequestURL().toString();
+        }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
+            log.info("default redirect: ");
             return "redirect:/application/"+applicationId;
         }
     }
@@ -357,8 +372,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(bindingResult.hasErrors()){
             return "application-form";
         }else{
-            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId;
+            return getRedirectUrl(request, applicationId);
         }
     }
 
