@@ -28,6 +28,7 @@ var IFSLoader = {
       IFS.pieChart.init();
       IFS.modal.init();
       IFS.closeCss.init();
+      IFS.passwordCheck.init();
     }
   },
   'app-form' : {

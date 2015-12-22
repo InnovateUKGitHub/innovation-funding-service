@@ -91,6 +91,14 @@ public class UserController {
         return users;
     }
 
+    @RequestMapping("/findByEmail/{email}/")
+    public List<UserResource> findByEmail(@PathVariable("email") final String email) {
+        List<User> users = repository.findByEmail(email);
+
+        List<UserResource> userResources = users.stream().map(u -> new UserResource(u)).collect(Collectors.toList());
+        return userResources;
+    }
+
     @RequestMapping("/findAssignableUsers/{applicationId}")
     public Set<User> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
