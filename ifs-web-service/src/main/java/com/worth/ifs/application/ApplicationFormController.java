@@ -136,7 +136,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+            return "redirect:/application/"+applicationId;
         }
     }
 
@@ -358,7 +358,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form" + "/section/" + sectionId;
+            return "redirect:/application/"+applicationId;
         }
     }
 
