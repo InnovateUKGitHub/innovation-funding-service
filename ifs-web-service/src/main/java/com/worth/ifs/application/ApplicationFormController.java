@@ -136,7 +136,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+            return "redirect:/application/"+applicationId;
         }
     }
 
@@ -264,19 +264,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                              @PathVariable("sectionId") final Long sectionId,
                              @PathVariable("questionId") final Long questionId,
                              HttpServletRequest request) {
-        log.debug("ADD another: " + sectionId + " questionID " + questionId);
-
         addCost(applicationId, questionId, request);
         return "redirect:/application/" + applicationId + "/form" +  "/section/" + sectionId;
     }
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
-        log.debug("ADD COST: " + applicationId + " questionID " + questionId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        log.debug("ADD COST 1: " + applicationId + " questionID " + questionId);
-
         ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
-        log.debug("ADD COST 2: " + applicationId + " questionID " + questionId);
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
@@ -286,7 +280,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetitionId());
-
         Map<Long, List<String>> errors = null;
         if(question != null) {
             errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
@@ -365,7 +358,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             return "application-form";
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form" + "/section/" + sectionId;
+            return "redirect:/application/"+applicationId;
         }
     }
 
@@ -398,7 +391,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
-
             if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
                 List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
@@ -482,6 +474,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
+            } else if(fieldName.startsWith("formInput[")) {
+                cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
             }
             financeFormHandler.storeField(cleanedFieldName, value);
         }
