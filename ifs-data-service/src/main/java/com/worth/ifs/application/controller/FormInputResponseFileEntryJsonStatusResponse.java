@@ -1,6 +1,7 @@
 package com.worth.ifs.application.controller;
 
 import com.worth.ifs.util.JsonStatusResponse;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -15,7 +16,7 @@ public class FormInputResponseFileEntryJsonStatusResponse extends JsonStatusResp
     }
 
     private FormInputResponseFileEntryJsonStatusResponse(String message, long fileEntryId) {
-        super(message);
+        super(message, HttpStatus.OK);
         this.fileEntryId = fileEntryId;
     }
 

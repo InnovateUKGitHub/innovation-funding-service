@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
@@ -34,9 +35,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -334,5 +333,25 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         String content = response.getResponse().getContentAsString();
         JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
         assertEquals("Error retrieving file", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testGetFileButFileNotFound() throws Exception {
+
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error(UNABLE_TO_FIND_FILE)));
+
+        MvcResult response = mockMvc.
+                perform(
+                        get("/forminputresponse/file").
+                                param("formInputId", "123").
+                                param("applicationId", "456").
+                                param("processRoleId", "789")).
+                andExpect(status().isNotFound()).
+                andDo(document("forminputresponse/file_fileDownload_notFound")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to find file", jsonResponse.getMessage());
     }
 }

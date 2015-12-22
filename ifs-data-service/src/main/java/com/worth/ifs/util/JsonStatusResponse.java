@@ -1,10 +1,14 @@
 package com.worth.ifs.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * This class represents the response of a JSON call, and provides factory methods to create standard response.
@@ -18,46 +22,58 @@ public class JsonStatusResponse {
 
     private String message;
 
+    @JsonIgnore
+    private HttpStatus status;
+
     @SuppressWarnings("unused")
     protected JsonStatusResponse() {
         // for JSON marshalling
     }
 
-    protected JsonStatusResponse(String message) {
+    protected JsonStatusResponse(String message, int statusCode) {
+        this(message, HttpStatus.valueOf(statusCode));
+    }
+
+    protected JsonStatusResponse(String message, HttpStatus status) {
         this.message = message;
+        this.status = status;
     }
 
     public static JsonStatusResponse ok() {
-        return new JsonStatusResponse("OK");
+        return new JsonStatusResponse("OK", SC_OK);
     }
 
     public static JsonStatusResponse ok(String message) {
-        return new JsonStatusResponse(message);
+        return new JsonStatusResponse(message, SC_OK);
     }
 
     public static JsonStatusResponse badRequest(String message, HttpServletResponse response) {
-        return getJsonStatusResponse(message, response, HttpServletResponse.SC_BAD_REQUEST);
+        return getJsonStatusResponse(message, response, SC_BAD_REQUEST);
     }
 
     public static JsonStatusResponse lengthRequired(String message, HttpServletResponse response) {
-        return getJsonStatusResponse(message, response, HttpServletResponse.SC_LENGTH_REQUIRED);
+        return getJsonStatusResponse(message, response, SC_LENGTH_REQUIRED);
     }
 
     public static JsonStatusResponse payloadTooLarge(String message, HttpServletResponse response) {
-        return getJsonStatusResponse(message, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
-    }
-
-    private static JsonStatusResponse getJsonStatusResponse(String message, HttpServletResponse response, int scRequestEntityTooLarge) {
-        sendHttpResponseCode(response, scRequestEntityTooLarge);
-        return new JsonStatusResponse(message);
+        return getJsonStatusResponse(message, response, SC_REQUEST_ENTITY_TOO_LARGE);
     }
 
     public static JsonStatusResponse internalServerError(String message, HttpServletResponse response) {
-        return getJsonStatusResponse(message, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return getJsonStatusResponse(message, response, SC_INTERNAL_SERVER_ERROR);
     }
 
     public static JsonStatusResponse unsupportedMediaType(String message, HttpServletResponse response) {
-        return getJsonStatusResponse(message, response, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        return getJsonStatusResponse(message, response, SC_UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    public static JsonStatusResponse notFound(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, SC_NOT_FOUND);
+    }
+
+    private static JsonStatusResponse getJsonStatusResponse(String message, HttpServletResponse response, int statusCode) {
+        sendHttpResponseCode(response, statusCode);
+        return new JsonStatusResponse(message, statusCode);
     }
 
     public String getMessage() {
@@ -66,6 +82,10 @@ public class JsonStatusResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 
     private static void sendHttpResponseCode(HttpServletResponse response, int httpServletResponseScCode) {

@@ -27,13 +27,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.JsonStatusResponse.*;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
+import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -55,6 +61,38 @@ public class FormInputResponseFileUploadController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    private interface ServiceFailureToJsonResponseHandler {
+        Optional<JsonStatusResponse> handle(ServiceFailure serviceFailure, HttpServletResponse response);
+    }
+
+    private class SimpleServiceFailureToJsonResponseHandler implements ServiceFailureToJsonResponseHandler {
+
+        private List<String> handledServiceFailures;
+        private BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction;
+
+        public SimpleServiceFailureToJsonResponseHandler(BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction, List<String> handledServiceFailures) {
+            this.handledServiceFailures = handledServiceFailures;
+            this.handlerFunction = handlerFunction;
+        }
+
+        public SimpleServiceFailureToJsonResponseHandler(List<Enum<?>> handledServiceFailures, BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction) {
+            this(handlerFunction, simpleMap(handledServiceFailures, Enum::name));
+        }
+
+        @Override
+        public Optional<JsonStatusResponse> handle(ServiceFailure serviceFailure, HttpServletResponse response) {
+
+            if (handledServiceFailures.containsAll(serviceFailure.getErrors())) {
+                return Optional.of(handlerFunction.apply(serviceFailure, response));
+            }
+            return empty();
+        }
+    }
+
+    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
+            new SimpleServiceFailureToJsonResponseHandler(asList(UNABLE_TO_FIND_FILE), (serviceFailure, response) -> notFound("Unable to find file", response))
+    );
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
     public JsonStatusResponse createFile(
@@ -102,7 +140,7 @@ public class FormInputResponseFileUploadController {
 
             return result.mapLeftOrRight(
                     failure ->
-                        left(new ResponseEntity<>(failure, HttpStatus.INTERNAL_SERVER_ERROR)),
+                        left(new ResponseEntity<>(failure, failure.getStatus())),
                     success -> {
                         FormInputResponseFileEntryResource fileEntry = success.getKey();
                         InputStream inputStream = success.getValue().get();
@@ -125,9 +163,21 @@ public class FormInputResponseFileUploadController {
                 applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
 
         return file.mapLeftOrRight(
-                failure -> Either.<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>left(internalServerError("Error retrieving file", response)),
-                success -> Either.<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>right(success.getResult())
+                failure -> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error retrieving file", response))),
+                success -> right(success.getResult())
         );
+    }
+
+    private Optional<JsonStatusResponse> handleServiceFailure(ServiceFailure serviceFailure, HttpServletResponse response) {
+
+        for (ServiceFailureToJsonResponseHandler handler : serviceFailureHandlers) {
+            Optional<JsonStatusResponse> result = handler.handle(serviceFailure, response);
+            if (result.isPresent()) {
+                return result;
+            }
+        }
+
+        return empty();
     }
 
     /**
@@ -156,16 +206,15 @@ public class FormInputResponseFileUploadController {
     }
 
     /**
-     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-     * response (an Either with a left of ServiceFailure).
-     *
-     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
+     * This wrapper wraps the serviceCode function, catching all exceptions thrown from within serviceCode and converting them into failing JsonStatusResponses.
      *
      * @param serviceCode
      * @return
      */
-    protected <SuccessType> Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>> handlingErrorsWithResponseEntity(Supplier<JsonStatusResponse> catchAllError, Supplier<Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>>> serviceCode) {
+    protected <SuccessType> Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>> handlingErrorsWithResponseEntity(
+            Supplier<JsonStatusResponse> catchAllError,
+            Supplier<Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>>> serviceCode) {
+
         try {
             Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>> response = serviceCode.get();
 

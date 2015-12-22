@@ -51,3 +51,7 @@ include::{snippets}/forminputresponse/file_fileDownload/curl-request.adoc[]
 ==== Failure cases
 ===== Internal error
 include::{snippets}/forminputresponse/file_fileDownload_internalServerError/http-response.adoc[]
+
+
+===== Not found
+include::{snippets}/forminputresponse/file_fileDownload_notFound/http-response.adoc[]
