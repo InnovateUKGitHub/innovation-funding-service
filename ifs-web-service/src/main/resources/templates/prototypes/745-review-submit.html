@@ -16,11 +16,7 @@
 	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-
-	<div class="hgroup" style="padding-top: 20px">
-        <p class="subtitle no-margin-bottom">Technology inspired - Application number: 12347353</p>
-        <h1 class="heading-xlarge no-margin-top">Application summary</h1>
-    </div>
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application summary'})" th:remove="tag" />
 
 	<p class="subtitle extra-margin">
         Please review your application before final submission. Any section where there are errors or problems with the content have been highlighted in red.
