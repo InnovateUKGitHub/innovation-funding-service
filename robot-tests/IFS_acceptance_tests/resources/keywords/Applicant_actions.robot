@@ -9,7 +9,7 @@ Applicant goes to the 'application details' question
     Go To    ${APPLICATION_DETAILS_URL}
 
 Applicant goes to the 'application summary' page for application 2
-    Go To   ${APPLICATION_2_SUMMARY_URL}
+    Go To    ${APPLICATION_2_SUMMARY_URL}
 
 Applicant goes to the 'economic benefits' question for application 2
     Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
@@ -88,103 +88,97 @@ the applicant is in the "Your Finances" sub-section
 the applicant is in the Finance section
     Go To    ${FINANCES}
 
-
-
-
-
 Applicant is on the overview page
-    Location Should Be  ${APPLICATION_OVERVIEW_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
-
+    Location Should contain    ${APPLICATION_OVERVIEW_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Application form
-    Location Should Be  ${APPLICATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${APPLICATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'application details' question
-    Location Should Be  ${APPLICATION_DETAILS_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
-
+    Location Should Be    ${APPLICATION_DETAILS_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'project summary' question
-    Location Should Be  ${PROJECT_SUMMARY_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_SUMMARY_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'public description' question
-    Location Should Be  ${PUBLIC_DESCRIPTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'scope' question
-    Location Should Be  ${SCOPE_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${SCOPE_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'business opportunity question'
-    Location Should Be  ${BUSINESS_OPPORTUNITY_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'potential market' question
-    Location Should Be  ${POTENTIAL_MARKET_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${POTENTIAL_MARKET_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'project exploitation' question
-    Location Should Be  ${PROJECT_EXPLOITATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_EXPLOITATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'economic benefit' question
-    Location Should Be  ${ECONOMIC_BENEFIT_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${ECONOMIC_BENEFIT_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'technical approach' question
-    Location Should Be  ${TECHNICAL APPROACH_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${TECHNICAL APPROACH_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'innovation' question
-    Location Should Be  ${INNOVATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${INNOVATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'risks' question
-    Location Should Be  ${RISKS_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${RISKS_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'funding' question
-    Location Should Be  ${FUNDING_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${FUNDING_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'adding value' question
-    Location Should Be  ${ADDING_VALUE_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${ADDING_VALUE_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the scope section
-    Location Should Be  ${SCOPE_SECTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${SCOPE_SECTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Application questions section
-    Location Should Be  ${APPLICATION_QUESTIONS_SECTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the "Your approach..." section
-    Location Should Be  ${PROJECT_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Finances section
-    Location Should Be  ${FINANCES}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${FINANCES}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
