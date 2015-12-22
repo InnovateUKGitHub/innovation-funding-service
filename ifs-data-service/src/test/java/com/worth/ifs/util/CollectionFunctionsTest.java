@@ -299,4 +299,14 @@ public class CollectionFunctionsTest {
     public void test_simpleJoiner() {
         assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
     }
+
+    @Test
+    public void test_simpleJoiner_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullElements() {
+        assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
+    }
 }

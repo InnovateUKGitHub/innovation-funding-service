@@ -189,6 +189,9 @@ public class CollectionFunctions {
      * @return
      */
     public static <T> String simpleJoiner(List<T> list, String joinString) {
-        return list.stream().map(Object::toString).collect(joining(joinString));
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
     }
 }
