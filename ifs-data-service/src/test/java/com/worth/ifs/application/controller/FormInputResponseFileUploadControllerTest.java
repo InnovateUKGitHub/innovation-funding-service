@@ -23,6 +23,7 @@ import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -147,6 +148,24 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
         assertEquals("Error creating file", jsonResponse.getMessage());
     }
+
+    @Test
+    public void testCreateFileButFormInputNotFound() throws Exception {
+        assertCreateFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+    }
+
+
+    @Test
+    public void testCreateFileButApplicationNotFound() throws Exception {
+        assertCreateFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+    }
+
+
+    @Test
+    public void testCreateFileButProcessRoleNotFound() throws Exception {
+        assertCreateFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+    }
+
 
     @Test
     public void testCreateFileButApplicationServiceCallFailsThrowsException() throws Exception {
@@ -337,8 +356,31 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetFileButFileNotFound() throws Exception {
+        assertGetFileButParameterNotFound(UNABLE_TO_FIND_FILE, "fileNotFound", "Unable to find file");
+    }
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error(UNABLE_TO_FIND_FILE)));
+    @Test
+    public void testGetFileButFormInputNotFound() throws Exception {
+        assertGetFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+    }
+
+    @Test
+    public void testGetFileButApplicationNotFound() throws Exception {
+        assertGetFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+    }
+
+    @Test
+    public void testGetFileButProcessRoleNotFound() throws Exception {
+        assertGetFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+    }
+
+    @Test
+    public void testGetFileButFormInputResponseNotFound() throws Exception {
+        assertGetFileButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
+    }
+
+    private void assertGetFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error(errorToReturn)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -347,11 +389,37 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isNotFound()).
-                andDo(document("forminputresponse/file_fileDownload_notFound")).
+                andDo(document("forminputresponse/file_fileDownload_" + documentationSuffix)).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
         JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
-        assertEquals("Unable to find file", jsonResponse.getMessage());
+        assertEquals(expectedMessage, jsonResponse.getMessage());
+    }
+
+    private void assertCreateFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> failureResponse =
+                left(error(errorToReturn));
+
+        when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/forminputresponse/file").
+                                param("formInputId", "123").
+                                param("applicationId", "456").
+                                param("processRoleId", "789").
+                                param("filename", "original.pdf").
+                                header("Content-Type", "application/pdf").
+                                header("Content-Length", "1000").
+                                content("My PDF content")).
+                andExpect(status().isNotFound()).
+                andDo(document("forminputresponse/file_fileUpload_" + documentationSuffix)).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals(expectedMessage, jsonResponse.getMessage());
     }
 }

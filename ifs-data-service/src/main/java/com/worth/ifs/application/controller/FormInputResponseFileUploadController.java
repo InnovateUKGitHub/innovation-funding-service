@@ -3,6 +3,8 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
+import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -28,12 +30,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.JsonStatusResponse.*;
@@ -62,36 +63,13 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private ApplicationService applicationService;
 
-    private interface ServiceFailureToJsonResponseHandler {
-        Optional<JsonStatusResponse> handle(ServiceFailure serviceFailure, HttpServletResponse response);
-    }
-
-    private class SimpleServiceFailureToJsonResponseHandler implements ServiceFailureToJsonResponseHandler {
-
-        private List<String> handledServiceFailures;
-        private BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction;
-
-        public SimpleServiceFailureToJsonResponseHandler(BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction, List<String> handledServiceFailures) {
-            this.handledServiceFailures = handledServiceFailures;
-            this.handlerFunction = handlerFunction;
-        }
-
-        public SimpleServiceFailureToJsonResponseHandler(List<Enum<?>> handledServiceFailures, BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction) {
-            this(handlerFunction, simpleMap(handledServiceFailures, Enum::name));
-        }
-
-        @Override
-        public Optional<JsonStatusResponse> handle(ServiceFailure serviceFailure, HttpServletResponse response) {
-
-            if (handledServiceFailures.containsAll(serviceFailure.getErrors())) {
-                return Optional.of(handlerFunction.apply(serviceFailure, response));
-            }
-            return empty();
-        }
-    }
-
     private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-            new SimpleServiceFailureToJsonResponseHandler(asList(UNABLE_TO_FIND_FILE), (serviceFailure, response) -> notFound("Unable to find file", response))
+
+            new SimpleServiceFailureToJsonResponseHandler(asList(UNABLE_TO_FIND_FILE), (serviceFailure, response) -> notFound("Unable to find file", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response))
     );
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
@@ -242,8 +220,8 @@ public class FormInputResponseFileUploadController {
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
         return creationResult.mapLeftOrRight(
-                failure -> Either.<JsonStatusResponse, FormInputResponseFileEntryResource> left(internalServerError("Error creating file", response)),
-                success -> Either.<JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getResult().getValue()));
+                failure -> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error creating file", response))),
+                success -> right(success.getResult().getValue()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
