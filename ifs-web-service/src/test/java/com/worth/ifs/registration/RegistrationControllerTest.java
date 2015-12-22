@@ -13,10 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,7 +29,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
     private RegistrationController registrationController;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         super.setup();
         setupUserRoles();
 
@@ -49,6 +50,67 @@ public class RegistrationControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
+        ;
+    }
+
+    @Test
+    public void missingOrganisationGetParameterChangesViewWhenViewingForm() throws Exception {
+        mockMvc.perform(get("/registration/register")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
+        ;
+    }
+
+    @Test
+    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenViewingForm() throws Exception {
+        mockMvc.perform(get("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
+        ;
+    }
+
+    @Test
+    public void missingOrganisationGetParameterChangesViewWhenSubmittingForm() throws Exception {
+        mockMvc.perform(post("/registration/register")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
+        ;
+    }
+
+    @Test
+    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenSubmittingForm() throws Exception {
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
+        ;
+    }
+
+    @Test
+    public void validButAlreadyExistingEmailInputShouldReturnErrorOnEmailField() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        List<UserResource> userResourceList = new ArrayList<>();
+        userResourceList.add(newUserResource().build());
+
+        String email = "alreadyexistingemail@test.test";
+
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(userService.findUserByEmail(email)).thenReturn(userResourceList);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", email)
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
     }
 
