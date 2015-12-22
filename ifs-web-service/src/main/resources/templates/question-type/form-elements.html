@@ -199,7 +199,8 @@
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
-            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() and
+                    !(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                  src="/images/field/field-assigned.png"
                  alt="This field is assigned to you"
                  title="This field is assigned to you"
