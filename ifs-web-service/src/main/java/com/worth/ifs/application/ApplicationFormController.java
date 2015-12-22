@@ -146,8 +146,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter("mark_as_complete") != null
         ){
             // user did a action, just display the same page.
-            log.info("redirect: "+ request.getRequestURL().toString());
-            return "redirect:"+ request.getRequestURL().toString();
+            log.info("redirect: "+ request.getPathInfo().toString());
+            return "redirect:"+ request.getPathInfo().toString();
         }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             log.info("default redirect: ");

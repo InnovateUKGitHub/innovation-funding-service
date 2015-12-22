@@ -43,6 +43,15 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return restGet(userRestURL + "/token/" + token, User.class);
     }
 
+    @NotSecured("Method should be able to be called by a web service for guest user that is creating his account to check for duplicate email")
+    public List<UserResource> findUserByEmail(String email) {
+        if(StringUtils.isEmpty(email))
+            return null;
+        ResponseEntity<UserResource[]> usersResponse = restGetEntity(userRestURL+"/findByEmail/"+email+"/", UserResource[].class);
+        UserResource[] users = usersResponse.getBody();
+        return Arrays.asList(users);
+    }
+
     public User retrieveUserByEmailAndPassword(String email, String password) {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
             return null;
@@ -95,7 +104,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return Arrays.asList(users);
     }
 
-    @NotSecured("Method should be able to be called by a guest user that is creating his account")
+    @NotSecured("Method should be able to be called by a web service for guest user to create an account")
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
