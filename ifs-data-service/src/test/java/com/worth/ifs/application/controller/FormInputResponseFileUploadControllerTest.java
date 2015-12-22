@@ -31,6 +31,14 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,6 +60,10 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testCreateFile() throws Exception {
 
+        // having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
+        // than JSON and XML
+        String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
+
         FormInputResponseFileEntryResource resourceExpectations = argThat(lambdaMatches(resource -> {
             assertEquals(123L, resource.getCompoundId().getFormInputId());
             assertEquals(456L, resource.getCompoundId().getApplicationId());
@@ -65,7 +77,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         }));
 
         Supplier<InputStream> inputStreamExpectations = argThat(lambdaMatches(inputStreamSupplier ->
-                assertInputStreamContents(inputStreamSupplier.get(), "My PDF content")));
+                assertInputStreamContents(inputStreamSupplier.get(), dummyContent)));
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> successResponse =
                 right(new ServiceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L))));
@@ -81,8 +93,28 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("filename", "original.pdf").
                                 header("Content-Type", "application/pdf").
                                 header("Content-Length", "1000").
-                                content("My PDF content")).
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(dummyContent)
+                        ).
                 andExpect(status().isOk()).
+                andDo(document("forminputresponse/file_fileUpload",
+                        requestParameters(
+                                parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
+                                parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput"),
+                                parameterWithName("filename").description("The filename of the file being uploaded")
+                        ),
+                        requestHeaders(
+                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"),
+                                headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes"),
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        ),
+                        requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")),
+                        responseFields(
+                                fieldWithPath("fileEntryId").description("Id of the FileEntry that was created"),
+                                fieldWithPath("message").description("A plain text descriptive message of the action that was performed e.g. \"File created successfully\"")
+                        ))
+                ).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -109,6 +141,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isInternalServerError()).
+                andDo(document("forminputresponse/file_fileUpload_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -153,6 +186,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "99999999").
                                 content("My PDF content")).
                 andExpect(status().isPayloadTooLarge()).
+                andDo(document("forminputresponse/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -173,6 +207,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 content("My PDF content")).
                 andExpect(status().isLengthRequired()).
+                andDo(document("forminputresponse/file_fileUpload_missingContentLength")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -194,6 +229,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
+                andDo(document("forminputresponse/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -214,6 +250,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
+                andDo(document("forminputresponse/file_fileUpload_missingContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -232,7 +269,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         }));
 
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
-        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned InputStream".getBytes());
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
         when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(new ServiceSuccess(Pair.of(fileEntryResource, inputStreamSupplier))));
 
@@ -241,11 +278,23 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/file").
                                 param("formInputId", "123").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
                 andExpect(status().isOk()).
+                andDo(document("forminputresponse/file_fileDownload",
+                        requestParameters(
+                                parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file for"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
+                                parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse")
+                        ),
+                        requestHeaders(
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        ))
+                ).
                 andReturn();
 
-        assertEquals("The returned InputStream", response.getResponse().getContentAsString());
+        assertEquals("The returned binary file data", response.getResponse().getContentAsString());
     }
 
     @Test
@@ -260,6 +309,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
+                andDo(document("forminputresponse/file_fileDownload_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
