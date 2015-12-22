@@ -74,4 +74,10 @@ public class UserServiceImpl implements UserService {
         ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
         return userResourceResourceStatusEnvelope;
     }
+
+    public List<UserResource> findUserByEmail(String email) {
+        List<UserResource> users = userRestService.findUserByEmail(email);
+
+        return users;
+    }
 }

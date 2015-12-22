@@ -14,7 +14,8 @@ public enum CostType {
     TRAVEL("travel"),
     OTHER_COSTS("other_costs"),
     YOUR_FINANCE("your_finance"),
-    FINANCE("finance");
+    FINANCE("finance"),
+    OTHER_FUNDING("other_funding");
 
     private String type;
 

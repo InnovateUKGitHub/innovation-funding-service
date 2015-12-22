@@ -104,6 +104,10 @@
                 </li>
             </ul>
         </div>
+
+        <p>
+            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+        </p>
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
@@ -123,7 +127,11 @@
             </label>
 
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
-            <div th:include="question-type/form-elements :: form-percentage (id='cost-financegrantclaim', title='', field='formInput['+${'finance-grantclaim-'+organisationgrantClaimPercentageId}+']')" th:remove="tag" />
+            <input type="number"
+                   class="width-small"
+                   id="cost-financegrantclaim"
+                   th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
+                   th:value="${organisationGrantClaimPercentage}" />
             <span>%</span>
         </div>
     </div>
@@ -255,8 +263,10 @@
                         </span>
                     </label>
                 </div>
+                <div class="alignright-button">
+                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                </div>
             </div>
-            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
         </div>
     </div>
 
@@ -348,8 +358,9 @@
                     </span>
                 </label>
             </div>
-            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
         </div>
     </div>
 
@@ -739,71 +750,78 @@
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getFormInputs().get(0).getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-       
 
-    <fieldset class="inline" id="otherCostsShowHideToggle">
-      <div class="form-group">
-        <label class="block-label" data-target="otherCostsForm" for="radio-indent-1">
-          <input id="otherCostsShowHideToggle-yes" name="radio-indent-group" value="Yes" type="radio" />
-          Yes
-        </label>
-
-        <label class="block-label" for="radio-indent-2">
-          <input id="otherCostsShowHideToggle-no" name="radio-indent-group" value="No" type="radio" />
-          No
-        </label>
-
-      </div>
-        <div class="form-group panel-indent js-hidden" id="otherCostsForm">
-            <table id="other-funding">
-                <thead>
-                <tr>
-                    <th scope="col">Source of Funding</th>
-                    <th scope="col">Date Applied for</th>
-                    <th scope="col" class="numeric">Amount Sought (£)</th>
-                    <th scope="col">Successful?</th>
-                    <th scope="col" class="numeric">Amount Secured or Still Sought</th>
-                    <th scope="col">Date of Decision</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td class="numeric">
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td class="numeric">
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <input type="text"/>
-                    </td>
-                    <td>
-                        <a href="#">Remove</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <p style="text-align: right;">
-        
-                <a class="add-another-row" href="#" data-clone-rows="0">Add another funding source</a>
-            </p>
+        <div th:attr="data-finance-subsection-table-container=${question.getId()}"
+             th:with="formInputType=${question.formInputs.get(0).formInputType},
+                               costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}
+                     ,type=${formInputType.title}">
+        <fieldset class="inline" id="otherFundingShowHideToggle">
+            <div class="form-block inline">
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}" 
+                       th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                       data-target="other-funding-table">
+                    <input type="radio"
+                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                           th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
+                           th:value="Yes"
+                           th:checked="${costCategory.otherFunding?.equals('Yes')}" 
+                           />
+                    Yes
+                </label>
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}" 
+                       th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
+                    <input type="radio"
+                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                           th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
+                           th:value="No"
+                           th:checked="${costCategory.otherFunding?.equals('No')}"/>
+                    No
+                </label>
+            </div>
+                <div class="form-group"  id="other-funding-table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Source of funding</th>
+                            <th class="width-medium">Date secured</th>
+                            <th class="width-medium">Funding amount (£)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="otherFunding : ${costCategory.costs}" >
+                            <tr>
+                                <td>
+                                    <label th:for="${'cost-'+type+'-'+otherFunding.id+'-source'}" class="visuallyhidden">Source of funding</label>
+                                    <input type="text" th:name="${type +'-fundingSource-' + otherFunding.id}" class="width-full" th:id="${'cost-'+type+'-'+otherFunding.id+'-source'}" th:value="${otherFunding.fundingSource}" />
+                                </td>
+                                <td>
+                                    <label th:for="${'cost-'+type+'-'+otherFunding.id+'-date'}" class="visuallyhidden">Date secured</label>
+                                    <input type="text" th:name="${type +'-dateSecured-' + otherFunding.id}" class="width-medium" th:id="${'cost-'+type+'-'+otherFunding.id+'-date'}" placeholder="MM-YYYY" th:value="${otherFunding.securedDate}" />
+                                </td>
+                                <td>
+                                    <label th:for="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" class="visuallyhidden">Funding amount (£)</label>
+                                    <input type="number" th:name="${type +'-fundingAmount-' + otherFunding.id}"  th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
+                                </td>
+                            </tr>
+                            </div>
+                        </tbody>
+                    </table>
+                    <p class="alignright">
+                        <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another source of funding</a>
+                    </p>
+                    <p>Your updated funding level is <strong>60%</strong></p>
+                    <details>
+                        <summary><span class="summary">Why has this changed?</span></summary>
+                        <div class="panel-indent">
+                            Help text required
+                        </div>
+                    </details>
+                </div>
+            </fieldset>
+            <div class="alignright-button extra-margin">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
         </div>
-    </fieldset>
-        
-
-
-
-
     </div>
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <div th:fragment="financial_summary" th:if="${financeTotalPerType}">

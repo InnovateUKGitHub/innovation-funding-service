@@ -16,6 +16,7 @@ public interface UserService {
     List<User> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    List<UserResource> findUserByEmail(String email);
     public Set<User> getAssignableUsers(ApplicationResource application);
     public Set<User> getApplicationUsers(ApplicationResource application);
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);

@@ -62,6 +62,11 @@
     </div>
 </div>
 
+<!-- =========================== Element: Application Title =========================== -->
+<div th:fragment="application-title (application, competition) ">
+    <h2 class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${application.getId()} "/>
+    <h2 class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${application.getId()} "/>
+</div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
     <div class="pie-container">

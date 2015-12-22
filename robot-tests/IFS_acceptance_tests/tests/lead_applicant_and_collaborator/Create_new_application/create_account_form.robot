@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
+...
+...               -INFUND-886:As an applicant I want the system to recognise an existing user profile if I try to create a new account with matching details so that I am prevented from creating a new duplicate profile
 Suite Setup       Login as user    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -9,21 +11,16 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-
-${correct_password}     password
-${incorrect_password}   wrongpassword
-${long_password}        passwordpasswordpasswordpasswordpasswordpasswordpassword
-${short_password}       pass
-${valid_email}          ewan@worth.systems
-${invalid_email}        notavalidemail
-
-
-
+${correct_password}    password
+${incorrect_password}    wrongpassword
+${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
+${short_password}    pass
+${valid_email}    ___ewan_@worth.systems
 
 *** Test Cases ***
 First name left blank
-    [Documentation]    -INFUND-885:
-    [Tags]    Account
+    [Documentation]    -INFUND-885
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user leaves the first name field blank
     And the user inputs a last name
@@ -36,8 +33,8 @@ First name left blank
     And the user cannot login with their new details
 
 Last name left blank
-    [Documentation]    -INFUND-885:
-    [Tags]    Account
+    [Documentation]    -INFUND-885
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user leaves the last name field blank
@@ -50,8 +47,8 @@ Last name left blank
     And the user cannot login with their new details
 
 Phone number left blank
-    [Documentation]    -INFUND-885:
-    [Tags]    Account
+    [Documentation]    -INFUND-885
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -65,7 +62,7 @@ Phone number left blank
 
 Email left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -78,7 +75,7 @@ Email left blank
 
 Password left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -92,7 +89,7 @@ Password left blank
 
 Re-type password left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user leaves the first name field blank
     And the user inputs a last name
@@ -104,23 +101,9 @@ Re-type password left blank
     Then the user should see an error
     And the user cannot login with their new details
 
-Invalid email used
-    [Documentation]    -INFUND-885
-    [Tags]    Account
-    Given the user is on the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs an invalid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
-    And the user submits their information
-    Then the user should see an error
-    And the user cannot login with the invalid email
-
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -134,7 +117,7 @@ Password and re-typed password do not match
 
 Password is too short
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -148,7 +131,7 @@ Password is too short
 
 Password is too long
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -162,7 +145,7 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account
+    [Tags]    Account    Validations
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -174,6 +157,19 @@ Valid account creation
     Then the user should be redirected to the login page
     And the user can login with their new details
     And the user can see the organisation they are associated with
+
+Email duplication check
+    [Documentation]    INFUND-886
+    [Tags]    Account    Validations
+    Given the user is on the account creation page
+    When the user inputs a first name
+    And the user inputs a last name
+    And the user inputs a phone number
+    And the user inputs a valid email address
+    And the user inputs a valid password
+    And the user retypes the password correctly
+    And the user submits their information
+    Then the user should see an error for the email duplication
 
 *** Keywords ***
 the user is on the account creation page
@@ -209,9 +205,6 @@ the user leaves the phone number field blank
 the user leaves the email address field blank
     Input Text    id=email    ${EMPTY}
 
-the user inputs an invalid email address
-    Input Text    id=email    notavalidemailaddress
-
 the user leaves the password field blank
     Input Password    id=password    ${EMPTY}
 
@@ -234,7 +227,7 @@ the user re-enters the long password
     Input Password    id=retypedPassword    ${long_password}
 
 the user submits their information
-    Select Checkbox     termsAndConditions
+    Select Checkbox    termsAndConditions
     Submit Form
 
 the user should see an error
@@ -273,10 +266,10 @@ the user cannot login with either password
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Contain     Please try again
-    go to   ${LOGIN_URL}
-    Input Text  id=id_email     ${valid_email}
-    Input Password  id=id_password      ${incorrect_password}
+    Page Should Contain    Please try again
+    go to    ${LOGIN_URL}
+    Input Text    id=id_email    ${valid_email}
+    Input Password    id=id_password    ${incorrect_password}
     Submit Form
     Page Should Contain    Please try again
 
@@ -292,3 +285,7 @@ the user can login with their new details
 the user can see the organisation they are associated with
     go to    ${ACCOUNT_CREATION_FORM_URL}
     Page Should Contain    Nomensa
+
+the user should see an error for the email duplication
+    Page Should Contain    We were unable to create your account
+    page should contain    This email address is already in use

@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
-    private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
+    private static final Log log = LogFactory.getLog(ApplicationFormController.class);
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @InitBinder
@@ -135,8 +135,23 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(bindingResult.hasErrors()){
             return "application-form";
         }else{
+            return getRedirectUrl(request, applicationId);
+        }
+    }
+
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId){
+        if(
+                request.getParameter("assign_question") != null ||
+                request.getParameter("mark_as_incomplete") != null ||
+                request.getParameter("mark_as_complete") != null
+        ){
+            // user did a action, just display the same page.
+            log.info("redirect: "+ request.getPathInfo().toString());
+            return "redirect:"+ request.getPathInfo().toString();
+        }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+            log.info("default redirect: ");
+            return "redirect:/application/"+applicationId;
         }
     }
 
@@ -151,7 +166,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (processRole != null) {
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
         } else {
-            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+            log.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
         }
         return showQuestion(form, bindingResult, model, applicationId, questionId, request);
     }
@@ -176,8 +191,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addPreviousQuestionToModel(Question previousQuestion, Long applicationId, Model model) {
-        String previousUrl = "";
-        String previousText = "";
+        String previousUrl;
+        String previousText;
 
         if(previousQuestion != null) {
             Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
@@ -194,8 +209,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNextQuestionToModel(Question nextQuestion, Long applicationId, Model model) {
-        String nextUrl = "";
-        String nextText = "";
+        String nextUrl;
+        String nextText;
 
         if(nextQuestion!=null) {
             Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
@@ -280,7 +295,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetitionId());
-
         Map<Long, List<String>> errors = null;
         if(question != null) {
             errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
@@ -312,7 +326,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
         // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> LOG.info("key " + key));
+        params.forEach((key, value) -> log.info("key " + key));
 
         boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
@@ -341,9 +355,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
-        bindingResult.getAllErrors().forEach((e) -> LOG.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
         bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, sectionId, null, request, response, bindingResult);
-        bindingResult.getAllErrors().forEach((e) -> LOG.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey("assign_question")) {
             assignQuestion(model, applicationId, request);
@@ -358,8 +372,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(bindingResult.hasErrors()){
             return "application-form";
         }else{
-            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form" + "/section/" + sectionId;
+            return getRedirectUrl(request, applicationId);
         }
     }
 
@@ -372,7 +385,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
 
-            if(errors.containsKey(questionId) && errors.get(questionId).size() > 0){
+            if(errors.containsKey(questionId) && !errors.get(questionId).isEmpty()){
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             }else{
@@ -392,12 +405,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
-
             if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
                 List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
                 if (errors.size() != 0) {
-                    LOG.error("save failed. " + question.getId());
+                    log.error("save failed. " + question.getId());
                     errorMap.put(question.getId(), new ArrayList<>(errors));
                 }
             }
@@ -414,15 +426,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(updatedApplication.getName() != null){
-            LOG.error("setApplicationDetails: "+ updatedApplication.getName());
+            log.error("setApplicationDetails: "+ updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
         if(updatedApplication.getStartDate() != null) {
-            LOG.error("setApplicationDetails: "+ updatedApplication.getStartDate());
+            log.error("setApplicationDetails: "+ updatedApplication.getStartDate());
             application.setStartDate(updatedApplication.getStartDate());
         }
         if(updatedApplication.getDurationInMonths() != null){
-            LOG.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
+            log.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }
@@ -442,10 +454,9 @@ public class ApplicationFormController extends AbstractApplicationController {
             String fieldName = request.getParameter("fieldName");
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
-            LOG.debug("INPUT ID: " + inputIdentifier);
             errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors);
             } else {
                 return this.createJsonObjectNode(true, null);
@@ -477,8 +488,9 @@ public class ApplicationFormController extends AbstractApplicationController {
             String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
+            } else if(fieldName.startsWith("formInput[")) {
+                cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
             }
-            LOG.debug("FIELDNAME: " + cleanedFieldName + " VALUE: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
         }
     }
@@ -543,7 +555,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setStartDate(startDate);
             applicationService.save(application);
         }catch(DateTimeException | NumberFormatException e){
-            LOG.error(e);
+            log.error(e);
             errors.add("Please enter a valid date.");
         }
         return errors;

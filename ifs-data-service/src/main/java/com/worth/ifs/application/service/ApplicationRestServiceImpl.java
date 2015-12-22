@@ -39,6 +39,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
 
+    @Value("${ifs.data.service.rest.processrole}")
+    String processRoleRestURL;
+
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
@@ -137,5 +140,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
         return restPost(url, application, ApplicationResource.class);
     }
+
+
+    @Override
+    public ApplicationResource findByProcessRoleId(Long id) {
+        return restGet(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
+    }
+
 
 }

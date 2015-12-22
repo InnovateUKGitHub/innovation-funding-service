@@ -3,8 +3,10 @@ package com.worth.ifs.assessment;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -22,11 +25,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -70,15 +74,16 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testCompetitionAssessmentDashboard() throws Exception {
-        List<Assessment> nonSubmittedAssessments = assessments.stream().filter(assessment -> !assessment.isSubmitted()).collect(Collectors.toList());
+        List<Assessment> nonSubmittedAssessments = assessments.stream().filter(a -> !a.isSubmitted()).collect(toList());
+        nonSubmittedAssessments.sort(new AssessmentStatusComparator());
 
-        mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competition.getId()))
-                .andExpect(view().name(competitionAssessments))
-                .andExpect(model().attribute("competition", competition))
-                .andExpect(model().attribute("assessments", Matchers.hasSize(nonSubmittedAssessments.size())))
-                .andExpect(model().attribute("assessments", Matchers.hasItems(nonSubmittedAssessments.get(0), nonSubmittedAssessments.get(1))))
-                .andExpect(model().attribute("submittedAssessments", submittedAssessments));
-
+        MvcResult mvcResult = mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competition.getId())).andReturn();
+        AssessmentDashboardModel model = this.attributeFromMvcResultModel(mvcResult, "model");
+        assertNotNull(model);
+        assertEquals(2, model.getAssessments().size());
+        assertEquals(nonSubmittedAssessments.get(0).getId(), model.getAssessments().get(0).getAssessment().getId());
+        assertEquals(submittedAssessments.get(0).getId(), model.getSubmittedAssessments().get(0).getAssessment().getId());
+        assertEquals(competition.getId(), model.getCompetition().getId());
     }
 
     @Test
@@ -95,13 +100,13 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(view().name(assessorDashboard))
                 .andExpect(model().attribute("competition", competitionService.getById(application.getCompetitionId())))
                 .andExpect(model().attributeDoesNotExist("assessment"));
-
     }
 
     @Test
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -118,6 +123,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         ApplicationResource application = applications.get(0);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -133,6 +139,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         when(applicationService.getById(anyLong())).thenReturn(application);
 
@@ -148,7 +155,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetitionId())));
     }
-    
+
 
     @Test
     public void testUpdateQuestionAssessmentFeedbackValid() throws Exception {
@@ -194,6 +201,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsReject() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
                 .andExpect(view().name(rejectInvitation))
@@ -211,7 +219,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Test
     public void testInvitationAnswerReject() throws Exception {
-        ApplicationResource application = applications.get(1);
+        ProcessRole assessorProcessRole = assessorProcessRoles.get(0);
 
         String reason = "Decline because of 123";
         String observations = "Observations 12345678";
@@ -219,11 +227,13 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 post("/assessor/invitation_answer")
                         .param("reject", "a")
                         .param("competitionId", "1")
-                        .param("applicationId", String.valueOf(application.getId()))
+                        .param("applicationId", String.valueOf(assessorProcessRole.getApplication().getId()))
                         .param("decisionReason", reason)
                         .param("observations", observations)
         ).andExpect(status().is3xxRedirection());
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).rejectAssessmentInvitation(eq(application.getId()), eq(assessor.getId()), any(Assessment.class));
+        Mockito.inOrder(assessmentRestService)
+                .verify(assessmentRestService, calls(1))
+                .rejectAssessmentInvitation(eq(assessorProcessRole.getId()), any(ProcessOutcome.class));
     }
 
     @Test
@@ -240,7 +250,9 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("competitionId", "1")
                         .param("applicationId", String.valueOf(application.getId()))
         ).andExpect(status().is3xxRedirection());
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).acceptAssessmentInvitation(eq(application.getId()), eq(assessor.getId()), any(Assessment.class));
+        Mockito.inOrder(assessmentRestService)
+                .verify(assessmentRestService, calls(1))
+                .acceptAssessmentInvitation(eq(assessment.getProcessRole().getId()), any(Assessment.class));
     }
 
     @Test
@@ -267,7 +279,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
         String feedback = "just because 345678";
         String isSuitable = "Yes, suitable for funding";
         String comments = "comment; x";
-        Double overallScore = 60.0;
         mockMvc.perform(
                 post("/assessor/competitions/{competitionId}/applications/{applicationId}/complete",
                         application.getCompetitionId(),
@@ -277,17 +288,16 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("is-suitable-for-funding", isSuitable)
                         .param("suitable-for-funding-feedback", feedback)
                         .param("comments-to-share", comments)
-                        .param("overall-score", overallScore + "")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/assessor/competitions/" + competition.getId() + "/applications"));
 
-        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments, overallScore);
+        Mockito.inOrder(assessmentRestService).verify(assessmentRestService, calls(1)).saveAssessmentSummary(assessor.getId(), application.getId(), isSuitable, feedback, comments);
     }
 
     private Assessment getAssessment(ApplicationResource application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> new ApplicationResource(a.getApplication()).equals(application)).findFirst();
-        Assert.assertTrue(optionalAssessment.isPresent());
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> new ApplicationResource(a.getProcessRole().getApplication()).equals(application)).findFirst();
+        assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }
 }

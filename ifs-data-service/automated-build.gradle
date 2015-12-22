@@ -20,3 +20,6 @@ project.ext['flyway.user']='ifs'
 project.ext['flyway.password']="ifs"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
+
+ext.cookieSecure=true
+ext.cookieHTTPOnly=false

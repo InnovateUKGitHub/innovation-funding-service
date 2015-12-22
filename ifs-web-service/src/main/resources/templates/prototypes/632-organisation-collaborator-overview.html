@@ -13,13 +13,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
 
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
   	 <div class="hgroup" style="padding-top: 20px">
         <p class="subtitle no-margin-bottom">Technology inspired - Application number: 12347353</p>
-        <h1 class="heading-xlarge no-margin-top">Application overview</h1>
+        <h1 class="heading-xlarge no-margin-top">Application team</h1>
     </div>
 
     <p>View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
@@ -40,7 +41,7 @@
         <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small></li>
     </ul>
 
-    <p><a href="./633-application-invite.html">Invite new contributers</a></p>
+    <p><a href="./633-application-invite.html" class="button">Invite new contributors</a></p>
   	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

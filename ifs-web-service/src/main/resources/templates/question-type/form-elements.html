@@ -178,7 +178,7 @@
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')
+                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
                             )
                        )
                        + ' ' +
@@ -199,7 +199,7 @@
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
-            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}"
+            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
                  alt="This field is assigned to you"
                  title="This field is assigned to you"
@@ -261,10 +261,10 @@
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                            th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
                             th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink"/>
-                    <div th:if="${questionAssignee?.getAssignee()?.getId() == assignableUser.getId()}"
+                    <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
             </ul>
@@ -308,7 +308,7 @@
             type="submit"
             name="mark_as_complete" 
             th:value="${question.getId()}"
-            th:class="${readonly}? 'button' : 'buttonlink'"
+            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
     </button>
     <button th:unless="${readonly}"
@@ -316,9 +316,10 @@
             type="submit"
             name="mark_as_incomplete"
             th:value="${question.getId()}"
-            class="buttonlink"
+            th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
+
 </div>
 <!-- ========================= edit link =========================== -->
 
@@ -335,8 +336,8 @@
     <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
 				<span class="count-message">Words remaining:</span>
-				<span class="count-down" aria-live="polite"
-                      th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
+				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
+				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:text="${maxWords}" th:classappend="${maxWords &lt; 0}? negative : positive" >0</span>
 		</span>
     </div>
 </div>

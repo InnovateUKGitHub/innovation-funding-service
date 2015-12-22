@@ -18,6 +18,6 @@ public interface ApplicationRestService {
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
     public void updateApplicationStatus(Long applicationId, Long statusId);
     public Double getCompleteQuestionsPercentage(Long applicationId);
-
     public Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
+    public ApplicationResource findByProcessRoleId(Long id);
 }

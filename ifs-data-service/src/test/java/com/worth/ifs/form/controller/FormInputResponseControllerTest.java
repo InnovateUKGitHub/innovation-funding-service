@@ -10,6 +10,8 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
+import java.util.List;
+
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -38,11 +40,10 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         Application application = newApplication().withId(123L).withProcessRoles(consortiumsProcessRoles).build();
         FormInput formInput = newFormInput().build();
 
-        FormInputResponse[] consortiumResponses = newFormInputResponse().withFormInputs(formInput).buildArray(2, FormInputResponse.class);
+        List<FormInputResponse> consortiumResponses = newFormInputResponse().withFormInputs(formInput).build(2);
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[0].getId())).thenReturn(singletonList(consortiumResponses[0]));
-        when(formInputResponseRepositoryMock.findByUpdatedById(consortiumsProcessRoles[1].getId())).thenReturn(singletonList(consortiumResponses[1]));
+        when(formInputResponseRepositoryMock.findByApplicationId(123L)).thenReturn(consortiumResponses);
 
         mockMvc.perform(post("/forminputresponse/findResponsesByApplication/123")
                 .contentType(MediaType.APPLICATION_JSON)

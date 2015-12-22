@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,6 +88,8 @@ public class RegistrationController {
     public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
         String destination = "registration-register";
 
+        checkForExistingEmail(registrationForm.getEmail(), bindingResult);
+
         if(!bindingResult.hasErrors()) {
             ResourceEnvelope<UserResource> userResourceEnvelope = createUser(registrationForm, getOrganisationId(request));
 
@@ -98,11 +101,19 @@ public class RegistrationController {
             }
 
         } else {
-            Organisation organisation = getOrganisation(request);
-            addOrganisationNameToModel(model, organisation);
+            if (!processOrganisation(request, model)) {
+                destination = "redirect:/login";
+            }
         }
 
         return destination;
+    }
+
+    private void checkForExistingEmail(String email, BindingResult bindingResult) {
+        List<UserResource> users = userService.findUserByEmail(email);
+        if(users!=null && !users.isEmpty()) {
+            bindingResult.addError(new FieldError("email", "email", email, false, null, null, "Email address is already in use"));
+        }
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<ResourceError> errors, BindingResult bindingResult) {

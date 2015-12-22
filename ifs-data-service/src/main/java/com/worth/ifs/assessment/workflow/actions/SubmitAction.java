@@ -22,7 +22,6 @@ public class SubmitAction implements Action<String, String> {
     @Override
     public void execute(StateContext<String, String> context) {
         Assessment updatedAssessment = (Assessment) context.getMessageHeader("assessment");
-        updatedAssessment.submit();
         updatedAssessment.setProcessStatus(context.getTransition().getTarget().getId());
         assessmentRepository.save(updatedAssessment);
     }

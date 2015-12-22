@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -29,8 +31,8 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         return Arrays.asList(restGet(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
     }
 
-    public Assessment getOneByAssessorAndApplication(Long assessorId, Long applicationId) {
-        return restGet(assessmentRestURL +"/findAssessmentByApplication/" + assessorId + "/" + applicationId, Assessment.class);
+    public Assessment getOneByProcessRole(Long processRoleId) {
+        return restGet(assessmentRestURL +"/findAssessmentByProcessRole/" + processRoleId, Assessment.class);
     }
 
 
@@ -56,13 +58,12 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         return restPost(assessmentRestURL +"/respondToAssessmentInvitation/", node, Boolean.class);
     }
 
-    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments, Double overallScore) {
+    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
         node.put("assessorId", assessorId);
         node.put("applicationId", applicationId);
         node.put("suitableValue", suitableValue);
-        node.put("overallScore", overallScore);
         node.put("suitableFeedback", HtmlUtils.htmlEscape(suitableFeedback));
         node.put("comments",  HtmlUtils.htmlEscape(comments));
         return restPost(assessmentRestURL +"/saveAssessmentSummary/", node, Boolean.class);
@@ -78,13 +79,19 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public void acceptAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
-        restPost(assessmentRestURL + "/acceptAssessmentInvitation/" + applicationId + "/" + assessorId, assessment, String.class);
+    public void acceptAssessmentInvitation(Long processId, Assessment assessment) {
+        restPost(assessmentRestURL + "/acceptAssessmentInvitation/" + processId, assessment, String.class);
     }
 
     @Override
-    public void rejectAssessmentInvitation(Long applicationId, Long assessorId, Assessment assessment) {
-        restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + applicationId + "/" + assessorId, assessment, String.class);
+    public void rejectAssessmentInvitation(Long processId, ProcessOutcome processOutcome) {
+        restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + processId, processOutcome, String.class);
     }
+
+    @Override
+    public Score getScore(Long id) {
+        return restGet(assessmentRestURL + "/" + id + "/score", Score.class);
+    }
+
 
 }
