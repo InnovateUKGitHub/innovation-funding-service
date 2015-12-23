@@ -89,14 +89,20 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                     try {
                         return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).map(tempFile ->
                                validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).map(tempFile ->
-                               updateFileForFileEntry(FileEntryResourceAssembler.valueOf(updatedFile), tempFile)).map(fileAndFileEntry ->
+                               updateFileEntry(updatedFile).map(updatedFileEntry ->
+                               updateFileForFileEntry(updatedFileEntry, tempFile).map(fileAndFileEntry ->
                                successResponse(fileAndFileEntry)
-                        );
+                        )));
                     } finally {
                         deleteFile(validationFile);
                     }
                 })
         );
+    }
+
+    private Either<ServiceFailure, FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {
+        FileEntry updated = fileEntryRepository.save(FileEntryResourceAssembler.valueOf(updatedFileDetails));
+        return right(updated);
     }
 
     private <T> Either<ServiceFailure, Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
