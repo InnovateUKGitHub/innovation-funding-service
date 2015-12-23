@@ -118,7 +118,7 @@ public class FormInputResponseFileUploadController {
 
             return result.mapLeftOrRight(
                     failure ->
-                        left(new ResponseEntity<>(failure, failure.getStatus())),
+                        Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> left(new ResponseEntity<>(failure, failure.getStatus())),
                     success -> {
                         FormInputResponseFileEntryResource fileEntry = success.getKey();
                         InputStream inputStream = success.getValue().get();
@@ -126,7 +126,7 @@ public class FormInputResponseFileUploadController {
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
                         httpHeaders.setContentType(fileEntry.getFileEntryResource().getMediaType());
-                        return right(new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK));
+                        return Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> right(new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK));
                     }
             );
 
