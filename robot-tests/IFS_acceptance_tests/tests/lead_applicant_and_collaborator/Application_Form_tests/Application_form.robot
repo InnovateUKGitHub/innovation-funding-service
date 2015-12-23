@@ -25,7 +25,6 @@ Verify the Autosave for the form text areas
     and the Applicant refreshes the page
     Then the text should be visible
 
-
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form

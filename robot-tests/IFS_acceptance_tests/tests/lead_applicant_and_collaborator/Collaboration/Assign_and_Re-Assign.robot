@@ -11,11 +11,6 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
-Verify that the assign button is visible in the overview page
-    [Tags]    Collaboration    Overview
-    When the Applicant is in the overview page
-    Then the assign button should be visible in the overview page
-
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration
@@ -61,8 +56,6 @@ Verify the Lead applicant can assign a question back to him self
     and the lead applicant re-assign the question to him self    Steve Smith
 
 *** Keywords ***
-
-
 When the Applicant assigns the public description question to the collaborator
     [Arguments]    ${assignee_name}
     Clear Element Text    css=#form-input-12 .editor
@@ -85,7 +78,6 @@ the Collaborator is in the public description section
     Click Element    css=input.button
     Applicant goes to the 'public description' question
 
-
 the Collaborator gets the assigned notification
     Wait Until Element Is Visible    css=#content > div.event-alert
     Element Should Contain    css=#content > div.event-alert > p    Steve Smith has assigned a question to you
@@ -102,16 +94,6 @@ the second Collaborator is logged in
     Input Text    id=id_email    pete.tom@egg.com
     Input Password    id=id_password    test
     Click Element    css=input.button
-
-the applicant clicks the assign to Lead applicant
-    Switch to the first browser
-    Applicant goes to the Application form
-    Click Element    css=#form-input-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-footer > button
-    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-
-the field should be re-assigned to the Applicant
-    Element Should Be Enabled    css=#form-input-12 .editor
-    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > button
 
 the public description question should be assigned to the collaborator
     Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count
@@ -130,14 +112,8 @@ the collaborator marks the public description question as complete
 the 'Last update' message should be updated
     Element Should Contain    css=#form-input-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-header > p > small    Last updated: Today by you
 
-the Applicant is in the overview page
-    Applicant goes to the Overview page
-
-the assign button should be visible in the overview page
-    Page Should Contain Element    css=#section-1 .list-overview > li:nth-child(3) div.assign-button button
-
 the question should show the assigned persons name
-    Element Should Contain    css=#form-input-12 .assignee span+span   Jessica Doe
+    Element Should Contain    css=#form-input-12 .assignee span+span    Jessica Doe
 
 the lead applicant re-assign the question to him self
     [Arguments]    ${assignee_name}
