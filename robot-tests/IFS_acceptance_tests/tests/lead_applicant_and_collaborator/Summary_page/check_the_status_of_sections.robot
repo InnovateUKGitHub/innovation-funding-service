@@ -7,6 +7,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/Application_question_edit_actions.robot
 
 *** Variables ***
 
@@ -27,20 +28,13 @@ Check that status is updated on the summary page after editing a section so it i
     Given applicant goes to the 'application summary' page for application 2
     And the applicant can see that the 'economic benefit' section is marked as complete
     When applicant goes to the 'economic benefit' question for application 2
-    And the applicant edits the 'economic benefit' question
+    The Applicant Edits The "economic Benefit" Question
     And applicant goes to the 'application summary' page for application 2
     Then none of the sections are marked as complete
 
 *** Keywords ***
-the applicant adds some content and marks this section as complete
-    Input Text    css=#form-input-4 .editor    This is some random text
-    Click Element    name=mark_as_complete
-
 the applicant can see that the 'economic benefit' section is marked as complete
     Page Should Contain    Complete
-
-the applicant edits the 'economic benefit' question
-    Click Element    name=mark_as_incomplete
 
 none of the sections are marked as complete
     Page Should Not Contain    Complete

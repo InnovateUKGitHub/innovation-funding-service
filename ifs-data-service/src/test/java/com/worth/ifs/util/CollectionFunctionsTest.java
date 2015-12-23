@@ -3,7 +3,10 @@ package com.worth.ifs.util;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -294,4 +297,44 @@ public class CollectionFunctionsTest {
     public void test_simpleFilterNot_nullElements() {
         assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
     }
+
+    @Test
+    public void testToLinkedMap() {
+        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5");
+        Map<String, String> orderedMap = orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
+        int index = 0;
+        for (Entry<String, String> entry : orderedMap.entrySet()) {
+            // Order is what we are testing
+            assertEquals(orderedList.get(index), entry.getKey());
+            assertEquals(orderedList.get(index) + orderedList.get(index), entry.getValue());
+            index++;
+        }
+        assertEquals(orderedList.size(), index);
+    }
+
+    @Test
+    public void testToLinkedMapDuplicateEntry() {
+        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5", "4");
+        try {
+            orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
+            fail("Should have failed with illegal state exception");
+        } catch (IllegalStateException e) {
+            // Expected  behaviour
+        }
+    }
+
+    public void test_simpleJoiner() {
+        assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullElements() {
+        assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
+    }
 }
+

@@ -81,3 +81,8 @@ include::assessment.adoc[]
 [[user]]
 == User
 include::user.adoc[]
+
+[[fileinputresponse]]
+== FormInputResponse
+include::forminputresponse.adoc[]
+

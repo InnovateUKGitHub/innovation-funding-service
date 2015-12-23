@@ -5,8 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error
@@ -65,11 +65,11 @@ public class ServiceFailure {
     }
 
     public static ServiceFailure error(List<String> messages) {
-        return new ServiceFailure(messages.stream().map(GlobalError::new).collect(toList()), null);
+        return new ServiceFailure(simpleMap(messages, GlobalError::new), null);
     }
 
     public static ServiceFailure error(List<String> messages, Throwable e) {
-        return new ServiceFailure(messages.stream().map(GlobalError::new).collect(toList()), e);
+        return new ServiceFailure(simpleMap(messages, GlobalError::new), e);
     }
 
     public static ServiceFailure error(String... messages) {
@@ -85,7 +85,7 @@ public class ServiceFailure {
     }
 
     public static ServiceFailure error(Enum<?>... messages) {
-        return error(asList(messages).stream().map(Enum::name).collect(toList()));
+        return error(simpleMap(asList(messages), Enum::name));
     }
 
     public static ServiceFailure error(Throwable e, String... messages) {
@@ -101,18 +101,32 @@ public class ServiceFailure {
     }
 
     public static ServiceFailure error(Throwable e, Enum<?>... messages) {
-        return error(asList(messages).stream().map(Enum::name).collect(toList()), e);
+        return error(simpleMap(asList(messages), Enum::name), e);
     }
 
     public boolean is(String... messages) {
-        List<String> containedErrors = errors.stream().map(GlobalError::getMessage).collect(toList());
+        List<String> containedErrors = simpleMap(errors, GlobalError::getMessage);
         List<String> messagesList = asList(messages);
         return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
     }
 
     public boolean is(Enum<?>... messages) {
-        List<String> var = asList(messages).stream().map(Enum::name).collect(toList());
+        List<String> var = simpleMap(asList(messages), Enum::name);
         return is(var.toArray(new String[var.size()]));
+    }
+
+    public boolean contains(Enum<?>... messages) {
+        List<String> messagesToCheck = simpleMap(asList(messages), Enum::name);
+        return contains(messagesToCheck.toArray(new String[messagesToCheck.size()]));
+    }
+
+    public boolean contains(String... messages) {
+        List<String> containedErrors = simpleMap(errors, GlobalError::getMessage);
+        return containedErrors.containsAll(asList(messages));
+    }
+
+    public List<String> getErrors() {
+        return simpleMap(errors, GlobalError::getMessage);
     }
 
     public Throwable getCause() {

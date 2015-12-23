@@ -23,3 +23,5 @@ project.ext['flyway.placeholderSuffix']='}'
 
 ext.cookieSecure=true
 ext.cookieHTTPOnly=false
+
+ext.ifsFileStorageLocation="/tmp"

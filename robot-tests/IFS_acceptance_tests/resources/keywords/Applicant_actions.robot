@@ -17,6 +17,12 @@ Applicant goes to the 'application summary' page for application 2
 Applicant goes to the 'economic benefit' question for application 2
     Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
 
+Applicant goes to the 'application overview' page for application 3
+    Go To    ${APPLICATION_3_OVERVIEW_URL}
+
+Applicant goes to the 'economic benefits' question for application 3
+    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
+
 Applicant goes to the 'project summary' question
     Go To    ${PROJECT_SUMMARY_URL}
 
