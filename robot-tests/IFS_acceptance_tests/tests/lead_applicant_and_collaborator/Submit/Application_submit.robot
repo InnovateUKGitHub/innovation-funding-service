@@ -14,14 +14,6 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
-Verify the "Review and submit" button (overview page)
-    [Documentation]    -INFUND-195
-    ...    -INFUND-214
-    [Tags]    Applicant    Submit    Review and Submit
-    When the applicant is in the overview page
-    Then the overview page should have the "Review & Submit" button
-    and the button should redirect to the summary page
-
 Verify the "review and submit" button (Form)
     [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the applicant is in the form

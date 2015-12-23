@@ -250,7 +250,7 @@
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="assign-buttons">
-    <div class="assign-container collapsible" th:if="${question.isAssignEnabled()}">
+    <div class="assign-container collapsible js-close-others" th:if="${question.isAssignEnabled()}">
 
         <div class="assign-button">
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
@@ -263,7 +263,8 @@
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
                             th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
-                            th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink"/>
+                            th:attrappend="formaction='&#35;question-'+${question.getId()}" 
+                            class="buttonlink"/>
                     <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
