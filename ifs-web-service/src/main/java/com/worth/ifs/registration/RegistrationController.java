@@ -48,6 +48,7 @@ public class RegistrationController {
     private final Log log = LogFactory.getLog(getClass());
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
+    public final static String EMAIL_FIELD_NAME = "email";
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request) {
@@ -110,9 +111,11 @@ public class RegistrationController {
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
-        List<UserResource> users = userService.findUserByEmail(email);
-        if(users!=null && !users.isEmpty()) {
-            bindingResult.addError(new FieldError("email", "email", email, false, null, null, "Email address is already in use"));
+        if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME)) {
+            List<UserResource> users = userService.findUserByEmail(email);
+            if (users != null && !users.isEmpty()) {
+                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
+            }
         }
     }
 
