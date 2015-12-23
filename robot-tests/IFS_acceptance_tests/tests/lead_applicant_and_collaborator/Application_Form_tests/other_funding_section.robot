@@ -13,20 +13,11 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 ${OTHER_FUNDING_SOURCE}     My mate Dave
 ${OTHER_FUNDING_DATE}       12-2008
-${OTHER_FUNDING_AMOUNT}     12345
+${OTHER_FUNDING_AMOUNT}     10000
 
 
 
 *** Test Cases ***
-
-#Try to add another source of funding and verify that a new row has been created
-#    [Documentation]     INFUND-438
-#    [Tags]  Applicant   Application     Finances    Other funding
-#    Given applicant goes to the 'Your finances' section
-#    And applicant can see that the 'No' radio button is selected
-#    And applicant selects 'Yes' for other funding
-#    Then applicant can see a new row
-
 
 
 Add details for another source of funding and verify that these details have bee autosaved
@@ -70,19 +61,14 @@ Applicant enters some details into this row
     Input Text   id=cost-other_funding-55-source            ${OTHER_FUNDING_SOURCE}
     Wait Until Element Is Visible               id=cost-other_funding-55-date
     Input Text   id=cost-other_funding-55-date              ${OTHER_FUNDING_DATE}
+    Wait Until Element Is Visible               id=cost-other_funding-55-fundingAmount
     Input Text   id=cost-other_funding-55-fundingAmount     ${OTHER_FUNDING_AMOUNT}
 
 Applicant can leave the 'Your finances' page but the details are still saved
     Reload Page
-    Alert Should Be Present
-    Applicant goes to the 'Your finances' section
-    Alert Should Be Present
-    Applicant selects 'Yes' for other funding
     Wait Until Element Is Visible       id=cost-other_funding-55-source
-    Page Should Contain     ${OTHER_FUNDING_SOURCE}
-    Page Should Contain     ${OTHER_FUNDING_DATE}
-    Page Should Contain     ${OTHER_FUNDING_AMOUNT}
-
+    Textfield Should Contain         cost-other_funding-55-source           ${OTHER_FUNDING_SOURCE}
+    Textfield Should Contain         cost-other_funding-55-date             ${OTHER_FUNDING_DATE}
 
 Applicant cannot see the 'other funding' details
     Page Should Not Contain     ${OTHER_FUNDING_SOURCE}
