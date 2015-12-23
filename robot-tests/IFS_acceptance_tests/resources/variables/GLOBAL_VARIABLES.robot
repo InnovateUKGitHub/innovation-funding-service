@@ -1,6 +1,6 @@
 *** Variables ***
 ${BROWSER}        Firefox
-${SERVER_BASE}    localhost:8080
+${SERVER_BASE}    localhost:8085
 ${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/login
