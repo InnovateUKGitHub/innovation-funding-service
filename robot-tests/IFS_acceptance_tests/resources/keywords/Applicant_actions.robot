@@ -8,8 +8,11 @@ Applicant goes to the Application form
 Applicant goes to the 'application details' question
     Go To    ${APPLICATION_DETAILS_URL}
 
+
+
 Applicant goes to the 'application summary' page for application 2
     Go To    ${APPLICATION_2_SUMMARY_URL}
+
 
 Applicant goes to the 'economic benefit' question for application 2
     Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
@@ -49,6 +52,9 @@ Applicant goes to the 'funding' question
 
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
+
+Applicant goes to the 'Your finances' section
+    Go To   ${YOUR_FINANCES_URL}
 
 Applicant edits the 'Project Summary' question
     Clear Element Text    css=#form-input-11 .editor
