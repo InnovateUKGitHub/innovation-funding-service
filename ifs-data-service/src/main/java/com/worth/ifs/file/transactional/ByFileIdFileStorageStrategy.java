@@ -62,8 +62,16 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     private List<String> getFullPathToContainingFolderAsSegments(IntFunction<String> folderNameFunction) {
-        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(asList(pathToStorageBase.split(separator)), asList(containingFolder));
+
+        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(asList(pathToStorageBase.split(separatorForSplit())), asList(containingFolder));
         List<String> fullPathToContainingFolder = simpleFilterNot(fullPathToContainingFolderWithEmptyElements, StringUtils::isBlank);
         return combineLists(fullPathToContainingFolder, range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList()));
+    }
+
+    private String separatorForSplit() {
+        if (separator.equals("\\")) {
+            return "\\\\";
+        }
+        return separator;
     }
 }

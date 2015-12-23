@@ -31,8 +31,8 @@ import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
-import static com.worth.ifs.util.FileFunctions.pathElementsToAbsoluteFile;
-import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
+import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
+import static com.worth.ifs.util.FileFunctions.pathElementsToPathString;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -60,7 +60,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Before
     public void setupTempFolders() {
         tempFolderPath = Files.createTempDir();
-        tempFolderPaths = simpleFilterNot(asList(tempFolderPath.getPath().split(File.separator)), StringUtils::isBlank);
+        tempFolderPaths = simpleFilterNot(asList(tempFolderPath.getPath().split(File.pathSeparator)), StringUtils::isBlank);
     }
 
     @After
@@ -106,7 +106,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             assertTrue(newFileResult.exists());
             assertEquals("thefilename", newFileResult.getName());
 
-            String expectedPath = pathElementsToAbsolutePathString(fullPathToNewFile);
+            String expectedPath = pathElementsToPathString(fullPathToNewFile);
             assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
 
             assertEquals("Fake Input Stream", Files.readFirstLine(newFileResult, defaultCharset()));
@@ -159,7 +159,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             assertTrue(secondFile.exists());
             assertEquals("thefilename2", secondFile.getName());
 
-            String expectedPath = pathElementsToAbsolutePathString(fullPathToNewFile);
+            String expectedPath = pathElementsToPathString(fullPathToNewFile);
             assertEquals(expectedPath + File.separator + "thefilename1", firstFile.getPath());
             assertEquals(expectedPath + File.separator + "thefilename2", secondFile.getPath());
 
@@ -248,13 +248,13 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             File firstFile = result1.getRight().getResult().getKey();
             assertTrue(firstFile.exists());
             assertEquals("samefilename", firstFile.getName());
-            String expectedPath1 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(0));
+            String expectedPath1 = pathElementsToPathString(fullPathsToNewFiles.get(0));
             assertEquals(expectedPath1 + File.separator + "samefilename", firstFile.getPath());
 
             File secondFile = result2.getRight().getResult().getKey();
             assertTrue(secondFile.exists());
             assertEquals("samefilename", secondFile.getName());
-            String expectedPath2 = pathElementsToAbsolutePathString(fullPathsToNewFiles.get(1));
+            String expectedPath2 = pathElementsToPathString(fullPathsToNewFiles.get(1));
             assertEquals(expectedPath2 + File.separator + "samefilename", secondFile.getPath());
 
         } finally {
@@ -264,6 +264,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testCreateFileFailureToCreateFoldersHandledGracefully() {
+
+        assumeNotWindows();
 
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
@@ -280,7 +282,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         // make the temp folder readonly so that the subfolder creation fails
-        File tempFolder = pathElementsToAbsoluteFile(tempFolderPaths);
+        File tempFolder = pathElementsToFile(tempFolderPaths);
         tempFolder.setReadOnly();
 
         try {
@@ -294,6 +296,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testCreateFileFailureToCreateFileHandledGracefully() {
+
+        assumeNotWindows();
 
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
@@ -310,7 +314,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         // make the target folder readonly so that the subfolder creation fails
-        File targetFolder = pathElementsToAbsoluteFile(fullPathToNewFile);
+        File targetFolder = pathElementsToFile(fullPathToNewFile);
         targetFolder.setReadOnly();
 
         try {
@@ -340,11 +344,11 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         // start by creating a new File to retrieve
         List<String> fullPathToNewFile = tempFolderPaths;
         List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
-        pathElementsToAbsoluteFile(fullPathPlusFilename).createNewFile();
+        pathElementsToFile(fullPathPlusFilename).createNewFile();
 
         try {
             Files.write("Plain text",
-                    pathElementsToAbsoluteFile(fullPathPlusFilename), defaultCharset());
+                    pathElementsToFile(fullPathPlusFilename), defaultCharset());
 
             FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
 
@@ -356,7 +360,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             assertInputStreamContents(inputStreamResult.getRight().getResult().get(), "Plain text");
         } finally {
-            pathElementsToAbsoluteFile(fullPathPlusFilename).delete();
+            pathElementsToFile(fullPathPlusFilename).delete();
         }
     }
 
@@ -366,12 +370,12 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         // start by creating a new File to retrieve
         List<String> fullPathToNewFile = tempFolderPaths;
         List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
-        pathElementsToAbsoluteFile(fullPathPlusFilename).createNewFile();
+        pathElementsToFile(fullPathPlusFilename).createNewFile();
 
         try {
 
             Files.write("Plain text",
-                    pathElementsToAbsoluteFile(fullPathPlusFilename), defaultCharset());
+                    pathElementsToFile(fullPathPlusFilename), defaultCharset());
 
             when(fileEntryRepository.findOne(123L)).thenReturn(null);
 
@@ -380,7 +384,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
 
         } finally {
-            pathElementsToAbsoluteFile(fullPathPlusFilename).delete();
+            pathElementsToFile(fullPathPlusFilename).delete();
         }
     }
 
@@ -427,6 +431,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateFileWithIncorrectContentType() throws IOException {
 
+        assumeNotWindows();
         assumeNotOsx();
 
         FileEntryResource fileResource = newFileEntryResource().
@@ -457,6 +462,14 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     private boolean isNotOsx() {
         return !System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    private boolean isNotWindows() {
+        return !System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
+    private void assumeNotWindows() {
+        assumeTrue(isNotWindows());
     }
 
     private void assumeNotOsx() {
