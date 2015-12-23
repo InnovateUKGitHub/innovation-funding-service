@@ -58,20 +58,40 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
             return startOfPartitionPadded + "_" + endForThisPartition;
         };
 
-        return Pair.of(getFullPathToContainingFolderAsSegments(folderNameFunction), id + "");
+        return Pair.of(getFullFolderPathToFileAsSegments(folderNameFunction), id + "");
     }
 
-    private List<String> getFullPathToContainingFolderAsSegments(IntFunction<String> folderNameFunction) {
+    private List<String> getFullFolderPathToFileAsSegments(IntFunction<String> folderNameFunction) {
 
-        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(asList(pathToStorageBase.split(separatorForSplit())), asList(containingFolder));
-        List<String> fullPathToContainingFolder = simpleFilterNot(fullPathToContainingFolderWithEmptyElements, StringUtils::isBlank);
-        return combineLists(fullPathToContainingFolder, range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList()));
+        List<String> fullPathToContainingFolder = getAbsolutePathToFileUploadFolder();
+        List<String> folderPathToFileWithinContainingFolder = range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList());
+        return combineLists(fullPathToContainingFolder, folderPathToFileWithinContainingFolder);
     }
 
-    private String separatorForSplit() {
-        if (separator.equals("\\")) {
+    private List<String> getAbsolutePathToFileUploadFolder() {
+        return getAbsolutePathToFileUploadFolder(separator);
+    }
+
+    List<String> getAbsolutePathToFileUploadFolder(String fileSeparator) {
+
+        // get an absolute path to the file upload folder, split into segments
+        String separatorToUseInSplit = separatorForSplit(fileSeparator);
+        List<String> pathToStorageBaseAsSegments = asList(pathToStorageBase.split(separatorToUseInSplit));
+        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(pathToStorageBaseAsSegments, asList(containingFolder));
+        List<String> fullPathWithNoEmptyElements = simpleFilterNot(fullPathToContainingFolderWithEmptyElements, StringUtils::isBlank);
+
+        // then if using a *nix path that starts with file separator e.g. /tmp/path, ensure that we retain the leading "/"
+        if (pathToStorageBase.startsWith(fileSeparator)) {
+            fullPathWithNoEmptyElements.set(0, fileSeparator + fullPathWithNoEmptyElements.get(0));
+        }
+
+        return fullPathWithNoEmptyElements;
+    }
+
+    private String separatorForSplit(String fileSeparator) {
+        if (fileSeparator.equals("\\")) {
             return "\\\\";
         }
-        return separator;
+        return fileSeparator;
     }
 }

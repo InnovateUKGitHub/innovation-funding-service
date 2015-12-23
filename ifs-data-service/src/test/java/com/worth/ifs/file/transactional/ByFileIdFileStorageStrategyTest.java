@@ -89,4 +89,22 @@ public class ByFileIdFileStorageStrategyTest {
             assertEquals(1000, currentPartitionsIdRange / childPartitionsIdRange);
         }
     }
+
+    @Test
+    public void testGetFullPathToFileUploadFolderWithUnixSeparator() {
+
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy("/tmp/path/to/containing/folder", "BaseFolder");
+
+        List<String> fullPathToFileUploadFolder = strategy.getAbsolutePathToFileUploadFolder("/");
+        assertEquals(asList("/tmp", "path", "to", "containing", "folder", "BaseFolder"), fullPathToFileUploadFolder);
+    }
+
+    @Test
+    public void testGetFullPathToFileUploadFolderWithWindowsSeparator() {
+
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy("c:\\tmp\\path\\to\\containing\\folder", "BaseFolder");
+
+        List<String> fullPathToFileUploadFolder = strategy.getAbsolutePathToFileUploadFolder("\\");
+        assertEquals(asList("c:", "tmp", "path", "to", "containing", "folder", "BaseFolder"), fullPathToFileUploadFolder);
+    }
 }
