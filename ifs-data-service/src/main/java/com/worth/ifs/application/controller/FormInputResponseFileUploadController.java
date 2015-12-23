@@ -103,7 +103,7 @@ public class FormInputResponseFileUploadController {
     }
 
     @RequestMapping(value = "/file", method = GET)
-    public @ResponseBody ResponseEntity<?> getFile(
+    public @ResponseBody ResponseEntity<?> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId,
@@ -125,8 +125,34 @@ public class FormInputResponseFileUploadController {
                         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
-                        httpHeaders.setContentType(fileEntry.getFileEntryResource().getMediaType());
+                        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));
                         return Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> right(new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK));
+                    }
+            );
+
+        }).mapLeftOrRight(failure -> failure, success -> success);
+    }
+
+    @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
+    public @ResponseBody ResponseEntity<?> getFileEntryDetails(
+            @RequestParam("formInputId") long formInputId,
+            @RequestParam("applicationId") long applicationId,
+            @RequestParam("processRoleId") long processRoleId,
+            HttpServletResponse response) throws IOException {
+
+        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error retrieving file", response);
+
+        return handlingErrorsWithResponseEntity(internalServerError, () -> {
+
+            Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
+                    doGetFile(formInputId, applicationId, processRoleId, response);
+
+            return result.mapLeftOrRight(
+                    failure ->
+                            Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> left(new ResponseEntity<>(failure, failure.getStatus())),
+                    success -> {
+                        FormInputResponseFileEntryResource fileEntry = success.getKey();
+                        return Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> right(new ResponseEntity<>(fileEntry, HttpStatus.OK));
                     }
             );
 

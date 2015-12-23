@@ -59,7 +59,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
             createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                 try {
-                    return validateMediaType(validationFile, resource.getMediaType()).map(tempFile ->
+                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).map(tempFile ->
                            validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
                            saveFileEntry(resource).map(savedFileEntry ->
                            createFileForFileEntry(savedFileEntry, tempFile)).map(fileAndFileEntry ->

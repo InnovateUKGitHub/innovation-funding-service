@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
@@ -277,7 +279,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFile() throws Exception {
+    public void testGetFileContents() throws Exception {
 
         FormInputResponseFileEntryId fileEntryIdExpectations = argThat(lambdaMatches(fileEntryId -> {
             assertEquals(123L, fileEntryId.getFormInputId());
@@ -316,7 +318,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileButApplicationServiceCallFails() throws Exception {
+    public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
         when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error("No files today!")));
 
@@ -336,7 +338,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileButApplicationServiceCallThrowsException() throws Exception {
+    public void testGetFileContentsButApplicationServiceCallThrowsException() throws Exception {
 
         when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenThrow(new RuntimeException("No files today!"));
 
@@ -355,28 +357,76 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileButFileNotFound() throws Exception {
+    public void testGetFileContentsButFileNotFound() throws Exception {
         assertGetFileButParameterNotFound(UNABLE_TO_FIND_FILE, "fileNotFound", "Unable to find file");
     }
 
     @Test
-    public void testGetFileButFormInputNotFound() throws Exception {
+    public void testGetFileContentsButFormInputNotFound() throws Exception {
         assertGetFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
     }
 
     @Test
-    public void testGetFileButApplicationNotFound() throws Exception {
+    public void testGetFileContentsButApplicationNotFound() throws Exception {
         assertGetFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
     }
 
     @Test
-    public void testGetFileButProcessRoleNotFound() throws Exception {
+    public void testGetFileContentsButProcessRoleNotFound() throws Exception {
         assertGetFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
-    public void testGetFileButFormInputResponseNotFound() throws Exception {
+    public void testGetFileContentsButFormInputResponseNotFound() throws Exception {
         assertGetFileButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
+    }
+
+    @Test
+    public void testGetFileEntryDetails() throws Exception {
+
+        FormInputResponseFileEntryId fileEntryIdExpectations = argThat(lambdaMatches(fileEntryId -> {
+            assertEquals(123L, fileEntryId.getFormInputId());
+            assertEquals(456L, fileEntryId.getApplicationId());
+            assertEquals(789L, fileEntryId.getProcessRoleId());
+            return true;
+        }));
+
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                with(id(5678L)).
+                withFilesizeBytes(1234L).
+                with(name("original filename.pdf")).
+                withMediaType("application/pdf").
+                build();
+
+        FormInputResponseFileEntryResource formInputFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(new ServiceSuccess(Pair.of(formInputFileEntryResource, inputStreamSupplier))));
+
+        MvcResult response = mockMvc.
+                perform(
+                        get("/forminputresponse/fileentry").
+                                param("formInputId", "123").
+                                param("applicationId", "456").
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isOk()).
+                andDo(document("forminputresponse/file_fileEntry",
+                        requestParameters(
+                                parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file entry for"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
+                                parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse")
+                        ),
+                        requestHeaders(
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        ))
+                ).
+                andReturn();
+
+        FormInputResponseFileEntryResource returnedFileEntryDetails = new ObjectMapper().readValue(response.getResponse().getContentAsString(), FormInputResponseFileEntryResource.class);
+        assertEquals(formInputFileEntryResource, returnedFileEntryDetails);
     }
 
     private void assertGetFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
