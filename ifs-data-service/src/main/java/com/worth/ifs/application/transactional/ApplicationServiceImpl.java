@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -41,6 +43,11 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    public enum ServiceFailures {
+        UNABLE_TO_CREATE_FILE, //
+        UNABLE_TO_FIND_FILE, //
+    }
 
     @Autowired
     private FileService fileService;
@@ -98,7 +105,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> fileDetails =
                 fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
 
-        return fileDetails.map(successfulFile -> {
+        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> fileDetails.map(successfulFile -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -125,7 +132,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
                 })));
             }
-        });
+        }));
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        return handlingErrors(UNABLE_TO_FIND_FILE, () -> getFormInputResponse(fileEntryId).
+                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier.getResult()))
+        )));
     }
 
     private Either<ServiceFailure, FormInput> getFormInput(long formInputId) {
@@ -134,14 +149,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private Either<ServiceFailure, Application> getApplication(long applicationId) {
         return getOrFail(() -> applicationRepository.findOne(applicationId), () -> error(APPLICATION_NOT_FOUND));
-    }
-
-    @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
-        return getFormInputResponse(fileEntryId).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier.getResult()))
-        ));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {

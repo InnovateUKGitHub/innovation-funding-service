@@ -318,10 +318,23 @@ public class CollectionFunctionsTest {
         try {
             orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
             fail("Should have failed with illegal state exception");
-        }
-        catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             // Expected  behaviour
         }
+    }
+
+    public void test_simpleJoiner() {
+        assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullElements() {
+        assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
     }
 }
 

@@ -20,7 +20,13 @@ ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
 ext.testIfsDatasourcePassword=""
 
-ext.ifsFileStorageLocation="/tmp"
+// Choose an appropriate location for a location to store uploaded files.
+// It is an OS-specific path, so choose the appropriate format depending on
+// whether you're on a *nix OS or a Windows OS.
+//
+// Note the 4 backslashes in Windows paths (this is to preserve the backslashes
+// so they are retained in application.properties during the processResource task)
+ext.ifsFileStorageLocation="/tmp or c:\\\\temp"
 
 ext.cookieSecure=false
 ext.cookieHTTPOnly=false

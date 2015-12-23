@@ -26,8 +26,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePath;
-import static com.worth.ifs.util.FileFunctions.pathElementsToAbsolutePathString;
+import static com.worth.ifs.util.FileFunctions.*;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
@@ -55,28 +54,22 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+
         return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
+
             createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                 try {
-                    return validateMediaType(validationFile, resource.getMediaType()).
-                            map(tempFile -> validateContentLength(resource.getFilesizeBytes(), tempFile)).
-                            map(tempFile -> saveFileEntry(resource).
-                                    map(savedFileEntry -> doCreateFile(savedFileEntry, tempFile)).
-                                    map(fileAndFileEntry -> successResponse(fileAndFileEntry))
-                            );
+                    return validateMediaType(validationFile, resource.getMediaType()).map(tempFile ->
+                           validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
+                           saveFileEntry(resource).map(savedFileEntry ->
+                           createFileForFileEntry(savedFileEntry, tempFile)).map(fileAndFileEntry ->
+                           successResponse(fileAndFileEntry))
+                    );
                 } finally {
                     deleteFile(validationFile);
                 }
-            }));
-    }
-
-    private void deleteFile(File file) {
-        try {
-            Files.delete(file.toPath());
-        } catch (IOException e) {
-            log.error("Unable to delete " + file);
-            log.error(e);
-        }
+            })
+        );
     }
 
     @Override
@@ -146,11 +139,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, Pair<File, FileEntry>> doCreateFile(FileEntry savedFileEntry, File tempFile) {
-        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
-        List<String> pathElements = filePathAndName.getLeft();
-        String filename = filePathAndName.getRight();
-        return doCreateFile(pathElements, filename, tempFile).map(file -> right(Pair.of(file, savedFileEntry)));
+    private Either<ServiceFailure, Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
+
+        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+        return createFileForFileEntry(pathElements, filename, tempFile).map(file -> right(Pair.of(file, savedFileEntry)));
     }
 
     private Either<ServiceFailure, FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -171,7 +165,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
             List<String> pathElements = filePathAndName.getLeft();
             String filename = filePathAndName.getRight();
-            File expectedFile = new File(pathElementsToAbsolutePathString(pathElements), filename);
+            File expectedFile = new File(pathElementsToFile(pathElements), filename);
             return expectedFile.exists() ? expectedFile : null;
 
         }, () -> {
@@ -180,9 +174,9 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         });
     }
 
-    private Either<ServiceFailure, File> doCreateFile(List<String> pathElements, String filename, File tempFile) {
+    private Either<ServiceFailure, File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
 
-        Path foldersPath = pathElementsToAbsolutePath(pathElements);
+        Path foldersPath = pathElementsToPath(absolutePathElements);
 
         return createFolders(foldersPath).
                 map(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
@@ -234,6 +228,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         } catch (IOException e) {
             log.error("Error closing file stream for file " + file, e);
             return errorResponse(UNABLE_TO_CREATE_FILE, e);
+        }
+    }
+
+    private void deleteFile(File file) {
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
+            log.error("Error deleting file", e);
         }
     }
 }
