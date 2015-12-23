@@ -222,8 +222,10 @@ public class FormInputResponseFileUploadController {
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
         return creationResult.mapLeftOrRight(
-                failure -> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error creating file", response))),
-                success -> right(success.getResult().getValue()));
+                failure ->
+                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error creating file", response))),
+                success ->
+                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getResult().getValue()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
