@@ -25,6 +25,9 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
+    @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
+    Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+
     @PreAuthorize("hasPermission(#fileEntry, 'READ')")
     Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntry);
 }

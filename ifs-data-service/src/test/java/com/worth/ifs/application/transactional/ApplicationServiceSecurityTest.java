@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.method.P;
 
 import java.io.File;
 import java.io.InputStream;
@@ -150,6 +151,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId id) {
+            return null;
+        }
+
+        @Override
+        public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
     }

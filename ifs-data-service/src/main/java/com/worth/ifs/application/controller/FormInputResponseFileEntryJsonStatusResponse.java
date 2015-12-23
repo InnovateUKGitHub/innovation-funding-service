@@ -24,6 +24,10 @@ public class FormInputResponseFileEntryJsonStatusResponse extends JsonStatusResp
         return new FormInputResponseFileEntryJsonStatusResponse("File created successfully", fileEntryId);
     }
 
+    public static FormInputResponseFileEntryJsonStatusResponse fileEntryUpdated(long fileEntryId) {
+        return new FormInputResponseFileEntryJsonStatusResponse("File updated successfully", fileEntryId);
+    }
+
     public long getFileEntryId() {
         return fileEntryId;
     }

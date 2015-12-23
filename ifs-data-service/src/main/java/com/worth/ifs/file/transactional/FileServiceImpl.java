@@ -16,10 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -40,6 +37,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     enum ServiceFailures {
         UNABLE_TO_CREATE_FOLDERS, //
         UNABLE_TO_CREATE_FILE, //
+        UNABLE_TO_UPDATE_FILE, //
         DUPLICATE_FILE_CREATED, //
         UNABLE_TO_FIND_FILE, //
         INCORRECTLY_REPORTED_MEDIA_TYPE, //
@@ -80,6 +78,34 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 map(fileEntry -> getInputStreamSuppier(fileEntry)).
                 map(inputStream -> successResponse(inputStream))
         );
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
+
+        return handlingErrors(UNABLE_TO_UPDATE_FILE, () ->
+
+                createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
+                    try {
+                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).map(tempFile ->
+                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).map(tempFile ->
+                               updateFileForFileEntry(FileEntryResourceAssembler.valueOf(updatedFile), tempFile)).map(fileAndFileEntry ->
+                               successResponse(fileAndFileEntry)
+                        );
+                    } finally {
+                        deleteFile(validationFile);
+                    }
+                })
+        );
+    }
+
+    private <T> Either<ServiceFailure, Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
+
+        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+
+        return updateFileForFileEntry(pathElements, filename, tempFile).map(file -> right(Pair.of(file, existingFileEntry)));
     }
 
     private Either<ServiceFailure, File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -182,6 +208,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 map(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
     }
 
+    private Either<ServiceFailure, File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
+
+        Path foldersPath = pathElementsToPath(absolutePathElements);
+        return updateExistingFileWithTempFile(foldersPath, filename, tempFile);
+    }
+
     private Either<ServiceFailure, File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
         try {
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
@@ -194,9 +226,25 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
             return right(targetFile.toFile());
         } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
-            log.error(e);
+            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return errorResponse(UNABLE_TO_CREATE_FILE);
+        }
+    }
+
+    private Either<ServiceFailure, File> updateExistingFileWithTempFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            File fileToCreate = new File(targetFolder.toString(), targetFilename);
+
+            if (!fileToCreate.exists()) {
+                log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
+                return errorResponse(UNABLE_TO_FIND_FILE);
+            }
+
+            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
+            return right(targetFile.toFile());
+        } catch (IOException e) {
+            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return errorResponse(UNABLE_TO_UPDATE_FILE);
         }
     }
 

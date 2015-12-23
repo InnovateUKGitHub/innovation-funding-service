@@ -11,7 +11,6 @@ import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.ByteArrayInputStream;
@@ -73,7 +72,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
             assertNull(resource.getFileEntryResource().getId());
             assertEquals(1000, resource.getFileEntryResource().getFilesizeBytes());
-            assertEquals(MediaType.parseMediaType("application/pdf"), resource.getFileEntryResource().getMediaType());
+            assertEquals("application/pdf", resource.getFileEntryResource().getMediaType());
             assertEquals("original.pdf", resource.getFileEntryResource().getName());
             return true;
         }));

@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_UPDATE_FILE;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -46,6 +47,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_FILE, //
+        UNABLE_TO_UPDATE_FILE, //
         UNABLE_TO_FIND_FILE, //
     }
 
@@ -102,10 +104,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> fileDetails =
-                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier);
-
-        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> fileDetails.map(successfulFile -> {
+        return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
+                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -133,6 +133,29 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 })));
             }
         }));
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+
+        return handlingErrors(UNABLE_TO_UPDATE_FILE, () -> {
+
+            Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> existingFileResult =
+                    getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
+
+            return existingFileResult.map(existingFile -> {
+
+                FormInputResponseFileEntryResource existingFormInputResource = existingFile.getResult().getLeft();
+
+                FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
+                FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
+                FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
+
+                return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).map(updatedFile ->
+                    successResponse(Pair.of(updatedFile.getResult().getKey(), existingFormInputResource))
+                );
+            });
+        });
     }
 
     @Override
