@@ -189,12 +189,12 @@ public class FormInputResponseFileUploadController {
      * @param serviceCode
      * @return
      */
-    protected <SuccessType> Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>> handlingErrorsWithResponseEntity(
+    protected Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> handlingErrorsWithResponseEntity(
             Supplier<JsonStatusResponse> catchAllError,
-            Supplier<Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>>> serviceCode) {
+            Supplier<Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<?>>> serviceCode) {
 
         try {
-            Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<SuccessType>> response = serviceCode.get();
+            Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> response = serviceCode.get();
 
             if (response.isLeft()) {
                 LOG.debug("Controller failure encountered");
