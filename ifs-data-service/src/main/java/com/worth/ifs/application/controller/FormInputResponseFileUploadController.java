@@ -141,8 +141,10 @@ public class FormInputResponseFileUploadController {
                 applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
 
         return file.mapLeftOrRight(
-                failure -> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error retrieving file", response))),
-                success -> right(success.getResult())
+                failure ->
+                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error retrieving file", response))),
+                success ->
+                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> right(success.getResult())
         );
     }
 
