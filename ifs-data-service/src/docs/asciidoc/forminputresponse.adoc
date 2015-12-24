@@ -47,6 +47,81 @@ include::{snippets}/forminputresponse/file_fileUpload_applicationNotFound/http-r
 include::{snippets}/forminputresponse/file_fileUpload_processRoleNotFound/http-response.adoc[]
 
 
+===== Content Length incorrectly reported in Content-Length header
+include::{snippets}/forminputresponse/file_fileUpload_incorrectlyReportedContentLength/http-response.adoc[]
+
+
+===== Content Type incorrectly reported in Content-Type header
+include::{snippets}/forminputresponse/file_fileUpload_incorrectlyReportedContentType/http-response.adoc[]
+
+
+===== Duplicate file encountered (file already exists)
+include::{snippets}/forminputresponse/file_fileUpload_duplicateFile/http-response.adoc[]
+
+
+
+=== Update file for existing response to a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponse/file_fileUpdate/http-request.adoc[]
+include::{snippets}/forminputresponse/file_fileUpdate/request-headers.adoc[]
+include::{snippets}/forminputresponse/file_fileUpdate/request-parameters.adoc[]
+include::{snippets}/forminputresponse/file_fileUpdate/request-fields.adoc[]
+
+===== Response
+include::{snippets}/forminputresponse/file_fileUpdate/http-response.adoc[]
+include::{snippets}/forminputresponse/file_fileUpdate/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponse/file_fileUpdate/curl-request.adoc[]
+
+
+==== Failure cases
+===== Internal Error
+include::{snippets}/forminputresponse/file_fileUpdate_internalServerError/http-response.adoc[]
+
+
+===== Content-Length header missing
+include::{snippets}/forminputresponse/file_fileUpdate_missingContentLength/http-response.adoc[]
+
+
+===== Payload too large
+include::{snippets}/forminputresponse/file_fileUpdate_payloadTooLarge/http-response.adoc[]
+
+
+===== Content-Type header missing
+include::{snippets}/forminputresponse/file_fileUpdate_missingContentType/http-response.adoc[]
+
+
+===== Unsupported Content-Type
+include::{snippets}/forminputresponse/file_fileUpdate_unsupportedContentType/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponse/file_fileUpdate_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponse/file_fileUpdate_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponse/file_fileUpdate_processRoleNotFound/http-response.adoc[]
+
+
+===== Content Length incorrectly reported in Content-Length header
+include::{snippets}/forminputresponse/file_fileUpdate_incorrectlyReportedContentLength/http-response.adoc[]
+
+
+===== Content Type incorrectly reported in Content-Type header
+include::{snippets}/forminputresponse/file_fileUpdate_incorrectlyReportedContentType/http-response.adoc[]
+
+
+===== File not found (no file to update)
+include::{snippets}/forminputresponse/file_fileUpdate_noFileFoundToUpdate/http-response.adoc[]
+
+
+
 === Download a file from a FormInputResponse
 ==== Success case
 ===== Request
