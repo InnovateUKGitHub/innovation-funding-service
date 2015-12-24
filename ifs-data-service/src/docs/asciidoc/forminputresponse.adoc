@@ -121,6 +121,44 @@ include::{snippets}/forminputresponse/file_fileUpdate_incorrectlyReportedContent
 include::{snippets}/forminputresponse/file_fileUpdate_noFileFoundToUpdate/http-response.adoc[]
 
 
+=== Get File Details for a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponse/file_fileEntry/http-request.adoc[]
+include::{snippets}/forminputresponse/file_fileEntry/request-headers.adoc[]
+include::{snippets}/forminputresponse/file_fileEntry/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/forminputresponse/file_fileEntry/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponse/file_fileEntry/curl-request.adoc[]
+
+==== Failure cases
+===== Internal error
+include::{snippets}/forminputresponse/file_fileEntry_internalServerError/http-response.adoc[]
+
+
+===== File not found
+include::{snippets}/forminputresponse/file_fileEntry_fileNotFound/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponse/file_fileEntry_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponse/file_fileEntry_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponse/file_fileEntry_processRoleNotFound/http-response.adoc[]
+
+
+===== Form Input Response not found
+include::{snippets}/forminputresponse/file_fileEntry_formInputResponseNotFound/http-response.adoc[]
+
+
 
 === Download a file from a FormInputResponse
 ==== Success case
