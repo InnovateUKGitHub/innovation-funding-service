@@ -339,6 +339,84 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void testUpdateFile() throws IOException {
+
+        FileEntryResource updatingFileEntry = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(30).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        try {
+
+            File existingFileToUpdate = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename")));
+            Files.createParentDirs(existingFileToUpdate);
+            existingFileToUpdate.createNewFile();
+
+            Files.write("Original content", existingFileToUpdate, defaultCharset());
+
+            when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(updatedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+            Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+
+            assertNotNull(result);
+            assertTrue(result.isRight());
+
+            File newFileResult = result.getRight().getResult().getKey();
+
+            assertTrue(newFileResult.exists());
+            assertEquals("thefilename", newFileResult.getName());
+
+            String expectedPath = pathElementsToPathString(fullPathToNewFile);
+            assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
+
+            assertEquals("Updated content should be here", Files.readFirstLine(newFileResult, defaultCharset()));
+
+        } finally {
+
+            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
+        }
+    }
+
+    @Test
+    public void testUpdateFileButNoFileExistsOnFilesystemToUpdate() throws IOException {
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        try {
+            when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(updatedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+            FileEntryResource expectedFileResourceForUpdate = newFileEntryResource().
+                    with(id(456L)).
+                    withFilesizeBytes(17).
+                    build();
+
+            Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.updateFile(expectedFileResourceForUpdate, fakeInputStreamSupplier());
+
+            assertNotNull(result);
+            assertTrue(result.isLeft());
+            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+
+        } finally {
+
+            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
+        }
+    }
+
+    @Test
     public void testGetFileByFileEntryId() throws IOException {
 
         // start by creating a new File to retrieve
@@ -456,7 +534,11 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     private Supplier<InputStream> fakeInputStreamSupplier() {
-        ByteArrayInputStream fakeInputStream = new ByteArrayInputStream("Fake Input Stream".getBytes(defaultCharset()));
+        return fakeInputStreamSupplier("Fake Input Stream");
+    }
+
+    private Supplier<InputStream> fakeInputStreamSupplier(String content) {
+        ByteArrayInputStream fakeInputStream = new ByteArrayInputStream(content.getBytes(defaultCharset()));
         return () -> fakeInputStream;
     }
 
