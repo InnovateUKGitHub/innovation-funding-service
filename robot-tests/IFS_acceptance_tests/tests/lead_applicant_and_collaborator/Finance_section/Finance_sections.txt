@@ -13,13 +13,13 @@ ${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk
 ${APPLICANT_PSW}    test
 
 *** Test Cases ***
-Verify the Finance sections
+Finance sub-sections
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
     When Applicant goes to the Your finances section
     Then the Applicant should see all the "Your Finance" Sections
 
-Verify the text guidance in the "Your Finance section"
+Guidance in the 'Your Finances' section
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
     Given Applicant goes to the Your finances section
