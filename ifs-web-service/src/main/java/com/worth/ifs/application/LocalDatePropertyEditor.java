@@ -17,7 +17,7 @@ import java.util.Map;
  * One other way to remove this class, would be to merge the day/month/year value into 1 form-input element.
  */
 public class LocalDatePropertyEditor extends PropertyEditorSupport {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(LocalDatePropertyEditor.class);
     private WebRequest webRequest;
 
     public LocalDatePropertyEditor(WebRequest webRequest) {
@@ -36,7 +36,7 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         try {
             setValue(LocalDate.of(year, month, day));
         } catch (Exception ex) {
-            log.error(ex);
+            LOG.error(ex);
             setValue(null);
         }
     }
@@ -45,6 +45,7 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         try {
             return chronoField.checkValidIntValue(Long.valueOf(parameterMap.get(parameterName)[0]));
         } catch (Exception e){
+            LOG.error(e);
             return (int)chronoField.range().getMinimum();
         }
     }
