@@ -417,6 +417,58 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void testUpdateFileWithIncorrectContentLength() throws IOException {
+
+        int incorrectFilesize = 1234;
+
+        FileEntryResource fileResource = newFileEntryResource().
+                with(id(null)).
+                withFilesizeBytes(incorrectFilesize).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(incorrectFilesize);
+
+        FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_FILESIZE));
+    }
+
+    @Test
+    public void testUpdateFileWithIncorrectContentType() throws IOException {
+
+        assumeNotWindows();
+        assumeNotOsx();
+
+        FileEntryResource fileResource = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(17).
+                withMediaType("application/pdf").
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17).withMediaType("application/pdf");
+
+        FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_MEDIA_TYPE));
+    }
+
+    @Test
     public void testGetFileByFileEntryId() throws IOException {
 
         // start by creating a new File to retrieve
