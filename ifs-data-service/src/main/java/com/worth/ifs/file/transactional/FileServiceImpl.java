@@ -34,7 +34,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private static final Log log = LogFactory.getLog(FileServiceImpl.class);
 
-    enum ServiceFailures {
+    public enum ServiceFailures {
         UNABLE_TO_CREATE_FOLDERS, //
         UNABLE_TO_CREATE_FILE, //
         UNABLE_TO_UPDATE_FILE, //

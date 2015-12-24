@@ -11,6 +11,7 @@ import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.ByteArrayInputStream;
@@ -24,6 +25,9 @@ import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_FILESIZE;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_MEDIA_TYPE;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
@@ -34,6 +38,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -97,7 +102,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(dummyContent)
                         ).
-                andExpect(status().isOk()).
+                andExpect(status().isCreated()).
                 andDo(document("forminputresponse/file_fileUpload",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
@@ -278,6 +283,21 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void testCreateFileButContentLengthHeaderMisreported() throws Exception {
+        assertCreateFileButErrorOccurs(INCORRECTLY_REPORTED_FILESIZE, "fileUpload", "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
+    }
+
+    @Test
+    public void testCreateFileButContentTypeHeaderMisreported() throws Exception {
+        assertCreateFileButErrorOccurs(INCORRECTLY_REPORTED_MEDIA_TYPE, "fileUpload", "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
+    }
+
+    @Test
+    public void testCreateFileButDuplicateFileEncountered() throws Exception {
+        assertCreateFileButErrorOccurs(DUPLICATE_FILE_CREATED, "fileUpload", "duplicateFile", CONFLICT, "File already exists");
+    }
+
+    @Test
     public void testGetFileContents() throws Exception {
 
         FormInputResponseFileEntryId fileEntryIdExpectations = argThat(lambdaMatches(fileEntryId -> {
@@ -447,6 +467,10 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     private void assertCreateFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
+        assertCreateFileButErrorOccurs(errorToReturn, "fileUpload", documentationSuffix, NOT_FOUND, expectedMessage);
+    }
+
+    private void assertCreateFileButErrorOccurs(Enum<?> errorToReturn, String documentationPrefix, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> failureResponse =
                 left(error(errorToReturn));
@@ -463,10 +487,10 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
-                andExpect(status().isNotFound()).
-                andDo(document("forminputresponse/file_fileUpload_" + documentationSuffix)).
+                andDo(document("forminputresponse/file_" + documentationPrefix + "_" + documentationSuffix)).
                 andReturn();
 
+        assertEquals(expectedStatus.value(), response.getResponse().getStatus());
         String content = response.getResponse().getContentAsString();
         JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
         assertEquals(expectedMessage, jsonResponse.getMessage());

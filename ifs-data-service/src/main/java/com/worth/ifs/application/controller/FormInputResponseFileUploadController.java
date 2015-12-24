@@ -17,7 +17,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +35,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryUpdated;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -40,9 +44,7 @@ import static com.worth.ifs.util.ParsingFunctions.validLong;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  *
@@ -68,7 +70,10 @@ public class FormInputResponseFileUploadController {
             new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input", response)),
             new SimpleServiceFailureToJsonResponseHandler(asList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
             new SimpleServiceFailureToJsonResponseHandler(asList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response)),
-            new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response))
+            new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(INCORRECTLY_REPORTED_FILESIZE), (serviceFailure, response) -> badRequest("Incorrectly reported filesize", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(INCORRECTLY_REPORTED_MEDIA_TYPE), (serviceFailure, response) -> unsupportedMediaType("Incorrectly reported Content Type", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(DUPLICATE_FILE_CREATED), (serviceFailure, response) -> conflict("File already exists", response))
     );
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
@@ -93,7 +98,7 @@ public class FormInputResponseFileUploadController {
                 map(filenameParameter -> validContentLength(lengthFromHeader, response).
                 map(validLength -> validMediaType(typeFromHeader, response).
                 map(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request, response).
-                map(fileEntry -> returnFileEntryCreatedResponse(fileEntry)
+                map(fileEntry -> returnFileEntryCreatedResponse(fileEntry, response)
             ))))));
 
             return result;
@@ -123,7 +128,7 @@ public class FormInputResponseFileUploadController {
                     map(filenameParameter -> validContentLength(lengthFromHeader, response).
                     map(validLength -> validMediaType(typeFromHeader, response).
                     map(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request, response).
-                    map(fileEntry -> returnFileEntryUpdatedResponse(fileEntry)
+                    map(fileEntry -> returnFileEntryUpdatedResponse(fileEntry, response)
             ))))));
 
             return result;
@@ -264,12 +269,12 @@ public class FormInputResponseFileUploadController {
         }
     }
 
-    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryCreatedResponse(FormInputResponseFileEntryResource fileEntry) {
-        return right(fileEntryCreated(fileEntry.getFileEntryResource().getId()));
+    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryCreatedResponse(FormInputResponseFileEntryResource fileEntry, HttpServletResponse response) {
+        return right(fileEntryCreated(fileEntry.getFileEntryResource().getId(), response));
     }
 
-    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryUpdatedResponse(FormInputResponseFileEntryResource fileEntry) {
-        return right(fileEntryUpdated(fileEntry.getFileEntryResource().getId()));
+    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryUpdatedResponse(FormInputResponseFileEntryResource fileEntry, HttpServletResponse response) {
+        return right(fileEntryUpdated(fileEntry.getFileEntryResource().getId(), response));
     }
 
     private Either<JsonStatusResponse, FormInputResponseFileEntryResource> createFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
