@@ -50,7 +50,6 @@
             <div th:unless="${companyHouseLookup.inCompanyHouse}" th:remove="tag">
                 <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
                 <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
-                <div th:include="create-application/fragments :: organisation-size" th:with="form=${companyHouseLookup}"></div>
                 <button type="submit button-large extra-margin" name="confirm-company-details" class="button">Continue</button>
             </div>
         </form>

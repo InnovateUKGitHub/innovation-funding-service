@@ -234,7 +234,8 @@ public class CreateApplicationController extends AbstractApplicationController {
             if (!bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
                 String name = org.getName();
                 String companyHouseNumber = org.getCompanyNumber();
-                Organisation organisation = new Organisation(null, name, companyHouseNumber, confirmCompanyDetailsForm.getOrganisationSize());
+                // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
+                Organisation organisation = new Organisation(null, name, companyHouseNumber, null);
 
                 OrganisationResource organisationResource = organisationService.save(organisation);
                 if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
