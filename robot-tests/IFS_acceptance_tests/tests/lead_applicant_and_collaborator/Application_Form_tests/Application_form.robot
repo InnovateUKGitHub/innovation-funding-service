@@ -38,23 +38,6 @@ Verify the navigation in the form sections
     Given Applicant goes to the Overview page
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
-Verify the last update metadata
-    [Documentation]    INFUND-283
-    ...    This test case has been commented because of the changes in the overview page
-    [Tags]    Applicant    Form
-    #Given the applicant is on the application overview page
-    #and opens the 'Your business proposition' section
-    #Then the last update date of question 1 is a date in the past
-    #Given the Applicant is in the application form
-    #and the applicant is on section 'Your business proposition'
-    #and the last update date of question 1 is a date in the past
-    #When the Applicant edits question 1
-    #and the Applicant refreshes the page
-    #Then the last update date should be updated
-    #and the applicant is on the application overview page
-    #and opens the 'Your business proposition' section
-    #and the last update date should be updated
-
 Verify that the word count is available
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
@@ -247,25 +230,5 @@ the question should not be marked as complete on the application overview page
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
     Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
-the last update date of question 1 is a date in the past
-    Page Should Contain Element    css=#question-1
-    Element Should Contain    css=#question-1    Last updated: 18 September 10:33AM by you
-
-the Applicant edits question 1
-    Clear Element Text    css=#question-1 textarea
-    Input Text    css=#question-1 textarea    Check last updated date.
-    Focus    css=.app-submit-btn
-    Sleep    2s
-
-the last update date should be updated
-    Page Should Contain Element    css=#question-1
-    Element Should Contain    css=#question-1    Last updated: Today by you
-
-the applicant is on section 'Your business proposition'
-    Go To    ${YOUR_BUSINESS_URL}
-
 the applicant is on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
-
-opens the 'Your business proposition' section
-    #Click Button    css=#section-3 button
