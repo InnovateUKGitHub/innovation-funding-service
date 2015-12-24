@@ -16,13 +16,13 @@ ${APPLICANT_PSW}    test
 Verify the Finance sections
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    When the applicant is in the "Your Finances" sub-section
+    When Applicant goes to the Your finances section
     Then the Applicant should see all the "Your Finance" Sections
 
 Verify the text guidance in the "Your Finance section"
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    When the applicant is in the "Your Finances" sub-section
+    Given Applicant goes to the Your finances section
     When the Applicant is in the Labour sub-section
     And the Applicant clicks the "Labour costs guidance"
     Then the guidance text should be visible

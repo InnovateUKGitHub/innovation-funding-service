@@ -56,7 +56,7 @@ Applicant goes to the 'funding' question
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
 
-Applicant goes to the 'Your finances' section
+Applicant goes to the Your finances section
     Go To    ${YOUR_FINANCES_URL}
 
 Applicant goes to the finance overview
