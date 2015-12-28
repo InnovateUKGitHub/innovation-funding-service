@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -77,7 +77,7 @@ public class FormInputResponseController {
 
         Optional<ProcessRole> applicantProcessRole = userAppRoles.stream()
                 .peek(r -> log.info("Role :" + r.getRole().getName()))
-                .filter(processRole -> processRole.getRole().getName().equals(APPLICANT.getName()) || processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())
+                .filter(processRole -> processRole.getRole().getName().equals(COLLABORATOR.getName()) || processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())
                 ).findFirst();
 
         Optional<FormInputResponse> response = applicantProcessRole.map(role -> {

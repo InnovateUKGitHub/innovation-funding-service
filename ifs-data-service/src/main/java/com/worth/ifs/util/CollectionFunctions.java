@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.*;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -219,5 +220,21 @@ public class CollectionFunctions {
      */
     public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
         return simpleFilter(list, element -> !filterFn.test(element));
+    }
+
+    /**
+     * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
+     * joinString
+     *
+     * @param list
+     * @param joinString
+     * @param <T>
+     * @return
+     */
+    public static <T> String simpleJoiner(List<T> list, String joinString) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
     }
 }

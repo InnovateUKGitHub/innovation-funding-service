@@ -288,4 +288,4 @@ the user can see the organisation they are associated with
 
 the user should see an error for the email duplication
     Page Should Contain    We were unable to create your account
-    page should contain    This email address is already in use
+    page should contain    Email address is already in use

@@ -19,7 +19,7 @@ import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputRe
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,7 +58,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         Application application = newApplication().withId(456L).build();
         User user = newUser().with(id(123L)).build();
-        ProcessRole applicantProcessRole = newProcessRole().withRole(newRole().withType(APPLICANT).build()).build();
+        ProcessRole applicantProcessRole = newProcessRole().withRole(newRole().withType(COLLABORATOR).build()).build();
 
         FormInput formInput = newFormInput().with(id(789L)).build();
 

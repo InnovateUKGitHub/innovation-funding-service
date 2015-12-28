@@ -52,11 +52,10 @@ IFS.collapsible = (function(){
 
             //close all other buttons on click, defined by the js-close-others class on the container element
             if(closeAll){
-                var container =  jQuery(this).closest('.collapsible');
-                container.find('[aria-expanded]').attr('aria-expanded','false');
-                container.find('[aria-hidden]').attr('aria-hidden','true');
+                jQuery('.collapsible [aria-expanded]').attr('aria-expanded','false');
+                jQuery('.collapsible [aria-hidden]').attr('aria-hidden','true');
             }
-
+            
             //toggle the current
             jQuery(this).attr('aria-expanded', state);
             panel.attr('aria-hidden', !state);
