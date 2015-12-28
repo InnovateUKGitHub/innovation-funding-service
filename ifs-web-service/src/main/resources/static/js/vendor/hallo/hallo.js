@@ -207,7 +207,7 @@
         return this.element.html(contents);
       },
       isModified: function() {
-        if (this.previousContent === undefined) {
+        if (typeof this.previousContent === "undefined") {
           this.previousContent = "";
           return true;
         }
