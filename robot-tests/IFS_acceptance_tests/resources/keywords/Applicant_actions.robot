@@ -3,7 +3,7 @@ Applicant goes to the Overview page
     go to    ${APPLICATION_OVERVIEW_URL}
 
 Applicant goes to the Application form
-    Go To    ${APPLICATION_URL}
+    Go To    ${PUBLIC_DESCRIPTION_URL}
 
 Applicant goes to the 'application details' question
     Go To    ${APPLICATION_DETAILS_URL}
@@ -76,7 +76,7 @@ Question should be editable
     sleep    2s
 
 Mark question 12 as editable
-    click Element    css=#question-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    click Element    css=#form-input-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
 
 Switch to the first browser
     Switch browser    1

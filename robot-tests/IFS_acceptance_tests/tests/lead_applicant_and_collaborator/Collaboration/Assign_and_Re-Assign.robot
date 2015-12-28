@@ -38,8 +38,11 @@ Verify the field is enabled for the collaborator/assignee
 Verify the ' Last update message'
     [Documentation]    INFUND-280
     [Tags]    Collaboration
-    When the collaborator marks the public description question as complete
+    When the collaborator edits public description question
     Then the 'Last update' message should be updated
+
+Verify collaborator mark as complete
+    When the collaborator marks question as complete
 
 Verify the field is disabled for the Collaborator
     [Documentation]    INFUND-275
@@ -68,8 +71,7 @@ the success message should show
     Element Should Contain    css=#content > div.event-alert    Question assigned successfully
 
 the field of the public description question should be disabled
-    sleep    2
-    Element Should Be Disabled    id=12
+    Wait Until Element Is Visible    css=#form-input-12 .readonly
 
 the Collaborator is in the public description section
     The guest user opens the browser
@@ -87,7 +89,7 @@ and the collaborator can see the 'assigned to you' in the overview page
     Element Should Contain    css=#form-input-12 .assign-container    You
 
 the public description question should not be editable
-    Element Should Be Disabled    id=12
+    Wait Until Element Is Visible    css=#form-input-12 .readonly
 
 the second Collaborator is logged in
     The guest user opens the browser
@@ -103,14 +105,16 @@ the public description question should be assigned to the collaborator
 the second Collaborator is in the public description question
     Applicant goes to the 'public description' question
 
-the collaborator marks the public description question as complete
+the collaborator edits public description question
     Applicant goes to the Application form
     Clear Element Text    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
-    Click Element    css=#form-input-12 .buttonlink
+    Focus    css=.app-submit-btn
+    Sleep    2s
+    Reload Page
 
 the 'Last update' message should be updated
-    Element Should Contain    css=#form-input-12 > div > div.textarea-wrapped.marked-as-complete.word-count > div.textarea-header > p > small    Last updated: Today by you
+    Element Should Contain    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
 the question should show the assigned persons name
     Element Should Contain    css=#form-input-12 .assignee span+span    Jessica Doe
@@ -126,3 +130,6 @@ the Applicant opens again the application form
     Reload Page
     Applicant goes to the Application form
     Mark question 12 as editable
+
+the collaborator marks question as complete
+    Click Element    css=#form-input-12 .buttonlink[name="mark_as_complete"]
