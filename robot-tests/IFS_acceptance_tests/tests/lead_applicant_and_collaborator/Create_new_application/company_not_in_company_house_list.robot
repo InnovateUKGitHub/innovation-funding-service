@@ -2,7 +2,7 @@
 Documentation     -INFUND-888 As an applicant I want to be able to manually add an unverified company as part of registration as I am not yet registered with Companies House so that I can enter a competition as a Start-up company
 Suite Teardown    User closes the browser
 Test Setup        Login as user    &{lead_applicant_credentials}
-Test Teardown     User closes the browser
+Test Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

@@ -4,7 +4,7 @@ Documentation     -INFUND-399: As a client, I would like to demo the system with
 ...
 ...               -INFUND-171: As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
 Suite Setup       The guest user opens the browser
-Suite Teardown    User closes the browser
+Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
