@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
-Suite Setup       Login as user    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Test Template     Invalid Email Check
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

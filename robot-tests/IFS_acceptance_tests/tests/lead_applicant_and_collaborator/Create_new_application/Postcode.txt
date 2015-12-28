@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-890 : As an applicant I want to use UK postcode lookup function to look up and enter my business address details as they won't necessarily be the same as the address held by Companies House, so that the system has accurate record of my contact details
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

@@ -2,8 +2,8 @@
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
 ...
 ...               -INFUND-886:As an applicant I want the system to recognise an existing user profile if I try to create a new account with matching details so that I am prevented from creating a new duplicate profile
-Suite Setup       Login as user    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
