@@ -6,7 +6,7 @@ var concat = require('gulp-concat');
 gulp.task('default',['js']);
 
 //build all js 
-gulp.task('js',['ifs-js','govuk-js','hallo-js']);
+gulp.task('js',['ifs-js','govuk-js','editor-js']);
 
 
 //concat and minify all the ifs files
@@ -37,11 +37,11 @@ gulp.task('govuk-js',function(){
   .pipe(gulp.dest('js/dest'))
 });
 
-gulp.task('hallo-js',function(){
+gulp.task('editor-js',function(){
   return gulp.src([
-    'js/vendor/hallo/*.js'
+    'js/vendor/wysiwyg-editor/*.js'
   ])
-  .pipe(concat('hallo.min.js'))
+  .pipe(concat('editor.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
 });

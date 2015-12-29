@@ -263,7 +263,7 @@ http://hallojs.org
     # Check whether the editable has been modified
     isModified: ->
       if typeof @previousContent == 'undefined'
-        @previousContent = ''
+        @previousContent = false
         return true
       changed = @previousContent != @getContents()
       @previousContent = @getContents()
