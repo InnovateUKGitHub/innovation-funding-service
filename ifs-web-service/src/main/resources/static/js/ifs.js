@@ -23,12 +23,12 @@ var IFSLoader = {
       IFS.conditionalForms.init();
       IFS.wordCount.init();
       IFS.editor.init();
+      IFS.formValidation.init();
     }, 
     finalize : function(){
       IFS.pieChart.init();
       IFS.modal.init();
       IFS.closeCss.init();
-      IFS.passwordCheck.init();
     }
   },
   'app-form' : {
