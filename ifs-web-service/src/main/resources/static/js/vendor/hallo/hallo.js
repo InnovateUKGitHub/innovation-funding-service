@@ -207,11 +207,12 @@
         return this.element.html(contents);
       },
       isModified: function() {
-        if (typeof this.previousContent === "undefined") {
-          this.previousContent = "";
+        var changed;
+        if (typeof this.previousContent === 'undefined') {
+          this.previousContent = '';
           return true;
         }
-        var changed = this.previousContent !== this.getContents()
+        changed = this.previousContent !== this.getContents();
         this.previousContent = this.getContents();
         return changed;
       },
