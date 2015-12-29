@@ -65,7 +65,7 @@ the Applicant is in the summary page
     Click Element    link=Review & submit
 
 the submit button should be disabled
-    Element Should Be Disabled    css=#content > div.alignright-button > a
+    Element Should Be Disabled    css=.alignright-button button
 
 Mark Question as complete
     Wait Until Element Is Visible    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
@@ -81,6 +81,8 @@ Clear the Project summary field
     Wait Until Element Is Visible    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
+    Focus    css=.app-submit-btn
+    Sleep    2s
 
 the link of the application should redirect to the submitted application page
     click link    link=A novel solution to an old problem
@@ -107,7 +109,7 @@ Applicant is in the sumary page
 
 Click to mark the question as complete if the if the question is editable
     [Arguments]    ${Text_Area}
-    ${status}    ${Value}=    Run Keyword And Ignore Error    Element Should Be Visible     jQuery=jQuery("button:contains('Mark as complete')");
+    ${status}    ${Value}=    Run Keyword And Ignore Error    Element Should Be Visible    jQuery=jQuery("button:contains('Mark as complete')");
     Run Keyword If    '${status}' == 'PASS'    Input Text    ${Text_Area}    test 123
-    Run Keyword If    '${status}' == 'PASS'    Click element     jQuery=jQuery("button:contains('Mark as complete')");
-    Run Keyword If    '${status}' == 'PASS'    Wait Until Element Is Visible     jQuery=jQuery("button:contains('Edit')");
+    Run Keyword If    '${status}' == 'PASS'    Click element    jQuery=jQuery("button:contains('Mark as complete')");
+    Run Keyword If    '${status}' == 'PASS'    Wait Until Element Is Visible    jQuery=jQuery("button:contains('Edit')");

@@ -1,8 +1,7 @@
 *** Settings ***
 Documentation     -INFUND-888 As an applicant I want to be able to manually add an unverified company as part of registration as I am not yet registered with Companies House so that I can enter a competition as a Start-up company
-Suite Teardown    User closes the browser
-Test Setup        Login as user    &{lead_applicant_credentials}
-Test Teardown     TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -85,6 +84,7 @@ the applicant can still see the address fields
     the applicant can see the fields to enter their address
 
 the applicant enters an address manually
+    Wait Until Element Is Visible    id=street
     Input Text    id=street    ${address_street_line_one}
     Input Text    id=street-2    ${address_street_line_two}
     Input Text    id=street-3    ${address_street_line_three}

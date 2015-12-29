@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-887 : As an applicant I want the option to look up my business organisation's details using Companies House lookup so I don’t have to type it in manually as part of the registration process
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

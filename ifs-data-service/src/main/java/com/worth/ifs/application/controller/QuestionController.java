@@ -66,11 +66,11 @@ public class QuestionController {
         setComplete(questionId, applicationId, markedAsInCompleteById, false);
     }
 
-    private void setComplete(Long questionId, Long applicationId, Long markedById, boolean markAsComplete) {
-        ProcessRole markedAsCompleteBy = processRoleRepository.findOne(markedById);
+    private void setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+        ProcessRole markedAsCompleteBy = processRoleRepository.findOne(processRoleId);
         Application application = applicationRepository.findOne(applicationId);
         Question question = questionRepository.findOne(questionId);
-        QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, markedById);
+        QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
         if (questionStatus == null) {
             questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
         } else if (markAsComplete) {
