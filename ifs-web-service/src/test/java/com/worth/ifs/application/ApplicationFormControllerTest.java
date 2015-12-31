@@ -418,7 +418,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElementApplicationStartDate() throws Exception {
-        String value = "30";
+        String value = "25";
         String questionId= "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
 
