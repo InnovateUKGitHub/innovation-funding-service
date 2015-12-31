@@ -209,7 +209,7 @@
       isModified: function() {
         var changed;
         if (typeof this.previousContent === 'undefined') {
-          this.previousContent = '';
+          this.previousContent = false;
           return true;
         }
         changed = this.previousContent !== this.getContents();
