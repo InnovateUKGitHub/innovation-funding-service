@@ -13,13 +13,15 @@ IFS.autoSave = (function(){
         init : function(){
             s = this.settings;
             var saveFields = s.inputs+','+s.textareas;
-            jQuery('body').on('change', saveFields, function(e){ 
-                IFS.autoSave.fieldChanged(e.target);
-            });
-            //wait until the user stops typing 
-            jQuery('body').on('keyup', saveFields, function(e) { 
-                clearTimeout(window.IFS.autoSave_timer);
-                window.IFS.autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
+            jQuery('body').on('change keyup', saveFields, function(e){
+                if(e.type == 'keyup'){
+                  //wait until the user stops typing
+                  clearTimeout(window.IFS.autoSave_timer);
+                  window.IFS.autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
+                }
+                else {
+                    IFS.autoSave.fieldChanged(e.target);
+                }
             });
         },
         fieldChanged : function (element){
