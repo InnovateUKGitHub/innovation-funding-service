@@ -24,4 +24,5 @@ public interface UserRestService {
     public List<User> findRelatedUsers(Long applicationId);
     public ProcessRole findProcessRoleById(Long processRoleId);
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

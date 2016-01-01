@@ -32,6 +32,9 @@
     <div th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" class="header-links">
         <ul class="navigation-list navigation-right">
             <li>
+                <a href="/profile/view">My profile</a>
+            </li>
+            <li>
                 <a th:href="${userDashboardLink}">My dashboard</a>
             </li>
             <li>
