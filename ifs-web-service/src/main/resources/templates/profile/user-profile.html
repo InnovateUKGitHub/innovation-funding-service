@@ -33,7 +33,11 @@
     <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a href="/profile/edit"> Edit your details</a></small></h2>
     <!--/*/ <th:block th:object="${userDetailsForm}">/*/-->
     <h3 class="heading-small">Your name</h3>
-    <p th:text="|*{title} *{firstName} *{lastName}|">Mr Joe Bloggs</p>
+    <p>
+        <span th:text="*{title}" th:remove="tag">Mr</span>
+        <span th:text="*{firstName}" th:remove="tag">Joe</span>
+        <span th:text="*{lastName}" th:remove="tag">Bloggs</span>
+    </p>
     <h3 class="heading-small">Phone number</h3>
     <p th:text="*{phoneNumber}">01234 567891</p>
     <h3 class="heading-small">Email address</h3>

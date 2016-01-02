@@ -74,7 +74,7 @@ public class ProfileController {
             ResourceEnvelope<UserResource> userResourceEnvelope = updateUser(loggedInUser, userDetailsForm);
 
             if(userResourceEnvelopeStatusIsOK(userResourceEnvelope)) {
-                destination = "profile/user-profile";
+                destination = viewUserProfile(model, request);
             } else {
                 addEnvelopeErrorsToBindingResultErrors(userResourceEnvelope.getErrors(), bindingResult);
             }
