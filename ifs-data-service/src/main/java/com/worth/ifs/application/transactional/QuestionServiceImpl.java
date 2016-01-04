@@ -45,16 +45,19 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     SectionService sectionService;
 
 
+    @Override
     public Question getQuestionById(final Long id) {
         return questionRepository.findOne(id);
     }
 
+    @Override
     public void markAsComplete(final Long questionId,
                                final Long applicationId,
                                final Long markedAsCompleteById){
         setComplete(questionId, applicationId, markedAsCompleteById, true);
     }
 
+    @Override
     public void markAsInComplete(final Long questionId,
                                  final Long applicationId,
                                  final Long markedAsInCompleteById){
@@ -76,6 +79,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         questionStatusRepository.save(questionStatus);
     }
 
+    @Override
     public void assign(final Long questionId,
                        final Long applicationId,
                        final Long assigneeId,
@@ -95,6 +99,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         questionStatusRepository.save(questionStatus);
     }
 
+    @Override
     public Set<Long> getMarkedAsComplete(Long applicationId,
                                          Long organisationId) {
         Application application = applicationRepository.findOne(applicationId);
@@ -134,6 +139,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
+    @Override
     public void updateNotification(final Long questionStatusId,
                                    final Boolean notify) {
         QuestionStatus questionStatus = questionStatusRepository.findOne(questionStatusId);
@@ -141,11 +147,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         questionStatusRepository.save(questionStatus);
     }
 
-
+    @Override
     public List<Question> findByCompetition(final Long competitionId) {
         return questionRepository.findByCompetitionId(competitionId);
     }
 
+    @Override
     public Question getNextQuestion(final Long questionId) {
         Question question = questionRepository.findOne(questionId);
         Question nextQuestion = null;
@@ -178,6 +185,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     }
 
+    @Override
     public Question getPreviousQuestionBySection(final Long sectionId) {
         Section section = sectionService.getById(sectionId);
         if(section!=null && section.getParentSection()!=null) {
@@ -192,6 +200,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
+    @Override
     public Question getNextQuestionBySection(final Long sectionId) {
         Section section = sectionService.getById(sectionId);
         if(section!=null && section.getParentSection()!=null) {
@@ -206,6 +215,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
+    @Override
     public Question getPreviousQuestion(final Long questionId) {
         Question question = questionRepository.findOne(questionId);
         Question previousQuestion = null;
@@ -230,6 +240,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
+    @Override
     public Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
         if(question.hasMultipleStatuses()) {
             return isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId);

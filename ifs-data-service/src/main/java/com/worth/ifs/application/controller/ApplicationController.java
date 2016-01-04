@@ -14,6 +14,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.user.domain.*;
@@ -58,7 +59,7 @@ public class ApplicationController {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    QuestionController questionController;
+    QuestionService questionService;
     @Autowired
     RoleRepository roleRepository;
     @Autowired
@@ -150,10 +151,10 @@ public class ApplicationController {
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
-                        .filter(q -> q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, org.getId())).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
                 .sum();
         Long countSingleStatusQuestionsCompleted = questions.stream()
-                .filter(q -> !q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, 0L)).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
         Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();

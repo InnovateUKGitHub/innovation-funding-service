@@ -7,6 +7,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -41,7 +42,7 @@ public class SectionController {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    QuestionController questionController;
+    QuestionService questionService;
 
     @RequestMapping("/getById/{sectionId}")
     public Section getById(@PathVariable("sectionId") final Long sectionId) {
@@ -134,7 +135,7 @@ public class SectionController {
             if (!question.isMarkAsCompletedEnabled())
                 continue;
 
-            boolean questionMarkedAsComplete = questionController.isMarkedAsComplete(question, applicationId, organisationId);
+            boolean questionMarkedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
             // if one of the questions is incomplete then the whole section is incomplete
             if (!questionMarkedAsComplete) {
                 sectionIsComplete = false;

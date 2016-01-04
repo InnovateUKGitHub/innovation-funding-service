@@ -169,27 +169,27 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(36L, nextQuestion.getId().longValue());
     }
 
-    @Test
-    public void testIsMarkedAsComplete() throws Exception {
-        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
-
-        controller.markAsComplete(questionId, applicationId, userId);
-
-        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
-    }
-
-    @Test
-    public void testIsMarkedAsCompleteMultiple() throws Exception {
-        question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE);
-
-
-        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
-
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 2L);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 8L);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
-
-        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
-    }
+//    @Test
+//    public void testIsMarkedAsComplete() throws Exception {
+//        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
+//
+//        controller.markAsComplete(questionId, applicationId, userId);
+//
+//        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
+//    }
+//
+//    @Test
+//    public void testIsMarkedAsCompleteMultiple() throws Exception {
+//        question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE);
+//
+//
+//        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
+//
+//        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
+//        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 2L);
+//        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 8L);
+//        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
+//
+//        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
+//    }
 }
