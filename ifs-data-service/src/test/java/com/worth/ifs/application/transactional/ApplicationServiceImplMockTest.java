@@ -32,6 +32,7 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
@@ -39,6 +40,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
+import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -133,7 +135,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(left(ServiceFailure.error("no files for you...")));
+                thenReturn(left(error("no files for you...")));
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -338,7 +340,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(left(ServiceFailure.error("no files for you...")));
+                thenReturn(left(error("no files for you...")));
 
         Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
                 service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
@@ -375,6 +377,83 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
+    public void testDeleteFormInputResponseFileUploadButFileServiceCallFails() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.deleteFile(999L)).thenReturn(left(error("No deleting for you!")));
+
+        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is("No deleting for you!"));
+    }
+
+    @Test
+    public void testDeleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(FORM_INPUT_RESPONSE_NOT_FOUND));
+    }
+
+    @Test
+    public void testDeleteFormInputResponseFileUploadButFileEntryNotFound() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(left(error(UNABLE_TO_FIND_FILE)));
+
+        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+    }
+
+    @Test
+    public void testDeleteFormInputResponseFileUploadButUnexpectedExceptionOccursAndHandledGracefully() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.deleteFile(999L)).thenThrow(new IllegalArgumentException("No deleting files today..."));
+
+        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_DELETE_FILE));
+    }
+
+
+    @Test
     public void testGetFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
@@ -406,7 +485,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(left(ServiceFailure.error("no files for you...")));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(left(error("no files for you...")));
 
         Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
