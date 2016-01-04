@@ -51,7 +51,7 @@ public class QuestionController {
         questionService.assign(questionId, applicationId, assigneeId, assignedById);
     }
 
-
+    @RequestMapping(value="/getMarkedAsComplete/{applicationId}/{organisationId}")
     public Set<Long> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
         return questionService.getMarkedAsComplete(applicationId, organisationId);
