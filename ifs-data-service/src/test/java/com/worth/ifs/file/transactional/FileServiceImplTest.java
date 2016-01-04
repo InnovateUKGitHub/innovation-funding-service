@@ -38,6 +38,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -466,6 +467,106 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_MEDIA_TYPE));
+    }
+
+    @Test
+    public void testDeleteFile() throws IOException {
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        try {
+
+            File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename")));
+            Files.createParentDirs(existingFileToDelete);
+            existingFileToDelete.createNewFile();
+            Files.write("Content to be deleted", existingFileToDelete, defaultCharset());
+            assertTrue(existingFileToDelete.exists());
+
+            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+            Either<ServiceFailure, ServiceSuccess<FileEntry>> result = service.deleteFile(456L);
+            assertNotNull(result);
+            assertTrue(result.isRight());
+
+            assertFalse(existingFileToDelete.exists());
+            verify(fileEntryRepository).delete(fileEntryToDelete);
+
+        } finally {
+
+            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
+        }
+    }
+
+    @Test
+    public void testDeleteFileButCantDeleteFile() throws IOException {
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename", "andachildthatwillstopdeletion")));
+
+        try {
+
+            Files.createParentDirs(existingFileToDelete);
+            existingFileToDelete.createNewFile();
+            Files.write("Content to be deleted", existingFileToDelete, defaultCharset());
+
+            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+            Either<ServiceFailure, ServiceSuccess<FileEntry>> result = service.deleteFile(456L);
+            assertNotNull(result);
+            assertTrue(result.isLeft());
+            assertTrue(result.getLeft().is(UNABLE_TO_DELETE_FILE));
+
+            assertTrue(existingFileToDelete.exists());
+            verify(fileEntryRepository).delete(fileEntryToDelete);
+
+        } finally {
+
+            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
+        }
+    }
+
+    @Test
+    public void testDeleteFileButNoFileExistsOnFilesystemToDelete() throws IOException {
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
+
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+
+        try {
+
+            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+            when(fileStorageStrategyMock.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+
+            Either<ServiceFailure, ServiceSuccess<FileEntry>> result = service.deleteFile(456L);
+            assertNotNull(result);
+            assertTrue(result.isLeft());
+            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+
+        } finally {
+
+            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
+        }
+    }
+
+    @Test
+    public void testDeleteFileButNoFileEntryExistsInDatabase() throws IOException {
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(null);
+
+        Either<ServiceFailure, ServiceSuccess<FileEntry>> result = service.deleteFile(456L);
+        assertNotNull(result);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
     }
 
     @Test

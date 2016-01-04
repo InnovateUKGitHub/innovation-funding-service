@@ -38,6 +38,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         UNABLE_TO_CREATE_FOLDERS, //
         UNABLE_TO_CREATE_FILE, //
         UNABLE_TO_UPDATE_FILE, //
+        UNABLE_TO_DELETE_FILE, //
         DUPLICATE_FILE_CREATED, //
         UNABLE_TO_FIND_FILE, //
         INCORRECTLY_REPORTED_MEDIA_TYPE, //
@@ -98,6 +99,26 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                     }
                 })
         );
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<FileEntry>> deleteFile(long fileEntryId) {
+
+        return handlingErrors(UNABLE_TO_DELETE_FILE, () ->
+            findFileEntry(fileEntryId).
+            map(fileEntry -> findFile(fileEntry).
+            map(file -> {
+
+                fileEntryRepository.delete(fileEntry);
+
+                boolean fileDeletedSuccessfully = file.delete();
+
+                if (fileDeletedSuccessfully) {
+                    return successResponse(fileEntry);
+                } else {
+                    return errorResponse(UNABLE_TO_DELETE_FILE);
+                }
+            })));
     }
 
     private Either<ServiceFailure, FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {

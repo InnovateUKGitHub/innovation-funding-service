@@ -22,4 +22,6 @@ public interface FileService {
     Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId);
 
     Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier);
+
+    Either<ServiceFailure, ServiceSuccess<FileEntry>> deleteFile(long fileEntryId);
 }
