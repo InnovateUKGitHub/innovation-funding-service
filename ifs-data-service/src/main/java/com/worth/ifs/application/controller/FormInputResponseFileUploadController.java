@@ -193,6 +193,24 @@ public class FormInputResponseFileUploadController {
         }).mapLeftOrRight(failure -> failure, success -> success);
     }
 
+    @RequestMapping(value = "/file", method = DELETE, produces = "application/json")
+    public @ResponseBody JsonStatusResponse deleteFileEntry(
+            @RequestParam("formInputId") long formInputId,
+            @RequestParam("applicationId") long applicationId,
+            @RequestParam("processRoleId") long processRoleId,
+            HttpServletResponse response) throws IOException {
+
+        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error deleting file", response);
+
+        return handlingErrors(internalServerError, () -> {
+
+            FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+            return applicationService.deleteFormInputResponseFileUpload(compoundId).
+                    mapLeftOrRight(failure -> left(internalServerError.get()), success -> right(ok()));
+
+        }).mapLeftOrRight(failure -> failure, success -> success);
+    }
+
     private Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId, HttpServletResponse response) {
 
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
