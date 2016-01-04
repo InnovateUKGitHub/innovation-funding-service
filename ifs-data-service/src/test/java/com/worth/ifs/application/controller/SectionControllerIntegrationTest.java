@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 
 import static org.junit.Assert.*;
 
+@Rollback
 public class SectionControllerIntegrationTest extends BaseControllerIntegrationTest<SectionController> {
 
     @Autowired
@@ -63,7 +64,6 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         this.controller = controller;
     }
 
-    @Rollback
     @Test
     public void testGetById() throws Exception {
         Section section = controller.getById(sectionId);
@@ -76,7 +76,6 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     /**
      * Check if all sections under Your-Finances is marked-as-complete.
      */
-    @Rollback
     @Test
     public void testChildSectionsAreCompleteForAllOrganisations() throws Exception {
         excludedSections = null;

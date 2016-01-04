@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+@Rollback
 public class QuestionControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionController> {
 
 
@@ -45,7 +46,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         this.controller = controller;
     }
 
-    @Rollback
     @Test
     public void testGetQuestionById() throws Exception {
         question = controller.getQuestionById(questionId);
@@ -54,7 +54,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals("How does your project align with the scope of this competition?", question.getName());
     }
 
-    @Rollback
     @Test
     public void testMarkAsComplete() throws Exception {
         controller.markAsComplete(questionId, applicationId, userId);
@@ -67,7 +66,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         );
     }
 
-    @Rollback
     @Test
     public void testMarkAsInComplete() throws Exception {
         controller.markAsInComplete(questionId, applicationId, userId);
@@ -80,7 +78,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     }
 
-    @Rollback
      @Test
      public void testAssign() throws Exception {
         controller.assign(questionId, applicationId, newAssigneeProcessRoleId, userId);
@@ -93,13 +90,11 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Ignore
-    @Rollback
     @Test
     public void testAssignMultiple() throws Exception {
         //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
     }
 
-    @Rollback
     @Test
     public void testGetMarkedAsComplete() throws Exception {
         // Start with zero completed
@@ -120,7 +115,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(7, markedAsComplete.size());
     }
 
-    @Rollback
     @Test
     public void testUpdateNotification() throws Exception {
         QuestionStatus questionStatus = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionId, applicationId, userId);
@@ -136,7 +130,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertFalse(questionStatus.getNotified());
     }
 
-    @Rollback
     @Test
     public void testFindByCompetition() throws Exception {
         List<Question> questions = controller.findByCompetition(competitionId);
@@ -145,7 +138,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(questions.size() > 5);
     }
 
-    @Rollback
     @Test
     public void testGetNextQuestion() throws Exception {
         Question nextQuestion = controller.getNextQuestion(9L);
@@ -153,7 +145,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(11L, nextQuestion.getId().longValue());
     }
 
-    @Rollback
     @Test
     public void testGetPreviousQuestion() throws Exception {
         Question previousQuestion = controller.getPreviousQuestion(11L);
@@ -162,7 +153,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(9L, previousQuestion.getId().longValue());
     }
 
-    @Rollback
     @Test
     public void testGetPreviousQuestionBySection() throws Exception {
         Question previousQuestion = controller.getPreviousQuestionBySection(10L);
@@ -171,7 +161,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(16L , previousQuestion.getId().longValue());
     }
 
-    @Rollback
     @Test
     public void testGetNextQuestionBySection() throws Exception {
         Question nextQuestion = controller.getNextQuestionBySection(10L);
@@ -180,7 +169,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertEquals(36L, nextQuestion.getId().longValue());
     }
 
-    @Rollback
     @Test
     public void testIsMarkedAsComplete() throws Exception {
         assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
@@ -190,7 +178,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
     }
 
-    @Rollback
     @Test
     public void testIsMarkedAsCompleteMultiple() throws Exception {
         question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE);
