@@ -1,13 +1,14 @@
 IFS.autoSave = (function(){
     "use strict";
     var s; // private alias to settings 
-
+    var serverSideValidationErrors = []; // we store the last validation message as deleting of messages is done by content as unique identifier.
+                             // So if we have multiple messages it will only delete the one which contains the message that has been resolved.
     return {
         settings : {
             inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"])',
             textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
             typeTimeout : 500,
-            minimumUpdateTime : 1000 // the minimum time between the ajax request, and displaying the result of the ajax call.
+            minimumUpdateTime : 1000, // the minimum time between the ajax request, and displaying the result of the ajax call.
         },
         init : function(){
             s = this.settings;
@@ -32,9 +33,8 @@ IFS.autoSave = (function(){
                 applicationId: jQuery(".form-serialize-js #application_id").val()
             };
 
-             var formState = jQuery('.form-serialize-js').serialize();
              var formGroup = field.closest('.form-group');
-             var validationMessages = formGroup.find(".validation-messages").first();
+             var formState = jQuery('.form-serialize-js').serialize();
              var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
              var startAjaxTime= new Date().getTime();
              var applicationId = jQuery("#application_id").val();
@@ -60,23 +60,21 @@ IFS.autoSave = (function(){
 
                      // set the form-saved-state
                      jQuery('.form-serialize-js').data('serializedFormState',formState);
-                     field.removeClass('error');
-                     formGroup.removeClass('error');
                       
                       //save message
                      if(data.success == 'true'){
                          setTimeout(function(){
-                             IFS.autoSave.removeValidationError(formGroup);
+                             IFS.autoSave.clearServerSideValidationErrors(field);
                              formTextareaSaveInfo.html('Saved!');
                          }, remainingWaitingTime);
                      }else{
                          setTimeout(function(){
+                             IFS.autoSave.clearServerSideValidationErrors(field);
                              formTextareaSaveInfo.html("Invalid input, but saved anyway.");
-                             IFS.autoSave.removeValidationError(formGroup);
                              jQuery.each(data.validation_errors, function(index, value){
-                                 validationMessages.append('<span class="error-message">' + value + '</span>');
+                                 IFS.formValidation.setInvalid(field,value);
+                                 serverSideValidationErrors.push(value);
                              });
-                             formGroup.addClass('error');
                          }, remainingWaitingTime);
                      }
                  }).fail(function(data) {
@@ -84,30 +82,38 @@ IFS.autoSave = (function(){
                      var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                      setTimeout(function(){
-                         IFS.autoSave.removeValidationError(formGroup);
-
                          var errorMessage = data.responseJSON.errorMessage;
                          if (formGroup.length) {
-                             formGroup.addClass('error');
                              if(formTextareaSaveInfo.length){
                                 formTextareaSaveInfo.html(errorMessage);
                              }
                              else {
                                 var label = formGroup.find('label').first();
                                 if (label.length) {
-                                  validationMessages.append('<span class="error-message">' + errorMessage + '</span>');
+                                  serverSideValidationErrors.push(errorMessage);
+                                  IFS.formValidation.setInvalid(field,errorMessage);
                                 }
                              }
                          } else {
                              field.addClass('error');
                          }
                      }, remainingWaitingTime);
-                 });
+                 }).error(function(xhr) {
+                      if(typeof(xhr.responseText) !== 'undefined'){
+                          var err = JSON.parse(xhr.responseText);
+                          var errorMessage = err.error+' : '+err.message;
+                          serverSideValidationErrors.push(errorMessage);
+                          IFS.formValidation.setInvalid(field,errorMessage);
+                          formTextareaSaveInfo.html('');
+                      }
+                });
              }
         },
-        removeValidationError: function (formGroup){
-            formGroup.removeClass('error');
-            formGroup.find('.error-message').remove();
+        clearServerSideValidationErrors : function(field){
+            for (var i = 0; i < serverSideValidationErrors.length; i++){
+                 IFS.formValidation.setValid(field,serverSideValidationErrors[i]);
+            }
         }
+
     };
 })();

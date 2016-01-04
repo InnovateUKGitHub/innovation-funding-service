@@ -1,8 +1,7 @@
 *** Settings ***
 Documentation     -INFUND-1095: The creator of the application gets the Lead applicant role
-Suite Teardown    User closes the browser
-Test Setup        Login as user    &{lead_applicant_credentials}
-Test Teardown     User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

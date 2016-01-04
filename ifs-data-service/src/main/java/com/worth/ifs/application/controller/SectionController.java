@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/section")
 public class SectionController {
+    private final Log log = LogFactory.getLog(getClass());
     @Autowired
     ApplicationRepository applicationRepository;
     @Autowired
@@ -38,11 +39,9 @@ public class SectionController {
     @Autowired
     SectionRepository sectionRepository;
     @Autowired
-    QuestionController questionController;
-    @Autowired
     QuestionRepository questionRepository;
-
-    private final Log log = LogFactory.getLog(getClass());
+    @Autowired
+    QuestionController questionController;
 
     @RequestMapping("/getById/{sectionId}")
     public Section getById(@PathVariable("sectionId") final Long sectionId) {
@@ -83,13 +82,11 @@ public class SectionController {
             List<Question> questions = section.getQuestions();
             for (Question question : questions) {
                 if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
-
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
                     sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
                         List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
                         return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
                     });
-
                 } else {
                     // no wordcount.
                     sectionIncomplete = false;
@@ -117,7 +114,6 @@ public class SectionController {
             sectionIsComplete = section.getChildSections()
                     .stream()
                     .allMatch(s -> isSectionComplete(s, applicationId, organisationId));
-            log.debug("section : " + section.getName() + " id: " + section.getId() + " complete: " + sectionIsComplete + " for org: " + organisationId);
         }
         return sectionIsComplete;
     }
@@ -127,20 +123,20 @@ public class SectionController {
      */
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
-        for(Question question : section.getQuestions()) {
-            if(question.getName()!=null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection()!=null) {
-                if(!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
+        for (Question question : section.getQuestions()) {
+            if (question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
+                if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
                 break;
             }
 
-            if(!question.isMarkAsCompletedEnabled())
+            if (!question.isMarkAsCompletedEnabled())
                 continue;
 
             boolean questionMarkedAsComplete = questionController.isMarkedAsComplete(question, applicationId, organisationId);
             // if one of the questions is incomplete then the whole section is incomplete
-            if(!questionMarkedAsComplete) {
+            if (!questionMarkedAsComplete) {
                 sectionIsComplete = false;
                 break;
             }
@@ -155,17 +151,15 @@ public class SectionController {
         List<Section> sections = parentSection.getChildSections();
 
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
-
         for (Section section : sections) {
-            //Only check the sections that have subsections
-            if(section.hasChildSections() && !section.equals(excludedSection)) {
-                //Check if section is complete for all organisations that participate in the application
-                for(ApplicationFinance applicationFinance : applicationFinanceList) {
-                    if (!this.isSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId())) {
-                        allSectionsWithSubsectionsAreComplete=false;
-                        break;
-                    }
+            for (ApplicationFinance applicationFinance : applicationFinanceList) {
+                if (!this.isMainSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId())) {
+                    allSectionsWithSubsectionsAreComplete = false;
+                    break;
                 }
+            }
+            if (allSectionsWithSubsectionsAreComplete == false) {
+                break;
             }
         }
 
@@ -174,7 +168,7 @@ public class SectionController {
 
     @RequestMapping("/getNextSection/{sectionId}")
     public Section getNextSection(@PathVariable("sectionId") final Long sectionId) {
-        if(sectionId==null) {
+        if (sectionId == null) {
             return null;
         }
         Section section = sectionRepository.findOne(sectionId);
@@ -182,11 +176,11 @@ public class SectionController {
     }
 
     public Section getNextSection(Section section) {
-        if(section==null) {
+        if (section == null) {
             return null;
         }
 
-        if(section.getParentSection()!=null) {
+        if (section.getParentSection() != null) {
             return getNextSiblingSection(section);
         } else {
             Section nextSection = sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
@@ -198,7 +192,7 @@ public class SectionController {
         Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
-        if(sibling == null) {
+        if (sibling == null) {
             return getNextSection(section.getParentSection());
         } else {
             return sibling;
@@ -207,7 +201,7 @@ public class SectionController {
 
     @RequestMapping("/getPreviousSection/{sectionId}")
     public Section getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
-        if(sectionId==null) {
+        if (sectionId == null) {
             return null;
         }
         Section section = sectionRepository.findOne(sectionId);
@@ -215,11 +209,11 @@ public class SectionController {
     }
 
     public Section getPreviousSection(Section section) {
-        if(section==null) {
+        if (section == null) {
             return null;
         }
 
-        if(section.getParentSection()!=null) {
+        if (section.getParentSection() != null) {
             return getPreviousSiblingSection(section);
         } else {
             return sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority());
@@ -230,7 +224,7 @@ public class SectionController {
         Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
 
-        if(sibling == null) {
+        if (sibling == null) {
             return getPreviousSection(section.getParentSection());
         } else {
             return sibling;

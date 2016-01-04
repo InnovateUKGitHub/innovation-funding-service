@@ -1,6 +1,8 @@
 *** Settings ***
+Documentation     More test cases should follow when all the sections are ready
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Default Tags      Autosave    Calculations    Finance    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -11,57 +13,30 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 'Labour' Calculations/Autosave
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
-    [Tags]    Finance    Calculations    Labour    Applicant
-    Given the applicant is in the "Your Finances" sub-section
+    [Tags]    Labour
+    Given Applicant goes to the Your finances section
     When the Applicant fills the Labour costs
     Then the calculations of the labour should be correct
     and when the applicant fills a second row in the labour costs
     Then the total labour cost calculation should be correct
 
-'Overhead' Calculations
-    #iven the applicant is in the "Your Finances" sub-section
-    #When the applicant fiills the Overhead fields
-    #Then the calculations of the overhead section should be correct
-
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Finance    Calculations    Materials    Applicant
-    Given the applicant is in the "Your Finances" sub-section
+    [Tags]    Materials
+    Given Applicant goes to the Your finances section
     When the Applicant fills the Materials fields
     Then the calculations of the Materials should be correct
     and when the applicant fills a second row in the materials section
     Then the total materials costs calculations should be correct
 
-'Capital usage' calculations
-    Given the applicant is in the "Your Finances" sub-section
-    #When the applicant fills the 'capital usage' field
-    #Then the calculations of the 'capital usage' should be correct
-
-Test for the "Subcontracting costs" Calculations/Autosave
+'Subcontracting costs' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Finance    Calculations    Subcontracting Costs    Applicant
-    Given the applicant is in the "Your Finances" sub-section
+    [Tags]    Subcontracting Costs
+    Given Applicant goes to the Your finances section
     When the applicant edits the Subcontracting costs section
     The total subcontracting costs should correct
 
-'Travel and subsistence' calculations
-    Given the applicant is in the "Your Finances" sub-section
-    #When the applicant fills the 'Travel and subsistence' field
-    #Then the calculations of the 'Travel and subsistence' should be correct
-
-Verify the fields that should be read-only are not editable
-    [Documentation]    INFUND-192
-    [Tags]    Finance    Calculations    Applicant
-    Given the applicant is in the "Your Finances" sub-section
-    When the Applicant is in the Labour sub-section
-    Then the read-only fields are not editable
-
 *** Keywords ***
-the read-only fields are not editable
-    Element Should Be Disabled    css=#labour-costs-table tbody td:nth-of-type(3) input
-    Element Should Be Disabled    xpath=//*[@id="collapsible-1"]//td[contains(text(),"Total costs")]/input
-    Element Should Be Disabled    xpath=//*[@id="collapsible-1"]//*[contains(text(), "Total labour costs")]//input
-
 the Applicant fills the Labour costs
     Click Element    xpath=//*[@aria-controls="collapsible-1"]
     Click Element    link=Add another role
@@ -105,10 +80,6 @@ The total subcontracting costs should correct
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
     Textfield Value Should Be    css=#cost-subcontracting-total    £ 200
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(9) > span > span    £ 200
-
-Input has value
-    ${input_value} =    Get Value    ${input_selector}
-    Should Be Equal As Strings    ${input_value}    £ 522
 
 when the applicant fills a second row in the labour costs
     Click Element    xpath=//*[@aria-controls="collapsible-1"]

@@ -65,8 +65,8 @@
     </div>
 
     <div class="alignright-button">
-        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${incompletedSections.size() == 0}">Submit application</a>
-        <button disabled="disabled" class="button" th:unless="${incompletedSections.size() == 0}">Submit application</button>
+        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${allQuestionsCompleted}">Submit application</a>
+        <button disabled="disabled" class="button" th:unless="${allQuestionsCompleted}">Submit application</button>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

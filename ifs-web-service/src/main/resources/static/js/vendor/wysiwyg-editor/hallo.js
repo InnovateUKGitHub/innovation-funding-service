@@ -207,10 +207,14 @@
         return this.element.html(contents);
       },
       isModified: function() {
-        if (!this.previousContent) {
-          this.previousContent = this.originalContent;
+        var changed;
+        if (typeof this.previousContent === 'undefined') {
+          this.previousContent = false;
+          return true;
         }
-        return this.previousContent !== this.getContents();
+        changed = this.previousContent !== this.getContents();
+        this.previousContent = this.getContents();
+        return changed;
       },
       setUnmodified: function() {
         jQuery(this.element).removeClass('isModified');

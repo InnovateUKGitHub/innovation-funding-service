@@ -144,12 +144,12 @@ when the applicant inserts "-1" in the month field
     Input Text    id=application_details-startdate_month    -1
 
 the applicant clears the text area of the "Project Summary"
-    Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
+    #Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
-    Press Key  css=#form-input-11 .editor   \\8
+    Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Click Element    css=.fa-bold
-    sleep    1s
+    Comment    Click Element    css=.fa-bold
+    Sleep    2s
 
 the applicant should get a validation error
     Focus    css=.app-submit-btn
@@ -177,6 +177,7 @@ when the Applicant inserts 01 in the duration field
 The Applicant should not see any more the error for the duration
     Focus    css=.app-submit-btn
     Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
+    Sleep    1s
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title

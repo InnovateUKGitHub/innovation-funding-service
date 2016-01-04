@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -133,7 +130,6 @@ public abstract class AbstractApplicationController {
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
-        addMarkedAsCompleteDetails(model, application, userOrganisation);
         addApplicationFormDetailInputs(application, form);
 
         userOrganisation.ifPresent(org ->
@@ -201,12 +197,12 @@ public abstract class AbstractApplicationController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected  void addMarkedAsCompleteDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected Set<Long> getMarkedAsCompleteDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
-        model.addAttribute("markedAsComplete", questionService.getMarkedAsComplete(application.getId(), organisationId));
+        return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
@@ -261,6 +257,12 @@ public abstract class AbstractApplicationController {
         model.addAttribute("previousSection", previousSection);
         model.addAttribute("nextSection", nextSection);
         model.addAttribute("sections", sections);
+
+        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(model, application, userOrganisation);
+        model.addAttribute("markedAsComplete", markedAsComplete);
+
+        Optional<Question> aIncompleteQuestion = sections.values().stream().flatMap(section -> section.getQuestions().stream()).filter(question -> !markedAsComplete.contains(question.getId())).findAny();
+        model.addAttribute("allQuestionsCompleted", !aIncompleteQuestion.isPresent());
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {

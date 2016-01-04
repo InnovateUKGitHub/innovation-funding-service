@@ -14,129 +14,102 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
-Verify the "review and submit" button (Form)
-    [Tags]    Applicant    Submit    Review and Submit    Summary
-    Given the applicant is in the form
-    When the Applicant clicks the "Review and submit" button
-    Then the applicant will navigate to the summary page
-
-Verify the "Submit button" is disabled when the state of the application is not valid
+Submit flow/ disabled submit button (incomplete application)
     [Documentation]    INFUND-195
     [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the application is not valid
     When the Applicant is in the summary page
     Then the submit button should be disabled
+    [Teardown]    Project summary question should have a text
 
-Verify the Warning message when the applicant clicks the submit button in the summary page
-    [Documentation]    INFUND-205, INFUND-195
-    [Tags]    Applicant    Submit    Review and Submit    Summary
-    Given the application is valid
-    When the applicant submits the application in the summary page
-    Then the applicant should get a warning message
-    [Teardown]    Mark Question as incomplete
-
-Verify the successful submit page
+Submit flow (complete application)
     [Documentation]    INFUND-205
+    ...
+    ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
     [Tags]    Applicant    Submit    Review and Submit    Summary
-    Given the application is valid
-    When the applicant submits the application
+    Given the application is complete
+    When the applicant submits the application in the summary page
+    Then the applicant should get the submit modal
+    When the applicant submits the application in the summary page
+    and the applicant clicks Yes in the submit modal
     Then the Applicant should navigate to the "submit confirmation" page
-    and the page should have a confirmation text
-    and the "Return to dashboard" button is visible
     and the "Return to dashboard" button navigates to the dashboard page
     and the link of the application should redirect to the submitted application page
 
 *** Keywords ***
-the applicant will navigate to the summary page
-    Location Should Be    ${SUMMARY_URL}
-
-the Applicant clicks the "Review and submit" button
-    click element    link=Review & submit
-
-the applicant submits the application
-    Go To    ${APPLICATION_DETAILS_URL}
-    Click Element    link=Review & submit
-    Wait Until Element Is Visible    xpath=//*[@data-js-modal="modal-confirm-submit"]
-    Click Element    xpath=//*[@data-js-modal="modal-confirm-submit"]
-    Click Element    css=.modal-confirm-submit .button
-
 the Applicant should navigate to the "submit confirmation" page
     Location Should Be    ${APPLICATION_SUBMITTED_URL}
-
-the "Return to dashboard" button is visible
-    Page Should Contain Element    link=Return to dashboard
+    Page Should Contain    Application submitted
 
 the "Return to dashboard" button navigates to the dashboard page
     Click Element    link=Return to dashboard
     Location Should Be    ${DASHBOARD_URL}
 
-the page should have a confirmation text
-    Page Should Contain    Application submitted
-
 the applicant submits the application in the summary page
-    Go To    ${DASHBOARD_URL}
-    Click Element    link=A novel solution to an old problem
-    Click Element    xpath=//*[@aria-controls="collapsible-1"]
-    Click Element    link=Application details
+    Applicant goes to the Overview page
     Click Element    link=Review & submit
     Click Element    link=Submit application
 
-the applicant should get a warning message
+the applicant should get the submit modal
     Wait Until Element Is Visible    css=.modal-confirm-submit
     Element Should Be Visible    css=body > div.modal-confirm-submit > div > a
     Element Should Be Visible    css=body > div.modal-confirm-submit > div > button
     Click Element    css=body > div.modal-confirm-submit > div > button
 
 the application is not valid
-    Go To    ${APPLICATION_DETAILS_URL}
-    Enter invalid data into Question field
-    #Mark Question as complete
+    Applicant goes to the 'project summary' question
+    Clear the Project summary field
 
 the Applicant is in the summary page
-    sleep    1s
-    focus    css=a.button
-    Click Element    css=a.button
+    Applicant goes to the Overview page
+    Click Element    link=Review & submit
 
 the submit button should be disabled
-    Element Should Be Disabled    css=#content > div.alignright-button > button
-
-the application is valid
-    Go To    ${APPLICATION_DETAILS_URL}
-    Enter valid data into Question field
-    Mark Question as complete
-
-the applicant is in the overview page
-    Applicant goes to the Overview page
-
-the overview page should have the "Review & Submit" button
-    Page Should Contain Element    css=#content > div.alignright-button > a
-
-the button should redirect to the summary page
-    Click Element    css=#content > div.alignright-button > a
-    Location Should Be    ${SUMMARY_URL}
-
-the applicant is in the form
-    go to    ${SCOPE_SECTION_URL}
+    Element Should Be Disabled    css=.alignright-button button
 
 Mark Question as complete
-    Wait Until Element Is Visible    css=#form-input-12 div.textarea-footer > button[name="mark_as_complete"]
-    Click Element    css=#form-input-12 div.textarea-footer > button[name="mark_as_complete"]
+    Wait Until Element Is Visible    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
+    Click Element    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
+
+Enter valid data in the Project summary question
+    Wait Until Element Is Visible    css=#form-input-11 .editor
+    Clear Element Text    css=#form-input-11 .editor
+    Press Key    css=#form-input-11 .editor    \\8
+    Input Text    css=#form-input-11 .editor    This is a valid text !@#
+
+Clear the Project summary field
+    Wait Until Element Is Visible    css=#form-input-11 .editor
+    Clear Element Text    css=#form-input-11 .editor
+    Press Key    css=#form-input-11 .editor    \\8
+    Focus    css=.app-submit-btn
+    Sleep    2s
+
+the link of the application should redirect to the submitted application page
+    click link    link=A novel solution to an old problem
+    Page Should Contain    Application status
+
+Project summary question should have a text
+    Applicant goes to the 'project summary' question
+    Wait Until Element Is Visible    css=#form-input-11 .editor
+    Clear Element Text    css=#form-input-11 .editor
+    Press Key    css=#form-input-11 .editor    \\8
+    Input Text    css=#form-input-11 .editor    This is a valid text !@#
 
 Mark Question as incomplete
     Go To    ${APPLICATION_DETAILS_URL}
     Wait Until Element Is Visible    css=#form-input-12 div.textarea-footer > button[name="mark_as_incomplete"]
     Click Element    css=#form-input-12 div.textarea-footer > button[name="mark_as_incomplete"]
 
-Enter valid data into Question field
-    Wait Until Element Is Visible    css=#form-input-12 .editor
-    Clear Element Text    css=#form-input-12 .editor
-    Input Text    css=#form-input-12 .editor    This is a valid text !@#
+the applicant clicks Yes in the submit modal
+    click link    link=Yes, I want to submit my application
 
-Enter invalid data into Question field
-    Wait Until Element Is Visible    css=#form-input-12 .editor
-    Clear Element Text    css=#form-input-12 .editor
-    Input Text    css=#form-input-12 .editor    1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 \ 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10
+Applicant is in the sumary page
+    Applicant goes to the Overview page
+    Click Element    link=Review & submit
 
-the link of the application should redirect to the submitted application page
-    click link    link=A novel solution to an old problem
-    Page Should Contain    Application status
+Click to mark the question as complete if the if the question is editable
+    [Arguments]    ${Text_Area}
+    ${status}    ${Value}=    Run Keyword And Ignore Error    Element Should Be Visible    jQuery=jQuery("button:contains('Mark as complete')");
+    Run Keyword If    '${status}' == 'PASS'    Input Text    ${Text_Area}    test 123
+    Run Keyword If    '${status}' == 'PASS'    Click element    jQuery=jQuery("button:contains('Mark as complete')");
+    Run Keyword If    '${status}' == 'PASS'    Wait Until Element Is Visible    jQuery=jQuery("button:contains('Edit')");

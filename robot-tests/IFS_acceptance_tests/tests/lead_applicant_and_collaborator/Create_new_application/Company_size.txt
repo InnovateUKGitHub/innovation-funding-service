@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-891: As an Applicant I want to be able to add the organisation size against my company profile during initial registration so I can be correctly aligned with eligibility criteria for the competition
-Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup        The guest user opens the browser
+Suite Teardown     TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
