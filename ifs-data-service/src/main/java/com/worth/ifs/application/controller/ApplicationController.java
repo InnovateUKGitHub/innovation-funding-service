@@ -13,6 +13,7 @@ import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
 import com.worth.ifs.user.domain.*;
@@ -52,6 +53,8 @@ public class ApplicationController {
     ProcessRoleRepository processRoleRepository;
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
+    @Autowired
+    ApplicationService applicationService;
     @Autowired
     UserRepository userRepository;
     @Autowired
