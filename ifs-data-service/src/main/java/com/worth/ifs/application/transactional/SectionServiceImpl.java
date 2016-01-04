@@ -1,4 +1,4 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -7,16 +7,15 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -25,11 +24,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * SectionController exposes Application data and operations through a REST API.
+ * Transactional and secured service focused around the processing of Applications
  */
-@RestController
-@RequestMapping("/section")
-public class SectionController {
+@Service
+public class SectionServiceImpl extends BaseTransactionalService implements SectionService {
+
     private final Log log = LogFactory.getLog(getClass());
     @Autowired
     ApplicationRepository applicationRepository;
@@ -44,14 +43,14 @@ public class SectionController {
     @Autowired
     QuestionService questionService;
 
-    @RequestMapping("/getById/{sectionId}")
-    public Section getById(@PathVariable("sectionId") final Long sectionId) {
+    @Override
+    public Section getById(final Long sectionId) {
         return sectionRepository.findOne(sectionId);
     }
 
-    @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
-    public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
-                                          @PathVariable("organisationId") final Long organisationId) {
+    @Override
+    public Set<Long> getCompletedSections(final Long applicationId,
+                                          final Long organisationId) {
         Set<Long> completedSections = new LinkedHashSet<>();
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
@@ -70,8 +69,8 @@ public class SectionController {
     }
 
 
-    @RequestMapping("/getIncompleteSections/{applicationId}")
-    public List<Long> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
+    @Override
+    public List<Long> getIncompleteSections(final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
 
         List<Section> sections = application.getCompetition().getSections();
@@ -101,7 +100,7 @@ public class SectionController {
         return incompleteSections;
     }
 
-    @RequestMapping("findByName/{name}")
+    @Override
     public Section findByName(@PathVariable("name") final String name) {
         return sectionRepository.findByName(name);
     }
@@ -119,9 +118,7 @@ public class SectionController {
         return sectionIsComplete;
     }
 
-    /**
-     * get questions for the sections and filter out the ones that have marked as completed turned on
-     */
+    @Override
     public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
         boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
@@ -145,6 +142,7 @@ public class SectionController {
         return sectionIsComplete;
     }
 
+    @Override
     public boolean childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
         boolean allSectionsWithSubsectionsAreComplete = true;
 
@@ -167,7 +165,7 @@ public class SectionController {
         return allSectionsWithSubsectionsAreComplete;
     }
 
-    @RequestMapping("/getNextSection/{sectionId}")
+    @Override
     public Section getNextSection(@PathVariable("sectionId") final Long sectionId) {
         if (sectionId == null) {
             return null;
@@ -176,6 +174,7 @@ public class SectionController {
         return getNextSection(section);
     }
 
+    @Override
     public Section getNextSection(Section section) {
         if (section == null) {
             return null;
@@ -200,7 +199,7 @@ public class SectionController {
         }
     }
 
-    @RequestMapping("/getPreviousSection/{sectionId}")
+    @Override
     public Section getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
         if (sectionId == null) {
             return null;
@@ -209,6 +208,7 @@ public class SectionController {
         return getPreviousSection(section);
     }
 
+    @Override
     public Section getPreviousSection(Section section) {
         if (section == null) {
             return null;
@@ -232,8 +232,9 @@ public class SectionController {
         }
     }
 
-    @RequestMapping("/getSectionByQuestionId/{questionId}")
+    @Override
     public Section getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
         return sectionRepository.findByQuestionsId(questionId);
     }
+
 }
