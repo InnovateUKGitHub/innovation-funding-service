@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
@@ -290,6 +291,60 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+    }
+
+    @Test
+    public void testUpdateFormInputResponseFileUpload() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
+
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+
+        File fileFound = mock(File.class);
+
+        when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, existingFileEntry))));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.updateFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isRight());
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
+        assertEquals(fileFound, resultParts.getKey());
+        assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
+
+        verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+    }
+
+    @Test
+    public void testUpdateFormInputResponseFileUploadButFileServiceCallFails() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource formInputFileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry fileEntry = FileEntryResourceAssembler.valueOf(fileEntryResource);
+        FormInputResponse existingFormInputResponse =
+                newFormInputResponse().withFileEntry(fileEntry).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+
+        when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
+                thenReturn(left(ServiceFailure.error("no files for you...")));
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+                service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is("no files for you..."));
     }
 
     @Test
