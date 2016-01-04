@@ -18,8 +18,12 @@ public class FormInputResponseFileEntryResource {
     }
 
     public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId) {
+        this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId));
+    }
+
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, FormInputResponseFileEntryId compoundId) {
         this.fileEntryResource = fileEntryResource;
-        this.compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+        this.compoundId = compoundId;
     }
 
     public FileEntryResource getFileEntryResource() {

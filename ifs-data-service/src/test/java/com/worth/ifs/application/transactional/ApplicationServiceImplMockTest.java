@@ -348,6 +348,33 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
+    public void testDeleteFormInputResponseFileUpload() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        FormInputResponse unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+
+        when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
+        when(fileServiceMock.deleteFile(999L)).thenReturn(right(new ServiceSuccess(existingFileEntry)));
+
+        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+
+        assertTrue(result.isRight());
+        assertEquals(unlinkedFormInputFileEntry, result.getRight().getResult());
+        assertNull(existingFormInputResponse.getFileEntry());
+        verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+        verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
+    }
+
+    @Test
     public void testGetFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();

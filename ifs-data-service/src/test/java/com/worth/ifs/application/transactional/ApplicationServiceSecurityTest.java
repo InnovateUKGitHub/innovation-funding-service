@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -156,6 +157,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public Either<ServiceFailure, ServiceSuccess<FormInputResponse>> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
             return null;
         }
     }

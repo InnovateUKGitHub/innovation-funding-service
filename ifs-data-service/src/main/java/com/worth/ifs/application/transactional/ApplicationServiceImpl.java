@@ -32,11 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_UPDATE_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
@@ -48,6 +47,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_FILE, //
         UNABLE_TO_UPDATE_FILE, //
+        UNABLE_TO_DELETE_FILE, //
         UNABLE_TO_FIND_FILE, //
     }
 
@@ -118,7 +118,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             if (existingResponse != null) {
                 existingResponse.setFileEntry(fileEntry);
                 formInputResponseRepository.save(existingResponse);
-                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
                 return successResponse(Pair.of(successfulFile.getResult().getKey(), fileEntryResource));
             } else {
                 return getProcessRole(processRoleId).
@@ -145,7 +145,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             return existingFileResult.map(existingFile -> {
 
-                FormInputResponseFileEntryResource existingFormInputResource = existingFile.getResult().getLeft();
+                FormInputResponseFileEntryResource existingFormInputResource = existingFile.getResult().getKey();
 
                 FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
                 FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
@@ -156,6 +156,34 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 );
             });
         });
+    }
+
+    @Override
+    public Either<ServiceFailure, ServiceSuccess<FormInputResponse>> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
+
+        return handlingErrors(UNABLE_TO_DELETE_FILE, () -> {
+
+            Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> existingFileResult =
+                    getFormInputResponseFileUpload(formInputResponseFileId);
+
+            return existingFileResult.map(existingFile -> {
+
+                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getResult().getKey();
+                Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
+
+                return fileService.deleteFile(fileEntryId).
+                    map(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
+                    map(formInputResponse -> unlinkFileEntryFromFormInputResponse(formInputResponse)).
+                    map(unlinkedFileEntryResource -> successResponse(unlinkedFileEntryResource)
+                ));
+            });
+        });
+    }
+
+    private Either<ServiceFailure, FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
+        formInputResponse.setFileEntry(null);
+        FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
+        return right(unlinkedResponse);
     }
 
     @Override
