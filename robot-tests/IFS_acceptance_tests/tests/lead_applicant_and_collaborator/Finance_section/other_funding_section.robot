@@ -46,6 +46,7 @@ Applicant can see a new row
     Element Should Be Visible    id=other-funding-table
 
 Applicant enters some details into this row
+    Sleep       5s
     Wait Until Element Is Visible    id=cost-other_funding-55-source
     Input Text    id=cost-other_funding-55-source    ${OTHER_FUNDING_SOURCE}
     Wait Until Element Is Visible    id=cost-other_funding-55-date
