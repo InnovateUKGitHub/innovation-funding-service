@@ -11,7 +11,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -109,18 +108,18 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
         when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -137,7 +136,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
                 thenReturn(left(error("no files for you...")));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -155,16 +154,16 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         FormInputResponse existingFormInputResponse = newFormInputResponse().build();
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -182,12 +181,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -205,13 +204,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -229,14 +228,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
         when(applicationRepositoryMock.findOne(456L)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -254,14 +253,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         FormInputResponse existingFormInputResponse = newFormInputResponse().build();
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
 
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenThrow(new RuntimeException("Surprise!"));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -279,7 +278,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, newFileEntry))));
+                thenReturn(right(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
@@ -288,7 +287,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(formInputResponseRepositoryMock.save(isA(FormInputResponse.class))).thenThrow(new RuntimeException("Surprise!"));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -309,16 +308,16 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         File fileFound = mock(File.class);
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(right(new ServiceSuccess(Pair.of(fileFound, existingFileEntry))));
+                thenReturn(right(Pair.of(fileFound, existingFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(inputStreamSupplier));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight().getResult();
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -337,12 +336,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 newFormInputResponse().withFileEntry(fileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(inputStreamSupplier));
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
                 thenReturn(left(error("no files for you...")));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> result =
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
@@ -361,16 +360,16 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(inputStreamSupplier));
 
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
-        when(fileServiceMock.deleteFile(999L)).thenReturn(right(new ServiceSuccess(existingFileEntry)));
+        when(fileServiceMock.deleteFile(999L)).thenReturn(right(existingFileEntry));
 
-        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+        Either<ServiceFailure, FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isRight());
-        assertEquals(unlinkedFormInputFileEntry, result.getRight().getResult());
+        assertEquals(unlinkedFormInputFileEntry, result.getRight());
         assertNull(existingFormInputResponse.getFileEntry());
         verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
@@ -387,10 +386,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(inputStreamSupplier));
         when(fileServiceMock.deleteFile(999L)).thenReturn(left(error("No deleting for you!")));
 
-        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+        Either<ServiceFailure, FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
@@ -405,7 +404,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+        Either<ServiceFailure, FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
@@ -424,8 +423,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(left(error(UNABLE_TO_FIND_FILE)));
 
-        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
-                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+        Either<ServiceFailure, FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
         assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
@@ -442,10 +440,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(right(inputStreamSupplier));
         when(fileServiceMock.deleteFile(999L)).thenThrow(new IllegalArgumentException("No deleting files today..."));
 
-        Either<ServiceFailure, ServiceSuccess<FormInputResponse>> result =
+        Either<ServiceFailure, FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
@@ -461,16 +459,16 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(new ServiceSuccess(inputStreamSupplier)));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(right(inputStreamSupplier));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> result =
+        Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isRight());
-        assertEquals(inputStreamSupplier, result.getRight().getResult().getValue());
+        assertEquals(inputStreamSupplier, result.getRight().getValue());
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(321L)).build();
-        FormInputResponseFileEntryResource formInputResponseFile = result.getRight().getResult().getKey();
+        FormInputResponseFileEntryResource formInputResponseFile = result.getRight().getKey();
 
         assertEquals(fileEntryResource.getId(), formInputResponseFile.getFileEntryResource().getId());
         assertEquals(123L, formInputResponseFile.getCompoundId().getFormInputId());
@@ -487,7 +485,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(left(error("no files for you...")));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> result =
+        Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
@@ -503,7 +501,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenThrow(new RuntimeException("not so fast!"));
 
-        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> result =
+        Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
@@ -516,7 +514,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> result =
+        Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());

@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
@@ -24,14 +23,14 @@ public interface ApplicationService {
     Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+    Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+    Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'UPDATE')")
-    Either<ServiceFailure, ServiceSuccess<FormInputResponse>> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
+    Either<ServiceFailure, FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
-    Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
+    Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 }

@@ -7,7 +7,6 @@ import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -216,14 +215,14 @@ public class FormInputResponseFileUploadController {
 
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
 
-        Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> file =
+        Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> file =
                 applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
 
         return file.mapLeftOrRight(
                 failure ->
                         Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error retrieving file", response))),
                 success ->
-                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> right(success.getResult())
+                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> right(success)
         );
     }
 
@@ -302,13 +301,13 @@ public class FormInputResponseFileUploadController {
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
         return creationResult.mapLeftOrRight(
                 failure ->
                         Either. <JsonStatusResponse, FormInputResponseFileEntryResource> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error creating file", response))),
                 success ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getResult().getValue()));
+                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getValue()));
     }
 
     private Either<JsonStatusResponse, FormInputResponseFileEntryResource> updateFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
@@ -317,13 +316,13 @@ public class FormInputResponseFileUploadController {
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> creationResult = applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> creationResult = applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
 
         return creationResult.mapLeftOrRight(
                 failure ->
                         Either. <JsonStatusResponse, FormInputResponseFileEntryResource> left(handleServiceFailure(failure, response).orElseGet(() -> internalServerError("Error updating file", response))),
                 success ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getResult().getValue()));
+                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getValue()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {

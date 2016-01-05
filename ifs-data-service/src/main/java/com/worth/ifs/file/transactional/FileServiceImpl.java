@@ -6,7 +6,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -56,7 +55,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private FileEntryRepository fileEntryRepository;
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+    public Either<ServiceFailure, Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
         return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
 
@@ -76,7 +75,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId) {
+    public Either<ServiceFailure, Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         return handlingErrors(UNABLE_TO_FIND_FILE, () ->
                 findFileEntry(fileEntryId).
                 map(fileEntry -> findFile(fileEntry)).
@@ -86,7 +85,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
+    public Either<ServiceFailure, Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
 
         return handlingErrors(UNABLE_TO_UPDATE_FILE, () ->
 
@@ -106,7 +105,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<FileEntry>> deleteFile(long fileEntryId) {
+    public Either<ServiceFailure, FileEntry> deleteFile(long fileEntryId) {
 
         return handlingErrors(UNABLE_TO_DELETE_FILE, () ->
             findFileEntry(fileEntryId).

@@ -9,7 +9,6 @@ import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,7 +24,6 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -35,9 +33,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing the security annotations on the ApplicationService interface
@@ -284,22 +280,22 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return right(new ServiceSuccess(Pair.of(new File("", ""), newFileEntry().build())));
+        public Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
+            return right(Pair.of(new File("", ""), new FormInputResponseFileEntryResource()));
         }
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        public Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
             return null;
         }
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
+        public Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess<FormInputResponse>> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        public Either<ServiceFailure, FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
             return null;
         }
     }

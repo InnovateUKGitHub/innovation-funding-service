@@ -159,8 +159,8 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, ServiceSuccess<T>> successResponse(T response) {
-        return Either.<ServiceFailure, ServiceSuccess<T>> right(new ServiceSuccess(response));
+    protected static <T> Either<ServiceFailure, T> successResponse(T response) {
+        return Either.<ServiceFailure, T> right(response);
     }
 
     /**
