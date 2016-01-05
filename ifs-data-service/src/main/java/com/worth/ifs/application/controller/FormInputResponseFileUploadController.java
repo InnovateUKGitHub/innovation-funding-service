@@ -205,8 +205,9 @@ public class FormInputResponseFileUploadController {
         return handlingErrors(internalServerError, () -> {
 
             FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-            return applicationService.deleteFormInputResponseFileUpload(compoundId).
-                    mapLeftOrRight(failure -> left(internalServerError.get()), success -> right(ok()));
+            return applicationService.deleteFormInputResponseFileUpload(compoundId).mapLeftOrRight(
+                    failure -> Either.<JsonStatusResponse, JsonStatusResponse> left(handleServiceFailure(failure, response).orElseGet(internalServerError)),
+                    success -> Either.<JsonStatusResponse, JsonStatusResponse> right(ok("File deleted successfully")));
 
         }).mapLeftOrRight(failure -> failure, success -> success);
     }

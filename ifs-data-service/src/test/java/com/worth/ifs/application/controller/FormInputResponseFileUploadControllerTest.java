@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
@@ -28,6 +29,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_FILESIZE;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_MEDIA_TYPE;
+import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
 import static com.worth.ifs.util.Either.left;
@@ -45,9 +47,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -529,6 +529,214 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testUpdateFileButFileNotFoundToUpdate() throws Exception {
         assertUpdateFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToUpdate", NOT_FOUND, "Unable to find file");
     }
+
+
+    @Test
+    public void testDeleteFile() throws Exception {
+
+        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> successResponse =
+                right(new ServiceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L))));
+
+        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(123L, 456L, 789L);
+        FormInputResponse unlinkedFormInputResponse = newFormInputResponse().build();
+
+        when(applicationService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(right(new ServiceSuccess<>(unlinkedFormInputResponse)));
+
+        MvcResult response = mockMvc.
+                perform(
+                        delete("/forminputresponse/file").
+                                param("formInputId", "123").
+                                param("applicationId", "456").
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")).
+                andExpect(status().isOk()).
+                andDo(document("forminputresponse/file_fileDelete",
+                        requestParameters(
+                                parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
+                                parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput")
+                        ),
+                        requestHeaders(
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("A plain text descriptive message of the action that was performed e.g. \"File deleted successfully\"")
+                        ))
+                ).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("File deleted successfully", jsonResponse.getMessage());
+    }
+
+//    @Test
+//    public void testUpdateFileButApplicationServiceCallFails() throws Exception {
+//
+//        Either<ServiceFailure, ServiceSuccess<Pair<File, FormInputResponseFileEntryResource>>> failureResponse =
+//                left(error("No files today!"));
+//
+//        when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Type", "application/pdf").
+//                                header("Content-Length", "1000").
+//                                content("My PDF content")).
+//                andExpect(status().isInternalServerError()).
+//                andDo(document("forminputresponse/file_fileUpload_internalServerError")).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("Error updating file", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButApplicationServiceCallFailsThrowsException() throws Exception {
+//
+//        when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenThrow(new RuntimeException("No files today!"));
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Type", "application/pdf").
+//                                header("Content-Length", "1000").
+//                                content("My PDF content")).
+//                andExpect(status().isInternalServerError()).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("Error updating file", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButFormInputNotFound() throws Exception {
+//        assertUpdateFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+//    }
+//
+//
+//    @Test
+//    public void testUpdateFileButApplicationNotFound() throws Exception {
+//        assertUpdateFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+//    }
+//
+//
+//    @Test
+//    public void testUpdateFileButProcessRoleNotFound() throws Exception {
+//        assertUpdateFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentLengthHeaderTooLarge() throws Exception {
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Type", "application/pdf").
+//                                header("Content-Length", "99999999").
+//                                content("My PDF content")).
+//                andExpect(status().isPayloadTooLarge()).
+//                andDo(document("forminputresponse/file_fileUpdate_payloadTooLarge")).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("File upload was too large for FormInputResponse.  Max filesize in bytes is 5000", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentLengthHeaderMissing() throws Exception {
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Type", "application/pdf").
+//                                content("My PDF content")).
+//                andExpect(status().isLengthRequired()).
+//                andDo(document("forminputresponse/file_fileUpdate_missingContentLength")).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("Please supply a valid Content-Length HTTP header.  Maximum 5000", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentTypeHeaderInvalid() throws Exception {
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Type", "text/plain").
+//                                header("Content-Length", "1000").
+//                                content("My PDF content")).
+//                andExpect(status().isUnsupportedMediaType()).
+//                andDo(document("forminputresponse/file_fileUpdate_unsupportedContentType")).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentTypeHeaderMissing() throws Exception {
+//
+//        MvcResult response = mockMvc.
+//                perform(
+//                        put("/forminputresponse/file").
+//                                param("formInputId", "123").
+//                                param("applicationId", "456").
+//                                param("processRoleId", "789").
+//                                param("filename", "original.pdf").
+//                                header("Content-Length", "1000").
+//                                content("My PDF content")).
+//                andExpect(status().isUnsupportedMediaType()).
+//                andDo(document("forminputresponse/file_fileUpload_missingContentType")).
+//                andReturn();
+//
+//        String content = response.getResponse().getContentAsString();
+//        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+//        assertEquals("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", jsonResponse.getMessage());
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentLengthHeaderMisreported() throws Exception {
+//        assertUpdateFileButErrorOccurs(INCORRECTLY_REPORTED_FILESIZE, "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
+//    }
+//
+//    @Test
+//    public void testUpdateFileButContentTypeHeaderMisreported() throws Exception {
+//        assertUpdateFileButErrorOccurs(INCORRECTLY_REPORTED_MEDIA_TYPE, "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
+//    }
+//
+//    @Test
+//    public void testUpdateFileButFileNotFoundToUpdate() throws Exception {
+//        assertUpdateFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToUpdate", NOT_FOUND, "Unable to find file");
+//    }
 
     @Test
     public void testGetFileDetails() throws Exception {
