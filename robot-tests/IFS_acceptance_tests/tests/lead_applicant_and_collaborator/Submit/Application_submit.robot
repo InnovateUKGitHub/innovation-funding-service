@@ -106,10 +106,7 @@ the submit button should be disabled
     Element Should Be Disabled    css=.alignright-button button
 
 Mark question as complete
-
     Click Button    name=mark_as_complete
-   # Wait Until Element Is Visible    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
-    # Click Element    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
 
 Enter valid data in the Project summary question
     Wait Until Element Is Visible    css=#form-input-11 .editor
