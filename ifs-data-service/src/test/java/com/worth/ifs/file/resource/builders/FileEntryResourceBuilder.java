@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
-import static org.springframework.http.MediaType.parseMediaType;
 
 public class FileEntryResourceBuilder extends BaseBuilder<FileEntryResource, FileEntryResourceBuilder> {
 
@@ -26,7 +25,7 @@ public class FileEntryResourceBuilder extends BaseBuilder<FileEntryResource, Fil
     }
 
     public FileEntryResourceBuilder withMediaType(String mediaType) {
-        return with(resource -> resource.setMediaType(parseMediaType(mediaType)));
+        return with(resource -> resource.setMediaType(mediaType));
     }
 
     public FileEntryResourceBuilder withFilesizeBytes(long filesizeBytes) {

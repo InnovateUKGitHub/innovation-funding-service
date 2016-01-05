@@ -6,7 +6,6 @@ import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.util.Either;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         long responseId = 1L;
         when(responseRepositoryMock.findOne(responseId)).thenReturn(null);
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
@@ -60,7 +59,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         when(responseRepositoryMock.findOne(responseId)).thenReturn(newResponse().build());
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(null);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
@@ -84,7 +83,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         when(responseRepositoryMock.findOne(responseId)).thenReturn(newResponse().build());
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(incorrectTypeProcessRole);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
@@ -117,7 +116,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         when(responseRepositoryMock.findOne(responseId)).thenReturn(response);
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(incorrectApplicationProcessRole);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
@@ -133,7 +132,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         long responseId = 1L;
         when(responseRepositoryMock.findOne(responseId)).thenThrow(new RuntimeException());
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
@@ -172,7 +171,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
         when(responseRepositoryMock.save(response)).thenReturn(response);
 
-        Either<ServiceFailure, ServiceSuccess> serviceResult
+        Either<ServiceFailure, Feedback> serviceResult
                 = service.updateAssessorFeedback(
                 new Feedback()
                         .setResponseId(responseId)
