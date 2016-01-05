@@ -25,18 +25,12 @@
     <p>You have been invited at act as an assessor for our new competition <strong>'Technology Inspired'</strong>. Please read the information below and confirm whether you are available to assess applications for this competition.</p>
 
     <section class="boxed">
-
-        <h2 class="heading-medium no-margin-top">21st March - Assessor Briefing</h2>
-        <p class="form-hint">1 hour web based conference call</p>
-        <p>The lead technologist for the competition will explain and answer questions on the scope of the competition. It is important that all assessors must receive this briefing.</p>
-
-        <h2 class="heading-medium">15th - 25th April - Assessment Period</h2>
+    
+        <h2 class="heading-medium no-margin">15th - 25th April - Assessment Period</h2>
         <p>Remote assessment period for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the actual number of applications will depend on the application response and could be less than this.  Our assessment fee for this competition is &pound;100 per application.</p>
-        
-        <h2 class="heading-medium">11th May - Assessment Moderation Panel</h2>
-        <p class="form-hint">All day - Swindon</p>
-        <p>The lead technologist will select 5 assessors to attend an assessment panel meeting; these assessors will be required to read the applications to be moderated prior to the meeting.  At the meeting, the panel will discuss the applications &amp; score them based upon the panel scoring criteria. As we only require 5 assessors for this, confirmation of attendance would be sent out closer to the time.</p>
 
+        <p>The assessor briefing will take place on the 21st March</p>
+    
     </section>
 
     <section>
@@ -58,14 +52,14 @@
 
 	<form method="post" action="/prototypes/865-assessor-dashboard-invites?accepted=yes">
         <fieldset>
-            <legend class="visuallyhidden">Are you able to complete this application?</legend>
-            <h2 class="heading-medium">Are you able to complete this application?</h2>
+            <legend class="visuallyhidden">Are you available to assess this competition?</legend>
+            <h2 class="heading-medium">Are you available to assess this competition?</h2>
             <button class="button large" name="accept" value="accepted" type="submit">Accept</button>
             <a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="modal-reject-assessment">Reject</a>
         </fieldset>
     </form>
 
-    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/865-assessor-dashboard-invites?accepted=no'" th:remove="tag" />
+    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-comp-reject" th:with="backTo='/prototypes/865-assessor-dashboard-invites?accepted=no'" th:remove="tag" />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

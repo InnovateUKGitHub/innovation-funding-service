@@ -18,34 +18,69 @@
 	
 	<h1 class="heading-large">Competitions</h1>
 	
-	<form>
-		<div class="filters" style="padding: 20px; background: #e4e4e4; margin-bottom: 40px;">
+	
+	<div class="search-filters">
+		
+		<form>
+
+			<h2 class="heading-medium no-margin">Filter competitions</h2>
+
 			<div class="grid-row">
-				<div class="column-quarter">
-					Status
+				<div class="column-third">
+					<label class="form-label" for="filter-status">Status</label>
+					<select class="form-control" id="filter-status" name="filter-status">
+						<option selected="selected">---</option>
+						<option value="prep">Prep</option>
+						<option value="open">Open</option>
+						<option value="closed">Closed</option>
+						<option value="in-assessment">In assessment</option>
+						<option value="funders-panel">Funders panel</option>
+						<option value="project-set-up">Project set-up</option>
+						<option value="complete">Complete</option>
+					</select>
 				</div>
-				<div class="column-quarter">
-					Competition type
+				<div class="column-third">
+					<label class="form-label" for="filter-comp-type">Competition type</label>
+					<select class="form-control" id="filter-comp-type" name="filter-comp-type">
+						<option selected="selected">---</option>
+						<option value="feasibility">Feasibility study</option>
+						<option value="collaborative-rd">Collaborative R&#38;D</option>
+						<option value="smart">Smart</option>
+						<option value="sbri">SBRI</option>
+					</select>
 				</div>
-				<div class="column-quarter">
-					Innovation area
-				</div>
-				<div class="column-quarter">
-					Assigned user
+				<div class="column-third">
+					<label class="form-label" for="filter-innovation-area">Innovation area</label>
+					<select class="form-control" id="filter-innovation-area" name="filter-innovation-area">
+						<option selected="selected">---</option>
+						<option value="agriculture-food">Agriculture &#38; food</option>
+						<option value="built-environment">Built environment</option>
+						<option value="digital-economy">Digital economy</option>
+						<option value="emerging-technologies">Emerging technologies</option>
+						<option value="energy">Energy</option>
+						<option value="health-care">Health &#38; care</option>
+						<option value="high-value-manufacturing">High value manufacturing</option>
+						<option value="space-applications">Space applications</option>
+						<option value="transport">Transport</option>
+						<option value="urban-living">Urban living</option>
+					</select>
 				</div>
 			</div>
 			<div class="grid-row extra-margin">
-				<div class="column-three-quarters">
-					Search
+				<div class="column-two-thirds">
+					<label class="form-label" for="filter-search">Search</label>
+					<input type="text" class="form-control" id="filter-search" style="width: 100%"/>
 				</div>
-				<div class="column-quarter">
-					Filter
+				<div class="column-third">
+					<button class="button">Filter</button>
 				</div>
 			</div>
-		</div>
 
-	</form>
-	
+		</form>
+
+	</div>
+
+
 	<div class="grid-row sorting">
 		<div class="column-half">
 			<h2 class="heading-xlarge no-margin">14 <small>competitions</small></h2>
@@ -53,11 +88,11 @@
 		<div class="column-half alignright">
 			<label for="sort-by">Sort by</label>
 			<select name="sort-by" id="sort-by" class="form-control">
-				<option>Priority</option>
+				<option value="priority">Priority</option>
+				<option value="closing-date">Closing date</option>
 			</select>
 		</div>
 	</div>
-
 
 	<ul class="comp-list">
 		<li>
