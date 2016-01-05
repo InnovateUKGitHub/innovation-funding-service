@@ -1,0 +1,244 @@
+=== Upload file for a response to a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponsefileupload/file_fileUpload/http-request.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpload/request-headers.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpload/request-parameters.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpload/request-fields.adoc[]
+
+===== Response
+include::{snippets}/forminputresponsefileupload/file_fileUpload/http-response.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpload/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponsefileupload/file_fileUpload/curl-request.adoc[]
+
+
+==== Failure cases
+===== Internal Error
+include::{snippets}/forminputresponsefileupload/file_fileUpload_internalServerError/http-response.adoc[]
+
+
+===== Content-Length header missing
+include::{snippets}/forminputresponsefileupload/file_fileUpload_missingContentLength/http-response.adoc[]
+
+
+===== Payload too large
+include::{snippets}/forminputresponsefileupload/file_fileUpload_payloadTooLarge/http-response.adoc[]
+
+
+===== Content-Type header missing
+include::{snippets}/forminputresponsefileupload/file_fileUpload_missingContentType/http-response.adoc[]
+
+
+===== Unsupported Content-Type
+include::{snippets}/forminputresponsefileupload/file_fileUpload_unsupportedContentType/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponsefileupload/file_fileUpload_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponsefileupload/file_fileUpload_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponsefileupload/file_fileUpload_processRoleNotFound/http-response.adoc[]
+
+
+===== Content Length incorrectly reported in Content-Length header
+include::{snippets}/forminputresponsefileupload/file_fileUpload_incorrectlyReportedContentLength/http-response.adoc[]
+
+
+===== Content Type incorrectly reported in Content-Type header
+include::{snippets}/forminputresponsefileupload/file_fileUpload_incorrectlyReportedContentType/http-response.adoc[]
+
+
+===== Duplicate file encountered (file already exists)
+include::{snippets}/forminputresponsefileupload/file_fileUpload_duplicateFile/http-response.adoc[]
+
+
+
+=== Update file for existing response to a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/http-request.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/request-headers.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/request-parameters.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/request-fields.adoc[]
+
+===== Response
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/http-response.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponsefileupload/file_fileUpdate/curl-request.adoc[]
+
+
+==== Failure cases
+===== Internal Error
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_internalServerError/http-response.adoc[]
+
+
+===== Content-Length header missing
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_missingContentLength/http-response.adoc[]
+
+
+===== Payload too large
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_payloadTooLarge/http-response.adoc[]
+
+
+===== Content-Type header missing
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_missingContentType/http-response.adoc[]
+
+
+===== Unsupported Content-Type
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_unsupportedContentType/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_processRoleNotFound/http-response.adoc[]
+
+
+===== Form Input Response not found (update expects an existing Form Input Response)
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_formInputResponseNotFound/http-response.adoc[]
+
+
+===== Content Length incorrectly reported in Content-Length header
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_incorrectlyReportedContentLength/http-response.adoc[]
+
+
+===== Content Type incorrectly reported in Content-Type header
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_incorrectlyReportedContentType/http-response.adoc[]
+
+
+===== File not found (no file to update)
+include::{snippets}/forminputresponsefileupload/file_fileUpdate_noFileFoundToUpdate/http-response.adoc[]
+
+
+=== Get File Details for a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponsefileupload/file_fileEntry/http-request.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileEntry/request-headers.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileEntry/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/forminputresponsefileupload/file_fileEntry/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponsefileupload/file_fileEntry/curl-request.adoc[]
+
+==== Failure cases
+===== Internal error
+include::{snippets}/forminputresponsefileupload/file_fileEntry_internalServerError/http-response.adoc[]
+
+
+===== File not found
+include::{snippets}/forminputresponsefileupload/file_fileEntry_fileNotFound/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponsefileupload/file_fileEntry_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponsefileupload/file_fileEntry_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponsefileupload/file_fileEntry_processRoleNotFound/http-response.adoc[]
+
+
+===== Form Input Response not found
+include::{snippets}/forminputresponsefileupload/file_fileEntry_formInputResponseNotFound/http-response.adoc[]
+
+
+
+=== Download a file from a FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponsefileupload/file_fileDownload/http-request.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileDownload/request-headers.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileDownload/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/forminputresponsefileupload/file_fileDownload/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponsefileupload/file_fileDownload/curl-request.adoc[]
+
+==== Failure cases
+===== Internal error
+include::{snippets}/forminputresponsefileupload/file_fileDownload_internalServerError/http-response.adoc[]
+
+
+===== File not found
+include::{snippets}/forminputresponsefileupload/file_fileDownload_fileNotFound/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponsefileupload/file_fileDownload_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponsefileupload/file_fileDownload_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponsefileupload/file_fileDownload_processRoleNotFound/http-response.adoc[]
+
+
+===== Form Input Response not found
+include::{snippets}/forminputresponsefileupload/file_fileDownload_formInputResponseNotFound/http-response.adoc[]
+
+
+
+=== Unlink and delete a file from an existing FormInputResponse
+==== Success case
+===== Request
+include::{snippets}/forminputresponsefileupload/file_fileDelete/http-request.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileDelete/request-headers.adoc[]
+include::{snippets}/forminputresponsefileupload/file_fileDelete/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/forminputresponsefileupload/file_fileDelete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponsefileupload/file_fileDelete/curl-request.adoc[]
+
+
+==== Failure cases
+===== Internal Error
+include::{snippets}/forminputresponsefileupload/file_fileDelete_internalServerError/http-response.adoc[]
+
+
+===== Form Input not found
+include::{snippets}/forminputresponsefileupload/file_fileDelete_formInputNotFound/http-response.adoc[]
+
+
+===== Application not found
+include::{snippets}/forminputresponsefileupload/file_fileDelete_applicationNotFound/http-response.adoc[]
+
+
+===== Process Role not found
+include::{snippets}/forminputresponsefileupload/file_fileDelete_processRoleNotFound/http-response.adoc[]
+
+
+===== Form Input Response not found (delete expects an existing Form Input Response)
+include::{snippets}/forminputresponsefileupload/file_fileDelete_formInputResponseNotFound/http-response.adoc[]
+
+
+===== File not found (no file to delete)
+include::{snippets}/forminputresponsefileupload/file_fileDelete_noFileFoundToDelete/http-response.adoc[]
+
+

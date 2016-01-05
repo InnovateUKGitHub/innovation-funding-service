@@ -104,7 +104,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 content(dummyContent)
                         ).
                 andExpect(status().isCreated()).
-                andDo(document("forminputresponse/file_fileUpload",
+                andDo(document("forminputresponsefileupload/file_fileUpload",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -148,7 +148,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponse/file_fileUpload_internalServerError")).
+                andDo(document("forminputresponsefileupload/file_fileUpload_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -210,7 +210,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "99999999").
                                 content("My PDF content")).
                 andExpect(status().isPayloadTooLarge()).
-                andDo(document("forminputresponse/file_fileUpload_payloadTooLarge")).
+                andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -231,7 +231,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 content("My PDF content")).
                 andExpect(status().isLengthRequired()).
-                andDo(document("forminputresponse/file_fileUpload_missingContentLength")).
+                andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -253,7 +253,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponse/file_fileUpload_unsupportedContentType")).
+                andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -274,7 +274,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponse/file_fileUpload_missingContentType")).
+                andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -337,7 +337,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 content(dummyContent)
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponse/file_fileUpdate",
+                andDo(document("forminputresponsefileupload/file_fileUpdate",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -381,7 +381,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponse/file_fileUpload_internalServerError")).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -443,7 +443,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "99999999").
                                 content("My PDF content")).
                 andExpect(status().isPayloadTooLarge()).
-                andDo(document("forminputresponse/file_fileUpdate_payloadTooLarge")).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_payloadTooLarge")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -464,7 +464,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 content("My PDF content")).
                 andExpect(status().isLengthRequired()).
-                andDo(document("forminputresponse/file_fileUpdate_missingContentLength")).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentLength")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -486,7 +486,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponse/file_fileUpdate_unsupportedContentType")).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_unsupportedContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -507,7 +507,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponse/file_fileUpload_missingContentType")).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentType")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -523,6 +523,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testUpdateFileButContentTypeHeaderMisreported() throws Exception {
         assertUpdateFileButErrorOccurs(INCORRECTLY_REPORTED_MEDIA_TYPE, "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
+    }
+
+    @Test
+    public void testUpdateFileButFormInputResponseNotFound() throws Exception {
+        assertUpdateFileButErrorOccurs(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", NOT_FOUND, "Unable to find Form Input Response");
     }
 
     @Test
@@ -550,7 +555,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("processRoleId", "789").
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponse/file_fileDelete",
+                andDo(document("forminputresponsefileupload/file_fileDelete",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -584,7 +589,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponse/file_fileDelete_internalServerError")).
+                andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -616,6 +621,10 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertDeleteFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
     }
 
+    @Test
+    public void testDeleteFileButFormInputResponseNotFound() throws Exception {
+        assertDeleteFileButErrorOccurs(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", NOT_FOUND, "Unable to find Form Input Response");
+    }
 
     @Test
     public void testDeleteFileButApplicationNotFound() throws Exception {
@@ -630,7 +639,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testDeleteFileButFileNotFoundToDelete() throws Exception {
-        assertDeleteFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToUpdate", NOT_FOUND, "Unable to find file");
+        assertDeleteFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToDelete", NOT_FOUND, "Unable to find file");
     }
 
     @Test
@@ -657,7 +666,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponse/file_fileEntry",
+                andDo(document("forminputresponsefileupload/file_fileEntry",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file details for"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -686,7 +695,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponse/file_fileEntry_internalServerError")).
+                andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -734,7 +743,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileDetailsButFormInputResponseNotFound() throws Exception {
+    public void testGetFileDetailsButformInputResponseNotFound() throws Exception {
         assertGetFileDetailsButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
     }
 
@@ -762,7 +771,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponse/file_fileDownload",
+                andDo(document("forminputresponsefileupload/file_fileDownload",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file for"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -789,7 +798,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponse/file_fileDownload_internalServerError")).
+                andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -837,7 +846,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileContentsButFormInputResponseNotFound() throws Exception {
+    public void testGetFileContentsButformInputResponseNotFound() throws Exception {
         assertGetFileButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
     }
 
@@ -873,7 +882,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponse/file_fileEntry",
+                andDo(document("forminputresponsefileupload/file_fileEntry",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file entry for"),
                                 parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
@@ -899,7 +908,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isNotFound()).
-                andDo(document("forminputresponse/file_fileDownload_" + documentationSuffix)).
+                andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -917,7 +926,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
                 andExpect(status().isNotFound()).
-                andDo(document("forminputresponse/file_fileEntry_" + documentationSuffix)).
+                andDo(document("forminputresponsefileupload/file_fileEntry_" + documentationSuffix)).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -946,7 +955,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
-                andDo(document("forminputresponse/file_fileUpload_" + documentationSuffix)).
+                andDo(document("forminputresponsefileupload/file_fileUpload_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
@@ -981,7 +990,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
-                andDo(document("forminputresponse/file_fileUpdate_" + documentationSuffix)).
+                andDo(document("forminputresponsefileupload/file_fileUpdate_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
@@ -1002,7 +1011,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", "123").
                                 param("applicationId", "456").
                                 param("processRoleId", "789")).
-                andDo(document("forminputresponse/file_fileDelete_" + documentationSuffix)).
+                andDo(document("forminputresponsefileupload/file_fileDelete_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
