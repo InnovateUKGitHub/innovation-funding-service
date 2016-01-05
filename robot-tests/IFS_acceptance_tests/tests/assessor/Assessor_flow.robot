@@ -20,7 +20,7 @@ Resource          ../../resources/keywords/Assessor_actions.robot
 ${reject_application_name}    Security for the Internet of Things
 ${accept_application_name}    A new innovative solution
 ${competition_name}    Technology Inspired
-${deadline_month}    december deadline
+${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
