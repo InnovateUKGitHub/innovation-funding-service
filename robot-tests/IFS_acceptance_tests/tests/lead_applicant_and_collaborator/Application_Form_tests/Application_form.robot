@@ -8,7 +8,8 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
 ...
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Run Keywords    Login as User    &{lead_applicant_credentials}
+...               AND    Create new application
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -240,7 +241,7 @@ Create new application
     Click Element    css=#content > form > input
 
 Applicant goes to the 'project summary' question of the new application
-    Go To     ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+    Go To    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
 
 Applicant goes to the 'public description' question of the new application
     go to    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
