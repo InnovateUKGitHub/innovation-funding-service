@@ -126,6 +126,13 @@ public class User {
         this.processRoles.addAll(Arrays.asList(r));
     }
 
+    public void addUserOrganisation(Organisation... o){
+        if(this.organisations == null){
+            this.organisations  = new ArrayList<>();
+        }
+        this.organisations.addAll(Arrays.asList(o));
+    }
+
     public Boolean passwordEquals(String passwordInput){
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
         return encoder.matches(passwordInput, this.password);
