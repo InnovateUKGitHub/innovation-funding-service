@@ -6,7 +6,6 @@ import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
@@ -44,27 +43,22 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback) {
+    public Either<ServiceFailure, Feedback> updateAssessorFeedback(Feedback feedback) {
 
-        BiFunction<ProcessRole, Response, Either<ServiceFailure, ServiceSuccess>> updateFeedback = (role, response) -> {
+        BiFunction<ProcessRole, Response, Either<ServiceFailure, Feedback>> updateFeedback = (role, response) -> {
             AssessorFeedback responseFeedback = response.getOrCreateResponseAssessorFeedback(role);
             responseFeedback.setAssessmentValue(feedback.getValue().orElse(null));
             responseFeedback.setAssessmentFeedback(feedback.getText().orElse(null));
             responseRepository.save(response);
-            return right(new ServiceSuccess());
+            return right(feedback);
         };
 
-        return handlingErrors(() -> {
-            return getResponse(feedback.getResponseId()).map(response -> {
-                return getProcessRole(feedback.getAssessorProcessRoleId()).map(processRole -> {
-                    return validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).map(assessorRole -> {
-                        return validateProcessRoleInApplication(response, processRole).map(roleInApplication -> {
-                            return updateFeedback.apply(assessorRole, response);
-                        });
-                    });
-                });
-            });
-        });
+        return handlingErrors(() -> getResponse(feedback.getResponseId()).
+            map(response -> getProcessRole(feedback.getAssessorProcessRoleId()).
+            map(processRole -> validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).
+            map(assessorRole -> validateProcessRoleInApplication(response, processRole).
+            map(roleInApplication -> updateFeedback.apply(assessorRole, response))
+        ))));
     }
 
     @Override

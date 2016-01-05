@@ -6,7 +6,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -26,7 +25,8 @@ import java.util.function.Supplier;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static com.worth.ifs.util.FileFunctions.*;
+import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
+import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
@@ -37,9 +37,11 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private static final Log log = LogFactory.getLog(FileServiceImpl.class);
 
-    enum ServiceFailures {
+    public enum ServiceFailures {
         UNABLE_TO_CREATE_FOLDERS, //
         UNABLE_TO_CREATE_FILE, //
+        UNABLE_TO_UPDATE_FILE, //
+        UNABLE_TO_DELETE_FILE, //
         DUPLICATE_FILE_CREATED, //
         UNABLE_TO_FIND_FILE, //
         INCORRECTLY_REPORTED_MEDIA_TYPE, //
@@ -53,13 +55,13 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private FileEntryRepository fileEntryRepository;
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Pair<File, FileEntry>>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
+    public Either<ServiceFailure, Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
         return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
 
             createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                 try {
-                    return validateMediaType(validationFile, resource.getMediaType()).map(tempFile ->
+                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).map(tempFile ->
                            validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
                            saveFileEntry(resource).map(savedFileEntry ->
                            createFileForFileEntry(savedFileEntry, tempFile)).map(fileAndFileEntry ->
@@ -73,13 +75,67 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
-    public Either<ServiceFailure, ServiceSuccess<Supplier<InputStream>>> getFileByFileEntryId(Long fileEntryId) {
+    public Either<ServiceFailure, Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         return handlingErrors(UNABLE_TO_FIND_FILE, () ->
                 findFileEntry(fileEntryId).
                 map(fileEntry -> findFile(fileEntry)).
                 map(fileEntry -> getInputStreamSuppier(fileEntry)).
                 map(inputStream -> successResponse(inputStream))
         );
+    }
+
+    @Override
+    public Either<ServiceFailure, Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
+
+        return handlingErrors(UNABLE_TO_UPDATE_FILE, () ->
+
+                createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
+                    try {
+                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).map(tempFile ->
+                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).map(tempFile ->
+                               updateFileEntry(updatedFile).map(updatedFileEntry ->
+                               updateFileForFileEntry(updatedFileEntry, tempFile).map(fileAndFileEntry ->
+                               successResponse(fileAndFileEntry)
+                        )));
+                    } finally {
+                        deleteFile(validationFile);
+                    }
+                })
+        );
+    }
+
+    @Override
+    public Either<ServiceFailure, FileEntry> deleteFile(long fileEntryId) {
+
+        return handlingErrors(UNABLE_TO_DELETE_FILE, () ->
+            findFileEntry(fileEntryId).
+            map(fileEntry -> findFile(fileEntry).
+            map(file -> {
+
+                fileEntryRepository.delete(fileEntry);
+
+                boolean fileDeletedSuccessfully = file.delete();
+
+                if (fileDeletedSuccessfully) {
+                    return successResponse(fileEntry);
+                } else {
+                    return errorResponse(UNABLE_TO_DELETE_FILE);
+                }
+            })));
+    }
+
+    private Either<ServiceFailure, FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {
+        FileEntry updated = fileEntryRepository.save(FileEntryResourceAssembler.valueOf(updatedFileDetails));
+        return right(updated);
+    }
+
+    private <T> Either<ServiceFailure, Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
+
+        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+
+        return updateFileForFileEntry(pathElements, filename, tempFile).map(file -> right(Pair.of(file, existingFileEntry)));
     }
 
     private Either<ServiceFailure, File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -182,6 +238,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 map(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
     }
 
+    private Either<ServiceFailure, File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
+
+        Path foldersPath = pathElementsToPath(absolutePathElements);
+        return updateExistingFileWithTempFile(foldersPath, filename, tempFile);
+    }
+
     private Either<ServiceFailure, File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
         try {
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
@@ -194,9 +256,25 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
             return right(targetFile.toFile());
         } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename);
-            log.error(e);
+            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return errorResponse(UNABLE_TO_CREATE_FILE);
+        }
+    }
+
+    private Either<ServiceFailure, File> updateExistingFileWithTempFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            File fileToCreate = new File(targetFolder.toString(), targetFilename);
+
+            if (!fileToCreate.exists()) {
+                log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
+                return errorResponse(UNABLE_TO_FIND_FILE);
+            }
+
+            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
+            return right(targetFile.toFile());
+        } catch (IOException e) {
+            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return errorResponse(UNABLE_TO_UPDATE_FILE);
         }
     }
 

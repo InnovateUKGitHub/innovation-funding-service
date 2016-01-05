@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -192,11 +193,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         try {
             permissionEntity = lookupMethod.getRight().invoke(lookupMethod.getLeft(), targetId);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException("Could not successfully call permission entity lookup method", e);
+            throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
         }
 
         if (permissionEntity == null) {
-            throw new IllegalArgumentException("Could not find entity of type " + targetType + " with id " + targetId);
+            throw new AccessDeniedException("Could not find entity of type " + targetType + " with id " + targetId);
         }
 
         return hasPermission(authentication, permissionEntity, permission);

@@ -30,7 +30,7 @@ public class FileEntry {
         this(id, originalFilename, mediaType.toString(), filesizeBytes);
     }
 
-    private FileEntry(Long id, String originalFilename, String mediaType, long filesizeBytes) {
+    public FileEntry(Long id, String originalFilename, String mediaType, long filesizeBytes) {
         this.id = id;
         this.name = originalFilename;
         this.mediaType = mediaType;

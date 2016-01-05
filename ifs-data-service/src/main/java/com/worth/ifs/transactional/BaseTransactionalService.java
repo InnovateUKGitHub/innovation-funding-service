@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.NoTransactionException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
  *
  * Created by dwatson on 06/10/15.
  */
+@Transactional
 public abstract class BaseTransactionalService  {
 
     private static final Log log = LogFactory.getLog(BaseTransactionalService.class);
@@ -157,8 +159,8 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, ServiceSuccess<T>> successResponse(T response) {
-        return Either.<ServiceFailure, ServiceSuccess<T>> right(new ServiceSuccess(response));
+    protected static <T> Either<ServiceFailure, T> successResponse(T response) {
+        return Either.<ServiceFailure, T> right(response);
     }
 
     /**

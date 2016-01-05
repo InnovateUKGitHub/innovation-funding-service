@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -418,7 +419,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         try {
             permissionEvaluator.hasPermission(new UserAuthentication(readWriteUser), Long.MAX_VALUE, "java.lang.Long", "Read");
             fail("Should've failed as no entity could be looked up");
-        } catch (IllegalArgumentException e) {
+        } catch (AccessDeniedException e) {
             // expected behaviour
         }
     }

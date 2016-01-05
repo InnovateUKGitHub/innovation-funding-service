@@ -6,7 +6,6 @@ import com.worth.ifs.assessment.dto.Feedback.Id;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
 import com.worth.ifs.util.Either;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +74,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getMessage());
+        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getValue().get());
 
         verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
     }
@@ -120,8 +119,8 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     private static class TestAssessmentService implements AssessorService {
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback) {
-            return right(new ServiceSuccess("Security tested!"));
+        public Either<ServiceFailure, Feedback> updateAssessorFeedback(Feedback feedback) {
+            return right(new Feedback().setValue(Optional.of("Security tested!")));
         }
 
         @Override
