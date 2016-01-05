@@ -45,6 +45,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_FILE, //
+        FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, //
         UNABLE_TO_UPDATE_FILE, //
         UNABLE_TO_DELETE_FILE, //
         UNABLE_TO_FIND_FILE, //
@@ -103,35 +104,44 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
-                fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
+        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
             long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
-            FileEntry fileEntry = successfulFile.getValue();
-
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
-            if (existingResponse != null) {
-                existingResponse.setFileEntry(fileEntry);
-                formInputResponseRepository.save(existingResponse);
-                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-                return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
+            if (existingResponse != null && existingResponse.getFileEntry() != null) {
+                return errorResponse(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE);
             } else {
-                return getProcessRole(processRoleId).
-                        map(processRole -> getFormInput(formInputId).
-                        map(formInput -> getApplication(applicationId).
-                        map(application -> {
 
-                    FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
-                    formInputResponseRepository.save(newFormInputResponse);
-                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                    return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
-                })));
+                return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
+
+                    FileEntry fileEntry = successfulFile.getValue();
+
+                    if (existingResponse != null) {
+
+                        existingResponse.setFileEntry(fileEntry);
+                        formInputResponseRepository.save(existingResponse);
+                        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
+                        return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
+
+                    } else {
+
+                        return getProcessRole(processRoleId).
+                                map(processRole -> getFormInput(formInputId).
+                                map(formInput -> getApplication(applicationId).
+                                map(application -> {
+                                    FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+                                    formInputResponseRepository.save(newFormInputResponse);
+                                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+                                    return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
+                        })));
+                    }
+                });
             }
-        }));
+        });
     }
 
     @Override
@@ -141,7 +151,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
-
             return existingFileResult.map(existingFile -> {
 
                 FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();

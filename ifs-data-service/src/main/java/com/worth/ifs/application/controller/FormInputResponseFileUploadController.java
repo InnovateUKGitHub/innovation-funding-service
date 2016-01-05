@@ -33,6 +33,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
 import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryUpdated;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
@@ -72,7 +73,8 @@ public class FormInputResponseFileUploadController {
             new SimpleServiceFailureToJsonResponseHandler(asList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response)),
             new SimpleServiceFailureToJsonResponseHandler(asList(INCORRECTLY_REPORTED_FILESIZE), (serviceFailure, response) -> badRequest("Incorrectly reported filesize", response)),
             new SimpleServiceFailureToJsonResponseHandler(asList(INCORRECTLY_REPORTED_MEDIA_TYPE), (serviceFailure, response) -> unsupportedMediaType("Incorrectly reported Content Type", response)),
-            new SimpleServiceFailureToJsonResponseHandler(asList(DUPLICATE_FILE_CREATED), (serviceFailure, response) -> conflict("File already exists", response))
+            new SimpleServiceFailureToJsonResponseHandler(asList(DUPLICATE_FILE_CREATED), (serviceFailure, response) -> conflict("File already exists", response)),
+            new SimpleServiceFailureToJsonResponseHandler(asList(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), (serviceFailure, response) -> conflict("File already linked to Form Input Response", response))
     );
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")

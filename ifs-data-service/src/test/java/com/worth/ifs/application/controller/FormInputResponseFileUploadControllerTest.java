@@ -23,6 +23,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
@@ -294,6 +295,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testCreateFileButDuplicateFileEncountered() throws Exception {
         assertCreateFileButErrorOccurs(DUPLICATE_FILE_CREATED, "duplicateFile", CONFLICT, "File already exists");
+    }
+
+    @Test
+    public void testCreateFileButFormInputResponseAlreadyHasFileLinked() throws Exception {
+        assertCreateFileButErrorOccurs(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "fileAlreadyLinked", CONFLICT, "File already linked to Form Input Response");
     }
 
     @Test

@@ -30,9 +30,7 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_DELETE_FILE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -124,6 +122,31 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
         verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+    }
+
+    @Test
+    public void testCreateFormInputResponseFileUploadButFileAlreadyExistsForFormInputResponse() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
+
+        FileEntry alreadyExistingFileEntry = newFileEntry().build();
+        FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntry(alreadyExistingFileEntry).build();
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
+        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
+        when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
+
+        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> result =
+                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE));
     }
 
     @Test

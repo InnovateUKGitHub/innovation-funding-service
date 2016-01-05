@@ -59,6 +59,10 @@ include::{snippets}/forminputresponsefileupload/file_fileUpload_incorrectlyRepor
 include::{snippets}/forminputresponsefileupload/file_fileUpload_duplicateFile/http-response.adoc[]
 
 
+===== File already linked to Form Input Response
+include::{snippets}/forminputresponsefileupload/file_fileUpload_fileAlreadyLinked/http-response.adoc[]
+
+
 
 === Update file for existing response to a FormInputResponse
 ==== Success case
