@@ -132,8 +132,9 @@ then when the Year field is empty
     Clear Element Text    id=application_details-startdate_year
 
 the applicant should get a validation error "Please enter a valid value"
-    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
+    #Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
     #Element Should Contain    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid value.
+    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > label > span
 
 when the applicant inserts "-1" in the day field
     Clear Element Text    id=application_details-startdate_day
@@ -161,7 +162,7 @@ the applicant inserts "0" in the duration field
 
 the applicant should get a validation error for the duration
     #Focus    css=.app-submit-btn
-    Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
+    Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
 
 when the applicant inserts "-1" in the duration field
     Clear Element Text    id=application_details-duration
@@ -176,7 +177,7 @@ when the Applicant inserts 01 in the duration field
 
 The Applicant should not see any more the error for the duration
     Focus    css=.app-submit-btn
-    Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > div > span
+    Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
     Sleep    1s
 
 the applicant clears the application title field

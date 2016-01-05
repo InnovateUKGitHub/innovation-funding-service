@@ -69,3 +69,42 @@ table{
 		}
 	}
 }
+
+
+
+/*----- Competition admin status' ----*/
+
+.comp-status{
+	background: $button-colour;
+	text-align: center;
+	padding: 20px;
+	color: $white;
+	
+	&.closed{
+		background: $red;
+	}
+
+	&.funders-panel{
+		background: $light-blue;
+	}
+
+	&.in-assessment{
+		background: $orange;
+	}
+
+	&.prep{
+		background: $grey-1;
+	}
+
+	h2{
+		margin: 0 0 0.5em 0;
+	}
+
+	sup{
+		font-size: 0.5em;
+	}
+}
+
+
+
+

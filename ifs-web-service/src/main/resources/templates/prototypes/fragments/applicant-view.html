@@ -21,7 +21,12 @@
 <!-- ========Applicant view - sub header back to comp dashboard======= -->
 <div th:fragment="prototype-subheader(link, url)">
     <div class="sub-header">
-        <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+        <div th:if="${url == ''}" th:remove="tag">
+            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+        </div>
+        <div th:if="${url != ''}" th:remove="tag">
+             <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
+        </div>
     </div>
 </div>
 
