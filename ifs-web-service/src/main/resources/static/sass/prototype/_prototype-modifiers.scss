@@ -18,6 +18,37 @@
 	clear: both;
 	overflow: auto;
 }
+
+/*--- Underlining ---*/
+
+.grid-row{
+	&.sorting{
+		border-bottom: 1px solid $secondary-text-colour;
+	}
+}
+
+.heading-large{
+	&.underline{
+		border-bottom: 4px solid $black;
+	}
+}
+
+.heading-medium{
+	&.underline{
+		border-bottom: 1px solid $black;
+	}
+}
+
+ul.underline{
+	li{
+		border-top: 1px solid $black;
+
+		&:first-child{
+			border-top: none;
+		}
+	}
+}
+
 		
 /*--- Controlling visibility of hidden panels for js and non-js ---*/
 

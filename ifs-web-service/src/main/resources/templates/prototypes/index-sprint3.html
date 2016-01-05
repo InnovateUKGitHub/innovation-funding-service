@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header no-margin-bottom group">
+		<div class="hgroup">
+			<h1>Prototype index</h1>
+			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
+		</div>
+	</header>
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 3</h1>
+
+			<section>
+				<h2 class="heading-medium">Competition administrator</h2>
+				<ul class="list-bullet">
+					<li>
+						<h3><a href="/prototypes/860-comp-dashboard">INFUND-860</a></h3>
+						<p>As a Competition Administrator I want to see how many applications have been submitted for a competition as soon as it closes so I can ensure we have enough assessors and begin the process of assignment</p>
+					</li>
+					<li>
+						<h3>INFUND-997</h3>
+						<p>**As a Competition Administrator I want to see how many applications are currently underway (over 50% complete) for an open competition so I can invite assessors enough assessors</p>
+					</li>
+					<li>
+						<h3>INFUND-998</h3>
+						<p>**As a Competition Administrator I want to see how many assessments are currently underway for a competition in assessment so I can track progresss</p>
+					</li>
+					<li>
+						<h3>INFUND-863</h3>
+						<p>As a Competition Administrator I want to be able to manually select a pool of assessors from a list of available assessors for future allocation to a competition</p>
+					</li>
+					<li>
+						<h3>INFUND-866</h3>
+						<p>As a Competition Administrator I want to be able to group assessors selected for the assessor pool by specialism so I can more accurately assign assessors to applications</p>
+					</li>
+					<li>
+						<h3>INFUND-1021</h3>
+						<p>As a Competition Administrator I want the option to manually allocate assessors to each application from my pool of assessors so that I can distribute the assessments incorporating awareness of expertise and conflicts</p>
+					</li>
+					<li>
+						<h3><a href="/prototypes/1022-comp-admin-assessors">INFUND-1022</a></h3>
+						<p>As a Competition Administrator I want the option to allocate assessors to each application within their specialist groups so that I can distribute the assessments more effectively</p>
+					</li>
+					<li>
+						<h3>INFUND-870</h3>
+						<p>As a Competition Administrator I want to manually allocate a new assessor to an application when an appointed assessor declines so that I can have the correctly designated number of assessor for each application</p>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="heading-medium">Applicant</h2>
+				<ul class="list-bullet">
+
+					<li>
+						<h3>INFUND-1137</h3><p>As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given</p>
+					</li>
+					<li>
+						<h3>INFUND-1170</h3><p>As an applicant I want see where my completed application is in the assessment process so that I can track its progress through assessment</p>
+					</li>
+					<li>
+						<h3>INFUND-545</h3><p>As an applicant I want to access my application assessment feedback, so that I can review the comments</p>
+					</li>
+					<li>
+						<h3>INFUND-1141</h3><p>As a lead applicant I want to be able to agree to the Terms and Conditions when submitting an application so I can compete the verification process and comply with the competition requirements.</p>
+					</li>
+					<li>
+						<h3>INFUND-920</h3><p>As an applicant i want the process information separate from applying, so that i don't have to apply in order to find out general information</p>
+					</li>
+					<li>
+						<h3>INFUND-1169</h3><p>As an applicant I want to be given guidance to contact Innovate UK's helpdesk if I wish to apply for a special rate for Admin Support Costs (formerly Overheads) so that I am not limited to the default rate</p>
+					</li>
+					<li>
+						<h3>INFUND-1171</h3><p>As an applicant I want to be directed to the Innovate UK helpdesk if I need to change my email address, so that I can keep my details up to date</p>
+					</li>
+					<li>
+						<h3>INFUND-1172</h3><p>As an applicant I want to be directed to the Innovate UK helpdesk if I need to change the organisation associated with my user ccount, so that I can keep my details up to date</p>
+					</li>
+					<li>
+						<h3>INFUND-1173</h3><p>As an applicant I want to be directed to the Innovate UK helpdesk if I need to change the lead applicant for the current appication, so that I can keep my organisation's details up to date</p>
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Applicant</h2>
+				<ul class="list-bullet">
+					<li>
+						<h3>INFUND-1175</h3> <p>As an assessor I want to be shown a countdown indicator informing me of an approaching deadline for completion of assessment so that I can manage my workload and contact Innovate UK if necessary</p>
+					</li>
+					<li>
+						<h3>INFUND-1176</h3> <p>As an assessor I want to be able to create an account by following a link in the email invitation so that I can be approved for assessment of Innovate UK competitions</p>
+					</li>
+					<li>
+						<h3>INFUND-1177</h3> <p>As an assessor I want to supply my profile information and skills so that Innovate UK can accurately assign approriate assessments to me</p>
+					</li>
+					<li>
+						<h3>INFUND-1178</h3> <p>As an assessor I want to be able to update/edit my profile information and skills so that Innovate UK can accurately assign approriate assessments to me</p>
+					</li>
+					<li>
+						<h3>INFUND-1247</h3> <p>As an assessor I need to provide contracts and DOI to Innovate UK so that I am able to assess a competition</p>
+					</li>
+					<li>
+						<h3>INFUND-1179</h3> <p>As an assessor I want to be able to log in with an existing account by having the option to select Applicant or Assessor when I log in, if I have a user account with both role profiles so that I don't access the wrong profile information</p>
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Misc</h2>
+				<ul class="list-bullet">
+					<li>
+						<h3>INFUND-1203</h3><p>As a Lead Technologist/Comp Admin I want to be able to dynamically view all assessment information and scoring calculations for a competition together in a table so that I can rank the list and see identify areas requiring further review</p>
+					</li>
+					<li>
+						<h3>INFUND-1196</h3><p>As a Competition Administrator/Lead Technologist I want to be able to view details of completed assessments so I can review the comments if necessary</p>
+					</li>
+					<li>
+						<h3>INFUND-1197</h3><p>As a Competition Administrator I want to be able to export information for the Panel Sheet so I can input into a spreadsheet</p>
+					</li>
+					<li>
+						<h3>INFUND-1203</h3><p>As an internal Innovate UK user I want to see the words <strong>Official Sensitive</strong> clearly marked in the header section of each page I print from IFS so that I comply with regulations</p>
+					</li>
+					<li>
+						<h3>INFUND-1174</h3><p>As an assessor at the beginning of an assessment, I want to be asked to confirm whether the application is in the correct research category so that Innovate UK know whether they have the right expertise assessing the application</p>
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Ongoing tasks</h2>
+				<ul class="list-bullet">
+					<li>
+						<h3>INFUND-636</h3><p>As a UX team member I want to make  refinements to the components we already have for accessibility, code validity  and usability, so we can make small improvements which don't fit in a specific user story.</p>
+					</li>
+				</ul>
+			</section>
+			
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>
