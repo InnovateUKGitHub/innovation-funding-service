@@ -56,7 +56,6 @@ Applicant goes to the 'funding' question
 Applicant goes to the 'project team' question
     Go To    ${PROJECT_TEAM_URL}
 
-
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
 
@@ -65,7 +64,6 @@ Applicant goes to the Your finances section
 
 Applicant goes to the finance overview
     Go To    ${FINANCES_OVERVIEW_URL}
-
 
 Applicant edits the 'Project Summary' question
     Clear Element Text    css=#form-input-11 .editor
@@ -82,6 +80,7 @@ Question should be editable
 
 Mark question 12 as editable
     click Element    css=#form-input-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    Sleep    1s
 
 Switch to the first browser
     Switch browser    1
@@ -176,7 +175,7 @@ Applicant is on the 'funding' question
     Page Should Not Contain    Error
 
 Applicant is on the 'project team' question
-    Location Should Be      ${PROJECT_TEAM_URL}
+    Location Should Be    ${PROJECT_TEAM_URL}
     Page Should Not Contain    error
     Page Should Not Contain    Error
 
