@@ -1,7 +1,11 @@
 package com.worth.ifs.application.transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
@@ -13,6 +17,8 @@ import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.io.File;
@@ -150,6 +156,56 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public Either<ServiceFailure, ServiceSuccess<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId id) {
+            return null;
+        }
+
+        @Override
+        public ApplicationResourceHateoas getApplicationByIdHateoas(Long id) {
+            return null;
+        }
+
+        @Override
+        public Resources<ApplicationResourceHateoas> findAllHateoas() {
+            return null;
+        }
+
+        @Override
+        public ApplicationResource getApplicationById(Long id) {
+            return null;
+        }
+
+        @Override
+        public List<ApplicationResource> findAll() {
+            return null;
+        }
+
+        @Override
+        public List<ApplicationResource> findByUserId(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ResponseEntity<String> saveApplicationDetails(Long id, ApplicationResource application) {
+            return null;
+        }
+
+        @Override
+        public ObjectNode getProgressPercentageByApplicationId(Long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ResponseEntity<String> updateApplicationStatus(Long id, Long statusId) {
+            return null;
+        }
+
+        @Override
+        public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
+            return null;
+        }
+
+        @Override
+        public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
             return null;
         }
     }
