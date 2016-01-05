@@ -19,6 +19,7 @@ Verify the applicant can assign a question
     Then the success message should show
     and the field of the public description question should be disabled
     and the question should show the assigned persons name
+    [Teardown]    User closes the browser
 
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
@@ -26,6 +27,7 @@ Verify the field is disabled for other collaborators
     Given the second Collaborator is logged in
     When the second Collaborator is in the public description question
     Then the public description question should not be editable
+    [Teardown]    User closes the browser
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
@@ -48,15 +50,7 @@ Verify the field is disabled for the Collaborator
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     Then the field of the public description question should be disabled
-
-Verify the Lead applicant can assign a question back to him self
-    [Documentation]    INFUND-275
-    [Tags]    Collaboration
-    [Setup]    Switch to the first browser
-    Given the Applicant opens again the application form
-    When the Applicant assigns the public description question to the collaborator    Jessica Doe
-    and the field of the public description question should be disabled
-    and the lead applicant re-assign the question to him self    Steve Smith
+    [Teardown]    User closes the browser
 
 *** Keywords ***
 When the Applicant assigns the public description question to the collaborator
@@ -119,17 +113,8 @@ the 'Last update' message should be updated
 the question should show the assigned persons name
     Element Should Contain    css=#form-input-12 .assignee span+span    Jessica Doe
 
-the lead applicant re-assign the question to him self
-    [Arguments]    ${assignee_name}
-    Reload Page
-    Click Element    css=#form-input-12 > div > div.textarea-wrapped.word-count > div.textarea-footer > div > div.assign-button > button
-    Click Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
-    Element Should Be Enabled    id=12
-
-the Applicant opens again the application form
-    Reload Page
-    Applicant goes to the Application form
-    Mark question 12 as editable
-
 the collaborator marks question as complete
     Click Element    css=#form-input-12 .buttonlink[name="mark_as_complete"]
+
+the Applicant assigns the public description question to the collaborator
+    [Arguments]    ${arg1}

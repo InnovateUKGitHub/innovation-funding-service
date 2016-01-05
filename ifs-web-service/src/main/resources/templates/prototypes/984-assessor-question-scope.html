@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Scope (Gateway question)'})" th:remove="tag" />
@@ -48,7 +48,7 @@
     </li>
 </ul>
 
-<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to application overview</a>
+<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to assessment overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

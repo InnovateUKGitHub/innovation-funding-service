@@ -1,6 +1,5 @@
 #!/bin/bash
 
-testDirectory
 
 testDirectory='IFS_acceptance_tests/tests/*'
 if [ -n "$1" ]; then
