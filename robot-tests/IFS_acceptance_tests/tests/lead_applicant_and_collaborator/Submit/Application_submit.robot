@@ -27,7 +27,7 @@ Submit flow (complete application)
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
     [Tags]    Applicant    Submit    Review and Submit    Summary
-    Given the application is complete
+    Given all the sections are marked as complete
     When the applicant submits the application in the summary page
     Then the applicant should get the submit modal
     When the applicant submits the application in the summary page
@@ -37,6 +37,44 @@ Submit flow (complete application)
     and the link of the application should redirect to the submitted application page
 
 *** Keywords ***
+
+
+all the sections are marked as complete
+
+    Applicant goes to the 'application details' question
+    Alert Should Be Present
+    Sleep   2s
+    Mark question as complete
+    Applicant goes to the 'project summary' question
+    Mark question as complete
+    Applicant goes to the 'public description' question
+    Mark question as complete
+    Applicant goes to the 'scope' question
+    Mark question as complete
+    Applicant goes to the 'business opportunity' question
+    Mark question as complete
+    Applicant goes to the 'potential market' question
+    Mark question as complete
+    Applicant goes to the 'project exploitation' question
+    Mark question as complete
+    Applicant goes to the 'economic benefits' question
+    Mark question as complete
+    Applicant goes to the 'technical approach' question
+    Mark question as complete
+    Applicant goes to the 'innovation' question
+    Mark question as complete
+    Applicant goes to the 'risks' question
+    Mark question as complete
+    Applicant goes to the 'project team' question
+    Mark question as complete
+    Applicant goes to the 'funding' question
+    Mark question as complete
+    Applicant goes to the 'adding value' question
+    Mark question as complete
+
+
+
+
 the Applicant should navigate to the "submit confirmation" page
     Location Should Be    ${APPLICATION_SUBMITTED_URL}
     Page Should Contain    Application submitted
@@ -67,9 +105,11 @@ the Applicant is in the summary page
 the submit button should be disabled
     Element Should Be Disabled    css=.alignright-button button
 
-Mark Question as complete
-    Wait Until Element Is Visible    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
-    Click Element    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
+Mark question as complete
+
+    Click Button    name=mark_as_complete
+   # Wait Until Element Is Visible    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
+    # Click Element    css=#form-input-11 div.textarea-footer > button[name="mark_as_complete"]
 
 Enter valid data in the Project summary question
     Wait Until Element Is Visible    css=#form-input-11 .editor
