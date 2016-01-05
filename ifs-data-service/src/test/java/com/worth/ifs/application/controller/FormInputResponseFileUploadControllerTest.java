@@ -556,7 +556,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
                                 header("IFS_AUTH_TOKEN", "123abc")).
-                andExpect(status().isOk()).
+                andExpect(status().isNoContent()).
                 andDo(document("forminputresponsefileupload/file_fileDelete",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
