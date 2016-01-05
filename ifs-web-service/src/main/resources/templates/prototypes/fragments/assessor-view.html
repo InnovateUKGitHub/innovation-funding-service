@@ -24,10 +24,10 @@
             </div>
         </div>
         <div th:if="${url == ''}" th:remove="tag">
-            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Some link text</h2>
+            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">
-             <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+             <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
         </div>
     </div>
 </div>

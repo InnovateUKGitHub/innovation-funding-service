@@ -89,6 +89,39 @@ li.type-company{
     }
 }
 
+/*----- Standard definition list ----*/
+
+.standard-definition-list{
+    overflow: auto;
+    @include core-19;
+
+    dt{
+        display: block;
+        float: left;
+        width: 50%;
+        margin-bottom: 0.5em;
+
+        @include media-down(tablet) {
+            width: 70%;
+        }
+    }
+
+    dd{
+        display: block;
+        float: left;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+
+        &.warning{
+            color: $red;
+        }
+
+        & + dt{
+            clear: both;
+        }
+    }
+}
+
 /*----- Eligibility criteria for finances ----*/
 
 .eligibility{
@@ -129,6 +162,68 @@ li.type-company{
             clear: both;
         }
     }
+}
 
+/*----- Comp admin lists ----*/
 
+.comp-timeline-status{
+    li{
+        border-top: 1px solid $secondary-text-colour;
+        color: $secondary-text-colour;
+
+        h3{
+            margin: 10px 0 0 0;
+        }
+
+        p{
+            margin: 0 0 10px 0;
+        }
+
+        &:first-child{
+            border-top: none;
+        }
+
+        &.done{
+            border-top: 1px solid $text-colour;
+            color: $text-colour;
+            @extend %icon-tick;
+            background-position: right 50%;
+
+            &:first-child{
+                border-top: none;
+            }
+        }
+    }
+}
+
+.comp-list{
+    li{
+        border-top: 1px solid $secondary-text-colour;
+        color: $text-colour;
+        overflow: auto;
+        
+        &:first-child{
+            border-top: none;
+        }
+
+        .comp-details{
+            @extend .column-two-thirds;
+        }
+
+        p{
+            color: $secondary-text-colour;
+            font-weight: bold;
+        }
+
+        .status{
+            @extend .column-third;
+            float: right;
+            background: $panel-colour;
+            padding: 12px;
+            text-align: center;
+            margin-top: 1.2em;
+            font-weight: bold;
+        }
+
+    }
 }

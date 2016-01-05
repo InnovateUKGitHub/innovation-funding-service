@@ -53,6 +53,10 @@ Applicant goes to the 'risks' question
 Applicant goes to the 'funding' question
     Go To    ${FUNDING_URL}
 
+Applicant goes to the 'project team' question
+    Go To    ${PROJECT_TEAM_URL}
+
+
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
 
@@ -61,6 +65,7 @@ Applicant goes to the Your finances section
 
 Applicant goes to the finance overview
     Go To    ${FINANCES_OVERVIEW_URL}
+
 
 Applicant edits the 'Project Summary' question
     Clear Element Text    css=#form-input-11 .editor
@@ -167,6 +172,11 @@ Applicant is on the 'risks' question
 
 Applicant is on the 'funding' question
     Location Should Be    ${FUNDING_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
+
+Applicant is on the 'project team' question
+    Location Should Be      ${PROJECT_TEAM_URL}
     Page Should Not Contain    error
     Page Should Not Contain    Error
 
