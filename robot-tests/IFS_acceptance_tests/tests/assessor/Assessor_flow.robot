@@ -34,7 +34,7 @@ ${persistence_application_name}    A new innovative solution
 *** Test Cases ***
 Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
@@ -54,7 +54,7 @@ Applications details page has two lists
 
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor    failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
@@ -76,7 +76,7 @@ Application state changes when accepting an invitation for assessment
 
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -148,7 +148,7 @@ Competition for Assessment count
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
