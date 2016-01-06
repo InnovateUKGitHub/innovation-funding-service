@@ -13,9 +13,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'The management and use of Biofuels'}, ${''})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/1345-comp-dashboard'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin">The management and use of Biofuels</h1>
+    </div>
 	
 	<div class="grid-row extra-margin">
 		<div class="column-two-thirds">
