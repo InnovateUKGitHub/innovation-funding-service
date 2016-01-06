@@ -3,8 +3,34 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	
+
+	<div th:if="${param.filterStatus != null}" th:remove="tag">
+		<style>
+			li.status{
+				display: none;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Open'}">
+			li.status.comp-status-open{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Closed'}">
+			li.status.comp-status-closed{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'In assessment'}">
+			li.status.comp-status-assess{
+				display: block;
+			}
+		</style>
+	</div>
+
 </head>
 <body class="comp-dashboard">
+
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -21,55 +47,79 @@
 	
 	<div class="search-filters">
 		
-		<form>
+		<form formaction="/prototypes/1345-comp-dashboard" method="GET">
 
 			<h2 class="heading-medium no-margin">Filter competitions</h2>
 
 			<div class="grid-row">
 				<div class="column-third">
 					<label class="form-label" for="filter-status">Status</label>
-					<select class="form-control" id="filter-status" name="filter-status">
-						<option selected="selected">---</option>
-						<option value="prep">Prep</option>
-						<option value="open">Open</option>
-						<option value="closed">Closed</option>
-						<option value="in-assessment">In assessment</option>
-						<option value="funders-panel">Funders panel</option>
+					<select class="form-control" id="filterStatus" name="filterStatus">
+						
+						<option th:if="${param.filterStatus != null}" th:remove="tag">
+							<option th:text="${param.filterStatus[0]}" selected="selected">TEST</option>
+						</option>
+						
+						<option th:if="${param.filterStatus == null}" th:remove="tag">
+							<option selected="selected">---</option>
+						</option>
+
+						<!-- <option value="prep">Prep</option> -->
+						<option value="Open">Open</option>
+						<option value="Closed">Closed</option>
+						<option value="In assessment">In assessment</option>
+						<!-- <option value="funders-panel">Funders panel</option>
 						<option value="project-set-up">Project set-up</option>
-						<option value="complete">Complete</option>
+						<option value="complete">Complete</option> -->
 					</select>
 				</div>
 				<div class="column-third">
-					<label class="form-label" for="filter-comp-type">Competition type</label>
-					<select class="form-control" id="filter-comp-type" name="filter-comp-type">
-						<option selected="selected">---</option>
-						<option value="feasibility">Feasibility study</option>
-						<option value="collaborative-rd">Collaborative R&#38;D</option>
-						<option value="smart">Smart</option>
-						<option value="sbri">SBRI</option>
+					<label class="form-label" for="filterCompType">Competition type</label>
+					<select class="form-control" id="filterCompType" name="filterCompType">
+
+						<option th:if="${param.filterCompType != null}" th:remove="tag">
+							<option th:text="${param.filterCompType[0]}" selected="selected">TEST</option>
+						</option>
+						
+						<option th:if="${param.filterCompType == null}" th:remove="tag">
+							<option selected="selected">---</option>
+						</option>
+
+						<option value="Feasibility study">Feasibility study</option>
+						<option value="Collaborative R&#38;D">Collaborative R&#38;D</option>
+						<option value="Smart">Smart</option>
+						<option value="SBRI">SBRI</option>
 					</select>
 				</div>
 				<div class="column-third">
-					<label class="form-label" for="filter-innovation-area">Innovation area</label>
-					<select class="form-control" id="filter-innovation-area" name="filter-innovation-area">
-						<option selected="selected">---</option>
-						<option value="agriculture-food">Agriculture &#38; food</option>
-						<option value="built-environment">Built environment</option>
-						<option value="digital-economy">Digital economy</option>
-						<option value="emerging-technologies">Emerging technologies</option>
-						<option value="energy">Energy</option>
-						<option value="health-care">Health &#38; care</option>
-						<option value="high-value-manufacturing">High value manufacturing</option>
-						<option value="space-applications">Space applications</option>
-						<option value="transport">Transport</option>
-						<option value="urban-living">Urban living</option>
+					<label class="form-label" for="filterInnovationArea">Innovation area</label>
+					<select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+						
+						<option th:if="${param.filterInnovationArea != null}" th:remove="tag">
+							<option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
+						</option>
+						
+						<option th:if="${param.filterInnovationArea == null}" th:remove="tag">
+							<option selected="selected">---</option>
+						</option>
+
+						<option value="Agriculture &#38; food">Agriculture &#38; food</option>
+						<option value="Built environment">Built environment</option>
+						<option value="Digital economy">Digital economy</option>
+						<option value="Emerging technologies">Emerging technologies</option>
+						<option value="Energy">Energy</option>
+						<option value="Health &#38; care">Health &#38; care</option>
+						<option value="High value manufacturing">High value manufacturing</option>
+						<option value="Space applications">Space applications</option>
+						<option value="Transport">Transport</option>
+						<option value="Urban living">Urban living</option>
 					</select>
 				</div>
 			</div>
 			<div class="grid-row extra-margin">
 				<div class="column-two-thirds">
-					<label class="form-label" for="filter-search">Search</label>
-					<input type="text" class="form-control" id="filter-search" style="width: 100%"/>
+					<label class="form-label" for="filterSearch">Search</label>
+					<input type="text" class="form-control" id="filterSearch"/>
 				</div>
 				<div class="column-third">
 					<button class="button">Filter</button>
@@ -82,10 +132,33 @@
 
 
 	<div class="grid-row sorting">
-		<div class="column-half">
-			<h2 class="heading-xlarge no-margin">14 <small>competitions</small></h2>
+		<div class="column-two-thirds">
+			
+			<div th:if="${param.filterStatus != null and param.filterCompType[0] == '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
+				
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+
+			</div>
+
+			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+
+			</div>
+
+			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] != '---'}" th:remove="tag">
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> with innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+			</div>
+
+			<div th:if="${param.filterStatus == null}" th:remove="tag">
+				<p><span class="heading-xlarge no-margin">14</span> <strong>competitions</strong></p>
+			</div>
+
 		</div>
-		<div class="column-half alignright">
+
+
+
+
+		<div class="column-third alignright">
 			<label for="sort-by">Sort by</label>
 			<select name="sort-by" id="sort-by" class="form-control">
 				<option value="priority">Priority</option>
@@ -95,70 +168,110 @@
 	</div>
 
 	<ul class="comp-list">
-		<li>
+		<li class="status comp-status-open">
 			<div class="comp-details">
 				<h3 class="heading-small"><a href="/prototypes/860-comp-applications-dashboard">The management and use of Biofuels</a></h3>
-				<p>Ref number: 14060009</p>
+				<p>Ref number: 14060001</p>
 			</div>
 			<p class="status">
 				Open
 			</p>
 		</li>
-		<li>
+		<li class="status  comp-status-panel">
 			<div class="comp-details">
 				<h3 class="heading-small">Managing energy on marine vessels</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060002</p>
 			</div>
 			<p class="status">
 				Funders panel
 			</p>
 		</li>
-		<li>
+		<li class="status comp-status-panel">
 			<div class="comp-details">
 				<h3 class="heading-small">Energy catalyst</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060003</p>
 			</div>
 			<p class="status">
 				Funders panel
 			</p>
 		</li>
-		<li>
+		<li class="status comp-status-closed">
 			<div class="comp-details">
 				<h3 class="heading-small">Portable renewable energy generation</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060004</p>
 			</div>
 			<p class="status">
 				Closed
 			</p>
 		</li>
-		<li>
+		<li class="status comp-status-open">
+			<div class="comp-details">
+				<h3 class="heading-small">Technology inspired</h3>
+				<p>Ref number: 14060005</p>
+			</div>
+			<p class="status">
+				Open
+			</p>
+		</li>
+		<li class="status comp-status-closed">
 			<div class="comp-details">
 				<h3 class="heading-small">Finding value in complex biological data</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060006</p>
 			</div>
 			<p class="status">
 				Closed
 			</p>
 		</li>
-		<li>
+		<li class="status comp-status-assess">
 			<div class="comp-details">
 				<h3 class="heading-small">Childcare provision for parents</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060007</p>
 			</div>
 			<p class="status">
 				In assessment
 			</p>
 		</li>
-		<li>
+		<li class="status comp-status-assess">
 			<div class="comp-details">
 				<h3 class="heading-small">Driving UK Capability and Economic Impact through Low Carbon Propulsion Technologies</h3>
-				<p>Ref number: 14060005</p>
+				<p>Ref number: 14060008</p>
+			</div>
+			<p class="status">
+				In assessment
+			</p>
+		</li>
+		<li class="status comp-status-assess">
+			<div class="comp-details">
+				<h3 class="heading-small">Game-changing technologies for aerospace</h3>
+				<p>Ref number: 14060009</p>
+			</div>
+			<p class="status">
+				In assessment
+			</p>
+		</li>
+		<li class="status comp-status-assess">
+			<div class="comp-details">
+				<h3 class="heading-small">Solving problems with data</h3>
+				<p>Ref number: 14060010</p>
 			</div>
 			<p class="status">
 				In assessment
 			</p>
 		</li>
 	</ul>
+	
+	<div th:if="${param.filterStatus == null}" th:remove="tag">
+
+		<ul class="pagination">
+		    <li class="next">
+		        <a href="#" rel="next" title="Navigate to next part">
+		            <span class="pagination-label">Next</span>
+		            <span class="pagination-part-title">2 of 2</span>
+		        </a>
+		    </li>
+		</ul>
+
+	</div>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
@@ -168,5 +281,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
 </body>
 </html>
