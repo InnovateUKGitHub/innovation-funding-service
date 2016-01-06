@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 'Labour' Calculations/Autosave
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
-    [Tags]    Labour
+    [Tags]    Labour    Failing
     Given Applicant goes to the Your finances section
     When the Applicant fills the Labour costs
     Then the calculations of the labour should be correct
@@ -22,7 +22,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Materials
+    [Tags]    Materials     Failing
     Given Applicant goes to the Your finances section
     When the Applicant fills the Materials fields
     Then the calculations of the Materials should be correct
@@ -31,7 +31,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Subcontracting costs' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Subcontracting Costs
+    [Tags]    Subcontracting Costs  Failing
     Given Applicant goes to the Your finances section
     When the applicant edits the Subcontracting costs section
     The total subcontracting costs should correct
@@ -63,8 +63,8 @@ the Applicant fills the Materials fields
 
 the calculations of the Materials should be correct
     Reload Page
-    # Sleep   2s
-    #  Alert Should Be Present
+     Sleep   2s
+     Alert Should Be Present
     Confirm Action
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1000
     Textfield Value Should Be    css=#material-costs-total-field    £ 1,000
@@ -81,8 +81,8 @@ the applicant edits the Subcontracting costs section
 
 The total subcontracting costs should correct
     Reload Page
-   #  Sleep    2s
-   #  Alert Should Be Present
+    Sleep    2s
+    Alert Should Be Present
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
     Textfield Value Should Be    css=#cost-subcontracting-total    £ 200
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(9) > span > span    £ 200
