@@ -66,6 +66,7 @@ Applicant goes to the finance overview
     Go To    ${FINANCES_OVERVIEW_URL}
 
 Applicant edits the 'Project Summary' question
+    focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
 
@@ -203,3 +204,8 @@ Applicant is on the Finances section
     Location Should Be    ${FINANCES}
     Page Should Not Contain    error
     Page Should Not Contain    Error
+
+Create new application
+    go to    ${CREATE_APPLICATION_PAGE}
+    Input Text    id=application_name    Form test application
+    Click Element    css=#content > form > input
