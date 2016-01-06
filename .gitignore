@@ -97,3 +97,7 @@ classes/
 
 ifs-web-service.iws
 /out
+
+
+# python bytecode nonsense
+robot-tests/IFS_acceptance_tests/libs/SauceLabs.pyc
