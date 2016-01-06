@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Your Profile'" th:remove="tag" />
 </head>
-<body>
+<body class="user-profile">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
-
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
@@ -16,7 +15,7 @@
 
     <h1 class="heading-large">Your profile</h1>
 
-    <h2 class="heading-medium no-margin-bottom">Your organisation &nbsp; <small><a href="/prototypes/675-edit-org"> Edit your organisation details</a></small></h2>
+    <h2 class="heading-medium no-margin-bottom">Your organisation <small><a href="/prototypes/675-edit-org"> Edit your organisation details</a></small></h2>
 
     <h3 class="heading-small">Organisation name</h3>
     <p>Nomensa</p>
@@ -30,18 +29,18 @@
 
     <hr />
 
-    <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a href="/profile/edit"> Edit your details</a></small></h2>
+    <h2 class="heading-medium no-margin-bottom">Your details <small><a href="/profile/edit"> Edit your details</a></small></h2>
     <!--/*/ <th:block th:object="${userDetailsForm}">/*/-->
     <h3 class="heading-small">Your name</h3>
     <p>
-        <span th:text="*{title}" th:remove="tag">Mr</span>
-        <span th:text="*{firstName}" th:remove="tag">Joe</span>
-        <span th:text="*{lastName}" th:remove="tag">Bloggs</span>
+        <span th:text="*{title}" th:remove="tag" />
+        <span th:text="*{firstName}" th:remove="tag" />
+        <span th:text="*{lastName}" th:remove="tag" />
     </p>
     <h3 class="heading-small">Phone number</h3>
-    <p th:text="*{phoneNumber}">01234 567891</p>
+    <p th:text="*{phoneNumber}" />
     <h3 class="heading-small">Email address</h3>
-    <p th:text="*{email}">J.b@nomensa.com</p>
+    <p th:text="*{email}" />
     <!--/*/ </th:block> /*/-->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -49,46 +48,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script type="text/javascript">
 
-    jQuery('input#address-same').on('click',function(e){
-        //e.preventDefault();
-        if ( jQuery(this).is(':checked') ) {
-            jQuery("#manual-company-input").hide();
-        }else{
-            jQuery("#manual-company-input").show();
-        }
-
-    });
-
-    jQuery('#manual-company-trigger').on('click',function(e){
-        e.preventDefault();
-        jQuery("#manual-company-input").show();
-        jQuery("#org-results").hide();
-
-    });
-
-    jQuery('#postcode-lookup').on('click',function(e){
-        e.preventDefault();
-        jQuery("#select-address-block").show();
-
-    });
-
-    jQuery('#select-address').on('change',function(e){
-        e.preventDefault();
-        jQuery("#address-details").show();
-        jQuery("#street").val("King William House");
-        jQuery("#street-2").val("13 Queens Square");
-        jQuery("#town").val("Bristol");
-        jQuery("#postcode").val("BS1 4NT");
-
-    });
-
-    jQuery('#enter-address-manually').on('click',function(e){
-        e.preventDefault();
-        jQuery("#address-details").show();
-        jQuery("#select-address-block").hide();
-    });
-</script>
 </body>
 </html>
