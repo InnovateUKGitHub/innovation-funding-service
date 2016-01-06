@@ -27,7 +27,7 @@ ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/7
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
     [Tags]    Applicant    Autosave    Form
-    [Setup]    Create new application
+    [Setup]
     Given Applicant goes to the 'project summary' question of the new application
     When the Applicant enters some text
     and the Applicant refreshes the page
@@ -176,6 +176,7 @@ When the Applicant edits the Public description
     #Focus    css=.app-submit-btn
     #Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
+    Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
     Sleep    1s
@@ -209,8 +210,10 @@ the word count for the Project description question should be correct (0 words)
     Element Should Contain    css=#form-input-12 .count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
+    focus    css=#form-input-12 .editor
     Clear Element Text    css=#form-input-12 .editor
     Press Key    css=#form-input-12 .editor    \\8
+    focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Hi, I’m a robot @#$@#$@#$
     Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
@@ -234,11 +237,6 @@ the question should not be marked as complete on the application overview page
 
 the applicant is on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
-
-Create new application
-    go to    ${CREATE_APPLICATION_PAGE}
-    Input Text    id=application_name    Form test application
-    Click Element    css=#content > form > input
 
 Applicant goes to the 'project summary' question of the new application
     Go To    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}

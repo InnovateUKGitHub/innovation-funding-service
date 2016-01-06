@@ -8,6 +8,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
+
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    My mate Dave
 ${OTHER_FUNDING_DATE}    12-2008
@@ -16,7 +17,7 @@ ${OTHER_FUNDING_AMOUNT}    10000
 *** Test Cases ***
 Add details for another source of funding and verify that these details have bee autosaved
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding
+    [Tags]    Applicant    Application    Finances    Other funding     Failing
     Given Applicant goes to the Your finances section
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding

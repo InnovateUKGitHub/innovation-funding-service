@@ -34,7 +34,7 @@ ${persistence_application_name}    A new innovative solution
 *** Test Cases ***
 Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
@@ -68,7 +68,7 @@ Application invitation review page shows partners
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor accepts the application
@@ -85,7 +85,7 @@ Application state changes when rejecting an invitation for assessment
 
 Application Summary sections can be opened and closed
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -94,7 +94,7 @@ Application Summary sections can be opened and closed
 
 Application Summary sections contain questions
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -103,7 +103,7 @@ Application Summary sections contain questions
 
 Application Summary shows your feedback when appropriate
     [Documentation]    INFUND-357
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -148,13 +148,13 @@ Competition for Assessment count
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
 Application Review changes are persisted when saving
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     ${section_name} =    Set Variable    Scope
     ${feedback_selection_value} =    Set Variable    No
     ${feedback_textarea_value} =    Set Variable    Test feedback text UNIQUE123

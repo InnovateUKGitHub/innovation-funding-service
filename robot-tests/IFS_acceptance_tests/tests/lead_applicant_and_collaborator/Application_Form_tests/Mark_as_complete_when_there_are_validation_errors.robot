@@ -34,7 +34,7 @@ Verify that the user doesn't get the error when the text area is not empty anymo
 the "Project Summary" question is empty
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
-    Click Element    css=.bold_button
+    #Click Element    css=.bold_button
 
 the applicant marks the public description question as complete
     Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]

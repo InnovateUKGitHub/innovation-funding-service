@@ -55,14 +55,14 @@ Verify the field is disabled for the Collaborator
 *** Keywords ***
 When the Applicant assigns the public description question to the collaborator
     [Arguments]    ${assignee_name}
-    Clear Element Text    css=#form-input-12 .editor
+    focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    lead Applicant's text 123...
     Click Element    css=#form-input-12 .assign-button button
     Click Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
 
 the success message should show
     Wait Until Element Is Visible    css=#content > div.event-alert
-    Element Should Contain    css=#content > div.event-alert    Question assigned successfully
+    Wait Until Page Contains    Question assigned successfully
 
 the field of the public description question should be disabled
     Wait Until Element Is Visible    css=#form-input-12 .readonly
@@ -102,6 +102,7 @@ the second Collaborator is in the public description question
 the collaborator edits public description question
     Applicant goes to the Application form
     Clear Element Text    css=#form-input-12 .editor
+    Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
     Sleep    2s
