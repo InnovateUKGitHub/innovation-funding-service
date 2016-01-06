@@ -78,9 +78,6 @@ Verify the validation error when the text area is empty
     Then the applicant should get a validation error
 
 *** Keywords ***
-the applicant is in the application form
-    go to    ${APPLICATION_URL}
-
 the applicant inserts "32" in the day field
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    32
@@ -161,7 +158,8 @@ the applicant inserts "0" in the duration field
     Input Text    id=application_details-duration    0
 
 the applicant should get a validation error for the duration
-    #Focus    css=.app-submit-btn
+    Focus    css=.app-submit-btn
+    Sleep    1s
     Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
 
 when the applicant inserts "-1" in the duration field
@@ -173,12 +171,12 @@ when the applicant leaves the duration field empty
 
 when the Applicant inserts 01 in the duration field
     Clear Element Text    id=application_details-duration
-    Input Text    id=application_details-duration    01
+    Input Text    id=application_details-duration    1
 
 The Applicant should not see any more the error for the duration
     Focus    css=.app-submit-btn
+    sleep    2s
     Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
-    Sleep    1s
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
