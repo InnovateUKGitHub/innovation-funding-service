@@ -4,17 +4,17 @@ import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
 
 /**
  * A Service that logs outgoing Notifications
  */
-@Service
-public class LoggingNotificationSendingService implements NotificationSendingService {
+@Component
+public class LoggingNotificationSender implements NotificationSender {
 
-    private static final Log LOG = LogFactory.getLog(LoggingNotificationSendingService.class);
+    private static final Log LOG = LogFactory.getLog(LoggingNotificationSender.class);
 
     @Override
     public NotificationMedium getNotificationMedium() {

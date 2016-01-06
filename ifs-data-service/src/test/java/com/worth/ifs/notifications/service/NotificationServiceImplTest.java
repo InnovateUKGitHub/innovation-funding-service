@@ -17,22 +17,22 @@ import static org.mockito.Mockito.*;
  */
 public class NotificationServiceImplTest extends BaseServiceUnitTest<NotificationService> {
 
-    private NotificationSendingService mockLoggingNotificationSendingService;
-    private NotificationSendingService mockEmailNotificationSendingService;
+    private NotificationSender mockLoggingNotificationSender;
+    private NotificationSender mockEmailNotificationSender;
 
     @Override
     protected NotificationService supplyServiceUnderTest() {
 
-        mockLoggingNotificationSendingService = Mockito.mock(NotificationSendingService.class);
-        mockEmailNotificationSendingService = Mockito.mock(NotificationSendingService.class);
+        mockLoggingNotificationSender = Mockito.mock(NotificationSender.class);
+        mockEmailNotificationSender = Mockito.mock(NotificationSender.class);
 
-        when(mockLoggingNotificationSendingService.getNotificationMedium()).thenReturn(LOGGING);
-        when(mockEmailNotificationSendingService.getNotificationMedium()).thenReturn(EMAIL);
+        when(mockLoggingNotificationSender.getNotificationMedium()).thenReturn(LOGGING);
+        when(mockEmailNotificationSender.getNotificationMedium()).thenReturn(EMAIL);
 
         NotificationServiceImpl notificationService = new NotificationServiceImpl();
 
         ReflectionTestUtils.setField(notificationService, "notificationSendingServices",
-                asList(mockLoggingNotificationSendingService, mockEmailNotificationSendingService));
+                asList(mockLoggingNotificationSender, mockEmailNotificationSender));
 
         notificationService.constructServicesByMediaMap();
 
@@ -53,8 +53,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
         service.sendNotification(notificationToSend, EMAIL);
 
-        verify(mockEmailNotificationSendingService).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSendingService, never()).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender).sendNotification(notificationToSend);
+        verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
     }
 
     @Test
@@ -63,8 +63,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
         service.sendNotification(notificationToSend, EMAIL, LOGGING);
 
-        verify(mockEmailNotificationSendingService).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSendingService).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender).sendNotification(notificationToSend);
+        verify(mockLoggingNotificationSender).sendNotification(notificationToSend);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
         service.sendNotification(notificationToSend, EMAIL, EMAIL);
 
-        verify(mockEmailNotificationSendingService, times(1)).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSendingService, never()).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
+        verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
     }
 }

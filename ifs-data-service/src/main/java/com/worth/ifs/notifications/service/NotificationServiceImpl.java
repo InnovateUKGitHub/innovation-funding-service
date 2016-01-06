@@ -5,6 +5,7 @@ import com.worth.ifs.notifications.resource.NotificationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.LinkedHashSet;
@@ -16,21 +17,22 @@ import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
- * Implementation of a generic NotificationService that will use appropriate NotificationSendingService implementations
+ * Implementation of a generic NotificationService that will use appropriate NotificationSender implementations
  * to send notifications to users based upon a set of NotificationMediums
  */
+@Service
 public class NotificationServiceImpl implements NotificationService {
 
     private static final Log LOG = LogFactory.getLog(NotificationServiceImpl.class);
 
     @Autowired
-    private List<NotificationSendingService> notificationSendingServices;
+    private List<NotificationSender> notificationSendingServices;
 
-    private Map<NotificationMedium, NotificationSendingService> servicesByMedia;
+    private Map<NotificationMedium, NotificationSender> servicesByMedia;
 
     @PostConstruct
-    public void constructServicesByMediaMap() {
-        servicesByMedia = simpleToMap(notificationSendingServices, NotificationSendingService::getNotificationMedium);
+    void constructServicesByMediaMap() {
+        servicesByMedia = simpleToMap(notificationSendingServices, NotificationSender::getNotificationMedium);
     }
 
     @Override
@@ -40,10 +42,10 @@ public class NotificationServiceImpl implements NotificationService {
 
         allMediaToSendNotificationBy.forEach(medium -> {
 
-            NotificationSendingService serviceForMedium = servicesByMedia.get(medium);
+            NotificationSender serviceForMedium = servicesByMedia.get(medium);
 
             if (serviceForMedium == null) {
-                LOG.error("No NotificationSendingService found that can send Notifications via the medium " + medium + " - not sending notitifaction this way");
+                LOG.error("No NotificationSender found that can send Notifications via the medium " + medium + " - not sending notitifaction this way");
             }
 
             serviceForMedium.sendNotification(notification);
