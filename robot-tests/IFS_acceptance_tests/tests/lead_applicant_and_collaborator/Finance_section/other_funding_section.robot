@@ -8,6 +8,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
+
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    My mate Dave
 ${OTHER_FUNDING_DATE}    12-2008

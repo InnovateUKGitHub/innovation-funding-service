@@ -122,7 +122,7 @@ Clear the Project summary field
     Sleep    2s
 
 the link of the application should redirect to the submitted application page
-    click link    link=A novel solution to an old problem
+    Click link    link=A novel solution to an old problem
     Page Should Contain    Application status
 
 Project summary question should have a text
