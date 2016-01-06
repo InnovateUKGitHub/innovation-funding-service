@@ -242,16 +242,10 @@ CREATE TABLE `cost` (
 LOCK TABLES `cost` WRITE;
 /*!40000 ALTER TABLE `cost` DISABLE KEYS */;
 INSERT INTO `cost` VALUES (1,NULL,'Working days per year',NULL,232,1,28);
-INSERT INTO `cost` VALUES (2,50000,'','Manager',168,1,28);
-INSERT INTO `cost` VALUES (4,30000,'','Engineer',696,1,28);
-INSERT INTO `cost` VALUES (12,100,'','Powder',20,1,30);
-INSERT INTO `cost` VALUES (13,150000,'specialist consultant','Mr Francis Bois',0,1,32);
 INSERT INTO `cost` VALUES (15,NULL,'Working days per year',NULL,227,2,28);
 INSERT INTO `cost` VALUES (16,NULL,'Working days per year',NULL,227,3,28);
 INSERT INTO `cost` VALUES (17,45000,'','Manager',120,3,28);
 INSERT INTO `cost` VALUES (18,140,'','Raw materials',120,3,30);
-INSERT INTO `cost` VALUES (19,600,'','crucibles',6,1,30);
-INSERT INTO `cost` VALUES (20,250,'','valves',12,1,30);
 INSERT INTO `cost` VALUES (21,32000,'','Engineer',250,3,28);
 INSERT INTO `cost` VALUES (22,28000,'','Technician',220,3,28);
 INSERT INTO `cost` VALUES (23,50,'','components',30,3,30);
@@ -282,10 +276,10 @@ INSERT INTO `cost` VALUES (47,200,'','Powder',45,7,30);
 INSERT INTO `cost` VALUES (48,0,'Grant Claim','',50,1,38);
 INSERT INTO `cost` VALUES (49,0,'Grant Claim','',70,2,38);
 INSERT INTO `cost` VALUES (50,0,'Grant Claim','',70,3,38);
-INSERT INTO `cost` VALUES (51,0,'Accept Rate','Yes',23,1,29);
+INSERT INTO `cost` VALUES (51,0,'','Yes',23,1,29);
 INSERT INTO `cost` VALUES (52,0,'Accept Rate','Yes',24,2,29);
 INSERT INTO `cost` VALUES (53,0,'Accept Rate','Yes',25,3,29);
-INSERT INTO `cost` VALUES (54,0,'Other Funding','Yes',NULL,1,35);
+INSERT INTO `cost` VALUES (54,0,'Other Funding','Yes',0,1,35);
 /*!40000 ALTER TABLE `cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,7 +335,6 @@ CREATE TABLE `cost_value` (
 
 LOCK TABLES `cost_value` WRITE;
 /*!40000 ALTER TABLE `cost_value` DISABLE KEYS */;
-INSERT INTO `cost_value` VALUES (13,1,'France');
 INSERT INTO `cost_value` VALUES (26,1,'UK');
 INSERT INTO `cost_value` VALUES (33,1,'France');
 INSERT INTO `cost_value` VALUES (45,1,'UK');
@@ -863,7 +856,7 @@ INSERT INTO `question` VALUES (5,NULL,'','Describe the areas of work and your o
 INSERT INTO `question` VALUES (6,NULL,'','Explain how your project is innovative in both a commercial and technical sense.','<p>You should show how your project will:</p><ul class=\"list-bullet\">         <li>push boundaries beyond current leading-edge science and technology</li><li>apply existing technologies in new areas</li></ul><p>Explain the novelty of the research in an industrial and/or academic context.</p><p>You should provide evidence that your proposed work is innovative. This could include patent search results, competitor analyses or literature surveys. If relevant, you should also outline your own intellectual property rights.</p>','What should I include in the project innovation section?','','\0','What is innovative about your project?','Innovation','','',10,'6',1,2);
 INSERT INTO `question` VALUES (7,NULL,'','We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.','<p>Please describe your plans for limiting and managing risk. You need to:</p><ul class=\"list-bullet\">         <li>identify the project\'s main risks and uncertainties</li><li>detail specific technical, commercial, managerial and environmental risks</li><li>list any other uncertainties such as ethical issues associated with the project</li><li>provide a detailed risk analysis</li><li>rate the main risks as high/medium/low</li><li>show how you\'ll limit the main risks</li><li>identify the project management tools and mechanisms you\'ll use to minimise operational risk</li><li>include arrangements for managing the project team and its partners</li></ul>','What should I include in the project risks section?','','\0','What are the risks (technical, commercial and environmental) to your project\'s success? What is your risk management strategy?','Risks','','',11,'7',1,2);
 INSERT INTO `question` VALUES (8,NULL,'','Describe your capability to develop and exploit this technology. Include details of your team\'s track record in managing research and development projects.','<p>You should show your project team:</p><ul class=\"list-bullet\">         <li>has the right mix of skills and experience to complete the project</li><li>has clear objectives</li><li>how it would have been formed even without Innovate UK investment</li></ul><p>If you are part of a consortium, describe the benefits of the collaboration. For example, increased knowledge transfer.</p>','What should I include in the project skills section?','','\0','Does your project team have the skills, experience and facilities to deliver this project?','Project team','','',12,'8',1,2);
-INSERT INTO `question` VALUES (9,NULL,'','Enter the full title of the project',NULL,NULL,'','\0','Application details','Application details','\0','\0',1,NULL,1,1);
+INSERT INTO `question` VALUES (9,NULL,'\0','Enter the full title of the project',NULL,NULL,'','\0','Application details','Application details','\0','\0',1,NULL,1,1);
 INSERT INTO `question` VALUES (11,NULL,'','Please provide a short summary of your project. Make sure you include what is innovative about it.','<p>We will not score this summary, but it will give the assessors a useful introduction to your project. It should provide a clear overview of the whole project, including:</p> <ul class=\"list-bullet\">         <li>your vision for the project</li><li>key objectives</li><li>main areas of focus</li><li>details of how it is innovative</li></ul>','What should I include in the project summary?','','\0','Project summary','Project summary\n','\0','\0',2,NULL,1,1);
 INSERT INTO `question` VALUES (12,NULL,'','Please provide a brief description of your project. If your application is successful, we will publish this description. This question is mandatory but we will not assess this content as part of your application.','<p>Innovate UK publishes information about projects we have funded. This is in line with government practice on openness and transparency of public-funded activities.</p><p>Describe your project in a way that will be easy for a non-specialist to understand. Don\'t include any information that is confidential, for example, intellectual property or patent details.</p> ','What should I include in the project public description?','','\0','Public description','Public description\n','\0','\0',3,NULL,1,1);
 INSERT INTO `question` VALUES (13,'Is this application in scope?','','If your application doesn\'t align with the scope, we will reject it.','<p>It is important that you read the following guidance.</p><p>To show how your project aligns with the scope of this competition, you need to:</p><ul class=\"list-bullet\">         <li>read the competition brief in full</li><li>understand the background, challenge and scope of the competition</li><li>address the research objectives in your application</li><li>match your project\'s objectives and activities to these</li></ul> <p>Once you have submitted your application, you should not change this section unless:</p><ul class=\"list-bullet\">         <li>we ask you to provide more information</li><li>we ask you to make it clearer</li></ul> ','What should I include in the project scope?','','\0','How does your project align with the scope of this competition?','Scope','','\0',4,NULL,1,1);
@@ -994,7 +987,6 @@ INSERT INTO `question_status` VALUES (3,NULL,'',NULL,1,NULL,NULL,1,28);
 INSERT INTO `question_status` VALUES (4,NULL,'',NULL,1,NULL,NULL,1,33);
 INSERT INTO `question_status` VALUES (6,'2015-10-02 17:46:54',NULL,'',1,1,1,NULL,13);
 INSERT INTO `question_status` VALUES (7,NULL,'',NULL,1,NULL,NULL,5,29);
-INSERT INTO `question_status` VALUES (8,'2015-09-25 00:07:50',NULL,'\0',1,NULL,NULL,NULL,29);
 INSERT INTO `question_status` VALUES (9,'2015-09-25 00:27:25',NULL,'',1,1,1,NULL,4);
 INSERT INTO `question_status` VALUES (10,'2015-10-02 17:03:42','','\0',5,NULL,NULL,10,12);
 INSERT INTO `question_status` VALUES (12,'2015-10-02 17:03:28','','\0',5,NULL,NULL,10,11);
@@ -1010,42 +1002,23 @@ INSERT INTO `question_status` VALUES (21,'2015-10-02 17:07:31','','\0',5,NULL,N
 INSERT INTO `question_status` VALUES (22,'2015-10-02 17:07:50','','\0',5,NULL,NULL,10,15);
 INSERT INTO `question_status` VALUES (23,'2015-10-02 17:08:03','','\0',5,NULL,NULL,10,16);
 INSERT INTO `question_status` VALUES (24,NULL,'',NULL,1,NULL,NULL,1,30);
-INSERT INTO `question_status` VALUES (25,'2015-10-02 16:41:52',NULL,'\0',1,NULL,NULL,NULL,30);
 INSERT INTO `question_status` VALUES (26,NULL,'',NULL,1,NULL,NULL,1,29);
-INSERT INTO `question_status` VALUES (27,'2015-10-02 16:41:59',NULL,'\0',1,NULL,NULL,NULL,29);
 INSERT INTO `question_status` VALUES (28,NULL,'',NULL,1,NULL,NULL,1,31);
-INSERT INTO `question_status` VALUES (29,'2015-10-02 16:42:07',NULL,'\0',1,NULL,NULL,NULL,31);
 INSERT INTO `question_status` VALUES (30,NULL,'',NULL,1,NULL,NULL,1,32);
-INSERT INTO `question_status` VALUES (31,'2015-10-02 16:43:05',NULL,'\0',1,NULL,NULL,NULL,32);
 INSERT INTO `question_status` VALUES (32,NULL,'',NULL,1,NULL,NULL,1,34);
-INSERT INTO `question_status` VALUES (33,'2015-10-02 16:43:21',NULL,'\0',1,NULL,NULL,NULL,34);
 INSERT INTO `question_status` VALUES (34,NULL,'',NULL,1,NULL,NULL,5,28);
-INSERT INTO `question_status` VALUES (35,'2015-10-02 16:49:18',NULL,'\0',1,NULL,NULL,NULL,28);
 INSERT INTO `question_status` VALUES (36,NULL,'',NULL,1,NULL,NULL,5,30);
-INSERT INTO `question_status` VALUES (37,'2015-10-02 16:50:23',NULL,'\0',1,NULL,NULL,NULL,30);
-INSERT INTO `question_status` VALUES (38,'2015-10-02 16:50:37',NULL,'\0',1,NULL,NULL,NULL,29);
 INSERT INTO `question_status` VALUES (39,NULL,'',NULL,1,NULL,NULL,9,28);
-INSERT INTO `question_status` VALUES (40,'2015-10-02 16:53:02',NULL,'\0',1,NULL,NULL,NULL,28);
 INSERT INTO `question_status` VALUES (41,NULL,'',NULL,1,NULL,NULL,9,32);
-INSERT INTO `question_status` VALUES (42,'2015-10-02 16:54:46',NULL,'\0',1,NULL,NULL,NULL,32);
 INSERT INTO `question_status` VALUES (43,NULL,'',NULL,1,NULL,NULL,9,30);
-INSERT INTO `question_status` VALUES (44,'2015-10-02 16:55:52',NULL,'\0',1,NULL,NULL,NULL,30);
 INSERT INTO `question_status` VALUES (45,NULL,'',NULL,1,NULL,NULL,5,31);
-INSERT INTO `question_status` VALUES (46,'2015-10-02 17:39:40',NULL,'\0',1,NULL,NULL,NULL,31);
 INSERT INTO `question_status` VALUES (47,NULL,'',NULL,1,NULL,NULL,5,32);
-INSERT INTO `question_status` VALUES (48,'2015-10-02 17:39:45',NULL,'\0',1,NULL,NULL,NULL,32);
 INSERT INTO `question_status` VALUES (49,NULL,'',NULL,1,NULL,NULL,5,33);
-INSERT INTO `question_status` VALUES (50,'2015-10-02 17:39:50',NULL,'\0',1,NULL,NULL,NULL,33);
 INSERT INTO `question_status` VALUES (51,NULL,'',NULL,1,NULL,NULL,5,34);
-INSERT INTO `question_status` VALUES (52,'2015-10-02 17:43:55',NULL,'\0',1,NULL,NULL,NULL,34);
 INSERT INTO `question_status` VALUES (53,NULL,'',NULL,1,NULL,NULL,9,29);
-INSERT INTO `question_status` VALUES (54,'2015-10-02 17:45:09',NULL,'\0',1,NULL,NULL,NULL,29);
 INSERT INTO `question_status` VALUES (55,NULL,'',NULL,1,NULL,NULL,9,31);
-INSERT INTO `question_status` VALUES (56,'2015-10-02 17:45:15',NULL,'\0',1,NULL,NULL,NULL,31);
 INSERT INTO `question_status` VALUES (57,NULL,'',NULL,1,NULL,NULL,9,33);
-INSERT INTO `question_status` VALUES (58,'2015-10-02 17:45:20',NULL,'\0',1,NULL,NULL,NULL,33);
 INSERT INTO `question_status` VALUES (59,NULL,'',NULL,1,NULL,NULL,9,34);
-INSERT INTO `question_status` VALUES (60,'2015-10-02 17:45:28',NULL,'\0',1,NULL,NULL,NULL,34);
 INSERT INTO `question_status` VALUES (61,NULL,NULL,NULL,1,1,1,NULL,1);
 INSERT INTO `question_status` VALUES (62,NULL,NULL,NULL,1,1,1,NULL,2);
 INSERT INTO `question_status` VALUES (63,NULL,NULL,NULL,1,1,1,NULL,3);
@@ -1178,6 +1151,7 @@ CREATE TABLE `schema_version` (
 LOCK TABLES `schema_version` WRITE;
 /*!40000 ALTER TABLE `schema_version` DISABLE KEYS */;
 INSERT INTO `schema_version` VALUES (1,1,'1','Base version','SQL','V1__Base_version.sql',1613992993,'root','2015-12-22 10:13:28',466,1);
+INSERT INTO `schema_version` VALUES (43,43,'10.1','Cleanup question status table','SQL','V10_1__Cleanup_question_status_table.sql',1785162239,'root','2016-01-06 11:46:31',12,1);
 INSERT INTO `schema_version` VALUES (2,2,'2.1','Add Form Input Tables','SQL','V2_1__Add_Form_Input_Tables.sql',1182368876,'root','2015-12-22 10:13:28',64,1);
 INSERT INTO `schema_version` VALUES (11,11,'2.10','MakeOriginalFirstPriorityQuestionsAssessable','SQL','V2_10__MakeOriginalFirstPriorityQuestionsAssessable.sql',-350651558,'root','2015-12-22 10:13:28',5,1);
 INSERT INTO `schema_version` VALUES (3,3,'2.2','Migrate Questions To Form Inputs','SQL','V2_2__Migrate_Questions_To_Form_Inputs.sql',1067513257,'root','2015-12-22 10:13:28',13,1);
@@ -1218,6 +1192,7 @@ INSERT INTO `schema_version` VALUES (38,38,'8.3','Update Other Funding','SQL','V
 INSERT INTO `schema_version` VALUES (39,39,'8.5','UpdateCompetitionDeadline','SQL','V8_5__UpdateCompetitionDeadline.sql',733388169,'root','2015-12-22 10:13:29',4,1);
 INSERT INTO `schema_version` VALUES (40,40,'9.1','RefactorProcesses','SQL','V9_1__RefactorProcesses.sql',1349902590,'root','2015-12-22 10:13:29',48,1);
 INSERT INTO `schema_version` VALUES (41,41,'9.2','Update question mark as done','SQL','V9_2__Update_question_mark_as_done.sql',318372711,'root','2015-12-22 10:13:29',5,1);
+INSERT INTO `schema_version` VALUES (42,42,'9.3','Update question mark as done','SQL','V9_3__Update_question_mark_as_done.sql',-1246662838,'root','2016-01-06 11:46:30',26,1);
 /*!40000 ALTER TABLE `schema_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1383,4 +1358,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-22 10:15:57
+-- Dump completed on 2016-01-06 11:55:18
