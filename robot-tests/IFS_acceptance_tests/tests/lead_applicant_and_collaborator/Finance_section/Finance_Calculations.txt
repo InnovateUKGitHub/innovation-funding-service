@@ -22,7 +22,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Materials     Failing
+    [Tags]    Materials    Failing
     Given Applicant goes to the Your finances section
     When the Applicant fills the Materials fields
     Then the calculations of the Materials should be correct
@@ -31,7 +31,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Subcontracting costs' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Subcontracting Costs  Failing
+    [Tags]    Subcontracting Costs    Failing
     Given Applicant goes to the Your finances section
     When the applicant edits the Subcontracting costs section
     The total subcontracting costs should correct
@@ -45,12 +45,13 @@ the Applicant fills the Labour costs
     Input Text    css=#cost-labour-1-workingDays    230
     Input Text    css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    focus    css=.add-another-row
     Sleep    1s
 
 the calculations of the labour should be correct
     Reload Page
-    Sleep   2s
-    Alert Should Be Present
+    Sleep    2s
+    #Alert Should Be Present
     Textfield Value Should Be    css=#labour-costs-table tbody td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    xpath=//*[@id="collapsible-1"]//td[contains(text(),"Total costs")]/input    £ 52,174
 
@@ -60,13 +61,14 @@ the Applicant fills the Materials fields
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    focus    css=.add-another-row
 
 the calculations of the Materials should be correct
+    focus    css=.add-another-row
     Reload Page
-     Sleep   2s
-     Alert Should Be Present
-    Confirm Action
-    Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1000
+    Sleep    2s
+    Click Element    xpath=//*[@aria-controls="collapsible-3"]
+    Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1,000
     Textfield Value Should Be    css=#material-costs-total-field    £ 1,000
 
 the applicant edits the Subcontracting costs section
@@ -81,8 +83,8 @@ the applicant edits the Subcontracting costs section
 
 The total subcontracting costs should correct
     Reload Page
-    Sleep    2s
-    Alert Should Be Present
+    #    Sleep    2s
+    #    Alert Should Be Present
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
     Textfield Value Should Be    css=#cost-subcontracting-total    £ 200
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(9) > span > span    £ 200
@@ -98,24 +100,25 @@ when the applicant fills a second row in the labour costs
 the total labour cost calculation should be correct
     Reload Page
     Sleep    2s
-    Alert Should Be Present
+    #Alert Should Be Present
     Textfield Value Should Be    css=#labour-costs-table tr:nth-of-type(3) td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    css=#labour-costs-table tr:nth-of-type(2) input    £ 52,174
     Textfield Value Should Be    css=#cost-labour-total-field    £ 104,348
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(1) > span > span    £ 104,348
 
 when the applicant fills a second row in the materials section
-    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    #Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
     Click Element    link=Add another materials cost
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
 
 the total materials costs calculations should be correct
+    focus    css=.add-another-row
     Reload Page
-    Sleep   2s
-    Alert Should Be Present
-    Confirm Action
+    Sleep    2s
+    #Alert Should Be Present
+    #Confirm Action
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(4) input    £ 1000
     Textfield Value Should Be    css=#material-costs-total-field    £ 2,000
