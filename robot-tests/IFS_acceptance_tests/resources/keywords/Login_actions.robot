@@ -6,7 +6,7 @@ ${REMOTE_URL}     ${EMPTY}
 ${DESIRED_CAPABILITIES}    ${EMPTY}
 ${SERVER_AUTH}    ${EMPTY}
 ${TEST_TAGS}    ${EMPTY}
-
+${FF_PROFILE}    ${CURDIR}/../firefox_config
 *** Keywords ***
 Login as user
     [Arguments]    ${email}    ${password}
@@ -24,6 +24,7 @@ The guest user clicks the log-in button
 
 The guest user opens the browser
     Open browser  http://google.com  ${BROWSER}
+    ...  ff_profile_dir=${FF_PROFILE}
     ...  remote_url=${REMOTE_URL}
     ...  desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if  '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
