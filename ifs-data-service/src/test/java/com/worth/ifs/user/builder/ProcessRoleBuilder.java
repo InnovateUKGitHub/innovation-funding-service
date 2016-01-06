@@ -89,7 +89,6 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
             }
         });
 
-
         return built;
     }
 }
