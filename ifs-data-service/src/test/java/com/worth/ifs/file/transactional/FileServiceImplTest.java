@@ -90,7 +90,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
             when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
@@ -132,7 +132,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 withFilesizeBytes(17).
                 build(2);
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
 
@@ -184,7 +184,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 withFilesizeBytes(17).
                 build(2);
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
 
@@ -225,8 +225,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 build(2);
 
         List<List<String>> fullPathsToNewFiles = asList(
-                combineLists(tempFolderPaths, asList("path", "to", "file")),
-                combineLists(tempFolderPaths, asList("path", "to2", "file"))
+                combineLists(tempFolderPaths, "path", "to", "file"),
+                combineLists(tempFolderPaths, "path", "to2", "file")
                 );
 
         try {
@@ -276,7 +276,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("cantcreatethisfolder"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "cantcreatethisfolder");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
@@ -351,11 +351,11 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
         FileEntry updatedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
 
-            File existingFileToUpdate = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename")));
+            File existingFileToUpdate = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename"));
             Files.createParentDirs(existingFileToUpdate);
             existingFileToUpdate.createNewFile();
 
@@ -393,7 +393,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
         FileEntry updatedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
             when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
@@ -431,7 +431,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
@@ -458,7 +458,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
@@ -474,11 +474,11 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
 
-            File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename")));
+            File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename"));
             Files.createParentDirs(existingFileToDelete);
             existingFileToDelete.createNewFile();
             Files.write("Content to be deleted", existingFileToDelete, defaultCharset());
@@ -506,9 +506,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
-        File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, asList("thefilename", "andachildthatwillstopdeletion")));
+        File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename", "andachildthatwillstopdeletion"));
 
         try {
 
@@ -539,7 +539,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         try {
 
@@ -573,7 +573,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         // start by creating a new File to retrieve
         List<String> fullPathToNewFile = tempFolderPaths;
-        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
+        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, "thefilename");
         pathElementsToFile(fullPathPlusFilename).createNewFile();
 
         try {
@@ -599,7 +599,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         // start by creating a new File to retrieve
         List<String> fullPathToNewFile = tempFolderPaths;
-        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, asList("thefilename"));
+        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, "thefilename");
         pathElementsToFile(fullPathPlusFilename).createNewFile();
 
         try {
@@ -648,7 +648,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
@@ -675,7 +675,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, asList("path", "to", "file"));
+        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.function.*;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -52,7 +54,10 @@ public class CollectionFunctions {
      */
     @SafeVarargs
     public static <T> List<T> combineLists(List<T>... lists) {
+        return doCombineLists(lists);
+    }
 
+    private static <T> List<T> doCombineLists(List<T>... lists) {
         List<T> combinedList = new ArrayList<>();
 
         for (List<T> list : lists) {
@@ -63,6 +68,33 @@ public class CollectionFunctions {
 
         return combinedList;
     }
+
+    /**
+     * Combine the given List and varargs array into a single List
+     *
+     * @param list
+     * @param otherElements
+     * @param <T>
+     * @return combined List containing the elements of the given Lists, in the original list order
+     */
+    @SafeVarargs
+    public static <T> List<T> combineLists(List<T> list, T... otherElements) {
+        return doCombineLists(new ArrayList<>(list), asList(otherElements));
+    }
+
+    /**
+     * Combine the given element and varargs array into a single List
+     *
+     * @param firstElement
+     * @param otherElements
+     * @param <T>
+     * @return combined List containing the elements of the given Lists, in the original list order
+     */
+    @SafeVarargs
+    public static <T> List<T> combineLists(T firstElement, T... otherElements) {
+        return doCombineLists(asList(firstElement), asList(otherElements));
+    }
+
 
     /**
      * Provides a forEach method as per the default List.forEach() method, but with the addition of having an index
@@ -173,6 +205,43 @@ public class CollectionFunctions {
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
         return toMap(keyMapper, valueMapper, (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new);
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map given a key generating function and a value generating function
+     *
+     * @param keyMapper
+     * @param valueMapper
+     * @param <T>
+     * @param <K>
+     * @param <U>
+     * @return
+     */
+    public static <T, K, U> Map<K,U> simpleToMap(
+            List<T> list,
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
+
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return list.stream().collect(toMap(keyMapper, valueMapper));
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map of keys against the original elements themselves, given a key generating function
+     *
+     * @param keyMapper
+     * @param <T>
+     * @param <K>
+     * @return
+     */
+    public static <T, K> Map<K,T> simpleToMap(
+            List<T> list,
+            Function<? super T, ? extends K> keyMapper) {
+
+        return simpleToMap(list, keyMapper, identity());
     }
 
     /**

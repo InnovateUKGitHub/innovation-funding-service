@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.function.Function.identity;
 import static org.junit.Assert.*;
 
 /**
@@ -335,6 +336,46 @@ public class CollectionFunctionsTest {
     @Test
     public void test_simpleJoiner_nullElements() {
         assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyAndValueMappers() {
+
+        Map<Integer, String> toMap = CollectionFunctions.simpleToMap(asList(1, 2, 3), element -> element + 10, element -> element + " value");
+        assertEquals(3, toMap.size());
+        assertTrue(toMap.keySet().contains(11));
+        assertTrue(toMap.keySet().contains(12));
+        assertTrue(toMap.keySet().contains(13));
+        assertEquals("1 value", toMap.get(11));
+        assertEquals("2 value", toMap.get(12));
+        assertEquals("3 value", toMap.get(13));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyAndValueMappersNullSafe() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity(), identity());
+        assertTrue(toMap.isEmpty());
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyMapper() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(asList(1, 2, 3), element -> element + 10);
+        assertEquals(3, toMap.size());
+        assertTrue(toMap.keySet().contains(11));
+        assertTrue(toMap.keySet().contains(12));
+        assertTrue(toMap.keySet().contains(13));
+        assertEquals(Integer.valueOf(1), toMap.get(11));
+        assertEquals(Integer.valueOf(2), toMap.get(12));
+        assertEquals(Integer.valueOf(3), toMap.get(13));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyMapperNullSafe() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity());
+        assertTrue(toMap.isEmpty());
     }
 }
 
