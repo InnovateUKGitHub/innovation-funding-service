@@ -79,7 +79,13 @@ public class CollectionFunctions {
      */
     @SafeVarargs
     public static <T> List<T> combineLists(List<T> list, T... otherElements) {
-        return doCombineLists(new ArrayList<>(list), asList(otherElements));
+        List<T> startingList = new ArrayList<>();
+
+        if (list != null && !list.isEmpty()) {
+            startingList.addAll(list);
+        }
+
+        return doCombineLists(startingList, asList(otherElements));
     }
 
     /**

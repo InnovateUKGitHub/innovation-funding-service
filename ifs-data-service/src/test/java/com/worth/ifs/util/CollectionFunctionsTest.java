@@ -92,6 +92,38 @@ public class CollectionFunctionsTest {
     }
 
     @Test
+    public void test_combineListsWithListAndVarargs() {
+
+        List<Integer> list = asList(1, 2, 3);
+        List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithListAndVarargsNullSafe() {
+        List<Integer> expectedCombinedList = asList(4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargs() {
+        List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargsEmptyVarargs() {
+        List<Integer> expectedCombinedList = asList(1);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargsNullElementSafe() {
+        List<Integer> expectedCombinedList = asList(2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 2, 3, 4, 5, 6));
+    }
+
+    @Test
     public void test_forEachWithIndex() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
