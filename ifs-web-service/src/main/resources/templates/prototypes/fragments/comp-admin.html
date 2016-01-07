@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- =========================== Comp details =========================== --> 
+
+<div th:fragment="prototype-comp-details">
+    <div class="grid-row extra-margin">
+        <div class="column-two-thirds">
+            <dl class="standard-definition-list">
+
+                <div th:if="${status == 'closed'}" th:remove="tag">
+                <dt>Comp type:</dt><dd>Collaborative R&#38;D</dd>
+                <dt>Innovation area:</dt><dd>Digital economy</dd>
+                <dt>Lead tech:</dt><dd>Mike Biddle</dd>
+                <dt>Comp exec:</dt><dd>Jessica Smith</dd>
+                <dt>Applicant deadline:</dt><dd>20th March 2016</dd>
+                </div>
+
+                <div th:if="${status == 'open'}" th:remove="tag">
+                <dt>Comp type:</dt><dd>Feasibility study</dd>
+                <dt>Innovation area:</dt><dd>Built environment</dd>
+                <dt>Lead tech:</dt><dd>Mike Biddle</dd>
+                <dt>Comp exec:</dt><dd>Jessica Smith</dd>
+                <dt>Applicant deadline:</dt><dd>20th March 2016</dd>
+                </div>
+
+                <div th:if="${status == 'assess'}" th:remove="tag">
+                <dt>Comp type:</dt><dd>Smart</dd>
+                <dt>Innovation area:</dt><dd>Emerging technologies</dd>
+                <dt>Lead tech:</dt><dd>Mike Biddle</dd>
+                <dt>Comp exec:</dt><dd>Jessica Smith</dd>
+                <dt>Applicant deadline:</dt><dd>20th March 2016</dd>
+                </div>
+
+            </dl>
+        </div>
+        <div class="column-third">
+            
+            <div th:if="${status == 'open'}" th:remove="tag">
+                <div class="comp-status open">
+                    <h2 class="heading-small">Competition open</h2>
+                    <p class="heading-large no-margin">Open until <br />20<sup>th</sup> March 2016</p>
+                </div>
+            </div>
+
+            <div th:if="${status != null}" th:remove="tag">
+
+                <div th:if="${status == 'funders'}" th:remove="tag">
+                    <div class="comp-status funders-panel">
+                        <h2 class="heading-small">Funders panel</h2>
+                        <p class="heading-large no-margin">15<sup>th</sup> September 2016</p>
+                    </div>
+                </div>
+
+                <div th:if="${status == 'closed'}" th:remove="tag">
+                    <div class="comp-status closed">
+                        <h2 class="heading-small">Competition closed</h2>
+                        <p class="heading-large no-margin">Date closed <br />15<sup>th</sup> September 2016</p>
+                    </div>
+                </div>
+
+                <div th:if="${status == 'assess'}" th:remove="tag">
+                    <div class="comp-status in-assessment">
+                        <h2 class="heading-small">Competition in assessment</h2>
+                        <p class="heading-large no-margin">Assessment deadline <br />15<sup>th</sup> September 2016</p>
+                    </div>
+                </div>
+
+                <div th:if="${status == 'prep'}" th:remove="tag">
+                    <div class="comp-status prep">
+                        <h2 class="heading-small">Competition in prep</h2>
+                        <p class="heading-large no-margin">Open date <br />15<sup>th</sup> September 2016</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- =========================== Comp details =========================== --> 
+<div th:fragment="prototype-comp-breakdown">
+    
+    <div th:if="${status == 'closed'}" th:remove="tag">
+        <h3 class="heading-medium">The competition is now closed</h3>
+        <a class="button" href="#">Allocate assessors</a>
+    </div>
+    
+    <div th:if="${status == 'open'}" th:remove="tag">
+        <h2 class="heading-large">Applications</h2>
+        <h3>Overall applications</h3>
+        <p class="heading-xlarge no-margin">92</p>
+    </div>
+
+     <div th:if="${status == 'assess'}" th:remove="tag">
+        <h2 class="heading-medium"><a href="#">Rejected applications</a></h2>
+        <h3>Total rejected applications</h3>
+        <p class="heading-xlarge no-margin">8</p>
+        <a class="button" href="#">Allocate assessors</a>
+    </div>
+    
+    <div class="grid-row">
+        <div class="column-half">
+
+            <div th:if="${status == 'closed'}" th:remove="tag">
+
+                <h2 class="heading-large underline">Application distribution</h2>
+                <ul>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Submitted</a></h3> 
+                        <strong class="heading-xlarge">121</strong> 
+                        <p class="form-hint">Final submissions</p>
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Confirmed assessors</a></h3> 
+                        <strong class="heading-xlarge">41</strong> 
+                    </li>
+                    <li>
+                        <h3 class="heading-small">Applications per assessor</h3> 
+                        <strong class="heading-xlarge">15</strong> 
+                    </li>
+                </ul>
+
+                <h2 class="heading-large underline">Incomplete applications</h2>
+                <ul>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Applications not submitted</a></h3> 
+                        <strong class="heading-xlarge">15</strong> 
+                    </li>
+                </ul>
+
+            </div>
+
+            <div th:if="${status == 'open'}" th:remove="tag">
+
+                <h2 class="heading-large underline">Application breakdown</h2>
+                <ul>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Submitted</a></h3> 
+                        <strong class="heading-xlarge">17</strong> 
+                        <p class="form-hint">Final submissions</p>
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">In progress</a></h3> 
+                        <strong class="heading-xlarge">52</strong> 
+                        <p class="form-hint">Over 50% complete</p>
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Open</a></h3> 
+                        <strong class="heading-xlarge">23</strong> 
+                        <p class="form-hint">Opened applications</p>
+                    </li>
+                </ul>
+
+                <h2 class="heading-large underline">Assessors</h2>
+                <ul>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Invited</a></h3> 
+                        <strong class="heading-xlarge">17</strong> 
+                        <p class="form-hint">Pending invitations</p>
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Accepted</a></h3> 
+                        <strong class="heading-xlarge">21</strong> 
+                        <p class="form-hint">Confirmed assessors</p>
+                    </li>
+                    <li>
+                        <h3 class="heading-small">Applications per assessor</h3> 
+                        <strong class="heading-xlarge">23</strong> 
+                        <p class="form-hint">Predicted applications per confirmed assessor</p>
+                    </li>
+                </ul>
+                <p class="extra-margin"><a href="#" class="button">Invite assessors</a></p>
+
+            </div>
+
+            <div th:if="${status == 'assess'}" th:remove="tag">
+
+                <h2 class="heading-large underline">Assessments in progress</h2>
+                <ul>
+                    <li>
+                        <h3 class="heading-small"><a href="#">Unstarted</a></h3> 
+                        <strong class="heading-xlarge">41</strong> 
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">In progress</a></h3> 
+                        <strong class="heading-xlarge">15</strong> 
+                    </li>
+                    <li>
+                        <h3 class="heading-small">Submitted</h3> 
+                        <strong class="heading-xlarge">84</strong> 
+                    </li>
+                    <li>
+                        <h3 class="heading-small"><a href="#">View all applications</a></h3>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        <div class="column-half">
+            <h2 class="heading-large underline">Assessors</h2>
+            
+            <ul class="comp-timeline-status">
+                 <li th:class="${status == 'assess'} or ${status == 'closed'} or ${status == 'open'} ? 'done'">
+                    <h3 class="heading-small">Competition opens</h3>
+                    <p>10 March 2016</p>
+                </li>
+                 <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
+                    <h3 class="heading-small">Optional briefing</h3>
+                    <p>10 March 2016</p>
+                </li>
+                 <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
+                    <h3 class="heading-small">Application deadline</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
+                    <h3 class="heading-small">Assessor briefing webinar</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li th:class="${status == 'assess'} ? 'done'">
+                    <h3 class="heading-small">Applications to assessors</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Assessor deadline</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Line drawing</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Feedback produced</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Applicants informed</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Feedback to successful applicants provided</h3>
+                    <p>10 March 2016</p>
+                </li>
+                <li>
+                    <h3 class="heading-small">Feedback to unsuccessful applicants provided</h3>
+                    <p>10 March 2016</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="upload-section">
+        <h3 class="heading-small no-margin">Competition documents</h3>
+        <div class="uploaded-file"><a href="#">Competition-brief.pdf</a> (161.96kb)</div>
+        <div class="uploaded-file"><a href="#">Guidance-for-applicants.pdf</a> (161.96kb)</div>
+        
+        <input type="file" name="file" id="file" class="inputfile" />
+        <label for="file" class="button-secondary extra-margin">+ Upload</label>
+    </div>
+
+</div>
+
+
+</html>
