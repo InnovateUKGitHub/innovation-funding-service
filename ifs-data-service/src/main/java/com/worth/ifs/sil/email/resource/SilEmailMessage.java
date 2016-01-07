@@ -3,6 +3,7 @@ package com.worth.ifs.sil.email.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -70,5 +71,15 @@ public class SilEmailMessage {
                 .append(subject)
                 .append(body)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("from", from)
+                .append("to", to)
+                .append("subject", subject)
+                .append("body", body)
+                .toString();
     }
 }
