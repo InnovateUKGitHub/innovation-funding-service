@@ -45,7 +45,9 @@ public class NotificationServiceImpl implements NotificationService {
             NotificationSender serviceForMedium = servicesByMedia.get(medium);
 
             if (serviceForMedium == null) {
-                LOG.error("No NotificationSender found that can send Notifications via the medium " + medium + " - not sending notitifaction this way");
+                String errorMessage = "No NotificationSender found that can send Notifications via the medium " + medium + " - not sending notitifaction this way";
+                LOG.error(errorMessage);
+                throw new IllegalArgumentException(errorMessage);
             }
 
             serviceForMedium.sendNotification(notification);

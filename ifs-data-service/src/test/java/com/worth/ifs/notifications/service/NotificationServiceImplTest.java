@@ -15,13 +15,13 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for NotificationServiceImpl
  */
-public class NotificationServiceImplTest extends BaseServiceUnitTest<NotificationService> {
+public class NotificationServiceImplTest extends BaseServiceUnitTest<NotificationServiceImpl> {
 
     private NotificationSender mockLoggingNotificationSender;
     private NotificationSender mockEmailNotificationSender;
 
     @Override
-    protected NotificationService supplyServiceUnderTest() {
+    protected NotificationServiceImpl supplyServiceUnderTest() {
 
         mockLoggingNotificationSender = Mockito.mock(NotificationSender.class);
         mockEmailNotificationSender = Mockito.mock(NotificationSender.class);
@@ -67,5 +67,17 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
         verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSendNotificationByUnknownMedium() {
+
+        ReflectionTestUtils.setField(service, "notificationSendingServices",
+                asList(mockLoggingNotificationSender));
+
+        service.constructServicesByMediaMap();
+
+        NotificationResource notificationToSend = newNotificationResource().build();
+        service.sendNotification(notificationToSend, EMAIL);
     }
 }
