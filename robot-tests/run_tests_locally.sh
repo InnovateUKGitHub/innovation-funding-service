@@ -1,4 +1,11 @@
 #!/bin/bash
+
+
+testDirectory='IFS_acceptance_tests/tests/*'
+if [ -n "$1" ]; then
+ testDirectory="$1"
+fi
+
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
@@ -77,7 +84,7 @@ do
 done
 echo "**********RUN THE WEB TESTS**********"
 cd ${scriptDir}
-pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase IFS_acceptance_tests/tests/*
+pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing $testDirectory
 
 
 

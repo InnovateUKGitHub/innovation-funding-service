@@ -1,6 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 
@@ -34,6 +35,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withRolesGlobal(Role... globalRoles) {
         return with(user -> user.setRoles(asList(globalRoles)));
+    }
+
+    public UserBuilder withOrganisations(final Organisation... organisations) {
+        return with(user -> user.addUserOrganisation(organisations));
     }
 
     @Override

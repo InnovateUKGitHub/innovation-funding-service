@@ -13,14 +13,19 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Funding'})" th:remove="tag" />
 
 	<form action="#" method="post">
-		<div class="form-group">
 			
+            <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+
+            <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />    
+        
+        <div class="form-group">
+
 			<h2 class="heading-medium no-margin">9. What will your project cost?</h2>
 			
 			<p>The amount of money needed to complete this project is large. The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly. The Materials and use of the fabricators equipment will account for approximately some of the budget. The time and expertise required across all 3 partners to complete each phase will amount to the lion share of the cost.</p>
@@ -47,7 +52,7 @@
     </li>
 </ul>
 
-<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to application overview</a>
+<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to assessment overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

@@ -53,6 +53,9 @@ Applicant goes to the 'risks' question
 Applicant goes to the 'funding' question
     Go To    ${FUNDING_URL}
 
+Applicant goes to the 'project team' question
+    Go To    ${PROJECT_TEAM_URL}
+
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
 
@@ -63,6 +66,7 @@ Applicant goes to the finance overview
     Go To    ${FINANCES_OVERVIEW_URL}
 
 Applicant edits the 'Project Summary' question
+    focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
 
@@ -77,6 +81,7 @@ Question should be editable
 
 Mark question 12 as editable
     click Element    css=#form-input-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    Sleep    1s
 
 Switch to the first browser
     Switch browser    1
@@ -170,6 +175,11 @@ Applicant is on the 'funding' question
     Page Should Not Contain    error
     Page Should Not Contain    Error
 
+Applicant is on the 'project team' question
+    Location Should Be    ${PROJECT_TEAM_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
+
 Applicant is on the 'adding value' question
     Location Should Be    ${ADDING_VALUE_URL}
     Page Should Not Contain    error
@@ -194,3 +204,8 @@ Applicant is on the Finances section
     Location Should Be    ${FINANCES}
     Page Should Not Contain    error
     Page Should Not Contain    Error
+
+Create new application
+    go to    ${CREATE_APPLICATION_PAGE}
+    Input Text    id=application_name    Form test application
+    Click Element    css=#content > form > input

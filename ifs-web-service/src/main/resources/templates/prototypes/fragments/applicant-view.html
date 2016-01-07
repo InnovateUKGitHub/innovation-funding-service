@@ -21,7 +21,12 @@
 <!-- ========Applicant view - sub header back to comp dashboard======= -->
 <div th:fragment="prototype-subheader(link, url)">
     <div class="sub-header">
-        <a th:href="${url}" class="link-back" th:text="${link}">Some link text</a>
+        <div th:if="${url == ''}" th:remove="tag">
+            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+        </div>
+        <div th:if="${url != ''}" th:remove="tag">
+             <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
+        </div>
     </div>
 </div>
 
@@ -36,7 +41,11 @@
 <!-- ===================Finances summary============================== -->
 <div th:fragment="prototype-finances-summary">
     <h2 class="heading-medium">Finances summary</h2>
-    <p>This is the level of cost detail that the assessors will see during the assessment process</p>
+
+    <div th:unless="${hideText != null}" th:remove="tag">
+        <p>This is the level of cost detail that the assessors will see during the assessment process</p>
+    </div>
+
     <div class="form-group">
         <div style="overflow: auto;">
             <table>
@@ -64,7 +73,7 @@
                         <th> <div>Empire Ltd</div>
                             <div><small>Lead organisation</small></div></th>
                         <td class="numeric"><strong>&pound;100,000</strong></td>
-                        <td class="numeric">60%</td>
+                        <td class="numeric">70%</td>
                         <td class="numeric">&pound;60,000</td>
                         <td class="numeric">&pound;10,000</td>
                         <td class="numeric">&pound;30,000</td>
@@ -73,7 +82,7 @@
                         <th><div>Ludlow</div>
                             <div><small>Partner</small></div></th>
                         <td class="numeric"><strong>&pound;150,000</strong></td>
-                        <td class="numeric">40%</td>
+                        <td class="numeric">50%</td>
                         <td class="numeric">&pound;60,000</td>
                         <td class="numeric">&pound;15,000</td>
                         <td class="numeric">&pound;75,000</td>

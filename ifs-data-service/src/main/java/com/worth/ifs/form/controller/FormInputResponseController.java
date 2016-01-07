@@ -81,8 +81,8 @@ public class FormInputResponseController {
                 ).findFirst();
 
         Optional<FormInputResponse> response = applicantProcessRole.map(role -> {
-            FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), userAppRoles.get(0).getId(), formInput.getId());
-            return existingResponse != null ? existingResponse : new FormInputResponse(LocalDateTime.now(), "", role, formInput, application);
+            List<FormInputResponse> existingResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(application.getId(), formInput.getId());
+            return (existingResponse != null && existingResponse.size() > 0) ? existingResponse.get(0) : new FormInputResponse(LocalDateTime.now(), "", role, formInput, application);
         });
 
         return response.orElseGet(() -> {

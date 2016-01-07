@@ -8,6 +8,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
+
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    My mate Dave
 ${OTHER_FUNDING_DATE}    12-2008
@@ -16,16 +17,17 @@ ${OTHER_FUNDING_AMOUNT}    10000
 *** Test Cases ***
 Add details for another source of funding and verify that these details have bee autosaved
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding
+    [Tags]    Applicant    Application    Finances    Other funding     Failing
     Given Applicant goes to the Your finances section
-    And applicant selects 'Yes' for other funding
-    And applicant chooses to add another source of funding
-    When applicant can see a new row
-    And applicant enters some details into this row
-    Then applicant can leave the 'Your finances' page but the details are still saved
-    #    And applicant selects 'No' for other funding
-    #    And applicant can see that the 'No' radio button is selected
-    #    And applicant cannot see the 'other funding' details
+    And Applicant selects 'Yes' for other funding
+    And Applicant chooses to add another source of funding
+    When Applicant can see a new row
+    And Applicant enters some details into this row
+    And Applicant chooses to add another source of funding
+    Then Applicant can leave the 'Your finances' page but the details are still saved
+    And applicant selects 'No' for other funding
+    And applicant can see that the 'No' radio button is selected
+    And applicant cannot see the 'other funding' details
 
 *** Keywords ***
 Applicant can see that the 'No' radio button is selected
@@ -36,6 +38,10 @@ Applicant selects 'Yes' for other funding
 
 Applicant chooses to add another source of funding
     Click Link    Add another source of funding
+    Sleep     5s
+    Reload Page
+    Sleep     5s
+    Alert Should Be Present
 
 Applicant selects 'No' for other funding
     Select Radio button    other_funding-otherPublicFunding-54    No
@@ -44,15 +50,19 @@ Applicant can see a new row
     Element Should Be Visible    id=other-funding-table
 
 Applicant enters some details into this row
+    Sleep       5s
     Wait Until Element Is Visible    id=cost-other_funding-55-source
     Input Text    id=cost-other_funding-55-source    ${OTHER_FUNDING_SOURCE}
     Wait Until Element Is Visible    id=cost-other_funding-55-date
     Input Text    id=cost-other_funding-55-date    ${OTHER_FUNDING_DATE}
     Wait Until Element Is Visible    id=cost-other_funding-55-fundingAmount
     Input Text    id=cost-other_funding-55-fundingAmount    ${OTHER_FUNDING_AMOUNT}
+    Sleep       5s
 
 Applicant can leave the 'Your finances' page but the details are still saved
     Reload Page
+    Sleep 	5s
+    Alert Should Be Present
     Wait Until Element Is Visible    id=cost-other_funding-55-source
     Textfield Should Contain    cost-other_funding-55-source    ${OTHER_FUNDING_SOURCE}
     Textfield Should Contain    cost-other_funding-55-date    ${OTHER_FUNDING_DATE}

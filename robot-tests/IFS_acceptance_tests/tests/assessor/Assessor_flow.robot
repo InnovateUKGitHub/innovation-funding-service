@@ -18,9 +18,9 @@ Resource          ../../resources/keywords/Assessor_actions.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
-${accept_application_name}    A new innovative solution
+${accept_application_name}    Using natural gas to heat homes
 ${competition_name}    Technology Inspired
-${deadline_month}    december deadline
+${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
@@ -44,17 +44,9 @@ Assessor can see the applications details page
     When Assessor clicks the competition
     Then Competition's details page should be visible
 
-Applications details page has two lists
-    [Documentation]    INFUND-322
-    [Tags]    Assessor
-    When Assessor is viewing the Competitions list
-    When Assessor clicks the competition
-    Then Details page should contain a list with the applications for assessment
-    and Page should contain a list with the submitted assessments
-
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor    failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
@@ -68,15 +60,23 @@ Application invitation review page shows partners
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
+Applications details page has two lists
+    [Documentation]    INFUND-322
+    [Tags]    Assessor
+    When Assessor is viewing the Competitions list
+    When Assessor clicks the competition
+    Then Details page should contain a list with the applications for assessment
+    and Page should contain a list with the submitted assessments
+
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -85,7 +85,7 @@ Application state changes when rejecting an invitation for assessment
 
 Application Summary sections can be opened and closed
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -94,7 +94,7 @@ Application Summary sections can be opened and closed
 
 Application Summary sections contain questions
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -103,7 +103,7 @@ Application Summary sections contain questions
 
 Application Summary shows your feedback when appropriate
     [Documentation]    INFUND-357
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -154,7 +154,7 @@ Assessment progress is 1 out of 3
 
 Application Review changes are persisted when saving
     [Documentation]    INFUND-354
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     ${section_name} =    Set Variable    Scope
     ${feedback_selection_value} =    Set Variable    No
     ${feedback_textarea_value} =    Set Variable    Test feedback text UNIQUE123
@@ -167,7 +167,8 @@ Application Review changes are persisted when saving
 
 *** Keywords ***
 Assessor clicks the Review Button
-    Click Element    link=Review assessment
+    #Click Element    link=Review assessment
+    Click Element    css=a.button.button-pull-right.no-margin
 
 Assessor selects "No"
     Select From List    xpath=//*[@name="is-suitable-for-funding"]    No
@@ -205,6 +206,7 @@ Application is not visible in the applications list
 Assessor opens an application
     [Arguments]    ${application_name}
     Click Element    xpath=//li//a[contains(text(),'${application_name}')]
+    #Click Element    xpath=//*[contains(text(),"${application_name}")]
 
 Assessor is viewing the Competitions list
     Go To    ${SERVER}/assessor/dashboard
@@ -236,8 +238,10 @@ Competitions progress should show
     ${assessment_progress_total}=    Get Text    xpath=${assessment_progress_element}/span[2]
     Should Be Equal As Integers    ${assessment_progress_assessed}    @{assessment_progress}[0]
     Should Be Equal As Integers    ${assessment_progress_total}    @{assessment_progress}[1]
+    Should Be True    ${assessment_progress_assessed}<=${assessment_progress_total}
 
 Application invitation Review page shows the Application title
+    #Get Value    ${accept_application_name}
     Element Should Be Visible    xpath=//*[contains(text(),"${accept_application_name}")]
 
 Application invitation Review page shows the Partners organisations
@@ -269,6 +273,8 @@ the Section contents will contain a question
 Assessor clicks a section
     [Arguments]    ${section_name}
     Click Element    link=${section_name}
+    #Click Element    xpath=//li//a[contains(text(),'${section_name}')]
+    #Click Element    xpath=//*[contains(text(),"${section_name}")]
 
 the assessor enters feedback
     [Arguments]    ${feedback_dropdown_value}    ${feedback_text_value}

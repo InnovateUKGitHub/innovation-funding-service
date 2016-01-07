@@ -8,8 +8,6 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
-*** Variables ***
-
 *** Test Cases ***
 Project summary section accepts Bold text format
     [Documentation]    INFUND-187

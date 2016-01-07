@@ -39,6 +39,12 @@ public class JsonStatusResponse {
         this.status = status;
     }
 
+    protected JsonStatusResponse(String message, HttpStatus status, HttpServletResponse response) {
+        this.message = message;
+        this.status = status;
+        sendHttpResponseCode(response, status.value());
+    }
+
     public static JsonStatusResponse ok() {
         return new JsonStatusResponse("OK", SC_OK);
     }
@@ -47,8 +53,16 @@ public class JsonStatusResponse {
         return new JsonStatusResponse(message, SC_OK);
     }
 
+    public static JsonStatusResponse noContent(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, SC_NO_CONTENT);
+    }
+
     public static JsonStatusResponse badRequest(String message, HttpServletResponse response) {
         return getJsonStatusResponse(message, response, SC_BAD_REQUEST);
+    }
+
+    public static JsonStatusResponse conflict(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, SC_CONFLICT);
     }
 
     public static JsonStatusResponse lengthRequired(String message, HttpServletResponse response) {
@@ -72,8 +86,7 @@ public class JsonStatusResponse {
     }
 
     private static JsonStatusResponse getJsonStatusResponse(String message, HttpServletResponse response, int statusCode) {
-        sendHttpResponseCode(response, statusCode);
-        return new JsonStatusResponse(message, statusCode);
+        return new JsonStatusResponse(message, HttpStatus.valueOf(statusCode), response);
     }
 
     public String getMessage() {

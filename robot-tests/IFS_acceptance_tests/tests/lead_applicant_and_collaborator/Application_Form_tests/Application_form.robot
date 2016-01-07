@@ -8,7 +8,8 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
 ...
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Run Keywords    Login as User    &{lead_applicant_credentials}
+...               AND    Create new application
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -16,11 +17,18 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
+*** Variables ***
+${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
+${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/7/form/question/11
+${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/7/form/question/12
+${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/7
+
 *** Test Cases ***
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
     [Tags]    Applicant    Autosave    Form
-    Given Applicant goes to the 'project summary' question
+    [Setup]
+    Given Applicant goes to the 'project summary' question of the new application
     When the Applicant enters some text
     and the Applicant refreshes the page
     Then the text should be visible
@@ -38,16 +46,10 @@ Verify the navigation in the form sections
     Given Applicant goes to the Overview page
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
-Verify that the word count is available
-    [Documentation]    INFUND-198
-    [Tags]    Applicant    Word count    Form
-    Given Applicant goes to the 'project summary' question
-    Then the word count should be available in the text area
-
 Verify that the word count works
     [Documentation]    INFUND-198
     [Tags]    Applicant    Word count    Form
-    Given Applicant goes to the 'public description' question
+    Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
     And when the Applicant edits the Project description question (500 words)
@@ -63,7 +65,7 @@ Verify that when the Applicant marks as complete the text box should be green an
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given Applicant goes to the 'public description' question
+    Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     and the button state should change to 'Edit'
@@ -73,7 +75,7 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    Applicant    Mark as complete    Form
-    Given Applicant goes to the 'public description' question
+    Given Applicant goes to the 'public description' question of the new application
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
     and the button state should change to 'Mark as complete'
@@ -169,11 +171,12 @@ the word count should be available in the text area
     Page Should Contain Element    css=#form-input-11 .count-down
 
 When the Applicant edits the Public description
-    Clear Element Text    css=#form-input-12 .editor
-    Press Key    css=#form-input-12 .editor    \\8
-    Focus    css=.app-submit-btn
-    Sleep    1s
+    #Clear Element Text    css=#form-input-12 .editor
+    #Press Key    css=#form-input-12 .editor    \\8
+    #Focus    css=.app-submit-btn
+    #Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    500
+    Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
     Sleep    1s
@@ -207,13 +210,15 @@ the word count for the Project description question should be correct (0 words)
     Element Should Contain    css=#form-input-12 .count-down    0
 
 the Applicant edits 'Public description' and marks it as complete
+    focus    css=#form-input-12 .editor
     Clear Element Text    css=#form-input-12 .editor
     Press Key    css=#form-input-12 .editor    \\8
+    focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Hi, I’m a robot @#$@#$@#$
     Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
-    Go To    ${APPLICATION_OVERVIEW_URL}
+    Go To    ${NEW_TEST_APPLICATION_OVERVIEW}
     Page Should Contain Element    css=#form-input-12 .complete
 
 the Applicant marks as incomplete 'Public description'
@@ -226,9 +231,15 @@ the button state should change to 'Mark as complete'
     Page Should Contain Element    css=#form-input-12 button    Mark as complete
 
 the question should not be marked as complete on the application overview page
-    Go To    ${APPLICATION_OVERVIEW_URL}
+    Go To    ${NEW_TEST_APPLICATION_OVERVIEW}
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
     Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
 the applicant is on the application overview page
     Go To    ${APPLICATION_OVERVIEW_URL}
+
+Applicant goes to the 'project summary' question of the new application
+    Go To    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+
+Applicant goes to the 'public description' question of the new application
+    go to    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}

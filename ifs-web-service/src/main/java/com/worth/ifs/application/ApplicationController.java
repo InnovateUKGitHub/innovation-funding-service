@@ -37,7 +37,6 @@ public class ApplicationController extends AbstractApplicationController {
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
-
     }
 
     @RequestMapping("/{applicationId}")

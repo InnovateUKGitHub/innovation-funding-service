@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,6 +22,9 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Autowired
     QuestionStatusRepository questionStatusRepository;
+    @Autowired
+    QuestionService questionService;
+
 
     private final Long userId = 1L;
     private final Long applicationId = 1L;
@@ -171,11 +175,11 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testIsMarkedAsComplete() throws Exception {
-        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId));
 
         controller.markAsComplete(questionId, applicationId, userId);
 
-        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
+        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId));
     }
 
     @Test
@@ -183,13 +187,13 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE);
 
 
-        assertFalse(controller.isMarkedAsComplete(question, applicationId, organisationId));
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId));
 
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 2L);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 8L);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
 
-        assertTrue(controller.isMarkedAsComplete(question, applicationId, organisationId));
+        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId));
     }
 }

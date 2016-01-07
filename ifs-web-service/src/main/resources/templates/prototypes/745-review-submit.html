@@ -365,11 +365,18 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 
 	<div>
         <span class="icon icon-information"></span>
-        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
+        <span> You will not be able to make changes to your application or resubmit after this point.</span>
     </div>
 
-    <div class="alignright-button">
-        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" href="#">Submit application</a>
+    <div class="form-block">
+			<label class="block-label" for="agree-terms">
+				<input id="agree-terms" type="checkbox" value="agree-terms"/>
+				The members of this consortium agree to the <a href="#">terms and conditions</a> of applying for funding through Innovate UK.
+			</label> 
+		</div>
+
+    <div class="alignright-button extra-margin">
+        <a role="button" tabindex="0" class="button large disabled" id="confirm-submit" data-js-modal="modal-confirm-submit" href="#">Submit application</a>
         
     </div>
 
@@ -384,5 +391,19 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	
+	jQuery('input#agree-terms').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#confirm-submit").removeClass('disabled');
+		}else{
+			jQuery("#confirm-submit").addClass('disabled');
+		}
+
+	});
+
+</script>
 </body>
 </html>
