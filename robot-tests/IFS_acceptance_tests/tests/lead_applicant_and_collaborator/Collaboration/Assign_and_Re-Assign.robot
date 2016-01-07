@@ -3,7 +3,6 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...
 ...               -INFUND-265: As both lead applicant and collaborator I want to see the changes other participants have made since my last visit, so I can see progress made on the application form
 Suite Setup       Login as User    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
