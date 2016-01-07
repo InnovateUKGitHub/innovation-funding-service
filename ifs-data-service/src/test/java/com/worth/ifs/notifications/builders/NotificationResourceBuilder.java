@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.addToList;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
@@ -37,8 +36,8 @@ public class NotificationResourceBuilder extends BaseBuilder<NotificationResourc
         return with(notification -> setField("from", source, notification));
     }
 
-    public NotificationResourceBuilder withTargets(NotificationTarget... targets) {
-        return withArray((target, notification) -> addToList("to", target, notification), targets);
+    public NotificationResourceBuilder withTargets(List<NotificationTarget> targets) {
+        return with(notification -> setField("to", targets, notification));
     }
 
     public NotificationResourceBuilder withMessageKey(Enum<?> messageKey) {
