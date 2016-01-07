@@ -380,8 +380,6 @@ public class CreateApplicationController extends AbstractApplicationController {
         } else if (request.getParameter(SEARCH_ADDRESS) != null) {
             return String.format("redirect:/application/create/selected-business/%s/postcode/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput());
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
-            log.warn("Selected addresss a: " + confirmCompanyDetailsForm.getPostcodeInput());
-            log.warn("Selected addresss b: " + confirmCompanyDetailsForm.getSelectedPostcodeIndex());
             return String.format("redirect:/application/create/selected-business/%s/postcode/%s/use-address/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput(), confirmCompanyDetailsForm.getSelectedPostcodeIndex());
         } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
             if (!bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
@@ -399,7 +397,7 @@ public class CreateApplicationController extends AbstractApplicationController {
 
                 return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
             } else {
-                log.warn("Could not save, validation message organistaion size.");
+                log.warn("Could not save, validation message organisation size.");
                 confirmCompanyDetailsForm.setTriedToSave(true);
             }
         }
