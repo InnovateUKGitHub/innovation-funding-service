@@ -20,5 +20,5 @@ public interface UserService {
     public Set<User> getAssignableUsers(ApplicationResource application);
     public Set<User> getApplicationUsers(ApplicationResource application);
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
-
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

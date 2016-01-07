@@ -1,6 +1,6 @@
-<!-- ===========================Element: Skip-content=========================== --> 
+<!-- ===========================Element: Skip-content=========================== -->
 
-<div th:fragment="skiplink-container"> 
+<div th:fragment="skiplink-container">
     <div id="skiplink-container">
       <div>
         <a href="#content" class="skiplink">Skip to main content</a>
@@ -8,17 +8,17 @@
     </div>
 </div>
 
-<!-- ===========================Element: cookie message=========================== --> 
+<!-- ===========================Element: cookie message=========================== -->
 
-<div th:fragment="global-cookie-message"> 
+<div th:fragment="global-cookie-message">
     <div id="global-cookie-message">
         <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
     </div>
 </div>
 
-<!-- ===========================Element: Header logo =========================== --> 
+<!-- ===========================Element: Header logo =========================== -->
 
-<div th:fragment="header-logo"> 
+<div th:fragment="header-logo">
     <div class="header-logo">
         <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
           <img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="Innovate UK logo" />GOV.UK
@@ -45,15 +45,15 @@
     <div class="competition-deadline">
         <div class="day">
             <div th:text="${#temporals.day(endDate)}" th:remove="tag" /><span th:switch="${#temporals.day(endDate)}">
-                <span th:case="'1'" th:remove="tag">st</span>   
+                <span th:case="'1'" th:remove="tag">st</span>
                 <span th:case="'21'" th:remove="tag">st</span>
                 <span th:case="'31'" th:remove="tag">st</span>
-                <span th:case="'2'" th:remove="tag">nd</span>   
+                <span th:case="'2'" th:remove="tag">nd</span>
                 <span th:case="'22'" th:remove="tag">nd</span>
-                <span th:case="'3'" th:remove="tag">rd</span>   
+                <span th:case="'3'" th:remove="tag">rd</span>
                 <span th:case="'23'" th:remove="tag">rd</span>
-                <span th:case="*" th:remove="tag">th</span> 
-            </span> 
+                <span th:case="*" th:remove="tag">th</span>
+            </span>
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
         <div class="time">
