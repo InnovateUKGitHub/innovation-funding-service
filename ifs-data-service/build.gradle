@@ -21,11 +21,23 @@ bootRepackage {
     mainClass = 'com.worth.ifs.Application'
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+    javaLanguageLevel = 1.8
+    generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
+}
+
+sourceCompatibility = 1.8
+
 sourceSets {
     client {
         java {
             srcDir 'src/main/java'
             include 'com/worth/ifs/domain'
+        }
+        main {
+            ext.originalJavaSrcDirs = java.srcDirs
+            java.srcDir "${generatedMapperSourcesDir}"
         }
     }
 }
@@ -34,16 +46,17 @@ bootRun {
     addResources = false
 }
 
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
 jar {
     dependsOn asciidoctor
     from ("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
 }
+
+configurations {
+    mapstruct
+}
+
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -63,6 +76,8 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile "org.flywaydb:flyway-core:3.2.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "org.mapstruct:mapstruct:1.0.0.Final"
+    mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
@@ -81,6 +96,36 @@ asciidoctor {
     dependsOn test
 }
 
+task generateMainMapperClasses(type: JavaCompile) {
+    ext.aptDumpDir = file( "build/tmp/apt/mapstruct" )
+    destinationDir = aptDumpDir
+
+    classpath = compileJava.classpath + configurations.mapstruct
+    source = sourceSets.main.originalJavaSrcDirs
+    ext.sourceDestDir = file generatedMapperSourcesDir
+
+    options.define(
+            compilerArgs: [
+                    "-nowarn",
+                    "-proc:only",
+                    "-encoding", "UTF-8",
+                    "-processor", "org.mapstruct.ap.MappingProcessor",
+                    "-s", sourceDestDir.absolutePath,
+                    "-source", 1.8,
+                    "-target", 1.8,
+            ]
+    );
+
+    inputs.dir source
+    outputs.dir generatedMapperSourcesDir
+    doFirst {
+        sourceDestDir.mkdirs()
+    }
+    doLast {
+        aptDumpDir.delete()
+    }
+}
+
 task client(type: Jar) {
     baseName += '-api'
     from(sourceSets.main.output) {
@@ -90,8 +135,10 @@ task client(type: Jar) {
         include "com/worth/ifs/*/dto/**"
         include "com/worth/ifs/*/constant/**"
         include "com/worth/ifs/*/resource/**"
+        include "com/worth/ifs/*/mapper/**"
         include "com/worth/ifs/util/**"
         include "com/worth/ifs/commons/security/**"
+        include "com/worth/ifs/mappers/**"
     }
 }
 task clientCopy(type: Copy){
@@ -154,6 +201,8 @@ processTestResources {
         expand project.properties
     }
 }
+
+compileJava.dependsOn generateMainMapperClasses
 
 task cleanDeploy() {
     build.mustRunAfter clean

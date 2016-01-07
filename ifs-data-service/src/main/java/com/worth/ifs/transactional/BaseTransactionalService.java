@@ -4,7 +4,7 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -65,7 +65,7 @@ public abstract class BaseTransactionalService  {
     protected RoleRepository roleRepository;
 
     @Autowired
-    protected CompetitionsRepository competitionRepository;
+    protected CompetitionRepository competitionRepository;
 
     @Autowired
     protected ApplicationRepository applicationRepository;

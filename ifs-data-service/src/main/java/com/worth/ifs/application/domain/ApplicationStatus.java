@@ -1,5 +1,7 @@
 package com.worth.ifs.application.domain;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,5 +42,14 @@ public class ApplicationStatus {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("name", name)
+            .toString();
     }
 }

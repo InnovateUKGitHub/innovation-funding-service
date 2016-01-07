@@ -109,4 +109,11 @@ public class QuestionStatus {
         this.notified = notified;
     }
 
+    public Question getQuestion() {
+        return this.question;
+    }
+
+    public Application getApplication() {
+        return this.application;
+    }
 }

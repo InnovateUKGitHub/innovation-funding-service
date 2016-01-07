@@ -1,6 +1,5 @@
 package com.worth.ifs.form.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
@@ -60,7 +59,6 @@ public class FormInput {
         return wordCount != null ? wordCount : 0;
     }
 
-    @JsonIgnore
     public List<FormInputResponse> getResponses() {
         return responses;
     }
@@ -81,7 +79,6 @@ public class FormInput {
         return description;
     }
 
-    @JsonIgnore
     public Set<FormValidator> getFormValidators() {
         return inputValidators;
     }
@@ -92,5 +89,45 @@ public class FormInput {
 
     public void addFormValidator(FormValidator inputValidator) {
         this.inputValidators.add(inputValidator);
+    }
+
+    public Competition getCompetition() {
+        return this.competition;
+    }
+
+    public Set<FormValidator> getInputValidators() {
+        return this.inputValidators;
+    }
+
+    public Boolean getIncludedInApplicationSummary() {
+        return this.includedInApplicationSummary;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setWordCount(Integer wordCount) {
+        this.wordCount = wordCount;
+    }
+
+    public void setFormInputType(FormInputType formInputType) {
+        this.formInputType = formInputType;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
+    public void setInputValidators(Set<FormValidator> inputValidators) {
+        this.inputValidators = inputValidators;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIncludedInApplicationSummary(Boolean includedInApplicationSummary) {
+        this.includedInApplicationSummary = includedInApplicationSummary;
     }
 }

@@ -139,6 +139,26 @@ public class Section implements Comparable<Section> {
         this.questionGroup = questionGroup;
     }
 
+    public void setDisplayInAssessmentApplicationSummary(boolean displayInAssessmentApplicationSummary) {
+        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

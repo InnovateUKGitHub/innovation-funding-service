@@ -110,4 +110,12 @@ public class Organisation {
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
     }
+
+    public void setApplicationFinances(List<ApplicationFinance> applicationFinances) {
+        this.applicationFinances = applicationFinances;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }
