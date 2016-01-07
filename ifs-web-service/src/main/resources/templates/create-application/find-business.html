@@ -17,22 +17,22 @@
 
         <h2 class="heading-medium">Business organisation</h2>
 
-        <form action="#" th:object="${companyHouseLookup}" method="POST">
+        <form th:action="@{/application/create/find-business}" th:object="${companyHouseForm}" method="POST">
             <fieldset>
                 <legend class="visuallyhidden">Business organisation</legend>
 
-                <div th:class="${#fields.hasErrors('*{companyHouseName}') and companyHouseLookup.companyHouseSearching} ? 'form-group error' : 'form-group'">
+                <div th:class="${#fields.hasErrors('*{companyHouseName}') and companyHouseForm.companyHouseSearching} ? 'form-group error' : 'form-group'">
                     <label class="form-label" for="org-name">
                        <span class="form-label-bold">Find your organisation on Companies House</span>
                        <span class="form-hint">Enter your company name or registration number</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}') and companyHouseLookup.companyHouseSearching}" th:errors="*{companyHouseName}" />
+                        <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}') and companyHouseForm.companyHouseSearching}" th:errors="*{companyHouseName}" />
                     </label>
                     <input class="form-control" id="org-name" th:field="*{companyHouseName}" type="text" value="" />
                     <button type="submit" id="org-search" name="search-company-house" class="button">Search</button>
                 </div>
 
-                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseLookup.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
-                    <li class="type-company" th:each="company : ${companyHouseLookup.companyHouseList}">
+                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseForm.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
+                    <li class="type-company" th:each="company : ${companyHouseForm.companyHouseList}">
                         <h3>
                             <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
                             </a>
@@ -40,17 +40,17 @@
                         <p class="meta crumbtrail" th:text="${company.description}"></p>
                         <p th:text="${company.location}"></p>
                     </li>
-                    <li th:unless="${companyHouseLookup.companyHouseList.size()}">
+                    <li th:unless="${companyHouseForm.companyHouseList.size()}">
                         <p>Sorry we couldn't find any results within Companies House.<br/> Are you sure you didn't make mistake?</p>
                     </li>
                 </ul>
             </fieldset>
             <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
-            <div th:unless="${companyHouseLookup.inCompanyHouse}" th:remove="tag">
-                <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
-                <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseLookup}" th:remove="tag"></div>
-                <div th:include="create-application/fragments :: organisation-size" th:with="form=${companyHouseLookup}"></div>
+            <div th:unless="${companyHouseForm.inCompanyHouse}" th:remove="tag">
+                <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseForm}" th:remove="tag"></div>
+                <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseForm}" th:remove="tag"></div>
+                <div th:include="create-application/fragments :: organisation-size" th:with="form=${companyHouseForm}"></div>
                 <button type="submit button-large extra-margin" name="confirm-company-details" class="button">Continue</button>
             </div>
         </form>

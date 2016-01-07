@@ -43,7 +43,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
@@ -254,10 +257,10 @@ public class BaseUnitTest {
         rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
 
         // Build the backing applications.
-        Application application1 = ApplicationBuilder.newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).build();
-        Application application2 = ApplicationBuilder.newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).build();
-        Application application3 = ApplicationBuilder.newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).build();
-        Application application4 = ApplicationBuilder.newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).build();
+        Application application1 = ApplicationBuilder.newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
+        Application application2 = ApplicationBuilder.newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
+        Application application3 = ApplicationBuilder.newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
+        Application application4 = ApplicationBuilder.newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
         ApplicationResource app1 = new ApplicationResource(application1);
         ApplicationResource app2 = new ApplicationResource(application2);
         ApplicationResource app3 = new ApplicationResource(application3);
