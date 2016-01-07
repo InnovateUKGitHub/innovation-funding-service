@@ -227,3 +227,67 @@ li.type-company{
 
     }
 }
+
+/*----- Application progress lists ----*/
+
+.application-progress-list{
+    
+    li{
+        background: url(../images/charts/offer-status-default.png) no-repeat;
+        overflow: auto;
+
+        &:last-child{
+             background: url(../images/charts/offer-status-default-last.png) no-repeat;
+        }
+
+        span{
+            margin-left: 100px;
+            padding: 20px;
+            border: 3px solid $grey-2;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 20px;
+
+            .heading-medium{
+                margin-top: 0;
+            }
+
+            &:before{
+                content: "";
+                position: absolute;
+                margin-left: -56px;
+                border: 18px solid transparent;
+                border-right: 18px solid $grey-2;
+            }
+        }
+
+        &.complete{
+            background: url(../images/charts/offer-status-tick.png) no-repeat;
+
+             &:last-child{
+                background: url(../images/charts/offer-status-tick-last.png) no-repeat;
+             }
+
+            span{
+                background: $grey-4;
+            }
+        }
+
+        &.processing{
+            background: url(../images/charts/offer-status-processing.png) no-repeat;
+
+             &:last-child{
+                background: url(../images/charts/offer-status-processing-last.png) no-repeat;
+             }
+
+            span{
+                background: $link-colour;
+                color: $white;
+
+                a{
+                    color: $white;
+                }
+            }
+        }
+    }
+}
