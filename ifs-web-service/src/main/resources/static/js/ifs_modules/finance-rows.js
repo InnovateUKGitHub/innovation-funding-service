@@ -4,8 +4,8 @@ IFS.financeRows = (function() {
 
     return {
         init: function(){
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .add-another-row', IFS.financeRows.addCostsRowHandler);
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .delete-row', IFS.financeRows.removeCostsRowHandler);
+            jQuery('body').on('click', '[data-finance-subsection-table-container] .add-another-row', IFS.financeRows.addCostsRowHandler);
+            jQuery('body').on('click', '[data-finance-subsection-table-container] .delete-row', IFS.financeRows.removeCostsRowHandler);
         },
         generateFragmentUrl : function(originalLink) {
             // Replace the non-javascript add and remove functionality with single fragment question HTML responses
@@ -33,11 +33,10 @@ IFS.financeRows = (function() {
 
             jQuery.get(dynamicHref, function(data) {
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
-                var tableSectionToUpdate = amendRowsLink.parents('[data-finance-subsection-table-container]');
+                var tableSectionToUpdate = amendRowsLink.closest('[data-finance-subsection-table-container]');
                 var tableSectionId = tableSectionToUpdate.attr('data-finance-subsection-table-container');
-                var replacement = htmlReplacement.find('[data-finance-subsection-table-container=' + tableSectionId + ']');
-                tableSectionToUpdate.replaceWith(replacement);
-                IFS.autoSave.init();
+                var replacement = htmlReplacement.find('[data-finance-subsection-table-container=' + tableSectionId + '] table');
+                tableSectionToUpdate.find('table').replaceWith(replacement);
             });
             e.preventDefault();
             return false;
@@ -54,6 +53,6 @@ IFS.financeRows = (function() {
             });
             e.preventDefault();
             return false;
-        }        
+        }
     };
 })();
