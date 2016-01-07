@@ -1,0 +1,34 @@
+1) Create a database dump from the latest flyway
+cd ../ifs-data-service/
+./gradlew flywayClean flywayMigrate;
+cd ../data-dumps/
+mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version > original_schema_only.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role > original_reference_data_only.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version > original_test_data_only.sql
+2) Baseline the scripts
+cd ../ifs-data-service/src/main/resources/db/migration/
+rm -rf *
+cp ../../../../../../data-dumps/original_schema_only.sql V1__BaseVersion.sql
+cp ../../../../../../data-dumps/original_reference_data_only.sql V2__ReferenceData.sql
+3) Drop the old database
+mysql -uifs -pifs -e"DROP DATABASE ifs"
+mysql -uifs -pifs -e"CREATE DATABASE ifs DEFAULT CHARACTER SET utf8"
+3) Run the migration
+cd ../../../../../
+./gradlew flywayMigrate
+4) Apply the original test data to the new database
+cd ../data-dumps/
+mysql -uifs -pifs ifs < original_test_data_only.sql
+5) Export the database this is the baseline for a test environment
+mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > new_database_with_test_data.sql
+6) Regenerate the acceptance tests database
+TODO
+7) Run the integration tests.
+TODO 
+
+
+
+
+
+
+
