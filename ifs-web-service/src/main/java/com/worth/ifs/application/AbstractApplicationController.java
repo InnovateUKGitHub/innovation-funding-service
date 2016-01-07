@@ -115,7 +115,7 @@ public abstract class AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
 
         application.setId(applicationId);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
@@ -205,11 +205,11 @@ public abstract class AbstractApplicationController {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
-        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetition());
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
@@ -243,7 +243,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSectionId);
         Section nextSection = sectionService.getNextSection(currentSectionId);
@@ -266,7 +266,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));

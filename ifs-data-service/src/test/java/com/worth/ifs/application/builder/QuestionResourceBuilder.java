@@ -1,8 +1,8 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInput;
 
@@ -14,19 +14,19 @@ import java.util.function.Function;
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
-public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
+public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, QuestionResourceBuilder> {
 
-    private QuestionBuilder(List<BiConsumer<Integer, Question>> newMultiActions) {
+    private QuestionResourceBuilder(List<BiConsumer<Integer, QuestionResource>> newMultiActions) {
         super(newMultiActions);
     }
 
     @Override
-    protected QuestionBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Question>> actions) {
-        return new QuestionBuilder(actions);
+    protected QuestionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, QuestionResource>> actions) {
+        return new QuestionResourceBuilder(actions);
     }
 
-    public static QuestionBuilder newQuestion() {
-        return new QuestionBuilder(emptyList())
+    public static QuestionResourceBuilder newQuestionResource() {
+        return new QuestionResourceBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true)
@@ -36,35 +36,35 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
                 .withGuidanceAnswer("Some Guidance Answer Text");
     }
 
-    public QuestionBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
+    public QuestionResourceBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
         return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
     }
 
-    public QuestionBuilder withQuestionNumber(String value) {
+    public QuestionResourceBuilder withQuestionNumber(String value) {
         return with(question -> setField("questionNumber", value, question));
     }
 
-    public QuestionBuilder withGuidanceQuestion(String value) {
+    public QuestionResourceBuilder withGuidanceQuestion(String value) {
         return with(question -> setField("guidanceQuestion", value, question));
     }
 
-    public QuestionBuilder withGuidanceAnswer(String value) {
+    public QuestionResourceBuilder withGuidanceAnswer(String value) {
         return with(question -> setField("guidanceAnswer", value, question));
     }
 
-    public QuestionBuilder withPriority(int priority) {
+    public QuestionResourceBuilder withPriority(int priority) {
         return with(question -> setField("priority", priority, question));
     }
 
-    public QuestionBuilder withPriority(Function<Integer, Integer> prioritySetter) {
+    public QuestionResourceBuilder withPriority(Function<Integer, Integer> prioritySetter) {
         return with((i, question) -> setField("priority", prioritySetter.apply(i), question));
     }
 
-    public QuestionBuilder withFormInputs(List<FormInput> formInputs) {
+    public QuestionResourceBuilder withFormInputs(List<FormInput> formInputs) {
         return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
     }
 
-    public QuestionBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
+    public QuestionResourceBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
         return with(question -> {
             question.setCompetition(competition);
             question.setSection(section);
@@ -72,10 +72,8 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         });
     }
 
-
-
     @Override
-    protected Question createInitial() {
-        return new Question();
+    protected QuestionResource createInitial() {
+        return new QuestionResource();
     }
 }

@@ -27,9 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
@@ -98,7 +96,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(assessorDashboard))
-                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetitionId())))
+                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetition())))
                 .andExpect(model().attributeDoesNotExist("assessment"));
     }
 
@@ -113,7 +111,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(applicationReview))
-                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetitionId())))
+                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetition())))
                 .andExpect(model().attribute("assessment", assessment));
         /** TODO: also test attribute partners {@link AssessmentController#153} */
 
@@ -130,7 +128,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(assessorDashboard))
-                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetitionId())))
+                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetition())))
                 .andExpect(model().attribute("assessment", assessment));
 
     }
@@ -153,7 +151,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(organisations.get(0), organisations.get(1))))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetitionId())));
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())));
     }
 
 
@@ -205,7 +203,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
                 .andExpect(view().name(rejectInvitation))
-                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetitionId())))
+                .andExpect(model().attribute("competition", competitionService.getById(application.getCompetition())))
                 .andExpect(model().attribute("assessment", assessment));
     }
 
@@ -281,7 +279,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         String comments = "comment; x";
         mockMvc.perform(
                 post("/assessor/competitions/{competitionId}/applications/{applicationId}/complete",
-                        application.getCompetitionId(),
+                        application.getCompetition(),
                         application.getId()
                 )
                         .param("confirm-submission", "")
@@ -296,7 +294,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     }
 
     private Assessment getAssessment(ApplicationResource application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> new ApplicationResource(a.getProcessRole().getApplication()).equals(application)).findFirst();
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getProcessRole().getApplication().equals(application)).findFirst();
         assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }

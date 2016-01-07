@@ -3,6 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.transactional.QuestionService;
 import org.junit.Before;
@@ -24,6 +25,8 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     QuestionStatusRepository questionStatusRepository;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    QuestionMapper questionMapper;
 
 
     private final Long userId = 1L;
@@ -52,7 +55,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetQuestionById() throws Exception {
-        question = controller.getQuestionById(questionId);
+        question= controller.getQuestionById(questionId);
 
         assertNotNull(question);
         assertEquals("How does your project align with the scope of this competition?", question.getName());
@@ -146,7 +149,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     public void testGetNextQuestion() throws Exception {
         Question nextQuestion = controller.getNextQuestion(9L);
         assertNotNull(nextQuestion);
-        assertEquals(11L, nextQuestion.getId().longValue());
+        assertEquals(new Long(11L), nextQuestion.getId());
     }
 
     @Test
@@ -154,7 +157,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         Question previousQuestion = controller.getPreviousQuestion(11L);
 
         assertNotNull(previousQuestion);
-        assertEquals(9L, previousQuestion.getId().longValue());
+        assertEquals(new Long(9L), previousQuestion.getId());
     }
 
     @Test
@@ -185,7 +188,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Test
     public void testIsMarkedAsCompleteMultiple() throws Exception {
         question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE);
-
 
         assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId));
 

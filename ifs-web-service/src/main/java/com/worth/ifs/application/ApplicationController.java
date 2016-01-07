@@ -177,7 +177,7 @@ public class ApplicationController extends AbstractApplicationController {
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
@@ -185,7 +185,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetition());
 
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), applicationId);
         QuestionStatus questionAssignee = questionAssignees.get(questionId);

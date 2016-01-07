@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResourceHateoas;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/competition")
 public class CompetitionController {
     @Autowired
-    CompetitionsRepository repository;
+    CompetitionRepository repository;
 
     private CompetitionResourceAssembler competitionResourceAssembler;
 

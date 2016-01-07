@@ -5,21 +5,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.*;
+import java.util.stream.Collector;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
@@ -161,6 +152,22 @@ public class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Set<R> simpleMapSet(Set<T> list, Function<T, R> mappingFn) {
+        if (null == list || list.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return list.stream().map(mappingFn).collect(toSet());
+    }
+
+    /**
      * A map collector that preserves order
      * @param keyMapper
      * @param valueMapper
@@ -191,8 +198,8 @@ public class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return Map.Entry::getValue;
+    public static <R, T> Function<Entry<R, T>, T> mapEntryValue() {
+        return Entry::getValue;
     }
 
     /**

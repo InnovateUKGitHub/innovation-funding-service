@@ -58,7 +58,7 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetitionId())
+                    application -> competitionService.getById(application.getCompetition())
                 )
             );
         model.addAttribute("applicationsInProcess", inProgress);

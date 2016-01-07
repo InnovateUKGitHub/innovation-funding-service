@@ -189,7 +189,7 @@ public class AssessmentController extends AbstractApplicationController {
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
         addApplicationDetails(application.getId(), userId, empty(), model, null);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
-        Set<String> partners = application.getProcessRoleIds().stream().
+        Set<String> partners = application.getProcessRoles().stream().
                 map(id -> processRoleService.getById(id)).
                 map(ProcessRole::getOrganisation).
                 map(Organisation::getName).

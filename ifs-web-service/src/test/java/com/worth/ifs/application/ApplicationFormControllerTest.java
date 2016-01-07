@@ -29,6 +29,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
@@ -139,7 +140,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testQuestionSubmit() throws Exception {
-        Question question = new Question();
+        Question question = newQuestion().build();
         ApplicationResource application = applications.get(0);
 
         when(questionService.getById(anyLong())).thenReturn(question);

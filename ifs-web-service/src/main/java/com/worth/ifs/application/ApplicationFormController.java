@@ -9,10 +9,12 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -51,6 +53,12 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private CostService costService;
+
+    @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
+    private QuestionMapper questionMapper;
 
 
     @RequestMapping
@@ -266,7 +274,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
@@ -290,11 +298,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form, Model model, Long userId,
-                                                Long applicationId, Long sectionId, Question question,
-                                                HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                              Long applicationId, Long sectionId, Question question,
+                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Map<Long, List<String>> errors = null;
         if(question != null) {
             errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
@@ -404,16 +412,22 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
-        questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
-            if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
-                String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
-                if (errors.size() != 0) {
-                    log.error("save failed. " + question.getId());
-                    errorMap.put(question.getId(), new ArrayList<>(errors));
-                }
-            }
-        }));
+        questions.stream()
+            .forEach(question -> question.getFormInputs()
+                .stream()
+                .forEach(formInput -> {
+                        if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                            String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                            List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
+                            if (errors.size() != 0) {
+                                log.error("save failed. " + question.getId());
+                                errorMap.put(question.getId(), new ArrayList<>(errors));
+                            }
+                        }
+                    }
+                )
+            );
+
         return errorMap;
     }
 
