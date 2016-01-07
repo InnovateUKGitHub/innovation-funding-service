@@ -3,14 +3,15 @@ package com.worth.ifs.application.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.MediaTypes;
@@ -36,6 +37,9 @@ import static org.springframework.hateoas.client.Hop.rel;
  */
 @Service
 public class ApplicationRestServiceImpl extends BaseRestService implements ApplicationRestService {
+    @Autowired
+    ApplicationMapper applicationMapper;
+
     @Value("${ifs.data.service.rest.application}")
     String applicationRestURL;
 
@@ -56,21 +60,14 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         HttpHeaders headers = new HttpHeaders();
         headers.add("IFS_AUTH_TOKEN","123abc");
         Traverson traverson = new Traverson(URI.create(getDataRestServiceURL() + applicationRestURL + "/" + applicationId), MediaTypes.HAL_JSON);
-        ApplicationResource application = new ApplicationResource(traverson.follow(rel("self")).withHeaders(headers)
+        ApplicationResource application = applicationMapper.mapApplicationToResource(traverson.follow(rel("self")).withHeaders(headers)
                                             .toObject(ApplicationResourceHateoas.class).toApplication());
         Resources<ProcessRole> roleResources = traverson.follow(rel("roles")).withHeaders(headers)
                                             .toObject(typeReference);
         List<ProcessRole> roles = new ArrayList<>(roleResources.getContent());
-        application.setProcessRoleIds(simpleMap(roles,ProcessRole::getId));
+        application.setProcessRoles(simpleMap(roles,ProcessRole::getId));
         return application;
 
-    }
-
-    private ProcessRole getRole(String href){
-        ParameterizedTypeReference<ProcessRoleResource> typeReference =
-            new ParameterizedTypeReference<ProcessRoleResource>() {};
-        ResponseEntity<ProcessRoleResource> resource = restGetParameterizedType(href, typeReference);
-        return resource.getBody().toProcessRole();
     }
 
     @Override

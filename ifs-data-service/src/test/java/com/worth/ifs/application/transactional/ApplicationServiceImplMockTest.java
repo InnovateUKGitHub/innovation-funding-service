@@ -70,7 +70,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
         when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
-        when(competitionsRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(Collections.singletonList(leadApplicantRole));
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 

@@ -14,8 +14,9 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
+import com.worth.ifs.invite.service.InviteRestServiceImpl;
+import com.worth.ifs.form.service.FormInputRestServiceImpl;
 import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
-import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
 import org.junit.Test;
@@ -60,9 +61,11 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     TokenAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
                     ApplicationResourceAssembler.class,
-                    ProcessRoleResourceAssembler.class,
                     CompetitionResourceAssembler.class,
                     QuestionStatusRestServiceImpl.class,
+                    FileServiceImpl.class,
+                    FormInputRestServiceImpl.class,
+                    InviteRestServiceImpl.class,
                     FileServiceImpl.class
             );
 

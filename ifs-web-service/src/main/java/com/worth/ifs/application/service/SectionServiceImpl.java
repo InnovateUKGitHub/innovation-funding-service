@@ -41,7 +41,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public List<Section> getParentSections(List<Section> sections) {
-        List<Section> childSections = new ArrayList<Section>();
+        List<Section> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
         sections = sections.stream()
                 .filter(s -> !childSections.stream()

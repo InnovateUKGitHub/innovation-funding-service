@@ -16,7 +16,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -96,9 +96,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     OrganisationRepository organisationRepository;
     @Autowired
-    CompetitionsRepository competitionRepository;
+    CompetitionRepository competitionRepository;
     @Autowired
     ApplicationResourceAssembler applicationResourceAssembler;
+
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -271,20 +272,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ApplicationResource getApplicationById(final Long id) {
-        return new ApplicationResource(applicationRepository.findOne(id));
+    public Application getApplicationById(final Long id) {
+        return applicationRepository.findOne(id);
     }
 
     @Override
-    public List<ApplicationResource> findAll() {
-        return simpleMap(applicationRepository.findAll(),ApplicationResource::new);
+    public List<Application> findAll() {
+        return applicationRepository.findAll();
     }
 
     @Override
-    public List<ApplicationResource> findByUserId(final Long userId) {
+    public List<Application> findByUserId(final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        return simpleMap(roles,role -> new ApplicationResource(role.getApplication()));
+        return simpleMap(roles,role -> role.getApplication());
     }
 
     @Override
@@ -318,8 +319,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ObjectNode getProgressPercentageByApplicationId(final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
+
         List<Question> questions = sections.stream()
-                .flatMap(s -> s.getQuestions().stream())
+                .flatMap(section -> section.getQuestions().stream())
                 .filter(Question::isMarkAsCompletedEnabled)
                 .collect(Collectors.toList());
 
@@ -374,14 +376,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
 
     @Override
-    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
+    public List<Application> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                              final Long userId,
                                                                              final UserRoleType role) {
 
         List<Application> allApps = applicationRepository.findAll();
         return allApps.stream()
                 .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
-                .map(ApplicationResource::new)
                 .collect(Collectors.toList());
     }
 
@@ -397,7 +398,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
+    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
             JsonNode jsonObj) {
@@ -435,7 +436,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         applicationRepository.save(application);
         processRoleRepository.save(processRole);
 
-        return new ApplicationResource(application);
+        return application;
     }
 
 }

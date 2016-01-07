@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDateTime.now;
+import static java.util.Comparator.comparing;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -92,7 +94,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, applicationId, assigneeId);
 
         if(questionStatus==null) {
-            questionStatus = new QuestionStatus(question, application, assignee, assignedBy, LocalDateTime.now());
+            questionStatus = new QuestionStatus(question, application, assignee, assignedBy, now());
         } else {
             questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
         }
@@ -159,24 +161,24 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         if(question!=null) {
             // retrieve next question within current section
             nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+                question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
             // retrieve next question in following section
             if(nextQuestion == null) {
-                nextQuestion = getNextQuestionBySection(question.getSection(), question.getCompetition().getId());
+                nextQuestion = getNextQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
             }
 
             // retrieve next question in any other section, but with higher priority
             if(nextQuestion == null) {
                 nextQuestion = questionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                        question.getCompetition().getId(), question.getPriority());
+                    question.getCompetition().getId(), question.getPriority());
             }
         }
 
         return nextQuestion;
     }
 
-    private Question getNextQuestionBySection(Section section, Long competitionId) {
+    private Question getNextQuestionBySection(Long section, Long competitionId) {
         Section nextSection = sectionService.getNextSection(section);
         if(nextSection!=null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
@@ -193,7 +195,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             if(previousSection!=null) {
                 Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                         .stream()
-                        .max(Comparator.comparing(question -> question.getPriority()));
+                        .max(comparing(Question::getPriority));
                 return lastQuestionInSection.orElse(null);
             }
         }
@@ -208,7 +210,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             if(nextSection!=null) {
                 Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                         .stream()
-                        .min(Comparator.comparing(question -> question.getPriority()));
+                        .min(comparing(question -> question.getPriority()));
                 return firstQuestionInSection.orElse(null);
             }
         }
@@ -221,17 +223,17 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         Question previousQuestion = null;
         if(question!=null) {
             previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
-                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+                question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
             if(previousQuestion==null) {
-                previousQuestion = getPreviousQuestionBySection(question.getSection(), question.getCompetition().getId());
+                previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
             }
         }
 
         return previousQuestion;
     }
 
-    private Question getPreviousQuestionBySection(Section section, Long competitionId) {
+    private Question getPreviousQuestionBySection(Long section, Long competitionId) {
         Section previousSection = sectionService.getPreviousSection(section);
 
         if(previousSection!=null) {

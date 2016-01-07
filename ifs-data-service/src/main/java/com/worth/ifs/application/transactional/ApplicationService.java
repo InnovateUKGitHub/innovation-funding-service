@@ -50,13 +50,13 @@ public interface ApplicationService {
     Resources<ApplicationResourceHateoas> findAllHateoas();
 
     @NotSecured("TODO")
-    ApplicationResource getApplicationById(final Long id);
+    Application getApplicationById(final Long id);
 
     @NotSecured("TODO")
-    List<ApplicationResource> findAll();
+    List<Application> findAll();
 
     @NotSecured("TODO")
-    List<ApplicationResource> findByUserId(final Long userId);
+    List<Application> findByUserId(final Long userId);
 
     /**
      * This method saves only a few application attributes that
@@ -73,12 +73,12 @@ public interface ApplicationService {
                                                    final Long statusId);
 
     @NotSecured("TODO")
-    List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
+    List<Application> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                       final Long userId,
                                                                       final UserRoleType role);
 
     @NotSecured("TODO")
-    ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
+    Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
             JsonNode jsonObj);

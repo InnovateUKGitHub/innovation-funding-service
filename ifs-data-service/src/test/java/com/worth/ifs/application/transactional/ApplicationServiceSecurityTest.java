@@ -316,17 +316,17 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ApplicationResource getApplicationById(Long id) {
+        public Application getApplicationById(Long id) {
             return null;
         }
 
         @Override
-        public List<ApplicationResource> findAll() {
+        public List<Application> findAll() {
             return null;
         }
 
         @Override
-        public List<ApplicationResource> findByUserId(Long userId) {
+        public List<Application> findByUserId(Long userId) {
             return null;
         }
 
@@ -346,12 +346,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
+        public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
             return null;
         }
 
         @Override
-        public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
+        public Application createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
             return null;
         }
     }

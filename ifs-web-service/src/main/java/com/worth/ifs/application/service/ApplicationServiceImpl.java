@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     ApplicationRestService applicationRestService;
 
+    @Autowired
+    ApplicationStatusRestService applicationStatusRestService;
+
     @Override
     public ApplicationResource getById(Long applicationId, Boolean... hateoas) {
         if(hateoas.length>0 && hateoas[0]) {
@@ -33,7 +37,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getInProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         return applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("created") || a.getApplicationStatus().getName().equals("submitted")))
+                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("submitted")))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -41,7 +45,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getFinished(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         return applications.stream()
-                .filter(a -> (a.getApplicationStatus().getName().equals("approved") || a.getApplicationStatus().getName().equals("rejected")))
+                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("approved") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("rejected")))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -50,7 +54,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
         Map<Long, Integer> applicationProgress = new HashMap<>();
         applications.stream()
-            .filter(a -> a.getApplicationStatus().getName().equals("created"))
+            .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
             .map(ApplicationResource::getId)
             .forEach(id -> {
                 Double progress = applicationRestService.getCompleteQuestionsPercentage(id);
@@ -89,6 +93,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationResource findByProcessRoleId(Long id) {
         return applicationRestService.findByProcessRoleId(id);
+    }
+
+    private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
+        return applicationStatusRestService.getApplicationStatusById(id);
     }
 
 }
