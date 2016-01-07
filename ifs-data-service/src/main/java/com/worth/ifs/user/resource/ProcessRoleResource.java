@@ -1,52 +1,74 @@
 package com.worth.ifs.user.resource;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
+import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.springframework.hateoas.core.Relation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Relation(value="processRole", collectionRelation="processRoles")
-public class ProcessRoleResource extends ResourceWithEmbeddeds {
-
+public class ProcessRoleResource {
     private Long id;
-    private User user;
-    private Application application;
-    private Role role;
-    private Organisation organisation;
+    private Long user;
+    private Long application;
+    private Long role;
+    private Long organisation;
+    private List<Response> responses = new ArrayList<>();
 
-    @JsonCreator
-    public ProcessRoleResource(@JsonProperty("id") Long id,
-                               @JsonProperty("user") User user,
-                               @JsonProperty("application") Application application,
-                               @JsonProperty("role") Role role,
-                               @JsonProperty("organisation") Organisation organisation
-    ){
-        super();
+    public ProcessRoleResource(){}
+
+    public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation
+    ) {
         this.id = id;
-        this.user = user;
-        this.application = application;
-        this.role = role;
-        this.organisation = organisation;
+        this.user = user.getId();
+        this.application = application.getId();
+        this.role = role.getId();
+        this.organisation = organisation.getId();
     }
 
-    public ProcessRole toProcessRole() {
-        return new ProcessRole(this.id, this.user, this.application, this.role, this.organisation);
-    }
+    public Long getId(){return id;}
 
-    public User getUser() {
+    public Long getUser() {
         return user;
     }
 
-    public Role getRole() {
+    public Long getRole() {
         return role;
     }
 
-    public Organisation getOrganisation() {
+    public Long getOrganisation() {
         return organisation;
+    }
+
+    public Long getApplication() {
+        return this.application;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public void setRole(Long role) {
+        this.role = role;
+    }
+
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
+
+    public List<Response> getResponses() {
+        return this.responses;
+    }
+
+    public void setResponses(List<Response> responses) {
+        this.responses = responses;
     }
 }

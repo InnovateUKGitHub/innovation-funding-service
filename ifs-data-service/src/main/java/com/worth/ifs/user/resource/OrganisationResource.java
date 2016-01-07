@@ -1,17 +1,10 @@
 package com.worth.ifs.user.resource;
 
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import org.springframework.hateoas.core.Relation;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Relation(value="organisation", collectionRelation="organisations")
 public class OrganisationResource {
@@ -19,27 +12,11 @@ public class OrganisationResource {
     private String name;
     private String companyHouseNumber;
     private OrganisationSize organisationSize;
-    private List<Long> processRoleIds = new ArrayList<>();
-    private List<Long> applicationFinanceIds = new ArrayList<>();
-    private List<Long> userIds = new ArrayList<>();
-
-    public OrganisationResource() {
-        /*default constructor*/
-    }
-
-    private List<Long> addressIds = new ArrayList<>();
-
-    public OrganisationResource(Organisation organisation) {
-        id=organisation.getId();
-        name = organisation.getName();
-        companyHouseNumber = organisation.getCompanyHouseNumber();
-        organisationSize = organisation.getOrganisationSize();
-
-        addressIds = simpleMap(organisation.getAddresses(), OrganisationAddress::getId);
-        processRoleIds = simpleMap(organisation.getProcessRoles(), ProcessRole::getId);
-        applicationFinanceIds = simpleMap(organisation.getApplicationFinances(), ApplicationFinance::getId);
-        userIds = simpleMap(organisation.getUsers(), User::getId);
-    }
+    private List<Long> processRoles = new ArrayList<>();
+    private List<Long> applicationFinances = new ArrayList<>();
+    private List<Long> users = new ArrayList<>();
+    private List<Long> addresses = new ArrayList<>();
+    private Long organisationType;
 
     public Long getId() {
         return id;
@@ -57,38 +34,6 @@ public class OrganisationResource {
         this.name = name;
     }
 
-    public List<Long> getProcessRoleIds() {
-        return processRoleIds;
-    }
-
-    public void setProcessRoleIds(List<Long> processRoleIds) {
-        this.processRoleIds = processRoleIds;
-    }
-
-    public List<Long> getApplicationFinanceIds() {
-        return applicationFinanceIds;
-    }
-
-    public void setApplicationFinanceIds(List<Long> applicationFinanceIds) {
-        this.applicationFinanceIds = applicationFinanceIds;
-    }
-
-    public List<Long> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-    }
-
-    public List<Long> getAddressIds() {
-        return addressIds;
-    }
-
-    public void setAddressIds(List<Long> addressIds) {
-        this.addressIds = addressIds;
-    }
-
     public String getCompanyHouseNumber() {
         return companyHouseNumber;
     }
@@ -103,5 +48,45 @@ public class OrganisationResource {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public List<Long> getProcessRoles() {
+        return processRoles;
+    }
+
+    public void setProcessRoles(List<Long> processRoles) {
+        this.processRoles = processRoles;
+    }
+
+    public List<Long> getApplicationFinances() {
+        return applicationFinances;
+    }
+
+    public void setApplicationFinances(List<Long> applicationFinances) {
+        this.applicationFinances = applicationFinances;
+    }
+
+    public List<Long> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Long> users) {
+        this.users = users;
+    }
+
+    public List<Long> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Long> addresses) {
+        this.addresses = addresses;
+    }
+
+    public Long getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(Long organisationType) {
+        this.organisationType = organisationType;
     }
 }
