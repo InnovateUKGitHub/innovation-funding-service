@@ -8,7 +8,7 @@ import com.worth.ifs.notifications.resource.UserNotificationTargetResource;
 import com.worth.ifs.user.domain.User;
 
 /**
- *
+ * A helper utility to resolve a set of Email Address details from given Notifications, for the "from" and "to" of the emails to be sent
  */
 public class EmailAddressResourceResolver {
 
