@@ -5,9 +5,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -162,6 +160,20 @@ public class BuilderAmendFunctions {
             ReflectionTestUtils.setField(instance, fieldName, value);
         }
         return instance;
+    }
+
+    public static <T> T addToList(String fieldName, Object value, T instance) {
+
+        List<Object> existingList = (List<Object>) getField(instance, fieldName);
+        List<Object> newList = new ArrayList<>();
+
+        if (existingList != null) {
+            newList.addAll(existingList);
+        }
+
+        newList.add(value);
+
+        return setField(fieldName, newList, instance);
     }
 
     public static Function<Integer, Integer> zeroBasedIndexes() {

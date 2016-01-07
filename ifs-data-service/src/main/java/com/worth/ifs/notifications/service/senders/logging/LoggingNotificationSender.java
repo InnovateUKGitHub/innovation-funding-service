@@ -1,7 +1,8 @@
-package com.worth.ifs.notifications.service;
+package com.worth.ifs.notifications.service.senders.logging;
 
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationResource;
+import com.worth.ifs.notifications.service.NotificationSender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;

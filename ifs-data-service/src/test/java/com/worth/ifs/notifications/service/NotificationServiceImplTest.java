@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static com.worth.ifs.notifications.builders.NotificationResourceBuilder.newNotificationResource;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
-import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
@@ -39,18 +39,10 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         return notificationService;
     }
 
-
-
-    private enum TestMessageKeys {
-
-        MESSAGE1, //
-        MESSAGE2
-    }
-
     @Test
     public void testSendNotificationByEmail() {
 
-        NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
+        NotificationResource notificationToSend = newNotificationResource().build();
         service.sendNotification(notificationToSend, EMAIL);
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -60,7 +52,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
     @Test
     public void testSendNotificationByEmailAndLogging() {
 
-        NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
+        NotificationResource notificationToSend = newNotificationResource().build();
         service.sendNotification(notificationToSend, EMAIL, LOGGING);
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -70,7 +62,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
     @Test
     public void testSendNotificationByEmailDeclaredTwiceButOnlySendOnce() {
 
-        NotificationResource notificationToSend = new NotificationResource(TestMessageKeys.MESSAGE1, asMap("firstName", "Bob"));
+        NotificationResource notificationToSend = newNotificationResource().build();
         service.sendNotification(notificationToSend, EMAIL, EMAIL);
 
         verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);

@@ -2,6 +2,7 @@ package com.worth.ifs.notifications.resource;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,6 +10,10 @@ import java.util.Map;
  * wherewithalls with which to construct an appropriate message based on the mediums chosen to send the notification via.
  */
 public class NotificationResource {
+
+    private NotificationSource from;
+
+    private List<NotificationTarget> to;
 
     /**
      * A key with which the end "sending" services can use to find the appropriate message body for the medium they represent
@@ -20,9 +25,25 @@ public class NotificationResource {
      */
     private Map<String, Object> arguments;
 
-    public NotificationResource(Enum<?> messageKey, Map<String, Object> arguments) {
+    /**
+     * For builder use only
+     */
+    public NotificationResource() {
+    }
+
+    public NotificationResource(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> arguments) {
+        this.from = from;
+        this.to = to;
         this.messageKey = messageKey;
         this.arguments = arguments;
+    }
+
+    public NotificationSource getFrom() {
+        return from;
+    }
+
+    public List<NotificationTarget> getTo() {
+        return to;
     }
 
     public Enum<?> getMessageKey() {
