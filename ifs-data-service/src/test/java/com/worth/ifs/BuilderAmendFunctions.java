@@ -89,6 +89,10 @@ public class BuilderAmendFunctions {
         return (i, t) -> setName(nameGenerationFunction.apply(i, t), t);
     }
 
+    public static <T> BiConsumer<Integer, T> names(String... names) {
+        return (i, t) -> setName(names[i], t);
+    }
+
     public static <T> Consumer<T> names(Function<T, String> nameGenerationFunction) {
         return t -> setName(nameGenerationFunction.apply(t), t);
     }

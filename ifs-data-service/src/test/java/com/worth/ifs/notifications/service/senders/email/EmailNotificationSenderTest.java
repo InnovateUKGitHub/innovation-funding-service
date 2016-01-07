@@ -51,7 +51,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         EmailAddressResource recipient1Email = EmailAddressResourceResolver.fromNotificationTarget(recipient1);
         EmailAddressResource recipient2Email = EmailAddressResourceResolver.fromNotificationTarget(recipient2);
 
-        verify(emailServiceMock).sendEmail(eq(senderEmail), isA(String.class), isA(String.class), isA(String.class), eq(asList(recipient1Email, recipient2Email)));
+        verify(emailServiceMock).sendEmail(eq(senderEmail), eq(asList(recipient1Email, recipient2Email)), isA(String.class), isA(String.class), isA(String.class));
     }
 
 }

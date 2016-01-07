@@ -9,7 +9,5 @@ import java.util.List;
  */
 public interface EmailService {
 
-    void sendEmail(EmailAddressResource from, String subject, String plainTextBody, String htmlBody, EmailAddressResource... recipients);
-
-    void sendEmail(EmailAddressResource from, String subject, String plainTextBody, String htmlBody, List<EmailAddressResource>... recipients);
+    void sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBody, String htmlBody);
 }

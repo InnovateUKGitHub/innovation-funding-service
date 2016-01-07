@@ -33,6 +33,6 @@ public class EmailNotificationSender implements NotificationSender {
         EmailAddressResource from = fromNotificationSource(notification.getFrom());
         List<EmailAddressResource> to = simpleMap(notification.getTo(), EmailAddressResourceResolver::fromNotificationTarget);
 
-        emailService.sendEmail(from, "A subject", "Plain text body", "html body", to);
+        emailService.sendEmail(from, to, "A subject", "Plain text body", "html body");
     }
 }

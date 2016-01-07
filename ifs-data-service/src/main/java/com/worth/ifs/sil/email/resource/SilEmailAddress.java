@@ -1,33 +1,27 @@
-package com.worth.ifs.email.resource;
+package com.worth.ifs.sil.email.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- *
+ * Represents a set of email details for email senders or recients sent to the SIL API
  */
-public class EmailAddressResource {
+public class SilEmailAddress {
 
-    private String emailAddress;
     private String name;
+    private String email;
 
-    /**
-     * For builder use only
-     */
-    public EmailAddressResource() {
-    }
-
-    public EmailAddressResource(String emailAddress, String name) {
-        this.emailAddress = emailAddress;
+    public SilEmailAddress(String name, String email) {
         this.name = name;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
+        this.email = email;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
@@ -36,19 +30,19 @@ public class EmailAddressResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        EmailAddressResource that = (EmailAddressResource) o;
+        SilEmailAddress that = (SilEmailAddress) o;
 
         return new EqualsBuilder()
-                .append(emailAddress, that.emailAddress)
                 .append(name, that.name)
+                .append(email, that.email)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(emailAddress)
                 .append(name)
+                .append(email)
                 .toHashCode();
     }
 }
