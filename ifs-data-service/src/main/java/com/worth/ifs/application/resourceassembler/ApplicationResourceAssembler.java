@@ -5,7 +5,6 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.commons.resource.ExtendedLink;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     private Class<ApplicationController> controllerClass = ApplicationController.class;
 
     @Autowired
-    private com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler processRoleResourceAssembler;
-
-    @Autowired
     private CompetitionResourceAssembler competitionResourceAssembler;
 
     public ApplicationResourceAssembler() {
@@ -39,14 +35,6 @@ public class ApplicationResourceAssembler extends ResourceAssemblerSupport<Appli
     @Override
     public ApplicationResourceHateoas toResource(Application application) {
         final ApplicationResourceHateoas resource = createResourceWithId(application.getId(), application);
-        // Add (multiple) links to processRoles
-        try{
-            for (ProcessRole role : application.getProcessRoles()) {
-                resource.add(processRoleResourceAssembler.linkToSingleResource(role).withRel("roles"));
-            }
-        }catch(NullPointerException e){
-            log.error(e);
-        }
 
         resource.add(competitionResourceAssembler.linkToSingleResource(application.getCompetition()).withRel("competition"));
 
