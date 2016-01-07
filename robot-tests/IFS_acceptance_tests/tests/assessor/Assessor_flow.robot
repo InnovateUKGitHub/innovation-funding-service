@@ -18,7 +18,7 @@ Resource          ../../resources/keywords/Assessor_actions.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
-${accept_application_name}    A new innovative solution
+${accept_application_name}    Using natural gas to heat homes
 ${competition_name}    Technology Inspired
 ${deadline_month}    December deadline
 ${deadline_day}    31
@@ -34,7 +34,7 @@ ${persistence_application_name}    A new innovative solution
 *** Test Cases ***
 Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
@@ -44,17 +44,9 @@ Assessor can see the applications details page
     When Assessor clicks the competition
     Then Competition's details page should be visible
 
-Applications details page has two lists
-    [Documentation]    INFUND-322
-    [Tags]    Assessor
-    When Assessor is viewing the Competitions list
-    When Assessor clicks the competition
-    Then Details page should contain a list with the applications for assessment
-    and Page should contain a list with the submitted assessments
-
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor    failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
@@ -74,9 +66,17 @@ Application state changes when accepting an invitation for assessment
     and Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
+Applications details page has two lists
+    [Documentation]    INFUND-322
+    [Tags]    Assessor
+    When Assessor is viewing the Competitions list
+    When Assessor clicks the competition
+    Then Details page should contain a list with the applications for assessment
+    and Page should contain a list with the submitted assessments
+
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -148,7 +148,7 @@ Competition for Assessment count
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
@@ -236,8 +236,8 @@ Competitions progress should show
     ${assessment_progress_element} =    Set Variable    //*[@class='in-progress' and .//*[contains(text(),"${competition_name}")]]//div[//*[contains(text(), "Assessment progress")]]/div/p/strong
     ${assessment_progress_assessed}=    Get Text    xpath=${assessment_progress_element}/span[1]
     ${assessment_progress_total}=    Get Text    xpath=${assessment_progress_element}/span[2]
-    #Should Be Equal As Integers    ${assessment_progress_assessed}    @{assessment_progress}[0]
-    #Should Be Equal As Integers    ${assessment_progress_total}    @{assessment_progress}[1]
+    Should Be Equal As Integers    ${assessment_progress_assessed}    @{assessment_progress}[0]
+    Should Be Equal As Integers    ${assessment_progress_total}    @{assessment_progress}[1]
     Should Be True    ${assessment_progress_assessed}<=${assessment_progress_total}
 
 Application invitation Review page shows the Application title

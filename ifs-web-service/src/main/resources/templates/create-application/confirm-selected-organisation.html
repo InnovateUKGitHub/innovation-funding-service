@@ -19,7 +19,7 @@
 
     <div th:include="create-application/fragments :: organisation-details" th:remove="tag"/>
 
-    <form action="#" th:object="${confirmCompanyDetailsForm}" method="POST">
+    <form th:action="@{/application/create/selected-business/{companyId}(companyId=${companyId})}" th:object="${confirmCompanyDetailsForm}" method="POST">
 
         <h2 class="heading-medium">Operating address</h2>
         <fieldset>

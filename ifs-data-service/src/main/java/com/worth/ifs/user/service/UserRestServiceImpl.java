@@ -119,4 +119,16 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         return restPost(url, user, UserResourceEnvelope.class);
     }
+
+    @Override
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+        UserResource user = new UserResource();
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setTitle(title);
+        user.setPhoneNumber(phoneNumber);
+        String url = userRestURL + "/updateDetails";
+        return restPost(url, user, UserResourceEnvelope.class);
+    }
 }

@@ -31,7 +31,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         FormInput input = repository.findOne(1L);
         assertEquals(Long.valueOf(1), input.getId());
-        assertEquals(Integer.valueOf(500), input.getWordCount());
+        assertEquals(Integer.valueOf(400), input.getWordCount());
         assertEquals("textarea", input.getFormInputType().getTitle());
         assertEquals(Long.valueOf(1L), ((Competition) getField(input, "competition")).getId());
         assertTrue(input.isIncludedInApplicationSummary());

@@ -7,13 +7,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Object to store the data that is use form the company house form, while creating a new application.
  */
-public class CompanyHouseForm  extends CreateApplicationForm{
+public class CompanyHouseForm extends CreateApplicationForm implements Serializable {
     @NotEmpty
     // on empty value don't check pattern since then there already is a validation message.
     @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&-,.:;\\@]+$", message = "Please enter valid characters")
