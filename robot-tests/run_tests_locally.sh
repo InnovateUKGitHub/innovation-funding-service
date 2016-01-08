@@ -62,6 +62,7 @@ cd ${scriptDir}
 echo "********BUILD AND DEPLOY THE APPLICATION********"
 cd ${dataServiceCodeDir}
 ./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
+./gradlew flywayMigrate
 cd ${webServiceCodeDir}
 ./gradlew clean deployToTomcat
 echo "********START THE DATA SERVER********"
