@@ -38,7 +38,7 @@ the user is in Create your account page
 
 the user enters the Valid Postcode
     Wait Until Element Is Visible    css=#postcode-check
-    Input Text    css=#postcode-check    SN2 1FF
+    Input Text    css=#postcode-check    postcode
     Click Element    id=postcode-lookup
 
 the user should see the results based on the entered Postcode in "Select your address" dropdown
@@ -49,14 +49,17 @@ the user leaves the Postcode field empty
     Click Element    id=postcode-lookup
 
 the user selects the checkbox "The registered test is the same as the operating address"
-    Wait Until Element Is Visible    css=#address-same
-    Click Element    css=#address-same
+    # Wait Until Element Is Visible    css=#address-same
+    # Click Element    css=#address-same
+    Select Checkbox         id=address-same
+    Select Checkbox         name=useCompanyHouseAddress
 
 the address fields should not be displayed on the page
     Element Should not Be Visible    css=#manual-company-input
 
 the user unselects the checkbox "The registered test is the same as the operating address"
-    Unselect Checkbox    css=#address-same
+    # Unselect Checkbox    css=#address-same
+    Unselect Checkbox       id=address-same
 
 the user should be able enter the postcode and find the address
     Element Should Be Visible    css=#manual-company-input
