@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Mobile Phone Data for Logistics Analytics - Application number: 0000003'}, ${'Feedback overview'})" th:remove="tag" />
+
+	<div class="success-alert">
+        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
+        <p>You have been successful with this round of funding. All partners in the consortium have been informed.</p>
+    </div>
+
+    <h2 class="heading-medium">Overall scores</h2>
+	<table>
+		<tbody>
+		<tr>
+			<th>Question</th>
+			<td><strong>Q1</strong></td>
+			<td><strong>Q2</strong></td>
+			<td><strong>Q3</strong></td>
+			<td><strong>Q4</strong></td>
+			<td><strong>Q5</strong></td>
+			<td><strong>Q6</strong></td>
+			<td><strong>Q7</strong></td>
+			<td><strong>Q8</strong></td>
+			<td><strong>Q9</strong></td>
+			<td><strong>Q10</strong></td>
+		</tr>
+		<tr>
+			<th>Score</th>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2 class="heading-medium no-margin-bottom">Application details</h2>
+	<p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
+	<ul class="list-overview">
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">Application details</h3>
+				</div>
+				<div class="column-third">
+					<p class="form-hint no-margin">No feedback provided</p>
+				</div>
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">Project summary</h3>
+				</div>
+				<div class="column-third">
+					<p class="form-hint no-margin">No feedback provided</p>
+				</div>
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">Public description</h3>
+				</div>
+				<div class="column-third">
+					<p class="form-hint no-margin">No feedback provided</p>
+				</div>
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">Scope</h3>
+				</div>
+				<div class="column-third">
+			        In scope? 4/5 Yes
+			    </div>
+			</div>
+		</li>
+	</ul>
+	
+	<h2 class="heading-medium no-margin-bottom">Application questions</h2>
+	<p class="form-hint">Each of these questions has been assessed by several independent assessors, who have provided a score out of 10 and written feedback.</p>
+	<ul class="list-overview">
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">1. Business opportunity</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">2. Potential market</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">3. Project exploitation</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">4. Economic benefit</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">5. Technical approach</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">6. Innovation</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5"  th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small"><a href="/prototypes/545-application-feedback-question7">7. Risks</a></h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">8. Project team</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5"  th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">9. Funding</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5" th:remove="tag" />
+			</div>
+		</li>
+		<li class="section-status">
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h3 class="heading-small">10. Adding value</h3>
+				</div>
+				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=5"  th:remove="tag" />
+			</div>
+		</li>
+	</ul>
+
+	
+	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
