@@ -19,6 +19,7 @@ Enter Valid Postcode and the results should be displayed in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
+    [Tags]      Failing
     Given the user is in Create your account page
     When the user leaves the Postcode field empty
     Then user should be displayed with warning message
