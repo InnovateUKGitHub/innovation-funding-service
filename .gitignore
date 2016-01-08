@@ -100,4 +100,4 @@ ifs-web-service.iws
 
 
 # python bytecode nonsense
-robot-tests/IFS_acceptance_tests/libs/SauceLabs.pyc
+*.pyc

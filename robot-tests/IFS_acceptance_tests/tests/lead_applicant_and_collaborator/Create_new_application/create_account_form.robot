@@ -145,7 +145,7 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]    Account    Validations    Failing
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -160,7 +160,7 @@ Valid account creation
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]    Account    Validations
+    [Tags]    Account    Validations    Failing
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name

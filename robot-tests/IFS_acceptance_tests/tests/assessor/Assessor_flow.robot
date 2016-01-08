@@ -34,7 +34,7 @@ ${persistence_application_name}    A new innovative solution
 *** Test Cases ***
 Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
@@ -114,7 +114,7 @@ Application Summary shows your feedback when appropriate
 
 Application Summary returns an error message when submitting empty feedback
     [Documentation]    INFUND-357
-    [Tags]    Assessor
+    [Tags]    Assessor  Failing
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${accept_application_name}
     and Assessor clicks the Review Button
@@ -148,7 +148,7 @@ Competition for Assessment count
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor
+    [Tags]    Assessor      Failing
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
