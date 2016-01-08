@@ -232,9 +232,10 @@ li.type-company{
 
 .application-progress-list{
     
-    li{
+    > li{
         background: url(../images/charts/offer-status-default.png) no-repeat;
         overflow: auto;
+        margin-bottom: 10px;
 
         &:last-child{
              background: url(../images/charts/offer-status-default-last.png) no-repeat;
@@ -246,7 +247,7 @@ li.type-company{
             border: 3px solid $grey-2;
             border-radius: 5px;
             display: block;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
 
             .heading-medium{
                 margin-top: 0;
@@ -289,5 +290,17 @@ li.type-company{
                 }
             }
         }
+
+        &.successful{
+            background: url(../images/charts/offer-success-last.png) no-repeat;
+        }
+
+         &.unsuccessful{
+            background: url(../images/charts/offer-unsuccessful-last.png) no-repeat;
+        }
+
+
+
+
     }
 }
