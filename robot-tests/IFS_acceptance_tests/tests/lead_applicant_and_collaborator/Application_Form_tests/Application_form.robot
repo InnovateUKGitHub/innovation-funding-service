@@ -106,62 +106,77 @@ When the Applicant clicks a section then the Applicant navigates to the correct 
     Location Should Be    ${APPLICATION_DETAILS_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=Project summary
     Click Element    link=Project summary
     Location Should Be    ${PROJECT_SUMMARY_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=Public description
     Click Element    link=Public description
     Location Should Be    ${PUBLIC_DESCRIPTION_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=Scope
     Click Element    link=Scope
     Location Should Be    ${SCOPE_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=1. Business opportunity
     Click Element    link=1. Business opportunity
     Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=2. Potential market
     Click Element    link=2. Potential market
     Location Should Be    ${POTENTIAL_MARKET_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=3. Project exploitation
     Click Element    link=3. Project exploitation
     Location Should Be    ${PROJECT_EXPLOITATION_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=4. Economic benefit
     Click Element    link=4. Economic benefit
     Location Should Be    ${ECONOMIC_BENEFIT_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=5. Technical approach
     Click Element    link=5. Technical approach
     Location Should Be    ${TECHNICAL_APPROACH_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=6. Innovation
     Click Element    link=6. Innovation
     Location Should Be    ${INNOVATION_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=7. Risks
     Click Element    link=7. Risks
     Location Should Be    ${RISKS_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=8. Project team
     Click Element    link=8. Project team
     Location Should Be    ${PROJECT_TEAM_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=9. Funding
     Click Element    link=9. Funding
     Location Should Be    ${FUNDING_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=10. Adding value
     Click Element    link=10. Adding value
     Location Should Be    ${ADDING_VALUE_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=Your finances
     Click Element    link=Your finances
     Location Should Be    ${YOUR_FINANCES_URL}
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
+    Wait Until Element Is Visible    link=Finances overview
     Click Element    link=Finances overview
     Location Should Be    ${FINANCES_OVERVIEW_URL}
     Page Should Not Contain Element    css=body.error
