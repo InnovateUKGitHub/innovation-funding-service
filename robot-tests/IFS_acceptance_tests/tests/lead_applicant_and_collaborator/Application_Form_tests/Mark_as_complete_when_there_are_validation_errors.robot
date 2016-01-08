@@ -9,7 +9,6 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/7/form/question/11
 
 *** Test Cases ***
 Verify that the user can't mark as complete empty text areas
@@ -55,4 +54,5 @@ applicant should be able to mark the question as complete
     Wait Until Element Is Not Visible    css=.error-summary li
 
 Applicant goes to the Project summary of the new application
-    go to    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+    #go to    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+    go to    ${PROJECT_SUMMARY_URL}
