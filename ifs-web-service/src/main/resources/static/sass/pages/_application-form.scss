@@ -1,6 +1,25 @@
 .app-form {
 
-
+	.labour-costs-table td {
+		 	border-top:1px solid $border-colour;
+			border-bottom:none;
+	}
+	.labour-costs-table tr:last-child td,
+	.labour-costs-table tr:nth-last-child(2) td[rowspan] {
+		border-bottom:1px solid $border-colour;
+	}
+	.labour-costs-table th[rowspan],
+	.labour-costs-table td[rowspan] {
+			padding:0;
+			text-align:center;
+	}
+	.labour-costs-table th[colspan],
+	.labour-costs-table td[colspan] {
+			border-top:none;
+	}
+	.labour-costs-table .control {
+		 padding:0;
+	 }
 	.form-label-bold {
 		font-size:24px;
 	}
@@ -26,6 +45,17 @@
 	// 		display: none;
 	// 	}
 	// }
+	.form-row .form-label {
+			width:50%;
+		}
+
+}
+
+.form-row {
+	border-bottom:1px solid $border-colour;
+	padding:20px 0;
+	&:first-child { border-top:1px solid $border-colour; }
+
 
 }
 
