@@ -12,83 +12,83 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Project summary section accepts Bold text format
     [Documentation]    INFUND-187
     [Tags]    Applicant    Form    WYSIWYG
-    Given Applicant goes to the 'project summary' question
-    When the Applicant clicks on Bold button in "Project summary"
-    Then text entered should be Bold and keep the same after page refresh
+    Given Applicant goes to the 'business opportunity' question
+    When the Applicant clicks on the Bold button in the "business opportunity" field
+    Then all text entered should be Bold and stay the same after page refresh
 
 Project summary section accepts Italic text format
     [Documentation]    INFUND-187
     [Tags]    Applicant    Form    WYSIWYG
-    Given Applicant goes to the 'project summary' question
-    When the Applicant clicks on Italic button in "Project summary"
-    Then text entered should be Italic and keep the same after page refresh
+    Given Applicant goes to the 'business opportunity' question
+    When the Applicant clicks on the Italic button in the "business opportunity" field
+    Then all text entered should be Italic and stay the same after page refresh
 
 Project summary section accepts Numbering bullet format
     [Documentation]    INFUND-187
     [Tags]    Applicant    Form    WYSIWYG
-    Given Applicant goes to the 'project summary' question
-    When the Applicant clicks on Numbering bullet button in "Project summary"
-    Then text entered should be in Numbering bullets and keep the same after page refresh
+    Given Applicant goes to the 'business opportunity' question
+    When the Applicant clicks on the Numbering bullet button in the "business opportunity" field
+    Then all text entered should be in Numbering bullets and stay the same after page refresh
 
 Project summary section accepts Bullet format
     [Documentation]    INFUND-187
     [Tags]    Applicant    Form    WYSIWYG
-    Given Applicant goes to the 'project summary' question
-    When the Applicant clicks on Bullet format button in "Project summary"
-    Then text entered should be in Bullet format and keep the same after page refresh
+    Given Applicant goes to the 'business opportunity' question
+    When the Applicant clicks on the Bullet format button in the "business opportunity" field
+    Then all text entered should be in Bullet format and stay the same after page refresh
 
 *** Keywords ***
-the Applicant clicks on Bold button in "Project summary"
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
+the Applicant clicks on the Bold button in the "business opportunity" field
+    Clear Element Text    css=#form-input-1 .editor
+    Press Key    css=#form-input-1 .editor    \\8
     click element    css=.bold_button
 
-the Applicant clicks on Italic button in "Project summary"
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
+the Applicant clicks on the Italic button in the "business opportunity" field
+    Clear Element Text    css=#form-input-1 .editor
+    Press Key    css=#form-input-1 .editor    \\8
     Click Element    css=.italic_button
 
-text entered should be Bold and keep the same after page refresh
-    Input Text    css=#form-input-11 .editor    Entering text to verify BOLD.
-    Element Should Be Visible    css=#form-input-11 .editor b
+all text entered should be Bold and stay the same after page refresh
+    Input Text    css=#form-input-1 .editor    Entering text to verify BOLD.
+    Element Should Be Visible    css=#form-input-1 .editor b
     Focus    css=.app-submit-btn
     Sleep    1s
     Reload Page
-    Wait Until Page Contains Element    css=#form-input-11 .editor strong
+    Wait Until Page Contains Element    css=#form-input-1 .editor strong
 
-the Applicant clicks on Numbering bullet button in "Project summary"
-    Input Text    css=#form-input-11 .editor    This is testing for numbering bullets.
+the Applicant clicks on the Numbering bullet button in the "business opportunity" field
+    Input Text    css=#form-input-1 .editor    This is testing for numbering bullets.
     Click Element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
-the Applicant clicks on Bullet format button in "Project summary"
-    Input Text    css=#form-input-11 .editor    testing
+the Applicant clicks on the Bullet format button in the "business opportunity" field
+    Input Text    css=#form-input-1 .editor    testing
     Click Element    css=.insertUnorderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
-text entered should be Italic and keep the same after page refresh
-    Input Text    css=#form-input-11 .editor    Entering text to verify ITALIC.
-    Element Should Be Visible    css=#form-input-11 .editor i
+all text entered should be Italic and stay the same after page refresh
+    Input Text    css=#form-input-1 .editor    Entering text to verify ITALIC.
+    Element Should Be Visible    css=#form-input-1 .editor i
     Focus    css=.app-submit-btn
     Sleep    1s
     Reload Page
-    Wait Until Page Contains Element    css=#form-input-11 .editor em
+    Wait Until Page Contains Element    css=#form-input-1 .editor em
 
-text entered should be in Numbering bullets and keep the same after page refresh
-    Element Should Be Visible    css=#form-input-11 .editor ol
+all text entered should be in Numbering bullets and stay the same after page refresh
+    Element Should Be Visible    css=#form-input-1 .editor ol
     Reload Page
     Focus    css=.app-submit-btn
     Sleep    1s
-    Wait Until Page Contains Element    css=#form-input-11 .editor ol
+    Wait Until Page Contains Element    css=#form-input-1 .editor ol
 
-text entered should be in Bullet format and keep the same after page refresh
-    Element Should Be Visible    css=#form-input-11 .editor li
+all text entered should be in Bullet format and stay the same after page refresh
+    Element Should Be Visible    css=#form-input-1 .editor li
     Reload Page
     Focus    css=.app-submit-btn
     Sleep    1s
-    Wait Until Page Contains Element    css=#form-input-11 .editor li
+    Wait Until Page Contains Element    css=#form-input-1 .editor li
 
 the applicant is in the Application details section
     go to    ${APPLICATION_URL}
