@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 /**
  * The Email message envelope for the SIL API
  */
@@ -22,13 +24,13 @@ public class SilEmailMessage {
     private String subject;
 
     @JsonProperty("Body")
-    private SilEmailBody body;
+    private List<SilEmailBody> body;
 
-    public SilEmailMessage(SilEmailAddress from, List<SilEmailAddress> to, String subject, SilEmailBody body) {
+    public SilEmailMessage(SilEmailAddress from, List<SilEmailAddress> to, String subject, SilEmailBody... bodyElements) {
         this.from = from;
         this.to = to;
         this.subject = subject;
-        this.body = body;
+        this.body = asList(bodyElements);
     }
 
     public SilEmailAddress getFrom() {
@@ -43,7 +45,7 @@ public class SilEmailMessage {
         return subject;
     }
 
-    public SilEmailBody getBody() {
+    public List<SilEmailBody> getBody() {
         return body;
     }
 

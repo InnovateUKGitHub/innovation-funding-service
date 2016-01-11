@@ -20,12 +20,13 @@ public class SilEmailService implements EmailService {
     private SilEmailEndpoint endpoint;
 
     @Override
-    public void sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBody, String htmlBody) {
+    public void sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBodyContent, String htmlBodyContent) {
 
         SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
         List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
-        SilEmailBody body = new SilEmailBody("text/plain", plainTextBody);
+        SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
+        SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-        endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, body));
+        endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody));
     }
 }
