@@ -819,7 +819,7 @@
                                 data-calculation-fields="[id*=fundingAmount]"
                                 data-calculation-operations="+"
                                 th:attr="data-binding-input=${'subsection-total-' + currentSectionId},data-calculation-rawvalue=${costCategory.getTotal()}"
-                                 readonly="readonly" type="text" id="cost-other-funding-total-field"
+                                 readonly="readonly" type="text"
                                  th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${currentSectionId}" style="display: none;">
                             <span
