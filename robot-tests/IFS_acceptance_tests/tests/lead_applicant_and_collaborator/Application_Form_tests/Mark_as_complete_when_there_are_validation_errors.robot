@@ -60,3 +60,4 @@ Applicant goes to the Project summary of the new application
 
 the applicant can click edit to make the section editable again
     Click Element      name=mark_as_incomplete
+    Wait Until Element is Visible       css=#form-input-11 .buttonlink[name="mark_as_complete"]
