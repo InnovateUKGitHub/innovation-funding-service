@@ -167,7 +167,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour (complete)">
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}"
+        <div th:attr="data-repeatable-container=${question.getId()}"
              th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group" th:if="${costCategory!=null}">
                 <table>
@@ -368,7 +368,7 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -404,7 +404,7 @@
                                        readonly="readonly"
                                        th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"/>
                             </td>
-                            <td class="alignright remove"> 
+                            <td class="alignright remove">
                                 <a class="delete-row" th:attr="data-cost-row=${materialCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                             </td>
                         </tr>
@@ -442,7 +442,7 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}" >
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}" >
             <div th:each="capitalUsage : ${costCategory.costs}">
                 <div class="form-row" th:attr="data-cost-row=${capitalUsage.id}">
                     <div class="form-group">
@@ -561,7 +561,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}">
             <div class="form-row" th:each="subContractingCost : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
                 <div class="form-group" th:attr="data-cost-row=${subContractingCost.id}">
                     <label class="form-label" th:for="${'cost-subcontracting-'+subContractingCost.id+'-companyName'}">Subcontractor name</label>
@@ -621,7 +621,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -692,7 +692,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -743,33 +743,33 @@
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>
-        </div> 
+        </div>
     </div>
 
     <!-- ===========================Form: Other funding=========================== -->
-    <div th:fragment="other_funding">
+    <div th:fragment="other_funding" th:remove="tag">
         <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${question.getFormInputs().get(0).getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
 
-        <div th:attr="data-finance-subsection-table-container=${question.getId()}"
+        <div th:remove="tag"
              th:with="formInputType=${question.formInputs.get(0).formInputType},
                                costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}
                      ,type=${formInputType.title}">
         <fieldset class="inline" id="otherFundingShowHideToggle">
             <div class="form-block inline">
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}" 
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}"
                        th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                        data-target="other-funding-table">
                     <input type="radio"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                            th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
                            th:value="Yes"
-                           th:checked="${costCategory.otherFunding?.equals('Yes')}" 
+                           th:checked="${costCategory.otherFunding?.equals('Yes')}"
                            />
                     Yes
                 </label>
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}" 
+                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}"
                        th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                     <input type="radio"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
@@ -779,7 +779,7 @@
                     No
                 </label>
             </div>
-                <div class="form-group"  id="other-funding-table">
+              <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" id="other-funding-table">
                     <table>
                         <thead>
                         <tr>
@@ -789,8 +789,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <div th:each="otherFunding : ${costCategory.costs}" >
-                            <tr>
+                            <tr th:each="otherFunding : ${costCategory.costs}">
                                 <td>
                                     <label th:for="${'cost-'+type+'-'+otherFunding.id+'-source'}" class="visuallyhidden">Source of funding</label>
                                     <input type="text" th:name="${type +'-fundingSource-' + otherFunding.id}" class="width-full" th:id="${'cost-'+type+'-'+otherFunding.id+'-source'}" th:value="${otherFunding.fundingSource}" />
@@ -804,7 +803,6 @@
                                     <input type="number" th:name="${type +'-fundingAmount-' + otherFunding.id}"  th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
                                 </td>
                             </tr>
-                            </div>
                         </tbody>
                     </table>
                     <p class="alignright">

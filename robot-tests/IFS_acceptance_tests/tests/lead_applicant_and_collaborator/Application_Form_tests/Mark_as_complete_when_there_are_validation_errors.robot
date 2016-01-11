@@ -9,7 +9,6 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/7/form/question/11
 
 *** Test Cases ***
 Verify that the user can't mark as complete empty text areas
@@ -29,6 +28,7 @@ Verify that the user doesn't get the error when the text area is not empty anymo
     and the applicant marks the public description question as complete
     and the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
+    And the applicant can click edit to make the section editable again
 
 *** Keywords ***
 the "Project Summary" question is empty
@@ -55,4 +55,8 @@ applicant should be able to mark the question as complete
     Wait Until Element Is Not Visible    css=.error-summary li
 
 Applicant goes to the Project summary of the new application
-    go to    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+    #go to    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
+    go to    ${PROJECT_SUMMARY_URL}
+
+the applicant can click edit to make the section editable again
+    Click Element      name=mark_as_incomplete

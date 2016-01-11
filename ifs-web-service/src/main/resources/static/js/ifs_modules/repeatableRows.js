@@ -1,11 +1,11 @@
 // Set up the handlers for adding and removing Cost Category costs rows
-IFS.financeRows = (function() {
+IFS.repeatableRows = (function() {
     "use strict";
 
     return {
         init: function(){
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .add-another-row', IFS.financeRows.addCostsRowHandler);
-            jQuery(document).on('click', '[data-finance-subsection-table-container] .delete-row', IFS.financeRows.removeCostsRowHandler);
+            jQuery('body').on('click', '[data-repeatable-container] .add-another-row', IFS.repeatableRows.addCostsRowHandler);
+            jQuery('body').on('click', '[data-repeatable-container] .delete-row', IFS.repeatableRows.removeCostsRowHandler);
         },
         generateFragmentUrl : function(originalLink) {
             // Replace the non-javascript add and remove functionality with single fragment question HTML responses
@@ -27,24 +27,28 @@ IFS.financeRows = (function() {
         addCostsRowHandler : function(e) {
             // Add a new row from the HTML fragment being returned, and bind / rebind the autocalc and autosave behaviours again to ensure it behaves as
             // per other fields and that the repeating-total fields have a back-reference to any added fields
-
             var amendRowsLink = jQuery(this);
-            var dynamicHref = IFS.financeRows.generateFragmentUrl(amendRowsLink);
+            var dynamicHref = IFS.repeatableRows.generateFragmentUrl(amendRowsLink);
+            var sectionToUpdate = amendRowsLink.closest('[data-repeatable-container]');
+            var tableSectionId = sectionToUpdate.attr('data-repeatable-container');
 
-            jQuery.get(dynamicHref, function(data) {
+            jQuery.ajax({
+                url : dynamicHref,
+                beforeSend : function(){
+                    amendRowsLink.before('<span class="form-hint">Adding a new row</span>');
+                }
+            }).done(function(data){
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
-                var tableSectionToUpdate = amendRowsLink.parents('[data-finance-subsection-table-container]');
-                var tableSectionId = tableSectionToUpdate.attr('data-finance-subsection-table-container');
-                var replacement = htmlReplacement.find('[data-finance-subsection-table-container=' + tableSectionId + ']');
-                tableSectionToUpdate.replaceWith(replacement);
-                IFS.autoSave.init();
+                var replacement = htmlReplacement.find('[data-repeatable-container=' + tableSectionId + ']');
+                sectionToUpdate.replaceWith(replacement);
             });
+
             e.preventDefault();
             return false;
         },
         removeCostsRowHandler : function(e) {
             var amendRowsLink = jQuery(this);
-            var dynamicHref = IFS.financeRows.generateFragmentUrl(amendRowsLink);
+            var dynamicHref = IFS.repeatableRows.generateFragmentUrl(amendRowsLink);
 
             jQuery.get(dynamicHref, function() {
                 var costRowsId = amendRowsLink.attr('data-cost-row');
@@ -54,6 +58,6 @@ IFS.financeRows = (function() {
             });
             e.preventDefault();
             return false;
-        }        
+        }
     };
 })();

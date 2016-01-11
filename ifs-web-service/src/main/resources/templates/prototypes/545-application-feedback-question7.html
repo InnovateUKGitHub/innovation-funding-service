@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Mobile Phone Data for Logistics Analytics - Application number: 0000003'}, ${'Risks'})" th:remove="tag" />
+
+	<h2 class="heading-medium no-margin">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
+
+	<div class="grid-row">
+		<div class="column-half">
+			<h3 class="heading-medium">Your answer:</h3>
+			<p>Three principal risks exist at this stage:</p>
+			<p>1. The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identify if the method needs to be altered during scale up to replicate results. In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase </p>
+			<p>2. During the phase to engineer a technique to isolate the issue we anticipate that there are inherent safety issues. We have consulted an independent firm to ensure that suitable equipment and measures have been put in place to minimise the risk to staff</p>
+			<p>3. Although we are confident that our fabrication partner is the best option for the prototype solution there is an indication that a particular piece of heavy machinery, currently unavailable in the UK will be required. Our Fabrication partner has already investigated options for accessing this equipment in the Far East and an appropriate budget has been set aside to be used for this purpose if required.</p>
+		</div>
+
+		<div class="column-half">
+			<h2 class="heading-large">Average score: 7/10</h2>
+			<h3 class="heading-medium no-margin">Assessor feedback</h3>
+			<ul class="boxed-list">
+				<li>
+					<h4 class="heading-small">Assessor1</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+				</li>
+				<li>
+					<h4 class="heading-small">Assessor2</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+				</li>
+				<li>
+					<h4 class="heading-small">Assessor3</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+				</li>
+				<li>
+					<h4 class="heading-small">Assessor4</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+				</li>
+				<li>
+					<h4 class="heading-small">Assessor5</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

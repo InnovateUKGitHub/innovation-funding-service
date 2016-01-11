@@ -34,6 +34,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
     [Tags]    Subcontracting Costs    Failing
     Given Applicant goes to the Your finances section
     When the applicant edits the Subcontracting costs section
+    And the applicant adds a new row in the subcontracting costs
     The total subcontracting costs should correct
 
 *** Keywords ***
@@ -57,33 +58,30 @@ the calculations of the labour should be correct
 
 the Applicant fills the Materials fields
     Click Element    xpath=//*[@aria-controls="collapsible-3"]
-    Click Element    link=Add another materials cost
+    Click link    Add another materials cost
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     focus    css=.add-another-row
+    sleep    1s
 
 the calculations of the Materials should be correct
     focus    css=.add-another-row
     Reload Page
-    Sleep    2s
-    Click Element    xpath=//*[@aria-controls="collapsible-3"]
-    Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1,000
+    #Sleep    2s
+    #Click Element    xpath=//*[@aria-controls="collapsible-3"]
+    Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1000
     Textfield Value Should Be    css=#material-costs-total-field    £ 1,000
 
 the applicant edits the Subcontracting costs section
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
-    Click Element    link=Add another subcontractor
+    Click Link    Add another subcontractor
     Wait Until Page Contains Element    css=.form-row:nth-child(1) .form-finances-subcontracting-cost
     Input Text    css=.form-row:nth-child(1) .form-finances-subcontracting-cost    100
-    Click Element    link=Add another subcontractor
-    Wait Until Page Contains Element    css=.form-row:nth-child(2) .form-finances-subcontracting-cost
-    Input Text    css=.form-row:nth-child(2) .form-finances-subcontracting-cost    100
-    sleep    1s
 
 The total subcontracting costs should correct
     Reload Page
-    #    Sleep    2s
+    Sleep    1s
     #    Alert Should Be Present
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
     Textfield Value Should Be    css=#cost-subcontracting-total    £ 200
@@ -107,18 +105,27 @@ the total labour cost calculation should be correct
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(1) > span > span    £ 104,348
 
 when the applicant fills a second row in the materials section
-    #Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
-    Click Element    link=Add another materials cost
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    Click link    link=Add another materials cost
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
+    focus    css=.add-another-row
+    sleep    1s
 
 the total materials costs calculations should be correct
     focus    css=.add-another-row
     Reload Page
-    Sleep    2s
+    #Sleep    1s
     #Alert Should Be Present
     #Confirm Action
-    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
+    #Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(5) > button
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(4) input    £ 1000
     Textfield Value Should Be    css=#material-costs-total-field    £ 2,000
+
+the applicant adds a new row in the subcontracting costs
+    Click Element    css=.add-another-row
+    Wait Until Page Contains Element    css=.form-row:nth-child(2) .form-finances-subcontracting-cost
+    Input Text    css=.form-row:nth-child(2) .form-finances-subcontracting-cost    100
+    sleep    1s
+    focus    css=.add-another-row
