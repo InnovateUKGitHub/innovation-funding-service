@@ -1,6 +1,12 @@
 package com.worth.ifs.user.resource;
 
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User Data Transfer Object
@@ -17,6 +23,7 @@ public class UserResource {
     private String token;
     private String email;
     private String password;
+    private List<Long> organisationIds = new ArrayList<>();
 
     public UserResource() {
     }
@@ -33,6 +40,7 @@ public class UserResource {
         token = user.getToken();
         email = user.getEmail();
         password = user.getEmail();
+        organisationIds = simpleMap(user.getOrganisations(), Organisation::getId);
     }
 
     public Long getId() {

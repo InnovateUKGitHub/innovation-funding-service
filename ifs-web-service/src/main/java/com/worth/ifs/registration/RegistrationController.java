@@ -1,6 +1,6 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.CreateApplicationController;
+import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
@@ -145,7 +145,7 @@ public class RegistrationController {
     }
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
-        CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
+        ApplicationCreationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
