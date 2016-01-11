@@ -11,9 +11,16 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 
-<main id="content">
+<main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+	
+	<div th:if="${param.unsuccessful != null}" th:remove="tag">
+		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?unsuccessful'})" th:remove="tag" />
+	</div>
+
+	<div th:if="${param.unsuccessful == null}" th:remove="tag">
+		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback'})" th:remove="tag" />
+	</div>
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -30,8 +37,8 @@
 			<p>3. Although we are confident that our fabrication partner is the best option for the prototype solution there is an indication that a particular piece of heavy machinery, currently unavailable in the UK will be required. Our Fabrication partner has already investigated options for accessing this equipment in the Far East and an appropriate budget has been set aside to be used for this purpose if required.</p>
 		</div>
 
-		<div class="column-half">
-			<h2 class="heading-large">Average score: 7/10</h2>
+		<div class="column-half" >
+			<h2 class="heading-large" th:text="'Average score: '+${score}+'/ 10'">Average score: 7/10</h2>
 			<h3 class="heading-medium no-margin">Assessor feedback</h3>
 			<ul class="boxed-list">
 				<li>
@@ -58,9 +65,20 @@
 		</div>
 	</div>
 
-	
-
-
+	<ul class="pagination">
+	    <li class="prev">
+	        <a rel="prev" title="Navigate to previous part" href="#">
+	            <span class="pagination-label">Previous</span>
+	            <span class="pagination-part-title">6. Innovation</span>
+	        </a>
+	    </li>
+	    <li class="next">
+	        <a rel="next" title="Navigate to next part" href="#">
+	            <span class="pagination-label">Next</span>
+	            <span class="pagination-part-title">8. Project team</span>
+	        </a>
+	    </li>
+	</ul>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

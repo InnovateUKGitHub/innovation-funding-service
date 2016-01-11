@@ -54,4 +54,9 @@ public class LabourCostCategory implements CostCategory {
             }
         }
     }
+
+    @Override
+    public boolean excludeFromTotalCost() {
+        return false;
+    }
 }

@@ -33,4 +33,9 @@ public class DefaultCostCategory implements CostCategory {
             costs.add(costItem);
         }
     }
+
+    @Override
+    public boolean excludeFromTotalCost() {
+        return false;
+    }
 }
