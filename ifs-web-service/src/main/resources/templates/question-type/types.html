@@ -786,10 +786,11 @@
                             <th>Source of funding</th>
                             <th class="width-medium">Date secured</th>
                             <th class="width-medium">Funding amount (£)</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="otherFunding : ${costCategory.costs}">
+                            <tr th:each="otherFunding : ${costCategory.costs}" th:attr="data-cost-row=${otherFunding.id}">
                                 <td>
                                     <label th:for="${'cost-'+type+'-'+otherFunding.id+'-source'}" class="visuallyhidden">Source of funding</label>
                                     <input type="text" th:name="${type +'-fundingSource-' + otherFunding.id}" class="width-full" th:id="${'cost-'+type+'-'+otherFunding.id+'-source'}" th:value="${otherFunding.fundingSource}" />
@@ -801,6 +802,9 @@
                                 <td>
                                     <label th:for="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" class="visuallyhidden">Funding amount (£)</label>
                                     <input type="number" th:name="${type +'-fundingAmount-' + otherFunding.id}"  th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
+                                </td>
+                                <td>
+                                    <a class="delete-row control" th:attr="data-cost-row=${otherFunding.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{otherFundingId}(otherFundingId=${otherFunding.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
                                 </td>
                             </tr>
                         </tbody>
