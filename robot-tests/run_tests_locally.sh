@@ -123,7 +123,7 @@ echo "webBase:           ${webBase}"
 
 unset opt
 unset quickTest
-quickTest=0
+
 testDirectory='IFS_acceptance_tests/tests/*'
 while getopts ":q :d:" opt ; do
     case $opt in
