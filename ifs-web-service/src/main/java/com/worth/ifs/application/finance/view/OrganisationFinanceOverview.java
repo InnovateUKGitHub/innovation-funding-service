@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -69,10 +70,40 @@ public class OrganisationFinanceOverview {
     }
 
     public Double getTotalGrantPercentage() {
+        Double totalFundingSought = 0D;
+
+        if(totalIsNotZero()) {
+            totalFundingSought = getTotalFundingSought().divide(getTotal(), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).doubleValue();
+        }
+
+        return totalFundingSought;
+    }
+
+    private boolean totalIsNotZero() {
+        return !getTotal().equals(new BigDecimal(0));
+    }
+
+    public BigDecimal getTotalFundingSought() {
+        BigDecimal totalFundingSought = new BigDecimal(0);
+
+        if(totalIsNotZero()) {
+            totalFundingSought = organisationFinances.stream()
+                    .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                    .map(of -> of.getTotalFundingSought())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+
+        return totalFundingSought;
+    }
+
+    public BigDecimal getTotalContribution() {
+        return getTotal().subtract(getTotalFundingSought());
+    }
+
+    public BigDecimal getTotalOtherFunding() {
         return organisationFinances.stream()
-                .filter(of -> of!=null && of.getGrantClaimPercentage()!=null)
-                .mapToInt(of -> of.getGrantClaimPercentage())
-                .average()
-                .orElse(0D);
+                .filter(of -> of != null)
+                .map(of -> of.getTotalOtherFunding())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

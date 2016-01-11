@@ -32,6 +32,14 @@ public class OtherFundingCostCategory implements CostCategory {
         return total;
     }
 
+    public BigDecimal getTotalFundingAmount() {
+        BigDecimal getTotalFundingAmount = costs.stream()
+                .map(OtherFunding.class::cast)
+                .map(c -> c.getFundingAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return getTotalFundingAmount;
+    }
+
     public String getOtherFunding() {
         if (otherFunding!=null) {
             return otherFunding.getOtherPublicFunding();
