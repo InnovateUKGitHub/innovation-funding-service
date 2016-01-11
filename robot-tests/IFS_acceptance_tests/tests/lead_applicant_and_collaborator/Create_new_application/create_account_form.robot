@@ -146,7 +146,7 @@ Password is too long
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations    Failing
-    # tagged as failing due to a bug which will be raised in jira
+    # tagged as failing due to bug INFUND-1496. This test should not be fixed until that issue is fixed.
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -162,7 +162,7 @@ Valid account creation
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    Account    Validations    Failing
-    # tagged aS failing due to a bug which wqill be raised in jira
+    # tagged as failing due to bug INFUND-1496. This test should not be fixed until that issue is fixed.
     Given the user is on the account creation page
     When the user inputs a first name
     And the user inputs a last name
