@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
+</head>
+<body class="app-details">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <div class="message-alert" th:if="${leadApplicant.id == authenticatedUser.id}">
+        <h2 class="heading-small">You are the lead applicant</h2>
+
+        <p>
+            You are the lead applicant for this application, meaning
+            you have the ability to invite contributors,<br/>
+            assigning questions, coordinating partners and submitting the application.
+        </p>
+    </div>
+
+    <h1 class="heading-large">Inviting Contributors</h1>
+
+    <p>From this page you are able to invite contributors to your application.<br/>You are able to add new contributors at any point during the application
+        process.</p>
+
+
+    <form th:object="${contributorsForm}" method="POST">
+        <ul class="boxed-list">
+            <li th:each="organisationEntry, organisationStats: ${organisationMap}">
+                <h2  th:if="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Lead Organisation "<span th:text="${organisationEntry.key.name}"></span>"</h2>
+                <h2  th:unless="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Partner Organisation "<span th:text="${organisationEntry.key.name}"></span>"</h2>
+
+                <p th:if="${organisationEntry.key.id == leadOrganisation.id}">The lead organisation will be the lead partner throughout the application and project.
+                    Add members of your own organisation to contribute to this application.
+                </p>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${organisationEntry.key.id == leadOrganisation.id}">
+                        <td>
+                            <input type="text" th:value="${leadApplicant.name}" readonly="readonly"/>
+                        </td>
+                        <td>
+                            <input type="text" th:value="${leadApplicant.email}" readonly="readonly"/>
+                        </td>
+                        <td class="alignright remove">
+                            <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
+                        </td>
+                    </tr>
+                    <tr th:each="user,stats: ${contributorsForm.organisationMap[__${organisationEntry.key.id}__]}">
+                        <td>
+                            <input type="text" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].personName}"/>
+                        </td>
+                        <td>
+                            <input type="text" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].email}"/>
+                        </td>
+                        <td class="alignright remove">
+                            <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
+                            <button class="add-another-row buttonlink" type="submit" name="remove_person"
+                                    th:value="${organisationEntry.key.id + '_' + stats.index}">Remove
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="alignright">
+                    <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationEntry.key.id}">Add person</button>
+                </p>
+            </li>
+            <li style="background:#f8f8f8">
+                <a href="javascript:void(0);" class="js-add-partner">Add partner organisation</a>
+                <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
+            </li>
+        </ul>
+
+        <div class="alignright-button" style="padding:10px 0;">
+            <button type="submit" name="save_contributors" class="button">Begin application</button>
+        </div>
+    </form>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
