@@ -23,6 +23,9 @@ public class Organisation {
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
+    @ManyToOne
+    private OrganisationType organisationType;
+
     @OneToMany(mappedBy="organisation")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -109,5 +112,13 @@ public class Organisation {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public OrganisationType getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(OrganisationType organisationType) {
+        this.organisationType = organisationType;
     }
 }
