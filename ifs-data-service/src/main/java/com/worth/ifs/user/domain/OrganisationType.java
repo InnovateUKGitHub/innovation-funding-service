@@ -13,6 +13,14 @@ public class OrganisationType {
     @ManyToOne
     private OrganisationType parentOrganisationType;
 
+    public OrganisationType(String name, OrganisationType parentOrganisationType) {
+        this.name = name;
+        this.parentOrganisationType = parentOrganisationType;
+    }
+
+    public OrganisationType() {
+    }
+
     public Long getId() {
         return id;
     }
