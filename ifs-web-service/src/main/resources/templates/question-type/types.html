@@ -812,6 +812,24 @@
                     <p class="alignright">
                         <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another source of funding</a>
                     </p>
+                    <div class="form-group form-group--align-right alignright">
+                      <label>
+                          Total other funding
+                          <input class="form-control form-control-1-4 alignright"
+                                data-calculation-fields="[id*=fundingAmount]"
+                                data-calculation-operations="+"
+                                th:attr="data-binding-input=${'subsection-total-' + currentSectionId},data-calculation-rawvalue=${costCategory.getTotal()}"
+                                 readonly="readonly" type="text" id="cost-other-funding-total-field"
+                                 th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                        <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${currentSectionId}" style="display: none;">
+                            <span
+                                    th:attr="data-binding-output=${'subsection-total-' + currentSectionId}"
+                                    th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
+                            </span>
+                        </span>
+                      </label>
+                    </div>
+
                     <p>Your updated funding level is <strong>60%</strong></p>
                     <details>
                         <summary><span class="summary">Why has this changed?</span></summary>
