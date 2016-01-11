@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 'Labour' Calculations/Autosave
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
-    [Tags]    Labour    Failing
+    [Tags]    Labour
     Given Applicant goes to the Your finances section
     When the Applicant fills the Labour costs
     Then the calculations of the labour should be correct
@@ -22,7 +22,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Materials    Failing
+    [Tags]    Materials
     Given Applicant goes to the Your finances section
     When the Applicant fills the Materials fields
     Then the calculations of the Materials should be correct
@@ -31,7 +31,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 'Subcontracting costs' Calculations/Autosave
     [Documentation]    INFUND-192
-    [Tags]    Subcontracting Costs    Failing
+    [Tags]    Subcontracting Costs
     Given Applicant goes to the Your finances section
     When the applicant edits the Subcontracting costs section
     And the applicant adds a new row in the subcontracting costs
@@ -75,9 +75,11 @@ the calculations of the Materials should be correct
 
 the applicant edits the Subcontracting costs section
     Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
-    Click Link    Add another subcontractor
+    Click Link    link=Add another subcontractor
     Wait Until Page Contains Element    css=.form-row:nth-child(1) .form-finances-subcontracting-cost
     Input Text    css=.form-row:nth-child(1) .form-finances-subcontracting-cost    100
+    focus    css=.add-another-row
+    sleep    3s
 
 The total subcontracting costs should correct
     Reload Page
@@ -124,7 +126,9 @@ the total materials costs calculations should be correct
     Textfield Value Should Be    css=#material-costs-total-field    £ 2,000
 
 the applicant adds a new row in the subcontracting costs
-    Click Element    css=.add-another-row
+    Reload Page
+    Click Element    css=#form-input-20 > div.collapsible > h2:nth-child(9) > button
+    Click link    Link=Add another subcontractor
     Wait Until Page Contains Element    css=.form-row:nth-child(2) .form-finances-subcontracting-cost
     Input Text    css=.form-row:nth-child(2) .form-finances-subcontracting-cost    100
     sleep    1s

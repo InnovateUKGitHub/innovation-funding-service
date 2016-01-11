@@ -1,7 +1,6 @@
 package com.worth.ifs.application.finance.cost;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class OtherFunding implements CostItem {
     private Long id;
@@ -28,7 +27,7 @@ public class OtherFunding implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        return BigDecimal.ZERO;
+        return this.fundingAmount;
     }
 
     public String getOtherPublicFunding() {

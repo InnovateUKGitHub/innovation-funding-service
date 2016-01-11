@@ -2,6 +2,7 @@ package com.worth.ifs.application.finance.model;
 
 import com.worth.ifs.application.finance.*;
 import com.worth.ifs.application.finance.cost.CostItem;
+import com.worth.ifs.application.finance.cost.OtherFunding;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
@@ -91,12 +92,18 @@ public class OrganisationFinance {
     }
 
     public BigDecimal getTotal() {
-        return costCategories.entrySet().stream()
+        BigDecimal total = costCategories.entrySet().stream()
                 .filter(cat -> cat != null)
                 .filter(cat -> cat.getValue() != null)
                 .filter(cat -> cat.getValue().getTotal() != null)
                 .map(cat -> cat.getValue().getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if(total == null) {
+            return new BigDecimal(0);
+        }
+
+        return total;
     }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {
@@ -116,10 +123,27 @@ public class OrganisationFinance {
     }
 
     public Integer getGrantClaimPercentage() {
+        if(grantClaimPercentage == null) {
+            return 0;
+        }
         return grantClaimPercentage;
     }
 
     public Long getGrantClaimPercentageId() {
+
         return grantClaimPercentageId;
+    }
+
+    public BigDecimal getTotalFundingSought() {
+        return getTotal().multiply(new BigDecimal(getGrantClaimPercentage())).divide(new BigDecimal(100)).subtract(getTotalOtherFunding());
+    }
+
+    public BigDecimal getTotalContribution() {
+        return getTotal().subtract(getTotalFundingSought());
+    }
+
+    public BigDecimal getTotalOtherFunding() {
+        OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory)getCostCategory(CostType.OTHER_FUNDING);
+        return otherFundingCategory.getTotalFundingAmount();
     }
 }
