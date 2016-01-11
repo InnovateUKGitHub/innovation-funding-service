@@ -96,6 +96,7 @@ public class OrganisationFinance {
                 .filter(cat -> cat != null)
                 .filter(cat -> cat.getValue() != null)
                 .filter(cat -> cat.getValue().getTotal() != null)
+                .filter(cat -> !cat.getValue().excludeFromTotalCost())
                 .map(cat -> cat.getValue().getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -139,11 +140,11 @@ public class OrganisationFinance {
     }
 
     public BigDecimal getTotalContribution() {
-        return getTotal().subtract(getTotalFundingSought());
+        return getTotal().multiply(new BigDecimal(100 - getGrantClaimPercentage())).divide(new BigDecimal(100));
     }
 
     public BigDecimal getTotalOtherFunding() {
-        OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory)getCostCategory(CostType.OTHER_FUNDING);
-        return otherFundingCategory.getTotalFundingAmount();
+        CostCategory otherFundingCategory = getCostCategory(CostType.OTHER_FUNDING);
+        return otherFundingCategory.getTotal();
     }
 }

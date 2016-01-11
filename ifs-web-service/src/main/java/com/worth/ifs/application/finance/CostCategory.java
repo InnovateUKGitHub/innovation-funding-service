@@ -14,4 +14,5 @@ public interface CostCategory {
 
     public BigDecimal getTotal();
     public void addCost(CostItem costItem);
+    public boolean excludeFromTotalCost();
 }
