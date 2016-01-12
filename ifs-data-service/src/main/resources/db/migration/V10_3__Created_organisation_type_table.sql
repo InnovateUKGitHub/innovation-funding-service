@@ -1,11 +1,11 @@
-CREATE TABLE organisation_type
-(
-    id BIGINT(20) PRIMARY KEY NOT NULL,
-    name VARCHAR(255),
-    parent_organisation_type_id BIGINT(20),
-    CONSTRAINT FK_eh40v8iivh39la2bmmr6h82u5 FOREIGN KEY (parent_organisation_type_id) REFERENCES organisation_type (id)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-CREATE INDEX FK_eh40v8iivh39la2bmmr6h82u5 ON organisation_type (parent_organisation_type_id);
+CREATE TABLE `organisation_type` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `parent_organisation_type_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_eh40v8iivh39la2bmmr6h82u5` (`parent_organisation_type_id`),
+  CONSTRAINT `FK_eh40v8iivh39la2bmmr6h82u5` FOREIGN KEY (`parent_organisation_type_id`) REFERENCES `organisation_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE organisation
@@ -13,8 +13,6 @@ ALTER TABLE organisation
 CREATE INDEX FK_syoqdheljsd92k1vtdjfae31m ON organisation (organisation_type_id);
 ALTER TABLE organisation
     ADD CONSTRAINT FK_syoqdheljsd92k1vtdjfae31m FOREIGN KEY (organisation_type_id) REFERENCES organisation_type (id);
-
-
 
 
 INSERT INTO organisation_type (id, name, parent_organisation_type_id) VALUES (1, 'Business', null);
