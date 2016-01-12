@@ -3,6 +3,7 @@ package com.worth.ifs.notifications.service;
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.UserNotificationSourceResource;
 import com.worth.ifs.notifications.resource.UserNotificationTargetResource;
+import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -35,7 +37,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap("applicationName", "My Application", "inviteUrl", "http://acceptinvite.com");
 
-        String processedTemplate = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
+        ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
+        assertTrue(renderResult.isRight());
+        String processedTemplate = renderResult.getRight();
 
         List<String> expectedMessageLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt").toURI()).toPath());
         String expectedMessage = simpleJoiner(expectedMessageLines, "\n");

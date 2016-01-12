@@ -5,10 +5,12 @@ import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import com.worth.ifs.sil.email.service.SilEmailEndpoint;
+import com.worth.ifs.transactional.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -20,13 +22,13 @@ public class SilEmailService implements EmailService {
     private SilEmailEndpoint endpoint;
 
     @Override
-    public void sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBodyContent, String htmlBodyContent) {
+    public ServiceResult<List<EmailAddressResource>> sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBodyContent, String htmlBodyContent) {
 
         SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
         List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
         SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
         SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-        endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody));
+        return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> success(to));
     }
 }

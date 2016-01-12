@@ -2,6 +2,7 @@ package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationResource;
+import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.NOTIFICATION_SENDER_NOT_FOUND;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
+import static com.worth.ifs.transactional.ServiceResult.*;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * Implementation of a generic NotificationService that will use appropriate NotificationSender implementations
@@ -24,6 +27,11 @@ import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 public class NotificationServiceImpl implements NotificationService {
 
     private static final Log LOG = LogFactory.getLog(NotificationServiceImpl.class);
+
+    enum ServiceFailures {
+        NOTIFICATION_SENDER_NOT_FOUND,
+        UNABLE_TO_SEND_NOTIFICATIONS
+    }
 
     @Autowired
     private List<NotificationSender> notificationSendingServices;
@@ -36,21 +44,17 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendNotification(NotificationResource notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
+    public ServiceResult<NotificationResource> sendNotification(NotificationResource notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
 
         Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
-        allMediaToSendNotificationBy.forEach(medium -> {
+        List<ServiceResult<NotificationResource>> results = simpleMap(allMediaToSendNotificationBy, medium ->
+                getNotificationSender(medium).map(serviceForMedium -> serviceForMedium.sendNotification(notification)));
 
-            NotificationSender serviceForMedium = servicesByMedia.get(medium);
+        return anyFailures(results, failureSupplier(UNABLE_TO_SEND_NOTIFICATIONS), successSupplier(notification));
+    }
 
-            if (serviceForMedium == null) {
-                String errorMessage = "No NotificationSender found that can send Notifications via the medium " + medium + " - not sending notitifaction this way";
-                LOG.error(errorMessage);
-                throw new IllegalArgumentException(errorMessage);
-            }
-
-            serviceForMedium.sendNotification(notification);
-        });
+    private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {
+        return nonNull(servicesByMedia.get(medium), NOTIFICATION_SENDER_NOT_FOUND);
     }
 }

@@ -293,7 +293,7 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_simpleMap_nullList() {
-        assertEquals(asList(), CollectionFunctions.simpleMap(null, i -> i + " string"));
+        assertEquals(asList(), CollectionFunctions.simpleMap((List<?>) null, i -> i + " string"));
     }
 
     @Test

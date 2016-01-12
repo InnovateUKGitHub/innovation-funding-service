@@ -1,6 +1,7 @@
 package com.worth.ifs.email.service;
 
 import com.worth.ifs.email.resource.EmailAddressResource;
+import com.worth.ifs.transactional.ServiceResult;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ import java.util.List;
  */
 public interface EmailService {
 
-    void sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBody, String htmlBody);
+    ServiceResult<List<EmailAddressResource>> sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBody, String htmlBody);
 }

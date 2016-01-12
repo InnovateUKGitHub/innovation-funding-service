@@ -199,6 +199,22 @@ public class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param set
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMap(Set<T> set, Function<T, R> mappingFn) {
+        if (set == null || set.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return set.stream().map(mappingFn).collect(toList());
+    }
+
+    /**
      * A map collector that preserves order
      * @param keyMapper
      * @param valueMapper
