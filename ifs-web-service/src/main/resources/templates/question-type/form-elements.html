@@ -148,10 +148,11 @@
 		</textarea>
 </div>
 <div th:fragment="form-finance-textarea (type, id, name, value)">
-		<textarea
+		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-' + id}"
                 th:text="${value}"
+                rows="4"
                 >
 		</textarea>
 </div>
@@ -187,14 +188,14 @@
                   "
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
- 
+
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
                  alt="This field is marked as complete"
-                 title="This field is marked as complete" 
+                 title="This field is marked as complete"
                  class="marked-as-complete" />
-            
+
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
@@ -263,7 +264,7 @@
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
                             th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
-                            th:attrappend="formaction='&#35;question-'+${question.getId()}" 
+                            th:attrappend="formaction='&#35;question-'+${question.getId()}"
                             class="buttonlink"/>
                     <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
@@ -300,14 +301,14 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <!--/* 
+    <!--/*
             TODO: the marks as complete button is hidden when in readonly,
-            this because the controller on the readonly pages doesn't handle mark as complete yet, 
-            if the controller is fixed remove 'hidden' from th:class 
+            this because the controller on the readonly pages doesn't handle mark as complete yet,
+            if the controller is fixed remove 'hidden' from th:class
      */-->
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
-            name="mark_as_complete" 
+            name="mark_as_complete"
             th:value="${question.getId()}"
             th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete
