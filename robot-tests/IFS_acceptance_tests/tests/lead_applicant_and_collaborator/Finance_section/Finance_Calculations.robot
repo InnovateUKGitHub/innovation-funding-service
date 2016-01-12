@@ -20,12 +20,6 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
     and when the applicant fills a second row in the labour costs
     Then the total labour cost calculation should be correct
 
-'Overhead' calculations/autosave
-    [Tags]    Failing
-    Given Applicant goes to the Your finances section
-    When the applicant fiills the Overhead fields
-    Then the calculations of the overhead section should be correct
-
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
     [Tags]    Materials
@@ -43,15 +37,20 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
     And the applicant adds a new row in the subcontracting costs
     The total subcontracting costs should correct
 
+'Capital usage' Calculations/Autosave
+    Given Applicant goes to the Your finances section
+    When the applicant fills the 'capital usage' field
+    #Then the calculations of the 'capital usage' should be correct
+
 *** Keywords ***
 the Applicant fills the Labour costs
     Click Element    xpath=//*[@aria-controls="collapsible-1"]
     Click Element    link=Add another role
-    Wait Until Page Contains Element    css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    230
-    Input Text    css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
-    Input Text    css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     focus    css=.add-another-row
     Sleep    1s
 
@@ -59,7 +58,7 @@ the calculations of the labour should be correct
     Reload Page
     Sleep    2s
     #Alert Should Be Present
-    Textfield Value Should Be    css=#labour-costs-table tbody td:nth-of-type(3) input    £ 522
+    Textfield Value Should Be    css=.labour-costs-table tbody td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    xpath=//*[@id="collapsible-1"]//td[contains(text(),"Total costs")]/input    £ 52,174
 
 the Applicant fills the Materials fields
@@ -98,17 +97,17 @@ The total subcontracting costs should correct
 when the applicant fills a second row in the labour costs
     Click Element    xpath=//*[@aria-controls="collapsible-1"]
     Click Element    link=Add another role
-    Wait Until Page Contains Element    css=#labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    Input Text    css=#labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    Input Text    css=#labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
+    Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     Sleep    1s
 
 the total labour cost calculation should be correct
     Reload Page
     Sleep    2s
     #Alert Should Be Present
-    Textfield Value Should Be    css=#labour-costs-table tr:nth-of-type(3) td:nth-of-type(3) input    £ 522
-    Textfield Value Should Be    css=#labour-costs-table tr:nth-of-type(2) input    £ 52,174
+    Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(3) input    £ 522
+    Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(2) input    £ 52,174
     Textfield Value Should Be    css=#cost-labour-total-field    £ 104,348
     Element Should Contain    css=#form-input-20 > div.collapsible > h2:nth-child(1) > span > span    £ 104,348
 
@@ -139,3 +138,12 @@ the applicant adds a new row in the subcontracting costs
     Input Text    css=.form-row:nth-child(2) .form-finances-subcontracting-cost    100
     sleep    1s
     focus    css=.add-another-row
+
+the applicant fiills the Overhead fields
+    click element    xpath=//*[@id="form-input-20"]/div[1]/h2[2]/button
+
+the applicant fills the 'capital usage' field
+    Click Element    //*[@id="form-input-20"]/div[1]/h2[4]/button
+    Click Element    link=Add another asset
+    Wait Until Element Is Visible    link=Remove
+    Input Text    css=.form-row:nth-child(1) .form-finances-subcontracting-cost    100
