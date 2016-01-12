@@ -22,10 +22,10 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class FreemarkerNotificationTemplateServiceIntegrationTest extends BaseIntegrationTest {
+public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private FreemarkerNotificationTemplateService service;
+    private FreemarkerNotificationTemplateRenderer renderer;
 
     @Test
     public void testTemplateRender() throws URISyntaxException, IOException {
@@ -35,7 +35,7 @@ public class FreemarkerNotificationTemplateServiceIntegrationTest extends BaseIn
 
         Map<String, Object> templateArguments = asMap("applicationName", "My Application", "inviteUrl", "http://acceptinvite.com");
 
-        String processedTemplate = service.processTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
+        String processedTemplate = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
 
         List<String> expectedMessageLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt").toURI()).toPath());
         String expectedMessage = simpleJoiner(expectedMessageLines, "\n");

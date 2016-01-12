@@ -6,7 +6,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,14 +17,14 @@ import java.util.Map;
  * A Notification Template Service (a service that can process a template file in order to produce a Notification message string) based
  * on Freemarker
  */
-@Service
-public class FreemarkerNotificationTemplateService implements NotificationTemplateService {
+@Component
+public class FreemarkerNotificationTemplateRenderer implements NotificationTemplateRenderer {
 
     @Autowired
     private Configuration configuration;
 
     @Override
-    public String processTemplate(NotificationSource notificationSource, NotificationTarget notificationTarget, String templatePath, Map<String, Object> templateReplacements) {
+    public String renderTemplate(NotificationSource notificationSource, NotificationTarget notificationTarget, String templatePath, Map<String, Object> templateReplacements) {
 
         Map<String, Object> replacementsWithCommonObjects = new HashMap<>(templateReplacements);
         replacementsWithCommonObjects.put("notificationSource", notificationSource);

@@ -5,14 +5,14 @@ import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationResource;
 import com.worth.ifs.notifications.service.NotificationSender;
+import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResourceResolver.fromNotificationSource;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.notifications.service.senders.email.EmailAddressResourceResolver.fromNotificationTarget;
 import static java.io.File.separator;
+import static java.util.Arrays.asList;
 
 /**
  * A Notification Sender that can, given a Notification, construct an email from it and use the Email Service to send
@@ -20,10 +20,13 @@ import static java.io.File.separator;
  */
 public class EmailNotificationSender implements NotificationSender {
 
-    private static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "ftltemplates/notifications/email/notifications" + separator + "email" + separator;
+    static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private NotificationTemplateRenderer renderer;
 
     @Override
     public NotificationMedium getNotificationMedium() {
@@ -34,8 +37,19 @@ public class EmailNotificationSender implements NotificationSender {
     public void sendNotification(NotificationResource notification) {
 
         EmailAddressResource from = fromNotificationSource(notification.getFrom());
-        List<EmailAddressResource> to = simpleMap(notification.getTo(), EmailAddressResourceResolver::fromNotificationTarget);
 
-        emailService.sendEmail(from, to, "A subject", "Plain text body", "html body");
+        notification.getTo().forEach(recipient -> {
+
+            String subject = renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "subject"), notification.getArguments());
+            String plainTextBody = renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_plain"), notification.getArguments());
+            String htmlBody = renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_html"), notification.getArguments());
+
+            emailService.sendEmail(from, asList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody);
+        });
+
+    }
+
+    private String getTemplatePath(NotificationResource notification, String suffix) {
+        return EMAIL_NOTIFICATION_TEMPLATES_PATH + notification.getMessageKey().name().toLowerCase() + "_" + suffix;
     }
 }
