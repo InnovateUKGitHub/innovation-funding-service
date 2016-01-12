@@ -921,7 +921,7 @@
                 </tr>
                 <tr>
                     <th>% Grant</th>
-                    <td class="numeric" th:text="${#numbers.formatDecimal(grantTotalPercentage, 0, 'COMMA', 0, 'POINT')}+'%'"></td>
+                    <td class="numeric"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                         <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                             th:text="${organisationFinance.grantClaimPercentage}+'%'"></td>

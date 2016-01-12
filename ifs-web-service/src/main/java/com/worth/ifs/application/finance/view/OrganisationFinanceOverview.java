@@ -69,16 +69,6 @@ public class OrganisationFinanceOverview {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Double getTotalGrantPercentage() {
-        Double totalFundingSought = 0D;
-
-        if(totalIsNotZero()) {
-            totalFundingSought = getTotalFundingSought().divide(getTotal(), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).doubleValue();
-        }
-
-        return totalFundingSought;
-    }
-
     private boolean totalIsNotZero() {
         return !getTotal().equals(new BigDecimal(0));
     }
@@ -97,7 +87,10 @@ public class OrganisationFinanceOverview {
     }
 
     public BigDecimal getTotalContribution() {
-        return getTotal().subtract(getTotalFundingSought());
+        return organisationFinances.stream()
+                .filter(of -> of != null)
+                .map(of -> of.getTotalContribution())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalOtherFunding() {

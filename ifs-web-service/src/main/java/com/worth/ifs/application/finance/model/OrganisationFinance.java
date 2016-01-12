@@ -136,11 +136,13 @@ public class OrganisationFinance {
     }
 
     public BigDecimal getTotalFundingSought() {
-        return getTotal().multiply(new BigDecimal(getGrantClaimPercentage())).divide(new BigDecimal(100)).subtract(getTotalOtherFunding());
+        BigDecimal totalFundingSought  = getTotal().multiply(new BigDecimal(getGrantClaimPercentage())).divide(new BigDecimal(100)).subtract(getTotalOtherFunding());
+
+        return totalFundingSought.max(new BigDecimal(0));
     }
 
     public BigDecimal getTotalContribution() {
-        return getTotal().multiply(new BigDecimal(100 - getGrantClaimPercentage())).divide(new BigDecimal(100));
+        return getTotal().subtract(getTotalOtherFunding()).subtract(getTotalFundingSought()).max(new BigDecimal(0));
     }
 
     public BigDecimal getTotalOtherFunding() {
