@@ -4,9 +4,9 @@
 cd ../ifs-data-service/
 ./gradlew flywayClean flywayMigrate;
 cd ../data-dumps/
-mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version > original_schema_only.sql
-mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role > original_reference_data_only.sql
-mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version > original_test_data_only.sql
+mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version > originalSchemaOnly.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role > originalReferenceDataOnly.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version > originalTestDataOnly.sql
 #2) Baseline the scripts
 cd ../ifs-data-service/src/main/resources/db/migration/
 rm -rf *
@@ -22,9 +22,10 @@ cd ../../../../../
 cd ../data-dumps/
 mysql -uifs -pifs ifs < original_test_data_only.sql
 #5) Export the database this is the baseline for a test environment
-mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > new_database_with_test_data.sql
+mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > newDatabaseWithTestData.sql
 #6) Regenerate the acceptance tests database
-#TODO
+mysql -uifs -pifs -e"DELETE FROM cost WHERE id IN()"
+mysql -uifs -pifs -e"DELETE FROM cost_value WHERE id IN()"
 #7) Run the integration tests.
 #TODO
 
