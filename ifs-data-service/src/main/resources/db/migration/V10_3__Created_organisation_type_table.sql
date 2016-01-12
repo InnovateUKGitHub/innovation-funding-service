@@ -8,6 +8,12 @@ CREATE TABLE organisation_type
 CREATE INDEX FK_eh40v8iivh39la2bmmr6h82u5 ON organisation_type (parent_organisation_type_id);
 
 
+ALTER TABLE organisation
+    ADD organisation_type_id BIGINT(20) NULL;
+CREATE INDEX FK_syoqdheljsd92k1vtdjfae31m ON organisation (organisation_type_id);
+ALTER TABLE organisation
+    ADD CONSTRAINT FK_syoqdheljsd92k1vtdjfae31m FOREIGN KEY (organisation_type_id) REFERENCES organisation_type (id);
+
 
 
 
@@ -23,10 +29,6 @@ INSERT INTO organisation_type (id, name, parent_organisation_type_id) VALUES (9,
 
 
 
-ALTER TABLE organisation
-    ADD organisation_type_id BIGINT(20) NULL;
-ALTER TABLE organisation
-    ADD CONSTRAINT FK_syoqdheljsd92k1vtdjfae31m FOREIGN KEY (organisation_type_id) REFERENCES organisation_type (id);
 
 --CREATE INDEX FK_syoqdheljsd92k1vtdjfae31m ON organisation (organisation_type_id);
 
