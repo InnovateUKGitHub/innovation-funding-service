@@ -45,8 +45,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
@@ -335,6 +333,9 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(app4)).thenReturn(organisationSet);
         when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app1)).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRoleOrNull(app2)).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRoleOrNull(app3)).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRoleOrNull(app4)).thenReturn(processRole4);
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));

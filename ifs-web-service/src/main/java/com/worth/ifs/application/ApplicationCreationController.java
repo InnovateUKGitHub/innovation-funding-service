@@ -110,9 +110,11 @@ public class ApplicationCreationController extends AbstractApplicationController
     }
 
     public static String getFromCookie(HttpServletRequest request, String fieldName) {
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(fieldName)) {
-                return cookie.getValue();
+        if(request != null && request.getCookies() != null){
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(fieldName)) {
+                    return cookie.getValue();
+                }
             }
         }
         return null;
