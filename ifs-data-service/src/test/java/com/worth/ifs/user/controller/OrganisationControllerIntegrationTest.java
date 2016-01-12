@@ -34,6 +34,23 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
 
         org = controller.findById(2L);
         assertEquals("Worth Internet Systems", org.getName());
+
+        org = controller.findById(5L);
+        assertEquals("Manchester University", org.getName());
+    }
+
+    @Rollback
+    @Test
+    public void testOrganisationType() throws Exception {
+        Organisation org = controller.findById(1L);
+        assertEquals("Business", org.getOrganisationType().getName());
+
+        org = controller.findById(2L);
+        assertEquals("Business", org.getOrganisationType().getName());
+
+        org = controller.findById(5L);
+        assertEquals("Academic", org.getOrganisationType().getName());
+        assertEquals("Research", org.getOrganisationType().getParentOrganisationType().getName());
     }
 
     @Rollback
