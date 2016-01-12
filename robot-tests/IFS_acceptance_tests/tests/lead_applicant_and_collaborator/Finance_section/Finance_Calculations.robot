@@ -20,6 +20,12 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
     and when the applicant fills a second row in the labour costs
     Then the total labour cost calculation should be correct
 
+'Overhead' calculations/autosave
+    [Tags]    Failing
+    Given Applicant goes to the Your finances section
+    When the applicant fiills the Overhead fields
+    Then the calculations of the overhead section should be correct
+
 'Materials' Calculations/Autosave
     [Documentation]    INFUND-192
     [Tags]    Materials
