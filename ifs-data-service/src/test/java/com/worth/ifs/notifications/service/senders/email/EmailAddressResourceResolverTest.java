@@ -30,7 +30,7 @@ public class EmailAddressResourceResolverTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFromNotificationSourceWithUnsupportedNotificationSource() {
-        NotificationSource unknownSource = new NotificationSource() {};
+        NotificationSource unknownSource = anonymousNotificationSource();
         EmailAddressResourceResolver.fromNotificationSource(unknownSource);
     }
 
@@ -47,8 +47,25 @@ public class EmailAddressResourceResolverTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFromNotificationTargetWithUnsupportedNotificationTarget() {
-        NotificationTarget unknownTarget = new NotificationTarget() {};
+        NotificationTarget unknownTarget = anonymousNotificationTarget();
         EmailAddressResourceResolver.fromNotificationTarget(unknownTarget);
     }
 
+    private NotificationSource anonymousNotificationSource() {
+        return new NotificationSource() {
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
+    }
+
+    private NotificationTarget anonymousNotificationTarget() {
+        return new NotificationTarget() {
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
+    }
 }

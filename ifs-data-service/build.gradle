@@ -63,6 +63,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile "org.flywaydb:flyway-core:3.2.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile 'org.freemarker:freemarker:2.3.23'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")

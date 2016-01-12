@@ -16,4 +16,9 @@ public class UserNotificationSourceResource implements NotificationSource {
     public User getUser() {
         return user;
     }
+
+    @Override
+    public String getName() {
+        return user.getName();
+    }
 }

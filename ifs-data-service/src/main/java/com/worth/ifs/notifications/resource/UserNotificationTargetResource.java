@@ -3,7 +3,7 @@ package com.worth.ifs.notifications.resource;
 import com.worth.ifs.user.domain.User;
 
 /**
- * Reporesents a User as the target of a given Notification
+ * Represents a User as the target of a given Notification
  */
 public class UserNotificationTargetResource implements NotificationTarget {
 
@@ -15,5 +15,10 @@ public class UserNotificationTargetResource implements NotificationTarget {
 
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public String getName() {
+        return user.getName();
     }
 }
