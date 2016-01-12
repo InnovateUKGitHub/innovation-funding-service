@@ -26,6 +26,13 @@ public class SilEmailMessage {
     @JsonProperty("Body")
     private List<SilEmailBody> body;
 
+    /**
+     * For JSON marshalling only
+     */
+    SilEmailMessage() {
+
+    }
+
     public SilEmailMessage(SilEmailAddress from, List<SilEmailAddress> to, String subject, SilEmailBody... bodyElements) {
         this.from = from;
         this.to = to;

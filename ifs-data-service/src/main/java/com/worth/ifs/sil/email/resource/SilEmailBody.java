@@ -16,6 +16,13 @@ public class SilEmailBody {
     @JsonProperty("Content")
     private String content;
 
+    /**
+     * For JSON marshalling only
+     */
+    public SilEmailBody() {
+
+    }
+
     public SilEmailBody(String contentType, String content) {
         this.contentType = contentType;
         this.content = content;

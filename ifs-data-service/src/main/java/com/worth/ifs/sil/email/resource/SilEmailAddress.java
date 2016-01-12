@@ -12,6 +12,13 @@ public class SilEmailAddress {
     private String name;
     private String email;
 
+    /**
+     * For JSON marshalling only
+     */
+    public SilEmailAddress() {
+
+    }
+
     public SilEmailAddress(String name, String email) {
         this.name = name;
         this.email = email;
