@@ -1,4 +1,5 @@
 *** Settings ***
+
 Documentation     INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Setup       Log in as user    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
@@ -23,7 +24,7 @@ Add details for another source of funding and verify that these details have bee
     And Applicant chooses to add another source of funding
     When Applicant can see a new row
     And Applicant enters some details into this row
-    And Applicant chooses to add another source of funding
+    And Applicant chooses to add yet another source of funding
     Then Applicant can leave the 'Your finances' page but the details are still saved
     And applicant selects 'No' for other funding
     And applicant can see that the 'No' radio button is selected
@@ -38,10 +39,17 @@ Applicant selects 'Yes' for other funding
 
 Applicant chooses to add another source of funding
     Click Link    Add another source of funding
-    Sleep     5s
-    Reload Page
-    Sleep     5s
-    Alert Should Be Present
+    Wait Until Element Is Visible   id=cost-other_funding-55-source
+    Sleep   2s
+
+Applicant chooses to add yet another source of funding
+    Select Radio button     other_funding-otherPublicFunding-54     Yes
+    Click Link      Add another source of funding
+    Wait Until Element Is Visible   id=cost-other_funding-56-source
+    Sleep   2s
+    Click Element       id=cost-other_funding-56-source
+    Sleep   2s
+
 
 Applicant selects 'No' for other funding
     Select Radio button    other_funding-otherPublicFunding-54    No

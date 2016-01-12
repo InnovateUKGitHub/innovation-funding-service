@@ -41,10 +41,10 @@
             </div>
 
             <div th:each="question : ${currentSection?.questions}" th:remove="tag">
-                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:attr="data-question-id=${question.getId()}" th:id="'form-input-'+${formInput.getId()}"
+                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
                      th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                     <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
-                </div>	
+                </div>
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
