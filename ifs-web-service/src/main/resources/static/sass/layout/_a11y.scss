@@ -2,11 +2,18 @@
 	@extend .hidden;
 }
 
-
-
+.hidden-save {
+	overflow:visible;
+	height: 0;
+	width: 0;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	display:block;
+}
 .buttonlink {
 	background:none;
-	border:none; 
+	border:none;
 	font: inherit;
 	cursor: pointer;
 	color: $govuk-blue;
@@ -15,9 +22,8 @@
 	@include inline-block;
 	text-decoration:underline;
 	padding: 0;
-	
+
 	&:hover {
 		@extend a:hover;
 	}
 }
-

@@ -54,9 +54,33 @@
 			<p class="no-margin"><span class="heading-large">10</span> <strong>assessors</strong></p>	
 		</div>
 		<div class="column-half alignright-button">
-			<a href="#" class="button">Send invites to assessors</a>
+			<a href="#" class="button" data-js-modal="modal-invite-assessors">Send invites to assessors</a>
 		</div>
 	</div>
+
+	<div class="modal-invite-assessors" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+			
+			<h2 class="heading-medium no-margin">Send invites to assessors</h2>
+
+			<p>Are you sure that you wish to send invites to the assessors on the invite list?</p>
+
+			<p>Once the invites have been sent this action cannot be undone.</p>
+
+			<hr />
+            
+            <div class="grid-row extra-margin">
+            	<div class="column-half">
+            		<a href="/prototypes/863-invite-list">Cancel</a>
+            	</div>
+            	<div class="column-half alignright-button">
+            		<a href="/prototypes/997-comp-applications-dashboard-open" class="button">Send invites</a>
+            	</div>
+            </div>
+
+        </div>
+    </div>
 
 	<h3 class="heading-small"><span class="heading-large">4</span> Current assessors</h3>
 		
