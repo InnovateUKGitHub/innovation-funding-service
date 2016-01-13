@@ -35,8 +35,8 @@ function stopServers {
 
 function resetDB {
     echo "********DROP THE DATABASE********"
-    `mysql -u${mysqlUser} -p${mysqlPassword} ifs -e"DROP DATABASE ifs"`
-    `mysql -u${mysqlUser} -p${mysqlPassword} ifs -e"CREATE DATABASE ifs CHARACTER SET utf8ls"`
+    `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
+    `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
 }
 
 function buildAndDeploy {
