@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #1) Create a database dump from the latest flyway
 cd ../ifs-data-service/
 ./gradlew flywayClean flywayMigrate;
@@ -10,8 +9,8 @@ mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-tabl
 #2) Baseline the scripts
 cd ../ifs-data-service/src/main/resources/db/migration/
 rm -rf *
-cp ../../../../../../data-dumps/original_schema_only.sql V1__BaseVersion.sql
-cp ../../../../../../data-dumps/original_reference_data_only.sql V2__ReferenceData.sql
+cp ../../../../../../data-dumps/originalSchemaOnly.sql V1__BaseVersion.sql
+cp ../../../../../../data-dumps/originalReferenceDataOnly.sql V2__ReferenceData.sql
 #3) Drop the old database
 mysql -uifs -pifs -e"DROP DATABASE ifs"
 mysql -uifs -pifs -e"CREATE DATABASE ifs DEFAULT CHARACTER SET utf8"
@@ -20,14 +19,19 @@ cd ../../../../../
 ./gradlew flywayMigrate
 #4) Apply the original test data to the new database
 cd ../data-dumps/
-mysql -uifs -pifs ifs < original_test_data_only.sql
+mysql -uifs -pifs ifs < originalTestDataOnly.sql
 #5) Export the database this is the baseline for a test environment
 mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > newDatabaseWithTestData.sql
 #6) Regenerate the acceptance tests database
-mysql -uifs -pifs -e"DELETE FROM cost WHERE id IN()"
-mysql -uifs -pifs -e"DELETE FROM cost_value WHERE id IN()"
-#7) Run the integration tests.
-#TODO
+cd ../robot-tests
+mysql -uifs -pifs ifs -e"DELETE FROM cost_value WHERE cost_id = 13"
+mysql -uifs -pifs ifs -e"DELETE FROM cost WHERE id IN(2,4,12,13,19,20)"
+mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > testDataDump.sql
+#7) Fix the integration tests.
+cd ../
+cp data-dumps/newDatabaseWithTestData.sql  ifs-data-service/src/test/resources/integrationData.sql
+
+
 
 
 
@@ -54,10 +58,8 @@ mysql -uifs -pifs -e"DELETE FROM cost_value WHERE id IN()"
 # rm src/main/resources/db/migration/V1__BaseVersion.sql
 # rm src/main/resources/db/migration/V2__ReferenceData.sql
 # cd ../data-dumps
-# rm new_database_with_test_data.sql original_reference_data_only.sql original_schema_only.sql reference_data_only.sql schema_only.sql original_test_data_only.sql
-# Drop the integration test database
-#mysql -uifs -pifs -e"DROP DATABASE ifs_test"
-#mysql -uifs -pifs -e"CREATE DATABASE ifs_test DEFAULT CHARACTER SET utf8"
+# rm newDatabaseWithTestData.sql originalReferenceDataOnly.sql originalSchemaOnly.sql referenceDataOnly.sql schemaOnly.sql originalTestDataOnly.sql
+
 
 
 
