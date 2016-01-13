@@ -8,7 +8,6 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
-
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
@@ -29,6 +28,7 @@
 
 
     <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
+        <button class="hidden-save" type="submit" aria-label="Save the list of invitees" />
         <ul class="boxed-list">
             <li th:each="organisationEntry, organisationStats: ${organisationMap}" th:attr="data-invite-org=${organisationEntry.key.id}">
                 <h2  th:if="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Lead Organisation "<span th:text="${organisationEntry.key.name}"></span>"</h2>
