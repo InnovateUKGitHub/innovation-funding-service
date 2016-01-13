@@ -86,3 +86,6 @@ include::user.adoc[]
 == FormInputResponse File Upload
 include::forminputresponsefileupload.adoc[]
 
+[[silstub]]
+== SIL stubbing endpoints
+include::silstub.adoc[]
