@@ -68,9 +68,7 @@ public class OrganisationFinanceOverview {
     }
 
     public BigDecimal getTotalFundingSought() {
-        BigDecimal totalFundingSought = new BigDecimal(0);
-
-        totalFundingSought = organisationFinances.stream()
+        BigDecimal totalFundingSought = organisationFinances.stream()
                 .filter(of -> of != null && of.getGrantClaimPercentage() != null)
                 .map(of -> of.getTotalFundingSought())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
