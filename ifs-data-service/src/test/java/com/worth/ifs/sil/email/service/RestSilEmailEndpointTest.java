@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static com.worth.ifs.sil.email.service.RestSilEmailEndpoint.ServiceFailures.UNABLE_TO_SEND_MAIL;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -69,6 +70,19 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         assertTrue(sendMailResult.isLeft());
         assertTrue(sendMailResult.getLeft().is(UNABLE_TO_SEND_MAIL));
+    }
+
+    @Test
+    public void testSendEmailButRestTemplateThrowsException() {
+
+        SilEmailMessage silEmail = new SilEmailMessage(null, null, "A subject");
+
+        when(mockRestTemplate.postForEntity("http://sil.com/silstub/sendmail", httpEntityForRestCall(silEmail), String.class)).thenThrow(new IllegalArgumentException("no posting!"));
+
+        ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
+
+        assertTrue(sendMailResult.isLeft());
+        assertTrue(sendMailResult.getLeft().is(UNEXPECTED_ERROR));
     }
 
 }

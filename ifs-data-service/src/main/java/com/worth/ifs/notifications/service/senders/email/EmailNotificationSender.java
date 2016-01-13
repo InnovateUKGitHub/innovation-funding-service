@@ -31,8 +31,7 @@ public class EmailNotificationSender implements NotificationSender {
 
     static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
 
-    enum ServiceFailures {
-
+    public enum ServiceFailures {
         EMAILS_NOT_SENT
     }
 
@@ -50,17 +49,20 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
 
-        EmailAddress from = fromNotificationSource(notification.getFrom());
+        return handlingErrors(EMAILS_NOT_SENT, () -> {
 
-        List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-            getSubject(notification, recipient).map(subject ->
-            getPlainTextBody(notification, recipient).map(plainTextBody ->
-            getHtmlBody(notification, recipient).map(htmlBody ->
-                emailService.sendEmail(from, asList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
-            )))
-        );
+            EmailAddress from = fromNotificationSource(notification.getFrom());
 
-        return anyFailures(results, failureSupplier(EMAILS_NOT_SENT), successSupplier(notification));
+            List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
+                getSubject(notification, recipient).map(subject ->
+                getPlainTextBody(notification, recipient).map(plainTextBody ->
+                getHtmlBody(notification, recipient).map(htmlBody ->
+                    emailService.sendEmail(from, asList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
+                )))
+            );
+
+            return anyFailures(results, failureSupplier(EMAILS_NOT_SENT), successSupplier(notification));
+        });
     }
 
     private ServiceResult<String> getSubject(Notification notification, NotificationTarget recipient) {

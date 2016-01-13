@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;

@@ -24,7 +24,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-    enum ServiceFailures {
+    public enum ServiceFailures {
         NOTIFICATION_SENDER_NOT_FOUND,
         UNABLE_TO_SEND_NOTIFICATIONS
     }
@@ -42,13 +42,16 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
 
-        Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
+        return handlingErrors(UNABLE_TO_SEND_NOTIFICATIONS, () -> {
 
-        List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
-                getNotificationSender(medium).map(serviceForMedium ->
-                        serviceForMedium.sendNotification(notification)));
+            Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
-        return anyFailures(results, failureSupplier(UNABLE_TO_SEND_NOTIFICATIONS), successSupplier(notification));
+            List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
+                    getNotificationSender(medium).map(serviceForMedium ->
+                            serviceForMedium.sendNotification(notification)));
+
+            return anyFailures(results, failureSupplier(UNABLE_TO_SEND_NOTIFICATIONS), successSupplier(notification));
+        });
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {

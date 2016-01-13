@@ -54,6 +54,7 @@ import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Not
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -71,6 +72,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         UNABLE_TO_UPDATE_FILE, //
         UNABLE_TO_DELETE_FILE, //
         UNABLE_TO_FIND_FILE, //
+        UNABLE_TO_SEND_NOTIFICATION, //
     }
 
     enum Notifications {
@@ -460,7 +462,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite) {
 
-        return getApplication(applicationId).map(application -> {
+        return handlingErrors(UNABLE_TO_SEND_NOTIFICATION, () -> getApplication(applicationId).map(application -> {
 
             NotificationSource from = systemNotificationSource;
             NotificationTarget to = new ExternalUserNotificationTarget(invite.getRecipientName(), invite.getRecipientEmail());
@@ -472,6 +474,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             Notification notification = new Notification(from, singletonList(to), INVITE_COLLABORATOR, notificationArguments);
 
             return notificationService.sendNotification(notification, EMAIL);
-        });
+        }));
     }
 }

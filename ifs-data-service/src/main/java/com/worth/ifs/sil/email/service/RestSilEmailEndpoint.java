@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.sil.email.service.RestSilEmailEndpoint.ServiceFailures.UNABLE_TO_SEND_MAIL;
 import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 
 /**
@@ -35,15 +36,18 @@ public class RestSilEmailEndpoint extends BaseRestService implements SilEmailEnd
     @Override
     public ServiceResult<SilEmailMessage> sendEmail(SilEmailMessage message) {
 
-        ResponseEntity<String> response = restPostWithEntity(silSendmailPath, message, String.class);
+        return handlingErrors(() -> {
 
-        if (!response.getStatusCode().equals(HttpStatus.ACCEPTED)) {
-            LOG.warn("Failed when sending email to SIL: " + response.getBody());
-            return failure(UNABLE_TO_SEND_MAIL);
-        }
+            ResponseEntity<String> response = restPostWithEntity(silSendmailPath, message, String.class);
 
-        LOG.debug("Successfully sent email to SIL: " + message);
-        return success(message);
+            if (!response.getStatusCode().equals(HttpStatus.ACCEPTED)) {
+                LOG.warn("Failed when sending email to SIL: " + response.getBody());
+                return failure(UNABLE_TO_SEND_MAIL);
+            }
+
+            LOG.debug("Successfully sent email to SIL: " + message);
+            return success(message);
+        });
     }
 
     @Override

@@ -21,6 +21,9 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.singletonList;
@@ -169,5 +172,77 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         String content = response.getResponse().getContentAsString();
         JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
         assertEquals("Notification sent successfully", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceFailsWithApplicationNotFound() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(APPLICATION_NOT_FOUND));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isBadRequest()).
+                andDo(document("application/invite-collaborator_applicationNotFound")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to find Application", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceFailsWithUnableToSend() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATIONS));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isInternalServerError()).
+                andDo(document("application/invite-collaborator_unableToSendNotification")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceThrowsException() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenThrow(new IllegalArgumentException("no inviting!"));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isInternalServerError()).
+                andDo(document("application/invite-collaborator_internalServerError")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
     }
 }

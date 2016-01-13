@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static com.worth.ifs.notifications.service.FreemarkerNotificationTemplateRenderer.ServiceErrors.UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 
 /**
@@ -29,7 +30,7 @@ public class FreemarkerNotificationTemplateRenderer implements NotificationTempl
 
     private static final Log LOG = LogFactory.getLog(FreemarkerNotificationTemplateRenderer.class);
 
-    enum ServiceErrors {
+    public enum ServiceErrors {
 
         UNABLE_TO_RENDER_TEMPLATE
     }
@@ -40,18 +41,21 @@ public class FreemarkerNotificationTemplateRenderer implements NotificationTempl
     @Override
     public ServiceResult<String> renderTemplate(NotificationSource notificationSource, NotificationTarget notificationTarget, String templatePath, Map<String, Object> templateReplacements) {
 
-        Map<String, Object> replacementsWithCommonObjects = new HashMap<>(templateReplacements);
-        replacementsWithCommonObjects.put("notificationSource", notificationSource);
-        replacementsWithCommonObjects.put("notificationTarget", notificationTarget);
+        return handlingErrors(UNABLE_TO_RENDER_TEMPLATE, () -> {
 
-        try {
-            Template temp = configuration.getTemplate(templatePath);
-            StringWriter writer = new StringWriter();
-            temp.process(replacementsWithCommonObjects, writer);
-            return success(writer.getBuffer().toString());
-        } catch (IOException | TemplateException e) {
-            LOG.error("Error rendering notification template " + templatePath, e);
-            return failure(UNABLE_TO_RENDER_TEMPLATE);
-        }
+            Map<String, Object> replacementsWithCommonObjects = new HashMap<>(templateReplacements);
+            replacementsWithCommonObjects.put("notificationSource", notificationSource);
+            replacementsWithCommonObjects.put("notificationTarget", notificationTarget);
+
+            try {
+                Template temp = configuration.getTemplate(templatePath);
+                StringWriter writer = new StringWriter();
+                temp.process(replacementsWithCommonObjects, writer);
+                return success(writer.getBuffer().toString());
+            } catch (IOException | TemplateException e) {
+                LOG.error("Error rendering notification template " + templatePath, e);
+                return failure(UNABLE_TO_RENDER_TEMPLATE);
+            }
+        });
     }
 }

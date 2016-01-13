@@ -573,6 +573,67 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertEquals(expectedNotificationToBeSent, notificationResult.getRight());
 
         verify(notificationServiceMock).sendNotification(expectedNotificationToBeSent, EMAIL);
-
     }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationNotFound() {
+
+        Notification expectedNotificationToBeSent = newNotification().
+                withMessageKey(INVITE_COLLABORATOR).
+                withArguments(asMap("applicationName", "My Application", "inviteUrl", "http://TODO.com")).
+                withSource(systemNotificationSourceMock).
+                withTargets(asList(new ExternalUserNotificationTarget("My Collaborator", "collaborator@example.com"))).
+                build();
+
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<Notification> notificationResult =
+                service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
+
+        assertTrue(notificationResult.isLeft());
+        assertTrue(notificationResult.getLeft().is(APPLICATION_NOT_FOUND));
+
+        verify(notificationServiceMock, never()).sendNotification(expectedNotificationToBeSent, EMAIL);
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButNotificationServiceFails() {
+
+        Notification expectedNotificationToBeSent = newNotification().
+                withMessageKey(INVITE_COLLABORATOR).
+                withArguments(asMap("applicationName", "My Application", "inviteUrl", "http://TODO.com")).
+                withSource(systemNotificationSourceMock).
+                withTargets(asList(new ExternalUserNotificationTarget("My Collaborator", "collaborator@example.com"))).
+                build();
+
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(newApplication().with(name("My Application")).build());
+        when(notificationServiceMock.sendNotification(expectedNotificationToBeSent, EMAIL)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATION));
+
+        ServiceResult<Notification> notificationResult =
+                service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
+
+        assertTrue(notificationResult.isLeft());
+        assertTrue(notificationResult.getLeft().is(UNABLE_TO_SEND_NOTIFICATION));
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButNotificationServiceThrowsException() {
+
+        Notification expectedNotificationToBeSent = newNotification().
+                withMessageKey(INVITE_COLLABORATOR).
+                withArguments(asMap("applicationName", "My Application", "inviteUrl", "http://TODO.com")).
+                withSource(systemNotificationSourceMock).
+                withTargets(asList(new ExternalUserNotificationTarget("My Collaborator", "collaborator@example.com"))).
+                build();
+
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(newApplication().with(name("My Application")).build());
+        when(notificationServiceMock.sendNotification(expectedNotificationToBeSent, EMAIL)).thenThrow(new IllegalArgumentException("No invites!"));
+
+        ServiceResult<Notification> notificationResult =
+                service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
+
+        assertTrue(notificationResult.isLeft());
+        assertTrue(notificationResult.getLeft().is(UNABLE_TO_SEND_NOTIFICATION));
+    }
+
 }

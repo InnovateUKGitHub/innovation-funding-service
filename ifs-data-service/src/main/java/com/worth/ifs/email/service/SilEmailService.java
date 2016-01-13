@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -26,11 +27,14 @@ public class SilEmailService implements EmailService {
     @Override
     public ServiceResult<List<EmailAddress>> sendEmail(EmailAddress from, List<EmailAddress> to, String subject, String plainTextBodyContent, String htmlBodyContent) {
 
-        SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
-        List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
-        SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
-        SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
+        return handlingErrors(() -> {
 
-        return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> success(to));
+            SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
+            List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
+            SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
+            SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
+
+            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> success(to));
+        });
     }
 }

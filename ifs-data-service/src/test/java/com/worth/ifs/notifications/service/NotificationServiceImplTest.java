@@ -10,6 +10,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
+import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
+import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
@@ -96,5 +99,29 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         Notification notificationToSend = newNotification().build();
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isLeft());
+    }
+
+    @Test
+    public void testSendNotificationByEmailButSenderFails() {
+
+        Notification notificationToSend = newNotification().build();
+
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(failure(EMAILS_NOT_SENT));
+
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_SEND_NOTIFICATIONS));
+    }
+
+    @Test
+    public void testSendNotificationByEmailButSenderThrowsException() {
+
+        Notification notificationToSend = newNotification().build();
+
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenThrow(new IllegalArgumentException("No sending!"));
+
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
+        assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_SEND_NOTIFICATIONS));
     }
 }

@@ -17,6 +17,7 @@ import java.util.function.BiFunction;
 
 import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_APPLICATION;
 import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_TYPE;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.

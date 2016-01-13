@@ -70,57 +70,6 @@ public abstract class BaseTransactionalService  {
     protected ApplicationRepository applicationRepository;
 
     /**
-     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-     * response (an Either with a left of ServiceFailure).
-     *
-     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
-     *
-     * @param serviceCode
-     * @param <T>
-     * @return
-     */
-    protected <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(UNEXPECTED_ERROR, serviceCode);
-    }
-
-    /**
-     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-     * response (an Either with a left of ServiceFailure).
-     *
-     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
-     *
-     * @param <T>
-     * @param serviceCode
-     * @return
-     */
-    protected <T> ServiceResult<T> handlingErrors(Enum<?> catchAllError, Supplier<ServiceResult<T>> serviceCode) {
-        try {
-            ServiceResult<T> response = serviceCode.get();
-
-            if (response.isLeft()) {
-                log.debug("Service failure encountered - performing transaction rollback");
-                rollbackTransaction();
-            }
-            return response;
-        } catch (Exception e) {
-            log.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
-            rollbackTransaction();
-            return failureResponse(catchAllError);
-        }
-    }
-
-    private void rollbackTransaction() {
-        try {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        } catch (NoTransactionException e) {
-            log.trace("No transaction to roll back");
-            log.error(e);
-        }
-    }
-
-    /**
      * Code to get a Response and return a Left of ServiceFailure when it's not found.
      *
      * @param responseId
