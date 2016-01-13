@@ -41,10 +41,7 @@ IFS.repeatableRows = (function() {
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
                 var replacement = htmlReplacement.find('[data-repeatable-container=' + tableSectionId + ']');
                 sectionToUpdate.replaceWith(replacement);
-
-                sectionToUpdate.find('input:not([readonly])').each(function(){
-                  IFS.autoSave.fieldChanged(this);
-                });
+                jQuery('body').trigger('updateSerializedFormState');
             });
 
             e.preventDefault();
@@ -59,10 +56,14 @@ IFS.repeatableRows = (function() {
                 var costRowsToDelete = jQuery('[data-cost-row=' + costRowsId + ']');
                 var container = amendRowsLink.closest('[data-repeatable-container]');
                 costRowsToDelete.remove();
+
                 container.find('[data-calculation-fields]').each(function(){
-                    var calculationFields = jQuery(this).attr('data-calculation-fields');
+                    var inst = jQuery(this);
+                    inst.attr({'data-calculation-rawvalue':0,'value':"£ 0"}).val("£ 0");
+                    var calculationFields = inst.attr('data-calculation-fields');
                     jQuery(calculationFields).trigger('change');
                 });
+                jQuery('body').trigger('updateSerializedFormState');
             });
             e.preventDefault();
             return false;
