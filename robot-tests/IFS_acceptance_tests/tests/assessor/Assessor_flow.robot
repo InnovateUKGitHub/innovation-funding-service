@@ -24,15 +24,15 @@ ${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
-@{competitions_assessment_progress_before}    2    4
-@{competitions_assessment_progress_after}    2    3
+@{competitions_assessment_progress_before}    0    4
+@{competitions_assessment_progress_after}    0    3
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does your project align with the scope of this competition?
 ${persistence_application_name}    A new innovative solution
 
 *** Test Cases ***
-Assessment progress is 1 out of 4
+Assessment progress is 0 out of 4
     [Documentation]    INFUND-302
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
@@ -46,7 +46,7 @@ Assessor can see the applications details page
 
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor    failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
@@ -60,23 +60,15 @@ Application invitation review page shows partners
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     and Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
-Applications details page has two lists
-    [Documentation]    INFUND-322
-    [Tags]    Assessor
-    When Assessor is viewing the Competitions list
-    When Assessor clicks the competition
-    Then Details page should contain a list with the applications for assessment
-    and Page should contain a list with the submitted assessments
-
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     Given Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -145,6 +137,14 @@ Competition for Assessment count
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions for Assessment shows an amount of competitions
+
+Applications details page has two lists
+    [Documentation]    INFUND-322
+    [Tags]    Assessor    Failing
+    When Assessor is viewing the Competitions list
+    When Assessor clicks the competition
+    Then Details page should contain a list with the applications for assessment
+    and Page should contain a list with the submitted assessments
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header-no-link" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application status'})" th:remove="tag" />
+
+	<ul class="application-progress-list">
+		<li class="complete"><span>
+				<h2 class="heading-medium">Submitted application</h2>
+				<p>You submitted your application on 12 March at 10:17am</p>
+				<p><a href="#">View application</a> | <a href="#">Download file</a></p>
+			</span></li>
+		<li class="processing"><span>
+				<h2 class="heading-medium">Assessment process</h2>
+				<p>We are assessing your application.</p>
+				<p>Up to 5 independent experts from business and academia will assess your application. They assess each application using the same critera. They will score each question and provide comments on your application.</p>
+				<p><a href="#">Find out more about the assessment process</a></p>
+			</span></li>
+		<li><span>
+				<h2 class="heading-medium">Decision notification</h2>
+				<p>You will be notified of our decision by <strong>25th April</strong></p>
+				<p>We will email you and your project partners by 25th April 2016 to tell you our decision. We will also record our decision here.</p>
+			</span></li>
+	</ul>
+
+	<hr />
+
+	<div class="grid-row">
+		<div class="column-half">
+			<ul class="application-progress-list">
+				<li class="successful">
+					
+					<span>
+						<h2 class="heading-medium">If your application is successful</h2>
+						<p>If your application is successful, we will send you a conditional grant offer letter. You will need to sign this and return it to us. You will also need to upload other documents:</p>
+						
+						<ul class="list-bullet">
+							<li>a collaboration agreement</li>
+							<li>financial forecasts</li>
+							<li>your bank (BACS) details</li>
+							<li>a detailed project plan</li>
+							<li>milestone and risk register</li>
+							<li>an exploitation plan</li>
+						</ul>
+
+					</span>
+
+				</li>
+			</ul>
+		</div>
+		<div class="column-half">
+			<ul class="application-progress-list">
+				<li class="unsuccessful">
+					<span>
+						<h2 class="heading-medium">If your application is unsuccessful</h2>
+						<p>If you are unsuccessful with your application, you will be able to see feedback from the assessors.</p>
+						<p>Sometimes your application will have scored well and will receive positive comments from the assessors, but not highly enough to be above the funding threshold for the competition.</p>
+					</span>
+				</li>
+			</ul>
+		</div>	
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class CreateApplicationControllerTest extends BaseUnitTest {
+public class ApplicationCreationControllerTest extends BaseUnitTest {
     @InjectMocks
-    private CreateApplicationController createApplicationController;
+    private ApplicationCreationController applicationCreationController;
 
     @Mock
     private Validator validator;
@@ -59,7 +59,7 @@ public class CreateApplicationControllerTest extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(createApplicationController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(applicationCreationController, new ErrorController())
                 .setViewResolvers(viewResolver())
                 .build();
 
@@ -226,9 +226,9 @@ public class CreateApplicationControllerTest extends BaseUnitTest {
                         .param("confirm-company-details", "")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists(CreateApplicationController.COMPANY_NAME))
-                .andExpect(cookie().exists(CreateApplicationController.COMPANY_ADDRESS))
-                .andExpect(cookie().exists(CreateApplicationController.ORGANISATION_SIZE))
+                .andExpect(cookie().exists(ApplicationCreationController.COMPANY_NAME))
+                .andExpect(cookie().exists(ApplicationCreationController.COMPANY_ADDRESS))
+                .andExpect(cookie().exists(ApplicationCreationController.ORGANISATION_SIZE))
                 .andExpect(view().name("redirect:/application/create/confirm-company"));
     }
 
@@ -337,19 +337,19 @@ public class CreateApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testInitializeApplication() throws Exception {
         mockMvc.perform(get("/application/create/initialize-application")
-                        .cookie(new Cookie(CreateApplicationController.COMPETITION_ID, "1"))
-                        .cookie(new Cookie(CreateApplicationController.USER_ID, "1"))
+                        .cookie(new Cookie(ApplicationCreationController.COMPETITION_ID, "1"))
+                        .cookie(new Cookie(ApplicationCreationController.USER_ID, "1"))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/application/" + applicationResource.getId()));
+                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite"));
     }
 
     @Test
     public void testConfirmCompany() throws Exception {
         mockMvc.perform(get("/application/create/confirm-company")
-                        .cookie(new Cookie(CreateApplicationController.COMPANY_ADDRESS, "{}"))
-                        .cookie(new Cookie(CreateApplicationController.COMPANY_NAME, "SOME NAME"))
-                        .cookie(new Cookie(CreateApplicationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
+                        .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
+                        .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
+                        .cookie(new Cookie(ApplicationCreationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("business"))
@@ -360,9 +360,9 @@ public class CreateApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testSaveCompany() throws Exception {
         mockMvc.perform(get("/application/create/save-company/")
-                        .cookie(new Cookie(CreateApplicationController.COMPANY_ADDRESS, "{}"))
-                        .cookie(new Cookie(CreateApplicationController.COMPANY_NAME, "SOME NAME"))
-                        .cookie(new Cookie(CreateApplicationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
+                        .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
+                        .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
+                        .cookie(new Cookie(ApplicationCreationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register?organisationId=" + organisationResource.getId()));

@@ -49,7 +49,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/application/create")
-public class CreateApplicationController extends AbstractApplicationController {
+public class ApplicationCreationController extends AbstractApplicationController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String USER_ID = "userId";
     public static final String COMPANY_HOUSE_COMPANY_ID = "companyId";
@@ -68,6 +68,7 @@ public class CreateApplicationController extends AbstractApplicationController {
     public static final String ORGANISATION_SIZE1 = "organisationSize";
     public static final String COMPANY_HOUSE_NAME = "companyHouseName";
     private static final String POSTCODE = "postcode";
+    private static final String APPLICATION_ID = "applicationId";
     @Value("${server.session.cookie.secure}")
     private static boolean cookieSecure;
     @Value("${server.session.cookie.http-only}")
@@ -84,6 +85,39 @@ public class CreateApplicationController extends AbstractApplicationController {
             cookie.setMaxAge(3600);
             response.addCookie(cookie);
         }
+    }
+
+    public static String getSerializedObject(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static <T> T getObjectFromJson(String json, Class<T> type) {
+        ObjectMapper mapper = new ObjectMapper();
+        T obj = null;
+        try {
+            obj = mapper.readValue(json, type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    public static String getFromCookie(HttpServletRequest request, String fieldName) {
+        if(request != null && request.getCookies() != null){
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(fieldName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     @Autowired
@@ -104,7 +138,8 @@ public class CreateApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping("/initialize-application")
-    public String initializeApplication(HttpServletRequest request) {
+    public String initializeApplication(HttpServletRequest request,
+                                        HttpServletResponse response) {
         Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
         Long userId = Long.valueOf(getFromCookie(request, USER_ID));
 
@@ -112,8 +147,12 @@ public class CreateApplicationController extends AbstractApplicationController {
         if (application == null || application.getId() == null) {
             log.error("Application not created with competitionID: " + competitionId);
             log.error("Application not created with userId: " + userId);
+        } else {
+            saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+            return String.format("redirect:/application/%s/contributors/invite", String.valueOf(application.getId()));
+            //return ApplicationController.redirectToApplication(application);
         }
-        return ApplicationController.redirectToApplication(application);
+        return null;
     }
 
     @RequestMapping("/create-organisation-type")
@@ -255,28 +294,6 @@ public class CreateApplicationController extends AbstractApplicationController {
         }
 
         return "create-application/find-business";
-    }
-
-    private String getSerializedObject(Object object) {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "";
-        try {
-            json = mapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            log.error(e);
-        }
-        return json;
-    }
-
-    private <T> T getObjectFromJson(String json, Class<T> type) {
-        ObjectMapper mapper = new ObjectMapper();
-        T obj = null;
-        try {
-            obj = mapper.readValue(json, type);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return obj;
     }
 
     /**
@@ -457,15 +474,6 @@ public class CreateApplicationController extends AbstractApplicationController {
 
     private List<CompanyHouseBusiness> searchCompanyHouse(String organisationName) {
         return organisationService.searchCompanyHouseOrganisations(organisationName);
-    }
-
-    private String getFromCookie(HttpServletRequest request, String fieldName) {
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(fieldName)) {
-                return cookie.getValue();
-            }
-        }
-        return null;
     }
 
     private void searchPostcodes(CreateApplicationForm form) {

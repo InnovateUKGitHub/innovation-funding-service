@@ -20,6 +20,7 @@ input[disabled],
 div.readonly{
     color: $black;
     background: $grey-4;
+    border: 1px solid $border-colour;
 }
 
 .form-group{
@@ -27,12 +28,22 @@ div.readonly{
         text-align: right;
     }
 }
+tr.form-group {
+  float:none;
+  td:first-child {
+    padding-left:1.25em;
+  }
+}
+.field-error {
+  @include box-shadow(none);
+  border: 2px solid $error-colour;
+}
 
 table td input{
-    width:100%; 
+    width:100%;
     @extend .form-control;
     @include box-sizing(border-box);
-    
+
     &[type="number"]{
         text-align: right;
     }
@@ -87,7 +98,7 @@ Used to define input widths, so they can be more specific to digits that need to
     width: 150px;
 }
 .width-large{
-    width: 200px; 
+    width: 200px;
 }
 .width-full{
     width: 100%;
@@ -100,7 +111,7 @@ select.form-control + button.button {
 
 
 table td{
-    
+
     &.numeric{
         text-align: right;
 
@@ -136,7 +147,7 @@ table td{
         border-bottom:none;
         background: $grey-4 0 0 no-repeat;
         min-height:60px;
-    } 
+    }
 
     .assignee {
         padding:20px 15px  5px;
@@ -147,7 +158,7 @@ table td{
     img + .assignee {
         padding:20px 15px 0 55px;
     }
-    
+
 
     .textarea-header + textarea,
     .textarea-header + [contenteditable="true"],
@@ -169,7 +180,7 @@ table td{
         overflow:auto; //needed for resize [contenteditable] div
     }
 
-   
+
     .textarea-footer {
         font-size:16px;
         padding: 10px 0px;
@@ -213,7 +224,5 @@ select{
 
 .feedback .textarea-wrapped textarea{
         border: 1px solid $border-colour;
-    
+
 }
-
-

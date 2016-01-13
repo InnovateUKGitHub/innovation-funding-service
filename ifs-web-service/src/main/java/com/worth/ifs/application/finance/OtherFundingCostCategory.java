@@ -55,4 +55,9 @@ public class OtherFundingCostCategory implements CostCategory {
             }
         }
     }
+
+    @Override
+    public boolean excludeFromTotalCost() {
+        return true;
+    }
 }

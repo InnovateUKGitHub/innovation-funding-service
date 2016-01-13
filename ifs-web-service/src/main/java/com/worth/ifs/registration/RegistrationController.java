@@ -1,6 +1,6 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.CreateApplicationController;
+import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
@@ -8,10 +8,11 @@ import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.login.LoginController;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class RegistrationController {
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
 
+    @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -52,6 +56,11 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(user != null){
+            return LoginController.getRedirectUrlForUser(user);
+        }
+
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
@@ -87,6 +96,11 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(user != null){
+            return LoginController.getRedirectUrlForUser(user);
+        }
+
         String destination = "registration-register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
@@ -131,7 +145,7 @@ public class RegistrationController {
     }
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
-        CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
+        ApplicationCreationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
