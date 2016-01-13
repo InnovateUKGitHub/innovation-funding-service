@@ -27,8 +27,7 @@ IFS.unsavedChanges = (function(){
             });
 
              jQuery(window).bind('beforeunload', function(e){
-                if(formSubmit === false &&
-                    jQuery('.form-serialize-js').serialize()!=jQuery('.form-serialize-js').data('serializedFormState')){
+                if(formSubmit === false && jQuery('.form-serialize-js').serialize()!=jQuery('.form-serialize-js').data('serializedFormState')){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";
                 } else{
                     e=null;
