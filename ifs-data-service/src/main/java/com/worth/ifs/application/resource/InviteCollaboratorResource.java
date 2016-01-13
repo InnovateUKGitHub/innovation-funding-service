@@ -1,5 +1,8 @@
 package com.worth.ifs.application.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Represents an invite for a Collaborator to join an Application
  */
@@ -25,5 +28,27 @@ public class InviteCollaboratorResource {
 
     public String getRecipientEmail() {
         return recipientEmail;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InviteCollaboratorResource that = (InviteCollaboratorResource) o;
+
+        return new EqualsBuilder()
+                .append(recipientName, that.recipientName)
+                .append(recipientEmail, that.recipientEmail)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(recipientName)
+                .append(recipientEmail)
+                .toHashCode();
     }
 }

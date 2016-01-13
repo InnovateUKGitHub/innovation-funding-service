@@ -39,3 +39,13 @@ include::{snippets}/application/create-application/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/create-application/curl-request.adoc[]
+
+=== Invite Collaborator
+==== Request
+include::{snippets}/application/invite-collaborator/http-request.adoc[]
+
+==== Response
+include::{snippets}/application/invite-collaborator/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/invite-collaborator/curl-request.adoc[]

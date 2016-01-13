@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static com.worth.ifs.util.JsonStatusResponse.accepted;
 import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
-import static com.worth.ifs.util.JsonStatusResponse.ok;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -105,7 +105,7 @@ public class ApplicationController {
 
         return notificationResult.mapLeftOrRight(
                 failure -> internalServerError("Unable to send Notification to invitee", response),
-                success -> ok("Notification sent successfully")
+                success -> accepted("Notification sent successfully", response)
         );
     }
 
