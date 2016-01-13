@@ -53,8 +53,12 @@ IFS.repeatableRows = (function() {
             jQuery.get(dynamicHref, function() {
                 var costRowsId = amendRowsLink.attr('data-cost-row');
                 var costRowsToDelete = jQuery('[data-cost-row=' + costRowsId + ']');
-                costRowsToDelete.find('[data-calculation-fields],[data-calculation-input]').val(0).attr('data-calculation-rawvalue',0).trigger('change');
+                var container = amendRowsLink.closest('[data-repeatable-container]');
                 costRowsToDelete.remove();
+                container.find('[data-calculation-fields]').each(function(){
+                    var calculationFields = jQuery(this).attr('data-calculation-fields');
+                    jQuery(calculationFields).trigger('change');
+                });
             });
             e.preventDefault();
             return false;
