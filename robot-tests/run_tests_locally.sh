@@ -34,18 +34,29 @@ function stopServers {
 }
 
 function resetDB {
-    echo "********INSERT THE TEST DATABASE********"
-    cd ${scriptDir}
-    `mysql -u${mysqlUser} -p${mysqlPassword} ifs < testDataDump.sql`
+    echo "********DROP THE DATABASE********"
+    `mysql -u${mysqlUser} -p${mysqlPassword} ifs -e"DROP DATABASE ifs"`
+    `mysql -u${mysqlUser} -p${mysqlPassword} ifs -e"CREATE DATABASE ifs CHARACTER SET utf8ls"`
 }
 
 function buildAndDeploy {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
     cd ${dataServiceCodeDir}
+    ## Before we start the build we need to have an acceptance test build environment
+    echo "********SWAPPING IN THE ACCEPTANCE TEST BUILD PROPERTIES********"
+    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/acceptance"/' dev-build.gradle > acceptance.gradle.tmp
+    mv dev-build.gradle dev-build.gradle.tmp
+    mv acceptance.gradle.tmp dev-build.gradle
     ./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
     ./gradlew flywayMigrate
+    ## Replace the acceptance test build environment with the one we had before.
+    echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
+    mv dev-build.gradle.tmp dev-build.gradle
+
     cd ${webServiceCodeDir}
     ./gradlew clean deployToTomcat
+    
+
 }
 
 function startServers {
