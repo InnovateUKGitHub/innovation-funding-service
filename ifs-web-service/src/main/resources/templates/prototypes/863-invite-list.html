@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	
+
+	<div th:if="${param.filterStatus != null}" th:remove="tag">
+		<style>
+			li.status{
+				display: none;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Open'}">
+			li.status.comp-status-open{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Closed'}">
+			li.status.comp-status-closed{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'In assessment'}">
+			li.status.comp-status-assess{
+				display: block;
+			}
+		</style>
+	</div>
+
+</head>
+<body class="comp-assessors">
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assessors'}, ${'/prototypes/863-invite-assessors'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Invite list'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-summary" th:remove="tag" />
+
+	<h2 class="heading-large">Confirm invites</h2>
+
+	<div class="grid-row highlight-panel">
+		<div class="column-half">
+			<p class="no-margin"><span class="heading-large">10</span> <strong>assessors</strong></p>	
+		</div>
+		<div class="column-half alignright-button">
+			<a href="#" class="button">Send invites to assessors</a>
+		</div>
+	</div>
+
+	<h3 class="heading-small"><span class="heading-large">4</span> Current assessors</h3>
+		
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 50%">Assessor</th>
+				<th style="width: 50%">Contract and DOI</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Earnest	Massey</td>
+				<td><span class="yes">Yes</span></td>
+			</tr>
+			<tr>
+				<td>Oliver Romero</td>
+				<td><span class="yes">Yes</span></td>
+			</tr>
+			<tr>
+				<td>Jeffrey	Carlson</td>
+				<td><span class="no">No</span></td>
+			</tr>
+			<tr>
+				<td>Jonathan Copeland</td>
+				<td><span class="yes">Yes</span></td>
+			</tr>
+			
+		</tbody>
+	</table>
+
+	<h3 class="heading-small extra-margin"><span class="heading-large">6</span> New assessors</h3>
+		
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 50%">Assessor</th>
+				<th style="width: 50%">Email</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Bill Knightly</td>
+				<td>b.knightly@assessor.co.uk</td>
+			</tr>
+			<tr>
+				<td>Dave Redford</td>
+				<td>d.redford@assessor.co.uk</td>
+			</tr>
+			<tr>
+				<td>Peter Newman</td>
+				<td>p.newman@assessor.co.uk</td>
+			</tr>
+			<tr>
+				<td>Ryan Brown</td>
+				<td>r.brown@assessor.co.uk</td>
+			</tr>
+			<tr>
+				<td>Tim Townsend</td>
+				<td>t.townsend@assessor.co.uk</td>
+			</tr>
+			<tr>
+				<td>Vince Wilson</td>
+				<td>v.wilson@assessor.co.uk</td>
+			</tr>
+			
+		</tbody>
+	</table>
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
