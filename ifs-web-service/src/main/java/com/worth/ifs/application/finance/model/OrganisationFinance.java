@@ -31,6 +31,10 @@ public class OrganisationFinance {
 
     CostItemFactory costItemFactory = new CostItemFactory();
 
+    public OrganisationFinance() {
+
+    }
+
     public OrganisationFinance(Long applicationFinanceId, Organisation organisation, List<Cost> costs) {
         this.applicationFinanceId = applicationFinanceId;
         this.organisation = organisation;
@@ -91,21 +95,7 @@ public class OrganisationFinance {
         costCategory.addCost(costItem);
     }
 
-    public BigDecimal getTotal() {
-        BigDecimal total = costCategories.entrySet().stream()
-                .filter(cat -> cat != null)
-                .filter(cat -> cat.getValue() != null)
-                .filter(cat -> cat.getValue().getTotal() != null)
-                .filter(cat -> !cat.getValue().excludeFromTotalCost())
-                .map(cat -> cat.getValue().getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if(total == null) {
-            return new BigDecimal(0);
-        }
-
-        return total;
-    }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {
         return costCategories;
@@ -123,16 +113,31 @@ public class OrganisationFinance {
         return applicationFinanceId;
     }
 
+    public Long getGrantClaimPercentageId() {
+        return grantClaimPercentageId;
+    }
+
+    public BigDecimal getTotal() {
+        BigDecimal total = costCategories.entrySet().stream()
+                .filter(cat -> cat != null)
+                .filter(cat -> cat.getValue() != null)
+                .filter(cat -> cat.getValue().getTotal() != null)
+                .filter(cat -> !cat.getValue().excludeFromTotalCost())
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if(total == null) {
+            return new BigDecimal(0);
+        }
+
+        return total;
+    }
+
     public Integer getGrantClaimPercentage() {
         if(grantClaimPercentage == null) {
             return 0;
         }
         return grantClaimPercentage;
-    }
-
-    public Long getGrantClaimPercentageId() {
-
-        return grantClaimPercentageId;
     }
 
     public BigDecimal getTotalFundingSought() {
