@@ -11,25 +11,45 @@ cd ../ifs-data-service/src/main/resources/db/migration/
 rm -rf *
 cp ../../../../../../data-dumps/originalSchemaOnly.sql V1__BaseVersion.sql
 cp ../../../../../../data-dumps/originalReferenceDataOnly.sql V2__ReferenceData.sql
+#3) Copy the test data across
+cd ../integration
+touch V1_1__IntegrationInitial.sql
+cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
+cd ../development
+touch V1_1__DevelopmentInitial.sql
+cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
+cd ../acceptance
+touch V1_1__AcceptanceInitial.sql
+cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
+touch V2_1__RemoveCosts.sql
+echo "DELETE FROM cost_value WHERE cost_id = 13" >  V2_1__RemoveCosts.sql
+echo "DELETE FROM cost WHERE id IN(2,4,12,13,19,20)" > V2_1__RemoveCosts.sql
+
+
 #3) Drop the old database
-mysql -uifs -pifs -e"DROP DATABASE ifs"
-mysql -uifs -pifs -e"CREATE DATABASE ifs DEFAULT CHARACTER SET utf8"
+#mysql -uifs -pifs -e"DROP DATABASE ifs"
+#mysql -uifs -pifs -e"CREATE DATABASE ifs DEFAULT CHARACTER SET utf8"
 #3) Run the migration
-cd ../../../../../
-./gradlew flywayMigrate
+#cd ../../../../../
+#./gradlew flywayMigrate
 #4) Apply the original test data to the new database
-cd ../data-dumps/
-mysql -uifs -pifs ifs < originalTestDataOnly.sql
+#cd ../data-dumps/
+#mysql -uifs -pifs ifs < originalTestDataOnly.sql
+
+#5) Remove entries for the acceptance tests
+#mysql -uifs -pifs ifs -e"DELETE FROM cost_value WHERE cost_id = 13"
+#mysql -uifs -pifs ifs -e"DELETE FROM cost WHERE id IN(2,4,12,13,19,20)"
+
+#mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > newDatabaseWithTestData.sql
+
 #5) Export the database this is the baseline for a test environment
-mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > newDatabaseWithTestData.sql
+
 #6) Regenerate the acceptance tests database
-cd ../robot-tests
-mysql -uifs -pifs ifs -e"DELETE FROM cost_value WHERE cost_id = 13"
-mysql -uifs -pifs ifs -e"DELETE FROM cost WHERE id IN(2,4,12,13,19,20)"
-mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > testDataDump.sql
-#7) Fix the integration tests.
-cd ../
-cp data-dumps/newDatabaseWithTestData.sql  ifs-data-service/src/test/resources/integrationData.sql
+#cd ../robot-tests
+#mysql -uifs -pifs ifs -e"DELETE FROM cost_value WHERE cost_id = 13"
+#mysql -uifs -pifs ifs -e"DELETE FROM cost WHERE id IN(2,4,12,13,19,20)"
+#mysqldump --add-drop-table --extended-insert=false ifs -uifs -pifs > testDataDump.sql
+
 
 
 
