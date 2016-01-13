@@ -25,8 +25,8 @@ touch V1_1__AcceptanceInitial.sql
 echo "-- Initial empty acceptance data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__AcceptanceInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
 touch V2_1__RemoveCosts.sql
-echo "DELETE FROM cost_value WHERE cost_id = 13" >  V2_1__RemoveCosts.sql
-echo "DELETE FROM cost WHERE id IN(2,4,12,13,19,20)" >> V2_1__RemoveCosts.sql
+echo "DELETE FROM cost_value WHERE cost_id = 13" >  V2_2__RemoveCosts.sql
+echo "DELETE FROM cost WHERE id IN(2,4,12,13,19,20)" >> V2_2__RemoveCosts.sql
 cd ../../../../../../
 
 #========
@@ -40,6 +40,10 @@ cd ../../../../../../
 #cd ../data-dumps
 #rm originalReferenceDataOnly.sql originalSchemaOnly.sql originalTestDataOnly.sql
 #cd ..
+#mysql -uifs -pifs -e"DROP DATABASE ifs"
+#mysql -uifs -pifs -e"DROP DATABASE ifs_test"
+#mysql -uifs -pifs -e"CREATE DATABASE ifs_test CHARACTER SET utf8"
+#mysql -uifs -pifs -e"CREATE DATABASE ifs CHARACTER SET utf8"
 
 
 
