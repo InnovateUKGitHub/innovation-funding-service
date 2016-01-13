@@ -1,33 +1,25 @@
-package com.worth.ifs.invite.domain;
+package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.user.domain.Organisation;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-public class InviteOrganisation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class InviteOrganisationResource {
     private Long id;
-
     private String organisationName;
-
-    @ManyToOne
-    @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy = "inviteOrganisation")
-    private List<Invite> invites;
+    List<InviteResource> inviteResources;
 
-    public InviteOrganisation() {
+    public InviteOrganisationResource() {
 
     }
 
-    public InviteOrganisation(String organisationName, Organisation organisation, List<Invite> invites) {
+    public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {
+        this.id = id;
         this.organisationName = organisationName;
         this.organisation = organisation;
-        this.invites = invites;
+        this.inviteResources = inviteResources;
     }
 
     public Long getId() {
@@ -54,11 +46,11 @@ public class InviteOrganisation {
         this.organisation = organisation;
     }
 
-    public List<Invite> getInvites() {
-        return invites;
+    public List<InviteResource> getInviteResources() {
+        return inviteResources;
     }
 
-    public void setInvites(List<Invite> invites) {
-        this.invites = invites;
+    public void setInviteResources(List<InviteResource> inviteResources) {
+        this.inviteResources = inviteResources;
     }
 }
