@@ -3,9 +3,9 @@
 cd ../ifs-data-service/
 ./gradlew flywayClean flywayMigrate;
 cd ../data-dumps/
-mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version > originalSchemaOnly.sql
-mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role > originalReferenceDataOnly.sql
-mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version > originalTestDataOnly.sql
+mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version --default-character-set=utf-8 > originalSchemaOnly.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role --default-character-set=utf-8 > originalReferenceDataOnly.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version --default-character-set=utf-8 > originalTestDataOnly.sql
 #2) Baseline the scripts
 cd ../ifs-data-service/src/main/resources/db/migration/
 rm -rf *
