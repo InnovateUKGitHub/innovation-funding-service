@@ -5,11 +5,15 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -17,6 +21,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,12 +34,15 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
@@ -43,6 +51,8 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -56,6 +66,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     protected ApplicationService supplyServiceUnderTest() {
         return new ApplicationServiceImpl();
     }
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
 
     @Test
     public void testCreateApplicationByApplicationNameForUserIdAndCompetitionId() {
@@ -539,4 +552,27 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(result.getLeft().is(FORM_INPUT_RESPONSE_NOT_FOUND));
     }
 
+    @Test
+    public void testInviteCollaboratorToApplication() {
+
+        Notification expectedNotificationToBeSent = newNotification().
+                withMessageKey(INVITE_COLLABORATOR).
+                withArguments(asMap("applicationName", "My Application", "inviteUrl", "http://TODO.com")).
+                withSource(systemNotificationSourceMock).
+                withTargets(asList(new ExternalUserNotificationTarget("My Collaborator", "collaborator@example.com"))).
+                build();
+
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(newApplication().with(name("My Application")).build());
+        when(notificationServiceMock.sendNotification(expectedNotificationToBeSent, EMAIL)).thenReturn(success(expectedNotificationToBeSent));
+
+        ServiceResult<Notification> notificationResult =
+                service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
+
+        assertTrue(notificationResult.isRight());
+
+        assertEquals(expectedNotificationToBeSent, notificationResult.getRight());
+
+        verify(notificationServiceMock).sendNotification(expectedNotificationToBeSent, EMAIL);
+
+    }
 }

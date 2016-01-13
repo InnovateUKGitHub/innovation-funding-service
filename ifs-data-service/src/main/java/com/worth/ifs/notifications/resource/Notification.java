@@ -1,5 +1,7 @@
 package com.worth.ifs.notifications.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
@@ -55,10 +57,38 @@ public class Notification {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Notification that = (Notification) o;
+
+        return new EqualsBuilder()
+                .append(from, that.from)
+                .append(to, that.to)
+                .append(messageKey, that.messageKey)
+                .append(arguments, that.arguments)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(from)
+                .append(to)
+                .append(messageKey)
+                .append(arguments)
+                .toHashCode();
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .append("messageKey", messageKey)
-            .append("arguments", arguments)
-            .toString();
+                .append("from", from)
+                .append("to", to)
+                .append("messageKey", messageKey)
+                .append("arguments", arguments)
+                .toString();
     }
 }
