@@ -91,6 +91,10 @@ public class ServiceResult<T> {
         return success(value);
     }
 
+    public static <T> ServiceResult<T> fromEither(Either<ServiceFailure, T> value) {
+        return new ServiceResult<>(value);
+    }
+
     public static <T, R> ServiceResult<T> anyFailures(List<ServiceResult<R>> results, Supplier<ServiceResult<T>> failureSupplier, Supplier<ServiceResult<T>> successSupplier) {
         return results.stream().anyMatch(ServiceResult::isLeft) ? failureSupplier.get() : successSupplier.get();
     }

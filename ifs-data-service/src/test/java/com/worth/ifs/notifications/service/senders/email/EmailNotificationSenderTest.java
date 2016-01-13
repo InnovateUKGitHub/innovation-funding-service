@@ -1,10 +1,10 @@
 package com.worth.ifs.notifications.service.senders.email;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.email.resource.EmailAddressResource;
-import com.worth.ifs.notifications.resource.NotificationResource;
-import com.worth.ifs.notifications.resource.UserNotificationSourceResource;
-import com.worth.ifs.notifications.resource.UserNotificationTargetResource;
+import com.worth.ifs.email.resource.EmailAddress;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.UserNotificationSource;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.User;
@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
-import static com.worth.ifs.notifications.builders.NotificationResourceBuilder.newNotificationResource;
+import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static com.worth.ifs.transactional.ServiceResult.success;
@@ -51,11 +51,11 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         User recipientUser1 = newUser().with(name("Recipient 1")).withEmailAddress("recipient1@email.com").build();
         User recipientUser2 = newUser().with(name("Recipient 2")).withEmailAddress("recipient2@email.com").build();
 
-        UserNotificationSourceResource sender = new UserNotificationSourceResource(senderUser);
-        UserNotificationTargetResource recipient1 = new UserNotificationTargetResource(recipientUser1);
-        UserNotificationTargetResource recipient2 = new UserNotificationTargetResource(recipientUser2);
+        UserNotificationSource sender = new UserNotificationSource(senderUser);
+        UserNotificationTarget recipient1 = new UserNotificationTarget(recipientUser1);
+        UserNotificationTarget recipient2 = new UserNotificationTarget(recipientUser2);
 
-        NotificationResource notification = newNotificationResource().
+        Notification notification = newNotification().
                 withMessageKey(MessageKeys.DUMMY_MESSAGE_KEY).
                 withSource(sender).
                 withTargets(asList(recipient1, recipient2)).
@@ -69,14 +69,14 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain", notification.getArguments())).thenReturn(success("Plain text body 2"));
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html", notification.getArguments())).thenReturn(success("HTML body 2"));
 
-        EmailAddressResource senderEmail = EmailAddressResourceResolver.fromNotificationSource(sender);
-        EmailAddressResource recipient1Email = EmailAddressResourceResolver.fromNotificationTarget(recipient1);
-        EmailAddressResource recipient2Email = EmailAddressResourceResolver.fromNotificationTarget(recipient2);
+        EmailAddress senderEmail = EmailAddressResolver.fromNotificationSource(sender);
+        EmailAddress recipient1Email = EmailAddressResolver.fromNotificationTarget(recipient1);
+        EmailAddress recipient2Email = EmailAddressResolver.fromNotificationTarget(recipient2);
 
         when(emailServiceMock.sendEmail(senderEmail, asList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(success(asList(recipient1Email)));
         when(emailServiceMock.sendEmail(senderEmail, asList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(success(asList(recipient2Email)));
 
-        ServiceResult<NotificationResource> results = notificationSender.sendNotification(notification);
+        ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isRight());
 
         verify(emailServiceMock).sendEmail(senderEmail, asList(recipient1Email), "My subject", "Plain text body", "HTML body");

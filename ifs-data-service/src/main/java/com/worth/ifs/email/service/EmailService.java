@@ -1,6 +1,7 @@
 package com.worth.ifs.email.service;
 
-import com.worth.ifs.email.resource.EmailAddressResource;
+import com.worth.ifs.email.resource.EmailAddress;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.transactional.ServiceResult;
 
 import java.util.List;
@@ -10,5 +11,6 @@ import java.util.List;
  */
 public interface EmailService {
 
-    ServiceResult<List<EmailAddressResource>> sendEmail(EmailAddressResource from, List<EmailAddressResource> to, String subject, String plainTextBody, String htmlBody);
+    @NotSecured("TODO")
+    ServiceResult<List<EmailAddress>> sendEmail(EmailAddress from, List<EmailAddress> to, String subject, String plainTextBody, String htmlBody);
 }

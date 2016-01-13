@@ -1,7 +1,7 @@
 package com.worth.ifs.email.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.email.resource.EmailAddressResource;
+import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
@@ -35,8 +35,8 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
     @Test
     public void testSendEmail() {
 
-        EmailAddressResource from = newEmailAddressResource().with(name("From User")).withEmail("from@email.com").build();
-        List<EmailAddressResource> to = newEmailAddressResource().with(names("To User 1", "To User 2")).withEmail("to1@email.com", "to2@email.com").build(2);
+        EmailAddress from = newEmailAddressResource().with(name("From User")).withEmail("from@email.com").build();
+        List<EmailAddress> to = newEmailAddressResource().with(names("To User 1", "To User 2")).withEmail("to1@email.com", "to2@email.com").build(2);
 
         SilEmailAddress silEmailFrom = new SilEmailAddress("From User", "from@email.com");
         SilEmailAddress silEmailTo1 = new SilEmailAddress("To User 1", "to1@email.com");

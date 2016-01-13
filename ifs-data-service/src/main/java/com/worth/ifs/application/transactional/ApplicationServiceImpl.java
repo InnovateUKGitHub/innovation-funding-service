@@ -10,10 +10,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
@@ -25,8 +22,11 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -48,18 +48,20 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.transactional.ServiceResult.fromEither;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static java.util.Arrays.asList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -75,30 +77,51 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         UNABLE_TO_FIND_FILE, //
     }
 
+    enum Notifications {
+        INVITE_COLLABORATOR
+    }
+
     @Autowired
     private FileService fileService;
+
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+
     @Autowired
     private FormInputRepository formInputRepository;
+
     @Autowired
     ApplicationRepository applicationRepository;
+
     @Autowired
     ProcessRoleRepository processRoleRepository;
+
     @Autowired
     ApplicationStatusRepository applicationStatusRepository;
+
     @Autowired
     UserRepository userRepository;
+
     @Autowired
     QuestionService questionService;
+
     @Autowired
     RoleRepository roleRepository;
+
     @Autowired
     OrganisationRepository organisationRepository;
+
     @Autowired
     CompetitionsRepository competitionRepository;
+
     @Autowired
     ApplicationResourceAssembler applicationResourceAssembler;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -438,4 +461,21 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return new ApplicationResource(application);
     }
 
+    @Override
+    public ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite) {
+
+        return fromEither(getApplication(applicationId)).map(application -> {
+
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new ExternalUserNotificationTarget(invite.getRecipientName(), invite.getRecipientEmail());
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("applicationName", application.getName());
+            notificationArguments.put("inviteUrl", "http://TODO.com");
+
+            Notification notification = new Notification(from, asList(to), INVITE_COLLABORATOR, notificationArguments);
+
+            return notificationService.sendNotification(notification, EMAIL);
+        });
+    }
 }

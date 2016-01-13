@@ -1,13 +1,13 @@
 package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.notifications.resource.NotificationResource;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static com.worth.ifs.notifications.builders.NotificationResourceBuilder.newNotificationResource;
+import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
 import static com.worth.ifs.transactional.ServiceResult.success;
@@ -45,11 +45,11 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
     @Test
     public void testSendNotificationByEmail() {
 
-        NotificationResource notificationToSend = newNotificationResource().build();
+        Notification notificationToSend = newNotification().build();
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
 
-        ServiceResult<NotificationResource> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isRight());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -59,12 +59,12 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
     @Test
     public void testSendNotificationByEmailAndLogging() {
 
-        NotificationResource notificationToSend = newNotificationResource().build();
+        Notification notificationToSend = newNotification().build();
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
         when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
 
-        ServiceResult<NotificationResource> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
         assertTrue(result.isRight());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -74,11 +74,11 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
     @Test
     public void testSendNotificationByEmailDeclaredTwiceButOnlySendOnce() {
 
-        NotificationResource notificationToSend = newNotificationResource().build();
+        Notification notificationToSend = newNotification().build();
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
 
-        ServiceResult<NotificationResource> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
         assertTrue(result.isRight());
 
         verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
@@ -93,8 +93,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         service.constructServicesByMediaMap();
 
-        NotificationResource notificationToSend = newNotificationResource().build();
-        ServiceResult<NotificationResource> result = service.sendNotification(notificationToSend, EMAIL);
+        Notification notificationToSend = newNotification().build();
+        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isLeft());
     }
 }

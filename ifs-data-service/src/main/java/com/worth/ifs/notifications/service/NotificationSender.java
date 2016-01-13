@@ -1,7 +1,7 @@
 package com.worth.ifs.notifications.service;
 
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
-import com.worth.ifs.notifications.resource.NotificationResource;
 import com.worth.ifs.transactional.ServiceResult;
 
 /**
@@ -11,5 +11,5 @@ public interface NotificationSender {
 
     NotificationMedium getNotificationMedium();
 
-    ServiceResult<NotificationResource> sendNotification(NotificationResource notification);
+    ServiceResult<Notification> sendNotification(Notification notification);
 }

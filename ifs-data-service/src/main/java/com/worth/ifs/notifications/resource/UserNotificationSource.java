@@ -5,20 +5,21 @@ import com.worth.ifs.user.domain.User;
 /**
  * Represents a User as the source of a given Notification
  */
-public class UserNotificationSourceResource implements NotificationSource {
+public class UserNotificationSource implements NotificationSource {
 
     private User user;
 
-    public UserNotificationSourceResource(User user) {
+    public UserNotificationSource(User user) {
         this.user = user;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     @Override
     public String getName() {
         return user.getName();
+    }
+
+    @Override
+    public String getEmailAddress() {
+        return user.getEmail();
     }
 }

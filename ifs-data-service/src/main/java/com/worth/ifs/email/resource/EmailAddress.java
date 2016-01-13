@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  *
  */
-public class EmailAddressResource {
+public class EmailAddress {
 
     private String emailAddress;
     private String name;
@@ -14,10 +14,10 @@ public class EmailAddressResource {
     /**
      * For builder use only
      */
-    public EmailAddressResource() {
+    public EmailAddress() {
     }
 
-    public EmailAddressResource(String emailAddress, String name) {
+    public EmailAddress(String emailAddress, String name) {
         this.emailAddress = emailAddress;
         this.name = name;
     }
@@ -36,7 +36,7 @@ public class EmailAddressResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        EmailAddressResource that = (EmailAddressResource) o;
+        EmailAddress that = (EmailAddress) o;
 
         return new EqualsBuilder()
                 .append(emailAddress, that.emailAddress)

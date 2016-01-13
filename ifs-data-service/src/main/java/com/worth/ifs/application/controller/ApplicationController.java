@@ -4,15 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationResourceHateoas;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
+import static com.worth.ifs.util.JsonStatusResponse.ok;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -85,6 +93,20 @@ public class ApplicationController {
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj);
+    }
+
+    @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
+    public JsonStatusResponse inviteCollaborator(
+            @PathVariable("applicationId") final Long applicationId,
+            @RequestBody InviteCollaboratorResource invite,
+            HttpServletResponse response) {
+
+        ServiceResult<Notification> notificationResult = applicationService.inviteCollaboratorToApplication(applicationId, invite);
+
+        return notificationResult.mapLeftOrRight(
+                failure -> internalServerError("Unable to send Notification to invitee", response),
+                success -> ok("Notification sent successfully")
+        );
     }
 
 }

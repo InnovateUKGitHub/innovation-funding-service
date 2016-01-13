@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A DTO reporesenting a message that we wish to send out via one or more mediums.  The NotificationResource itself holds the
+ * A DTO reporesenting a message that we wish to send out via one or more mediums.  The Notification itself holds the
  * wherewithalls with which to construct an appropriate message based on the mediums chosen to send the notification via.
  */
-public class NotificationResource {
+public class Notification {
 
     private NotificationSource from;
 
@@ -28,10 +28,10 @@ public class NotificationResource {
     /**
      * For builder use only
      */
-    public NotificationResource() {
+    public Notification() {
     }
 
-    public NotificationResource(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> arguments) {
+    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> arguments) {
         this.from = from;
         this.to = to;
         this.messageKey = messageKey;

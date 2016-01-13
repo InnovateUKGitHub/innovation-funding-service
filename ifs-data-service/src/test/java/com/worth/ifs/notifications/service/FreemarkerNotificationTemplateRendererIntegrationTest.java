@@ -1,8 +1,8 @@
 package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.notifications.resource.UserNotificationSourceResource;
-import com.worth.ifs.notifications.resource.UserNotificationTargetResource;
+import com.worth.ifs.notifications.resource.UserNotificationSource;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     @Test
     public void testTemplateRender() throws URISyntaxException, IOException {
 
-        UserNotificationSourceResource notificationSource = new UserNotificationSourceResource(newUser().build());
-        UserNotificationTargetResource notificationTarget = new UserNotificationTargetResource(newUser().build());
+        UserNotificationSource notificationSource = new UserNotificationSource(newUser().build());
+        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().build());
 
         Map<String, Object> templateArguments = asMap("applicationName", "My Application", "inviteUrl", "http://acceptinvite.com");
 

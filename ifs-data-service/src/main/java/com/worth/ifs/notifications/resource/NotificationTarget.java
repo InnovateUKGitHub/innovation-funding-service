@@ -6,4 +6,6 @@ package com.worth.ifs.notifications.resource;
 public interface NotificationTarget {
 
     String getName();
+
+    String getEmailAddress();
 }

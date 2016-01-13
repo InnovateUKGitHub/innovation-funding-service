@@ -3,13 +3,12 @@ package com.worth.ifs.application.transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
@@ -84,4 +83,6 @@ public interface ApplicationService {
             JsonNode jsonObj);
 
 
+    @NotSecured("TODO")
+    ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite);
 }

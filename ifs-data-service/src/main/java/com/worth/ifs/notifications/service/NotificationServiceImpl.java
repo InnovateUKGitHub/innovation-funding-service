@@ -1,7 +1,7 @@
 package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.notifications.resource.NotificationMedium;
-import com.worth.ifs.notifications.resource.NotificationResource;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,12 +44,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public ServiceResult<NotificationResource> sendNotification(NotificationResource notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
+    public ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
 
         Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
-        List<ServiceResult<NotificationResource>> results = simpleMap(allMediaToSendNotificationBy, medium ->
-                getNotificationSender(medium).map(serviceForMedium -> serviceForMedium.sendNotification(notification)));
+        List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
+                getNotificationSender(medium).map(serviceForMedium ->
+                        serviceForMedium.sendNotification(notification)));
 
         return anyFailures(results, failureSupplier(UNABLE_TO_SEND_NOTIFICATIONS), successSupplier(notification));
     }

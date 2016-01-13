@@ -1,7 +1,7 @@
 package com.worth.ifs.notifications.service.senders.logging;
 
 import com.worth.ifs.notifications.resource.NotificationMedium;
-import com.worth.ifs.notifications.resource.NotificationResource;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.service.NotificationSender;
 import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.logging.Log;
@@ -25,7 +25,7 @@ public class LoggingNotificationSender implements NotificationSender {
     }
 
     @Override
-    public ServiceResult<NotificationResource> sendNotification(NotificationResource notification) {
+    public ServiceResult<Notification> sendNotification(Notification notification) {
         LOG.debug("Sending Notification " + notification);
         return success(notification);
     }
