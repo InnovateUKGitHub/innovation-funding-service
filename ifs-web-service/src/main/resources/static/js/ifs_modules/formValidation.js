@@ -97,6 +97,7 @@ IFS.formValidation = (function(){
             var formGroup = field.closest('.form-group');
             if(formGroup){
                 field.addClass('field-error');
+
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
                 var errorEl = formGroup.find('.error-message:contains("'+message+'")');
                 if(errorEl.length === 0){
@@ -110,6 +111,7 @@ IFS.formValidation = (function(){
             var formGroup = field.closest('.form-group.error');
             if(formGroup){
               field.removeClass('field-error');
+
                formGroup.find('.error-message:contains("'+message+'")').remove();
 
                //if this was the last error we remove this one
