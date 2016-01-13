@@ -1,13 +1,16 @@
 package com.worth.ifs.util;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.function.Function;
 
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -15,6 +18,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJson
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,8 +31,8 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
     private long applicationId = 456L;
     private ProcessRole returnedProcessRole = newProcessRole().withId(789L).build();
 
-    private Function<ProcessRole, Either<JsonStatusResponse, JsonStatusResponse>> doWithProcessRoleFn =
-            processRole -> Either.right(JsonStatusResponse.ok("Success with " + processRole.getId()));
+    private Function<ProcessRole, ServiceResult<JsonStatusResponse>> doWithProcessRoleFn =
+            processRole -> success(JsonStatusResponse.ok("Success with " + processRole.getId()));
 
     @Test
     public void test_withProcessRoleReturnJsonResponse() {
@@ -36,8 +40,8 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
         when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(singletonList(role));
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(singletonList(returnedProcessRole));
 
-        Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
-                applicationId, new MockHttpServletResponse(), serviceLocator,
+        ServiceResult<JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
+                applicationId, serviceLocator,
                 processRole -> doWithProcessRoleFn.apply(processRole));
 
         assertEquals("Success with 789", response.getRight().getMessage());
@@ -48,11 +52,11 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
 
         when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(emptyList());
 
-        Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
-                applicationId, new MockHttpServletResponse(), serviceLocator,
+        ServiceResult<JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
+                applicationId, serviceLocator,
                 processRole -> doWithProcessRoleFn.apply(processRole));
 
-        assertEquals("No role of type ASSESSOR set up on Application 456", response.getLeft().getMessage());
+        assertTrue(response.getLeft().is(ROLE_NOT_FOUND));
     }
 
     @Test
@@ -61,10 +65,10 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
         when(roleRepositoryMock.findByName(ASSESSOR.getName())).thenReturn(singletonList(role));
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(userId, role, applicationId)).thenReturn(emptyList());
 
-        Either<JsonStatusResponse, JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
-                applicationId, new MockHttpServletResponse(), serviceLocator,
+        ServiceResult<JsonStatusResponse> response = withProcessRoleReturnJsonResponse(userId, ASSESSOR,
+                applicationId, serviceLocator,
                 processRole -> doWithProcessRoleFn.apply(processRole));
 
-        assertEquals("No process role of type ASSESSOR set up on Application 456", response.getLeft().getMessage());
+        assertTrue(response.getLeft().is(PROCESS_ROLE_NOT_FOUND));
     }
 }

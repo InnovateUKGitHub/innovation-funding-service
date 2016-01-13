@@ -25,14 +25,12 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,12 +54,10 @@ import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Not
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
-import static com.worth.ifs.transactional.ServiceFailure.error;
-import static com.worth.ifs.transactional.ServiceResult.fromEither;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.Either.right;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -164,7 +160,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         return handlingErrors(UNABLE_TO_CREATE_FILE, () -> {
 
@@ -175,7 +171,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
-                return errorResponse(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE);
+                return failureResponse(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE);
             } else {
 
                 return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
@@ -207,11 +203,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         return handlingErrors(UNABLE_TO_UPDATE_FILE, () -> {
 
-            Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
             return existingFileResult.map(existingFile -> {
 
@@ -229,11 +225,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Either<ServiceFailure, FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
+    public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
 
         return handlingErrors(UNABLE_TO_DELETE_FILE, () -> {
 
-            Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFileId);
 
             return existingFileResult.map(existingFile -> {
@@ -243,33 +239,33 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
                 return fileService.deleteFile(fileEntryId).
                     map(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
-                    map(formInputResponse -> unlinkFileEntryFromFormInputResponse(formInputResponse)).
-                    map(unlinkedFileEntryResource -> successResponse(unlinkedFileEntryResource)
-                ));
+                    map(this::unlinkFileEntryFromFormInputResponse).
+                    map(BaseTransactionalService::successResponse)
+                );
             });
         });
     }
 
-    private Either<ServiceFailure, FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
+    private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
         formInputResponse.setFileEntry(null);
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
-        return right(unlinkedResponse);
+        return success(unlinkedResponse);
     }
 
     @Override
-    public Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+    public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
         return handlingErrors(UNABLE_TO_FIND_FILE, () -> getFormInputResponse(fileEntryId).
                 map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
                 map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
         )));
     }
 
-    private Either<ServiceFailure, FormInput> getFormInput(long formInputId) {
-        return getOrFail(() -> formInputRepository.findOne(formInputId), () -> error(FORM_INPUT_NOT_FOUND));
+    private ServiceResult<FormInput> getFormInput(long formInputId) {
+        return getOrFail(() -> formInputRepository.findOne(formInputId), FORM_INPUT_NOT_FOUND);
     }
 
-    private Either<ServiceFailure, Application> getApplication(long applicationId) {
-        return getOrFail(() -> applicationRepository.findOne(applicationId), () -> error(APPLICATION_NOT_FOUND));
+    private ServiceResult<Application> getApplication(long applicationId) {
+        return getOrFail(() -> applicationRepository.findOne(applicationId), APPLICATION_NOT_FOUND);
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -277,8 +273,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId());
     }
 
-    private Either<ServiceFailure, FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
-        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), () -> error(FORM_INPUT_RESPONSE_NOT_FOUND));
+    private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
+        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), FORM_INPUT_RESPONSE_NOT_FOUND);
     }
 
     @Override
@@ -464,7 +460,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite) {
 
-        return fromEither(getApplication(applicationId)).map(application -> {
+        return getApplication(applicationId).map(application -> {
 
             NotificationSource from = systemNotificationSource;
             NotificationTarget to = new ExternalUserNotificationTarget(invite.getRecipientName(), invite.getRecipientEmail());
@@ -473,7 +469,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("inviteUrl", "http://TODO.com");
 
-            Notification notification = new Notification(from, asList(to), INVITE_COLLABORATOR, notificationArguments);
+            Notification notification = new Notification(from, singletonList(to), INVITE_COLLABORATOR, notificationArguments);
 
             return notificationService.sendNotification(notification, EMAIL);
         });

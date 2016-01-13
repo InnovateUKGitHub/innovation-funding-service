@@ -78,6 +78,10 @@ public class ServiceResult<T> {
         return new ServiceResult<>(ServiceFailure.error(failureKey));
     }
 
+    public static <T> ServiceResult<T> failure(String failureMessage) {
+        return new ServiceResult<>(ServiceFailure.error(failureMessage));
+    }
+
     public static <T> Supplier<ServiceResult<T>> failureSupplier(Enum<?> failureKey) {
         return () -> failure(failureKey);
     }

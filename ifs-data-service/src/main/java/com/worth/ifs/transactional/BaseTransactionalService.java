@@ -9,7 +9,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.ServiceFailure.error;
-import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
 import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
 
@@ -40,6 +38,7 @@ public abstract class BaseTransactionalService  {
 
     public enum Failures {
         UNEXPECTED_ERROR, //
+        ROLE_NOT_FOUND, //
         RESPONSE_NOT_FOUND, //
         FORM_INPUT_RESPONSE_NOT_FOUND, //
         APPLICATION_NOT_FOUND, //
@@ -81,7 +80,7 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected <T> Either<ServiceFailure, T> handlingErrors(Supplier<Either<ServiceFailure, T>> serviceCode) {
+    protected <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
         return handlingErrors(UNEXPECTED_ERROR, serviceCode);
     }
 
@@ -96,9 +95,9 @@ public abstract class BaseTransactionalService  {
      * @param serviceCode
      * @return
      */
-    protected <T> Either<ServiceFailure, T> handlingErrors(Enum<?> catchAllError, Supplier<Either<ServiceFailure, T>> serviceCode) {
+    protected <T> ServiceResult<T> handlingErrors(Enum<?> catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
-            Either<ServiceFailure, T> response = serviceCode.get();
+            ServiceResult<T> response = serviceCode.get();
 
             if (response.isLeft()) {
                 log.debug("Service failure encountered - performing transaction rollback");
@@ -108,7 +107,7 @@ public abstract class BaseTransactionalService  {
         } catch (Exception e) {
             log.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
             rollbackTransaction();
-            return errorResponse(catchAllError);
+            return failureResponse(catchAllError);
         }
     }
 
@@ -127,8 +126,8 @@ public abstract class BaseTransactionalService  {
      * @param responseId
      * @return
      */
-    protected Either<ServiceFailure, Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, () -> error(RESPONSE_NOT_FOUND));
+    protected ServiceResult<Response> getResponse(Long responseId) {
+        return getResponseById(responseId, responseRepository, RESPONSE_NOT_FOUND);
     }
 
     /**
@@ -137,8 +136,8 @@ public abstract class BaseTransactionalService  {
      * @param processRoleId
      * @return
      */
-    protected Either<ServiceFailure, ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, () -> error(PROCESS_ROLE_NOT_FOUND));
+    protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
+        return getProcessRoleById(processRoleId, processRoleRepository, PROCESS_ROLE_NOT_FOUND);
     }
 
     /**
@@ -148,19 +147,8 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, T> successBody(T response) {
-        return Either.<ServiceFailure, T> right(response);
-    }
-
-    /**
-     * Create a Right of T, to indicate a success.
-     *
-     * @param response
-     * @param <T>
-     * @return
-     */
-    protected static <T> Either<ServiceFailure, T> successResponse(T response) {
-        return Either.<ServiceFailure, T> right(response);
+    protected static <T> ServiceResult<T> successResponse(T response) {
+        return ServiceResult.success(response);
     }
 
     /**
@@ -170,8 +158,8 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error) {
-        return left(error(error));
+    protected static <T> ServiceResult<T> failureResponse(Enum<?> error) {
+        return ServiceResult.failure(error(error));
     }
 
 
@@ -183,7 +171,7 @@ public abstract class BaseTransactionalService  {
      * @param <T>
      * @return
      */
-    protected static <T> Either<ServiceFailure, T> errorResponse(Enum<?> error, Throwable e) {
-        return left(error(error, e));
+    protected static <T> ServiceResult<T> failureResponse(Enum<?> error, Throwable e) {
+        return ServiceResult.failure(error(error, e));
     }
 }

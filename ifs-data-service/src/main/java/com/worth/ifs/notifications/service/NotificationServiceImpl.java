@@ -1,10 +1,8 @@
 package com.worth.ifs.notifications.service;
 
-import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.transactional.ServiceResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +23,6 @@ import static com.worth.ifs.util.CollectionFunctions.*;
  */
 @Service
 public class NotificationServiceImpl implements NotificationService {
-
-    private static final Log LOG = LogFactory.getLog(NotificationServiceImpl.class);
 
     enum ServiceFailures {
         NOTIFICATION_SENDER_NOT_FOUND,
