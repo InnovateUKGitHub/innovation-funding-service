@@ -3,6 +3,7 @@
 cd ../ifs-data-service/
 ./gradlew flywayClean flywayMigrate;
 cd ../data-dumps/
+mysql --database=ifs -uifs -pifs -B -N -e "SHOW TABLES"  | awk '{print "ALTER TABLE", $1, "CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;"}' | mysql -uifs -pifs --database=ifs
 mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version --default-character-set=utf8 > originalSchemaOnly.sql
 mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role --default-character-set=utf8 > originalReferenceDataOnly.sql
 mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version --default-character-set=utf8 > originalTestDataOnly.sql
