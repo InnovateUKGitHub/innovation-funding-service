@@ -25,7 +25,7 @@ IFS.invites = (function(){
           //cookie is updated simply by having an ajax call go to the server
           var data = (jQuery(s.formid).serialize());
           jQuery.ajax({
-            url: window.location,
+            url: window.location.href,
             method: "POST",
             dataType : 'json', //for requests headers so that the back-end can give a version without 302 redirect
             data: data
@@ -36,9 +36,9 @@ IFS.invites = (function(){
           var orgContainer = jQuery(e.target).closest('li');
           var orgId = orgContainer.attr('data-invite-org');
           var rowId = orgContainer.find('[data-invite-row]').length;
-          var html = '<tr data-invite-row>\
+          var html = '<tr class="form-group" data-invite-row>\
                         <td><input type="text" value="" placeholder="name" name="organisationMap['+orgId+']['+rowId+'].personName" /></td>\
-                        <td><input type="text" value="" placeholder="name@company.co.uk" name="organisationMap['+orgId+']['+rowId+'].email" /></td>\
+                        <td><input type="email" value="" placeholder="name@company.co.uk" name="organisationMap['+orgId+']['+rowId+'].email" /></td>\
                         <td class="alignright"><button value="'+orgId+'_'+rowId+'" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                       </tr>';
           orgContainer.find('tbody').append(html);
