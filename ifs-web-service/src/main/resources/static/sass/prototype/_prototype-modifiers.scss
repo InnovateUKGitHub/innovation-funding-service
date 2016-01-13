@@ -19,6 +19,14 @@
 	overflow: auto;
 }
 
+/*--- highlight content ---*/
+
+.highlight-panel{
+	background: $highlight-colour;
+	padding: 20px 0;
+}
+
+
 /*--- Underlining ---*/
 
 .grid-row{

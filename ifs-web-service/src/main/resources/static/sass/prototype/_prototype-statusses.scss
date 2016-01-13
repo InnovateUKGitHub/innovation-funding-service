@@ -106,5 +106,17 @@ table{
 }
 
 
+/*----- Marking yes /no with tick / cross used in assessor invite tables ----*/
+
+.yes{
+	@extend %icon-tick;
+	padding-left: 28px;
+}
+
+.no{
+	@extend %icon-cross;
+	padding-left: 28px; 
+}
+
 
 

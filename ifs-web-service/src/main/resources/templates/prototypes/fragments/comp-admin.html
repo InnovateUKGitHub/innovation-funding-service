@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+<!-- ===================Comp admin Page title============================== -->
+<div th:fragment="prototype-comp-admin-page-title(subtitle, heading)">
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
+        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
+    </div>
+</div>
+
+<!-- ===================Applications summary for competition============================== -->
+<div th:fragment="prototype-comp-summary">
+    <section class="boxed">
+        <p>Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.</p>
+
+        <h2 class="heading-medium no-margin">Applications</h2>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <p><span class="heading-large">6</span> Completed</p>
+            </div>
+            <div class="column-third">
+                <p><span class="heading-large">6</span> In progress</p>
+            </div>
+            <div class="column-third">
+                <p><span class="heading-large">24</span> Started</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+
 <!-- =========================== Comp details =========================== --> 
 
 <div th:fragment="prototype-comp-details">
@@ -83,21 +113,44 @@
 <div th:fragment="prototype-comp-breakdown">
     
     <div th:if="${status == 'closed'}" th:remove="tag">
-        <h3 class="heading-medium">The competition is now closed</h3>
-        <a class="button" href="#">Allocate assessors</a>
+        <div class="grid-row highlight-panel extra-margin">
+            <div class="column-half">
+                <h3 class="heading-medium no-margin">The competition is now closed</h3>
+            </div>
+            <div class="column-half alignright-button">
+                <a class="button" href="#">Allocate assessors</a>
+            </div>
+        </div>
     </div>
     
     <div th:if="${status == 'open'}" th:remove="tag">
-        <h2 class="heading-large">Applications</h2>
-        <h3>Overall applications</h3>
-        <p class="heading-xlarge no-margin">92</p>
+
+    <h2 class="heading-large">Applications</h2>
+    
+        <div class="grid-row highlight-panel">
+            <div class="column-half">
+                <h3>Overall applications</h3>
+                <p class="heading-xlarge no-margin">92</p>
+            </div>
+            <div class="column-half alignright-button">
+                <a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a>
+            </div>
+        </div>
+
     </div>
 
      <div th:if="${status == 'assess'}" th:remove="tag">
-        <h2 class="heading-medium"><a href="#">Rejected applications</a></h2>
-        <h3>Total rejected applications</h3>
-        <p class="heading-xlarge no-margin">8</p>
-        <a class="button" href="#">Allocate assessors</a>
+        <h2 class="heading-large"><a href="#">Rejected applications</a></h2>
+
+        <div class="grid-row highlight-panel">
+            <div class="column-half">
+                <h3>Total rejected applications</h3>
+                <p class="heading-xlarge no-margin">8</p>
+            </div>
+            <div class="column-half alignright-button">
+                <a class="button" href="#">Allocate assessors</a>
+            </div>
+        </div>
     </div>
     
     <div class="grid-row">
@@ -171,7 +224,7 @@
                         <p class="form-hint">Predicted applications per confirmed assessor</p>
                     </li>
                 </ul>
-                <p class="extra-margin"><a href="#" class="button">Invite assessors</a></p>
+                <p class="extra-margin"><a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a></p>
 
             </div>
 
