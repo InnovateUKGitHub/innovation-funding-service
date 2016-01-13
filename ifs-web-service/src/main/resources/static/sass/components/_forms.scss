@@ -28,6 +28,16 @@ div.readonly{
         text-align: right;
     }
 }
+tr.form-group {
+  float:none;
+  td:first-child {
+    padding-left:1.25em;
+  }
+}
+.field-error {
+  @include box-shadow(none);
+  border: 2px solid $error-colour;
+}
 
 table td input{
     width:100%;

@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
 </head>
-<body class="app-details">
+<body class="app-invite">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
@@ -28,9 +28,9 @@
         process.</p>
 
 
-    <form th:object="${contributorsForm}" method="POST">
+    <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
         <ul class="boxed-list">
-            <li th:each="organisationEntry, organisationStats: ${organisationMap}">
+            <li th:each="organisationEntry, organisationStats: ${organisationMap}" th:attr="data-invite-org=${organisationEntry.key.id}">
                 <h2  th:if="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Lead Organisation "<span th:text="${organisationEntry.key.name}"></span>"</h2>
                 <h2  th:unless="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Partner Organisation "<span th:text="${organisationEntry.key.name}"></span>"</h2>
 
@@ -38,42 +38,43 @@
                     Add members of your own organisation to contribute to this application.
                 </p>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>E-mail</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:if="${organisationEntry.key.id == leadOrganisation.id}">
-                        <td>
-                            <input type="text" th:value="${leadApplicant.name}" readonly="readonly"/>
-                        </td>
-                        <td>
-                            <input type="text" th:value="${leadApplicant.email}" readonly="readonly"/>
-                        </td>
-                        <td class="alignright remove">
-                            <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
-                        </td>
-                    </tr>
-                    <tr th:each="user,stats: ${contributorsForm.organisationMap[__${organisationEntry.key.id}__]}">
-                        <td>
-                            <input type="text" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].personName}"/>
-                        </td>
-                        <td>
-                            <input type="text" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].email}"/>
-                        </td>
-                        <td class="alignright remove">
-                            <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
-                            <button class="add-another-row buttonlink" type="submit" name="remove_person"
-                                    th:value="${organisationEntry.key.id + '_' + stats.index}">Remove
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                  <table>
+                      <thead>
+                      <tr>
+                          <th>Name</th>
+                          <th>E-mail</th>
+                          <th>&nbsp;</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="form-group" th:if="${organisationEntry.key.id == leadOrganisation.id}">
+                          <td>
+                              <input type="text" th:value="${leadApplicant.name}" readonly="readonly"/>
+                          </td>
+                          <td>
+                              <input type="text" th:value="${leadApplicant.email}" readonly="readonly"/>
+                          </td>
+                          <td class="alignright remove">
+                              <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
+                          </td>
+                      </tr>
+                      <tr class="form-group" th:each="user,stats: ${contributorsForm.organisationMap[__${organisationEntry.key.id}__]}" data-invite-row="">
+                          <td>
+                              <input type="text" placeholder="name" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].personName}"/>
+                          </td>
+                          <td>
+                              <input type="email" placeholder="name@company.co.uk" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].email}"/>
+                          </td>
+                          <td class="alignright">
+                              <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
+                              <button class="remove-another-row buttonlink" type="submit" name="remove_person"
+                                      th:value="${organisationEntry.key.id + '_' + stats.index}">Remove
+                              </button>
+                          </td>
+                      </tr>
+                      </tbody>
+                  </table>
+
                 <p class="alignright">
                     <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationEntry.key.id}">Add person</button>
                 </p>
