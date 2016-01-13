@@ -38,7 +38,7 @@ rm src/main/resources/db/migration/V1__BaseVersion.sql
 rm src/main/resources/db/migration/V2__ReferenceData.sql
 rm src/main/resources/db/acceptance/V2_1__RemoveCosts.sql src/main/resources/db/acceptance/V2_1__TestDataBase.sql src/main/resources/db/development/V2_1__TestDataBase.sql src/main/resources/db/integration/V2_1__TestDataBase.sql
 cd ../data-dumps
-rm newDatabaseWithTestData.sql originalReferenceDataOnly.sql originalSchemaOnly.sql
+rm originalReferenceDataOnly.sql originalSchemaOnly.sql originalTestDataOnly.sql
 
 
 
