@@ -61,13 +61,13 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
                 withTargets(asList(recipient1, recipient2)).
                 build();
 
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject", notification.getArguments())).thenReturn(success("My subject"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain", notification.getArguments())).thenReturn(success("Plain text body"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html", notification.getArguments())).thenReturn(success("HTML body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body"));
 
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject", notification.getArguments())).thenReturn(success("My subject 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain", notification.getArguments())).thenReturn(success("Plain text body 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html", notification.getArguments())).thenReturn(success("HTML body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body 2"));
 
         EmailAddress senderEmail = EmailAddressResolver.fromNotificationSource(sender);
         EmailAddress recipient1Email = EmailAddressResolver.fromNotificationTarget(recipient1);
