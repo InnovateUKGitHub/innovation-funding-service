@@ -23,6 +23,8 @@ Add details for another source of funding and verify that these details have bee
     When Applicant can see a new row
     And Applicant enters some details into this row
     And Applicant chooses to add yet another source of funding
+    And the applicant enters some details into the second row
+    Then the total of the other funding should be correct
     Then Applicant can leave the 'Your finances' page but the details are still saved
     And applicant selects 'No' for other funding
     And applicant can see that the 'No' radio button is selected
@@ -37,15 +39,13 @@ Applicant selects 'Yes' for other funding
 
 Applicant chooses to add another source of funding
     Click Link    Add another source of funding
-    Wait Until Element Is Visible    id=cost-other_funding-55-source
-    Sleep    2s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
 
 Applicant chooses to add yet another source of funding
     Select Radio button    other_funding-otherPublicFunding-54    Yes
     Click Link    Add another source of funding
-    Wait Until Element Is Visible    id=cost-other_funding-56-source
-    Sleep    2s
-    Click Element    id=cost-other_funding-56-source
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     Sleep    2s
 
 Applicant selects 'No' for other funding
@@ -55,24 +55,41 @@ Applicant can see a new row
     Element Should Be Visible    id=other-funding-table
 
 Applicant enters some details into this row
-    Sleep    5s
-    Wait Until Element Is Visible    id=cost-other_funding-55-source
-    Input Text    id=cost-other_funding-55-source    ${OTHER_FUNDING_SOURCE}
-    Wait Until Element Is Visible    id=cost-other_funding-55-date
-    Input Text    id=cost-other_funding-55-date    ${OTHER_FUNDING_DATE}
-    Wait Until Element Is Visible    id=cost-other_funding-55-fundingAmount
-    Input Text    id=cost-other_funding-55-fundingAmount    ${OTHER_FUNDING_AMOUNT}
-    Sleep    5s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Sleep   1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    Sleep   1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    Sleep    1s
 
 Applicant can leave the 'Your finances' page but the details are still saved
     Reload Page
-    Sleep    5s
-    Alert Should Be Present
-    Wait Until Element Is Visible    id=cost-other_funding-55-source
-    Textfield Should Contain    cost-other_funding-55-source    ${OTHER_FUNDING_SOURCE}
-    Textfield Should Contain    cost-other_funding-55-date    ${OTHER_FUNDING_DATE}
+    #Alert Should Be Present
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
 
 Applicant cannot see the 'other funding' details
     Page Should Not Contain    ${OTHER_FUNDING_SOURCE}
     Page Should Not Contain    ${OTHER_FUNDING_DATE}
     Page Should Not Contain    ${OTHER_FUNDING_AMOUNT}
+
+the applicant enters some details into the second row
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    Sleep   1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    Sleep   1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Sleep   1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    focus    css=.app-submit-btn
+    Sleep    1s
+
+the total of the other funding should be correct
+    Textfield Value Should Be    id=other-funding-total    £ 20,000

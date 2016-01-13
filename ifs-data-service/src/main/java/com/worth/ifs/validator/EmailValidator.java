@@ -24,8 +24,8 @@ public class EmailValidator extends BaseValidator {
         CharSequence responseValue = response.getValue();
 
 
-        org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator externEmailValidator = new org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator();
-        if (!externEmailValidator.isValid(responseValue, null)) {
+        org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator externalEmailValidator = new org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator();
+        if (!externalEmailValidator.isValid(responseValue, null)) {
             errors.rejectValue("value", "response.invalidEmail", "Please enter a valid emailaddress");
         }
     }
