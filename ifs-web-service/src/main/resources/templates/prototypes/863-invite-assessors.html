@@ -53,7 +53,7 @@
 			<p><span class="heading-xlarge" id="assessor-count-display">0</span> assessors on the invite list</p>		
 		</div>
 		<div class="column-half alignright">
-			<a href="/prototypes/863-invite-list" class="button disabled" id="view-invite-list">View invite list</a>
+			<a href="/prototypes/863-invite-list" class="button disabled view-invite-list">View invite list <span>(0)</span></a>
 		</div>
 	</div>
 	
@@ -250,6 +250,55 @@
 
 	</div>
 
+	<h2 class="heading-large">
+		Add new assessors
+	</h2>
+
+	<ul> <!-- Based on existing invite markup from 633-application-invite -->
+		<li>
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>E-mail</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<input readonly="readonly" type="text" name="name-item-1" id="name-item-1" value="Joe Bloggs"  />
+						</td>
+						<td>
+							<input readonly="readonly" type="email" name="mail-item-1" id="mail-item-1" value="jbloggs@example.com"  />
+						</td>
+						<td class="alignright remove">
+							<!-- <a class="delete-row" data-cost-row="12" href="#">Remove</a> -->
+							(Example)
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<div class="grid-row extra-margin">
+				<div class="column-half">
+					<a class="add-another-row button-link" href="javascript:void(0);">Add new row</a>
+				</div>
+				<div class="column-half alignright-button">
+					<a href="" class="button button-secondary">Add to invite list</a>
+				</div>
+			</div>
+
+		</li>
+	</ul>
+
+	<hr />
+	
+	<p class="alignright-button extra-margin">
+		
+		<a href="/prototypes/863-invite-list" class="button disabled view-invite-list">View invite list <span>(0)</span></a>
+
+	</p>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -260,12 +309,49 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 
 <script type="text/javascript">
+
+	var counter = 0;
+
 	jQuery('.add-assessor').on('click',function(e){ 
 		e.preventDefault();
+
+		//alert('hello');
 		
-		jQuery(this).addClass( 'added' );
-		jQuery(this).text('Remove');
-		jQuery('#assessor-count-display').html(function(i, val) { return +val+1 });
+		if (jQuery(this).hasClass( 'added' )){
+			
+			jQuery(this).removeClass( 'added' );
+			jQuery(this).text('Add');
+
+			counter --;
+		
+		}else{
+			
+			jQuery(this).addClass( 'added' );
+			jQuery(this).text('Remove');
+
+			
+			counter ++;
+
+		}
+
+		jQuery('#assessor-count-display').html(counter);
+		jQuery('.view-invite-list span').html('(<strong>'+counter+'</strong>)');
+
+		if (counter == 0){
+			jQuery('.view-invite-list').addClass('disabled');
+			jQuery('.view-invite-list').on('click',function(e){
+				e.preventDefault();
+			});
+		}else{
+			jQuery('.view-invite-list').removeClass('disabled');
+			jQuery('.view-invite-list').on('click',function(e){
+				return true;
+			});
+			
+		}
+		
+		
+
 
 
 		//jQuery(this).text('Remove');
@@ -273,5 +359,6 @@
 
 
 	});</script>
+	<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>
 </html>
