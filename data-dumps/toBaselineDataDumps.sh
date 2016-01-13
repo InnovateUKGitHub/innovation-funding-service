@@ -6,7 +6,7 @@ cd ../data-dumps/
 mysql --database=ifs -uifs -pifs -B -N -e "SHOW TABLES"  | awk '{print "ALTER TABLE", $1, "CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;"}' | mysql -uifs -pifs --database=ifs
 mysqldump --no-data --add-drop-table -uifs -pifs ifs --ignore-table=ifs.schema_version --default-character-set=utf8 > originalSchemaOnly.sql
 mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs application_status cost_field form_input_type form_input_validator form_validator role organisation_type --default-character-set=utf8 > originalReferenceDataOnly.sql
-mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs ignore-table=ifs.organisation_type --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version --default-character-set=utf8 > originalTestDataOnly.sql
+mysqldump --no-create-info --extended-insert=false -uifs -pifs ifs --ignore-table=ifs.organisation_type --ignore-table=ifs.application_status --ignore-table=ifs.cost_field --ignore-table=ifs.form_input_type --ignore-table=ifs.form_input_validator --ignore-table=ifs.form_validator --ignore-table=ifs.role --ignore-table=ifs.schema_version --default-character-set=utf8 > originalTestDataOnly.sql
 #2) Baseline the scripts
 cd ../ifs-data-service/src/main/resources/db/migration/
 rm -rf *
@@ -43,7 +43,7 @@ mysql -uifs -pifs -e"CREATE DATABASE ifs CHARACTER SET utf8"
 #git checkout src/main/resources/db/migration/SCRIPTS_THAT_WILL_BE_RUN_ON_PRODUCTION src/main/resources/db/migration/V10_3__Created_organisation_type_table.sql
 #rm src/main/resources/db/migration/V1__BaseVersion.sql
 #rm src/main/resources/db/migration/V2__ReferenceData.sql
-#rm src/main/resources/db/acceptance/V2_2__RemoveCosts.sql src/main/resources/db/acceptance/V2_1__TestDataBase.sql src/main/resources/db/development/V2_1__TestDataBase.sql src/main/resources/db/integration/V2_1__TestDataBase.sql
+#rm src/main/resources/db/acceptance/V2_2__RemoveCosts.sql src/main/resources/db/acceptance/V2_1__TestDataBase.sql src/main/resources/db/development/V2_1__TestDataBase.sql src/main/resources/db/integration/V2_1__TestDataBase.sql src/main/resources/db/migration/V11_1__invite_tables.sql
 #cd ../data-dumps
 #rm originalReferenceDataOnly.sql originalSchemaOnly.sql originalTestDataOnly.sql
 #cd ..
