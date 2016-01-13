@@ -41,6 +41,10 @@ IFS.repeatableRows = (function() {
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
                 var replacement = htmlReplacement.find('[data-repeatable-container=' + tableSectionId + ']');
                 sectionToUpdate.replaceWith(replacement);
+
+                sectionToUpdate.find('input:not([readonly])').each(function(){
+                  IFS.autoSave.fieldChanged(this);
+                });
             });
 
             e.preventDefault();
