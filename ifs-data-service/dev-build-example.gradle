@@ -7,6 +7,7 @@ ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
 
 ext.serverPort="8090"
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
+ext.silRestBaseURL="http://localhost:8090"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'

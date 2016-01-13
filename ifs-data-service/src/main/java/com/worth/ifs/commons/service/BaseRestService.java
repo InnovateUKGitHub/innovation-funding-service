@@ -23,8 +23,6 @@ public abstract class BaseRestService {
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
 
-
-
     private String dataRestServiceURL;
 
     protected String getDataRestServiceURL() {

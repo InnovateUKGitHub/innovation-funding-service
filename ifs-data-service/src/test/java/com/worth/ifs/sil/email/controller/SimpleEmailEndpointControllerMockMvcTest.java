@@ -1,8 +1,7 @@
-package com.worth.ifs.sil.email;
+package com.worth.ifs.sil.email.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.sil.email.controller.SimpleEmailEndpointController;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;

@@ -26,8 +26,11 @@ public class RestSilEmailEndpoint extends BaseRestService implements SilEmailEnd
         UNABLE_TO_SEND_MAIL
     }
 
+    @Value("${sil.rest.baseURL}")
+    String silRestServiceUrl;
+
     @Value("${sil.rest.sendmail}")
-    private String silSendmailPath;
+    String silSendmailPath;
 
     @Override
     public ServiceResult<SilEmailMessage> sendEmail(SilEmailMessage message) {
@@ -41,5 +44,10 @@ public class RestSilEmailEndpoint extends BaseRestService implements SilEmailEnd
 
         LOG.debug("Successfully sent email to SIL: " + message);
         return success(message);
+    }
+
+    @Override
+    protected String getDataRestServiceURL() {
+        return silRestServiceUrl;
     }
 }
