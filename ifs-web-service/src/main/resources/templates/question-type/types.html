@@ -746,7 +746,7 @@
 
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
-        <p th:text="${question.description}"></p>
+        <p th:text="${question.description}" />
         <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="other-costs-table">
@@ -761,13 +761,7 @@
                     <div th:each="otherCost, iteration : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
-                              <textarea  class="form-control width-full"
-                                          th:id="'cost-'+${type}+ '-'+${otherCost.id}+'-description'}"
-                                          th:name="${type +'-'+name+'-' + otherCost.id}"
-                                          th:text="${otherCost.description}"
-                                          th:title="${'Row '+iteration.count+ ' : description and justification of the cost'}"
-                                          rows="4"    >
-                          		</textarea>
+                                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${otherCost.id}, name='description', value=${otherCost.description})" th:remove="tag" />
                             </td>
                             <td class="numeric">
                                 <input th:title="'Row '+${iteration.count}+' : estimated cost (£)'" type="number" th:name="${type +'-otherCost-' + otherCost.id}" class="form-control" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
