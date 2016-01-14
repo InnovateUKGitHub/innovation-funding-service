@@ -26,6 +26,11 @@
 	padding: 20px 0;
 }
 
+.grid-row{
+	&.highlight-panel{
+		margin: 0;
+	}
+}
 
 /*--- Underlining ---*/
 

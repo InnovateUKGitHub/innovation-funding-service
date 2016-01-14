@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	
+
+	<div th:if="${param.filterResponse != null}" th:remove="tag">
+		<div th:if="${param.filterResponse[0] == 'Accepted'}" th:remove="tag">
+			<style>
+				#assessor-accepted, #assessor-rejected, #assessor-awaiting{
+					display: none;
+				}
+
+				#assessor-accepted{
+					display: block;
+				}
+			</style>
+		</div>
+		<div th:if="${param.filterResponse[0] == 'Rejected'}" th:remove="tag">
+			<style>
+				#assessor-accepted, #assessor-rejected, #assessor-awaiting{
+					display: none;
+				}
+
+				#assessor-rejected{
+					display: block;
+				}
+			</style>
+		</div>
+		<div th:if="${param.filterResponse[0] == 'Awaiting response'}" th:remove="tag">
+			<style>
+				#assessor-accepted, #assessor-rejected, #assessor-awaiting{
+					display: none;
+				}
+
+				#assessor-awaiting{
+					display: block;
+				}
+			</style>
+		</div>
+		<div th:if="${param.filterResponse[0] == 'All'}" th:remove="tag">
+			<style>
+				#assessor-accepted, #assessor-rejected, #assessor-awaiting{
+					display: block;
+				}
+			</style>
+		</div>
+	</div>
+
+</head>
+<body class="comp-assessors">
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition overview'}, ${'/prototypes/997-comp-applications-dashboard-open'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage invites'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-summary" th:remove="tag" />
+	
+
+	<h2 class="heading-large">Invite list</h2>
+
+	<div class="grid-row highlight-panel">
+		<div class="column-third">
+			<p><span class="heading-medium">2</span> accepted</p>
+		</div>
+		<div class="column-third">
+			<p><span class="heading-medium">3</span> rejected</p>
+		</div>
+		<div class="column-third">
+			<p><span class="heading-medium">6</span> invited</p>
+		</div>
+	</div>
+	
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+
+	<h2 class="heading-large" id="current-assessors">Current responses</h2>
+	
+	<div class="search-filters extra-margin">
+		
+		<form formaction="/prototypes/863-manage-invites" method="GET"> 
+
+			<h2 class="heading-medium no-margin">Filter invites</h2>
+
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<label class="form-label" for="filterResponse">Response</label>
+					<select class="form-control" id="filterResponse" name="filterResponse">
+
+						<option th:if="${param.filterResponse != null}" th:remove="tag">
+							<option th:text="${param.filterResponse[0]}" selected="selected">TEST</option>
+						</option>
+
+						<option value="All">All</option>
+						<option value="Accepted">Accepted</option>
+						<option value="Rejected">Rejected</option>
+						<option value="Awaiting response">Awaiting response</option>
+					</select>
+				</div>
+
+				<div class="column-third alignright">
+					<button class="button">Filter</button>
+				</div>
+
+			</div>
+			
+		</form>
+
+	</div>
+
+	<section id="assessor-accepted">
+
+		<h2 class="heading-medium">Accepted (2)</h2>
+		
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 50%">Assessor</th>
+					<th style="width: 50%">Contract and DOI</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="filtered-result">
+					<td>Bill Knightly</td>
+					<td><span class="yes">Yes</span></td>
+				</tr>
+				<tr>
+					<td>Dave Redford</td>
+					<td><span class="yes">Yes</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</section>
+
+	<section id="assessor-rejected">
+
+		<h2 class="heading-medium">Rejected (2)</h2>
+
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 30%">Assessor</th>
+					<th style="width: 20%">Reason</th>
+					<th style="width: 50%">Further information</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="filtered-result">
+					<td>Peter Newman</td>
+					<td>Conflict of interest</td>
+					<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores accusamus sit dolore voluptatem delectus in corporis itaque ab inventore dignissimos dolor, maiores, consectetur id non repudiandae eligendi, laborum, doloribus dolorum.</td>
+				</tr>
+				<tr>
+					<td>Juanita	Luna</td>
+					<td>Too many assessments</td>
+					<td>Quam accusantium, tenetur corporis rem cum ratione nesciunt nulla deleniti cupiditate blanditiis, recusandae optio iusto provident quis, quaerat, delectus doloremque inventore porro.</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</section>
+
+	<section id="assessor-awaiting">
+		<h2 class="heading-medium">Awaiting response (5)</h2>
+		
+		<h3 class="heading-small">Current assessors (3)</h3>
+		
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 50%">Assessor</th>
+					<th style="width: 50%">Contract and DOI</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="filtered-result">
+					<td>Blake Kelley</td>
+					<td><span class="yes">Yes</span></td>
+				</tr>
+				<tr>
+					<td>Oliver Romero</td>
+					<td><span class="yes">Yes</span></td>
+				</tr>
+				<tr>
+					<td>Lori Underwood</td>
+					<td><span class="yes">Yes</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<h3 class="heading-small">New assessors (2)</h3>
+
+		<table >
+			<thead>
+				<tr>
+					<th style="width: 50%">Assessor</th>
+					<th style="width: 50%">Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="filtered-result">
+					<td>Verna Richards</td>
+					<td>v.richards@assessor.com</td>
+				</tr>
+				<tr>
+					<td>Phil Bill</td>
+					<td>p.bill@assessor.com</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</section>
+
+	
+	<p class="alignright-button extra-margin">
+		
+		<a href="/prototypes/863-invite-assessors" class="button view-invite-list">Invite more assessors</a>
+
+	</p>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
