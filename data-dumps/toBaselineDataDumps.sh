@@ -21,9 +21,9 @@ cd ../development
 touch V1_1__DevelopmentInitial.sql
 echo "-- Initial empty development data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__DevelopmentInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
-cd ../acceptance
-touch V1_1__AcceptanceInitial.sql
-echo "-- Initial empty acceptance data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__AcceptanceInitial.sql
+cd ../webtest
+touch V1_1__Webtest.sql
+echo "-- Initial empty webtest data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__WebTestInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
 touch V2_2__RemoveCosts.sql
 echo "DELETE FROM cost_value WHERE cost_id = 13;" >  V2_2__RemoveCosts.sql
