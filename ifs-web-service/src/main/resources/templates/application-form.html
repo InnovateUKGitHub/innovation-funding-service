@@ -14,7 +14,8 @@
     <div th:include="fragments/elements :: notification" th:remove="tag" />
 	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
-            <h1 class="heading-xlarge"  th:text="${currentQuestion?.shortName}" />
+            <h1 class="heading-xlarge" th:if="${currentQuestion?.shortName}" th:text="${currentQuestion?.shortName}" />
+            <h1 class="heading-xlarge" th:if="${currentSection}" th:text="${currentSection.getName()}" />
         </div>
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js">
             <button class="hidden-save" type="submit" name="submit-section">Save the form</button>
@@ -37,8 +38,7 @@
             </div>
 
             <div th:if="${currentSection}" th:remove="tag">
-                <h1 class="heading-xlarge" th:text="${currentSection.getName()}"></h1>
-                <p class="subtitle" th:text="${currentSection.getDescription()}"></p>
+                <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
             </div>
 
             <div th:each="question : ${currentSection?.questions}" th:remove="tag">
