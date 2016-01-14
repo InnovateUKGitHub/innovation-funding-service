@@ -99,6 +99,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         Notification notificationToSend = newNotification().build();
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isLeft());
+        assertTrue(result.getLeft().is(UNABLE_TO_SEND_NOTIFICATIONS));
     }
 
     @Test
