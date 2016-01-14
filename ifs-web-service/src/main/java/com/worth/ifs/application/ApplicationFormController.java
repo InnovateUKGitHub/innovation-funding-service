@@ -120,7 +120,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+
 
         /* Start save action */
         bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
@@ -136,6 +136,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
+            this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
