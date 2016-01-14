@@ -3,13 +3,14 @@
 }
 
 .hidden-save {
-	overflow:visible;
-	height: 0;
-	width: 0;
-	margin: 0;
-	border: 0;
-	padding: 0;
-	display:block;
+	overflow: hidden;
+  height: 0;
+  width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  position: relative;
+  z-index: -1;
 }
 .buttonlink {
 	background:none;
