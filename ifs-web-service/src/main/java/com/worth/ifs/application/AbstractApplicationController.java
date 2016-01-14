@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
  */
 public abstract class AbstractApplicationController {
-    private final Log log = LogFactory.getLog(getClass());
+    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
+    public static final String FORM_MODEL_ATTRIBUTE = "form";
+    private final Log LOG = LogFactory.getLog(getClass());
 
     @Autowired
     protected ResponseService responseService;
@@ -76,8 +78,8 @@ public abstract class AbstractApplicationController {
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey("assign_question")){
-            String assign = request.getParameter("assign_question");
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+            String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
             assigneeId = Long.valueOf(assign.split("_")[1]);
         }
 
@@ -87,8 +89,8 @@ public abstract class AbstractApplicationController {
     protected Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long questionId = null;
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey("assign_question")){
-            String assign = request.getParameter("assign_question");
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+            String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
             questionId = Long.valueOf(assign.split("_")[0]);
         }
 
@@ -100,7 +102,7 @@ public abstract class AbstractApplicationController {
         ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey("assign_question")){
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
@@ -138,7 +140,7 @@ public abstract class AbstractApplicationController {
 
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
 
-        model.addAttribute("form", form);
+        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
     }
 
@@ -166,8 +168,8 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
-        log.info("*********************");
-        log.info(application.getId());
+        LOG.info("*********************");
+        LOG.info(application.getId());
         List<FormInputResponse> responses = getFormInputResponses(application);
         Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
@@ -180,7 +182,7 @@ public abstract class AbstractApplicationController {
                         values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute("form", form);
+        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
     }
 
     protected List<Response> getResponses(ApplicationResource application) {
@@ -197,7 +199,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected Set<Long> getMarkedAsCompleteDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected Set<Long> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
@@ -262,7 +264,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("nextSection", nextSection);
         model.addAttribute("sections", sections);
 
-        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(model, application, userOrganisation);
+        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation);
         model.addAttribute("markedAsComplete", markedAsComplete);
 
         Optional<Question> aIncompleteQuestion = sections.values().stream().flatMap(section -> section.getQuestions().stream()).filter(question -> !markedAsComplete.contains(question.getId())).findAny();
