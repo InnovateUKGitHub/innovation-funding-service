@@ -1,1 +1,1 @@
--- Initial empty webtest data script to help ensure that we cannot accidentially run this scripts on another environment
+-- Initial empty webtest data script to help ensure that we cannot accidentally run this scripts on another environment
