@@ -7,7 +7,7 @@ public class OtherFunding implements CostItem {
     private String otherPublicFunding;
     private String fundingSource;
     private String securedDate;
-    private BigDecimal fundingAmount;
+    private BigDecimal fundingAmount = BigDecimal.ZERO;
 
     public OtherFunding() {
     }

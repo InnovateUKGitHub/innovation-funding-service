@@ -5,6 +5,7 @@ ext.ifsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs"
 ext.ifsDatasourceUsername="ifs"
 ext.ifsDatasourcePassword="ifs"
 ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
+ext.ifsFlywayLocations="db/migration,db/webtest"
 
 
 ext.serverPort="8080"

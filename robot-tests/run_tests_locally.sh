@@ -34,18 +34,29 @@ function stopServers {
 }
 
 function resetDB {
-    echo "********INSERT THE TEST DATABASE********"
-    cd ${scriptDir}
-    `mysql -u${mysqlUser} -p${mysqlPassword} ifs < testDataDump.sql`
+    echo "********DROP THE DATABASE********"
+    `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
+    `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
 }
 
 function buildAndDeploy {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
     cd ${dataServiceCodeDir}
+    ## Before we start the build we need to have an webtest test build environment
+    echo "********SWAPPING IN THE WEBTEST BUILD PROPERTIES********"
+    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/webtest"/' dev-build.gradle > webtest.gradle.tmp
+    mv dev-build.gradle dev-build.gradle.tmp
+    mv webtest.gradle.tmp dev-build.gradle
     ./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
     ./gradlew flywayMigrate
+    ## Replace the webtest build environment with the one we had before.
+    echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
+    mv dev-build.gradle.tmp dev-build.gradle
+
     cd ${webServiceCodeDir}
     ./gradlew clean deployToTomcat
+    
+
 }
 
 function startServers {
