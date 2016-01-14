@@ -823,12 +823,13 @@
                     <div class="form-group form-group--align-right alignright">
                       <label>
                           Total other funding
-                          <input class="form-control form-control-1-4 alignright"
+                          <input id="other-funding-total" 
+                                class="form-control form-control-1-4 alignright"
                                 data-calculation-fields="[id*=fundingAmount]"
                                 data-calculation-operations="+"
                                 th:attr="data-binding-input=${'subsection-total-' + currentSectionId},data-calculation-rawvalue=${costCategory.getTotal()}"
-                                 readonly="readonly" type="text"
-                                 th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                                readonly="readonly" type="text"
+                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${currentSectionId}" style="display: none;">
                             <span
                                     th:attr="data-binding-output=${'subsection-total-' + currentSectionId}"
@@ -935,7 +936,7 @@
                 </tr>
                 <tr>
                     <th>% Grant</th>
-                    <td class="numeric" th:text="${#numbers.formatDecimal(grantTotalPercentage, 0, 'COMMA', 0, 'POINT')}+'%'"></td>
+                    <td class="numeric"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                         <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                             th:text="${organisationFinance.grantClaimPercentage}+'%'"></td>

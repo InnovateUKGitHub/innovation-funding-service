@@ -19,7 +19,7 @@ IFS.finance = (function(){
                 IFS.finance.mirrorInputs();
 
                 // Used for calculations
-                jQuery("body").append(jQuery("<div class=\"js-hidden\"><input id=\"hundred-field\" value=\"100\" /></div>"));
+                jQuery("body").append(jQuery("<input type=\"hidden\" id=\"hundred-field\" value=\"100\" />"));
             },
             bindCalculationActionToFields : function(){
 
@@ -149,5 +149,5 @@ IFS.finance = (function(){
                     elementToMove.show();
                 });
             }
-    };   
+    };
 })();

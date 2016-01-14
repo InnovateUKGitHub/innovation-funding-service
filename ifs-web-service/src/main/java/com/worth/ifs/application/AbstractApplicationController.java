@@ -241,7 +241,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
-        model.addAttribute("grantTotalPercentage", organisationFinanceOverview.getTotalGrantPercentage());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());

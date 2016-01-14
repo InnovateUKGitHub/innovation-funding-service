@@ -29,9 +29,10 @@ img {
 
 small {
 	@extend .form-hint;
-	display: inline; 
+	display: inline;
 	font-size: 16px;
 }
+
 /*
 
 ###Right aligned buttons
@@ -47,7 +48,7 @@ small {
 .alignright-button {
 	text-align:right;
   @extend %contain-floats;
-   
+
 	a {
 		line-height:45px;
 	}
@@ -92,13 +93,13 @@ input[type="button"] {
 	&.large {
 	    box-shadow: 0px 4px 0px darken($button-colour,15%);
 	    padding: 15px 45px;
-	    font-size: 18px; 
+	    font-size: 18px;
 	    &.buttonlink{
 	    	box-shadow: none;
 	    	color: $link-colour;
 	    	&:hover,
 	    	&:focus{
-	    		background: none; 
+	    		background: none;
 	    	}
 	    }
 	}
@@ -151,9 +152,9 @@ input[type="button"] {
   }
 }
 
-/* 
+/*
 
-###Secondary Buttons 
+###Secondary Buttons
 
 ```
 <a href="#" class="button-secondary" tabindex="0">Anchor like a button</a>

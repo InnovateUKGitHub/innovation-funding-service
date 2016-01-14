@@ -2,6 +2,7 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 
@@ -38,6 +39,9 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
     private List<OrganisationAddress> addresses = new ArrayList<>();
+
+    @OneToMany(mappedBy="organisation")
+    private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
     public Organisation() {
 

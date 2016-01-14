@@ -8,14 +8,15 @@ IFS.wordCount = (function(){
         },
         init : function(){
             s = this.settings;
-            jQuery('body').on('change', s.wordcountEl, function(e){
-              IFS.wordCount.updateWordCount(e.target);
-            });
-            //wait until the user stops typing
-            jQuery('body').on('keyup', s.wordcountEl, function(e) {
-               clearTimeout(window.IFS.wordcount_timer);
-               window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
-            });
+            jQuery('body').on('change keyup', s.wordcountEl, function(e){
+              if(e.type == 'keyup'){
+                clearTimeout(window.IFS.wordcount_timer);
+                window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
+              }
+              else {
+                IFS.wordCount.updateWordCount(e.target);
+              }
+             });
         },
         updateWordCount : function(textarea){
               var field = jQuery(textarea);
@@ -28,7 +29,7 @@ IFS.wordCount = (function(){
 
               var words = jQuery.trim(value).split(' ');
               var count = 0;
-              //for and not foreach becuase of ie7 performance. 
+              //for and not foreach becuase of ie7 performance.
               for (var i = 0; i < words.length; i++) {
                 if(words[i].length > 0){
                   count++;

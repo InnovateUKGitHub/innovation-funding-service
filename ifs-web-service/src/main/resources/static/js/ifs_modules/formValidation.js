@@ -1,6 +1,6 @@
 IFS.formValidation = (function(){
     "use strict";
-    var s; 
+    var s;
     return {
         settings : {
             number : {
@@ -19,18 +19,18 @@ IFS.formValidation = (function(){
             typeTimeout : 800
         },
         init : function(){
-            s = this.settings; 
+            s = this.settings;
 
             IFS.formValidation.initPasswordCheck(); //checks if password and retyped password are equal
             IFS.formValidation.initNumberCheck();   //checks if it is a number by using jQuery.isNumeric (https://api.jquery.com/jQuery.isNumeric/)
             IFS.formValidation.initEmailCheck();   //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
         },
         initPasswordCheck : function(){
-            jQuery('body').on('change keyup', s.password.field1+','+s.password.field2, function(e){ 
+            jQuery('body').on('change keyup', s.password.field1+','+s.password.field2, function(e){
                 if(e.type == 'keyup'){
                     clearTimeout(window.IFS.formValidation_timer);
-                    window.IFS.formValidation_timer = setTimeout(function(){ 
-                        IFS.formValidation.checkPasswords(); 
+                    window.IFS.formValidation_timer = setTimeout(function(){
+                        IFS.formValidation.checkPasswords();
                     }, s.typeTimeout);
                 }
                 else {
@@ -60,8 +60,8 @@ IFS.formValidation = (function(){
 
                 if(e.type == 'keyup'){
                     clearTimeout(window.IFS.formValidation_timer);
-                    window.IFS.formValidation_timer = setTimeout(function(){ 
-                        IFS.formValidation.checkEmail(el); 
+                    window.IFS.formValidation_timer = setTimeout(function(){
+                        IFS.formValidation.checkEmail(el);
                     }, s.typeTimeout);
                 }
                 else {
@@ -81,7 +81,7 @@ IFS.formValidation = (function(){
             }
         },
         initNumberCheck : function(){
-            jQuery('body').on('change', s.number.fields , function(){ 
+            jQuery('body').on('change', s.number.fields , function(){
                 IFS.formValidation.checkNumber(jQuery(this));
             });
         },
@@ -96,6 +96,8 @@ IFS.formValidation = (function(){
         setInvalid : function(field,message){
             var formGroup = field.closest('.form-group');
             if(formGroup){
+                field.addClass('field-error');
+
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
                 var errorEl = formGroup.find('.error-message:contains("'+message+'")');
                 if(errorEl.length === 0){
@@ -108,8 +110,10 @@ IFS.formValidation = (function(){
         setValid : function(field,message){
             var formGroup = field.closest('.form-group.error');
             if(formGroup){
+              field.removeClass('field-error');
+
                formGroup.find('.error-message:contains("'+message+'")').remove();
-               
+
                //if this was the last error we remove this one
                if(formGroup.find('.error-message').length === 0){
                    formGroup.removeClass('error');
