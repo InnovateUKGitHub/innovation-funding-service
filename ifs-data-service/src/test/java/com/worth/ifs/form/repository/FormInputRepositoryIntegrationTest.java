@@ -42,7 +42,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_findByCompetitionId() {
 
         List<FormInput> competitionInputs = repository.findByCompetitionId(1L);
-        assertEquals(35, competitionInputs.size());
+        assertEquals(36, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());

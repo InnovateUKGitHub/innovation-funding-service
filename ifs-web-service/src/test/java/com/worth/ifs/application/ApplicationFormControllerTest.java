@@ -61,11 +61,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     private Long costId;
 
     private static ResultMatcher matchUrl(final String expectedString) {
-        return new ResultMatcher() {
-            public void match(MvcResult result) {
-                assertTrue(result.getResponse().getRedirectedUrl().equals(expectedString));
-            }
-        };
+        return result -> assertTrue(result.getResponse().getRedirectedUrl().equals(expectedString));
     }
 
     @Before

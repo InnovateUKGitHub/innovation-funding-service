@@ -4,6 +4,7 @@ ext.ifsDatasourceUrl="jdbc:mysql://localhost:3306/ifs"
 ext.ifsDatasourceUsername=""
 ext.ifsDatasourcePassword=""
 ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
+ext.ifsFlywayLocations="db/migration"
 
 ext.serverPort="8090"
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
@@ -15,6 +16,7 @@ project.ext['flyway.user']=''
 project.ext['flyway.password']=""
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
+project.ext['flyway.locations']="db/migration,db/development"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
