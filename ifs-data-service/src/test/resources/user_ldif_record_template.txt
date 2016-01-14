@@ -1,0 +1,13 @@
+dn: cn=$fullName,uid=$uid,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: $uid
+cn: $fullName
+displayName: $fullName
+givenName: $firstName
+sn: $lastName
+mail: $emailAddress
+title: $title
+userPassword: test
