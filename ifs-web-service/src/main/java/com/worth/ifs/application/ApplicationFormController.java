@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -51,6 +52,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private CostService costService;
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
 
     @RequestMapping
@@ -303,9 +306,19 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors = saveQuestionResponses(application, selectedSection.getQuestions(), request, user.getId(), bindingResult);
         }
 
+        Map<String, String[]> params = request.getParameterMap();
+        params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
+
+
+
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
+
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
+        if(financeFormHandler.handle(request)){
+            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
 
         return bindingResult;
     }
@@ -326,16 +339,10 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
         // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> log.info("key " + key));
 
         boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
         if(!marked){
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-        }
-
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-        if(financeFormHandler.handle(request)){
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
     }
@@ -452,9 +459,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<String> errors = new ArrayList<>();
         try {
             String fieldName = request.getParameter("fieldName");
+            log.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
-            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            errors = storeField(request, applicationId, user.getId(), fieldName, inputIdentifier, value);
 
             if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors);
@@ -468,13 +476,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
 
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+        } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
+            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
+            financeFormHandler.ajaxUpdateFinancePosition(request, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(fieldName, value);
+
+            storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
@@ -482,8 +494,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void storeCostField(String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
+    private void storeCostField(Long userId, Long applicationId ,String fieldName, String value) {
+        log.info("storeCostField "+fieldName);
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
         if (fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {

@@ -40,7 +40,7 @@ public class OrganisationFinanceOverview {
         List<ApplicationFinance> applicationFinances = financeService.getApplicationFinances(applicationId);
         for(ApplicationFinance applicationFinance : applicationFinances) {
             List<Cost> costs = financeService.getCosts(applicationFinance.getId());
-            OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinance.getId(), applicationFinance.getOrganisation(), costs);
+            OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinance, costs);
             organisationFinances.add(organisationFinance);
 
         }

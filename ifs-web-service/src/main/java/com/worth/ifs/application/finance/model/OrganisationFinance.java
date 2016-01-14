@@ -2,9 +2,10 @@ package com.worth.ifs.application.finance.model;
 
 import com.worth.ifs.application.finance.*;
 import com.worth.ifs.application.finance.cost.CostItem;
-import com.worth.ifs.application.finance.cost.OtherFunding;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,6 +23,7 @@ public class OrganisationFinance {
     private final Log log = LogFactory.getLog(getClass());
 
     public static final String GRANT_CLAIM = "Grant Claim";
+    OrganisationSize organisationSize;
     Long applicationFinanceId = 0L;
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
     Organisation organisation;
@@ -31,9 +33,17 @@ public class OrganisationFinance {
 
     CostItemFactory costItemFactory = new CostItemFactory();
 
-    public OrganisationFinance(Long applicationFinanceId, Organisation organisation, List<Cost> costs) {
-        this.applicationFinanceId = applicationFinanceId;
-        this.organisation = organisation;
+//    public OrganisationFinance(Long applicationFinanceId, Organisation organisation, List<Cost> costs) {
+//        this.applicationFinanceId = applicationFinanceId;
+//        this.organisation = organisation;
+//        this.costs = costs;
+//        initializeOrganisationFinances();
+//    }
+
+    public OrganisationFinance(ApplicationFinance applicationFinance, List<Cost> costs) {
+        this.applicationFinanceId = applicationFinance.getId();
+        this.organisation = applicationFinance.getOrganisation();
+        this.organisationSize = applicationFinance.getOrganisationSize();
         this.costs = costs;
         initializeOrganisationFinances();
     }
@@ -146,5 +156,13 @@ public class OrganisationFinance {
     public BigDecimal getTotalOtherFunding() {
         CostCategory otherFundingCategory = getCostCategory(CostType.OTHER_FUNDING);
         return otherFundingCategory.getTotal();
+    }
+
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
+    }
+
+    public void setOrganisationSize(OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
     }
 }
