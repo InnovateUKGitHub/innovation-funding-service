@@ -137,6 +137,20 @@
         </div>
     </div>
 
+    <!-- ===========================Form: organisation_size =========================== -->
+    <div th:fragment="organisation_size" th:remove="tag">
+        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        <span class="heading-medium" th:text="${question.name}" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div class="form-block">
+            <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
+                <input type="radio" th:id="financePosition-organisationSize" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                <span th:text="${size.name}"></span>
+            </label>
+        </div>
+    </div>
+
     <!-- ===========================Form: your_finance =========================== -->
     <div th:fragment="your_finance" th:remove="tag">
         <h2 class="heading-medium no-margin" th:text="${question.name}" />

@@ -4,13 +4,19 @@ import com.worth.ifs.application.finance.CostItemMapper;
 import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,17 +28,61 @@ import java.util.stream.Collectors;
  */
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
+    private final Long applicationId;
+    private final Long userId;
     private CostService costService;
+    private FinanceService financeService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    public FinanceFormHandler(CostService costService) {
+    public FinanceFormHandler(CostService costService, FinanceService financeService, ApplicationFinanceRestService applicationFinanceRestService, Long userId, Long applicationId) {
         this.costService = costService;
+        this.financeService = financeService;
+        this.applicationFinanceRestService = applicationFinanceRestService;
+        this.userId = userId;
+        this.applicationId = applicationId;
     }
 
     public boolean handle(HttpServletRequest request) {
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+        storeFinancePosition(request, applicationFinance.getId());
+
         List<Cost> costs = getCosts(request);
         return storeCosts(costs);
     }
+
+    private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
+        List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
+        if(!financePositionKeys.isEmpty()){
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId);
+
+            financePositionKeys.parallelStream().forEach(k -> {
+                String values = request.getParameterValues(k)[0];
+                log.debug(String.format("finance position k : %s value: %s ", k, values));
+                updateFinancePosition(applicationFinance, k, values);
+            });
+            applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
+        }
+    }
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value){
+        fieldName = fieldName.replace("financePosition-", "");
+        switch (fieldName) {
+            case "organisationSize":
+                applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
+                break;
+            default:
+                log.error(String.format("value not saved: %s / %s", fieldName, value));
+        }
+    }
+
+    public void ajaxUpdateFinancePosition(HttpServletRequest request, String fieldName, String value){
+
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getById(applicationFinance.getId());
+        updateFinancePosition(applicationFinanceResource, fieldName, value);
+        applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
+    }
+
 
     private List<Cost> getCosts(HttpServletRequest request) {
         List<CostField> costFields = costService.getCostFields();
@@ -48,7 +98,7 @@ public class FinanceFormHandler {
         List<Cost> costs = new ArrayList<>();
         for(CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
-                    filter(k -> k.startsWith(costType.getType())).collect(Collectors.toList());
+                    filter(k -> k.startsWith(costType.getType()+"-")).collect(Collectors.toList());
             Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
             List<CostItem> costItems = getCostItems(costFieldMap, costType, costTypeKeys);
             List<Cost> costsForType = costItemMapper.costItemsToCost(costType, costItems);

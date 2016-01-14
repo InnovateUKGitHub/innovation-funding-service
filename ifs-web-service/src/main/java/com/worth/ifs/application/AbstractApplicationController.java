@@ -221,6 +221,8 @@ public abstract class AbstractApplicationController {
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
+        model.addAttribute("organisationFinanceSize", organisationFinance.getOrganisationSize());
+        model.addAttribute("organisationFinanceId", organisationFinance.getApplicationFinanceId());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
         model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
         model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
@@ -290,13 +292,13 @@ public abstract class AbstractApplicationController {
     }
 
     protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
         if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(userId, applicationId);
+            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
         }
 
         List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
-        return new OrganisationFinance(applicationFinance.getId(),applicationFinance.getOrganisation(),organisationCosts);
+        return new OrganisationFinance(applicationFinance,organisationCosts);
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {

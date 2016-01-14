@@ -2,7 +2,9 @@ package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 
 import javax.persistence.*;
 
@@ -22,6 +24,9 @@ public class ApplicationFinance {
     @ManyToOne
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
+
+    @Enumerated(EnumType.STRING)
+    private OrganisationSize organisationSize;
 
     public ApplicationFinance() {
     }
@@ -52,5 +57,17 @@ public class ApplicationFinance {
     @JsonIgnore
     public Application getApplication() {
         return application;
+    }
+
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
+    }
+
+    public void setOrganisationSize(OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
+    }
+
+    public void merge(ApplicationFinanceResource applicationFinance) {
+        this.setOrganisationSize(applicationFinance.getOrganisationSize());
     }
 }
