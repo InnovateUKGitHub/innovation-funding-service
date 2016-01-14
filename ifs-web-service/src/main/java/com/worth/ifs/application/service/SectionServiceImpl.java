@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    @ProfileExecution
     public Section getSectionByQuestionId(Long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId);
     }

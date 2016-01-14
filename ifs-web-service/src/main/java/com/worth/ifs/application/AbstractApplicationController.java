@@ -17,6 +17,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -111,6 +112,7 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
+    @ProfileExecution
     protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, Boolean... hateoas) {
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
 
@@ -154,6 +156,7 @@ public abstract class AbstractApplicationController {
         form.setFormInput(formInputs);
     }
 
+    @ProfileExecution
     protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));

@@ -56,4 +56,10 @@ public class ApplicationFinanceController {
         ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
         return applicationFinanceRepository.save(applicationFinance);
     }
+
+    @RequestMapping("/findFinances/{applicationId}/{organisationId}")
+    public OrganisationFinanceResource findFinances() {
+
+    }
+
 }

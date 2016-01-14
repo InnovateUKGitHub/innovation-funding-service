@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -78,6 +79,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @ProfileExecution
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
@@ -96,7 +98,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
+    @ProfileExecution
+    public void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
         Optional<Long> questionSectionId = null;
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
