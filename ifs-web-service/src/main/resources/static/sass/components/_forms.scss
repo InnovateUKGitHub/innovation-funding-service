@@ -39,14 +39,8 @@ tr.form-group {
   border: 2px solid $error-colour;
 }
 
-table td input{
-    width:100%;
-    @extend .form-control;
-    @include box-sizing(border-box);
-
-    &[type="number"]{
+table td input[type="number"]{
         text-align: right;
-    }
 }
 
 
