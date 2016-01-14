@@ -15,15 +15,15 @@ cp ../../../../../../data-dumps/originalReferenceDataOnly.sql V2__ReferenceData.
 #3) Copy the test data across
 cd ../integration
 touch V1_1__IntegrationInitial.sql
-echo "-- Initial empty integration data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__IntegrationInitial.sql
+echo "-- Initial empty integration data script to help ensure that we cannot accidentally run this scripts on another environment" > V1_1__IntegrationInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
 cd ../development
 touch V1_1__DevelopmentInitial.sql
-echo "-- Initial empty development data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__DevelopmentInitial.sql
+echo "-- Initial empty development data script to help ensure that we cannot accidentally run this scripts on another environment" > V1_1__DevelopmentInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
 cd ../webtest
 touch V1_1__WebtestInitial.sql
-echo "-- Initial empty webtest data script to help ensure that we cannot accidentially run this scripts on another environment" > V1_1__WebtestInitial.sql
+echo "-- Initial empty webtest data script to help ensure that we cannot accidentally run this scripts on another environment" > V1_1__WebtestInitial.sql
 cp ../../../../../../data-dumps/originalTestDataOnly.sql V2_1__TestDataBase.sql
 touch V2_2__RemoveCosts.sql
 echo "DELETE FROM cost_value WHERE cost_id = 13;" >  V2_2__RemoveCosts.sql
