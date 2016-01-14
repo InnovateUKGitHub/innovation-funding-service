@@ -37,8 +37,8 @@ IFS.invites = (function(){
           var orgId = orgContainer.attr('data-invite-org');
           var rowId = orgContainer.find('[data-invite-row]').length;
           var html = '<tr class="form-group" data-invite-row>\
-                        <td><input type="text" value="" placeholder="name" name="organisationMap['+orgId+']['+rowId+'].personName" /></td>\
-                        <td><input type="email" value="" placeholder="name@company.co.uk" name="organisationMap['+orgId+']['+rowId+'].email" /></td>\
+                        <td><input type="text" class="form-control width-full" value="" placeholder="name" name="organisationMap['+orgId+']['+rowId+'].personName" /></td>\
+                        <td><input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisationMap['+orgId+']['+rowId+'].email" /></td>\
                         <td class="alignright"><button value="'+orgId+'_'+rowId+'" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                       </tr>';
           orgContainer.find('tbody').append(html);
