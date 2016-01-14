@@ -65,7 +65,7 @@ function startServers {
     ./startup.sh
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     touch ${dataLogFilePath}
-    tail -f -n0 ${dataLogFilePath} | while read logLine
+    tail -F -n0 ${dataLogFilePath} | while read logLine
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
@@ -74,7 +74,7 @@ function startServers {
     cd ${webTomcatBinPath}
     ./startup.sh
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
-    tail -f -n0 ${webLogFilePath} | while read logLine
+    tail -F -n0 ${webLogFilePath} | while read logLine
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done

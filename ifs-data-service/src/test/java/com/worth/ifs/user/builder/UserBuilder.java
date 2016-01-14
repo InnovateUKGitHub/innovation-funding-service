@@ -41,6 +41,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return with(user -> user.addUserOrganisation(organisations));
     }
 
+    public UserBuilder withEmailAddress(final String... emailAddresses) {
+        return withArray((email, user) -> user.setEmail(email), emailAddresses);
+    }
+
     @Override
     protected User createInitial() {
         return new User();

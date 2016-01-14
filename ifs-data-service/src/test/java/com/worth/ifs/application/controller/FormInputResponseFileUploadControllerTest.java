@@ -6,8 +6,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.util.Either;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -26,14 +25,11 @@ import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.DUPLICATE_FILE_CREATED;
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_FILESIZE;
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.INCORRECTLY_REPORTED_MEDIA_TYPE;
+import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
-import static com.worth.ifs.transactional.ServiceFailure.error;
-import static com.worth.ifs.util.Either.left;
-import static com.worth.ifs.util.Either.right;
+import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -87,7 +83,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 assertInputStreamContents(inputStreamSupplier.get(), dummyContent)));
 
         FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L);
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> successResponse = right(Pair.of(new File(""), createdResource));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse = success(Pair.of(new File(""), createdResource));
 
         when(applicationService.createFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
@@ -132,8 +128,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testCreateFileButApplicationServiceCallFails() throws Exception {
 
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                left(error("No files today!"));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
+                failure("No files today!");
 
         when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -324,8 +320,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         Supplier<InputStream> inputStreamExpectations = argThat(lambdaMatches(inputStreamSupplier ->
                 assertInputStreamContents(inputStreamSupplier.get(), dummyContent)));
 
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> successResponse =
-                right(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L)));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse =
+                success(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L)));
 
         when(applicationService.updateFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
@@ -370,8 +366,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                left(error("No files today!"));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
+                failure("No files today!");
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -547,7 +543,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(123L, 456L, 789L);
         FormInputResponse unlinkedFormInputResponse = newFormInputResponse().build();
 
-        when(applicationService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(right(unlinkedFormInputResponse));
+        when(applicationService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(success(unlinkedFormInputResponse));
 
         MvcResult response = mockMvc.
                 perform(
@@ -580,7 +576,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFileButApplicationServiceCallFails() throws Exception {
 
-        Either<ServiceFailure, FormInputResponse> failureResponse = left(error("No files today!"));
+        ServiceResult<FormInputResponse> failureResponse = failure("No files today!");
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
@@ -657,7 +653,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -688,7 +684,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileDetailsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error("No files today!")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure("No files today!"));
 
         MvcResult response = mockMvc.
                 perform(
@@ -762,7 +758,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -791,7 +787,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error("No files today!")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure("No files today!"));
 
         MvcResult response = mockMvc.
                 perform(
@@ -873,7 +869,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(right(Pair.of(formInputFileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(formInputFileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -901,7 +897,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     private void assertGetFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error(errorToReturn)));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure(errorToReturn));
 
         MvcResult response = mockMvc.
                 perform(
@@ -919,7 +915,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     private void assertGetFileDetailsButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(left(error(errorToReturn)));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure(errorToReturn));
 
         MvcResult response = mockMvc.
                 perform(
@@ -942,8 +938,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertCreateFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                left(error(errorToReturn));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = failure(errorToReturn);
 
         when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -977,8 +972,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertUpdateFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                left(error(errorToReturn));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = failure(errorToReturn);
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -1003,7 +997,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertDeleteFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        Either<ServiceFailure, FormInputResponse> failureResponse = left(error(errorToReturn));
+        ServiceResult<FormInputResponse> failureResponse = failure(errorToReturn);
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
