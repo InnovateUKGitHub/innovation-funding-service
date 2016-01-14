@@ -2,9 +2,10 @@ package com.worth.ifs.application.finance.model;
 
 import com.worth.ifs.application.finance.*;
 import com.worth.ifs.application.finance.cost.CostItem;
-import com.worth.ifs.application.finance.cost.OtherFunding;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,6 +23,7 @@ public class OrganisationFinance {
     private final Log log = LogFactory.getLog(getClass());
 
     public static final String GRANT_CLAIM = "Grant Claim";
+    OrganisationSize organisationSize;
     Long applicationFinanceId = 0L;
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
     Organisation organisation;
@@ -31,11 +33,22 @@ public class OrganisationFinance {
 
     CostItemFactory costItemFactory = new CostItemFactory();
 
+    public OrganisationFinance(ApplicationFinance applicationFinance, List<Cost> costs) {
+        this.applicationFinanceId = applicationFinance.getId();
+        this.organisation = applicationFinance.getOrganisation();
+        this.organisationSize = applicationFinance.getOrganisationSize();
+        this.costs = costs;
+        initializeOrganisationFinances();
+    }
+
     public OrganisationFinance(Long applicationFinanceId, Organisation organisation, List<Cost> costs) {
         this.applicationFinanceId = applicationFinanceId;
         this.organisation = organisation;
         this.costs = costs;
         initializeOrganisationFinances();
+    }
+
+    public OrganisationFinance() {
     }
 
     public void initializeOrganisationFinances() {
@@ -91,21 +104,7 @@ public class OrganisationFinance {
         costCategory.addCost(costItem);
     }
 
-    public BigDecimal getTotal() {
-        BigDecimal total = costCategories.entrySet().stream()
-                .filter(cat -> cat != null)
-                .filter(cat -> cat.getValue() != null)
-                .filter(cat -> cat.getValue().getTotal() != null)
-                .filter(cat -> !cat.getValue().excludeFromTotalCost())
-                .map(cat -> cat.getValue().getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if(total == null) {
-            return new BigDecimal(0);
-        }
-
-        return total;
-    }
 
     public EnumMap<CostType, CostCategory> getCostCategories() {
         return costCategories;
@@ -123,6 +122,26 @@ public class OrganisationFinance {
         return applicationFinanceId;
     }
 
+    public Long getGrantClaimPercentageId() {
+        return grantClaimPercentageId;
+    }
+
+    public BigDecimal getTotal() {
+        BigDecimal total = costCategories.entrySet().stream()
+                .filter(cat -> cat != null)
+                .filter(cat -> cat.getValue() != null)
+                .filter(cat -> cat.getValue().getTotal() != null)
+                .filter(cat -> !cat.getValue().excludeFromTotalCost())
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if(total == null) {
+            return new BigDecimal(0);
+        }
+
+        return total;
+    }
+
     public Integer getGrantClaimPercentage() {
         if(grantClaimPercentage == null) {
             return 0;
@@ -130,21 +149,32 @@ public class OrganisationFinance {
         return grantClaimPercentage;
     }
 
-    public Long getGrantClaimPercentageId() {
-
-        return grantClaimPercentageId;
-    }
-
     public BigDecimal getTotalFundingSought() {
-        return getTotal().multiply(new BigDecimal(getGrantClaimPercentage())).divide(new BigDecimal(100)).subtract(getTotalOtherFunding());
+        BigDecimal totalFundingSought  = getTotal()
+                .multiply(new BigDecimal(getGrantClaimPercentage()))
+                .divide(new BigDecimal(100))
+                .subtract(getTotalOtherFunding());
+
+        return totalFundingSought.max(new BigDecimal(0));
     }
 
     public BigDecimal getTotalContribution() {
-        return getTotal().multiply(new BigDecimal(100 - getGrantClaimPercentage())).divide(new BigDecimal(100));
+        return getTotal()
+                .subtract(getTotalOtherFunding())
+                .subtract(getTotalFundingSought())
+                .max(new BigDecimal(0));
     }
 
     public BigDecimal getTotalOtherFunding() {
         CostCategory otherFundingCategory = getCostCategory(CostType.OTHER_FUNDING);
-        return otherFundingCategory.getTotal();
+        return (otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO);
+    }
+
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
+    }
+
+    public void setOrganisationSize(OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
     }
 }

@@ -5,10 +5,12 @@ import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -81,6 +83,12 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected FileService fileServiceMock;
+
+    @Mock
+    protected EmailService emailServiceMock;
+
+    @Mock
+    protected NotificationService notificationServiceMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

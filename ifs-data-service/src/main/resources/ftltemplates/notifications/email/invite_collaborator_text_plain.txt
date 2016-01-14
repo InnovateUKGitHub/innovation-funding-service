@@ -1,0 +1,8 @@
+Dear ${notificationTarget.name},
+
+You've been invited to join the application ${applicationName} as a collaborator.  Please paste the link below into a browser to accept the invitation:
+
+${inviteUrl}
+
+Thanks,
+${notificationSource.name}

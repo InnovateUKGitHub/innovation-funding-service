@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -40,6 +41,9 @@ public class Application {
     @ManyToOne
     @JoinColumn(name="competition", referencedColumnName="id")
     private Competition competition;
+
+    @OneToMany(mappedBy="application")
+    private List<Invite> invites;
 
 
     public Application() {

@@ -1,0 +1,8 @@
+Dear User 2,
+
+You've been invited to join the application My Application as a collaborator.  Please paste the link below into a browser to accept the invitation:
+
+http://acceptinvite.com
+
+Thanks,
+User 1

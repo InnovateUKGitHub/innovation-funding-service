@@ -4,12 +4,15 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +37,9 @@ public class ApplicationFinanceController {
     @Autowired
     ApplicationRepository applicationRepository;
 
+    @Autowired
+    CostRepository costRepository;
+
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
     public ApplicationFinance findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
@@ -47,6 +53,15 @@ public class ApplicationFinanceController {
         return applicationFinanceRepository.findByApplicationId(applicationId);
     }
 
+    @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
+    public double getResearchParticipationPercentage(
+            @PathVariable("applicationId") final Long applicationId) {
+        List<ApplicationFinance> finances = applicationFinanceRepository.findByApplicationId(applicationId);
+        log.warn(String.format("Finances Size: %s", finances.size()));
+
+        return 0.0;
+    }
+
     @RequestMapping("/add/{applicationId}/{organisationId}")
     public ApplicationFinance add(
             @PathVariable("applicationId") final Long applicationId,
@@ -57,9 +72,22 @@ public class ApplicationFinanceController {
         return applicationFinanceRepository.save(applicationFinance);
     }
 
+    @RequestMapping("/getById/{applicationFinanceId}")
+    public ApplicationFinanceResource findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId){
+        return new ApplicationFinanceResource(applicationFinanceRepository.findOne(applicationFinanceId));
+    }
+
+    @RequestMapping("/update/{applicationFinanceId}")
+    public ApplicationFinanceResource update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance){
+        log.error(String.format("ApplicationFinanceController.update(%d)", applicationFinanceId));
+        ApplicationFinance dbFinance = applicationFinanceRepository.findOne(applicationFinance.getId());
+        dbFinance.merge(applicationFinance);
+        dbFinance = applicationFinanceRepository.save(dbFinance);
+        return new ApplicationFinanceResource(dbFinance);
+    }
+
     @RequestMapping("/findFinances/{applicationId}/{organisationId}")
     public OrganisationFinanceResource findFinances() {
 
     }
-
 }

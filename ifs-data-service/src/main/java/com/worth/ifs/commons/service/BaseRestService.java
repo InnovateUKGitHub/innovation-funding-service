@@ -23,8 +23,6 @@ public abstract class BaseRestService {
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
 
-
-
     private String dataRestServiceURL;
 
     protected String getDataRestServiceURL() {
@@ -110,11 +108,11 @@ public abstract class BaseRestService {
      * restPost is a generic method that performs a RESTful POST request.
      *
      * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param responseType - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
      */
-    protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> c) {
+    protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getHeaders();
 
@@ -123,7 +121,7 @@ public abstract class BaseRestService {
         }
 
         HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
-        return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, c);
+        return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, responseType);
     }
 
     @NotSecured("")

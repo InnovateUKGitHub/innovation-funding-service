@@ -1,6 +1,6 @@
 IFS.autoSave = (function(){
     "use strict";
-    var s; // private alias to settings 
+    var s; // private alias to settings
     var serverSideValidationErrors = []; // we store the last validation message as deleting of messages is done by content as unique identifier.
                              // So if we have multiple messages it will only delete the one which contains the message that has been resolved.
     return {
@@ -36,7 +36,6 @@ IFS.autoSave = (function(){
             };
 
              var formGroup = field.closest('.form-group');
-             var formState = jQuery('.form-serialize-js').serialize();
              var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
              var startAjaxTime= new Date().getTime();
              var applicationId = jQuery("#application_id").val();
@@ -61,7 +60,7 @@ IFS.autoSave = (function(){
                      var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                      // set the form-saved-state
-                     jQuery('.form-serialize-js').data('serializedFormState',formState);
+                     jQuery('body').trigger('updateSerializedFormState');
                       
                       //save message
                      if(data.success == 'true'){
