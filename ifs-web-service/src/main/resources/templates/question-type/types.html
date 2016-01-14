@@ -147,7 +147,7 @@
           <fieldset>
             <legend class="visuallyhidden" th:text="${question.name}"/>
             <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
-                  <input type="radio" th:id="financePosition-organisationSize" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                  <input type="radio" th:id="'financePosition-organisationSize-'+${size}" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
                   <span th:text="${size.name}"></span>
               </label>
           </fieldset>
@@ -324,15 +324,15 @@
                 <legend>Do you choose to accept this rate?</legend>
                 <div class="form-group">
                   <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}">
-                      <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}"
+                      <input th:id="${overheadCosts.id+'-acceptRate_0'}"
                              type="radio"
                              th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
                              value="Yes"
                              th:checked="${overheadCosts?.acceptRate == 'Yes'}" />
                       20% of labour costs
                   </label>
-                  <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_1'}" data-target="customRate">
-                      <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_1'}"
+                  <label class="block-label" th:for="${overheadCosts.id+'-acceptRate_1'}" data-target="customRate">
+                      <input th:id="${overheadCosts.id+'-acceptRate_1'}"
                              type="radio"
                              th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
                              value="No"
@@ -341,7 +341,7 @@
                   </label>
                   <div class="panel-indent js-hidden">
                       <div class="form-group">
-                          <label class="form-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}">Overhead rate</label>
+                          <label class="form-label" th:for="${overheadCosts.id+'-customRate'}">Overhead rate</label>
                           <input type="text"
                                  th:name="'overheads-customRate-'+${overheadCosts?.id}"
                                  th:id="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}"
@@ -350,10 +350,10 @@
                                  th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" /> %
                       </div>
                       <div class="form-group">
-                          <label class="form-label" th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
+                          <label class="form-label" th:for="${overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
                           <input type="text"
                                  th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
-                                 th:id="${'cost-'+ type + '-'+overheadCosts.id+'-calculatedRate'}"
+                                 th:id="${overheadCosts.id+'-calculatedRate'}"
                                  class="form-control"
                                  readonly="readonly"
                                  data-binding-input="subsection-total-9"

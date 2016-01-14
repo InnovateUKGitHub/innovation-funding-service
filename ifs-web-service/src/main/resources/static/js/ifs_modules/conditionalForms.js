@@ -9,7 +9,7 @@ IFS.conditionalForms = (function(){
         init : function(){
             jQuery('label[data-target]').each(function(){
                 var label = jQuery(this);
-                var dataTarget = '#'+label.attr('data-target');
+                var dataTarget = label.attr('data-target');
                 var inputEl = label.find('input[type="radio"],input[type="checkbox"]');
 
                 //for having inverted show/hide
@@ -17,15 +17,15 @@ IFS.conditionalForms = (function(){
                 if(label.attr('data-target-inverted')){
                     isInverted = true;
                 }
-                if(inputEl && dataTarget && dataTarget){
+                if(inputEl && dataTarget){
                     var groupName = inputEl.attr('name');
                     inputEl.attr('aria-controls',dataTarget);
                     //execute on pageload
-                    IFS.conditionalForms.toggleVisibility(inputEl,dataTarget,isInverted);
+                    IFS.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
 
                     //execute on click
                     jQuery('input[name="'+groupName+'"]').on('click',function(){
-                        IFS.conditionalForms.toggleVisibility(inputEl,dataTarget,isInverted);
+                        IFS.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
                     });
                 }
             });
