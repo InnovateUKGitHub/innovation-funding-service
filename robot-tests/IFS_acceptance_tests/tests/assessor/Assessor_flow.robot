@@ -24,15 +24,15 @@ ${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
 ${competition_details_page_title}    Competition Details
-@{competitions_assessment_progress_before}    0    4
-@{competitions_assessment_progress_after}    0    3
+@{competitions_assessment_progress_before}    1    4
+@{competitions_assessment_progress_after}    1    3
 ${partners_header_text}    Partners
 ${partner_to_check}    Ludlow
 ${accept_application_first_question_title}    How does your project align with the scope of this competition?
 ${persistence_application_name}    A new innovative solution
 
 *** Test Cases ***
-Assessment progress is 0 out of 4
+Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
     [Tags]    Assessor
     When Assessor is viewing the Competitions list
@@ -140,7 +140,7 @@ Competition for Assessment count
 
 Applications details page has two lists
     [Documentation]    INFUND-322
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     When Assessor clicks the competition
     Then Details page should contain a list with the applications for assessment
