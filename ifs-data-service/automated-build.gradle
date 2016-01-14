@@ -10,6 +10,7 @@ ext.ifsFlywayLocations="db/migration,db/webtest"
 
 ext.serverPort="8080"
 ext.ifsDataServiceRestBaseURL="http://localhost:8080"
+ext.silRestBaseURL="http://localhost:8080/silstub"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
 ext.testIfsDatasourceUsername="ifs"

@@ -38,6 +38,7 @@ public class OrganisationFinance {
         this.organisation = applicationFinance.getOrganisation();
         this.organisationSize = applicationFinance.getOrganisationSize();
         this.costs = costs;
+        initializeOrganisationFinances();
     }
 
     public OrganisationFinance(Long applicationFinanceId, Organisation organisation, List<Cost> costs) {
