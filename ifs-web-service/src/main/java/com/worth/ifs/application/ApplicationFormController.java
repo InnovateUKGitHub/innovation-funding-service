@@ -288,7 +288,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
