@@ -123,7 +123,7 @@
     <div th:fragment="finance">
         <div class="form-group">
             <label class="form-label" for="cost-financegrantclaim">
-                <span class="heading-medium" th:text="${question.name}" />
+                <div class="heading-medium" th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
 
             </label>
@@ -140,15 +140,18 @@
     <!-- ===========================Form: organisation_size =========================== -->
     <div th:fragment="organisation_size" th:remove="tag">
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <span class="heading-medium" th:text="${question.name}" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div class="form-block">
+        <div class="form-group">
+          <h2 class="heading-medium" th:text="${question.name}" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
+          <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+          <fieldset>
+            <legend class="visuallyhidden" th:text="${question.name}"/>
             <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
-                <input type="radio" th:id="financePosition-organisationSize" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
-                <span th:text="${size.name}"></span>
-            </label>
-        </div>
+                  <input type="radio" th:id="financePosition-organisationSize" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                  <span th:text="${size.name}"></span>
+              </label>
+          </fieldset>
+      </div>
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
@@ -743,7 +746,7 @@
 
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
-        <p th:text="${question.description}"></p>
+        <p th:text="${question.description}" />
         <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group">
                 <table id="other-costs-table">
@@ -758,13 +761,7 @@
                     <div th:each="otherCost, iteration : ${costCategory.costs}" >
                         <tr th:attr="data-cost-row=${otherCost.id}">
                             <td>
-                              <textarea  class="form-control width-full"
-                                          th:id="'cost-'+${type}+ '-'+${otherCost.id}+'-description'}"
-                                          th:name="${type +'-'+name+'-' + otherCost.id}"
-                                          th:text="${otherCost.description}"
-                                          th:title="${'Row '+iteration.count+ ' : description and justification of the cost'}"
-                                          rows="4"    >
-                          		</textarea>
+                                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${otherCost.id}, name='description', value=${otherCost.description})" th:remove="tag" />
                             </td>
                             <td class="numeric">
                                 <input th:title="'Row '+${iteration.count}+' : estimated cost (£)'" type="number" th:name="${type +'-otherCost-' + otherCost.id}" class="form-control" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}"/>
