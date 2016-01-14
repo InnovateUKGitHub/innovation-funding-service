@@ -9,19 +9,21 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
-To verify Edit Profile is available from Dashboard page
+View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     When the Applicant is in Dashboard page
     Then the link to Edit Profile should be present
 
-To verify Edit Profile is available from Your profile page
+View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     When the Applicant clicks the link Edit profile from Dashboard page
     Then the link to Edit Profile should be present in Your profile page
 
-Save changes while editing profile
+Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    When the Applicant is in Your details page
+    When the Applicant is in Dashboard page
+    And the Applicant clicks the link Edit profile from Dashboard page
+    And the applicant clicks the Edit your details link
     And the Applicant enters the profile details
     Then the Applicant should see the saved changes in Your profile page
 
@@ -37,11 +39,13 @@ Display error when Last name is blank
     Then the Applicant leaves the Last name empty and enters all other details
     And an Error message is displayed for Last name
 
-Display error when Phone number is blank
+Display error when Phone number is blank or contains letters
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     When the Applicant is in Your details page
-    the Applicant leaves the Phone number empty and enters all other details
-    And an Error message is displayed for Phone number
+    And the Applicant leaves the Phone number empty and enters all other details
+    Then an Error message is displayed for Phone number
+    And when the applicant enters some letters in the phone number field
+    #Then the applicant should get a validation error for the phone number
 
 *** Keywords ***
 the Applicant is in Dashboard page
@@ -100,3 +104,12 @@ the Applicant should see the saved changes in Your profile page
     Page Should Contain    Chris
     Page Should Contain    Brown
     Page Should Contain    0123456789
+
+the applicant clicks the Edit your details link
+    click element    link=Edit your details
+
+when the applicant enters some letters in the phone number field
+    Input Text    id=firstName    Chris
+    Input Text    id=lastName    Brown
+    Input Text    id=phoneNumber    test
+    Click Element    css=.extra-margin
