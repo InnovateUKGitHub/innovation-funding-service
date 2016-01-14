@@ -64,6 +64,7 @@ dependencies {
     compile "org.flywaydb:flyway-core:3.2.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile 'org.freemarker:freemarker:2.3.23'
+    compile 'javax.mail:mail:1.4.7'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")

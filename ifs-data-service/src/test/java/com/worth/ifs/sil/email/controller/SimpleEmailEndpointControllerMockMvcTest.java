@@ -6,9 +6,11 @@ import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
 import static java.util.Collections.singletonList;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -17,13 +19,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- *
+ * Tests around the SIL email stub
  */
 public class SimpleEmailEndpointControllerMockMvcTest extends BaseControllerMockMVCTest<SimpleEmailEndpointController> {
 
     @Override
     protected SimpleEmailEndpointController supplyControllerUnderTest() {
-        return new SimpleEmailEndpointController();
+        SimpleEmailEndpointController endpointController = new SimpleEmailEndpointController();
+        ReflectionTestUtils.setField(endpointController, "sendMailFromSilStub", FALSE);
+        return endpointController;
     }
 
     @Test
