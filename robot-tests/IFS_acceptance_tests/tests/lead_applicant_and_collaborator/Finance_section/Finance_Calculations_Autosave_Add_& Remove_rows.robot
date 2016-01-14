@@ -34,7 +34,7 @@ Materials
     Then the calculations of the Materials should be correct
     and when the applicant fills a second row in the materials section
     Then the total materials costs calculations should be correct
-    and when the applicant removes one material row
+    and when the applicant removes the material rows
     Then the calculations of the Materials should be correct again
     and when the user reloads the page
     Then the calculations of the Materials should be correct again
@@ -142,7 +142,9 @@ the Applicant fills the Materials fields
     input text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     focus    css=.app-submit-btn
 
-when the applicant removes one material row
+when the applicant removes the material rows
+    click element    link=Remove
+    sleep    1s
     click element    link=Remove
     sleep    1s
 
@@ -156,7 +158,7 @@ when the applicant fills a second row in the materials section
 
 the calculations of the Materials should be correct again
     #Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1000
-    Textfield Value Should Be    css=#material-costs-total-field    £ 1,000
+    Textfield Value Should Be    css=#material-costs-total-field    £ 0
 
 the total materials costs calculations should be correct
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(4) input    £ 1,000
