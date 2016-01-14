@@ -47,6 +47,9 @@ public class OrganisationFinance {
         initializeOrganisationFinances();
     }
 
+    public OrganisationFinance() {
+    }
+
     public void initializeOrganisationFinances() {
         createCostCategories();
         addCostsToCategories();
@@ -163,7 +166,7 @@ public class OrganisationFinance {
 
     public BigDecimal getTotalOtherFunding() {
         CostCategory otherFundingCategory = getCostCategory(CostType.OTHER_FUNDING);
-        return otherFundingCategory.getTotal();
+        return (otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO);
     }
 
     public OrganisationSize getOrganisationSize() {

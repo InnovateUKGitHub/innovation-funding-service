@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -53,6 +52,7 @@ public class OrganisationFinanceOverview {
         EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
             BigDecimal typeTotal = organisationFinances.stream()
+                    .filter(o -> o.getCostCategory(costType) != null)
                     .map(o -> o.getCostCategory(costType).getTotal())
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             totalPerType.put(costType, typeTotal);

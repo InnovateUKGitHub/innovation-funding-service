@@ -292,9 +292,9 @@ public abstract class AbstractApplicationController {
     }
 
     protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
         if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(userId, applicationId);
+            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
         }
 
         List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());

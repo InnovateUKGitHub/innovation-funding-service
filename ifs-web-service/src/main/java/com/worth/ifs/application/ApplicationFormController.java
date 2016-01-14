@@ -374,9 +374,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
 
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
 
         if(bindingResult.hasErrors()){
+            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
