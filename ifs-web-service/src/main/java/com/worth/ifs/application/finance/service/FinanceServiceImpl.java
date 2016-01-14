@@ -29,7 +29,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Autowired
     ApplicationFinanceRestService applicationFinanceRestService;
 
-    public ApplicationFinance addApplicationFinance(Long userId, Long applicationId) {
+    public ApplicationFinance addApplicationFinance(Long applicationId, Long userId) {
         ProcessRole processRole = userRestService.findProcessRole(userId, applicationId);
 
         if(processRole.getOrganisation()!=null) {
@@ -38,7 +38,7 @@ public class FinanceServiceImpl implements FinanceService {
         return null;
     }
 
-    public ApplicationFinance getApplicationFinance(Long userId, Long applicationId) {
+    public ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
