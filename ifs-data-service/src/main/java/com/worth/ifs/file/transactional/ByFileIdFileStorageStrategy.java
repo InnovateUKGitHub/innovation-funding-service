@@ -77,7 +77,7 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
         // get an absolute path to the file upload folder, split into segments
         String separatorToUseInSplit = separatorForSplit(fileSeparator);
         List<String> pathToStorageBaseAsSegments = asList(pathToStorageBase.split(separatorToUseInSplit));
-        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(pathToStorageBaseAsSegments, asList(containingFolder));
+        List<String> fullPathToContainingFolderWithEmptyElements = combineLists(pathToStorageBaseAsSegments, containingFolder);
         List<String> fullPathWithNoEmptyElements = simpleFilterNot(fullPathToContainingFolderWithEmptyElements, StringUtils::isBlank);
 
         // then if using a *nix path that starts with file separator e.g. /tmp/path, ensure that we retain the leading "/"

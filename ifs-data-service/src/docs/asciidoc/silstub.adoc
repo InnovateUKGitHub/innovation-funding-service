@@ -1,0 +1,11 @@
+=== Send email to SIL stub
+==== Success case
+===== Request
+include::{snippets}/silstub/sendmail/http-request.adoc[]
+include::{snippets}/silstub/sendmail/request-headers.adoc[]
+
+===== Response
+include::{snippets}/silstub/sendmail/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/silstub/sendmail/curl-request.adoc[]

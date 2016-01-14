@@ -53,6 +53,10 @@ public class JsonStatusResponse {
         return new JsonStatusResponse(message, SC_OK);
     }
 
+    public static JsonStatusResponse accepted(String message, HttpServletResponse response) {
+        return getJsonStatusResponse(message, response, SC_ACCEPTED);
+    }
+
     public static JsonStatusResponse noContent(String message, HttpServletResponse response) {
         return getJsonStatusResponse(message, response, SC_NO_CONTENT);
     }
