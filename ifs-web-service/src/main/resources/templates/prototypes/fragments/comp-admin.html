@@ -133,7 +133,15 @@
                 <p class="heading-xlarge no-margin">92</p>
             </div>
             <div class="column-half alignright-button">
-                <a href="/prototypes/863-invite-assessors" class="button large">Invite assessors</a>
+                
+                <div th:if="${param.invitesSent == null}" th:remove="tag">
+                    <a href="/prototypes/863-invite-assessors" class="button large">Invite assessors</a>
+                </div>
+
+                <div th:if="${param.invitesSent != null}" th:remove="tag">
+                    <a href="/prototypes/863-manage-invites" class="button large">Manage assessor invites</a>
+                </div>
+
             </div>
         </div>
 
@@ -224,7 +232,17 @@
                         <p class="form-hint">Predicted applications per confirmed assessor</p>
                     </li>
                 </ul>
-                <p class="extra-margin"><a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a></p>
+                <p class="extra-margin">
+
+                    <div th:if="${param.invitesSent == null}" th:remove="tag">
+                        <a href="/prototypes/863-invite-assessors" class="button large">Invite assessors</a>
+                    </div>
+
+                    <div th:if="${param.invitesSent != null}" th:remove="tag">
+                        <a href="/prototypes/863-manage-invites" class="button large">Manage assessor invites</a>
+                    </div>
+
+                </p>
 
             </div>
 
