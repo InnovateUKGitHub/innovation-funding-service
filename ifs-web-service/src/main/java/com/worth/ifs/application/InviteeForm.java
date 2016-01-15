@@ -1,11 +1,18 @@
 package com.worth.ifs.application;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.io.Serializable;
 
 public class InviteeForm implements Serializable {
-    public Long userId;
-    public String personName;
-    public String email;
+
+    private Long userId;
+    @NotEmpty
+    private String personName;
+    @NotEmpty
+    @Email
+    private String email;
 
     public InviteeForm(Long userId, String personName, String email) {
         this.userId = userId;
@@ -14,6 +21,8 @@ public class InviteeForm implements Serializable {
     }
 
     public InviteeForm() {
+        this.personName = "";
+        this.email = "";
     }
 
     public String getPersonName() {
