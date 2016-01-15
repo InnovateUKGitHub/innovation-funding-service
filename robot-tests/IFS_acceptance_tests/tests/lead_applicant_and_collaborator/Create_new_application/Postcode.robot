@@ -19,9 +19,8 @@ Enter Valid Postcode and the results should be displayed in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
-    [Tags]      Failing
-    # postcode lookup not yet implemented so, I have tagged this test as failing to keep all our lovely green lights
-    # however it doesn't need fixing! Leave until the functionality is implemented
+    [Tags]      Pending
+    # waiting for postcode lookup functionality to be implemented properly
     Given the user is in Create your account page
     When the user leaves the Postcode field empty
     Then user should be displayed with warning message
