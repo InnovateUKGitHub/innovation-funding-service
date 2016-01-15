@@ -138,7 +138,7 @@
     </div>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <div th:fragment="organisation_size" th:remove="tag">
+    <div th:fragment="organisation_size" th:if="${organisationType.name == 'Business'}" th:remove="tag">
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <span class="heading-medium" th:text="${question.name}" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
