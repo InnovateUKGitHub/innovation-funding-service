@@ -86,8 +86,13 @@ public class ApplicationFinanceController {
         return new ApplicationFinanceResource(dbFinance);
     }
 
-    @RequestMapping("/findFinances/{applicationId}/{organisationId}")
-    public OrganisationFinanceResource findFinances() {
+    @RequestMapping("/finances/{applicationId}/{organisationId}")
+    public ApplicationFinanceResource finances() {
+        return null;
+    }
 
+    @RequestMapping("/financeTotals/{applicationId}")
+    public ApplicationFinanceResource financeTotals() {
+        return null;
     }
 }

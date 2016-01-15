@@ -5,17 +5,22 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ApplicationFinanceResource {
     Long id;
     private Long organisation;
     private Long application;
     private OrganisationSize organisationSize;
+    private List<CostItem> costItems;
 
     public ApplicationFinanceResource(ApplicationFinance applicationFinance) {
         this.id = applicationFinance.getId();
         this.organisation = applicationFinance.getOrganisation().getId();
         this.application = applicationFinance.getApplication().getId();
         this.organisationSize = applicationFinance.getOrganisationSize();
+        this.costItems = new ArrayList<>();
     }
 
     public ApplicationFinanceResource() {
