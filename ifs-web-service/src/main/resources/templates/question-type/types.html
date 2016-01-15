@@ -913,7 +913,7 @@
     </div>
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
-        <div class="form-group">
+        <div class="form-group project-cost-breakdown">
             <div style="overflow: auto;">
                 <table>
                     <thead>
@@ -959,7 +959,7 @@
     <!-- ===========================Form: funding breakdown =========================== -->
     <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
 
-      <div class="form-group">
+      <div class="form-group finance-summary">
 
             <table>
                 <thead>
