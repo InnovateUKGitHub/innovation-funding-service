@@ -1,11 +1,14 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.util.*;
 public class ApplicationContributorController extends AbstractApplicationController {
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private final Log log = LogFactory.getLog(getClass());
+    @Autowired
+    private InviteRestService inviteRestService;
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -55,12 +60,8 @@ public class ApplicationContributorController extends AbstractApplicationControl
         String json = ApplicationCreationController.getFromCookie(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
-            log.info("size before: " + contributorsForm.getOrganisationMap().size());
-            log.info("size before-: " + contributorsForm.getOrganisation(String.valueOf(leadOrganisation.getId())).size());
             ContributorsForm contributorsForm2 = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
             contributorsForm.setOrganisationMap(contributorsForm2.getOrganisationMap());
-            log.info("size after: " + contributorsForm.getOrganisationMap().size());
-            log.info("size after-: " + contributorsForm.getOrganisation(String.valueOf(leadOrganisation.getId())).size());
         }
 
         return "application-contributors/invite";
@@ -74,8 +75,10 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
                                      @ModelAttribute ContributorsForm contributorsForm,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response,
+                                     HttpServletRequest request) {
         ApplicationResource application = applicationService.getById(applicationId);
+        ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         if (organisationIndex != null) {
             addPersonRow(contributorsForm, organisationIndex, application);
         } else if (organisationAndPerson != null) {
@@ -85,22 +88,47 @@ public class ApplicationContributorController extends AbstractApplicationControl
         String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
         ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
+        if(request.getParameterMap().containsKey("save_contributors")){
+            contributorsForm.getOrganisationMap().forEach((organisationName, inviteMap) -> {
+                List<InviteResource> invites = new ArrayList<>();
+                Organisation existingOrganisation = organisationService.getOrganisationById(Long.valueOf(organisationName));
+                if (existingOrganisation != null) {
+                    organisationName = existingOrganisation.getName();
+                }
+                organisationName = leadApplicantProcessRole.getOrganisation().getName();
+                inviteMap.stream().forEach(invite -> {
+                    InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
+                    if (existingOrganisation != null) {
+                        inviteResource.setInviteOrganisationId(existingOrganisation.getId());
+                    }
+                    invites.add(inviteResource);
+                });
+                log.debug(String.format("Adding %s invite to organisation: %s", invites.size(), organisationName));
+                if(existingOrganisation != null){
+                    inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+                }else{
+                    inviteRestService.createInvitesByInviteOrganisation(organisationName, invites);
+                }
+            });
+        }
+
+
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {
-        log.info("remove person " + organisationAndPerson);
+        log.debug("remove person " + organisationAndPerson);
         String organisationId = organisationAndPerson.substring(0, organisationAndPerson.indexOf("_"));
         int personIndex = Integer.parseInt(organisationAndPerson.substring(organisationAndPerson.indexOf("_") + 1, organisationAndPerson.length()));
 
         contributorsForm.getOrganisation(organisationId).remove(personIndex);
 
-        log.info("organisationId " + organisationId);
-        log.info("personIndex " + personIndex);
+        log.debug("organisationId " + organisationId);
+        log.debug("personIndex " + personIndex);
     }
 
     private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex, ApplicationResource application) {
-        log.info("add person " + organisationIndex);
+        log.debug("add person " + organisationIndex);
         if (organisationIndex.equals("0")) {
             ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
             Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();

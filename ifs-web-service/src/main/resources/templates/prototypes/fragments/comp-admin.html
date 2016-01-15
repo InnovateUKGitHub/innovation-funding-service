@@ -18,13 +18,13 @@
 
         <div class="grid-row">
             <div class="column-third">
-                <p><span class="heading-xlarge">6</span> Completed</p>
+                <p><span class="heading-medium">6</span> Completed</p>
             </div>
             <div class="column-third">
-                <p><span class="heading-xlarge">6</span> In progress</p>
+                <p><span class="heading-medium">6</span> In progress</p>
             </div>
             <div class="column-third">
-                <p><span class="heading-xlarge">24</span> Started</p>
+                <p><span class="heading-medium">24</span> Started</p>
             </div>
         </div>
     </section>
@@ -133,7 +133,15 @@
                 <p class="heading-xlarge no-margin">92</p>
             </div>
             <div class="column-half alignright-button">
-                <a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a>
+                
+                <div th:if="${param.invitesSent == null}" th:remove="tag">
+                    <a href="/prototypes/863-invite-assessors" class="button large">Invite assessors</a>
+                </div>
+
+                <div th:if="${param.invitesSent != null}" th:remove="tag">
+                    <a href="/prototypes/863-manage-invites" class="button large">Manage assessor invites</a>
+                </div>
+
             </div>
         </div>
 
@@ -224,7 +232,17 @@
                         <p class="form-hint">Predicted applications per confirmed assessor</p>
                     </li>
                 </ul>
-                <p class="extra-margin"><a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a></p>
+                <p class="extra-margin">
+
+                    <div th:if="${param.invitesSent == null}" th:remove="tag">
+                        <a href="/prototypes/863-invite-assessors" class="button large">Invite assessors</a>
+                    </div>
+
+                    <div th:if="${param.invitesSent != null}" th:remove="tag">
+                        <a href="/prototypes/863-manage-invites" class="button large">Manage assessor invites</a>
+                    </div>
+
+                </p>
 
             </div>
 

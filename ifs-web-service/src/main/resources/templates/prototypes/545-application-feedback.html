@@ -201,7 +201,49 @@
 			</div>
 		</li>
 	</ul>
+	
+	<div class="grid-row extra-margin">
+		<div class="column-two-thirds">
+			&nbsp;
+		</div>
+		<div class="column-third">
+			<p>
+				Average overall: <strong th:text="${score}+'0%'">SCORE</strong>
+			</p>	
+		</div>
+	</div>
+	
+	<h2 class="heading-medium" th:with="recommend=${param.unsuccessful} ? No : Yes">
+		Final recommendation: <span th:text="${recommend}">Yes</span>
+	</h2>
 
+	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
+		<li>
+			<h4 class="heading-small">Assessor 1</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+		</li>
+		<li>
+			<h4 class="heading-small">Assessor 2</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+		</li>
+		<li>
+			<h4 class="heading-small">Assessor 3</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+		</li>
+		<li>
+			<h4 class="heading-small">Assessor 4</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+		</li>
+		<li>
+			<h4 class="heading-small">Assessor 5</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+		</li>
+	</ul>
 	
 	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
 
