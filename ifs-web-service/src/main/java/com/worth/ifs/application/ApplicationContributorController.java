@@ -131,7 +131,6 @@ public class ApplicationContributorController extends AbstractApplicationControl
             ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
         }
 
-
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
     }
 
@@ -148,20 +147,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
     private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex, ApplicationResource application) {
         log.debug("add person " + organisationIndex);
-//        if (organisationIndex.equals("0")) {
-//            ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-//            Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
-//            organisationIndex = String.valueOf(leadOrganisation.getId());
-//        }
         OrganisationInvite organisationInvite = contributorsForm.getOrganisations().get(Integer.parseInt(organisationIndex));
-        if (organisationInvite == null) {
-            log.error("organisationInvite is null");
-        }
-        if (organisationInvite.getInvites() == null) {
-            log.error("organisationInvite.getInvites is null");
-        }
-
-        log.error(String.format("Add person to organisation : %s / %s", organisationIndex, organisationInvite.getOrganisationName()));
         List<InviteeForm> invites = organisationInvite.getInvites();
         invites.add(new InviteeForm());
     }
