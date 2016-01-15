@@ -213,8 +213,8 @@
 		</div>
 	</div>
 	
-	<h2 class="heading-medium">
-		Final recommendation
+	<h2 class="heading-medium" th:with="recommend=${param.unsuccessful} ? No : Yes">
+		Final recommendation: <span th:text="${recommend}">Yes</span>
 	</h2>
 
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
