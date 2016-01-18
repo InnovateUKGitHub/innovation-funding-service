@@ -147,5 +147,72 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .andExpect(cookie().exists("contributor_invite_state"))
                 .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
+
+
+    }
+
+    /**
+     * When user adds a partner organisation, it should just add a empty person row, so the user can fill in directly.
+     */
+    @Test
+    public void testInviteContributorsPostAddPartner() throws Exception {
+
+        mockMvc.perform(post(inviteUrl)
+                .param("organisations[0].organisationName", "Empire Ltd")
+                .param("organisations[0].organisationId", "1")
+                .param("organisations[0].invites[0].personName", "Nico Bijl")
+                .param("organisations[0].invites[0].email", "nico@worth.systems")
+                .param("organisations[0].invites[1].personName", "Brent de Kok")
+                .param("organisations[0].invites[1].email", "brent@worth.systems")
+                .param("add_partner", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\"}]}]}"))
+                .andExpect(view().name(redirectUrl));
+    }
+
+
+    /**
+     * When the last person is removed from a partner organisation, also remove the organisation.
+     * @throws Exception
+     */
+    @Test
+    public void testInviteContributorsPostRemovePersonAndPartner() throws Exception {
+        mockMvc.perform(post(inviteUrl)
+                .param("organisations[0].organisationName", "Empire Ltd")
+                .param("organisations[0].organisationId", "1")
+                .param("organisations[0].invites[0].personName", "Nico Bijl")
+                .param("organisations[0].invites[0].email", "nico@worth.systems")
+                .param("organisations[0].invites[1].personName", "Brent de Kok")
+                .param("organisations[0].invites[1].email", "brent@worth.systems")
+                .param("organisations[1].organisationName", "SomePartner")
+                .param("organisations[1].invites[0].personName", "Nico Bijl")
+                .param("organisations[1].invites[0].email", "nico@worth.systems")
+                .param("remove_person", "1_0"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
+                .andExpect(view().name(redirectUrl));
+    }
+
+    @Test
+    public void testInviteContributorsPostRemovePersonFromPartner() throws Exception {
+        mockMvc.perform(post(inviteUrl)
+                .param("organisations[0].organisationName", "Empire Ltd")
+                .param("organisations[0].organisationId", "1")
+                .param("organisations[0].invites[0].personName", "Nico Bijl")
+                .param("organisations[0].invites[0].email", "nico@worth.systems")
+                .param("organisations[0].invites[1].personName", "Brent de Kok")
+                .param("organisations[0].invites[1].email", "brent@worth.systems")
+                .param("organisations[1].organisationName", "SomePartner")
+                .param("organisations[1].invites[0].personName", "Nico Bijl")
+                .param("organisations[1].invites[0].email", "nico@worth.systems")
+                .param("organisations[1].invites[1].personName", "Brent de Kok")
+                .param("organisations[1].invites[1].email", "brent@worth.systems")
+                .param("remove_person", "1_0"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"SomePartner\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
+                .andExpect(view().name(redirectUrl));
     }
 }

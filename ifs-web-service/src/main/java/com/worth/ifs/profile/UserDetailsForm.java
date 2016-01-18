@@ -1,7 +1,9 @@
 package com.worth.ifs.profile;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -25,7 +27,8 @@ public class UserDetailsForm {
     private String lastName;
 
     @NotEmpty(message = "Please enter a phone number")
-    @Size(max = 256, message = "Input for your phone number has a maximum length of 256 characters")
+    @Length(min=6, max = 20, message = "Input for your phone number has a maximum length of 20 characters")
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
     private String phoneNumber;
 
     private String actionUrl;

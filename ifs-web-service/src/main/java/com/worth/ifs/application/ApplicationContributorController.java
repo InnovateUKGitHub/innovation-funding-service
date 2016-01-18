@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
@@ -85,6 +84,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     @RequestMapping(value = "/invite", method = RequestMethod.POST)
     public String inviteContributors(@PathVariable("applicationId") final Long applicationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
+                                     @RequestParam(name = "add_partner", required = false) String addPartner,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
@@ -96,6 +96,8 @@ public class ApplicationContributorController extends AbstractApplicationControl
             addPersonRow(contributorsForm, organisationIndex, application);
         } else if (organisationAndPerson != null) {
             removePersonRow(contributorsForm, organisationAndPerson);
+        }else if (addPartner != null) {
+            addPartnerRow(contributorsForm);
         }
         // User should never be able to set the organisation name or id of the lead-organisation.
         contributorsForm.getOrganisations().get(0).setOrganisationName(leadApplicantProcessRole.getOrganisation().getName());
@@ -106,16 +108,20 @@ public class ApplicationContributorController extends AbstractApplicationControl
         if (request.getParameterMap().containsKey("save_contributors") && !bindingResult.hasErrors()) {
             contributorsForm.getOrganisations().forEach((organisationInvite) -> {
                 List<InviteResource> invites = new ArrayList<>();
-                Organisation existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
+                Organisation existingOrganisation = null;
+                if(organisationInvite.getOrganisationId() != null){
+                    existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
+                }
 
+                final Organisation finalExistingOrganisation = existingOrganisation;
                 organisationInvite.getInvites().stream().forEach(invite -> {
                     InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
-                    if (existingOrganisation != null) {
-                        inviteResource.setInviteOrganisationId(existingOrganisation.getId());
+                    if (finalExistingOrganisation != null) {
+                        inviteResource.setInviteOrganisationId(finalExistingOrganisation.getId());
                     }
                     invites.add(inviteResource);
                 });
-                log.debug(String.format("Adding %s invite to organisation: %s", invites.size(), organisationInvite.getOrganisationName()));
+
                 if (existingOrganisation != null) {
                     inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
                 } else {
@@ -139,7 +145,11 @@ public class ApplicationContributorController extends AbstractApplicationControl
         int organisationIndex = Integer.parseInt(organisationAndPerson.substring(0, organisationAndPerson.indexOf("_")));
         int personIndex = Integer.parseInt(organisationAndPerson.substring(organisationAndPerson.indexOf("_") + 1, organisationAndPerson.length()));
 
+        // Removing the last person from a organisation will also remove the organisation itself.
         contributorsForm.getOrganisations().get(organisationIndex).getInvites().remove(personIndex);
+        if(organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().size() == 0){
+            contributorsForm.getOrganisations().remove(organisationIndex);
+        }
 
         log.debug("organisationId " + organisationIndex);
         log.debug("personIndex " + personIndex);
@@ -151,14 +161,17 @@ public class ApplicationContributorController extends AbstractApplicationControl
         List<InviteeForm> invites = organisationInvite.getInvites();
         invites.add(new InviteeForm());
     }
+    private void addPartnerRow(ContributorsForm contributorsForm) {
+        log.debug("addPartnerRow " );
+        OrganisationInvite organisationInvite = new OrganisationInvite();
+        InviteeForm invite = new InviteeForm();
+        LinkedList<InviteeForm> invites = new LinkedList<>();
+        invites.add(invite);
+        organisationInvite.setInvites(invites);
+        contributorsForm.getOrganisations().add(organisationInvite);
+    }
 
     private void getContributors(ApplicationResource application) {
-        List<Long> roleIds = application.getProcessRoleIds();
-
-        Map<Organisation, List<User>> organisationMap = new LinkedHashMap<>();
-        roleIds.stream().forEach(roleId -> {
-            ProcessRole role = processRoleService.getById(roleId);
-        });
 
     }
 

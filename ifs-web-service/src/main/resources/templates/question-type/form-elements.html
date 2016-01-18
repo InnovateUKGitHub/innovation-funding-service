@@ -227,6 +227,8 @@
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
           </p>
+            <div th:if="${!userIsLeadApplicant}"
+               th:include="question-type/form-elements :: ready-for-review" th:remove="tag"/>
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
@@ -234,22 +236,39 @@
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
             <!--  we show mark as complete buttons and the question should be assigned to you or-->
-            <div th:unless="(${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+            <div th:unless="${!userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
-
         </div>
-
-
     </div>
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
-        <span>This question is assigned to</span>
-        <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+    <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.getAssignee()})" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')">
+      <span th:if="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
+      <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+    </div>
+    <div th:if="${questionAssignee?.getAssignee()}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" >
+        <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/> by
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+        </span>
+        <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+        </span>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
+<div th:fragment="ready-for-review">
+  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}">
+    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
+            type="submit"
+            name="assign_question"
+            th:value="${question.getId()}+'_'+${questionAssignee?.getAssignedBy()?.getUser()?.getId()}"
+            th:class="'buttonlink'">Ready for review
+    </button>
+  </div>
+</div>
 <div th:fragment="assign-buttons">
     <div class="assign-container collapsible js-close-others" th:if="${question.isAssignEnabled()}">
 
@@ -276,7 +295,9 @@
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
-            Assigned to: <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+            <span th:if="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Assigned to:</span>
+            <span th:unless="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Reassigned to:</span>
+             <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
         </div>
         <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">

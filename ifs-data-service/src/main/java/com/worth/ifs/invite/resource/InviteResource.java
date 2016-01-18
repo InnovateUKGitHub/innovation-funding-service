@@ -1,4 +1,8 @@
 package com.worth.ifs.invite.resource;
+
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteStatus;
+
 public class InviteResource {
     private Long id;
     private String name;
@@ -6,12 +10,12 @@ public class InviteResource {
     private Long applicationId;
     private Long inviteOrganisationId;
     private String hash;
-    private Integer status;
+    private InviteStatus status;
 
     public InviteResource() {}
 
 
-    public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, Integer status) {
+    public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, InviteStatus status) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -25,6 +29,15 @@ public class InviteResource {
         this.name = name;
         this.email = email;
         this.applicationId = applicationId;
+    }
+
+    public InviteResource(Invite i) {
+        this.name = i.getName();
+        this.email = i.getEmail();
+        this.applicationId = i.getApplication().getId();
+        this.inviteOrganisationId = i.getInviteOrganisation().getId();
+        this.hash = i.getHash();
+        this.status = i.getStatus();
     }
 
     public Long getId() {
@@ -75,11 +88,11 @@ public class InviteResource {
         this.hash = hash;
     }
 
-    public Integer getStatus() {
+    public InviteStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(InviteStatus status) {
         this.status = status;
     }
 }

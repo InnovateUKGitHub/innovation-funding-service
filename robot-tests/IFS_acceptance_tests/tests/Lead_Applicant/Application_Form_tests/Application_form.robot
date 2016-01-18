@@ -30,7 +30,7 @@ Verify the Autosave for the form text areas
     [Setup]
     Given Applicant goes to the 'project summary' question of the new application
     When the Applicant enters some text
-    and the Applicant refreshes the page
+    And the Applicant refreshes the page
     Then the text should be visible
 
 Verify the Questions guidance for the "Rovel additive..." Application form
