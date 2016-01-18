@@ -10,14 +10,14 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${OVERVIEW_PAGE_X_APPLICATION}    ${SERVER}/application/1
+${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
 
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
     [Tags]    Finance    Finance Section    Collaboration    Failing
     Given the user logs in as lead applicant
-    When the user goes to the finance summary of the 'x' application
+    When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     and the finance Project cost breakdown calculations should be correct
     And the user logs out
@@ -26,7 +26,7 @@ Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
     [Tags]    Finance    Finance Section    Collaboration    Failing
     Given the user logs in as first collaborator
-    and the user goes to the finance summary of the 'x' application
+    and the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     and the finance Project cost breakdown calculations should be correct
     And the user logs out
@@ -35,7 +35,7 @@ Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
     [Tags]    Finance    Finance Section    Collaboration    Failing
     Given the user logs in as second collaborator
-    and the user goes to the finance summary of the 'x' application
+    and the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     and the finance Project cost breakdown calculations should be correct
     And the user logs out
@@ -44,9 +44,8 @@ Finance summary calculations for the second collaborator
 The user logs in as lead applicant
     Login as user    &{lead_applicant_credentials}
 
-the user goes to the finance summary of the 'x' application
-    go to    ${OVERVIEW_PAGE_X_APPLICATION}
-    #sleep    1s
+the user goes to the finance summary of the Providing sustainable childcare application
+    go to    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
     click element    link=Finances overview
 
 The user logs out
