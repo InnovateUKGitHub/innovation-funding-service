@@ -63,18 +63,19 @@ public class User {
     }
 
     public User(String name, String email, String password, String token, String imageUrl,
-                List<ProcessRole> processRoles) {
+                List<ProcessRole> processRoles, String uid) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.token = token;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
+        this.uid = uid;
     }
 
     public User(Long id, String name, String email, String password, String token, String imageUrl,
-                List<ProcessRole> processRoles) {
-        this(name, email, password, token, imageUrl, processRoles);
+                List<ProcessRole> processRoles, String uid) {
+        this(name, email, password, token, imageUrl, processRoles, uid);
         this.id = id;
     }
 

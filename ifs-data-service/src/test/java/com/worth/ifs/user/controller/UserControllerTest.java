@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.*;
@@ -33,9 +32,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
-        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", "test/image/url/2", null);
-        User testUser3 = new User(3L, "testUser3", "email3@email.nl", "password", "testToken789ghi", "test/image/url/3", null);
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null, "my-uid");
+        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", "test/image/url/2", null, "my-uid2");
+        User testUser3 = new User(3L, "testUser3", "email3@email.nl", "password", "testToken789ghi", "test/image/url/3", null, "my-uid3");
 
         List<User> users = new ArrayList<>();
         users.add(testUser1);
@@ -49,20 +48,23 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("[0]name", is(testUser1.getName())))
                 .andExpect(jsonPath("[0]imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("[0]token", is(testUser1.getToken())))
+                .andExpect(jsonPath("[0]uid", is(testUser1.getUid())))
                 .andExpect(jsonPath("[1]id", is((Number) testUser2.getId().intValue())))
                 .andExpect(jsonPath("[1]name", is(testUser2.getName())))
                 .andExpect(jsonPath("[1]imageUrl", is(testUser2.getImageUrl())))
                 .andExpect(jsonPath("[1]token", is(testUser2.getToken())))
+                .andExpect(jsonPath("[1]uid", is(testUser2.getUid())))
                 .andExpect(jsonPath("[2]id", is((Number) testUser3.getId().intValue())))
                 .andExpect(jsonPath("[2]name", is(testUser3.getName())))
                 .andExpect(jsonPath("[2]imageUrl", is(testUser3.getImageUrl())))
                 .andExpect(jsonPath("[2]token", is(testUser3.getToken())))
+                .andExpect(jsonPath("[2]uid", is(testUser3.getUid())))
                 .andDo(document("user/get-all-users"));
     }
 
     @Test
     public void userControllerShouldReturnUserById() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null, "my-uid");
 
         when(userRepositoryMock.findOne(testUser1.getId())).thenReturn(testUser1);
         mockMvc.perform(get("/user/id/" + testUser1.getId()))
@@ -71,23 +73,23 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("token", is(testUser1.getToken())))
+                .andExpect(jsonPath("uid", is(testUser1.getUid())))
                 .andDo(document("user/get-user"));
     }
 
     @Test
-    public void userControllerShouldReturnUserByToken() throws Exception {
-        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
+    public void userControllerShouldReturnUserByUid() throws Exception {
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null, "my-uid");
 
-        List<User> userList = singletonList(testUser1);
-
-        when(userRepositoryMock.findByToken(testUser1.getToken())).thenReturn(userList);
-
-        mockMvc.perform(get("/user/token/" + testUser1.getToken()))
+        when(userRepositoryMock.findOneByUid(testUser1.getUid())).thenReturn(testUser1);
+    
+        mockMvc.perform(get("/user/uid/" + testUser1.getUid()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("name", is(testUser1.getName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("token", is(testUser1.getToken())))
+                .andExpect(jsonPath("uid", is(testUser1.getUid())))
                 .andDo(document("user/get-user-by-token"));
 
     }
@@ -159,8 +161,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("[0].email", is(user.getEmail())))
                 .andExpect(jsonPath("[1].email").doesNotExist()
                 );
-
-
     }
 
     @Test

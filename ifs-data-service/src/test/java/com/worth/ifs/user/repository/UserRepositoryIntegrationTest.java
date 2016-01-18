@@ -37,7 +37,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Rollback
     public void test_createUser() {
         // Create a new user
-        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>()));
+        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>(), "my-uid"));
         assertNotNull(newUser.getId());
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
@@ -52,7 +52,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Rollback
     public void test_deleteNewUser() {
         // Create a new user
-        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>()));
+        User newUser = repository.save(new User("New User", "new@example.com", "apassword", "worthsystemsandhiveittogetheratlast", "", new ArrayList<>(), "my-uid"));
 
         // and immediately delete them
         repository.delete(newUser.getId());
