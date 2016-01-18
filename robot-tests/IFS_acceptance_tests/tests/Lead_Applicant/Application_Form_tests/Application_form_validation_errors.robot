@@ -20,55 +20,55 @@ Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    When the applicant inserts an invalid date "18-11-2015"
+    And the applicant inserts an invalid date "18-11-2015"
+    When the applicant should get a validation error for the date
+    And the Year field is empty
     Then the applicant should get a validation error for the date
-    and then when the Year field is empty
-    Then the applicant should get a validation error for the date
-    And when the applicant inserts "2016" in the Year field(valid date)
-    Then the applicant should not see the validation error any more
+    And the applicant inserts "2016" in the Year field(valid date)
+    And the applicant should not see the validation error any more
 
 Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    When the applicant inserts "32" in the day field
+    And the applicant inserts "32" in the day field
+    And the applicant should get a validation error for the date
+    When the applicant inserts "0" in the day field
+    And the applicant should get a validation error for the date
+    And the applicant inserts "-1" in the day field
     Then the applicant should get a validation error for the date
-    and when the applicant inserts "0" in the day field
-    Then the applicant should get a validation error for the date
-    and when the applicant inserts "-1" in the day field
-    Then the applicant should get a validation error for the date
-    and when the day field is empty
-    Then the applicant should get a validation error "Please enter a valid value"
-    and when the applicant inserts 01 in the day
-    Then the applicant should not see the validation error any more
+    And the day field is empty
+    And the applicant should get a validation error "Please enter a valid value"
+    And the applicant inserts 01 in the day
+    And the applicant should not see the validation error any more
 
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    When the applicant inserts "0" in the month field
+    And the applicant inserts "0" in the month field
+    And the applicant should get a validation error for the date
+    When the applicant inserts "13" in the month field
+    And the applicant should get a validation error for the date
+    And the applicant inserts "-1" in the month field
     Then the applicant should get a validation error for the date
-    and when the applicant inserts "13" in the month field
-    Then the applicant should get a validation error for the date
-    And when the applicant inserts "-1" in the month field
-    Then the applicant should get a validation error for the date
-    and then when the month field is empty
-    Then the applicant should get a validation error for the date
-    And when the applicant inserts "01" in the month field
-    Then the applicant should not see the validation error any more
+    And the month field is empty
+    And the applicant should get a validation error for the date
+    And the applicant inserts "01" in the month field
+    And the applicant should not see the validation error any more
 
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    When the applicant inserts "0" in the duration field
+    And the applicant inserts "0" in the duration field
+    And the applicant should get a validation error for the duration
+    When the applicant inserts "-1" in the duration field
+    And the applicant should get a validation error for the duration
+    And the applicant leaves the duration field empty
     Then the applicant should get a validation error for the duration
-    And when the applicant inserts "-1" in the duration field
-    Then the applicant should get a validation error for the duration
-    And when the applicant leaves the duration field empty
-    Then the applicant should get a validation error for the duration
-    And when the Applicant inserts 01 in the duration field
-    The Applicant should not see any more the error for the duration
+    And the Applicant inserts 01 in the duration field
+    And the Applicant should not see any more the error for the duration
 
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
@@ -82,7 +82,7 @@ the applicant inserts "32" in the day field
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    32
 
-when the applicant inserts "0" in the day field
+the applicant inserts "0" in the day field
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    0
 
@@ -90,10 +90,10 @@ the applicant inserts "0" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    0
 
-when the day field is empty
+the day field is empty
     Clear Element Text    id=application_details-startdate_day
 
-when the applicant inserts 01 in the day
+the applicant inserts 01 in the day
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    01
 
@@ -102,14 +102,14 @@ the applicant should not see the validation error any more
     Focus    css=.app-submit-btn
     Wait Until Element Is Not Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
 
-when the applicant inserts "13" in the month field
+the applicant inserts "13" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    13
 
-then when the month field is empty
+the month field is empty
     Clear Element Text    id=application_details-startdate_month
 
-when the applicant inserts "01" in the month field
+the applicant inserts "01" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    01
 
@@ -121,11 +121,11 @@ the applicant inserts an invalid date "18-11-2015"
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2015
 
-when the applicant inserts "2016" in the Year field(valid date)
+the applicant inserts "2016" in the Year field(valid date)
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2016
 
-then when the Year field is empty
+the Year field is empty
     Clear Element Text    id=application_details-startdate_year
 
 the applicant should get a validation error "Please enter a valid value"
@@ -133,11 +133,11 @@ the applicant should get a validation error "Please enter a valid value"
     #Element Should Contain    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid value.
     Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > label > span
 
-when the applicant inserts "-1" in the day field
+the applicant inserts "-1" in the day field
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    -1
 
-when the applicant inserts "-1" in the month field
+the applicant inserts "-1" in the month field
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    -1
 
@@ -162,14 +162,14 @@ the applicant should get a validation error for the duration
     Sleep    1s
     Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
 
-when the applicant inserts "-1" in the duration field
+the applicant inserts "-1" in the duration field
     Clear Element Text    id=application_details-duration
     Input Text    id=application_details-duration    -1
 
-when the applicant leaves the duration field empty
+the applicant leaves the duration field empty
     Clear Element Text    id=application_details-duration
 
-when the Applicant inserts 01 in the duration field
+the Applicant inserts 01 in the duration field
     Clear Element Text    id=application_details-duration
     Input Text    id=application_details-duration    1
 
