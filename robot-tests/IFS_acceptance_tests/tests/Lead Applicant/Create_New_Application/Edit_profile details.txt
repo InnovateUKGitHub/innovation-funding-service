@@ -64,7 +64,7 @@ the Applicant enters the profile details
     Select From List By Index    id=title    4
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    0123456789
+    Input Text    id=phoneNumber    +-0123456789
     Click Element    css=.extra-margin
 
 the Applicant is in Your details page
