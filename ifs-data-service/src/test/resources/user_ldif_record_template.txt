@@ -1,7 +1,6 @@
 dn: cn=$fullName,uid=$uid,dc=nodomain
 objectClass: top
 objectClass: person
-objectClass: organizationalPerson
 objectClass: inetOrgPerson
 uid: $uid
 cn: $fullName

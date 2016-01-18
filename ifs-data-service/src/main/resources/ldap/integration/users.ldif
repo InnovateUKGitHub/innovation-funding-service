@@ -1,0 +1,96 @@
+dn: cn=Steve Smith,uid=steve.smith,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: steve.smith
+cn: Steve Smith
+displayName: Steve Smith
+givenName: Steve
+sn: Smith
+mail: steve.smith@empire.com
+title: Mr
+userPassword: test
+
+
+dn: cn=Jessica Doe,uid=jessica.doe,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: jessica.doe
+cn: Jessica Doe
+displayName: Jessica Doe
+givenName: Jessica
+sn: Doe
+mail: jessica.doe@ludlow.co.uk
+title: Mrs
+userPassword: test
+
+
+dn: cn=Professor Plum,uid=professor.plum,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: professor.plum
+cn: Professor Plum
+displayName: Professor Plum
+givenName: Professor
+sn: Plum
+mail: paul.plum@gmail.com
+title: Prof
+userPassword: test
+
+
+dn: cn=Comp Exec (Competitions),uid=comp.exec (competitions),dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: comp.exec (competitions)
+cn: Comp Exec (Competitions)
+displayName: Comp Exec (Competitions)
+givenName: Comp
+sn: Exec (Competitions)
+mail: competitions@innovateuk.gov.uk
+title: Mr
+userPassword: test
+
+
+dn: cn=Project Finance Analyst (Finance),uid=project.finance analyst (finance),dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: project.finance analyst (finance)
+cn: Project Finance Analyst (Finance)
+displayName: Project Finance Analyst (Finance)
+givenName: Project
+sn: Finance Analyst (Finance)
+mail: finance@innovateuk.gov.uk
+title: Mr
+userPassword: test
+
+
+dn: cn=Pete Tom,uid=pete.tom,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: pete.tom
+cn: Pete Tom
+displayName: Pete Tom
+givenName: Pete
+sn: Tom
+mail: pete.tom@egg.com
+title: Mr
+userPassword: test
+
+
+dn: cn=Felix Wilson,uid=felix.wilson,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: felix.wilson
+cn: Felix Wilson
+displayName: Felix Wilson
+givenName: Felix
+sn: Wilson
+mail: felix.wilson@gmail.com
+title: Mr
+userPassword: test
