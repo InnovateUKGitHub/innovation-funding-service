@@ -3,6 +3,7 @@ package com.worth.ifs.finance.controller;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -36,6 +37,9 @@ public class ApplicationFinanceController {
 
     @Autowired
     ApplicationRepository applicationRepository;
+
+    @Autowired
+    ApplicationFinanceHandler applicationFinanceHandler;
 
     @Autowired
     CostRepository costRepository;
@@ -87,8 +91,8 @@ public class ApplicationFinanceController {
     }
 
     @RequestMapping("/finances/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource finances() {
-        return null;
+    public ApplicationFinanceResource finances(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
+        return applicationFinanceHandler.getApplicationOrganisationFinances(applicationId, organisationId);
     }
 
     @RequestMapping("/financeTotals/{applicationId}")

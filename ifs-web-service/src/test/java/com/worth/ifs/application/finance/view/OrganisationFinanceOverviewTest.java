@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;

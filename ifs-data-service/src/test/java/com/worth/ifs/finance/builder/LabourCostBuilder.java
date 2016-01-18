@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.finance.resource.LabourCost;
+import com.worth.ifs.finance.resource.cost.LabourCost;
 
 import java.util.List;
 import java.util.function.BiConsumer;

@@ -71,6 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+        // TODO: improve performance this is slow, check first call in for loop (too many questions)
         for(Question question : questions) {
             final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
             questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));

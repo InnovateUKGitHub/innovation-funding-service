@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -26,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractApplicationController {
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
-    private final Log LOG = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     protected ResponseService responseService;
@@ -114,8 +114,9 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    @ProfileExecution
     protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, Boolean... hateoas) {
+        StopWatch stopWatch1 = new StopWatch("add application details 1");
+        stopWatch1.start("addApplicationDetails.applicationservice.competitionservice.orgservice");
         ApplicationResource application = applicationService.getById(applicationId, hateoas);
 
         application.setId(applicationId);
@@ -130,19 +131,37 @@ public abstract class AbstractApplicationController {
             form = new ApplicationForm();
         }
         form.application = application;
+        stopWatch1.stop();
+        log.info(stopWatch1.prettyPrint());
 
+        StopWatch stopWatch2 = new StopWatch("add application details 2");
+        stopWatch2.start("addApplicationDetails.addingdetails");
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
 
+        StopWatch stopWatch3 = new StopWatch("add application details 3");
+        stopWatch3.start("addApplicationDetails.maporgs");
+
+        StopWatch stopWatch4 = new StopWatch("add application details 3.1");
+        stopWatch4.start("addApplicationDetails.userOrganisation.ifPresent");
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId)
         );
-
+        stopWatch4.stop();
+        log.info(stopWatch4.prettyPrint());
+        StopWatch stopWatch5 = new StopWatch("add application details 3.2");
+        stopWatch5.start("addApplicationDetails.addMappedSectionsDetails");
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
-
+        stopWatch5.stop();
+        log.info(stopWatch5.prettyPrint());
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        stopWatch3.stop();
+        log.info(stopWatch3.prettyPrint());
+
         return application;
     }
 
@@ -171,8 +190,8 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
-        LOG.info("*********************");
-        LOG.info(application.getId());
+        log.info("*********************");
+        log.info(application.getId());
         List<FormInputResponse> responses = getFormInputResponses(application);
         Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
@@ -214,13 +233,10 @@ public abstract class AbstractApplicationController {
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        Competition competition = competitionService.getById(application.getCompetitionId());
-        List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
-        model.addAttribute("assignedSections", assignedSections);
     }
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {

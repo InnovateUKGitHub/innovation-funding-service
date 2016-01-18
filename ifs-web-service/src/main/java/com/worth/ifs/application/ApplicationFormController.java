@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -89,11 +90,19 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
+        StopWatch stopWatch = new StopWatch("Call services");
+        stopWatch.start("showQuestion.services");
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
 
+        StopWatch stopWatch2 = new StopWatch("Add form attributes");
+        stopWatch2.start("showQuestion.addFormAttributes");
         this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -101,14 +110,21 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    @ProfileExecution
-    public void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
+    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
         Optional<Long> questionSectionId = null;
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
+        StopWatch stopWatch1 = new StopWatch("add application details");
+        stopWatch1.start("addFormAttributes.addApplicationDetails");
         super.addApplicationDetails(applicationId, userId, questionSectionId, model, form, false);
+        stopWatch1.stop();
+        log.info(stopWatch1.prettyPrint());
+        StopWatch stopWatch2 = new StopWatch("add navigation");
+        stopWatch2.start("addFormAttributes.addNavigation");
         addNavigation(question, applicationId, model);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
         model.addAttribute("currentQuestion", question);
     }
 

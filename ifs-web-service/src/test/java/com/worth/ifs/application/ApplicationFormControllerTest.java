@@ -2,8 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.finance.CostCategory;
-import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.security.CookieFlashMessageFilter;

@@ -1,17 +1,12 @@
 package com.worth.ifs.application.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.form.domain.FormInput;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 

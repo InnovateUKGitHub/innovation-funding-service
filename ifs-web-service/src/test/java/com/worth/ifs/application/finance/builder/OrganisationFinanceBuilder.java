@@ -1,17 +1,12 @@
 package com.worth.ifs.application.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.finance.CostCategory;
-import com.worth.ifs.application.finance.CostType;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
-import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class OrganisationFinanceBuilder extends BaseBuilder<OrganisationFinance, OrganisationFinanceBuilder> {
