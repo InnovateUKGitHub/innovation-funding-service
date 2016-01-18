@@ -53,7 +53,7 @@ Verify the field is disabled for the Collaborator
     [Teardown]    User closes the browser
 
 *** Keywords ***
-When the Applicant assigns the public description question to the collaborator
+the Applicant assigns the public description question to the collaborator
     [Arguments]    ${assignee_name}
     focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    lead Applicant's text 123...
@@ -78,7 +78,7 @@ the Collaborator gets the assigned notification
     Wait Until Element Is Visible    css=#content > div.event-alert
     Element Should Contain    css=#content > div.event-alert > p    Steve Smith has assigned a question to you
 
-and the collaborator can see the 'assigned to you' in the overview page
+the collaborator can see the 'assigned to you' in the overview page
     Applicant goes to the Overview page
     Element Should Contain    css=#form-input-12 .assign-container    You
 
@@ -115,7 +115,9 @@ the question should show the assigned persons name
     Element Should Contain    css=#form-input-12 .assignee span+span    Jessica Doe
 
 the collaborator marks question as complete
-    Click Element    css=#form-input-12 .buttonlink[name="mark_as_complete"]
+    Click Element       name=assign_question
+    #Wait Until Element Is Visible   css=#form-input-12 .buttonlink[name="mark_as_complete"]
+    #Click Element    css=#form-input-12 .buttonlink[name="mark_as_complete"]
 
-the Applicant assigns the public description question to the collaborator
-    [Arguments]    ${arg1}
+#the Applicant assigns the public description question to the collaborator
+ #   [Arguments]    ${arg1}
