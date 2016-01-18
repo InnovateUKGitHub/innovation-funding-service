@@ -10,6 +10,7 @@ public class InviteResource {
 
     public InviteResource() {}
 
+
     public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, Integer status) {
         this.id = id;
         this.name = name;
@@ -18,6 +19,12 @@ public class InviteResource {
         this.inviteOrganisationId = inviteOrganisationId;
         this.hash = hash;
         this.status = status;
+    }
+
+    public InviteResource(String name, String email, Long applicationId) {
+        this.name = name;
+        this.email = email;
+        this.applicationId = applicationId;
     }
 
     public Long getId() {

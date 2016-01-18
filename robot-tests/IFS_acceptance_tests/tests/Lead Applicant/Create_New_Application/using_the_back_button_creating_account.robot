@@ -22,7 +22,7 @@ The user presses the back button while on the create account page
 
 The user creates an account and then presses the back button
     [Documentation]     INFUND-1423
-    [Tags]  Create account  Back button     Failing
+    [Tags]  Create account  Back button     Pending
     # tagged as failing due to bug INFUND-1496. This test should not be fixed until that issue is fixed.
     Given the user goes to the create account page
     And the user enters valid details and creates an account

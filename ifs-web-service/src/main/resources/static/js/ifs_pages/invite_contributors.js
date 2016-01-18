@@ -37,8 +37,8 @@ IFS.invites = (function(){
           var orgId = orgContainer.attr('data-invite-org');
           var rowId = orgContainer.find('[data-invite-row]').length;
           var html = '<tr class="form-group" data-invite-row>\
-                        <td><input type="text" class="form-control width-full" value="" placeholder="name" name="organisationMap['+orgId+']['+rowId+'].personName" /></td>\
-                        <td><input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisationMap['+orgId+']['+rowId+'].email" /></td>\
+                        <td><input type="text" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName" /></td>\
+                        <td><input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisations['+orgId+'].invites['+rowId+'].email" /></td>\
                         <td class="alignright"><button value="'+orgId+'_'+rowId+'" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                       </tr>';
           orgContainer.find('tbody').append(html);
@@ -48,12 +48,15 @@ IFS.invites = (function(){
           jQuery('[data-invite-row]').each(function(index,value){
               var orgId = jQuery(value).closest('li').attr('data-invite-org');
 
-              jQuery(value).find('input').each(function(){
+              jQuery(value).find('input').each(function(inviteIndex, inviteValue){
                   var input = jQuery(this);
                   var oldName = input.attr('name');
+
                   var newName = oldName.split('.');
-                  newName[0] = 'organisationMap['+orgId+']['+index+']';
+                  newName[0] = 'organisations['+orgId+']'
+                  newName[1] = 'invites['+inviteIndex+']';
                   newName = newName.join('.');
+
                   input.attr('name',newName);
               });
           });

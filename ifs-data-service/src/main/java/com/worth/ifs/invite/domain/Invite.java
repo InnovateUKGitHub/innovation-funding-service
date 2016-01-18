@@ -22,13 +22,14 @@ public class Invite {
 
     private String hash;
 
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private InviteStatus status;
 
     public Invite() {
 
     }
 
-    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, Integer status) {
+    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatus status) {
         this.name = name;
         this.email = email;
         this.application = application;
@@ -85,11 +86,11 @@ public class Invite {
         this.hash = hash;
     }
 
-    public Integer getStatus() {
+    public InviteStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(InviteStatus status) {
         this.status = status;
     }
 }

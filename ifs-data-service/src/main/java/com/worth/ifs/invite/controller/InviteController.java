@@ -6,13 +6,12 @@ import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.domain.InviteStatus;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.service.InviteRestServiceImpl;
-import com.worth.ifs.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,8 +48,7 @@ public class InviteController {
     }
 
     private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
-
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(inviteOrganisationResource.getOrganisationName(), null, null);
+        InviteOrganisation newInviteOrganisation = new InviteOrganisation(inviteOrganisationResource.getOrganisationName(), inviteOrganisationResource.getOrganisation(), null);
 
         return newInviteOrganisation;
     }
@@ -66,7 +64,7 @@ public class InviteController {
 
     private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findOne(inviteResource.getApplicationId());
-        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, 0);
+        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
 
         return invite;
     }

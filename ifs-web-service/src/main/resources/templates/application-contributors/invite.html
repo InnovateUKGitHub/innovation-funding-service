@@ -28,59 +28,76 @@
 
 
     <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
-        <button class="hidden-save" type="submit" aria-label="Save the list of invitees" />
+        <button class="hidden-save" type="submit" aria-label="Save the list of invitees"/>
         <ul class="boxed-list">
-            <li th:each="organisationEntry, organisationStats: ${organisationMap}" th:attr="data-invite-org=${organisationEntry.key.id}">
-                <h2  th:if="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Lead Organisation "<span th:remove="tag" th:text="${organisationEntry.key.name}" />"</h2>
-                <h2  th:unless="${organisationEntry.key.id == leadOrganisation.id}" class="heading-medium">Partner Organisation "<span th:remove="tag" th:text="${organisationEntry.key.name}"/>"</h2>
+            <li th:each="organisationInvite, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
+                <h2 th:if="${organisationStats.index == 0}" class="heading-medium">Lead Organisation "<span th:remove="tag"
+                                                                                                            th:text="${organisationInvite.organisationName}"/>"
+                </h2>
 
-                <p th:if="${organisationEntry.key.id == leadOrganisation.id}">The lead organisation will be the lead partner throughout the application and project.
+                <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<span th:remove="tag"
+                                                                                                                   th:text="${organisationInvite.organisationName}"/>"
+                </h2>
+
+                <p th:if="${organisationStats.index == 0}">The lead organisation will be the lead partner throughout the application and project.
                     Add members of your own organisation to contribute to this application.
                 </p>
+                <input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-full" placeholder="Organisation Name"
+                       th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'error'"
+                       th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>
+                <input type="hidden" class="form-control width-full" placeholder="name"
+                       th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
 
-                  <table>
-                      <thead>
-                      <tr>
-                          <th>Name</th>
-                          <th>E-mail</th>
-                          <th>&nbsp;</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr class="form-group" th:if="${organisationEntry.key.id == leadOrganisation.id}">
-                          <td>
-                              <input type="text" class="form-control width-full" th:value="${leadApplicant.name}" readonly="readonly"/>
-                          </td>
-                          <td>
-                              <input type="text" class="form-control width-full" th:value="${leadApplicant.email}" readonly="readonly"/>
-                          </td>
-                          <td class="alignright remove">
-                              <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
-                          </td>
-                      </tr>
-                      <tr class="form-group" th:each="user,stats: ${contributorsForm.organisationMap[__${organisationEntry.key.id}__]}" data-invite-row="">
-                          <td>
-                              <input type="text" class="form-control width-full" placeholder="name" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].personName}"/>
-                          </td>
-                          <td>
-                              <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:field="*{organisationMap[__${organisationEntry.key.id}__][__${stats.index}__].email}"/>
-                          </td>
-                          <td class="alignright">
-                              <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
-                              <button class="remove-another-row buttonlink" type="submit" name="remove_person"
-                                      th:value="${organisationEntry.key.id + '_' + stats.index}">Remove
-                              </button>
-                          </td>
-                      </tr>
-                      </tbody>
-                  </table>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="form-group" th:if="${organisationInvite.organisationId == leadOrganisation.id}">
+                        <td>
+                            <input type="text" class="form-control width-full" th:value="${leadApplicant.name}" readonly="readonly"/>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control width-full" th:value="${leadApplicant.email}" readonly="readonly"/>
+                        </td>
+                        <td class="alignright remove">
+                            <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
+                        </td>
+                    </tr>
+                    <tr class="form-group" th:each="user, userStats: ${organisationInvite.invites}" data-invite-row="">
+                        <td>
+                            <input type="text" class="form-control width-full"
+                                   placeholder="name"
+                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}? 'error'"
+                                   th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName}"/>
+                        </td>
+                        <td>
+                            <input type="email" class="form-control width-full"
+                                   placeholder="name@company.co.uk"
+                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}? 'error'"
+                                   th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}"/>
+                        </td>
+                        <td class="alignright">
+                            <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
+                            <button class="remove-another-row buttonlink" type="submit" name="remove_person"
+                                    th:value="${organisationStats.index + '_' + userStats.index}">Remove
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
                 <p class="alignright">
-                    <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationEntry.key.id}">Add person</button>
+                    <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add person</button>
                 </p>
             </li>
             <li style="background:#f8f8f8">
                 <a href="javascript:void(0);" class="js-add-partner">Add partner organisation</a>
+
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
             </li>
         </ul>

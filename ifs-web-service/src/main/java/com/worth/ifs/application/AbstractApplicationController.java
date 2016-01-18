@@ -224,6 +224,7 @@ public abstract class AbstractApplicationController {
         OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
         model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
         model.addAttribute("organisationFinanceSize", organisationFinance.getOrganisationSize());
+        model.addAttribute("organisationType", organisationFinance.getOrganisation().getOrganisationType());
         model.addAttribute("organisationFinanceId", organisationFinance.getApplicationFinanceId());
         model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
         model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
