@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static java.util.Collections.singletonList;
 
 /**

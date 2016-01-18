@@ -12,22 +12,15 @@ import org.springframework.web.client.HttpClientErrorException;
 @Component
 public class WebCredentialsValidator implements CredentialsValidator {
 
-
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     UserRestService userRestService;
 
     @Override
-    public User retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        User user = userRestService.retrieveUserByEmailAndPassword(emailAddress, password);
-        return user;
-    }
-
-    @Override
-    public User retrieveUserByToken(String token) {
+    public User retrieveUserByUid(String uid) {
         try {
-            return userRestService.retrieveUserByToken(token);
+            return userRestService.retrieveUserByUid(uid);
         } catch (HttpClientErrorException e) {
             log.error(e);
             return null;

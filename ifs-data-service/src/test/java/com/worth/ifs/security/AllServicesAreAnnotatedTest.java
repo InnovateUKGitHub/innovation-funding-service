@@ -5,7 +5,7 @@ import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.AssessmentRestServiceImpl;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
@@ -58,7 +58,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     ApplicationRestServiceImpl.class,
                     CompanyHouseRestServiceImpl.class,
                     ResponseRestServiceImpl.class,
-                    TokenAuthenticationService.class,
+                    UidAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
                     ApplicationResourceAssembler.class,
                     ProcessRoleResourceAssembler.class,

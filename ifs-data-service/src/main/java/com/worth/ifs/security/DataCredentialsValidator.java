@@ -14,14 +14,7 @@ public class DataCredentialsValidator implements CredentialsValidator {
     UserController userController;
 
     @Override
-    public User retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        User user = userController.getUserByEmailandPassword(emailAddress, password);
-        return user;
+    public User retrieveUserByUid(String uid) {
+        return userController.getUserByUid(uid);
     }
-
-    @Override
-    public User retrieveUserByToken(String token) {
-        User user = userController.getUserByToken(token);
-        return user;
-  }
 }

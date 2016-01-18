@@ -1,13 +1,11 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.application.ApplicationCreationController;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.login.LoginController;
 import com.worth.ifs.user.domain.Organisation;
@@ -40,14 +38,7 @@ public class RegistrationController {
     private OrganisationService organisationService;
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private TokenAuthenticationService tokenAuthenticationService;
-
-    @Autowired
     protected UserAuthenticationService userAuthenticationService;
-
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -58,7 +49,7 @@ public class RegistrationController {
     public String registerForm(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
-            return LoginController.getRedirectUrlForUser(user);
+            return LoginController.getRedirectUrlForUser();
         }
 
         String destination = "registration-register";
@@ -98,7 +89,7 @@ public class RegistrationController {
     public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
-            return LoginController.getRedirectUrlForUser(user);
+            return LoginController.getRedirectUrlForUser();
         }
 
         String destination = "registration-register";
@@ -146,7 +137,9 @@ public class RegistrationController {
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
         ApplicationCreationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
-        tokenAuthenticationService.addAuthentication(response, userResource);
+
+        // TODO DW - INFUND-1267 - can  we do the below behaviour with Shib SP / IdP?
+//        tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
     private boolean userResourceEnvelopeStatusIsOK(ResourceEnvelope<UserResource> userResourceEnvelope) {

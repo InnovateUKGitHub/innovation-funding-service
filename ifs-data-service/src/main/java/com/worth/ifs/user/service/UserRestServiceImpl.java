@@ -36,11 +36,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         this.processRoleRestURL = processRoleRestURL;
     }
 
-    public User retrieveUserByToken(String token) {
-        if(StringUtils.isEmpty(token))
+    public User retrieveUserByUid(String uid) {
+        if(StringUtils.isEmpty(uid))
             return null;
 
-        return restGet(userRestURL + "/token/" + token, User.class);
+        return restGet(userRestURL + "/uid/" + uid, User.class);
     }
 
     @NotSecured("Method should be able to be called by a web service for guest user that is creating his account to check for duplicate email")
@@ -52,13 +52,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return Arrays.asList(users);
     }
 
-    public User retrieveUserByEmailAndPassword(String email, String password) {
-        if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
-            return null;
-
-        return restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
-    }
-
+    @Override
     public User retrieveUserById(Long id) {
         if(id == null || id.equals(0L))
             return null;
@@ -66,38 +60,45 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return restGet(userRestURL + "/id/" + id, User.class);
     }
 
+    @Override
     public List<User> findAll() {
         ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAll/", User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
+    @Override
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
         return restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
     }
 
+    @Override
     public ProcessRole findProcessRoleById(Long processRoleId) {
         return restGet(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
     }
 
+    @Override
     public List<ProcessRole> findProcessRole(Long applicationId) {
         ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRole = responseEntity.getBody();
         return Arrays.asList(processRole);
     }
 
+    @Override
     public List<User> findAssignableUsers(Long applicationId){
         ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAssignableUsers/" + applicationId, User[].class);
         User[] users =responseEntity.getBody();
         return Arrays.asList(users);
     }
 
+    @Override
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId){
         ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRoles =responseEntity.getBody();
         return Arrays.asList(processRoles);
     }
 
+    @Override
     public List<User> findRelatedUsers(Long applicationId){
         ResponseEntity<User[]> responseEntity = restGetEntity(getDataRestServiceURL() + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
@@ -105,6 +106,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @NotSecured("Method should be able to be called by a web service for guest user to create an account")
+    @Override
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 

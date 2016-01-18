@@ -54,7 +54,7 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public Object getCredentials() {
-        return user.getToken();
+        return user.getUid();
     }
 
     @Override

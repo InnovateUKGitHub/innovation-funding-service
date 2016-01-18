@@ -47,31 +47,9 @@ public class UserController {
         return "return error object instead";
     }
 
-    @RequestMapping("/token/{token}")
-     public User getUserByToken(@PathVariable("token") final String token) {
-        List<User> users = repository.findByToken(token);
-        if(users!=null && !users.isEmpty()) {
-            return users.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    @RequestMapping("/email/{email}/password/{password}")
-    public User getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        List<User> users = repository.findByEmail(email);
-
-        if (!users.isEmpty()){
-            User user = users.get(0);
-            if(user.passwordEquals(password)){
-                return user;
-            }else{
-                return null;
-            }
-        }else{
-            log.warn("Return null");
-            return null;
-        }
+    @RequestMapping("/uid/{uid}")
+     public User getUserByUid(@PathVariable("uid") final String uid) {
+        return repository.findOneByUid(uid);
     }
 
     @RequestMapping("/id/{id}")
@@ -83,6 +61,7 @@ public class UserController {
     public List<User> getUserByName(@PathVariable("name") final String name) {
         return repository.findByName(name);
     }
+
     @RequestMapping("/findAll/")
     public List<User> findAll() {
         return repository.findAll();

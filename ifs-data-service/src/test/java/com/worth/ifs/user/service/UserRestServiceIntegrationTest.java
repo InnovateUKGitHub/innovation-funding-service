@@ -23,7 +23,7 @@ public class UserRestServiceIntegrationTest extends BaseRestServiceIntegrationTe
 
     @Test
     public void test_retrieveUserByEmailAndPassword() {
-        User user = service.retrieveUserByEmailAndPassword("steve.smith@empire.com", "test");
+        User user = service.retrieveUserByUid("6b50cb4f-7222-33a5-99c5-8c068cd0b03c");
         assertNotNull(user);
         assertEquals("steve.smith@empire.com", user.getEmail());
     }

@@ -36,7 +36,8 @@ public class User {
     @Column(unique=true)
     private String token;
 
-
+    @Column(unique=true)
+    private String uid;
 
     @Column(unique=true)
     private String email;
@@ -100,6 +101,10 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     @JsonIgnore
