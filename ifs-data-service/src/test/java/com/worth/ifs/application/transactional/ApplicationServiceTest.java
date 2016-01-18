@@ -38,8 +38,8 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "test/image/url/2", "testToken456def", null, "my-uid");
-        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null, "my-uid");
+        User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "testToken456def", null, "my-uid");
+        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", null, "my-uid");
 
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);

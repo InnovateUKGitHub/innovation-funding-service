@@ -80,8 +80,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void applicationControllerShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "test/image/url/2", "testToken456def", null, "my-uid");
-        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null, "my-uid2");
+        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", null, "my-uid");
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", null, "my-uid2");
 
         ApplicationResource testApplication1 = new ApplicationResource(new Application(null, "testApplication1Name", null, null, 1L));
         ApplicationResource testApplication2 = new ApplicationResource(new Application(null, "testApplication2Name", null, null, 2L));

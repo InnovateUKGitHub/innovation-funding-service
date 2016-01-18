@@ -34,9 +34,6 @@ public class User {
     private String imageUrl;
 
     @Column(unique=true)
-    private String token;
-
-    @Column(unique=true)
     private String uid;
 
     @Column(unique=true)
@@ -62,20 +59,19 @@ public class User {
 
     }
 
-    public User(String name, String email, String password, String token, String imageUrl,
+    public User(String name, String email, String password, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.token = token;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
         this.uid = uid;
     }
 
-    public User(Long id, String name, String email, String password, String token, String imageUrl,
+    public User(Long id, String name, String email, String password, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this(name, email, password, token, imageUrl, processRoles, uid);
+        this(name, email, password, imageUrl, processRoles, uid);
         this.id = id;
     }
 
@@ -98,10 +94,6 @@ public class User {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public String getUid() {
@@ -204,7 +196,9 @@ public class User {
         this.email = email;
     }
 
-    public void setToken(String token) { this.token = token; }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     @Override
     public boolean equals(Object o) {

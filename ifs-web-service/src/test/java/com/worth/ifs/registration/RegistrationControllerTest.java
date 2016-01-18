@@ -213,7 +213,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
         userResource.setTitle("Mr");
         userResource.setPhoneNumber("0123456789");
         userResource.setEmail("test@test.test");
-        userResource.setToken("testToken123abc");
         userResource.setId(1L);
 
 

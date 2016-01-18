@@ -14,7 +14,6 @@ public class UserTest {
     Long id;
     String name;
     String imageUrl;
-    String token;
     String password;
     String email;
     String uid;
@@ -27,7 +26,6 @@ public class UserTest {
         email = "test@innovateuk.org";
         password = "test123";
         imageUrl = "/image/url/test";
-        token = "testtoken123abc";
         uid = "uid";
 
         processRoles = new ArrayList<>();
@@ -35,7 +33,7 @@ public class UserTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        user = new User(id, name, email, password, token, imageUrl, processRoles, "uid");
+        user = new User(id, name, email, password, imageUrl, processRoles, "uid");
     }
 
     @Test
@@ -44,7 +42,6 @@ public class UserTest {
         Assert.assertEquals(user.getName(), name);
         Assert.assertEquals(user.getId(), id);
         Assert.assertEquals(user.getImageUrl(),imageUrl);
-        Assert.assertEquals(user.getToken(), token);
         Assert.assertEquals(user.getUid(), uid);
     }
 }

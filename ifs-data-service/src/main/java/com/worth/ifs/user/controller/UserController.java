@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -100,7 +101,7 @@ public class UserController {
         ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
 
         if(repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            UserResource createdUserResource = createUserWithToken(newUser);
+            UserResource createdUserResource = createUserWithUid(newUser);
             addUserResource(resourceEnvelope, createdUserResource);
         }
         else {
@@ -140,11 +141,11 @@ public class UserController {
         resourceEnvelope.addError(new ResourceError("email", "User with given email address does not exist!"));
     }
 
-    private UserResource createUserWithToken(User user) {
+    private UserResource createUserWithUid(User user) {
+        // TODO DW - INFUND-1267 - the UUID should be supplied by the Shib REST API
+        user.setUid(UUID.randomUUID().toString());
         User createdUser = repository.save(user);
-        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
-        User finalUser = repository.save(createdUserWithToken);
-        return new UserResource(finalUser);
+        return new UserResource(createdUser);
     }
 
     private User updateUser(User existingUser, UserResource updatedUserResource){
@@ -189,11 +190,5 @@ public class UserController {
 
     private String concatenateFullName(String firstName, String lastName) {
         return firstName+" "+lastName;
-    }
-
-    private User addTokenBasedOnIdToUser(User user) {
-        String userToken = user.getId() + "abc123";
-        user.setToken(userToken);
-        return user;
     }
 }

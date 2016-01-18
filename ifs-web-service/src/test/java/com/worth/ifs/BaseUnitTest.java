@@ -138,10 +138,10 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
+        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
         applicant = loggedInUser;
-        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
-        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
+        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "image", new ArrayList(), "my-uid2");
+        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "image", new ArrayList<>(), "my-uid3");
         users = asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);

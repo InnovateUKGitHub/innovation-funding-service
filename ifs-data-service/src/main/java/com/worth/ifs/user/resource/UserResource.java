@@ -20,7 +20,6 @@ public class UserResource {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
-    private String token;
     private String email;
     private String password;
     private List<Long> organisationIds = new ArrayList<>();
@@ -37,7 +36,6 @@ public class UserResource {
         inviteName = user.getInviteName();
         phoneNumber = user.getPhoneNumber();
         imageUrl = user.getImageUrl();
-        token = user.getToken();
         email = user.getEmail();
         password = user.getEmail();
         organisationIds = simpleMap(user.getOrganisations(), Organisation::getId);
@@ -105,14 +103,6 @@ public class UserResource {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getEmail() {
