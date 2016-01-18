@@ -1,8 +1,8 @@
-dn: cn=Steve Smith,uid=steve.smith,dc=nodomain
+dn: uid=6b50cb4f-7222-33a5-99c5-8c068cd0b03c,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: steve.smith
+uid: 6b50cb4f-7222-33a5-99c5-8c068cd0b03c
 cn: Steve Smith
 displayName: Steve Smith
 givenName: Steve
@@ -12,11 +12,11 @@ title: Mr
 userPassword: test
 
 
-dn: cn=Jessica Doe,uid=jessica.doe,dc=nodomain
+dn: uid=7de841a5-0812-3de9-bb0a-72e2ac86ecfb,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: jessica.doe
+uid: 7de841a5-0812-3de9-bb0a-72e2ac86ecfb
 cn: Jessica Doe
 displayName: Jessica Doe
 givenName: Jessica
@@ -26,11 +26,11 @@ title: Mrs
 userPassword: test
 
 
-dn: cn=Professor Plum,uid=professor.plum,dc=nodomain
+dn: uid=847ac08d-5486-3f3a-9e15-06303fb01ffb,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: professor.plum
+uid: 847ac08d-5486-3f3a-9e15-06303fb01ffb
 cn: Professor Plum
 displayName: Professor Plum
 givenName: Professor
@@ -40,11 +40,11 @@ title: Prof
 userPassword: test
 
 
-dn: cn=Comp Exec (Competitions),uid=comp.exec (competitions),dc=nodomain
+dn: uid=6c1964bd-6915-35b5-9145-79541fde6a04,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: comp.exec (competitions)
+uid: 6c1964bd-6915-35b5-9145-79541fde6a04
 cn: Comp Exec (Competitions)
 displayName: Comp Exec (Competitions)
 givenName: Comp
@@ -54,11 +54,11 @@ title: Mr
 userPassword: test
 
 
-dn: cn=Project Finance Analyst (Finance),uid=project.finance analyst (finance),dc=nodomain
+dn: uid=b23decfc-f417-3448-80b7-818bd75c92e4,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: project.finance analyst (finance)
+uid: b23decfc-f417-3448-80b7-818bd75c92e4
 cn: Project Finance Analyst (Finance)
 displayName: Project Finance Analyst (Finance)
 givenName: Project
@@ -68,11 +68,11 @@ title: Mr
 userPassword: test
 
 
-dn: cn=Pete Tom,uid=pete.tom,dc=nodomain
+dn: uid=61de6f46-c6c5-3228-a18a-039504ee5a7f,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: pete.tom
+uid: 61de6f46-c6c5-3228-a18a-039504ee5a7f
 cn: Pete Tom
 displayName: Pete Tom
 givenName: Pete
@@ -82,11 +82,11 @@ title: Mr
 userPassword: test
 
 
-dn: cn=Felix Wilson,uid=felix.wilson,dc=nodomain
+dn: uid=36ec131a-858f-3a52-ba08-6764055d5836,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-uid: felix.wilson
+uid: 36ec131a-858f-3a52-ba08-6764055d5836
 cn: Felix Wilson
 displayName: Felix Wilson
 givenName: Felix

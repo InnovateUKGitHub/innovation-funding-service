@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -48,7 +49,7 @@ public class GenerateLdifUserRecords {
                 replacements.put("fullName", fullName);
                 replacements.put("firstName", userRecord.firstName);
                 replacements.put("lastName", userRecord.lastName);
-                replacements.put("uid", userRecord.firstName.toLowerCase() + "." + userRecord.lastName.toLowerCase());
+                replacements.put("uid", UUID.nameUUIDFromBytes((userRecord.firstName.toLowerCase() + "." + userRecord.lastName.toLowerCase()).getBytes()).toString());
                 replacements.put("emailAddress", userRecord.emailAddress);
                 replacements.put("title", userRecord.title);
 

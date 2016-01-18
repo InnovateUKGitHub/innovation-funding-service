@@ -1,4 +1,4 @@
-dn: cn=$fullName,uid=$uid,dc=nodomain
+dn: uid=$uid,dc=nodomain
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
