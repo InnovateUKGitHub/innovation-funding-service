@@ -39,7 +39,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     public ResourceEnvelope<InviteOrganisationResource> createInvitesByOrganisation(Long organisationId, List<InviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
-        inviteOrganisation.setOrganisation(organisationRestService.getOrganisationById(organisationId));
+        inviteOrganisation.setOrganisationId(organisationId);
         inviteOrganisation.setInviteResources(invites);
 
         String url = inviteRestUrl + "/createApplicationInvites";

@@ -35,16 +35,15 @@
                                                                                                             th:text="${organisationInvite.organisationName}"/>"
                 </h2>
 
-                <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<span th:remove="tag"
-                                                                                                                   th:text="${organisationInvite.organisationName}"/>"
+                <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-large" placeholder="Organisation Name"
+                                                                                                                    th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'error'"
+                                                                                                                    th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>"
                 </h2>
 
                 <p th:if="${organisationStats.index == 0}">The lead organisation will be the lead partner throughout the application and project.
                     Add members of your own organisation to contribute to this application.
                 </p>
-                <input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-full" placeholder="Organisation Name"
-                       th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'error'"
-                       th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>
+
                 <input type="hidden" class="form-control width-full" placeholder="name"
                        th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
 
@@ -96,7 +95,7 @@
                 </p>
             </li>
             <li style="background:#f8f8f8">
-                <a href="javascript:void(0);" class="js-add-partner">Add partner organisation</a>
+                <button class="buttonlink" type="submit" name="add_partner" value="">Add partner organisation</button>
 
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
             </li>
