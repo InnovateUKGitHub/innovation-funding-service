@@ -44,8 +44,8 @@ Display error when Phone number is blank or contains letters
     When the Applicant is in Your details page
     And the Applicant leaves the Phone number empty and enters all other details
     Then an Error message is displayed for Phone number
-    And when the applicant enters some letters in the phone number field
-    #Then the applicant should get a validation error for the phone number
+    And when the applicant enters some letters(more than the max) in the phone number field
+    Then the applicant should get a validation error for the phone number
 
 *** Keywords ***
 the Applicant is in Dashboard page
@@ -64,7 +64,7 @@ the Applicant enters the profile details
     Select From List By Index    id=title    4
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    0123456789
+    Input Text    id=phoneNumber    +-0123456789
     Click Element    css=.extra-margin
 
 the Applicant is in Your details page
@@ -108,8 +108,13 @@ the Applicant should see the saved changes in Your profile page
 the applicant clicks the Edit your details link
     click element    link=Edit your details
 
-when the applicant enters some letters in the phone number field
+when the applicant enters some letters(more than the max) in the phone number field
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    test
+    Input Text    id=phoneNumber    wewewewewewewewewewewewe
     Click Element    css=.extra-margin
+
+the applicant should get a validation error for the phone number
+    Wait Until Element Is Visible    css=.error-message
+    Page Should Contain    Please enter a valid phone number
+    Page Should Contain    Input for your phone number has a maximum length of 20 characters

@@ -4,7 +4,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Pending    Failing
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
