@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-736: As an applicant I want to be able to add all the finance details for all the sections so I can sent in all the info necessary to apply
+...
+...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags
@@ -8,6 +10,10 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
+
+*** Variables ***
+${OTHER_FUNDING_AMOUNT}    10000
+${OTHER_FUNDING_DATE}    12-2008
 
 *** Test Cases ***
 Labour
@@ -87,6 +93,22 @@ Other costs
     then the other costs total should be correct
     and when the user reloads the page
     then the other costs total should be correct
+
+Other Fundings
+    [Documentation]    INFUND-438
+    [Tags]    Applicant    Application    Finances    Other funding    Failing
+    Given Applicant goes to the Your finances section
+    And Applicant selects 'Yes' for other funding
+    And Applicant chooses to add another source of funding
+    When Applicant can see a new row
+    And Applicant enters some details into this row
+    And Applicant chooses to add yet another source of funding
+    And the applicant enters some details into the second row
+    Then the total of the other funding should be correct
+    Then Applicant can leave the 'Your finances' page but the details are still saved
+    And applicant selects 'No' for other funding
+    And applicant can see that the 'No' radio button is selected
+    And applicant cannot see the 'other funding' details
 
 *** Keywords ***
 the Applicant fills the Labour costs
@@ -282,3 +304,66 @@ when the user reloads the page
 the calculations of the Materials should be correct
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1,000
     Textfield Value Should Be    css=#material-costs-total-field    £ 1,000
+
+the total of the other funding should be correct
+    Textfield Value Should Be    id=other-funding-total    £ 20,000
+
+the applicant enters some details into the second row
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    Sleep    1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    Sleep    1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Sleep    1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    focus    css=.app-submit-btn
+    Sleep    1s
+
+Applicant cannot see the 'other funding' details
+    Page Should Not Contain    ${OTHER_FUNDING_SOURCE}
+    Page Should Not Contain    ${OTHER_FUNDING_DATE}
+    Page Should Not Contain    ${OTHER_FUNDING_AMOUNT}
+
+Applicant can leave the 'Your finances' page but the details are still saved
+    Reload Page
+    #Alert Should Be Present
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+
+Applicant enters some details into this row
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Sleep    1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    Sleep    1s
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    Sleep    1s
+
+Applicant can see a new row
+    Element Should Be Visible    id=other-funding-table
+
+Applicant selects 'No' for other funding
+    Select Radio button    other_funding-otherPublicFunding-54    No
+
+Applicant chooses to add yet another source of funding
+    Select Radio button    other_funding-otherPublicFunding-54    Yes
+    Click Link    Add another source of funding
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    Sleep    2s
+
+Applicant chooses to add another source of funding
+    Click Link    Add another source of funding
+    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+
+Applicant selects 'Yes' for other funding
+    Select Radio button    other_funding-otherPublicFunding-54    Yes
+
+Applicant can see that the 'No' radio button is selected
+    Radio Button Should Be Set To    other_funding-otherPublicFunding-54    No
