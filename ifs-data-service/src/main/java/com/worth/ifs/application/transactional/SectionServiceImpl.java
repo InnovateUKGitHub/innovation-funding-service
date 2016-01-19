@@ -79,7 +79,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         for (Section section : sections) {
             boolean sectionIncomplete = false;
 
-            List<Question> questions = section.getQuestions();
+            List<Question> questions = section.getAllChildQuestions();
             for (Question question : questions) {
                 if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
@@ -147,12 +147,19 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         boolean allSectionsWithSubsectionsAreComplete = true;
 
         Application application = applicationRepository.findOne(applicationId);
-        List<Section> sections = parentSection.getChildSections();
+        List<Section> sections = null;
+        // if no parent defined, just check all sections.
+        if(parentSection == null){
+            sections = sectionRepository.findAll();
+        }else{
+            sections = parentSection.getChildSections();
+        }
 
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
         for (Section section : sections) {
             for (ApplicationFinance applicationFinance : applicationFinanceList) {
                 if (!this.isMainSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId())) {
+                    log.debug(String.format("This section is incomplete: section ID %d / name %s / organisation ID %d ", section.getId(), section.getName(), applicationFinance.getOrganisation().getId()));
                     allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }

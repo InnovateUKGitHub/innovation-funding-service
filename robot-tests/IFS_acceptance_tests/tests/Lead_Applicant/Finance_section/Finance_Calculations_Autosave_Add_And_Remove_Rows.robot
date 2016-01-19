@@ -11,6 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
+${OTHER_FUNDING_SOURCE}     Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
 
@@ -95,9 +96,9 @@ Other costs
     Then the user reloads the page
     And the other costs total should be correct
 
-Other Fundings
+Other Funding
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding    Failing
+    [Tags]    Applicant    Application    Finances    Other funding
     Given Applicant goes to the Your finances section
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding
@@ -106,7 +107,7 @@ Other Fundings
     And Applicant chooses to add yet another source of funding
     And the applicant enters some details into the second row
     Then the total of the other funding should be correct
-    Then Applicant can leave the 'Your finances' page but the details are still saved
+    And Applicant can leave the 'Your finances' page but the details are still saved
     And applicant selects 'No' for other funding
     And applicant can see that the 'No' radio button is selected
     And applicant cannot see the 'other funding' details

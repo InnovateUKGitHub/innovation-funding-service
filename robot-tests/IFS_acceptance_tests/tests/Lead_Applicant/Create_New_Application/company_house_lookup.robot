@@ -37,13 +37,11 @@ search using invalid registration number
     When the user enters the invalid registration number in the Search text field
     Then the search criteria should not fetch any result
 
-Search for invalid charachters
+Search for invalid characters
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house    Failing
-    # This test fails due to a bug which has been raised in Jira (INFUND-1493). I have tagged this test as failing to
-    # keep all our lovely green lights however it doesn't need fixing! Leave until the bug is fixed
+    [Tags]    Applicant    Company house    Pending
     Given the user is in "Create your account" page
-    When the applicant inserts invalid charachters
+    When the applicant inserts invalid characters
     Then the applicant should get a validation error for the company house
 
 *** Keywords ***
@@ -80,7 +78,7 @@ the user enters the invalid registration number in the Search text field
     Input Text    id=org-name    87645
     Click Element    id=org-search
 
-the applicant inserts invalid charachters
+the applicant inserts invalid characters
     Input Text    id=org-name    {}{}
     Click Element    id=org-search
 

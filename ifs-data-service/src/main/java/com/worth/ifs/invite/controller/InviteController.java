@@ -6,7 +6,7 @@ import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.domain.InviteStatus;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+/**
+ * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
+ */
 
 @RestController
 @RequestMapping("/invite")
@@ -71,9 +75,9 @@ public class InviteController {
 
     private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
         Organisation organisation = null;
-        if(inviteOrganisationResource.getOrganisationId() != null){
+        if (inviteOrganisationResource.getOrganisationId() != null) {
             organisation = organisationRepository.findOne(inviteOrganisationResource.getOrganisationId());
-        }else{
+        } else {
             log.error("organisationId = null");
         }
         InviteOrganisation newInviteOrganisation = new InviteOrganisation(
@@ -96,7 +100,7 @@ public class InviteController {
 
     private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findOne(inviteResource.getApplicationId());
-        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
+        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
 
         return invite;
     }

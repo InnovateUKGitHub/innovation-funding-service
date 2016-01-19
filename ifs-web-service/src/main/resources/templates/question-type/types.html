@@ -125,13 +125,13 @@
             <label class="form-label" for="cost-financegrantclaim">
                 <div class="heading-medium" th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">Maximum claim percentage: <span th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}"></span>%</span>
+                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
                    min="0"
                    th:max="${organisationFinanceSize.getMaxGrantClaimPercentage()}"
-                   class="width-small"
+                   th:class="${organisationFinanceSize.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}" />

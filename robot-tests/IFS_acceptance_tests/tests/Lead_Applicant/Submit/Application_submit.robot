@@ -26,7 +26,8 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
-    [Tags]    Applicant    Submit    Review and Submit    Summary   Failing
+    [Tags]    Applicant    Submit    Review and Submit    Summary   Pending
+    # Pending creation of a new application in the test database, see INFUND-1514
     Given all the sections are marked as complete
     And the applicant submits the application in the summary page
     When the applicant should get the submit modal
