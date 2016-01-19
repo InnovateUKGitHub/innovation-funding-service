@@ -19,11 +19,13 @@ public class UserDetailsForm {
     private String title;
 
     @NotEmpty(message = "Please enter a first name")
-    @Size(max = 256, message = "Input for your first name has a maximum length of 256 characters")
+    @Pattern(regexp = "[\\p{L} ]*", message = "Please enter a first name")
+    @Length(min=2, max = 70)
     private String firstName;
 
     @NotEmpty(message = "Please enter a last name")
-    @Size(max = 256, message = "Input for your last name has a maximum length of 256 characters")
+    @Pattern(regexp = "[\\p{L} ]*", message = "Please enter a last name")
+    @Length(min=2, max = 70)
     private String lastName;
 
     @NotEmpty(message = "Please enter a phone number")

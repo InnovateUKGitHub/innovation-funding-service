@@ -62,3 +62,26 @@
 .question {
 	clear:both;
 }
+
+//finances
+.total-cost{
+		padding:15px 0;
+		border-top:1px solid $border-colour;
+		margin:25px 0 0;
+
+		.column-half {
+			padding:0;
+		}
+		.heading-medium {
+			margin-top:0;
+		}
+		label {
+			display: block;
+		}
+		input[readonly]{
+			border:none;
+			background:#fff;
+			@include box-sizing(border-box);
+			padding-right:45px;
+		}
+}

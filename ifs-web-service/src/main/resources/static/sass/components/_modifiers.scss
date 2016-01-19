@@ -8,10 +8,10 @@
 
 .no-pad{
 	padding: 0;
-	
+
 	.heading-large,
 	.heading-xlarge{
-		margin-bottom: 10px;   
+		margin-bottom: 10px;
 	}
 
 	.subtitle{
@@ -54,43 +54,5 @@
 
 	&.large{
 		box-shadow: 0px 4px 0px darken(#c00000,15%);
-	}
-}
-
-.total-cost{
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: -30px;
-    margin-bottom: 40px;
-
-    .alignright{
-    	margin-top: -5px;
-    }
-
-    input[readonly]{
-        color: $black;
-        background: none;
-        border: none;
-        text-align: right;
-        margin-right: 60px;
-        width: 170px;
-
-        .no-js &{
-        	margin-right: 0;
-        }
-    }
-
-    @include media-down(mobile) {
-		margin-top: 0;
-    }
-
-    @include media-down(tablet) {
-		.heading-medium{
-			font-size: 20px;
-		}
-		input[readonly]{
-			font-size: 20px;
-			width: 140px;
-		}
 	}
 }

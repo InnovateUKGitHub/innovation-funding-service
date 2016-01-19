@@ -9,7 +9,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Section defines database relations and a model to use client side and server side.
@@ -72,6 +74,23 @@ public class Section implements Comparable<Section> {
     public List<Question> getQuestions() {
         return questions;
     }
+
+    /**
+     * Get questions from this section and childSections.
+     */
+    @JsonIgnore
+    public List<Question> getAllChildQuestions() {
+        LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
+        if(childSections != null && childSections.size() != 0){
+            LinkedList<Question> childQuestions = childSections.stream()
+                    .filter(s -> s.getAllChildQuestions() != null && s.getAllChildQuestions().size() > 0)
+                    .flatMap(s -> s.getAllChildQuestions().stream())
+                    .collect(Collectors.toCollection(LinkedList::new));
+            sectionQuestions.addAll(childQuestions);
+        }
+        return sectionQuestions;
+    }
+
 
     public Long getId() {
         return id;
