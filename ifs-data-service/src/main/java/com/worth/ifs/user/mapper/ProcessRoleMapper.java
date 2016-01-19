@@ -7,12 +7,10 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        UserMapper.class,
         ApplicationMapper.class,
         RoleMapper.class,
         OrganisationMapper.class

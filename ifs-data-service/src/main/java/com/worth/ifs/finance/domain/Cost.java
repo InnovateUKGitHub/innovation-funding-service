@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 
 import javax.persistence.*;
@@ -79,6 +80,7 @@ public class Cost {
         return costValues;
     }
 
+    @JsonIgnore
     public Question getQuestion() {
         return question;
     }
@@ -103,6 +105,7 @@ public class Cost {
         this.question = question;
     }
 
+    @JsonIgnore
     public ApplicationFinance getApplicationFinance() {
         return this.applicationFinance;
     }

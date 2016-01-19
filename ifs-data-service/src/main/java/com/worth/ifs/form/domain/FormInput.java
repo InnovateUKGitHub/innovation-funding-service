@@ -1,5 +1,6 @@
 package com.worth.ifs.form.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
@@ -91,6 +92,7 @@ public class FormInput {
         this.inputValidators.add(inputValidator);
     }
 
+    @JsonIgnore
     public Competition getCompetition() {
         return this.competition;
     }

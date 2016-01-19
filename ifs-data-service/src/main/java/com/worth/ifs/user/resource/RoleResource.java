@@ -1,6 +1,7 @@
 package com.worth.ifs.user.resource;
 
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -13,7 +14,7 @@ public class RoleResource {
     private Long id;
     private String name;
     private List<Long> processRoles = new ArrayList<>();
-    private List<Long> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     public RoleResource() {
     }

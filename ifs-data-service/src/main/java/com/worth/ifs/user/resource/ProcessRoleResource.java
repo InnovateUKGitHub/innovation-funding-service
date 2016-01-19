@@ -13,7 +13,7 @@ import java.util.List;
 @Relation(value="processRole", collectionRelation="processRoles")
 public class ProcessRoleResource {
     private Long id;
-    private Long user;
+    private User user;
     private Long application;
     private Long role;
     private Long organisation;
@@ -24,7 +24,7 @@ public class ProcessRoleResource {
     public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation
     ) {
         this.id = id;
-        this.user = user.getId();
+        this.user = user;
         this.application = application.getId();
         this.role = role.getId();
         this.organisation = organisation.getId();
@@ -32,7 +32,7 @@ public class ProcessRoleResource {
 
     public Long getId(){return id;}
 
-    public Long getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -48,7 +48,7 @@ public class ProcessRoleResource {
         return this.application;
     }
 
-    public void setUser(Long user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

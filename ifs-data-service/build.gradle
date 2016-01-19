@@ -141,7 +141,6 @@ task client(type: Jar) {
         include "com/worth/ifs/*/dto/**"
         include "com/worth/ifs/*/constant/**"
         include "com/worth/ifs/*/resource/**"
-        include "com/worth/ifs/*/mapper/**"
         include "com/worth/ifs/util/**"
         include "com/worth/ifs/commons/security/**"
         include "com/worth/ifs/mappers/**"

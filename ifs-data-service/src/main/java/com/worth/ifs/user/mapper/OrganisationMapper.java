@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
     uses = {
         ProcessRoleMapper.class,
         ApplicationFinanceMapper.class,
-        UserMapper.class,
         OrganisationAddressMapper.class,
         OrganisationTypeMapper.class
     }

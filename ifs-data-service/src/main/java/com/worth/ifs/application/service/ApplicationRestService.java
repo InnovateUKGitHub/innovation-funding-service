@@ -11,7 +11,6 @@ import java.util.List;
  */
 public interface ApplicationRestService {
     public ApplicationResource getApplicationById(Long applicationId);
-    public ApplicationResource getApplicationByIdHateoas(Long applicationId);
     public List<ApplicationResource> getApplicationsByUserId(Long userId);
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
     public void saveApplication(ApplicationResource application);

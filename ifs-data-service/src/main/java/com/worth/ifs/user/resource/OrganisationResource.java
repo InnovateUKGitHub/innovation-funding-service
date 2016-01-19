@@ -1,6 +1,7 @@
 package com.worth.ifs.user.resource;
 
 import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.User;
 import org.springframework.hateoas.core.Relation;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class OrganisationResource {
     private OrganisationSize organisationSize;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
-    private List<Long> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
     private List<Long> addresses = new ArrayList<>();
     private Long organisationType;
 
@@ -66,11 +67,11 @@ public class OrganisationResource {
         this.applicationFinances = applicationFinances;
     }
 
-    public List<Long> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Long> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

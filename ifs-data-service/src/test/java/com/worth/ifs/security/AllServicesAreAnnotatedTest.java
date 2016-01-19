@@ -66,7 +66,8 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     FileServiceImpl.class,
                     FormInputRestServiceImpl.class,
                     InviteRestServiceImpl.class,
-                    FileServiceImpl.class
+                    FileServiceImpl.class,
+                    ApplicationStatusRestServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
