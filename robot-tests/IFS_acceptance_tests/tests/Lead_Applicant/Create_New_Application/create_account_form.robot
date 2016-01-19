@@ -231,6 +231,7 @@ the user re-enters the long password
 the user submits their information
     Select Checkbox    termsAndConditions
     Submit Form
+    Page Should Not Contain     something went wrong
 
 the user should see an error
     Page Should Contain    We were unable to create your account

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin">Declaration of interest</h1>
+    </div>
+
+    <div class="boxed" style="max-height: 500px">
+
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-terms" th:remove="tag" />
+
+    </div>
+
+	<p class="form-hint extra-margin">
+		You can access these terms of contract at any time from your profile.
+	</p>
+	
+	<form>
+
+		<fieldset>
+			
+			<legend class="visuallyhidden">Confirm terms and conditions</legend>
+
+			<div class="form-block">
+				<label class="block-label" for="confirm-assessor-terms">
+					<input id="confirm-assessor-terms" type="checkbox" value="" /> 
+					I agree to the terms of contract for becoming an assessor
+				</label>
+			</div>
+			
+			<div class="form-block extra-margin">
+				<a class="button button-large" href="/prototypes/865-assessor-dashboard-invites?noInvites">Continue</a>
+			</div>
+		</fieldset>
+
+	</form>
+
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

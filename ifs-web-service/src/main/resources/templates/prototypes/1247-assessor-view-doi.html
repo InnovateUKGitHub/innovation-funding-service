@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?noInvites'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large">Contract &#38; Declaration of interest</h1>
+
+	<h2 class="heading-medium no-margin-bottom">Declaration of interest &nbsp; <small><a href="/prototypes/1247-assessor-doi?edit"> Edit your declared interests</a></small></h2>
+
+	<h3 class="heading-medium">Professional affiliations</h3>
+	<p>Company A</p>
+
+	<h3 class="heading-medium">Principle employer and role</h3>
+	<p>Company A - Job Role X</p>
+
+	<h3 class="heading-medium">Appointments, directorships and consultancies</h3>
+	<p>N/A</p>
+
+	<h3 class="heading-medium">Other pecuniary interests</h3>
+	<p>N/A</p>
+
+	<h3 class="heading-medium">Close family member appointments, directorships and consultancies</h3>
+	<p>Company B</p>
+
+	<h3 class="heading-medium">Close family member other pecuniary interest</h3>
+	<p>N/A</p>
+
+	<h2 class="heading-medium">Terms &#38; conditions of employmeny</h2>
+
+	<ul class="list-bullet">
+		<li><a href="#">Contractual terms and conditions</a></li>
+		<li><a href="#">Assessor claiming guidelines</a></li>
+	</ul>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
