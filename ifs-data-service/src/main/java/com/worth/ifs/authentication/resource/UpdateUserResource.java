@@ -1,24 +1,22 @@
 package com.worth.ifs.authentication.resource;
 
 /**
- * Represents a request to an Identity Provider to create a new User record
+ * Represents a request to an Identity Provider to update an existing User record
  */
-public class CreateUserResource {
+public class UpdateUserResource {
 
     private String title;
     private String firstName;
     private String lastName;
     private String emailAddress;
-    private String password;
     private String phoneNumber;
 
-    public CreateUserResource(String title, String firstName, String lastName, String emailAddress, String phoneNumber, String password) {
+    public UpdateUserResource(String title, String firstName, String lastName, String emailAddress, String phoneNumber) {
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
-        this.password = password;
     }
 
     public String getTitle() {
@@ -39,9 +37,5 @@ public class CreateUserResource {
 
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

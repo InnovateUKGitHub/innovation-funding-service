@@ -53,7 +53,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> createUserWithUid(User user, String password) {
 
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getTitle(), user.getFirstName(), user.getLastName(), user.getEmail(), password);
+        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getTitle(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), password);
 
         return uidFromIdpResult.map(uidFromIdp -> {
             user.setUid(uidFromIdp);

@@ -12,6 +12,7 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.UserProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class UserController {
 
     @Autowired
     RegistrationService registrationService;
+
+    @Autowired
+    UserProfileService userProfileService;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -98,12 +102,15 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+    public ResourceEnvelope<UserResource> updateUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
 
         ServiceResult<User> createUserResult = registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource);
 
         return createUserResult.mapLeftOrRight(
             failure -> {
+
+                // TODO DW - INFUND-1267 - correctly map service errors to correct controller errors
+
                 ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
                 addDuplicateEmailError(resourceEnvelope);
                 return resourceEnvelope;
@@ -119,18 +126,25 @@ public class UserController {
     }
 
     @RequestMapping("/updateDetails")
-    public ResourceEnvelope<UserResource> createUser(@RequestBody UserResource userResource) {
-        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-        List<User> existingUser = repository.findByEmail(userResource.getEmail());
-        if(existingUser == null || existingUser.size() <=0) {
-            log.error("User with email " + userResource.getEmail() + " doesn't exist!");
-            addUserDoesNotExistError(resourceEnvelope);
-            return resourceEnvelope;
-        }
-        User newUser = updateUser(existingUser.get(0), userResource);
-        UserResource updatedUser = updateUser(newUser);
-        addUserResource(resourceEnvelope, updatedUser);
-        return resourceEnvelope;
+    public ResourceEnvelope<UserResource> updateUser(@RequestBody UserResource userResource) {
+
+        ServiceResult<User> updateResult = userProfileService.updateProfile(userResource);
+
+        return updateResult.mapLeftOrRight(
+            failure -> {
+
+                // TODO DW - INFUND-1267 - correctly map service errors to correct controller errors
+
+                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+                addUserDoesNotExistError(resourceEnvelope);
+                return resourceEnvelope;
+            },
+            success -> {
+                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+                addUserResource(resourceEnvelope, new UserResource(success));
+                return resourceEnvelope;
+            }
+        );
     }
 
     private void addUserResource(ResourceEnvelope<UserResource> resourceEnvelope, UserResource userResource) {
@@ -141,18 +155,5 @@ public class UserController {
     private void addUserDoesNotExistError(ResourceEnvelope<UserResource> resourceEnvelope) {
         resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
         resourceEnvelope.addError(new ResourceError("email", "User with given email address does not exist!"));
-    }
-
-    private User updateUser(User existingUser, UserResource updatedUserResource){
-        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
-        existingUser.setTitle(updatedUserResource.getTitle());
-        existingUser.setLastName(updatedUserResource.getLastName());
-        existingUser.setFirstName(updatedUserResource.getFirstName());
-        return existingUser;
-    }
-
-    private UserResource updateUser(User user) {
-        User savedUser = repository.save(user);
-        return new UserResource(savedUser);
     }
 }

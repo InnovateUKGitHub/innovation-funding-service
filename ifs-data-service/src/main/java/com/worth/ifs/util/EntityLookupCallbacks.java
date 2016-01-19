@@ -12,13 +12,16 @@ import com.worth.ifs.user.repository.RoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.failureSupplier;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -87,5 +90,9 @@ public class EntityLookupCallbacks {
         return ofNullable(getterFn.get()).
                 map(ServiceResult::success).
                 orElse(ServiceResult.failure(failureResponse));
+    }
+
+    public static <T> ServiceResult<T> onlyElement(List<T> list, Enum<?> failureKey) {
+        return list.size() == 1 ? success(list.get(0)) : failure(failureKey);
     }
 }

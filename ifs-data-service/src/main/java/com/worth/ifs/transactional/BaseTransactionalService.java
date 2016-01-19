@@ -46,6 +46,7 @@ public abstract class BaseTransactionalService  {
         PROCESS_ROLE_NOT_FOUND, //
         PROCESS_ROLE_INCORRECT_TYPE, //
         PROCESS_ROLE_INCORRECT_APPLICATION, //
+        USER_NOT_FOUND, //
     }
 
     @Autowired
