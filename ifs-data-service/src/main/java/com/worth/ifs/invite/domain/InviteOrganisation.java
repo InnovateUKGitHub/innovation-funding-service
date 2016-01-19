@@ -5,6 +5,11 @@ import com.worth.ifs.user.domain.Organisation;
 import javax.persistence.*;
 import java.util.List;
 
+/*
+* The InviteOrganisation entity serves the purpose of grouping Invites by Organisation name entered in the application.
+* When an actual Organisation exists the InviteOrganisation can link the associated Invites to that Organisation.
+* */
+
 @Entity
 public class InviteOrganisation {
     @Id

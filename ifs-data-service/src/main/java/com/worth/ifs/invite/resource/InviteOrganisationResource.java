@@ -6,6 +6,10 @@ import com.worth.ifs.user.domain.Organisation;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+* InviteOrganisationResource is a DTO which enables the application to transfer InviteOrganisation entities.
+* */
+
 public class InviteOrganisationResource {
     private Long id;
     private String organisationName;
