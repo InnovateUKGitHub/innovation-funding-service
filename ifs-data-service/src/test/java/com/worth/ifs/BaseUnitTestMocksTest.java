@@ -16,6 +16,7 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -89,6 +90,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected NotificationService notificationServiceMock;
+
+    @Mock
+    protected RegistrationService registrationServiceMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

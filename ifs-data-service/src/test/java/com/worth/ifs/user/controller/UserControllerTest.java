@@ -6,15 +6,18 @@ import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -115,7 +118,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 
-        when(userRepositoryMock.save(Matchers.isA(User.class))).thenReturn(user);
+        when(registrationServiceMock.createUserLeadApplicantForOrganisation(organisationId, userResource)).thenReturn(success(user));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -131,7 +134,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("$.entity.name", is(user.getFirstName() + " " + user.getLastName()))
                 );
 
-        verify(userRepositoryMock).save(Matchers.isA(User.class));
+        verify(registrationServiceMock).createUserLeadApplicantForOrganisation(organisationId, userResource);
     }
 
     @Test
@@ -189,14 +192,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         String applicationJsonString = mapper.writeValueAsString(userResource);
 
         Long organisationId = 1L;
-        Long roleId = 1L;
 
         User user = new User();
 
         List<User> users = new ArrayList<User>();
         users.add(user);
 
-        when(userRepositoryMock.findByEmail(userResource.getEmail())).thenReturn(users);
+        when(registrationServiceMock.createUserLeadApplicantForOrganisation(organisationId, userResource)).thenReturn(failure(DUPLICATE_EMAIL_ADDRESS));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -204,7 +206,5 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName()))
                 );
-
-        verify(userRepositoryMock, times(0)).save(Matchers.isA(User.class));
     }
 }

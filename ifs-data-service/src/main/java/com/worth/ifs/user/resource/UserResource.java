@@ -2,6 +2,8 @@ package com.worth.ifs.user.resource;
 
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,5 +121,45 @@ public class UserResource {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserResource that = (UserResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(title, that.title)
+                .append(name, that.name)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(inviteName, that.inviteName)
+                .append(phoneNumber, that.phoneNumber)
+                .append(imageUrl, that.imageUrl)
+                .append(email, that.email)
+                .append(password, that.password)
+                .append(organisationIds, that.organisationIds)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(title)
+                .append(name)
+                .append(firstName)
+                .append(lastName)
+                .append(inviteName)
+                .append(phoneNumber)
+                .append(imageUrl)
+                .append(email)
+                .append(password)
+                .append(organisationIds)
+                .toHashCode();
     }
 }

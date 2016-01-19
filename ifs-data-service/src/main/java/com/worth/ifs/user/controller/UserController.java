@@ -3,12 +3,15 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.user.domain.*;
+import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.transactional.RegistrationService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +39,9 @@ public class UserController {
     OrganisationRepository organisationRepository;
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    RegistrationService registrationService;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -94,21 +99,23 @@ public class UserController {
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public ResourceEnvelope<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        User newUser = assembleUserFromResource(userResource);
-        addOrganisationToUser(newUser, organisationId);
-        addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
 
-        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+        ServiceResult<User> createUserResult = registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource);
 
-        if(repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            UserResource createdUserResource = createUserWithUid(newUser);
-            addUserResource(resourceEnvelope, createdUserResource);
-        }
-        else {
-            addDuplicateEmailError(resourceEnvelope);
-        }
+        return createUserResult.mapLeftOrRight(
+            failure -> {
+                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+                addDuplicateEmailError(resourceEnvelope);
+                return resourceEnvelope;
+            },
+            successfullyCreatedUser ->
+                new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), new UserResource(successfullyCreatedUser))
+        );
+    }
 
-        return resourceEnvelope;
+    private void addDuplicateEmailError(ResourceEnvelope<UserResource> resourceEnvelope) {
+        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
+        resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
     }
 
     @RequestMapping("/updateDetails")
@@ -131,21 +138,9 @@ public class UserController {
         resourceEnvelope.setStatus(ResourceEnvelopeConstants.OK.getName());
     }
 
-    private void addDuplicateEmailError(ResourceEnvelope<UserResource> resourceEnvelope) {
-        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
-        resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
-    }
-
     private void addUserDoesNotExistError(ResourceEnvelope<UserResource> resourceEnvelope) {
         resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
         resourceEnvelope.addError(new ResourceError("email", "User with given email address does not exist!"));
-    }
-
-    private UserResource createUserWithUid(User user) {
-        // TODO DW - INFUND-1267 - the UUID should be supplied by the Shib REST API
-        user.setUid(UUID.randomUUID().toString());
-        User createdUser = repository.save(user);
-        return new UserResource(createdUser);
     }
 
     private User updateUser(User existingUser, UserResource updatedUserResource){
@@ -159,36 +154,5 @@ public class UserController {
     private UserResource updateUser(User user) {
         User savedUser = repository.save(user);
         return new UserResource(savedUser);
-    }
-
-    private void addRoleToUser(User user, String roleName) {
-        List<Role> userRoles = roleRepository.findByName(roleName);
-        user.setRoles(userRoles);
-    }
-
-    private void addOrganisationToUser(User user, Long organisationId) {
-        Organisation userOrganisation = organisationRepository.findOne(organisationId);
-        List<Organisation> userOrganisationList = new ArrayList<>();
-        userOrganisationList.add(userOrganisation);
-        user.setOrganisations(userOrganisationList);
-    }
-
-    private User assembleUserFromResource(UserResource userResource) {
-        User newUser = new User();
-        newUser.setFirstName(userResource.getFirstName());
-        newUser.setLastName(userResource.getLastName());
-        newUser.setPassword(userResource.getPassword());
-        newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
-        newUser.setPhoneNumber(userResource.getPhoneNumber());
-
-        String fullName = concatenateFullName(userResource.getFirstName(), userResource.getLastName());
-        newUser.setName(fullName);
-
-        return newUser;
-    }
-
-    private String concatenateFullName(String firstName, String lastName) {
-        return firstName+" "+lastName;
     }
 }
