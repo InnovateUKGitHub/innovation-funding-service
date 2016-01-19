@@ -52,7 +52,6 @@ public class InviteOrganisationResource {
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
     }
-
     public List<InviteResource> getInviteResources() {
         return inviteResources;
     }
