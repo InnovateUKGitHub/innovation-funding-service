@@ -9,14 +9,14 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
-When user is logged in
+The user is logged in
     [Documentation]    INFUND-921
     [Tags]    Applicant    Details page
     Given the Applicant is in Competition details page
     When the Applicant clicks on "Create application" button
     Then the Applicant should redirect to the Check Eligibility
 
-When user is not logged in and later enters correct login
+The user is not logged in and later enters correct login
     [Documentation]    INFUND-921
     [Tags]    Applicant    Details page
     Given the applicant is logged-out
@@ -26,7 +26,7 @@ When user is not logged in and later enters correct login
     And the Applicant will input correct login details
     And the Applicant will redirect to the "Your Details" page
 
-When user is not logged in and later enters incorrect login
+The user is not logged in and later enters incorrect login
     [Documentation]    INFUND-921
     [Tags]    Applicant    Details page
     Given the applicant is logged-out

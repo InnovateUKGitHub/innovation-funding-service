@@ -16,9 +16,9 @@ Status changes when we assign a question to the collaborator
     [Tags]    Applicant    Overview
     Given Applicant goes to the 'project summary' question
     When the Applicant edits the "Project summary" question
-    and the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
-    and the "assign to" should be correct for the "Project summary" question
-    and the blue flag should not be visible
+    And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
+    Then the "assign to" should be correct for the "Project summary" question
+    And the blue flag should not be visible
 
 The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
@@ -26,7 +26,7 @@ The applicant can assign re-assign a question from the overview page
     Given Applicant goes to the overview page
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Public description (overview page)
-    and the assign button should say Assign to:You
+    And the assign button should say Assign to:You
 
 *** Keywords ***
 the Applicant edits the "Project summary" question

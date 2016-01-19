@@ -16,9 +16,9 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 Verify the confirmation page page
     [Documentation]    INFUND-669
     [Tags]    Applicant    New application
-    When the applicant goes to the confirm competition url
-    Then the applicant should get the confirm competition page
-    and when the applicant confirms this page
+    Given the applicant goes to the confirm competition url
+    And the applicant should get the confirm competition page
+    When the applicant confirms this page
     Then the applicant should go to the create application page
 
 Verify the validation errors for the new application input
@@ -33,10 +33,10 @@ Verify the creation of a new application
     [Tags]    Applicant    New application
     Given the user is in the "Create application" page
     When the applicant inserts a valid competition title
-    and the applicant creates the new application
+    And the applicant creates the new application
     Then the applicant should redirect in the application overview page
-    and the title of the new application should be visible in the overview page
-    and the new application should be visible in the dashboard page
+    And the title of the new application should be visible in the overview page
+    And the new application should be visible in the dashboard page
 
 *** Keywords ***
 the applicant goes to the confirm competition url
@@ -45,7 +45,7 @@ the applicant goes to the confirm competition url
 the applicant should get the confirm competition page
     Element Should Be Visible    css=#content > div > form > button
 
-when the applicant confirms this page
+the applicant confirms this page
     click element    css=#content > div > form > button
 
 the applicant should go to the create application page

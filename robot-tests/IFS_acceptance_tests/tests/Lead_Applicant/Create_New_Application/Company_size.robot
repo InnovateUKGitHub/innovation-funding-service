@@ -25,18 +25,18 @@ EU Definition link should navigate to the correct page
     [Tags]    Applicant    New application    Company size
     Given the applicant is in the 'create your account' page
     When the applicant clicks the 'EU definition' link
-    The applicant should navigate to the correct page
+    Then the applicant should navigate to the correct page
 
 The applicant should be able to choose different organisation sizes
     [Documentation]    INFUND-891
     [Tags]    Applicant    Company Size    New application
     Given the applicant is in the 'create your account' page
-    When the applicant selects the Micro size and saves the page
-    Then the Applicant should redirect to the create account page
-    and when the applicant selects the Medium size and saves the page
-    Then the Applicant should redirect to the create account page
-    and when the applicant selects the Large size and saves the page
-    Then the Applicant should redirect to the create account page
+    And the applicant selects the Micro size and saves the page
+    And the Applicant should redirect to the create account page
+    When the applicant selects the Medium size and saves the page
+    And the Applicant should redirect to the create account page
+    Then the applicant selects the Large size and saves the page
+    And the Applicant should redirect to the create account page
 
 *** Keywords ***
 the applicant is in the 'create your account' page
@@ -56,12 +56,12 @@ the Applicant should redirect to the create account page
     Page Should Contain    The profile that you are creating will be linked to the following organisation
     Page Should Contain    INNOVATE LTD
 
-when the applicant selects the Medium size and saves the page
+the applicant selects the Medium size and saves the page
     go to    ${CREATE_YOUR_ACCOUNT_PAGE}
     Select Radio Button    organisationSize    MEDIUM
     Click Element    css=#content > form > button
 
-when the applicant selects the Large size and saves the page
+the applicant selects the Large size and saves the page
     go to    ${CREATE_YOUR_ACCOUNT_PAGE}
     Select Radio Button    organisationSize    LARGE
     Click Element    css=#content > form > button
