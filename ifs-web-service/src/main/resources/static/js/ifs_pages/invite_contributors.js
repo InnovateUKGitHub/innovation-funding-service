@@ -49,11 +49,11 @@ IFS.invites = (function(){
               var orgId = jQuery(value).closest('li').attr('data-invite-org');
 
               jQuery(value).find('input').each(function(inviteIndex, inviteValue){
-                  var input = jQuery(this);
+                  var input = jQuery(inviteValue);
                   var oldName = input.attr('name');
 
                   var newName = oldName.split('.');
-                  newName[0] = 'organisations['+orgId+']'
+                  newName[0] = 'organisations['+orgId+']';
                   newName[1] = 'invites['+inviteIndex+']';
                   newName = newName.join('.');
 
