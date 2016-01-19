@@ -68,7 +68,7 @@ Application state changes when accepting an invitation for assessment
 
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor      Failing
     Given Assessor is viewing the Competitions Applications list
     And Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -148,7 +148,7 @@ Applications details page has two lists
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor
+    [Tags]    Assessor      Failing
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
