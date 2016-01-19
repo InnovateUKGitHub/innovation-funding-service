@@ -63,13 +63,16 @@ public class ApplicationContributorController extends AbstractApplicationControl
         OrganisationInvite leadOrganisationInvite = new OrganisationInvite();
         leadOrganisationInvite.organisationName = leadOrganisation.getName();
         leadOrganisationInvite.organisationId = leadOrganisation.getId();
+
         contributorsForm.getOrganisations().add(leadOrganisationInvite);
 
         String json = ApplicationCreationController.getFromCookie(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
             ContributorsForm contributorsForm2 = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
-            contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
+            if(contributorsForm2.getApplicationId() == applicationId) {
+                contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
+            }
 
             // got result from submit? validate
             validator.validate(contributorsForm, bindingResult);
@@ -133,11 +136,16 @@ public class ApplicationContributorController extends AbstractApplicationControl
             ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
             return ApplicationController.redirectToApplication(application);
         } else {
-            String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
-            ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
         }
 
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
+    }
+
+    private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
+        contributorsForm.setApplicationId(applicationId);
+        String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+        ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {
