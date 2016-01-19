@@ -73,8 +73,10 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
         if (json != null && !json.equals("")) {
             ContributorsForm contributorsForm2 = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
-            contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
-            contributorsForm.setTriedToSave(contributorsForm2.isTriedToSave());
+            if(contributorsForm2.getApplicationId() == applicationId) {
+                contributorsForm.setTriedToSave(contributorsForm2.isTriedToSave());
+                contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
+            }
 
             // got result from submit? validate
             if(contributorsForm.isTriedToSave()){
@@ -150,11 +152,16 @@ public class ApplicationContributorController extends AbstractApplicationControl
             ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
             return ApplicationController.redirectToApplication(application);
         } else {
-            String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
-            ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
         }
 
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
+    }
+
+    private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
+        contributorsForm.setApplicationId(applicationId);
+        String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+        ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {

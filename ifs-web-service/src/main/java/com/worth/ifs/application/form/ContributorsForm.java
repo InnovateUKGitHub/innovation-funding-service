@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ContributorsForm implements Serializable {
     private boolean triedToSave = false;
+    private Long applicationId;
 
     @Valid
     private List<OrganisationInviteForm> organisations;
@@ -29,6 +30,14 @@ public class ContributorsForm implements Serializable {
 
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }
 
