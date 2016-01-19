@@ -7,6 +7,14 @@ IFS.formValidation = (function(){
                 fields : '[type="number"]',
                 messageInvalid : 'This field should be a number'
             },
+            min : {
+                fields: '[min]',
+                messageInvalid : 'This field should be %min%% or higher'
+            },
+            max : {
+                fields: '[max]',
+                messageInvalid : 'This field should be %max%% or lower'
+            },
             password: {
                 field1 : '[name="password"]',
                 field2 : '[name="retypedPassword"]',
@@ -20,10 +28,11 @@ IFS.formValidation = (function(){
         },
         init : function(){
             s = this.settings;
-
             IFS.formValidation.initPasswordCheck(); //checks if password and retyped password are equal
             IFS.formValidation.initNumberCheck();   //checks if it is a number by using jQuery.isNumeric (https://api.jquery.com/jQuery.isNumeric/)
             IFS.formValidation.initEmailCheck();   //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
+            IFS.formValidation.initMinCheck();
+            IFS.formValidation.initMaxCheck();
         },
         initPasswordCheck : function(){
             jQuery('body').on('change keyup', s.password.field1+','+s.password.field2, function(e){
@@ -87,10 +96,49 @@ IFS.formValidation = (function(){
         },
         checkNumber : function(field){
             if(jQuery.isNumeric(field.val())){
-                IFS.formValidation.setValid(field,s.number.messageInvalid);
+              IFS.formValidation.setValid(field,s.number.messageInvalid);
+              return true;
             }
-            else {
-                IFS.formValidation.setInvalid(field,s.number.messageInvalid);
+            else{
+              IFS.formValidation.setInvalid(field,s.number.messageInvalid);
+              return false;
+            }
+        },
+        initMaxCheck : function(){
+            jQuery('body').on('change', s.max.fields , function(){
+                IFS.formValidation.checkMax(jQuery(this));
+            });
+        },
+        checkMax : function(field){
+            var max = parseInt(field.attr('max'));
+
+            if(IFS.formValidation.checkNumber(field)){
+              var fieldVal = parseInt(field.val());
+              if(fieldVal > max){
+                IFS.formValidation.setInvalid(field,s.max.messageInvalid.replace('%max%',max));
+              }
+              else {
+                IFS.formValidation.setValid(field,s.max.messageInvalid.replace('%max%',max));
+              }
+            }
+
+        },
+        initMinCheck : function(){
+            jQuery('body').on('change', s.min.fields , function(){
+                IFS.formValidation.checkMin(jQuery(this));
+            });
+        },
+        checkMin : function(field){
+            var min = parseInt(field.attr('min'));
+
+            if(IFS.formValidation.checkNumber(field)){
+              var fieldVal = parseInt(field.val());
+              if(fieldVal < min){
+                IFS.formValidation.setInvalid(field,s.min.messageInvalid.replace('%min%',min));
+              }
+              else {
+                IFS.formValidation.setValid(field,s.min.messageInvalid.replace('%min%',min));
+              }
             }
         },
         setInvalid : function(field,message){
