@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.application.form;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
