@@ -11,6 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
+${OTHER_FUNDING_SOURCE}     Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
 
@@ -97,7 +98,7 @@ Other costs
 
 Other Fundings
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding    Failing
+    [Tags]    Applicant    Application    Finances    Other funding
     Given Applicant goes to the Your finances section
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding
