@@ -15,7 +15,7 @@ Auto-save test for the "Grant" field
     [Tags]    Applicant    Autosave    Finance
     Given Applicant goes to the Your finances section
     Then auto-save should work for the "Grant" field
-    and the grant value should be correct in the finance summary page
+    And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the grant value should be correct in the finance summary page

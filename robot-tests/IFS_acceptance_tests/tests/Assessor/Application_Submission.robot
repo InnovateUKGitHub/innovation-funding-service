@@ -16,7 +16,7 @@ ${competition_name}    Technology Inspired
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
     [Tags]    Assessor
-    When Assessor clicks the competition
+    Given Assessor clicks the competition
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     Then Cancel the confirmation popup

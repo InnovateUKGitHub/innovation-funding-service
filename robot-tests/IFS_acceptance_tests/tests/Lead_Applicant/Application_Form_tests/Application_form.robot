@@ -68,8 +68,8 @@ Verify that when the Applicant marks as complete the text box should be green an
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
-    and the button state should change to 'Edit'
-    and the question should be marked as complete on the application overview page
+    And the button state should change to 'Edit'
+    And the question should be marked as complete on the application overview page
 
 Verify that when the Applicant marks as incomplete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
@@ -78,8 +78,8 @@ Verify that when the Applicant marks as incomplete the text box should be green 
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
-    and the button state should change to 'Mark as complete'
-    and the question should not be marked as complete on the application overview page
+    And the button state should change to 'Mark as complete'
+    And the question should not be marked as complete on the application overview page
 
 *** Keywords ***
 the Applicant enters some text
