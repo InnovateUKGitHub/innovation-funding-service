@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top">
+        <h1 class="heading-large">Become an Assessor for Innovate UK</h1>
+    </div>
+
+    <p>Welcome to Innovate UK’s assessment service. You have been selected to assess applications for Innovate UK competitions based on your recognised knowledge and expertise. Your role will be to help Innovate UK select the best projects to receive public funding. In your role you will be required to score each application as per each competition guidelines and provide feedback comments to justify your scores.</p>
+
+    <p>Before you begin to assess you will need to create your online account.</p>
+
+    <p>To create an account you will need:</p>
+
+	<ul class="list-bullet">
+		<li>Your personal details, such as name address and phone number</li>
+		<li>Details of any interests to declare - both yours and close family members</li>
+		<li>To accept the terms and conditions for assessing for Innovate UK</li>
+	</ul>
+
+	<a href="/prototypes/1176-assessor-create-acc" class="button button-large">Create account</a>
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

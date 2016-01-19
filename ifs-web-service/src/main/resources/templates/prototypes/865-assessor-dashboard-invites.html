@@ -20,27 +20,34 @@
     </div>
     
     <div class="my-applications">
-            
-        <!-- Standard view invite sent -->
-        <div th:if="${param.accepted == null}" th:remove="tag">
-            <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
-        </div>
-
-        <!-- Invite either accepted or declined -->
-        <div th:if="${param.accepted != null}" th:remove="tag">
-            <div th:if="${param.accepted[0] == 'yes'}" th:remove="tag">
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invite-accepted" th:remove="tag" />
-            </div>
-
-            <div th:if="${param.accepted[0] == 'no'}" th:remove="tag">
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
-            </div>
+        <div th:if="${param.noInvites != null}" th:remove="tag">
+            <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites-empty" th:remove="tag" />
         </div>
         
+        <div th:if="${param.noInvites == null}" th:remove="tag">
+            <!-- Standard view invite sent -->
+            <div th:if="${param.accepted == null}" th:remove="tag">
+                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites" th:remove="tag" />
+
+                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
+            </div>
+
+            <!-- Invite either accepted or declined -->
+            <div th:if="${param.accepted != null}" th:remove="tag">
+                <div th:if="${param.accepted[0] == 'yes'}" th:remove="tag">
+                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
+                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invite-accepted" th:remove="tag" />
+                </div>
+
+                <div th:if="${param.accepted[0] == 'no'}" th:remove="tag">
+                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-profile" th:remove="tag" />
 
 
 
