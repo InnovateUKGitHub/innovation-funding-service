@@ -10,6 +10,8 @@ public class ContributorsForm implements Serializable {
     @Valid
     private List<OrganisationInvite> organisations;
 
+    private Long applicationId;
+
     public ContributorsForm() {
         organisations = new LinkedList<>();
     }
@@ -20,6 +22,14 @@ public class ContributorsForm implements Serializable {
 
     public void setOrganisations(List<OrganisationInvite> organisations) {
         this.organisations = organisations;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }
 
