@@ -26,15 +26,16 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
-    [Tags]    Applicant    Submit    Review and Submit    Summary   Failing
+    [Tags]    Applicant    Submit    Review and Submit    Summary   Pending
+    # Pending creation of a new application in the test database, see INFUND-1514
     Given all the sections are marked as complete
-    When the applicant submits the application in the summary page
-    Then the applicant should get the submit modal
-    When the applicant submits the application in the summary page
-    and the applicant clicks Yes in the submit modal
+    And the applicant submits the application in the summary page
+    When the applicant should get the submit modal
+    And the applicant submits the application in the summary page
+    And the applicant clicks Yes in the submit modal
     Then the Applicant should navigate to the "submit confirmation" page
-    and the "Return to dashboard" button navigates to the dashboard page
-    and the link of the application should redirect to the submitted application page
+    And the "Return to dashboard" button navigates to the dashboard page
+    And the link of the application should redirect to the submitted application page
 
 *** Keywords ***
 

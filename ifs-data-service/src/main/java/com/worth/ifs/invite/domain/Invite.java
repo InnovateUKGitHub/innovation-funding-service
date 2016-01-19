@@ -1,8 +1,13 @@
 package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
 
 import javax.persistence.*;
+
+/*
+* The Invite is used for saving invites into the database. Data about the Invitee and related Application and Organisation is saved through this entity.
+* */
 
 @Entity
 public class Invite {
@@ -23,13 +28,13 @@ public class Invite {
     private String hash;
 
     @Enumerated(EnumType.STRING)
-    private InviteStatus status;
+    private InviteStatusConstants status;
 
     public Invite() {
 
     }
 
-    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatus status) {
+    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {
         this.name = name;
         this.email = email;
         this.application = application;
@@ -86,11 +91,11 @@ public class Invite {
         this.hash = hash;
     }
 
-    public InviteStatus getStatus() {
+    public InviteStatusConstants getStatus() {
         return status;
     }
 
-    public void setStatus(InviteStatus status) {
+    public void setStatus(InviteStatusConstants status) {
         this.status = status;
     }
 }

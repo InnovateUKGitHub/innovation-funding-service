@@ -16,7 +16,7 @@ Verify that the user can't mark as complete empty text areas
     [Tags]    Applicant    Validations
     Given Applicant goes to the Project summary of the new application
     When the "Project Summary" question is empty
-    and the applicant marks the public description question as complete
+    And the applicant marks the public description question as complete
     Then the applicant should get a warning to enter data in the "Project Summary" question
     And the applicant should get an alert with the description of the error
 
@@ -25,8 +25,8 @@ Verify that the user doesn't get the error when the text area is not empty anymo
     [Tags]    Applicant    Validations
     Given Applicant goes to the Project summary of the new application
     When the "Project Summary" question is empty
-    and the applicant marks the public description question as complete
-    and the applicant inserts some text again in the "Project Summary" question
+    And the applicant marks the public description question as complete
+    And the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
     And the applicant can click edit to make the section editable again
 

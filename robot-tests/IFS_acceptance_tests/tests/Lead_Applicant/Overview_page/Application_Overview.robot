@@ -28,10 +28,10 @@ Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
     [Tags]    Applicant    Submit    Review and Submit    Overview
-    When Applicant goes to the Overview page
-    Then the overview page should have the "Review & Submit" button
-    and the applicant clicks the submit button
-    and the applicant redirects to the summary page
+    Given Applicant goes to the Overview page
+    And the overview page should have the "Review & Submit" button
+    When the applicant clicks the submit button
+    Then the applicant redirects to the summary page
 
 Applicant can see the List with the sections
     [Tags]    Applicant    Overview
@@ -48,7 +48,7 @@ The days left to submit should be visible
     [Documentation]    -INFUND-37
     [Tags]    Applicant    Overview
     When the Applicant is in the application overview page
-    The "Days left to submit" should be visible in the overview page
+    Then the "Days left to submit" should be visible in the overview page
 
 The Progress bar should be visible in the overview page
     [Documentation]    INFUND-32
@@ -79,7 +79,7 @@ the uploads should not be visible
     Element Should Not Be Visible    css=#question-17 > div > input[type="file"]
     Element Should Not Be Visible    css=#question-18 > div > input[type="file"]
 
-The "Days left to submit" should be visible in the overview page
+the "Days left to submit" should be visible in the overview page
     Element Should Be Visible    css=.sub-header .deadline .pie-overlay > div
 
 The Progress bar should be visible in the overview page

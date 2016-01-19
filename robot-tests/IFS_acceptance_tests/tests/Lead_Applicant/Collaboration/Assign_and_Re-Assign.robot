@@ -17,8 +17,8 @@ Verify the applicant can assign a question
     Given Applicant goes to the 'public description' question
     When the Applicant assigns the public description question to the collaborator    Jessica Doe
     Then the success message should show
-    and the field of the public description question should be disabled
-    and the question should show the assigned persons name
+    And the field of the public description question should be disabled
+    And the question should show the assigned persons name
     [Teardown]    User closes the browser
 
 Verify the field is disabled for other collaborators
@@ -32,10 +32,10 @@ Verify the field is disabled for other collaborators
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
     [Tags]    Collaboration    Overview
-    When the Collaborator is in the public description section
-    Then the Collaborator gets the assigned notification
-    and the public description question should be assigned to the collaborator
-    and the collaborator can see the 'assigned to you' in the overview page
+    Given the Collaborator is in the public description section
+    When the Collaborator gets the assigned notification
+    Then the public description question should be assigned to the collaborator
+    And the collaborator can see the 'assigned to you' in the overview page
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280

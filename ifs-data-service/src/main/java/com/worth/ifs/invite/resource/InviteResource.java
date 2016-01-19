@@ -1,7 +1,11 @@
 package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.invite.domain.InviteStatus;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+
+/*
+* InviteResource is a DTO which enables to application to transfer Invite entities.
+* */
 
 public class InviteResource {
     private Long id;
@@ -10,12 +14,12 @@ public class InviteResource {
     private Long applicationId;
     private Long inviteOrganisationId;
     private String hash;
-    private InviteStatus status;
+    private InviteStatusConstants status;
 
     public InviteResource() {}
 
 
-    public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, InviteStatus status) {
+    public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, InviteStatusConstants status) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -88,11 +92,11 @@ public class InviteResource {
         this.hash = hash;
     }
 
-    public InviteStatus getStatus() {
+    public InviteStatusConstants getStatus() {
         return status;
     }
 
-    public void setStatus(InviteStatus status) {
+    public void setStatus(InviteStatusConstants status) {
         this.status = status;
     }
 }

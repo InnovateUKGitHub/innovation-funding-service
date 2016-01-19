@@ -14,13 +14,13 @@ Enter Valid Postcode and the results should be displayed in the dropdown
     Given the user is in Create your account page
     When the user enters the Valid Postcode
     Then the user should see the results based on the entered Postcode in "Select your address" dropdown
-    and the applicant use the selected address
-    and the address fields should be filled
+    And the applicant use the selected address
+    And the address fields should be filled
 
 Empty Postcode field
     [Documentation]    INFUND-890
     [Tags]      Pending
-    # waiting for postcode lookup functionality to be implemented properly
+    # Pending until postcode lookup functionality is implemented properly
     Given the user is in Create your account page
     When the user leaves the Postcode field empty
     Then user should be displayed with warning message
@@ -31,7 +31,7 @@ Same Operating address
     When the user selects the checkbox "The registered test is the same as the operating address"
     Then the address fields should not be displayed on the page
     And the user unselects the checkbox "The registered test is the same as the operating address"
-    Then the user should be able enter the postcode and find the address
+    And the user should be able enter the postcode and find the address
 
 *** Keywords ***
 the user is in Create your account page
