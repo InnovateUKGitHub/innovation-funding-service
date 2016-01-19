@@ -10,6 +10,7 @@ sn: Smith
 mail: steve.smith@empire.com
 title: Mr
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=7de841a5-0812-3de9-bb0a-72e2ac86ecfb,dc=nodomain
@@ -24,6 +25,7 @@ sn: Doe
 mail: jessica.doe@ludlow.co.uk
 title: Mrs
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=847ac08d-5486-3f3a-9e15-06303fb01ffb,dc=nodomain
@@ -38,6 +40,7 @@ sn: Plum
 mail: paul.plum@gmail.com
 title: Prof
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=6c1964bd-6915-35b5-9145-79541fde6a04,dc=nodomain
@@ -52,6 +55,7 @@ sn: Exec (Competitions)
 mail: competitions@innovateuk.gov.uk
 title: Mr
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=b23decfc-f417-3448-80b7-818bd75c92e4,dc=nodomain
@@ -66,6 +70,7 @@ sn: Finance Analyst (Finance)
 mail: finance@innovateuk.gov.uk
 title: Mr
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=61de6f46-c6c5-3228-a18a-039504ee5a7f,dc=nodomain
@@ -80,6 +85,7 @@ sn: Tom
 mail: pete.tom@egg.com
 title: Mr
 userPassword: test
+telephoneNumber:
 
 
 dn: uid=36ec131a-858f-3a52-ba08-6764055d5836,dc=nodomain
@@ -94,3 +100,4 @@ sn: Wilson
 mail: felix.wilson@gmail.com
 title: Mr
 userPassword: test
+telephoneNumber:

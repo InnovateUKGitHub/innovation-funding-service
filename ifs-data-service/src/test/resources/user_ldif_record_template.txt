@@ -10,3 +10,4 @@ sn: $lastName
 mail: $emailAddress
 title: $title
 userPassword: test
+telephoneNumber: $phoneNumber

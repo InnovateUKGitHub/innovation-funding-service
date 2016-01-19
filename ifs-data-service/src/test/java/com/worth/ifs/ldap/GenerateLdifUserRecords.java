@@ -25,17 +25,19 @@ public class GenerateLdifUserRecords {
         String lastName;
         String emailAddress;
         String title;
+        String phoneNumber;
 
-        public LdapUserRecord(String firstName, String lastName, String emailAddress, String title) {
+        public LdapUserRecord(String firstName, String lastName, String emailAddress, String title, String phoneNumber) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.emailAddress = emailAddress;
             this.title = title;
+            this.phoneNumber = phoneNumber;
         }
     }
 
-    public static LdapUserRecord createLdapUserRecord(String firstName, String lastName, String emailAddress, String title) {
-        return new LdapUserRecord(firstName, lastName, emailAddress, title);
+    public static LdapUserRecord createLdapUserRecord(String firstName, String lastName, String emailAddress, String title, String phoneNumber) {
+        return new LdapUserRecord(firstName, lastName, emailAddress, title, phoneNumber);
     }
 
     public static String generateLdapUserRecord(LdapUserRecord... userRecords) {
@@ -52,6 +54,7 @@ public class GenerateLdifUserRecords {
                 replacements.put("uid", UUID.nameUUIDFromBytes((userRecord.firstName.toLowerCase() + "." + userRecord.lastName.toLowerCase()).getBytes()).toString());
                 replacements.put("emailAddress", userRecord.emailAddress);
                 replacements.put("title", userRecord.title);
+                replacements.put("phoneNumber", userRecord.phoneNumber);
 
                 File template = new File(Thread.currentThread().getContextClassLoader().getResource("user_ldif_record_template.txt").toURI());
                 List<String> templateLines = Files.readAllLines(template.toPath());
@@ -76,13 +79,13 @@ public class GenerateLdifUserRecords {
     public static void main(String[] args) throws IOException, URISyntaxException {
 
         String contents = generateLdapUserRecord(
-                createLdapUserRecord("Steve", "Smith", "steve.smith@empire.com", "Mr"),
-                createLdapUserRecord("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Mrs"),
-                createLdapUserRecord("Professor", "Plum", "paul.plum@gmail.com", "Prof"),
-                createLdapUserRecord("Comp", "Exec (Competitions)", "competitions@innovateuk.gov.uk", "Mr"),
-                createLdapUserRecord("Project", "Finance Analyst (Finance)", "finance@innovateuk.gov.uk", "Mr"),
-                createLdapUserRecord("Pete", "Tom", "pete.tom@egg.com", "Mr"),
-                createLdapUserRecord("Felix", "Wilson", "felix.wilson@gmail.com", "Mr"));
+                createLdapUserRecord("Steve", "Smith", "steve.smith@empire.com", "Mr", ""),
+                createLdapUserRecord("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Mrs", ""),
+                createLdapUserRecord("Professor", "Plum", "paul.plum@gmail.com", "Prof", ""),
+                createLdapUserRecord("Comp", "Exec (Competitions)", "competitions@innovateuk.gov.uk", "Mr", ""),
+                createLdapUserRecord("Project", "Finance Analyst (Finance)", "finance@innovateuk.gov.uk", "Mr", ""),
+                createLdapUserRecord("Pete", "Tom", "pete.tom@egg.com", "Mr", ""),
+                createLdapUserRecord("Felix", "Wilson", "felix.wilson@gmail.com", "Mr", ""));
 
         System.out.println(contents);
     }
