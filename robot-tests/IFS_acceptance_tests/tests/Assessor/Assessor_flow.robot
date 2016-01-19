@@ -63,16 +63,16 @@ Application state changes when accepting an invitation for assessment
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
-    and Assessor accepts the application
+    And Assessor accepts the application
     Then Application status should change to open    ${accept_application_name}
 
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
-    Given Assessor opens an application    ${reject_application_name}
+    And Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
-    and Assessor enters the reason for rejection
+    And Assessor enters the reason for rejection
     Then Application is not visible in the applications list    ${reject_application_name}
 
 Application Summary sections can be opened and closed
@@ -80,7 +80,7 @@ Application Summary sections can be opened and closed
     [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
-    and Assessor clicks the Review Button
+    And Assessor clicks the Review Button
     and the Assessor clicks a collapsible section
     Then the Section contents will be visible
 
@@ -89,29 +89,29 @@ Application Summary sections contain questions
     [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
-    and Assessor clicks the Review Button
-    and the Assessor clicks a collapsible section
+    And Assessor clicks the Review Button
+    And the Assessor clicks a collapsible section
     Then the Section contents will contain a question    ${accept_application_first_question_title}
 
 Application Summary shows your feedback when appropriate
     [Documentation]    INFUND-357
     [Tags]    Assessor    Failing
     Given Assessor is viewing the Competitions Applications list
-    Given Assessor opens an application    ${accept_application_name}
-    and Assessor clicks the Review Button
+    And Assessor opens an application    ${accept_application_name}
+    And Assessor clicks the Review Button
     When Assessor selects "No"
-    Then Your feedback textarea appears
-    When Assessor selects "Yes"
+    And Your feedback textarea appears
+    And Assessor selects "Yes"
     Then Your feedback textarea disappears
 
 Application Summary returns an error message when submitting empty feedback
     [Documentation]    INFUND-357
     [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
-    Given Assessor opens an application    ${accept_application_name}
-    and Assessor clicks the Review Button
+    And Assessor opens an application    ${accept_application_name}
+    And Assessor clicks the Review Button
     When Assessor selects "No"
-    and Assessor save while Your Feedback is empty
+    And Assessor save while Your Feedback is empty
     Then form will not be submitted
 
 Assessor can see the competitions that he/she accepted
@@ -144,7 +144,7 @@ Applications details page has two lists
     When Assessor is viewing the Competitions list
     When Assessor clicks the competition
     Then Details page should contain a list with the applications for assessment
-    and Page should contain a list with the submitted assessments
+    And Page should contain a list with the submitted assessments
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
@@ -159,10 +159,10 @@ Application Review changes are persisted when saving
     ${feedback_selection_value} =    Set Variable    No
     ${feedback_textarea_value} =    Set Variable    Test feedback text UNIQUE123
     Given Assessor is viewing the Competitions Applications list
-    and Assessor opens an application    ${persistence_application_name}
-    and Assessor clicks a section    ${section_name}
+    And Assessor opens an application    ${persistence_application_name}
+    And Assessor clicks a section    ${section_name}
     When the assessor enters feedback    ${feedback_selection_value}    ${feedback_textarea_value}
-    and refreshes the page
+    And refreshes the page
     Then the feedback should be present    ${feedback_selection_value}    ${feedback_textarea_value}
 
 *** Keywords ***

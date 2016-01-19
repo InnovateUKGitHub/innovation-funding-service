@@ -19,25 +19,25 @@ Finance summary page calculations for Lead applicant
     Given the user logs in as lead applicant
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
-    and the finance Project cost breakdown calculations should be correct
+    And the finance Project cost breakdown calculations should be correct
     And the user logs out
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
     [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as first collaborator
-    and the user goes to the finance summary of the Providing sustainable childcare application
+    And the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
-    and the finance Project cost breakdown calculations should be correct
+    And the finance Project cost breakdown calculations should be correct
     And the user logs out
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
     [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as second collaborator
-    and the user goes to the finance summary of the Providing sustainable childcare application
+    And the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
-    and the finance Project cost breakdown calculations should be correct
+    And the finance Project cost breakdown calculations should be correct
     And the user logs out
 
 *** Keywords ***
