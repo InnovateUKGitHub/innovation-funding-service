@@ -32,7 +32,13 @@
 		 
 		<p>If this is not the correct organisation <a href="#">email the application lead</a></p>
 
-		<a href="/prototypes/642-signup-create-acc" class="button">Accept invitation</a>
+		<div th:if="${param.org == null}" th:remove="tag">
+			 	<a href="/prototypes/642-signup-create-acc" class="button">Accept invitation</a>
+			</div>
+
+			<div th:if="${param.org != null}" th:remove="tag">
+			 	<a href="/prototypes/642-signup-create-acc?org" class="button">Accept invitation</a>
+			</div>
 		
 	</div>
 

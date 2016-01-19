@@ -28,6 +28,19 @@
 			<p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
 
 		</div>
+        
+        <div class="form-group extra-margin">
+            <label class="form-label" for="research-category">
+                <span class="form-label-bold">Please select the research category for this project</span>
+            </label>
+            <select class="form-control" id="research-category" name="research-category">
+                <option value="">Please select...</option>
+                <option value="Fundamental research">Fundamental research</option>
+                <option value="Industrial research">Industrial research</option>
+                <option value="Experimental development">Experimental development</option>
+                <option value="Technical feasibility studies">Technical feasibility studies</option>
+            </select>
+        </div>
 
 		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3, question='yesno'" th:remove="tag" />
 

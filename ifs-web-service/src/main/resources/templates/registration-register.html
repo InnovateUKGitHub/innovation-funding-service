@@ -52,7 +52,7 @@
                         <span class="form-label-bold">First name</span>
                         <span class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
                     </label>
-                    <input class="form-control" id="firstName" name="firstName" type="text" th:field="*{firstName}"/>
+                    <input class="form-control" type="text" th:field="*{firstName}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -68,7 +68,7 @@
                         <span class="form-hint">We may use this to contact you about the application</span>
                         <span class="error-message" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
                     </label>
-                    <input class="form-control" id="phoneNumber" name="phoneNumber" type="text" th:field="*{phoneNumber}"/>
+                    <input class="form-control" type="text" th:field="*{phoneNumber}"/>
                 </div>
                 <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
@@ -76,21 +76,21 @@
                         <span class="form-hint">You will need this to sign into your account</span>
                         <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                     </label>
-                    <input class="form-control" id="email" name="email" type="email" th:field="*{email}"/>
+                    <input class="form-control" type="email" th:field="*{email}"/>
                 </div>
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
                         <span class="form-label-bold">Password</span>
                         <span class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                     </label>
-                    <input class="form-control" id="password" name="password" type="password" th:field="*{password}"/>
+                    <input class="form-control" type="password" th:field="*{password}"/>
                 </div>
                 <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
                     <label class="form-label" for="retypedPassword">
                         <span class="form-label-bold">Re-type password</span>
                         <span class="error-message" th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></span>
                     </label>
-                    <input class="form-control" id="retypedPassword" name="retypedPassword" type="password" th:field="*{retypedPassword}"/>
+                    <input class="form-control" type="password" th:field="*{retypedPassword}"/>
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
                     <label class="block-label" for="termsAndConditions">

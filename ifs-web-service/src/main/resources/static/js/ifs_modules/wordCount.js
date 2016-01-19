@@ -1,34 +1,35 @@
 IFS.wordCount = (function(){
     "use strict";
-    var s; 
+    var s;
     return {
         settings : {
             wordcountEl : ".word-count textarea",
             typeTimeout : 500
         },
         init : function(){
-            s = this.settings; 
-            jQuery('body').on('change', s.wordcountEl, function(e){ 
-              IFS.wordCount.updateWordCount(e.target);
-            });
-            //wait until the user stops typing 
-            jQuery('body').on('keyup', s.wordcountEl, function(e) { 
-               clearTimeout(window.IFS.wordcount_timer);
-               window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
-            });
+            s = this.settings;
+            jQuery('body').on('change keyup', s.wordcountEl, function(e){
+              if(e.type == 'keyup'){
+                clearTimeout(window.IFS.wordcount_timer);
+                window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
+              }
+              else {
+                IFS.wordCount.updateWordCount(e.target);
+              }
+             });
         },
         updateWordCount : function(textarea){
               var field = jQuery(textarea);
               var value = field.val();
 
-              //regex = replace newlines with space \r\n, \n, \r 
+              //regex = replace newlines with space \r\n, \n, \r
               value = value.replace(/(\r\n|\n|\r)/gm," ");
               //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
               value = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
 
               var words = jQuery.trim(value).split(' ');
               var count = 0;
-              //for becuase of ie7 performance. 
+              //for and not foreach becuase of ie7 performance.
               for (var i = 0; i < words.length; i++) {
                 if(words[i].length > 0){
                   count++;
@@ -42,6 +43,6 @@ IFS.wordCount = (function(){
               }else{
                   countDownEl.removeClass("negative").addClass("positive");
               }
-        }  
+        }
     };
 })();

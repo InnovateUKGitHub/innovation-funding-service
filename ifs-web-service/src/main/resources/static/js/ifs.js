@@ -1,7 +1,7 @@
 /* jshint strict: false, undef: true, unused: true */
 
 
-//Dom based routing 
+//Dom based routing
 //------------------
 //Based on Paul Irish' code, please read blogpost
 //http://www.paulirish.com/2009/markup-based-unobtrusive-comprehensive-dom-ready-execution///
@@ -9,12 +9,12 @@
 //    * Page dependend execution of functions
 //    * Gives a more fine-grained control in which order stuff is executed
 //
-//Adding a page dependend function: 
-//    1. add class to body <body class="superPage"> 
+//Adding a page dependend function:
+//    1. add class to body <body class="superPage">
 //    2. add functions to the IFSLoader object IFSLoader = { superPage : init : function() {}};
 //
-//For now this will suffice, if complexity increases we might look at a more complex loader like requireJs. 
-//Please think before adding javascript, this project should work without any of this scripts.  
+//For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
+//Please think before adding javascript, this project should work without any of this scripts.
 
 var IFSLoader = {
   common : {
@@ -24,7 +24,7 @@ var IFSLoader = {
       IFS.wordCount.init();
       IFS.editor.init();
       IFS.formValidation.init();
-    }, 
+    },
     finalize : function(){
       IFS.pieChart.init();
       IFS.modal.init();
@@ -36,17 +36,20 @@ var IFSLoader = {
       IFS.unsavedChanges.init();
       IFS.autoSave.init();
       IFS.finance.init();
-      IFS.financeRows.init();
+      IFS.repeatableRows.init();
     }
   },
   'app-details' : {
-    init : function(){IFS.application_page.init(); }
+    init : function(){ IFS.application_page.init(); }
   },
   'assessment-details' : {
-    init: function(){IFS.assesment_feedback_page.init();}  
+    init : function(){ IFS.assesment_feedback_page.init(); }
   },
   'assessment-submit-review' : {
-    init: function(){IFS.assesment_submit_review_page.init();}  
+    init : function(){ IFS.assesment_submit_review_page.init(); }
+  },
+  'app-invite': {
+    init : function(){ IFS.invites.init(); }
   }
 };
 
@@ -79,10 +82,8 @@ var UTIL = (function(){
   };
 
 })();
-// kick it all off here 
+// kick it all off here
 
 jQuery(document).ready(function(){
     UTIL.loadEvents();
 });
-
-

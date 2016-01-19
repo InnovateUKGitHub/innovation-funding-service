@@ -46,6 +46,10 @@ bootRun {
     addResources = false
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 jar {
     dependsOn asciidoctor
     from ("${asciidoctor.outputDir}/html5") {
@@ -78,6 +82,8 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
+    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'javax.mail:mail:1.4.7'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
@@ -139,6 +145,9 @@ task client(type: Jar) {
         include "com/worth/ifs/util/**"
         include "com/worth/ifs/commons/security/**"
         include "com/worth/ifs/mappers/**"
+        exclude "com/worth/ifs/notifications/**"
+        exclude "com/worth/ifs/sil/**"
+        exclude "com/worth/ifs/email/**"
     }
 }
 task clientCopy(type: Copy){

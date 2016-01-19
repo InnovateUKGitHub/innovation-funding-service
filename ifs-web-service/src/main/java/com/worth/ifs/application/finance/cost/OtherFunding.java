@@ -1,14 +1,13 @@
 package com.worth.ifs.application.finance.cost;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class OtherFunding implements CostItem {
     private Long id;
     private String otherPublicFunding;
     private String fundingSource;
     private String securedDate;
-    private BigDecimal fundingAmount;
+    private BigDecimal fundingAmount = BigDecimal.ZERO;
 
     public OtherFunding() {
     }
@@ -28,7 +27,7 @@ public class OtherFunding implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        return BigDecimal.ZERO;
+        return this.fundingAmount;
     }
 
     public String getOtherPublicFunding() {

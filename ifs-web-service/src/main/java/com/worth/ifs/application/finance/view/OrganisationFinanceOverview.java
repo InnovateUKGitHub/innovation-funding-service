@@ -39,9 +39,8 @@ public class OrganisationFinanceOverview {
         List<ApplicationFinance> applicationFinances = financeService.getApplicationFinances(applicationId);
         for(ApplicationFinance applicationFinance : applicationFinances) {
             List<Cost> costs = financeService.getCosts(applicationFinance.getId());
-            OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinance.getId(), applicationFinance.getOrganisation(), costs);
+            OrganisationFinance organisationFinance = new OrganisationFinance(applicationFinance, costs);
             organisationFinances.add(organisationFinance);
-
         }
     }
 
@@ -53,14 +52,14 @@ public class OrganisationFinanceOverview {
         EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
             BigDecimal typeTotal = organisationFinances.stream()
+                    .filter(o -> o.getCostCategory(costType) != null)
                     .map(o -> o.getCostCategory(costType).getTotal())
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);;
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
             totalPerType.put(costType, typeTotal);
         }
 
         return totalPerType;
     }
-
 
     public BigDecimal getTotal() {
         return organisationFinances.stream()
@@ -68,11 +67,26 @@ public class OrganisationFinanceOverview {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Double getTotalGrantPercentage() {
+    public BigDecimal getTotalFundingSought() {
+        BigDecimal totalFundingSought = organisationFinances.stream()
+                .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                .map(of -> of.getTotalFundingSought())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return totalFundingSought;
+    }
+
+    public BigDecimal getTotalContribution() {
         return organisationFinances.stream()
-                .filter(of -> of!=null && of.getGrantClaimPercentage()!=null)
-                .mapToInt(of -> of.getGrantClaimPercentage())
-                .average()
-                .orElse(0D);
+                .filter(of -> of != null)
+                .map(of -> of.getTotalContribution())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalOtherFunding() {
+        return organisationFinances.stream()
+                .filter(of -> of != null)
+                .map(of -> of.getTotalOtherFunding())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

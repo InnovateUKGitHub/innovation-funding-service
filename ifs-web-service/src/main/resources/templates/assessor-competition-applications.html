@@ -110,7 +110,8 @@
 
                     <div class="alignright">
                         <input type="hidden" name="competitionId" th:value="${model.competition.id}" />
-                        <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit">Submit applications</a>
+                        <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" th:if="${model.assessmentsStartedAwaitingSubmission.size() > 0}">Submit applications</a>
+                        <button disabled="disabled" class="button large button-pull-right no-margin" th:unless="${model.assessmentsStartedAwaitingSubmission.size() > 0}">Submit applications</button>
                     </div>
                 </form>
 

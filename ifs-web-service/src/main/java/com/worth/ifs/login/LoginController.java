@@ -60,7 +60,7 @@ public class LoginController {
                     if(redirectUrl != null){
                         destination = "redirect:"+redirectUrl;
                     }else{
-                        destination = redirectionForUser(authenticatedUser);
+                        destination = getRedirectUrlForUser(authenticatedUser);
                     }
                 }
             } catch(BadCredentialsException bce) {
@@ -106,7 +106,7 @@ public class LoginController {
         return "/login";
     }
 
-    private String redirectionForUser(User user) {
+    public static String getRedirectUrlForUser(User user) {
         String roleName = "";
 
         if(!user.getRoles().isEmpty()) {

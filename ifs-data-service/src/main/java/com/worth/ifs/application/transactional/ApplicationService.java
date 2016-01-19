@@ -3,15 +3,12 @@ package com.worth.ifs.application.transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +29,16 @@ public interface ApplicationService {
     Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    Either<ServiceFailure, Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'UPDATE')")
-    Either<ServiceFailure, FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
+    ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
-    Either<ServiceFailure, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
+    ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
     @NotSecured("TODO")
     ApplicationResourceHateoas getApplicationByIdHateoas(final Long id);
@@ -84,4 +81,6 @@ public interface ApplicationService {
             JsonNode jsonObj);
 
 
+    @NotSecured("TODO")
+    ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite);
 }

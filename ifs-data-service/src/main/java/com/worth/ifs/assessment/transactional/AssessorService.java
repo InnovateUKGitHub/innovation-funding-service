@@ -1,8 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.util.Either;
+import com.worth.ifs.transactional.ServiceResult;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -21,10 +20,10 @@ public interface AssessorService {
      * @return
      */
     @PreAuthorize("hasPermission(#feedback, 'UPDATE')")
-    Either<ServiceFailure, Feedback> updateAssessorFeedback(@P("feedback") Feedback feedback);
+    ServiceResult<Feedback> updateAssessorFeedback(@P("feedback") Feedback feedback);
 
     @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.dto.Feedback', 'READ')")
-    Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id);
+    ServiceResult<Feedback> getFeedback(Feedback.Id id);
 
 
 }

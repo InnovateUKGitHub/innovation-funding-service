@@ -34,8 +34,14 @@
 		        <li>View application feedback</li>
 		        <li>Setup successful project</li>
 		    </ul>
+		    <div th:if="${param.org == null}" th:remove="tag">
+			 	<a href="/prototypes/642-create-acc-step1" class="button button-large">Create account</a>
+			</div>
 
-		    <a href="/prototypes/642-create-acc-step1" class="button button-large">Create account</a>
+			<div th:if="${param.org != null}" th:remove="tag">
+			 	<a href="/prototypes/642-confirmed-org" class="button button-large">Create account</a>
+			</div>
+
 		</section>
 		<section class="column-half">
 			<h1 class="heading-large">Sign in</h1>
@@ -52,7 +58,7 @@
 						<input class="form-control form-control-3-4" type="password" id="id_password" name="password" value="" />
 					</div><!-- .form-group -->
 				</fieldset>
-				<input class="button" formaction="/prototypes/642-create-acc-org-exists" value="Sign in" type="submit" />
+				<input class="button" formaction="/prototypes/642-confirm-org" value="Sign in" type="submit" />
 	        </form>
 		</section>
 	</div>

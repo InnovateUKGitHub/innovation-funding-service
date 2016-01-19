@@ -77,7 +77,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
                 .andExpect(view().name("applicant-dashboard"))
                 .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
-                .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
+                .andExpect(model().attribute("applicationsAssigned", hasSize(1)));
     }
 
     /**
@@ -92,13 +92,14 @@ public class ApplicantControllerTest extends BaseUnitTest {
         when(applicationService.getInProgress(collabUsers.getId())).thenReturn(progressMap);
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
+        when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
                 .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
-                .andExpect(model().attribute("applicationsAssigned", hasSize(1)));
+                .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
 
     }
 }

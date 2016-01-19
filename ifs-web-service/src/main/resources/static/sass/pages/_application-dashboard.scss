@@ -407,6 +407,15 @@ The view is similar to the applications for assessment, but have a grey backgrou
 
 } 
 
+
+.feedback{
+	background: $white;
+	display: block;
+	margin: -15px;
+	text-align: center;
+	padding: 5px 0;
+}
+
 	textarea{
 		&.form-control-large{
 			width: 100%;

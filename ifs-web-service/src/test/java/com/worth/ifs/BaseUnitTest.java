@@ -323,6 +323,15 @@ public class BaseUnitTest {
         applicationList.get(3).setCompetition(competition);
         applicationList.get(3).setProcessRoles(singletonList(processRole4));
 
+        applicationResources.get(0).setCompetition(competition.getId());
+        applicationResources.get(0).setProcessRoles(asList(processRole1.getId(), processRole5.getId()));
+        applicationResources.get(1).setCompetition(competition.getId());
+        applicationResources.get(1).setProcessRoles(singletonList(processRole2.getId()));
+        applicationResources.get(2).setCompetition(competition.getId());
+        applicationResources.get(2).setProcessRoles(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
+        applicationResources.get(3).setCompetition(competition.getId());
+        applicationResources.get(3).setProcessRoles(singletonList(processRole4.getId()));
+
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(0).addUserApplicationRole(processRole5);
         applications = applicationResources;

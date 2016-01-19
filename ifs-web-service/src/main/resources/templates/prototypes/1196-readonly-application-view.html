@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-summary">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
+
+    <h2 class="heading-medium">Details</h2>
+
+	<div class="collapsible section-overview">
+       
+       	<h2>Application details</h2>
+
+		<div id="collapsible-1" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					
+					<h3 class="heading-small">Project title</h3>
+					<p>A novel solution to an old problem</p>
+					
+					<h3 class="heading-small">Estimated timescales</h3>
+					<p>Project start date: 01/03/2016</p>
+					<p>Duration: 51 months</p>
+
+					<h3 class="heading-small">Lead organisation</h3>
+					<p>Empire Ltd</p>
+
+					<h3 class="heading-small">Partners</h3>
+
+					<ul class="list-bullet">
+						<li>Empire Ltd</li>
+						<li>Ludlow</li>
+						<li>EGGS</li>
+					</ul>
+
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>Project summary</h2>
+
+		<div id="collapsible-2" aria-hidden="false">
+			<div class="question" >
+				<div class="form-group">
+					<h3 class="heading-small">Project summary</h3>
+						<p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>Public description</h2>
+
+		<div id="collapsible-3" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">Public description</h3>
+
+					<p>Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.</p>
+
+					<p>The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.</p>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>Scope</h2>
+
+		<div id="collapsible-4" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">How does your project align with the scope of this competition?</h3>
+					<p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+				</div>
+			</div>
+    	</div>
+
+
+    </div>
+
+    <h2 class="heading-medium">Application questions</h2>
+
+	<div class="collapsible section-overview">
+		
+		<h2>1. Business opportunity</h2>
+
+		<div id="collapsible-5" aria-hidden="false">
+					
+			<div class="question" id="question-1">
+			    <div class="form-group">
+			        
+			        <h3 class="heading-small">What is the business opportunity that your project addresses?</h3>
+			        
+			        <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
+
+					<p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to </p>
+
+			    </div>
+			</div>
+
+    	</div>
+
+
+    	<h2>2. Potential market</h2>
+
+    	<div id="collapsible-6" aria-hidden="false">
+
+			<div class="question" id="question-2">
+			    <div class="form-group">
+			        
+			        <h2 class="heading-small">What is the size of the potential market for your project?</h2>
+			        
+			        <p> The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry. </p>
+
+					<p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>
+
+					<p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
+
+			    </div>
+			</div>
+
+    	</div>
+
+
+    	<h2>3. Project exploitation</h2>
+
+    	<div id="collapsible-7" aria-hidden="false">
+			<div class="question" id="question-3">
+			    <div class="form-group">
+			        
+			        <h2 class="heading-small">How will you exploit and market your project?</h2>
+			                        
+		            <p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry.</p>
+
+					<p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>
+
+					<p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
+
+			    </div>
+			</div>
+    	</div>
+
+
+    	<h2>4. Economic benefit</h2>
+
+    	<div id="collapsible-8" aria-hidden="false">
+			<div class="question" id="question-4">
+			    <div class="form-group">
+			        
+			        <h3 class="heading-small">What economic, social and environmental benefits do you expect your project to deliver and when?</h3>
+
+		            <p> The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.</p>
+
+					<p>The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field.</p>
+
+					<p>Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+			    
+			    </div>
+			</div>
+    	</div>
+
+
+    	<h2>5. Technical approach</h2>
+
+    	<div id="collapsible-9" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">What technical approach will you use and how will you manage your project?</h3>
+					<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm.</p>
+
+					<p>We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>6. Innovation</h2>
+
+    	<div id="collapsible-10" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">What is innovative about your project?
+</h3>
+					<p>The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>7. Risks</h2>
+
+    	<div id="collapsible-11" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+
+					<h3 class="heading-small">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
+
+					<p>Three principal risks exist at this stage:</p>
+
+					<ol class="list-number">
+						<li>The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identify if the method needs to be altered during scale up to replicate results.  In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase</li>
+
+						<li>During the phase to engineer a technique to isolate the issue we anticipate that there are inherent safety issues.  We have consulted an independent firm to ensure that suitable equipment and measures have been put in place to minimise the risk to staff.</li>
+
+						<li>Although we are confident that our fabrication partner is the best option for the prototype solution there is an indication that a particular piece of heavy machinery, currently unavailable in the UK will be required.  Our Fabrication partner has already investigated options for accessing this equipment in the Far East and an appropriate budget has been set aside to be used for this purpose if required.</li>
+					</ol>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>8. Project team</h2>
+
+    	<div id="collapsible-12" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+
+					<h3 class="heading-small">Does your project team have the skills, experience and facilities to deliver this project?</h3>
+
+					<p>The team consists of: Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field. We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.</p>
+
+					<p>Academic ? the principal investigator and his team have been studying the issue for a number of years and have qualifications across the spectrum that apply to the field. Together they have already identified several efficiencies that can be made within the industry.</p>
+
+					<p>The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>9. Funding</h2>
+
+    	<div id="collapsible-13" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">What will your project cost?</h3>
+					<p>The amount of money needed to complete this project is large.</p>
+					<p>The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly.</p>
+					<p>The Materials and use of the fabricators equipment will account for approximately some of the budget.</p>
+					<p>The time and expertise required across all 3 partners to complete each phase will amount to the lion share of the cost</p>.
+				</div>
+			</div>
+    	</div>
+
+
+    	<h2>10. Adding value</h2>
+
+    	<div id="collapsible-13" aria-hidden="false">
+			<div class="question">
+				<div class="form-group">
+					<h3 class="heading-small">How does financial support from Innovate UK and its funding partners add value?</h3>
+					<p>Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
+					<p>UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
+				</div>
+			</div>
+    	</div>
+
+	</div>
+
+	<h2 class="heading-medium">Finances</h2>
+
+	<div class="collapsible section-overview">
+
+		<!-- Finances complete -->
+		<div th:unless="${param.warning != null}" th:remove="tag"> 
+
+			<h2>Finances summary</h2>
+
+			<div class="question">
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+			</div>	
+
+		</div>
+	
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	
+	jQuery('input#agree-terms').on('click',function(e){ 
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#confirm-submit").removeClass('disabled');
+		}else{
+			jQuery("#confirm-submit").addClass('disabled');
+		}
+
+	});
+
+</script>
+</body>
+</html>

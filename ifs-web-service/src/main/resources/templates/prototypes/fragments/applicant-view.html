@@ -380,7 +380,13 @@
         </div>
 </div>
 
+<!-- ========Applicant view - feedback score======= -->
 
+<div th:fragment="prototype-feedback-score">
+    <div class="column-third" th:text="${(score != null ? 'Average score ' + score + ' / 10' : ' ')}">
+        SCORE here
+    </div>
+</div>
 
 
 

@@ -4,9 +4,11 @@ ext.ifsDatasourceUrl="jdbc:mysql://localhost:3306/ifs"
 ext.ifsDatasourceUsername=""
 ext.ifsDatasourcePassword=""
 ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
+ext.ifsFlywayLocations="db/migration"
 
 ext.serverPort="8090"
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
+ext.silRestBaseURL="http://localhost:8090/silstub"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
@@ -15,6 +17,7 @@ project.ext['flyway.user']=''
 project.ext['flyway.password']=""
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
+project.ext['flyway.locations']="db/migration,db/development"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
 ext.testIfsDatasourceUsername=""
@@ -30,3 +33,18 @@ ext.ifsFileStorageLocation="/tmp or c:\\\\temp"
 
 ext.cookieSecure=false
 ext.cookieHTTPOnly=false
+
+//
+// The production application will use the SIL to send emails out.  For non-production environments, the IFS application
+// can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
+// not the stub will attempt to send emails out via an SMTP server, or simply log the emails being sent (it does this
+// regardless)
+//
+ext.ifsSendMailLocally=false
+ext.ifsSmtpHost="smtp.gmail.com"
+ext.ifsSmtpPort=465
+ext.ifsSmtpUser="example-user@example.com"
+ext.ifsSmtpAuth=true
+ext.ifsSmtpPassword="example-password"
+ext.ifsSmtpTlsEnabled=true
+ext.ifsMailTimeoutMillis=10000

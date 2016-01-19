@@ -72,7 +72,6 @@ public class Question {
     private List<Cost> costs;
 
     private String questionNumber;
-    private long aLong;
 
     public Question() {
         //default constructor

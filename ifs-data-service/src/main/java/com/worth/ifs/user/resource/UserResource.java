@@ -2,7 +2,6 @@ package com.worth.ifs.user.resource;
 
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,10 +103,6 @@ public class UserResource {
         return organisations;
     }
 
-    public void setOrganisations(List<Organisation> organisations) {
-        this.organisations = simpleMap(organisations, Organisation::getId);
-    }
-
     public void addUserResourceApplicationRole(ProcessRole... r){
         if(this.processRoles == null){
             this.processRoles = new ArrayList<>();
@@ -138,21 +133,12 @@ public class UserResource {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = simpleMap(roles, Role::getId);
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-
-    public String getName() {
-        return name;
     }
 
     public String getFirstName() {
@@ -201,4 +187,19 @@ public class UserResource {
         return this.password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setProcessRoles(List<Long> processRoles) {
+        this.processRoles = processRoles;
+    }
+
+    public void setOrganisations(List<Long> organisations) {
+        this.organisations = organisations;
+    }
+
+    public void setRoles(List<Long> roles) {
+        this.roles = roles;
+    }
 }

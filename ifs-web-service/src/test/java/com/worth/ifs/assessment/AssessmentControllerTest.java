@@ -294,7 +294,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     }
 
     private Assessment getAssessment(ApplicationResource application) {
-        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getProcessRole().getApplication().equals(application)).findFirst();
+        Optional<Assessment> optionalAssessment = assessments.stream().filter(a -> a.getProcessRole().getApplication().getId().equals(application.getId())).findFirst();
         assertTrue(optionalAssessment.isPresent());
         return optionalAssessment.get();
     }

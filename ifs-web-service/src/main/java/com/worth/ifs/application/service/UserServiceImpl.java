@@ -75,9 +75,12 @@ public class UserServiceImpl implements UserService {
         return userResourceResourceStatusEnvelope;
     }
 
-    public List<UserResource> findUserByEmail(String email) {
-        List<UserResource> users = userRestService.findUserByEmail(email);
+    @Override
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
+    }
 
-        return users;
+    public List<UserResource> findUserByEmail(String email) {
+        return userRestService.findUserByEmail(email);
     }
 }

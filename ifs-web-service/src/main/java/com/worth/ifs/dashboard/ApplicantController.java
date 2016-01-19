@@ -74,16 +74,16 @@ public class ApplicantController {
      * collaborators, since the leadapplicant is the default assignee.
      */
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, User user){
-        return inProgress.stream().filter(a -> {
-                    ProcessRole role = processRoleService.findProcessRole(user.getId(), a.getId());
+        return inProgress.stream().filter(applicationResource -> {
+                    ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){
-                        int count = applicationService.getAssignedQuestionsCount(a.getId(), role.getId());
+                        int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
                         return (count == 0 ? false : true);
                     }else{
                         return false;
                     }
                 }
-        ).mapToLong(a -> a.getId()).boxed().collect(Collectors.toList());
+        ).mapToLong(applicationResource -> applicationResource.getId()).boxed().collect(Collectors.toList());
     }
 
 

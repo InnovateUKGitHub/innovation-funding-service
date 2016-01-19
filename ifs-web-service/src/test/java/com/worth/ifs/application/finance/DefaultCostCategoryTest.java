@@ -59,4 +59,9 @@ public class DefaultCostCategoryTest {
         costs.remove(null);
         Assert.assertEquals(new BigDecimal(60), defaultCostCategory.getTotal());
     }
+
+    @Test
+    public void excludeFromTotalCostShouldReturnBoolean() {
+        Assert.assertEquals(defaultCostCategory.excludeFromTotalCost(), false);
+    }
 }
