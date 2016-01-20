@@ -66,7 +66,6 @@ IFS.formValidation = (function(){
         initEmailCheck : function(){
             jQuery('body').on('change keyup', s.email.fields , function(e){
                 var el = jQuery(e.target);
-
                 if(e.type == 'keyup'){
                     clearTimeout(window.IFS.formValidation_timer);
                     window.IFS.formValidation_timer = setTimeout(function(){
@@ -111,7 +110,6 @@ IFS.formValidation = (function(){
         },
         checkMax : function(field){
             var max = parseInt(field.attr('max'));
-
             if(IFS.formValidation.checkNumber(field)){
               var fieldVal = parseInt(field.val());
               if(fieldVal > max){
@@ -130,7 +128,6 @@ IFS.formValidation = (function(){
         },
         checkMin : function(field){
             var min = parseInt(field.attr('min'));
-
             if(IFS.formValidation.checkNumber(field)){
               var fieldVal = parseInt(field.val());
               if(fieldVal < min){
@@ -145,7 +142,6 @@ IFS.formValidation = (function(){
             var formGroup = field.closest('.form-group');
             if(formGroup){
                 field.addClass('field-error');
-
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
                 var errorEl = formGroup.find('.error-message:contains("'+message+'")');
                 if(errorEl.length === 0){
@@ -159,8 +155,7 @@ IFS.formValidation = (function(){
             var formGroup = field.closest('.form-group.error');
             if(formGroup){
               field.removeClass('field-error');
-
-               formGroup.find('.error-message:contains("'+message+'")').remove();
+              formGroup.find('.error-message:contains("'+message+'")').remove();
 
                //if this was the last error we remove this one
                if(formGroup.find('.error-message').length === 0){

@@ -8,7 +8,8 @@ IFS.invites = (function(){
           inputs :  '.contributorsForm input',
           addRow : '.contributorsForm .add-another-row',
           removeRow : '.contributorsForm .remove-another-row',
-          addOrg : '[name="add_partner"]'
+          addOrg : '[name="add_partner"]',
+          partnerName : '.js-partner-name'
       },
       init : function(){
           s = this.settings;
@@ -23,6 +24,13 @@ IFS.invites = (function(){
           });
           jQuery('body').on('click',s.addOrg, function(e){
               IFS.invites.addOrg(e);
+          });
+          jQuery('body').on('keyup',s.partnerName, function(e){
+            IFS.invites.parterNameInHeader(e.target);
+          });
+          //fill out once at pageload
+          jQuery(s.partnerName).each(function(){
+              IFS.invites.parterNameInHeader(this);
           });
       },
       saveToCookie : function(){
@@ -53,8 +61,11 @@ IFS.invites = (function(){
         var currentOrgs = jQuery('[data-invite-org]');
         var orgId = currentOrgs.length;
         var html = '<li data-invite-org>\
-                    <h2 class="heading-medium">Partner Organisation "<input type="text" value="" name="organisations['+orgId+'].organisationName" placeholder="Organisation Name" class="form-control width-large">"</h2>\
-                          <input type="hidden" value="" name="organisations['+orgId+'].organisationId" placeholder="name" class="form-control width-full">\
+                      <h2 class="heading-medium">Partner Organisation<span></span></h2>\
+                      <div class="form-group">\
+                        <label for="organisations['+orgId+'].organisationName" class="form-label">Organisation Name</label>\
+                        <input type="text" value="" name="organisations['+orgId+'].organisationName"  placeholder="Name of the partner company" class="form-control js-partner-name">\
+                      </div>\
                           <table>\
                               <thead><tr>\
                                   <th>Name</th>\
@@ -73,6 +84,7 @@ IFS.invites = (function(){
                               <button value="'+orgId+'" name="add_person" type="submit" class="add-another-row buttonlink">Add person</button>\
                           </p>\
                       </li>';
+
           currentOrgs.last().after(html);
           IFS.invites.saveToCookie();
       },
@@ -105,12 +117,21 @@ IFS.invites = (function(){
           e.preventDefault();
           var button = jQuery(e.target);
           if(button.closest('[data-invite-org]').find('tbody tr').length == 1){
-            button.closest('[data-invite-org]').remove(); 
+            button.closest('[data-invite-org]').remove();
           }
           else {
             button.closest('tr').remove();
           }
           IFS.invites.recountRows();
+      },
+      parterNameInHeader : function(element){
+          var input = jQuery(element);
+          var header = input.closest('[data-invite-org]').children('h2');
+          if(header.children('span').length === 0){
+              header.append(' <span></span>');
+          }
+          var output = input.val().length ? '"'+input.val()+'"' : '';
+          header.children('span').text(output);
       }
     };
 })();
