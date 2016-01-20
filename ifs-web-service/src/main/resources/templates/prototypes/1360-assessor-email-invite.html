@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<h1 style="text-align: center"><strong>EXAMPLE EMAIL CLIENT</strong></h1>
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="extra-margin" style="padding-top: 30px">
+		
+		<p>From: <a href="#">competitionsteam@innovateuk.gov.uk</a><br />
+			To: Me </p>
+
+		<h2 class="heading-medium"><strong>Invitation to become an assessor with Innovate UK</strong></h2>
+
+		<p>You have been invited by the Innovate UK team to become an assessor for our competitive funding application process.</p>
+		 
+		<p>We recognise your expertise and would greatly appreciate your comments on the scientific/business merit of the applications. Please see attached for details about our assessment process.</p>
+		
+		<p>To create your account, and recieve invitations to assess <br /> 
+		<a href="/prototypes/1360-assessor-invite-start">please visit our new online Innovation Funding Service here.</a></p>
+		
+		<p>Many thanks, <br />
+		The Innovate UK team </p>
+		
+		
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    
+</main>
+
+
+
+</body>
+</html>

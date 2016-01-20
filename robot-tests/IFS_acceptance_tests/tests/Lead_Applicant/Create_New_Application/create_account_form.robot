@@ -145,7 +145,7 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations    Pending
+    [Tags]    Account    Validations
     # tagged as pending due to bug INFUND-1496.
     Given the user is on the account creation page
     When the user inputs a first name
@@ -157,11 +157,11 @@ Valid account creation
     And the user submits their information
     Then the user should be redirected to the login page
     And the user can login with their new details
-    And the user can see the organisation they are associated with
+    And the user can logout
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]    Account    Validations    Pending
+    [Tags]    Account    Validations
     # tagged as pending due to bug INFUND-1496.
     Given the user is on the account creation page
     When the user inputs a first name
@@ -231,6 +231,7 @@ the user re-enters the long password
 the user submits their information
     Select Checkbox    termsAndConditions
     Submit Form
+    Page Should Not Contain     something went wrong
 
 the user should see an error
     Page Should Contain    We were unable to create your account
@@ -284,9 +285,9 @@ the user can login with their new details
     Input Password    id=id_password    ${correct_password}
     Submit Form
 
-the user can see the organisation they are associated with
-    go to    ${ACCOUNT_CREATION_FORM_URL}
-    Page Should Contain    Nomensa
+the user can logout
+    logout as user
+
 
 the user should see an error for the email duplication
     Page Should Contain    We were unable to create your account

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create assessor account':'Edit your profile')}">Create assessor account</h1>
+    </div>
+
+	<!-- <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p> -->
+
+	<h2 class="heading-medium">Your details</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Your details</legend>
+			<div class="form-group">
+				<label class="form-label" for="title">
+					<span class="form-label-bold">Title</span>
+				</label>
+				<select class="form-control width-medium" id="title" name="title">
+					<option value="">Mr</option>
+					<option value="">Miss</option>
+					<option value="">Mrs</option>
+					<option value="">Ms</option>
+					<option value="">Dr</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="first-name">
+					<span class="form-label-bold">First name</span>
+				</label>
+				<input class="form-control" id="first-name" name="first-name" type="text" th:value="${(param.edit == null ? '':'Joe')}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="last-name">
+					<span class="form-label-bold">Last name</span>
+				</label>
+				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
+			</div>
+
+			<h3 class="heading-small">Gender</h3>
+			<fieldset class="inline">
+                <legend class="visuallyhidden">Gender</legend>
+                <div class="form-group">
+                  <label class="block-label" for="gender-female">
+                    <input id="gender-female" type="radio" name="gender-group" value="Female" />
+                    Female
+                  </label>
+                  <label class="block-label" for="gender-male">
+
+                    <input id="gender-male" type="radio" name="gender-group" value="Male" checked="checked" th:unless="${param.edit == null}"/>
+
+                    <input id="gender-male" type="radio" name="gender-group" value="Male" th:unless="${param.edit != null}"/>
+                    Male
+                  </label>
+                   <label class="block-label" for="gender-no-answer">
+                    <input id="gender-no-answer" type="radio" name="gender-group" value="Prefer not to say" />
+                    Prefer not to say
+                  </label>
+                </div>
+            </fieldset>
+
+
+			<div class="form-group" th:unless="${param.edit != null}">
+				<label class="form-label" for="postcode-check">
+					<span class="form-label-bold">Postcode</span>
+				</label>
+				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				<div>
+					<a href="#" id="enter-address-manually">Enter address manually</a>
+				</div>
+			</div>
+
+
+
+			<div class="form-group" id="select-address-block" style="display: none">
+				<label class="form-label" for="select-address">
+					<span class="form-label-bold">Select your address</span>
+				</label>
+				<select class="form-control" id="select-address" name="select-address">
+					<option value="">SN1 2BD, 1, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
+					<option value="">SN1 2BD, 2, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 3, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 4, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 5, Station Road, Swindon </option>
+				</select>
+			</div>
+			
+
+			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
+				<legend class="visuallyhidden">Address details</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+				</div>
+			</fieldset>
+
+
+
+			<div class="form-group extra-margin">
+				<label class="form-label" for="phone-number">
+					<span class="form-label-bold">Phone number</span>
+					<span class="form-hint">We may use this to contact you about the application</span>
+				</label>
+				<input class="form-control" id="phone-number" name="phone-number" type="text" th:value="${(param.edit == null ? '':'01234 567891')}" />
+			</div>
+
+			<div th:if="${param.edit == null}" th:remove="tag">
+				<div class="form-group">
+					<h3 class="heading-small">Email</h3>
+					<p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>jsmith@assessor.co.uk</strong></p>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="password">
+						<span class="form-label-bold">Password</span>
+					</label>
+					<input class="form-control" id="password" name="password" type="password" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="retype-password">
+						<span class="form-label-bold">Re-type password</span>
+					</label>
+					<input class="form-control" id="retype-password" name="retype-password" type="password" />
+				</div>
+				<div class="form-block">
+					<label class="block-label" for="terms-conditions">
+						<input id="terms-conditions" type="checkbox" value="terms-conditions"/>
+						I agree to the <a href="#">terms and conditions</a>
+					</label>
+				</div>
+			</div>
+
+			<div th:if="${param.edit != null}" th:remove="tag">
+				<div class="form-group">
+					<h3 class="heading-small">Email</h3>
+					<p class="form-hint">Your email address can not be changed in the system<br /><strong>jsmith@assessor.co.uk</strong></p>
+				</div>
+				<p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
+			</div>
+
+		</fieldset>
+		
+		<div th:if="${param.edit == null}" th:remove="tag">
+			<button class="button button-large extra-margin" name="create-account" formaction="/prototypes/1177-assessor-skills" type="submit">Continue</button>
+		</div>
+
+		<div th:if="${param.edit != null}" th:remove="tag">
+			<button class="button button-large extra-margin" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save changes</button>
+		</div>
+
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+	jQuery('#postcode-lookup').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#select-address-block").show();
+
+	});
+
+	jQuery('#select-address').on('change',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#street").val("4 Station Road");
+		jQuery("#county").val("Wiltshire");
+		jQuery("#town").val("Swindon");
+		jQuery("#postcode").val("SN1 2BD");
+
+	});
+
+	jQuery('#enter-address-manually').on('click',function(e){ 
+		e.preventDefault();
+		jQuery("#address-details").show();
+		jQuery("#select-address-block").hide();
+	});
+</script>
+</body>
+</html>

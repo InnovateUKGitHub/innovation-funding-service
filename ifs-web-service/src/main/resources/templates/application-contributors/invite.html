@@ -30,9 +30,9 @@
     <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
         <button class="hidden-save" type="submit" aria-label="Save the list of invitees"/>
         <ul class="boxed-list">
-            <li th:each="organisationInvite, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
+            <li th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
                 <h2 th:if="${organisationStats.index == 0}" class="heading-medium">Lead Organisation "<span th:remove="tag"
-                                                                                                            th:text="${organisationInvite.organisationName}"/>"
+                                                                                                            th:text="${organisationInviteForm.organisationName}"/>"
                 </h2>
 
                 <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-large" placeholder="Organisation Name"
@@ -56,7 +56,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="form-group" th:if="${organisationInvite.organisationId == leadOrganisation.id}">
+                    <tr class="form-group" th:if="${organisationInviteForm.organisationId == leadOrganisation.id}">
                         <td>
                             <input type="text" class="form-control width-full" th:value="${leadApplicant.name}" readonly="readonly"/>
                         </td>
@@ -67,7 +67,7 @@
                             <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
                         </td>
                     </tr>
-                    <tr class="form-group" th:each="user, userStats: ${organisationInvite.invites}" data-invite-row="">
+                    <tr class="form-group" th:each="user, userStats: ${organisationInviteForm.invites}" data-invite-row="">
                         <td>
                             <input type="text" class="form-control width-full"
                                    placeholder="name"
