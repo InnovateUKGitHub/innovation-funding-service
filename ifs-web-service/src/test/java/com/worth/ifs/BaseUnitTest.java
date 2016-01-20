@@ -348,6 +348,13 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(2).getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(0).getId())).thenReturn(processRole8);
 
+		Map<Long, Set<Long>> completedMap = new HashMap<>();
+        completedMap.put(organisation1.getId(), new TreeSet<>());
+        completedMap.put(organisation2.getId(), new TreeSet<>());
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(0).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(1).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(2).getId())).thenReturn(completedMap);
+
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(idsToApplicationResources.get(pr.getApplication().getId())));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);

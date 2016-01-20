@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/*
+* A typical RestService to use as a client API on the web-service side for the data-service functionality .
+* */
+
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
     private String inviteRestUrl;

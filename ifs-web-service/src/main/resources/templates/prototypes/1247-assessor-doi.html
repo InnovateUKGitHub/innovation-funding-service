@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Declaration of interest':'Edit your declaration of interest')}">Declaration of interest</h1>
+    </div>
+
+    <p>Innovate UK are required to formally report all material financial transactions with bodies connected with any independent assessors or any of their close family members.</p>
+
+    <p>Please complete the sections below, declaring all interests held during the financial year ending 31 March 2017.</p>
+	
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Declaration of interest</legend>
+			
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Professional affiliations</label>
+				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company A</div></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Principle employer and role</label>
+				<textarea name="doi-employer-role" id="doi-employer-role" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company A - Job role X</div></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Appointments, Directorships and consultancies</label>
+				<textarea name="doi-appointments" id="doi-appointments" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Other pecuniary interests</label>
+				<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Close family member appointments, directorships and consultancies</label>
+				<textarea name="doi-close-family" id="doi-close-family" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company B</div></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="skills-areas" class="form-label-bold">Close family member other pecuniary interests</label>
+				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
+			</div>
+
+			<div class="form-block">
+				<label class="block-label" for="confirm-doi">
+					<input id="confirm-doi" type="checkbox" value="" />
+					I can confirm for financial year ended 31 March 2017 that the above represents an accurate account of my interests outside Innovate UK
+				</label>
+			</div>
+
+		</fieldset>
+
+		<div th:if="${param.edit == null}" th:remove="tag">
+
+			<p class="form-hint">
+				If you do not have this information available you can continue and complete your declaration of interest later. You need to have completed this form before you can act as an assessor.
+			</p>
+
+			<button class="button button-large extra-margin" formaction="/prototypes/1176-assessor-contracts">Save declaration details</button>
+
+			<div class="extra-margin">
+				<a href="/prototypes/1176-assessor-contracts" class="button-link">Continue without providing your declaration details</a>
+			</div>
+
+		</div>
+
+		<div th:if="${param.edit != null}" th:remove="tag">
+			<button class="button button-large extra-margin" formaction="/prototypes/1247-assessor-view-doi">Save changes</button>
+		</div>
+		
+		
+
+	</form>
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

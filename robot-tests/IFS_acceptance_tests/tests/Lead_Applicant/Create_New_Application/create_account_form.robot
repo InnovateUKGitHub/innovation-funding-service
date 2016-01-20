@@ -21,7 +21,7 @@ ${valid_email}    ___ewan_@worth.systems
 First name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user leaves the first name field blank
     And the user inputs a last name
     And the user inputs a phone number
@@ -35,7 +35,7 @@ First name left blank
 Last name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user leaves the last name field blank
     And the user inputs a phone number
@@ -49,7 +49,7 @@ Last name left blank
 Phone number left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user leaves the phone number field blank
@@ -63,7 +63,7 @@ Phone number left blank
 Email left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -76,7 +76,7 @@ Email left blank
 Password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -90,7 +90,7 @@ Password left blank
 Re-type password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user leaves the first name field blank
     And the user inputs a last name
     And the user inputs a phone number
@@ -104,7 +104,7 @@ Re-type password left blank
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -118,7 +118,7 @@ Password and re-typed password do not match
 Password is too short
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -132,7 +132,7 @@ Password is too short
 Password is too long
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -145,9 +145,9 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations    Pending
+    [Tags]    Account    Validations
     # tagged as pending due to bug INFUND-1496.
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -157,13 +157,13 @@ Valid account creation
     And the user submits their information
     Then the user should be redirected to the login page
     And the user can login with their new details
-    And the user can see the organisation they are associated with
+    And the user can logout
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]    Account    Validations    Pending
+    [Tags]    Account    Validations
     # tagged as pending due to bug INFUND-1496.
-    Given the user is on the account creation page
+    Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -174,8 +174,27 @@ Email duplication check
     Then the user should see an error for the email duplication
 
 *** Keywords ***
-the user is on the account creation page
-    go to    ${ACCOUNT_CREATION_FORM_URL}
+the user follows the standard path to the account creation page
+#    Go To   ${competition_details_url}
+#   # Wait Until Element Is Visible       Sign in to apply
+#    Sleep   1s
+#    Click Button                    Sign in to apply
+#   # Wait Until Element Is Visible       Create
+#    Sleep   1s
+#    Location Should Be              ${CHECK_ELIGIBILITY}
+#    Click Button                    Create
+#    Sleep   1s
+#    Location Should Be          ${SEARCH_COMPANYHOUSE_URL}
+#    Input Text    id=org-name    innovateuk
+#    Click Element    id=org-search
+#
+    Go To    ${SERVER}/application/create/selected-business/05063042
+    Select Checkbox         id=address-same
+    Select Checkbox         name=useCompanyHouseAddress
+    Select Radio Button     organisationSize    SMALL
+    Click Button            Save organisation and continue
+    Sleep   1s
+    Page Should Contain     The profile that you are creating will be linked to the following organisation
 
 the user inputs a first name
     Input Text    id=firstName    John
@@ -283,10 +302,11 @@ the user can login with their new details
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
     Submit Form
+    Page Should Not Contain     something has gone wrong
 
-the user can see the organisation they are associated with
-    go to    ${ACCOUNT_CREATION_FORM_URL}
-    Page Should Contain    Nomensa
+the user can logout
+    logout as user
+
 
 the user should see an error for the email duplication
     Page Should Contain    We were unable to create your account

@@ -1,5 +1,8 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.application.form.ContributorsForm;
+import com.worth.ifs.application.form.InviteeForm;
+import com.worth.ifs.application.form.OrganisationInviteForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -43,6 +46,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     public String inviteContributors(@PathVariable("applicationId") final Long applicationId,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
+                                     HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
 
@@ -60,19 +64,28 @@ public class ApplicationContributorController extends AbstractApplicationControl
         model.addAttribute("leadOrganisation", leadOrganisation);
 
 
-        OrganisationInvite leadOrganisationInvite = new OrganisationInvite();
-        leadOrganisationInvite.organisationName = leadOrganisation.getName();
-        leadOrganisationInvite.organisationId = leadOrganisation.getId();
-        contributorsForm.getOrganisations().add(leadOrganisationInvite);
+        OrganisationInviteForm leadOrganisationInviteForm = new OrganisationInviteForm();
+        leadOrganisationInviteForm.setOrganisationName(leadOrganisation.getName());
+        leadOrganisationInviteForm.setOrganisationId(leadOrganisation.getId());
+        contributorsForm.getOrganisations().add(leadOrganisationInviteForm);
 
         String json = ApplicationCreationController.getFromCookie(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
             ContributorsForm contributorsForm2 = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
-            contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
+            if(contributorsForm2.getApplicationId() == applicationId) {
+                contributorsForm.setTriedToSave(contributorsForm2.isTriedToSave());
+                contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
+            }
 
             // got result from submit? validate
-            validator.validate(contributorsForm, bindingResult);
+            if(contributorsForm.isTriedToSave()){
+                validator.validate(contributorsForm, bindingResult);
+                contributorsForm.setTriedToSave(false);
+
+                String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+                ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+            }
         }
 
         return "application-contributors/invite";
@@ -105,6 +118,12 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
         validator.validate(contributorsForm, bindingResult);
 
+        if(request.getParameterMap().containsKey("save_contributors")){
+            contributorsForm.setTriedToSave(true);
+        }else{
+            contributorsForm.setTriedToSave(false);
+        }
+
         if (request.getParameterMap().containsKey("save_contributors") && !bindingResult.hasErrors()) {
             contributorsForm.getOrganisations().forEach((organisationInvite) -> {
                 List<InviteResource> invites = new ArrayList<>();
@@ -133,11 +152,16 @@ public class ApplicationContributorController extends AbstractApplicationControl
             ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
             return ApplicationController.redirectToApplication(application);
         } else {
-            String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
-            ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
         }
 
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
+    }
+
+    private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
+        contributorsForm.setApplicationId(applicationId);
+        String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+        ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {
@@ -157,18 +181,18 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
     private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex, ApplicationResource application) {
         log.debug("add person " + organisationIndex);
-        OrganisationInvite organisationInvite = contributorsForm.getOrganisations().get(Integer.parseInt(organisationIndex));
-        List<InviteeForm> invites = organisationInvite.getInvites();
+        OrganisationInviteForm organisationInviteForm = contributorsForm.getOrganisations().get(Integer.parseInt(organisationIndex));
+        List<InviteeForm> invites = organisationInviteForm.getInvites();
         invites.add(new InviteeForm());
     }
     private void addPartnerRow(ContributorsForm contributorsForm) {
         log.debug("addPartnerRow " );
-        OrganisationInvite organisationInvite = new OrganisationInvite();
+        OrganisationInviteForm organisationInviteForm = new OrganisationInviteForm();
         InviteeForm invite = new InviteeForm();
         LinkedList<InviteeForm> invites = new LinkedList<>();
         invites.add(invite);
-        organisationInvite.setInvites(invites);
-        contributorsForm.getOrganisations().add(organisationInvite);
+        organisationInviteForm.setInvites(invites);
+        contributorsForm.getOrganisations().add(organisationInviteForm);
     }
 
     private void getContributors(ApplicationResource application) {

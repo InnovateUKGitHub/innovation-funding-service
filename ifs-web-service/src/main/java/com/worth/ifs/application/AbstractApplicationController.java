@@ -206,6 +206,7 @@ public abstract class AbstractApplicationController {
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
+
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
         List<Question> questions = questionService.findByCompetition(application.getCompetition());
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
@@ -265,11 +266,25 @@ public abstract class AbstractApplicationController {
         model.addAttribute("nextSection", nextSection);
         model.addAttribute("sections", sections);
 
-        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation);
+
+        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        Optional<Question> aIncompleteQuestion = sections.values().stream().flatMap(section -> section.getQuestions().stream()).filter(question -> !markedAsComplete.contains(question.getId())).findAny();
-        model.addAttribute("allQuestionsCompleted", !aIncompleteQuestion.isPresent());
+        TreeSet<Organisation> organisations = organisationService.getApplicationOrganisations(application);
+        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(getMarkedAsCompleteDetails(application, Optional.of(organisations.first())));
+        // only keep the questionIDs of questions that are complete by all organisations
+        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(getMarkedAsCompleteDetails(application, Optional.of(o))));
+        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
+
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
+        completedSectionsByOrganisation.forEach((key, values) -> {
+            sectionsMarkedAsComplete.retainAll(values);
+        });
+
+        model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
+        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
+        model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {

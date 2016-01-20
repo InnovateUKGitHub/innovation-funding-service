@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.application.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OrganisationInvite implements Serializable {
+public class OrganisationInviteForm implements Serializable {
 
     @NotEmpty
     String organisationName;
@@ -15,14 +15,13 @@ public class OrganisationInvite implements Serializable {
     @Valid
     LinkedList<InviteeForm> invites;
 
-    public OrganisationInvite(String organisationName, Long organisationId) {
-
+    public OrganisationInviteForm(String organisationName, Long organisationId) {
         this.organisationName = organisationName;
         this.organisationId = organisationId;
         this.invites = new LinkedList<>();
     }
 
-    public OrganisationInvite() {
+    public OrganisationInviteForm() {
         organisationName = "";
         this.invites = new LinkedList<>();
     }

@@ -125,13 +125,13 @@
             <label class="form-label" for="cost-financegrantclaim">
                 <div class="heading-medium" th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">Maximum claim percentage: <span th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}"></span>%</span>
+                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
                    min="0"
                    th:max="${organisationFinanceSize.getMaxGrantClaimPercentage()}"
-                   class="width-small"
+                   th:class="${organisationFinanceSize.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}" />
@@ -922,7 +922,8 @@
                     <tr>
                         <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         <th scope="col" class="numeric">Total</th>
-                        <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}">
+                        <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}"
+                            th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
                             <div th:text="${applicationOrganisation.name}"></div>
                             <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
                             <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
@@ -937,6 +938,7 @@
                         </td>
                         <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
+                                th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(financeSubSection.id)} ? complete : incomplete"
                                 th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
                                 th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getCostCategory(T(com.worth.ifs.application.finance.CostType).fromString(formInputType.title))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
@@ -968,7 +970,7 @@
                 <tr>
                     <th scope="col"><span class="visuallyhidden">Actions</span></th>
                     <th scope="col" class="numeric">Total</th>
-                    <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}">
+                    <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}" th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
                         <div th:text="${applicationOrganisation.name}"></div>
                         <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
                         <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>

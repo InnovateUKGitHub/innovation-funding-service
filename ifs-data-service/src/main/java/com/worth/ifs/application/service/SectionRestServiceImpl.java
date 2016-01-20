@@ -5,9 +5,13 @@ import com.worth.ifs.commons.service.BaseRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -28,6 +32,17 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
         return restGet(sectionRestURL + "/getById/" + sectionId, Section.class);
     }
 
+
+    @Override
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
+//        return restGet(sectionRestURL + "/getCompletedSectionsByOrganisation/"+applicationId, Map<Long, Set<Long>>.class);
+        ParameterizedTypeReference<Map<Long, Set<Long>>> typeReference =
+                new ParameterizedTypeReference<Map<Long, Set<Long>>>() {};
+        ResponseEntity<Map<Long, Set<Long>>> resource = restGetParameterizedType(sectionRestURL + "/getCompletedSectionsByOrganisation/"+applicationId, typeReference);
+        return resource.getBody();
+
+    }
+
     @Override
     public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId) {
         return asList(restGet(sectionRestURL + "/getCompletedSections/"+applicationId+"/"+organisationId, Long[].class));
@@ -41,6 +56,11 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public Section getSection(String name) {
         return restGet(sectionRestURL + "/findByName/" + name, Section.class);
+    }
+
+    @Override
+    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
+        return restGet(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
     }
 
     @Override

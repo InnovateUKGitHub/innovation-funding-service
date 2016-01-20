@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create assessor account':'Edit your skills')}">MAIN TITLE</h1>
+    </div>
+
+    <p th:unless="${param.edit != null}">Before you begin to assess please provide some additional information about your skills to enable us to allocate you relevant applications to assess.</p>
+
+    <h2 class="heading-medium">Innovation areas</h2>
+
+    <p>Please select all innovation areas which apply to your current area(s) of expertise.</p>
+
+    <p class="form-hint"><strong>Please note:</strong> we would only expect assessors to have one or two current areas of expertise.
+Your selection can be edited at a later date.</p>
+	
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Areas of expertise</legend>
+			<div class="grid-row">
+				<div class="column-half">
+					<div class="form-group">
+						<label class="block-label" for="skill">
+							<input id="skill" type="checkbox" name="skill" value="" />
+							Advanced Materials
+						</label>
+						<label class="block-label" for="skill-2">
+							<input id="skill-2" type="checkbox" name="skill" value="" />
+							Assisted Living Technologies
+						</label>
+						<label class="block-label" for="skill-3">
+							<input id="skill-3" type="checkbox" name="skills" value="" />
+							Biosciences
+						</label>
+						<label class="block-label" for="skill-4">
+							<input id="skill-4" type="checkbox" name="skills" value="" />
+							Built environment
+						</label>
+						<label class="block-label" for="skill-5">
+							<input id="skill-5" type="checkbox" name="skills" value="" />
+							Creative industries
+						</label>
+						<label class="block-label" for="skill-6">
+							<input id="skill-6" type="checkbox" name="skills" value="" />
+							Detection &#38; identification of infectious agents
+						</label>
+						<!-- <label class="block-label" for="skill-7">
+							<input id="skill-7" type="checkbox" name="skills" value="" />
+							Development
+						</label> -->
+						<label class="block-label" for="skill-8">
+
+							<input id="skill-8" type="checkbox" name="skills" value="" checked="checked" th:unless="${param.edit == null}" />
+							<input id="skill-8" type="checkbox" name="skills" value="" th:unless="${param.edit != null}" />
+							Digital sciences
+
+						</label>
+						<label class="block-label" for="skill-9">
+							<input id="skill-9" type="checkbox" name="skills" value="" />
+							Electronics, sensors &#38; photonics
+						</label>
+						<label class="block-label" for="skill-10">
+							<input id="skill-10" type="checkbox" name="skills" value="" />
+							Emerging technologies
+						</label>
+						<label class="block-label" for="skill-11">
+							<input id="skill-11" type="checkbox" name="skills" value="" />
+							Energy generation &#38; supply
+						</label>
+						<label class="block-label" for="skill-12">
+							<input id="skill-12" type="checkbox" name="skills" value="" />
+							Environmental sustainability
+						</label>
+						<label class="block-label" for="skill-13">
+							<input id="skill-13" type="checkbox" name="skills" value="" />
+							Food supply
+						</label>
+						<label class="block-label" for="skill-14">
+							<input id="skill-14" type="checkbox" name="skills" value="" />
+							Healthcare
+						</label>
+						<label class="block-label" for="skill-15">
+							<input id="skill-15" type="checkbox" name="skills" value="" />
+							High value manufacturing
+						</label>
+		            </div>
+				</div>
+
+				<div class="column-half">
+					<label class="block-label" for="skill-16">
+						<input id="skill-16" type="checkbox" name="skills" value="" />
+						High value services
+					</label>
+					<label class="block-label" for="skill-17">
+						
+						<input id="skill-17" type="checkbox" name="skills" value="" checked="checked" th:unless="${param.edit == null}" />
+
+						<input id="skill-17" type="checkbox" name="skills" value="" th:unless="${param.edit != null}" />
+						Information &#38; communications technology (ICT)
+
+					</label>
+					<label class="block-label" for="skill-18">
+						<input id="skill-18" type="checkbox" name="skills" value="" />
+						Intelligent transport systems
+					</label>
+					<label class="block-label" for="skill-19">
+						<input id="skill-19" type="checkbox" name="skills" value="" />
+						Low carbon vehicles
+					</label>
+					<label class="block-label" for="skill-20">
+						<input id="skill-20" type="checkbox" name="skills" value="" />
+						Materials
+					</label>
+					<label class="block-label" for="skill-21">
+						<input id="skill-21" type="checkbox" name="skills" value="" />
+						Nanotechnology
+					</label>
+					<!-- <label class="block-label" for="skill-22">
+						<input id="skill-22" type="checkbox" name="skills" value="" />
+						Open data institute
+					</label> -->
+					<label class="block-label" for="skill-23">
+						<input id="skill-23" type="checkbox" name="skills" value="" />
+						Regenerative medicine
+					</label>
+					<label class="block-label" for="skill-24">
+						<input id="skill-24" type="checkbox" name="skills" value="" />
+						Resource efficiency
+					</label>
+					<label class="block-label" for="skill-25">
+						<input id="skill-25" type="checkbox" name="skills" value="" />
+						Satellite comms &#38; navigation
+					</label>
+					<label class="block-label" for="skill-26">
+						<input id="skill-26" type="checkbox" name="skills" value="" />
+						Space
+					</label>
+					<label class="block-label" for="skill-27">
+						<input id="skill-27" type="checkbox" name="skills" value="" />
+						Stratified medicine
+					</label>
+					<label class="block-label" for="skill-28">
+						<input id="skill-28" type="checkbox" name="skills" value="" />
+						Sustainable agrifood
+					</label>
+					<label class="block-label" for="skill-29">
+						<input id="skill-29" type="checkbox" name="skills" value="" />
+						Transport
+					</label>
+					<label class="block-label" for="skill-30">
+						<input id="skill-30" type="checkbox" name="skills" value="" />
+						Urban living
+					</label>
+				</div>
+
+			</div>
+		</fieldset>
+
+		<h2 class="heading-medium">Skills areas</h2>
+		<fieldset>
+			<legend class="visuallyhidden">Skills areas</legend>
+
+			<label for="skills-areas">Please provide any specialist skills or key areas of expertise which could help Innovate UK in assigning the most appropriate applications to you for assessment.</label>
+
+			<p class="form-hint">For example ‘Solar Power’, ‘Genetics’, ‘Recycling’</p>
+
+			<textarea name="skills-areas" id="skills-areas" cols="30" rows="5" class="width-full"><div th:if="${param.edit != null}" th:remove="tag">Human Computer Interaction, Wearables, IoT</div>
+			</textarea>
+
+		</fieldset>
+
+		<h2 class="heading-medium no-margin-bottom">Assessor type</h2>
+		<fieldset class="inline">
+			<legend class="visuallyhidden">Assessor type</legend>
+			<p class="form-hint">
+				Please select your current area of work. If you are working in both please select the most dominant.
+			</p>
+			<label class="block-label" for="radio-inline-1">
+		      <input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio" checked="checked" th:unless="${param.edit == null}" />
+
+		      <input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio"  th:unless="${param.edit != null}" />
+		      
+		      Business
+		    </label>
+		    <label class="block-label" for="radio-inline-2">
+		      <input id="radio-inline-2" name="radio-inline-group" value="No" type="radio" />
+		      Academic
+		    </label>
+		</fieldset>
+
+		<div th:if="${param.edit == null}" th:remove="tag">
+			<hr />
+
+			<button class="button button-large" formaction="/prototypes/1247-assessor-doi">Continue</button>
+
+		</div>
+
+		<hr />
+
+		<div th:if="${param.edit != null}" th:remove="tag">
+			<button class="button button-large" formaction="/prototypes/1178-assessor-profile-skills">Save changes</button>
+		</div>
+
+
+	</form>
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
