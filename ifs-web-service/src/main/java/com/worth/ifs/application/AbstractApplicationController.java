@@ -290,7 +290,12 @@ public abstract class AbstractApplicationController {
         Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation);
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        Optional<Question> aIncompleteQuestion = sections.values().stream().flatMap(section -> section.getQuestions().stream()).filter(question -> !markedAsComplete.contains(question.getId())).findAny();
+        Optional<Question> aIncompleteQuestion = sections.values().stream()
+//                .peek(s -> LOG.debug(String.format("Section %s / %d", s.getName(), s.getChildSections().size())))
+                .flatMap(section -> section.getAllChildQuestions().stream())
+//                .peek(q -> LOG.debug(String.format("Question %s ", q.getName())))
+                .filter(question -> !markedAsComplete.contains(question.getId()))
+                .findAny();
         model.addAttribute("allQuestionsCompleted", !aIncompleteQuestion.isPresent());
     }
 

@@ -83,7 +83,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 testDirectory='IFS_acceptance_tests/tests/*'
@@ -134,13 +134,18 @@ echo "webBase:           ${webBase}"
 
 unset opt
 unset quickTest
+unset testScrub
+
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :d:" opt ; do
+while getopts ":q :t :d:" opt ; do
     case $opt in
         q)
          quickTest=1
         ;;
+	t)
+	 testScrub=1
+	;;
         d)
          testDirectory="$OPTARG"
         ;;
@@ -167,6 +172,13 @@ then
     echo "using quickTest:   TRUE" >&2
     resetDB
     runTests
+elif [ "$testScrub" ]
+then
+    echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
+    stopServers
+    buildAndDeploy
+    resetDB
+    startServers
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

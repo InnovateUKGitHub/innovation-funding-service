@@ -121,15 +121,17 @@
 
 
     <div th:fragment="finance">
-        <div class="form-group">
+        <div th:class="form-group" th:classappend="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
             <label class="form-label" for="cost-financegrantclaim">
                 <div class="heading-medium" th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-
+                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
-                   class="width-small"
+                   min="0"
+                   th:max="${organisationFinanceSize.getMaxGrantClaimPercentage()}"
+                   th:class="${organisationFinanceSize.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}" />
@@ -913,7 +915,7 @@
     </div>
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
-        <div class="form-group">
+        <div class="form-group project-cost-breakdown">
             <div style="overflow: auto;">
                 <table>
                     <thead>
@@ -959,7 +961,7 @@
     <!-- ===========================Form: funding breakdown =========================== -->
     <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
 
-      <div class="form-group">
+      <div class="form-group finance-summary">
 
             <table>
                 <thead>
