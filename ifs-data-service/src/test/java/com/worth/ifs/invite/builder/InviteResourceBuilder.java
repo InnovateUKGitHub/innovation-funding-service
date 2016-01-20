@@ -7,6 +7,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -23,6 +24,22 @@ public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteRes
     @Override
     protected InviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InviteResource>> actions) {
         return new InviteResourceBuilder(actions);
+    }
+
+    public InviteResourceBuilder withId(Long... ids) {
+        return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
+    }
+
+    public InviteResourceBuilder withEmail(final String... emailAddresses) {
+        return withArray((email, inviteResource) -> setField("email", email, inviteResource), emailAddresses);
+    }
+
+    public InviteResourceBuilder withName(final String... names) {
+        return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
+    }
+
+    public InviteResourceBuilder withApplicationId(final Long... applicationIds) {
+        return withArray((applicationId, inviteResource) -> setField("applicationId", applicationId, inviteResource), applicationIds);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.worth.ifs.invite.domain.Invite;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -23,6 +24,8 @@ public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
     protected InviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Invite>> actions) {
         return new InviteBuilder(actions);
     }
+
+
 
     @Override
     protected Invite createInitial() {
