@@ -72,8 +72,10 @@ public class IdpStubController {
         ocattr.add("inetOrgPerson");
         attrs.put(ocattr);
         attrs.put("uid", uid);
+        attrs.put("cn", "unused");
+        attrs.put("sn", "unused");
         attrs.put("mail", user.getEmailAddress());
-        attrs.put("userPassword", user.getPassword());
+        attrs.put("userPassword", user.getPlainTextPassword());
         return attrs;
     }
 

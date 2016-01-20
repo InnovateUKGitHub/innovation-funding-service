@@ -5,3 +5,5 @@ objectClass: inetOrgPerson
 uid: $uid
 mail: $emailAddress
 userPassword: test
+cn: unused
+sn: unused
