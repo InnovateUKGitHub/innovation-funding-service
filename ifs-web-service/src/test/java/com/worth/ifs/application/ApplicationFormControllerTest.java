@@ -4,6 +4,8 @@ import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
@@ -167,7 +169,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
 
         // verify that the method is called to send the data to the data services.
-        Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinance.getId(), questionId);
+        Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinanceResource.getId(), questionId);
     }
 
     @Test

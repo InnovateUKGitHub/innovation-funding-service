@@ -22,14 +22,12 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.Mock;
@@ -123,7 +121,7 @@ public class BaseUnitTest {
     public ApplicationStatus createdApplicationStatus;
     public ApplicationStatus approvedApplicationStatus;
     public ApplicationStatus rejectedApplicationStatus;
-    public ApplicationFinance applicationFinance;
+    public ApplicationFinanceResource applicationFinanceResource;
     public List<ProcessRole> processRoles;
 
     public InternalResourceViewResolver viewResolver() {
@@ -339,6 +337,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
+        when(organisationService.getOrganisationById(organisation1.getId())).thenReturn(organisation1);
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
 
     }
@@ -370,9 +369,9 @@ public class BaseUnitTest {
 
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
-        applicationFinance = new ApplicationFinance(1L, new Application(application), organisations.get(0));
-        when(financeService.getApplicationFinances(application.getId())).thenReturn(singletonList(applicationFinance));
-        when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
+        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
+        when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
     }
 
     public void setupAssessment(){
