@@ -7,7 +7,8 @@ IFS.invites = (function(){
           formid : '.contributorsForm',
           inputs :  '.contributorsForm input',
           addRow : '.contributorsForm .add-another-row',
-          removeRow : '.contributorsForm .remove-another-row'
+          removeRow : '.contributorsForm .remove-another-row',
+          addOrg : '[name="add_partner"]'
       },
       init : function(){
           s = this.settings;
@@ -19,6 +20,9 @@ IFS.invites = (function(){
           });
           jQuery('body').on('click',s.removeRow, function(e){
               IFS.invites.removeRow(e);
+          });
+          jQuery('body').on('click',s.addOrg, function(e){
+              IFS.invites.addOrg(e);
           });
       },
       saveToCookie : function(){
@@ -33,8 +37,8 @@ IFS.invites = (function(){
       },
       addRow : function(e){
           e.preventDefault();
-          var orgContainer = jQuery(e.target).closest('li');
-          var orgId = orgContainer.attr('data-invite-org');
+          var orgContainer = jQuery(e.target).closest('[data-invite-org]');
+          var orgId = orgContainer.index();
           var rowId = orgContainer.find('[data-invite-row]').length;
           var html = '<tr class="form-group" data-invite-row>\
                         <td><input type="text" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName" /></td>\
@@ -44,29 +48,69 @@ IFS.invites = (function(){
           orgContainer.find('tbody').append(html);
           IFS.invites.saveToCookie();
       },
+      addOrg : function(e){
+        e.preventDefault();
+        var currentOrgs = jQuery('[data-invite-org]');
+        var orgId = currentOrgs.length;
+        var html = '<li data-invite-org>\
+                    <h2 class="heading-medium">Partner Organisation "<input type="text" value="" name="organisations['+orgId+'].organisationName" placeholder="Organisation Name" class="form-control width-large">"</h2>\
+                          <input type="hidden" value="" name="organisations['+orgId+'].organisationId" placeholder="name" class="form-control width-full">\
+                          <table>\
+                              <thead><tr>\
+                                  <th>Name</th>\
+                                  <th>E-mail</th>\
+                                  <th>&nbsp;</th>\
+                              </tr></thead>\
+                              <tbody>\
+                              <tr data-invite-row class="form-group">\
+                                  <td><input type="text" value="" name="organisations['+orgId+'].invites[0].personName"  placeholder="name" class="form-control width-full"></td>\
+                                  <td><input type="email" value="" name="organisations['+orgId+'].invites[0].email" placeholder="name@company.co.uk" class="form-control width-full"></td>\
+                                  <td class="alignright"><button value="'+orgId+'_0" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
+                              </tr>\
+                              </tbody>\
+                          </table>\
+                          <p class="alignright">\
+                              <button value="'+orgId+'" name="add_person" type="submit" class="add-another-row buttonlink">Add person</button>\
+                          </p>\
+                      </li>';
+          currentOrgs.last().after(html);
+          IFS.invites.saveToCookie();
+      },
       recountRows : function(){
-          jQuery('[data-invite-row]').each(function(index,value){
-              var orgId = jQuery(value).closest('li').attr('data-invite-org');
+          jQuery('[data-invite-org] input').each(function(){
+              var input = jQuery(this);
 
-              jQuery(value).find('input').each(function(inviteIndex, inviteValue){
-                  var input = jQuery(inviteValue);
-                  var oldName = input.attr('name');
+              var orgId = input.closest('[data-invite-org]').index();
+              var inviteeId = input.closest('[data-invite-row]').index();
 
-                  var newName = oldName.split('.');
+              var oldName = input.attr('name');
+              if(typeof(oldName) !== 'undefined'){
+
+                var newName = oldName.split('.');
+                if(inviteeId !== -1 && orgId !== -1){
+                  if(orgId === 0){ inviteeId--; } //for the readonly owner field in the first organisation
                   newName[0] = 'organisations['+orgId+']';
-                  newName[1] = 'invites['+inviteIndex+']';
-                  newName = newName.join('.');
-
-                  input.attr('name',newName);
-              });
+                  newName[1] = 'invites['+inviteeId+']';
+                }
+                else if(orgId !== -1) {
+                  newName[0] = 'organisations['+orgId+']';
+                }
+                newName = newName.join('.');
+                input.attr('name',newName);
+              }
           });
+          IFS.invites.saveToCookie();
       },
       removeRow : function(e){
           e.preventDefault();
           var button = jQuery(e.target);
-          button.closest('tr').remove();
+          if(button.closest('[data-invite-org]').find('tbody tr').length == 1){
+            button.closest('[data-invite-org]').remove(); 
+          }
+          else {
+            button.closest('tr').remove();
+          }
           IFS.invites.recountRows();
-          IFS.invites.saveToCookie();
       }
     };
 })();

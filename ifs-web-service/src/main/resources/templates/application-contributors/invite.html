@@ -36,7 +36,7 @@
                 </h2>
 
                 <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-large" placeholder="Organisation Name"
-                                                                                                                    th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'error'"
+                                                                                                                    th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
                                                                                                                     th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>"
                 </h2>
 
@@ -71,13 +71,13 @@
                         <td>
                             <input type="text" class="form-control width-full"
                                    placeholder="name"
-                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}? 'error'"
+                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}? 'field-error'"
                                    th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName}"/>
                         </td>
                         <td>
                             <input type="email" class="form-control width-full"
                                    placeholder="name@company.co.uk"
-                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}? 'error'"
+                                   th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}? 'field-error'"
                                    th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}"/>
                         </td>
                         <td class="alignright">
