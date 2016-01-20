@@ -10,6 +10,8 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.invite.repository.InviteOrganisationRepository;
+import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -89,6 +91,12 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected NotificationService notificationServiceMock;
+
+    @Mock
+    protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    protected InviteRepository inviteRepositoryMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();

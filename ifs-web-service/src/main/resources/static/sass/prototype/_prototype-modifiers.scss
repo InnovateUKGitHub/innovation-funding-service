@@ -1,3 +1,4 @@
+
 .total-cost{
 	.heading-medium{
 		margin-left: 20px; 
@@ -9,6 +10,16 @@
 		margin-top: 5px;
 	}
 }
+
+/*--- Full width pages for comp administrators ---*/
+
+.full-width{
+	#content{
+		max-width: 90%;
+		min-width: 960px;
+	}
+}
+
 
 /*--- Boxed content ---*/
 

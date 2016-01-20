@@ -7,10 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +34,16 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
         return sectionRestService.getCompletedSectionIds(applicationId, organisationId);
+    }
+
+    @Override
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
+        return sectionRestService.getCompletedSectionsByOrganisation(applicationId);
+    }
+
+    @Override
+    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
+        return sectionRestService.allSectionsMarkedAsComplete(applicationId);
     }
 
     @Override
