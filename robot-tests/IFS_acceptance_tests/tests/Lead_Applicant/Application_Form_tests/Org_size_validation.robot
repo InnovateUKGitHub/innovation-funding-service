@@ -16,16 +16,22 @@ ${large_org_option}         LARGE
 
 
 *** Test Cases ***
+Small organisation can't choose over 70% funding
+                      [Documentation]                 INFUND-1100
+                      [Tags]                          Organisation  Funding     Finance
+    When the applicant enters organisation size details       ${small_org_option}   82
+    Then the 'your finances' section cannot be successfully saved
+
 Small organisation can choose up to 70% funding
                       [Documentation]                 INFUND-1100
                       [Tags]                          Organisation  Funding     Finance
     When the applicant enters organisation size details      ${small_org_option}   68
     Then the 'your finances' section can be successfully saved   ${small_org_option}     68
 
-Small organisation can't choose over 70% funding
+Medium organisation can't choose over 60% funding
                       [Documentation]                 INFUND-1100
                       [Tags]                          Organisation  Funding     Finance
-    When the applicant enters organisation size details       ${small_org_option}   82
+    When the applicant enters organisation size details      ${medium_org_option}  68
     Then the 'your finances' section cannot be successfully saved
 
 Medium organisation can choose up to 60% funding
@@ -34,10 +40,10 @@ Medium organisation can choose up to 60% funding
     When the applicant enters organisation size details      ${medium_org_option}  53
     Then the 'your finances' section can be successfully saved   ${medium_org_option}    53
 
-Medium organisation can't choose over 60% funding
+Large organisation can't choose over 50% funding
                       [Documentation]                 INFUND-1100
                       [Tags]                          Organisation  Funding     Finance
-    When the applicant enters organisation size details      ${medium_org_option}  68
+    When the applicant enters organisation size details      ${large_org_option}  54
     Then the 'your finances' section cannot be successfully saved
 
 Large organisation can choose up to 50% funding
@@ -45,14 +51,6 @@ Large organisation can choose up to 50% funding
                       [Tags]                          Organisation  Funding     Finance
     When the applicant enters organisation size details      ${large_org_option}  43
     Then the 'your finances' section can be successfully saved      ${large_org_option}     43
-
-Large organisation can't choose over 50% funding
-                      [Documentation]                 INFUND-1100
-                      [Tags]                          Organisation  Funding     Finance
-    When the applicant enters organisation size details      ${large_org_option}  54
-    Then the 'your finances' section cannot be successfully saved
-
-
 
 
 
@@ -87,7 +85,10 @@ Applicant enters the funding level  [Arguments]     ${funding_level}
 
 
 Applicant chooses to save and return to application overview
-    CLick Button        Save and return to application overview
+    Click Button        Save and return to application overview
+    Page Should Not Contain     error
+    Page Should Not Contain     Error
+    Page SHould Not Contain     something went wrong
 
 
 Applicant can see the correct organisation size has been selected   [Arguments]     ${org_size_option}
