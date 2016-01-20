@@ -83,7 +83,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 testDirectory='IFS_acceptance_tests/tests/*'
@@ -129,7 +129,7 @@ webLogFilePath=${webLogPath}"/catalina."${dateFormat}".log"
 echo "webLogFilePath:    ${webLogFilePath}"
 webPort=`sed '/^\#/d' dev-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "webPort:           ${webPort}"
-webBase="localhost:"${webPort}
+webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
 
 unset opt

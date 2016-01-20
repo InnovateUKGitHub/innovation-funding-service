@@ -16,11 +16,11 @@ Login as user
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
-    Input Text    id=id_email    ${USERNAME}
-    Input Password    id=id_password    ${PSW}
+    Input Text    id=username    ${USERNAME}
+    Input Password    id=password    ${PSW}
 
 The guest user clicks the log-in button
-    Click Button    css=input.button
+    Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
     Open browser  http://google.com  ${BROWSER}
