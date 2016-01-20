@@ -3,6 +3,7 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.mapper.ApplicationStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.junit.Before;
@@ -18,6 +19,9 @@ import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
+
+    @Autowired
+    ApplicationStatusMapper applicationStatusMapper;
 
     public static final long APPLICATION_ID = 1L;
     private QuestionController questionController;
@@ -44,7 +48,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void test_updateApplication() {
+    public void testUpdateApplication() {
 
         String originalTitle= "A novel solution to an old problem";
         String newTitle = "A new title";
@@ -80,16 +84,16 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void testUpdateApplicationStatus() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.APPROVED.getId());
-        assertEquals(ApplicationStatusConstants.APPROVED.getName(), controller.getApplicationById(APPLICATION_ID).getApplicationStatus().getName());
+        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.REJECTED.getId());
-        assertEquals(ApplicationStatusConstants.REJECTED.getName(), controller.getApplicationById(APPLICATION_ID).getApplicationStatus().getName());
+        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.CREATED.getId());
-        assertEquals(ApplicationStatusConstants.CREATED.getName(), controller.getApplicationById(APPLICATION_ID).getApplicationStatus().getName());
+        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.SUBMITTED.getId());
-        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), controller.getApplicationById(APPLICATION_ID).getApplicationStatus().getName());
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
     }
 
     @Test
@@ -102,7 +106,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(5, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
         assertTrue(application.isPresent());
-        assertEquals(competitionId, application.get().getCompetitionId());
+        assertEquals(competitionId, application.get().getCompetition());
     }
 
 }

@@ -2,6 +2,8 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -20,6 +22,8 @@ import static java.util.stream.Collectors.toList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
+
+    private static final Log LOG = LogFactory.getLog(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -137,6 +141,7 @@ public class User {
 
     public Boolean passwordEquals(String passwordInput){
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
+        LOG.debug(encoder.matches(passwordInput, this.password));
         return encoder.matches(passwordInput, this.password);
     }
 
@@ -199,6 +204,10 @@ public class User {
     }
 
     public void setToken(String token) { this.token = token; }
+
+    public String getPassword() {
+        return this.password;
+    }
 
     @Override
     public boolean equals(Object o) {

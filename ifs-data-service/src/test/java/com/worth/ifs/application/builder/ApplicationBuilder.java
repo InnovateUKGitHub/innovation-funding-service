@@ -54,4 +54,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withProcessRoles(ProcessRole... processRoles) {
         return with(application -> application.setProcessRoles(asList(processRoles)));
     }
+
+    public ApplicationBuilder withName(String name) {
+        return with(application -> application.setName(name));
+    }
 }

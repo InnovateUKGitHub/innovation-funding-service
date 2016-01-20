@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
@@ -40,6 +41,8 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     QuestionRepository questionRepository;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    QuestionMapper questionMapperImpl;
 
     @Override
     public Section getById(final Long sectionId) {
@@ -95,7 +98,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         for (Section section : sections) {
             boolean sectionIncomplete = false;
 
-            List<Question> questions = section.getAllChildQuestions();
+            List<Question> questions = section.fetchAllChildQuestions();
             for (Question question : questions) {
                 if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
                     // if there is a maxWordCount, ensure that no responses have gone over the limit

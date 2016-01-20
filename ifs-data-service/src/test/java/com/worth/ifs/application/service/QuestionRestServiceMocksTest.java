@@ -62,7 +62,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void indByIdTest() {
+    public void findByIdTest() {
         String expectedUrl = dataServicesUrl + questionRestURL + "/id/1";
 
         Question question = newQuestion().build();

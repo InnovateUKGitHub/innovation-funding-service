@@ -1,5 +1,6 @@
 package com.worth.ifs.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -109,4 +110,13 @@ public class QuestionStatus {
         this.notified = notified;
     }
 
+    @JsonIgnore
+    public Question getQuestion() {
+        return this.question;
+    }
+
+    @JsonIgnore
+    public Application getApplication() {
+        return this.application;
+    }
 }

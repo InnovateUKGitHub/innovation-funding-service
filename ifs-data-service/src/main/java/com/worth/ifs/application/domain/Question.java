@@ -185,6 +185,83 @@ public class Question {
         return formInputs;
     }
 
+    @JsonIgnore
+    public List<Cost> getCosts() {
+        return costs;
+    }
+
+    public Boolean getAssignEnabled() {
+        return this.assignEnabled;
+    }
+
+    public boolean isNeedingAssessorScore() {
+        return this.needingAssessorScore;
+    }
+
+    public boolean isNeedingAssessorFeedback() {
+        return this.needingAssessorFeedback;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setGuidanceQuestion(String guidanceQuestion) {
+        this.guidanceQuestion = guidanceQuestion;
+    }
+
+    public void setGuidanceAnswer(String guidanceAnswer) {
+        this.guidanceAnswer = guidanceAnswer;
+    }
+
+    public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
+        this.markAsCompletedEnabled = markAsCompletedEnabled;
+    }
+
+    public void setMultipleStatuses(Boolean multipleStatuses) {
+        this.multipleStatuses = multipleStatuses;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setNeedingAssessorScore(boolean needingAssessorScore) {
+        this.needingAssessorScore = needingAssessorScore;
+    }
+
+    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
+        this.needingAssessorFeedback = needingAssessorFeedback;
+    }
+
+    public void setFormInputs(List<FormInput> formInputs) {
+        this.formInputs = formInputs;
+    }
+
+    public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
+        this.assessorConfirmationQuestion = assessorConfirmationQuestion;
+    }
+
+    public void setCosts(List<Cost> costs) {
+        this.costs = costs;
+    }
+
+    public void setQuestionNumber(String questionNumber) {
+        this.questionNumber = questionNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) {
