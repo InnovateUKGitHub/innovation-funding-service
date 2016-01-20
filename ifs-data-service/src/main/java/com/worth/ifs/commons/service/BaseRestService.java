@@ -1,6 +1,8 @@
 package com.worth.ifs.commons.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,9 +11,13 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.util.Either.left;
+import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -85,6 +91,27 @@ public abstract class BaseRestService {
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
+    /**
+     * restPost is a generic method that performs a RESTful POST request.
+     *
+     * @param path - the unified name resource of the request to be made
+     * @param successClass - the class type of that the requestor wants to get from the request response, if a success response is encountered
+     * @param failureClass - the class type of that the requestor wants to get from the request response, if a failure response is encountered
+     * @param successCodes - a set of codes that represent a success case
+     * @param <T>
+     * @return
+     */
+    protected <R, T> Either<R, T> restPost(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus... successCodes) {
+        log.debug("restPostWithEntity: "+path);
+        ResponseEntity<String> response = restPostWithEntity(path, postEntity, String.class);
+
+        if (asList(successCodes).contains(response.getStatusCode())) {
+            return right(fromJson(response.getBody(), successClass));
+        }
+
+        return left(fromJson(response.getBody(), failureClass));
+    }
+
     protected void restPut(String path) {
         log.debug("restPutEntity: "+path);
         restPutEntity(path, Void.class);
@@ -92,6 +119,17 @@ public abstract class BaseRestService {
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), c);
+    }
+
+    protected <R, T> Either<R, T> restPut(String path, Object putEntity, Class<T> successClass, Class<R> failureClass, HttpStatus successCodes){
+
+        ResponseEntity<String> response = getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(putEntity), String.class);
+
+        if (asList(successCodes).contains(response.getStatusCode())) {
+            return right(fromJson(response.getBody(), successClass));
+        }
+
+        return left(fromJson(response.getBody(), failureClass));
     }
 
     protected void restPut(String path, Object entity) {
@@ -125,6 +163,15 @@ public abstract class BaseRestService {
 
         HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
         return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, responseType);
+    }
+
+    protected <T> T fromJson(String json, Class<T> clazz) {
+        try {
+            return new ObjectMapper().readValue(json, clazz);
+        } catch (IOException e) {
+            log.error("Unable to resolve class " + clazz + " from JSON " + json, e);
+            return null;
+        }
     }
 
     @NotSecured("")
