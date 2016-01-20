@@ -937,8 +937,8 @@
                         </td>
                         <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
-                                th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
-                                th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getCostCategory(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
+                                th:if="${applicationOrganisation.id == organisationFinance.organisation}"
+                                th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                         </div>
@@ -948,7 +948,7 @@
                         <td class="numeric" style="font-weight: 700;" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                         </td>
                         <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                            <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                                 th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
                         </div>
                     </tr>
@@ -981,7 +981,7 @@
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}">
                     </td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                            <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                            <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                             th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}"></td>
                     </div>
                 </tr>
@@ -989,7 +989,7 @@
                     <th>% Grant</th>
                     <td class="numeric"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                             th:text="${organisationFinance.grantClaimPercentage}+'%'"></td>
                     </div>
                 </tr>
@@ -997,7 +997,7 @@
                     <th>Funding sought</th>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                             th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"></td>
                     </div>
                 </tr>
@@ -1005,7 +1005,7 @@
                     <th>Other public sector funding</th>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                             th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"></td>
                     </div>
                 </tr>
@@ -1013,7 +1013,7 @@
                     <th>Contribution to project</th>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalContribution, 0, 'COMMA', 0, 'POINT')}"></td>
                     <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
-                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                        <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                             th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"></td>
                     </div>
                 </tr>
