@@ -11,10 +11,11 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite
+${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite
 
 *** Test Cases ***
 The lead applicant should be able to add a collaborator
-    [Documentation]    INFUND-901:
+    [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     When the applicant clicks the add person link
     Then a new line should be added
@@ -28,11 +29,31 @@ The user's inputs should be autosaved
     When the user fils the mane and email field
     And reloads the page
     The users inputs should still be visible
+    and when the user goes to the second invite page
+    Then the inputs of the first invite should not be visible
 
 The lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     Then the lead applicant should not be able to to be removed
+
+Validations for the Email field
+    [Documentation]    INFUND-901
+    Given the applicant is in the invite contributors page
+    When the applicant enters some invalid emails
+    Then the applicant should not redirected to the next page
+
+Validation for the name field
+    [Documentation]    INFUND-901
+    Given the applicant is in the invite contributors page
+    When the applicant submit the page without to enter a name
+    Then the applicant should get a vallidation error for the name field
+
+Valid submit
+    [Documentation]    INFUND-901
+    Given the applicant is in the invite contributors page
+    When the applicant enters valid inputs
+    Then the applicant should be redirected to the overview page
 
 *** Keywords ***
 the applicant is in the invite contributors page
@@ -69,3 +90,36 @@ The users inputs should still be visible
 
 the lead applicant should not be able to to be removed
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    That's you!
+
+when the user goes to the second invite page
+    go to    ${INVITE_COLLABORATORS2_PAGE}
+
+the inputs of the first invite should not be visible
+    Element Should Not Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
+
+the applicant enters some invalid emails
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    @example.com
+    Click Element    jquery=button:contains("Begin application")
+    sleep    1s
+
+the applicant should not redirected to the next page
+    Location Should Be    ${INVITE_COLLABORATORS_PAGE}
+
+the applicant submit the page without to enter a name
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
+    Click Element    jquery=button:contains("Begin application")
+    sleep    1s
+
+the applicant should get a vallidation error for the name field
+    Element Should Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .error
+
+the applicant enters valid inputs
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    tester
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
+    Click Element    jquery=button:contains("Begin application")
+    sleep    1s
+
+the applicant should be redirected to the overview page
+    Page Should Contain    Application overview
