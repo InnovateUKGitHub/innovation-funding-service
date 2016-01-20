@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public ResourceEnvelope<UserResource> updateUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+    public ResourceEnvelope<UserResource> createLeadApplicant(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
 
         ServiceResult<User> createUserResult = registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource);
 

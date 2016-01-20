@@ -18,6 +18,7 @@ import java.util.UUID;
 import static com.worth.ifs.util.JsonStatusResponse.created;
 import static com.worth.ifs.util.JsonStatusResponse.ok;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * Stub for talking directly to LDAP in lieu of having a REST API available to update LDAP information
@@ -36,7 +37,7 @@ public class IdpStubController {
         return created(uid, response);
     }
 
-    @RequestMapping(value = "/updateuser", method = POST, produces = "application/json")
+    @RequestMapping(value = "/updateuser", method = PUT, produces = "application/json")
     public JsonStatusResponse updateUser(@RequestBody UpdateUserResource updateUserRequest) {
         update(updateUserRequest);
         return ok();

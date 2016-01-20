@@ -59,7 +59,7 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
         // showing the uid being returned
 
         UpdateUserResource updateUserRequest = new UpdateUserResource(uid, title, firstName, lastName, emailAddress, phoneNumber);
-        ResponseEntity<String> response = restPut(idpCreateUserPath, updateUserRequest, String.class);
+        ResponseEntity<String> response = restPut(idpUpdateUserPath, updateUserRequest, String.class);
         return OK.equals(response.getStatusCode()) ? success(response.getBody()) : failure(UNABLE_TO_UPDATE_USER);
     }
 }
