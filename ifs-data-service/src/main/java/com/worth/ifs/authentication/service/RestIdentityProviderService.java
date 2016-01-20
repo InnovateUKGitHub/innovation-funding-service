@@ -4,6 +4,7 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import static com.worth.ifs.authentication.service.RestIdentityProviderService.S
 import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * RESTful implementation of the service that talks to the Identity Provider (in this case, via some API)
@@ -46,8 +48,8 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
         // showing the uid being returned
 
         CreateUserResource createUserRequest = new CreateUserResource(title, firstName, lastName, emailAddress, phoneNumber, password);
-        ResponseEntity<String> response = restPostWithEntity(idpCreateUserPath, createUserRequest, String.class);
-        return CREATED.equals(response.getStatusCode()) ? success(response.getBody()) : failure(UNABLE_TO_CREATE_USER);
+        ResponseEntity<JsonStatusResponse> response = restPostWithEntity(idpCreateUserPath, createUserRequest, JsonStatusResponse.class);
+        return CREATED.equals(response.getStatusCode()) ? success(response.getBody().getMessage()) : failure(UNABLE_TO_CREATE_USER);
     }
 
     @Override
@@ -56,8 +58,8 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
         // TODO DW - INFUND-1267 - need to define the correct format of the create user request and the subsequent response - currently just
         // showing the uid being returned
 
-        UpdateUserResource updateUserRequest = new UpdateUserResource(title, firstName, lastName, emailAddress, phoneNumber);
+        UpdateUserResource updateUserRequest = new UpdateUserResource(uid, title, firstName, lastName, emailAddress, phoneNumber);
         ResponseEntity<String> response = restPut(idpCreateUserPath, updateUserRequest, String.class);
-        return CREATED.equals(response.getStatusCode()) ? success(response.getBody()) : failure(UNABLE_TO_UPDATE_USER);
+        return OK.equals(response.getStatusCode()) ? success(response.getBody()) : failure(UNABLE_TO_UPDATE_USER);
     }
 }
