@@ -6,9 +6,10 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * This class contains methods to retrieve and store {@link Response} related data,
@@ -27,11 +28,11 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Override
     public Map<Long, FormInputResponse> mapFormInputResponsesToFormInput(List<FormInputResponse> responses) {
-        Map<Long, FormInputResponse> responseMap = new HashMap<>();
-        for (FormInputResponse response : responses) {
-            responseMap.put(response.getFormInput().getId(), response);
-        }
-        return responseMap;
+        return simpleToMap(
+            responses,
+            response -> response.getFormInput().getId(),
+            response -> response
+        );
     }
 
     @Override

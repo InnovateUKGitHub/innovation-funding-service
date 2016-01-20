@@ -80,8 +80,9 @@ public class SectionServiceImpl implements SectionService {
 
         for(Section section : sections) {
             boolean isUserAssignedSection = section.getQuestions().stream().anyMatch(q ->
-                    (questionAssignees.get(q.getId())!=null &&
-                            questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)));
+                questionAssignees.get(q.getId())!=null &&
+                questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)
+            );
             if(isUserAssignedSection) {
                 userAssignedSections.add(section.getId());
             }

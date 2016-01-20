@@ -60,6 +60,7 @@ public class FormInput {
         return wordCount != null ? wordCount : 0;
     }
 
+    @JsonIgnore
     public List<FormInputResponse> getResponses() {
         return responses;
     }

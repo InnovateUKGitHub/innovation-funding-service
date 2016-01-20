@@ -42,19 +42,9 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
-        log.info("Application with id " + applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
-    }
-
-    @RequestMapping("/hateoas/{applicationId}")
-    public String applicationDetailsHateoas(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
-        log.info("HATEOAS Application with id " + applicationId);
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected, true);
-        return "application-details-hateoas";
     }
 
     @RequestMapping("/{applicationId}/section/{sectionId}")

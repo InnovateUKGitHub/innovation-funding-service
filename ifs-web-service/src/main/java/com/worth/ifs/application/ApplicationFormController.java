@@ -64,7 +64,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form);
         return "application-form";
     }
 
@@ -108,7 +108,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
-        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form, false);
+        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
         addNavigation(question, applicationId, model);
         model.addAttribute("currentQuestion", question);
     }

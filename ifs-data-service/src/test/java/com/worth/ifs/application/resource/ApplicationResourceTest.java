@@ -1,5 +1,6 @@
 package com.worth.ifs.application.resource;
 
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -28,7 +29,7 @@ public class ApplicationResourceTest {
     public void setUp() throws Exception {
         id =0L;
         name = "testApplicationName";
-        applicationStatus = newApplicationStatusResource().with(application -> application.setId(id)).withName("status").build();
+        applicationStatus = newApplicationStatusResource().with(BuilderAmendFunctions.id(id)).withName("status").build();
         competition = new Competition();
         competition.setId(1L);
 

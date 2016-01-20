@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
@@ -16,19 +15,17 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATION;
 import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handleServiceFailure;
 import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handlingErrors;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.JsonStatusResponse.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -51,17 +48,6 @@ public class ApplicationController {
         new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> badRequest("Unable to find Application", response)),
         new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_SEND_NOTIFICATION), (serviceFailure, response) -> internalServerError("Unable to send Notification", response))
     );
-
-    @RequestMapping("/{id}")
-    public ApplicationResourceHateoas getApplicationByIdHateoas(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationByIdHateoas(id);
-
-    }
-
-    @RequestMapping("/hateoas/")
-    public Resources<ApplicationResourceHateoas> findAllHateoas() {
-        return applicationService.findAllHateoas();
-    }
 
     @RequestMapping("/normal/{id}")
     public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {

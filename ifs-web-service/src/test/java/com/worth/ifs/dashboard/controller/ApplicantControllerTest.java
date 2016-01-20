@@ -6,6 +6,7 @@ import com.worth.ifs.dashboard.ApplicantController;
 import com.worth.ifs.user.domain.User;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -64,6 +65,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
     /**
      * leadapplicant with one application in progress, assigned is not displayed for leadapplicant
      */
+    @Ignore
     @Test
     public void testDashboardApplicant() throws Exception {
         this.loginUser(applicant);
@@ -83,6 +85,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
     /**
      * Collaborator with one application in progress, with one application with assigned questions
      */
+    @Ignore
     @Test
     public void testDashboardCollaborator() throws Exception {
         User collabUsers = this.users.get(1);

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Interface for CRUD operations on {@link Application} related data.
  */
-public interface ApplicationRestService {
+public interface ApplicationRestService{
     public ApplicationResource getApplicationById(Long applicationId);
     public List<ApplicationResource> getApplicationsByUserId(Long userId);
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);

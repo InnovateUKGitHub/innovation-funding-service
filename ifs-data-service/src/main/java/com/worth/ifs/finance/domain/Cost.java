@@ -80,7 +80,6 @@ public class Cost {
         return costValues;
     }
 
-    @JsonIgnore
     public Question getQuestion() {
         return question;
     }

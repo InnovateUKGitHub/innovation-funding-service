@@ -185,6 +185,7 @@ public class Question {
         return formInputs;
     }
 
+    @JsonIgnore
     public List<Cost> getCosts() {
         return costs;
     }

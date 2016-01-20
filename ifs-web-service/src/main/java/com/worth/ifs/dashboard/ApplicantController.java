@@ -2,7 +2,9 @@ package com.worth.ifs.dashboard;
 
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -40,6 +42,9 @@ public class ApplicantController {
     ProcessRoleService processRoleService;
 
     @Autowired
+    ApplicationStatusRestService applicationStatusService;
+
+    @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @Autowired
@@ -61,10 +66,19 @@ public class ApplicantController {
                     application -> competitionService.getById(application.getCompetition())
                 )
             );
+
+        Map<Long, ApplicationStatusResource> applicationStatusMap = combineLists(inProgress, finished).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
+                )
+            );
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("competitions", competitions);
+        model.addAttribute("applicationStatuses", applicationStatusMap);
 
         return "applicant-dashboard";
     }

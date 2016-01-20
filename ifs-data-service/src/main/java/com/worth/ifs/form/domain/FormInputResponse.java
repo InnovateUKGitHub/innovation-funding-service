@@ -97,7 +97,6 @@ public class FormInputResponse {
         return formInput.getWordCount() - this.getWordCount();
     }
 
-    @JsonIgnore
     public FormInput getFormInput() {
         return formInput;
     }

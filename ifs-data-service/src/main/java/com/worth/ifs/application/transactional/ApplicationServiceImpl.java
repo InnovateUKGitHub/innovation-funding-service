@@ -10,8 +10,10 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.file.domain.FileEntry;
@@ -35,7 +37,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -111,8 +112,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     CompetitionRepository competitionRepository;
-    @Autowired
-    ApplicationResourceAssembler applicationResourceAssembler;
 
     @Autowired
     private NotificationService notificationService;
@@ -276,18 +275,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
         return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), FORM_INPUT_RESPONSE_NOT_FOUND);
-    }
-
-    @Override
-    public ApplicationResourceHateoas getApplicationByIdHateoas(final Long id) {
-        Application application = applicationRepository.findOne(id);
-        return applicationResourceAssembler.toResource(application);
-    }
-
-    @Override
-    public Resources<ApplicationResourceHateoas> findAllHateoas() {
-        List<Application> applications = applicationRepository.findAll();
-        return applicationResourceAssembler.toEmbeddedList(applications);
     }
 
     @Override
