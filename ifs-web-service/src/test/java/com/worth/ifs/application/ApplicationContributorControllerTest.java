@@ -1,7 +1,9 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.invite.service.InviteRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 
@@ -28,8 +30,11 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
 
     @InjectMocks
     private ApplicationContributorController applicationContributorController;
+
     @Mock
-    private LocalValidatorFactoryBean validator;
+    InviteRestService inviteRestService;
+    @Mock
+    private Validator validator;
 
     private Long applicationId;
     private Long alternativeApplicationId;
@@ -37,6 +42,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     private String redirectUrl;
     private String viewName;
     private String inviteUrl;
+    private String applicationRedirectUrl;
 
 
     @Before
@@ -60,6 +66,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         alternativeApplicationId = applicationId + 1;
         inviteUrl = String.format("/application/%d/contributors/invite", applicationId);
         redirectUrl = String.format("redirect:/application/%d/contributors/invite", applicationId);
+        applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         viewName = "application-contributors/invite";
     }
 
@@ -72,7 +79,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
 
     @Test
     public void testInviteContributorsCookie() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}],\"applicationId\":1}}");
+        Cookie cookie = new Cookie("contributor_invite_state", "{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}]}}");
 
 //        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
@@ -96,7 +103,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .param("add_person", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
@@ -111,10 +118,41 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
+    @Test
+    public void testInviteContributorsPostInvalidPerson() throws Exception {
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[0].invites[0].personName", "Nico Bijl")
+                        .param("organisations[0].invites[0].email", "")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"\"}]}]}"))
+                .andExpect(view().name(redirectUrl));
+    }
+
+    @Test
+    public void testInviteContributorsBeginApplication() throws Exception {
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[0].invites[0].personName", "Nico Bijl")
+                        .param("organisations[0].invites[0].email", "nico@gmail.com")
+                        .param("save_contributors", "")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", ""))
+                .andExpect(view().name(applicationRedirectUrl));
+    }
+    
     @Test
     public void testInviteContributorsRemovePerson() throws Exception {
         mockMvc.perform(
@@ -129,7 +167,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
@@ -147,7 +185,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
 
 
@@ -169,7 +207,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .param("add_partner", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
@@ -193,7 +231,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .param("remove_person", "1_0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
@@ -215,13 +253,13 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .param("remove_person", "1_0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"SomePartner\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}],\"applicationId\":1}"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":1,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]},{\"organisationName\":\"SomePartner\",\"organisationId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\"}]}]}"))
                 .andExpect(view().name(redirectUrl));
     }
 
     @Test
     public void whenCookieHasDifferingApplicationIdFromGetParameterItShouldBeIgnored() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", "{\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}],\"applicationId\":"+alternativeApplicationId+"}}");
+        Cookie cookie = new Cookie("contributor_invite_state", "{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\"}]}]}}");
 
 //        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
