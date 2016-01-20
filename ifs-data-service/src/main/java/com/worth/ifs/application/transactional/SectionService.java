@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,6 +15,9 @@ public interface SectionService {
 
     @NotSecured("TODO")
     Section getById(final Long sectionId);
+
+    @NotSecured("TODO")
+    Map<Long, Set<Long>> getCompletedSections(Long applicationId);
 
     @NotSecured("TODO")
     Set<Long> getCompletedSections(final Long applicationId,
@@ -29,7 +33,7 @@ public interface SectionService {
      * get questions for the sections and filter out the ones that have marked as completed turned on
      */
     @NotSecured("TODO")
-    boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId);
+    boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations);
 
     @NotSecured("TODO")
     boolean childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection);
