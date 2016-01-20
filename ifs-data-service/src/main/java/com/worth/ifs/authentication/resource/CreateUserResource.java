@@ -12,6 +12,12 @@ public class CreateUserResource {
     private String password;
     private String phoneNumber;
 
+    /**
+     * For JSON marshalling
+     */
+    public CreateUserResource() {
+    }
+
     public CreateUserResource(String title, String firstName, String lastName, String emailAddress, String phoneNumber, String password) {
         this.title = title;
         this.firstName = firstName;

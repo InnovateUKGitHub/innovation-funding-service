@@ -28,3 +28,12 @@ ext.cookieSecure=true
 ext.cookieHTTPOnly=false
 
 ext.ifsFileStorageLocation="/tmp"
+
+//
+// The below LDAP credentials allow the application to talk directly to LDAP in lieu of the Shib REST API
+// being made available
+//
+ext.ifsIdpStubLdapUrl="ifs-local-dev"
+ext.ifsIdpStubLdapBase="dc=nodomain"
+ext.ifsIdpStubLdapUser="admin"
+ext.ifsIdpStubLdapPassword="password"

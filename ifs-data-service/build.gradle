@@ -64,7 +64,11 @@ dependencies {
     compile "org.flywaydb:flyway-core:3.2.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile 'org.freemarker:freemarker:2.3.23'
+
     compile 'javax.mail:mail:1.4.7'
+
+    // the below dependency can be removed when Shib REST API is available
+    compile 'org.springframework.ldap:spring-ldap-core:2.0.4.RELEASE'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
