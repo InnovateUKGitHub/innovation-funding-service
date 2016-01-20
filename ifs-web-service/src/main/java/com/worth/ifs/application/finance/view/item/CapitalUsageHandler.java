@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.cost.CapitalUsage;
 import com.worth.ifs.application.finance.model.CostFormField;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostValue;

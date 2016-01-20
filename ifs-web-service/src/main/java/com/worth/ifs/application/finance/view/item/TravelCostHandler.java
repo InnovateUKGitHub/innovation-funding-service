@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.cost.TravelCost;
 import com.worth.ifs.application.finance.model.CostFormField;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -14,7 +13,7 @@ import java.util.List;
 public class TravelCostHandler extends CostHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFields) {
+    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
         BigDecimal costPerItem = null;
         String item = null;
         Integer quantity = null;
@@ -38,6 +37,6 @@ public class TravelCostHandler extends CostHandler {
                 }
             }
         }
-        return new TravelCost(id, costPerItem, item, quantity);
+        return new TravelCost(id, item, costPerItem, quantity);
     }
 }

@@ -11,13 +11,14 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-@Service
+@Component
 public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandler {
     private final Log log = LogFactory.getLog(getClass());
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);

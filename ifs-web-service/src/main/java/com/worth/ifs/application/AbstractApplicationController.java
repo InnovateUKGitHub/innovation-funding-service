@@ -14,6 +14,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -240,18 +241,20 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
-        OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
-        model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
-        model.addAttribute("organisationFinanceSize", organisationFinance.getOrganisationSize());
-        model.addAttribute("organisationType", organisationFinance.getOrganisation().getOrganisationType());
-        model.addAttribute("organisationFinanceId", organisationFinance.getApplicationFinanceId());
-        model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
-        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
-        model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
-
-        String formInputKey = "finance-grantclaim-" + organisationFinance.getGrantClaimPercentageId();
-        String formInputValue = organisationFinance.getGrantClaimPercentage() != null ? organisationFinance.getGrantClaimPercentage().toString() : "";
-        form.addFormInput(formInputKey, formInputValue);
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(application.getId(), userId);
+        Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
+        model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
+        model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
+        model.addAttribute("organisationType", organisation.getOrganisationType());
+        model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
+        model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+        if(applicationFinanceResource.getGrantClaim()!=null) {
+            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaimPercentage());
+            model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
+            String formInputKey = "finance-grantclaim-" + applicationFinanceResource.getGrantClaim();
+            String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
+            form.addFormInput(formInputKey, formInputValue);
+        }
     }
 
     protected void addFinanceDetails(Model model, ApplicationResource application) {
@@ -262,7 +265,7 @@ public abstract class AbstractApplicationController {
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, application.getId());
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
-        model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+        model.addAttribute("organisationFinances", organisationFinanceOverview.getApplicationFinances());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
@@ -313,14 +316,13 @@ public abstract class AbstractApplicationController {
         return Optional.empty();
     }
 
-    protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
-        if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
+    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        if(applicationFinanceResource == null) {
+            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
         }
 
-        List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
-        return new OrganisationFinance(applicationFinance,organisationCosts);
+        return applicationFinanceResource;
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {

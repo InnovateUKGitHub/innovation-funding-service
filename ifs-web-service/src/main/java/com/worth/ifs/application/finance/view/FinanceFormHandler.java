@@ -1,14 +1,13 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.finance.cost.*;
 import com.worth.ifs.application.finance.model.CostFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
@@ -43,11 +42,11 @@ public class FinanceFormHandler {
     }
 
     public boolean handle(HttpServletRequest request) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
-        storeFinancePosition(request, applicationFinance.getId());
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        storeFinancePosition(request, applicationFinanceResource.getId());
 
-        List<Cost> costs = getCosts(request);
-        return storeCosts(costs);
+        List<CostItem> costItems = getCostItems(request);
+        return storeCostItems(costItems);
     }
 
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
@@ -55,7 +54,7 @@ public class FinanceFormHandler {
         if(!financePositionKeys.isEmpty()){
             ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId);
 
-            financePositionKeys.parallelStream().forEach(k -> {
+            financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];
                 log.debug(String.format("finance position k : %s value: %s ", k, values));
                 updateFinancePosition(applicationFinance, k, values);
@@ -75,36 +74,29 @@ public class FinanceFormHandler {
     }
 
     public void ajaxUpdateFinancePosition(HttpServletRequest request, String fieldName, String value){
-
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getById(applicationFinance.getId());
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
 
-    private List<Cost> getCosts(HttpServletRequest request) {
+    private List<CostItem> getCostItems(HttpServletRequest request) {
         List<CostField> costFields = costService.getCostFields();
-        return mapCostItems(request, costFields);
+        return mapRequestParametersToCostItems(request, costFields);
     }
 
-    /**
-     * Retrieve a list of costs where first the request parameters are mapped to
-     * the cost items and then converted to general costs.
-     */
-    private List<Cost> mapCostItems(HttpServletRequest request, List<CostField> costFields) {
-        CostItemMapper costItemMapper = new CostItemMapper(costFields);
-        List<Cost> costs = new ArrayList<>();
+
+    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostField> costFields) {
+        List<CostItem> costItems = new ArrayList<>();
         for(CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
                     filter(k -> k.startsWith(costType.getType()+"-")).collect(Collectors.toList());
             Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
-            List<CostItem> costItems = getCostItems(costFieldMap, costType, costTypeKeys);
-            List<Cost> costsForType = costItemMapper.costItemsToCost(costType, costItems);
-            costs.addAll(costsForType);
+            List<CostItem> costItemsForType = getCostItems(costFieldMap, costType, costTypeKeys);
+            costItems.addAll(costItemsForType);
         }
 
-        return costs;
+        return costItems;
     }
 
     /**
@@ -155,9 +147,7 @@ public class FinanceFormHandler {
         CostType costType = CostType.fromString(costFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         CostItem costItem = costHandler.toCostItem( Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
-        CostItemMapper costItemMapper = new CostItemMapper(costFields);
-        Cost cost = costItemMapper.costItemToCost(costType, costItem);
-        costService.update(cost);
+        //costService.update(cost);
     }
 
 
@@ -166,7 +156,6 @@ public class FinanceFormHandler {
         if(keyParts.length > 2) {
             return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
         } else if (keyParts.length == 2) {
-            log.info("id == null");
             return new CostFormField(costTypeKey, value, null, keyParts[1], keyParts[0]);
         }
         return null;
@@ -198,8 +187,8 @@ public class FinanceFormHandler {
         }
     }
 
-    private boolean storeCosts(List<Cost> costs) {
-        costs.stream().forEach(c -> costService.update(c));
+    private boolean storeCostItems(List<CostItem> costItems) {
+        //costs.stream().forEach(c -> costService.update(c));
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.application.finance.service;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -29,7 +30,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Autowired
     ApplicationFinanceRestService applicationFinanceRestService;
 
-    public ApplicationFinance addApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId) {
         ProcessRole processRole = userRestService.findProcessRole(userId, applicationId);
 
         if(processRole.getOrganisation()!=null) {
@@ -38,14 +39,21 @@ public class FinanceServiceImpl implements FinanceService {
         return null;
     }
 
-    public ApplicationFinance getApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
-    public List<ApplicationFinance> getApplicationFinances(Long applicationId) {
-        return applicationFinanceRestService.getApplicationFinances(applicationId);
+    public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
+        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId());
     }
+
+
+    public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
+        return applicationFinanceRestService.getFinanceTotals(applicationId);
+    }
+
 
     public List<Cost> getCosts(Long applicationFinanceId) {
        return costRestService.getCosts(applicationFinanceId);

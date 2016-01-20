@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -308,7 +309,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 

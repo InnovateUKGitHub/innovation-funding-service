@@ -7,6 +7,7 @@ import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,16 +47,23 @@ public class ApplicationFinanceController {
     CostRepository costRepository;
 
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
-    public ApplicationFinance findByApplicationOrganisation(
+    public ApplicationFinanceResource findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-        return applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        return new ApplicationFinanceResource(applicationFinance);
     }
 
     @RequestMapping("/findByApplication/{applicationId}")
-    public List<ApplicationFinance> findByApplication(
+    public List<ApplicationFinanceResource> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
-        return applicationFinanceRepository.findByApplicationId(applicationId);
+
+        List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
+        List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
+        if(applicationFinances!=null) {
+            applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
+        }
+        return applicationFinanceResources;
     }
 
     @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
@@ -67,13 +76,13 @@ public class ApplicationFinanceController {
     }
 
     @RequestMapping("/add/{applicationId}/{organisationId}")
-    public ApplicationFinance add(
+    public ApplicationFinanceResource add(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
         Application application = applicationRepository.findOne(applicationId);
         Organisation organisation = organisationRepository.findOne(organisationId);
         ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
-        return applicationFinanceRepository.save(applicationFinance);
+        return new ApplicationFinanceResource(applicationFinanceRepository.save(applicationFinance));
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
@@ -90,13 +99,13 @@ public class ApplicationFinanceController {
         return new ApplicationFinanceResource(dbFinance);
     }
 
-    @RequestMapping("/finances/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource finances(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return applicationFinanceHandler.getApplicationOrganisationFinances(applicationId, organisationId);
+    @RequestMapping("/financeDetails/{applicationId}/{organisationId}")
+    public ApplicationFinanceResource financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
+        return applicationFinanceHandler.getApplicationOrganisationFinances(new ApplicationFinanceResourceId(applicationId, organisationId));
     }
 
     @RequestMapping("/financeTotals/{applicationId}")
-    public ApplicationFinanceResource financeTotals() {
-        return null;
+    public List<ApplicationFinanceResource> financeTotals(@PathVariable("applicationId") final Long applicationId) {
+        return applicationFinanceHandler.getApplicationTotals(applicationId);
     }
 }

@@ -17,10 +17,12 @@ public class ApplicationFinanceResource {
     private EnumMap<CostType, CostCategory> financeOrganisationDetails;
 
     public ApplicationFinanceResource(ApplicationFinance applicationFinance) {
-        this.id = applicationFinance.getId();
-        this.organisation = applicationFinance.getOrganisation().getId();
-        this.application = applicationFinance.getApplication().getId();
-        this.organisationSize = applicationFinance.getOrganisationSize();
+        if(applicationFinance!=null) {
+            this.id = applicationFinance.getId();
+            this.organisation = applicationFinance.getOrganisation().getId();
+            this.application = applicationFinance.getApplication().getId();
+            this.organisationSize = applicationFinance.getOrganisationSize();
+        }
     }
 
     public ApplicationFinanceResource() {
@@ -70,7 +72,11 @@ public class ApplicationFinanceResource {
     }
 
     public CostCategory getFinanceOrganisationDetails(CostType costType) {
-        return financeOrganisationDetails.get(costType);
+        if(financeOrganisationDetails!=null) {
+            return financeOrganisationDetails.get(costType);
+        } else {
+            return null;
+        }
     }
 
     public void setFinanceOrganisationDetails(EnumMap<CostType, CostCategory> financeOrganisationDetails) {
@@ -78,6 +84,10 @@ public class ApplicationFinanceResource {
     }
 
     public BigDecimal getTotal() {
+        if(financeOrganisationDetails == null) {
+            return BigDecimal.ZERO;
+        }
+
         BigDecimal total = financeOrganisationDetails.entrySet().stream()
                 .filter(cat -> cat != null &&
                         cat.getValue() != null &&
@@ -87,15 +97,23 @@ public class ApplicationFinanceResource {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if(total == null) {
-            return new BigDecimal(0);
+            return BigDecimal.ZERO;
         }
 
         return total;
     }
 
+    public GrantClaim getGrantClaim() {
+        if(financeOrganisationDetails != null && financeOrganisationDetails.containsKey(CostType.FINANCE)) {
+            return (GrantClaim) financeOrganisationDetails.get(CostType.FINANCE);
+        } else {
+            return null;
+        }
+    }
+
     public Integer getGrantClaimPercentage() {
-        if(financeOrganisationDetails.containsKey(CostType.FINANCE)) {
-            GrantClaim grantClaim = (GrantClaim) financeOrganisationDetails.get(CostType.FINANCE);
+        GrantClaim grantClaim = getGrantClaim();
+        if(grantClaim!=null) {
             return grantClaim.getGrantClaimPercentage();
         } else {
             return 0;
@@ -103,19 +121,19 @@ public class ApplicationFinanceResource {
     }
 
     public BigDecimal getTotalFundingSought() {
-        BigDecimal totalFundingSought  = getTotal()
+        BigDecimal totalFundingSought = getTotal()
                 .multiply(new BigDecimal(getGrantClaimPercentage()))
                 .divide(new BigDecimal(100))
                 .subtract(getTotalOtherFunding());
 
-        return totalFundingSought.max(new BigDecimal(0));
+        return totalFundingSought.max(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalContribution() {
         return getTotal()
                 .subtract(getTotalOtherFunding())
                 .subtract(getTotalFundingSought())
-                .max(new BigDecimal(0));
+                .max(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalOtherFunding() {

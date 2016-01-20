@@ -67,8 +67,8 @@ public class ApplicationFinanceResourceTest {
                 .withOrganisation(organisation).build();
 
         ApplicationFinanceResource applicationFinanceResource1 = new ApplicationFinanceResource(applicationFinance);
-        assertEquals(applicationFinanceResource1.getApplication(), application);
-        assertEquals(applicationFinanceResource1.getOrganisation(), organisation);
+        assertEquals(applicationFinanceResource1.getApplication(), new Long(1L));
+        assertEquals(applicationFinanceResource1.getOrganisation(), new Long(1L));
     }
 
     @Test

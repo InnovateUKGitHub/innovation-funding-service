@@ -4,6 +4,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,10 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     OrganisationFinanceHandler organisationFinanceHandler;
 
     @Override
-    public ApplicationFinanceResource getApplicationOrganisationFinances(Long applicationId, Long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+    public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
+
         ApplicationFinanceResource applicationFinanceResource = null;
 
         if(applicationFinance!=null) {

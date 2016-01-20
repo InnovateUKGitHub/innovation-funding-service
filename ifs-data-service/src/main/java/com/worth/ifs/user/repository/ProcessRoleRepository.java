@@ -15,11 +15,12 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
-    List<ProcessRole> findByUser(@Param("user") User user);
-    List<ProcessRole> findByUserId(@Param("userId") Long userId);
-    List<ProcessRole> findByUserAndApplication(@Param("user") User user, @Param("application") Application application);
-    List<ProcessRole> findByUserIdAndRoleAndApplicationId(@Param("userId") Long userId, @Param("role") Role role, @Param("applicationId") Long applicationId);
-    List<ProcessRole> findByApplication(@Param("application") Application application);
-    List<ProcessRole> findByApplicationId(@Param("applicationId") Long applicationId);
-    ProcessRole findByUserIdAndApplicationId(@Param("userId") Long userId, @Param("applicationId") Long applicationId);
+    List<ProcessRole> findByUser(User user);
+    List<ProcessRole> findByUserId(Long userId);
+    List<ProcessRole> findByUserAndApplication(User user, Application application);
+    List<ProcessRole> findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
+    List<ProcessRole> findByApplication(Application application);
+    List<ProcessRole> findByApplicationId(Long applicationId);
+    ProcessRole findByUserIdAndApplicationId(Long userId, Long applicationId);
+    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(Long userId, Long roleId, Long applicationId, Long organisationId);
 }
