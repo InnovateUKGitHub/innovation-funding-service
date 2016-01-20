@@ -7,6 +7,8 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Service
 public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ApplicationFinanceRepository applicationFinanceRepository;
@@ -25,6 +28,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
+        log.debug("HEAEARG 3");
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
 
@@ -34,6 +38,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
             applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
             setFinanceDetails(applicationFinanceResource);
         }
+        log.debug("HEAEARG 4");
 
         return applicationFinanceResource;
     }
