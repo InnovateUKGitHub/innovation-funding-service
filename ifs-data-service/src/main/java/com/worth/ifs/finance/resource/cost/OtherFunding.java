@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.math.BigDecimal;
 
 public class OtherFunding implements CostItem {

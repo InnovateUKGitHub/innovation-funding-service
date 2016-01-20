@@ -1,8 +1,10 @@
 package com.worth.ifs.finance.resource.category;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,11 @@ public class OtherFundingCostCategory implements CostCategory {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public String getOtherFunding() {
+    public OtherFunding getOtherFunding() {
+        return otherFunding;
+    }
+
+    public String getOtherPublicFunding() {
         if (otherFunding!=null) {
             return otherFunding.getOtherPublicFunding();
         } else {

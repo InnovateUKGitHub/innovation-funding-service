@@ -1,7 +1,9 @@
 package com.worth.ifs.finance.resource.category;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

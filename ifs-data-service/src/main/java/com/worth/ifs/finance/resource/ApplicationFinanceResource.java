@@ -105,7 +105,12 @@ public class ApplicationFinanceResource {
 
     public GrantClaim getGrantClaim() {
         if(financeOrganisationDetails != null && financeOrganisationDetails.containsKey(CostType.FINANCE)) {
-            return (GrantClaim) financeOrganisationDetails.get(CostType.FINANCE);
+            CostCategory costCategory = financeOrganisationDetails.get(CostType.FINANCE);
+            return costCategory.getCosts().stream()
+                    .findAny()
+                    .filter(c -> c instanceof GrantClaim)
+                    .map(c -> (GrantClaim) c)
+                    .orElse(null);
         } else {
             return null;
         }

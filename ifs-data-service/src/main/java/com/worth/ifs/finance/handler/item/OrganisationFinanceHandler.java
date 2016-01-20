@@ -4,6 +4,7 @@ import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 
 public interface OrganisationFinanceHandler {
     EnumMap<CostType,CostCategory> getOrganisationFinances(Long applicationFinanceId);

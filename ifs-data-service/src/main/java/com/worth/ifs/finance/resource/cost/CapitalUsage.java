@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

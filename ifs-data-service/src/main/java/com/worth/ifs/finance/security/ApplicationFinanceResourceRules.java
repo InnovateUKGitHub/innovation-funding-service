@@ -20,8 +20,8 @@ import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
-/*
-    ApplicationFinanceResoureRules are taking care of the permissioning for reading the finances.
+/**
+ * ApplicationFinanceResourceRules are taking care of the permissioning for handling the finances.
  */
 @Component
 @PermissionRules
