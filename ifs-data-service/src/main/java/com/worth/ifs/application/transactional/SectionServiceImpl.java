@@ -11,16 +11,14 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +44,24 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public Section getById(final Long sectionId) {
         return sectionRepository.findOne(sectionId);
+    }
+
+    @Override
+    public Map<Long, Set<Long>> getCompletedSections(final Long applicationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        List<Section> sections = application.getCompetition().getSections();
+        List<Organisation> organisations = application.getProcessRoles().stream().map(p -> p.getOrganisation()).collect(Collectors.toList());
+        Map<Long, Set<Long>> organisationMap = new HashMap<>();
+        for (Organisation organisation : organisations) {
+            Set<Long> completedSections = new LinkedHashSet<>();
+            for (Section section : sections) {
+                if (this.isSectionComplete(section, applicationId, organisation.getId())) {
+                    completedSections.add(section.getId());
+                }
+            }
+            organisationMap.put(organisation.getId(), completedSections);
+        }
+        return organisationMap;
     }
 
     @Override
@@ -106,7 +122,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private boolean isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        boolean sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId);
+        boolean sectionIsComplete = isMainSectionComplete(section, applicationId, organisationId, true);
 
         // check if section has subsections, if there are subsections let the outcome depend on those subsections
         // and the section itself if it contains questions with mark as complete attached
@@ -119,10 +135,10 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
+    public boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
         boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
-            if (question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
+            if (ignoreOtherOrganisations == false && question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
                 if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section)) {
                     sectionIsComplete = false;
                 }
@@ -158,8 +174,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
         for (Section section : sections) {
             for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                if (!this.isMainSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId())) {
-                    log.debug(String.format("This section is incomplete: section ID %d / name %s / organisation ID %d ", section.getId(), section.getName(), applicationFinance.getOrganisation().getId()));
+                if (!this.isMainSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId(), true)) {
                     allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }
@@ -168,7 +183,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 break;
             }
         }
-
         return allSectionsWithSubsectionsAreComplete;
     }
 
