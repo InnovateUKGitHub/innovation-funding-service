@@ -9,7 +9,6 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
@@ -63,11 +62,13 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
+        log.debug("restGetEntity: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
-        return getRestTemplate().exchange(URI.create(path), HttpMethod.GET, jsonEntity(""), responseType);
+        log.debug("restGetParameterizedType: "+path);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), responseType);
     }
 
 
@@ -80,10 +81,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
+        log.debug("restPostWithEntity: "+path);
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected void restPut(String path) {
+        log.debug("restPutEntity: "+path);
         restPutEntity(path, Void.class);
     }
 

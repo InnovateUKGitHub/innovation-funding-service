@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,10 +29,18 @@ public class SectionController {
         return sectionService.getById(sectionId);
     }
 
+    @RequestMapping("/getCompletedSectionsByOrganisation/{applicationId}")
+    public Map<Long, Set<Long>> getCompletedSectionsMap(@PathVariable("applicationId") final Long applicationId) {
+        return sectionService.getCompletedSections(applicationId);
+    }
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public Set<Long> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("organisationId") final Long organisationId) {
         return sectionService.getCompletedSections(applicationId, organisationId);
+    }
+    @RequestMapping("/allSectionsMarkedAsComplete/{applicationId}")
+    public boolean getCompletedSections(@PathVariable("applicationId") final Long applicationId) {
+        return sectionService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null);
     }
 
 

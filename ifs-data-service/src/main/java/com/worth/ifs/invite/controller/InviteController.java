@@ -14,6 +14,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestServiceImpl;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +54,17 @@ public class InviteController {
 
     @RequestMapping("/createApplicationInvites")
     public ResourceEnvelope<InviteOrganisationResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
-        List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
-        InviteOrganisation createdInviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation);
-        inviteRepository.save(newInvites);
-
         ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), new InviteOrganisationResource());
+
+        if(inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
+            InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
+            List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
+            InviteOrganisation createdInviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation);
+            inviteRepository.save(newInvites);
+        }
+        else {
+            resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteOrganisationResource());
+        }
 
         return resourceEnvelope;
     }
@@ -103,5 +109,55 @@ public class InviteController {
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
 
         return invite;
+    }
+
+    private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
+        if(!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
+            return false;
+        }
+
+        if(!allInviteResourcesAreValid(inviteOrganisationResource)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
+        if ((inviteOrganisationResource.getOrganisationName() == null ||
+                inviteOrganisationResource.getOrganisationName().isEmpty())
+                        &&
+                        inviteOrganisationResource.getOrganisationId() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
+        if(inviteOrganisationResource.getInviteResources()
+                .stream()
+                .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
+                .count() > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private boolean inviteResourceIsValid(InviteResource inviteResource) {
+
+        if(inviteResource.getEmail() == null || inviteResource.getEmail().isEmpty()) {
+            return false;
+        }
+        if(inviteResource.getName() == null || inviteResource.getName().isEmpty()) {
+            return false;
+        }
+        if(inviteResource.getApplicationId() == null) {
+            return false;
+        }
+
+        return true;
     }
 }

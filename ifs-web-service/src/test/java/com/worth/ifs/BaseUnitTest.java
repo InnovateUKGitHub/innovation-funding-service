@@ -306,6 +306,12 @@ public class BaseUnitTest {
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
         when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
         when(sectionService.getInCompleted(app1.getId())).thenReturn(asList(3L, 4L));
+        Map<Long, Set<Long>> completedMap = new HashMap<>();
+        completedMap.put(organisation1.getId(), new TreeSet<>());
+        completedMap.put(organisation2.getId(), new TreeSet<>());
+        when(sectionService.getCompletedSectionsByOrganisation(app1.getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(app2.getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(app3.getId())).thenReturn(completedMap);
         when(processRoleService.findProcessRole(applicant.getId(), app1.getId())).thenReturn(processRole1);
         when(processRoleService.findProcessRole(applicant.getId(), app2.getId())).thenReturn(processRole2);
         when(processRoleService.findProcessRole(applicant.getId(), app3.getId())).thenReturn(processRole3);

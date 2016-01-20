@@ -88,15 +88,15 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
         assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(7, controller.getCompletedSections(applicationId, 3L).size());
+        assertEquals(8, controller.getCompletedSections(applicationId, 3L).size());
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
         assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L), applicationId, leadApplicantOrganisationId));
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(6, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).size());
-        assertEquals(7, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).size());
+        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).size());
+        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).size());
 
         section = sectionRepository.findOne(11L);
         assertEquals("Materials", section.getName());
