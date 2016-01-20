@@ -175,19 +175,6 @@ Email duplication check
 
 *** Keywords ***
 the user follows the standard path to the account creation page
-#    Go To   ${competition_details_url}
-#   # Wait Until Element Is Visible       Sign in to apply
-#    Sleep   1s
-#    Click Button                    Sign in to apply
-#   # Wait Until Element Is Visible       Create
-#    Sleep   1s
-#    Location Should Be              ${CHECK_ELIGIBILITY}
-#    Click Button                    Create
-#    Sleep   1s
-#    Location Should Be          ${SEARCH_COMPANYHOUSE_URL}
-#    Input Text    id=org-name    innovateuk
-#    Click Element    id=org-search
-#
     Go To    ${SERVER}/application/create/selected-business/05063042
     Select Checkbox         id=address-same
     Select Checkbox         name=useCompanyHouseAddress

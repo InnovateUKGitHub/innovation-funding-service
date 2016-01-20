@@ -38,19 +38,20 @@ The lead applicant shouldn't be able to remove himself
     Then the lead applicant cannot be removed
 
 Validations for the Email field
-    [Documentation]    INFUND-901   Failing
+    [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     When the applicant enters some invalid emails
     Then the applicant should not be redirected to the next page
 
 Validation for the name field
-    [Documentation]    INFUND-901   Failing
+    [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     When the applicant submits the page without entering a name
-    Then the applicant should not be redirected to the next page
+    Then the applicant should get a validation error for the name field
+    And the applicant should not be redirected to the next page
 
 Valid submit
-    [Documentation]    INFUND-901   Failing
+    [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page
@@ -117,10 +118,12 @@ the applicant should get a validation error for the name field
     Element Should Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .error
 
 the applicant enters valid inputs
+    # Click Button        Remove
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 
 the applicant should be redirected to the overview page
+    Sleep   1s
     Page Should Contain    Application overview
