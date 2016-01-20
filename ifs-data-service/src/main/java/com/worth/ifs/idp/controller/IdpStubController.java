@@ -6,6 +6,7 @@ import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,22 +25,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * Stub for talking directly to LDAP in lieu of having a REST API available to update LDAP information
  */
 @RestController
-@RequestMapping("/idpstub")
+@RequestMapping("/idpstub/user")
 public class IdpStubController {
 
     @Autowired
     private LdapTemplate ldapTemplate;
 
-    @RequestMapping(value = "/createuser", method = POST, produces = "application/json")
+    @RequestMapping(method = POST, produces = "application/json")
     public JsonStatusResponse createUser(@RequestBody CreateUserResource createUserRequest, HttpServletResponse response) {
         String uid = UUID.randomUUID().toString();
         create(createUserRequest, uid);
         return created(uid, response);
     }
 
-    @RequestMapping(value = "/updateuser", method = PUT, produces = "application/json")
-    public JsonStatusResponse updateUser(@RequestBody UpdateUserResource updateUserRequest) {
-        update(updateUserRequest);
+    @RequestMapping(value = "/{uid}", method = PUT, produces = "application/json")
+    public JsonStatusResponse updateUser(@RequestBody UpdateUserResource updateUserRequest, @PathVariable("uid") String uid) {
+        update(updateUserRequest, uid);
         return ok();
     }
 
@@ -48,19 +49,13 @@ public class IdpStubController {
         ldapTemplate.bind(dn, null, buildAttributes(user, uid));
     }
 
-    private void update(UpdateUserResource updateUserRequest) {
+    private void update(UpdateUserResource updateUserRequest, String uid) {
 
-        Name dn = buildDn(updateUserRequest.getUid());
+        Name dn = buildDn(uid);
 
-        ModificationItem title = getModificationItem("title", updateUserRequest.getTitle());
-        ModificationItem firstName = getModificationItem("givenName", updateUserRequest.getFirstName());
-        ModificationItem lastName = getModificationItem("sn", updateUserRequest.getLastName());
-        ModificationItem displayName = getModificationItem("displayName", updateUserRequest.getFirstName() + " " + updateUserRequest.getLastName());
-        ModificationItem cn = getModificationItem("cn", updateUserRequest.getFirstName() + " " + updateUserRequest.getLastName());
-        ModificationItem mail = getModificationItem("mail", updateUserRequest.getEmailAddress());
-        ModificationItem telephoneNumber = getModificationItem("telephoneNumber", updateUserRequest.getPhoneNumber());
+        ModificationItem password = getModificationItem("userPassword", updateUserRequest.getEmailAddress());
 
-        ldapTemplate.modifyAttributes(dn, new ModificationItem[] {title, firstName, lastName, displayName, cn, mail, telephoneNumber});
+        ldapTemplate.modifyAttributes(dn, new ModificationItem[] {password});
     }
 
     private ModificationItem getModificationItem(String attributeName, String value) {
@@ -77,14 +72,8 @@ public class IdpStubController {
         ocattr.add("inetOrgPerson");
         attrs.put(ocattr);
         attrs.put("uid", uid);
-        attrs.put("cn", user.getFirstName() + " " + user.getLastName());
-        attrs.put("displayName", user.getFirstName() + " " + user.getLastName());
-        attrs.put("givenName", user.getFirstName());
-        attrs.put("sn", user.getLastName());
         attrs.put("mail", user.getEmailAddress());
-        attrs.put("title", user.getTitle());
         attrs.put("userPassword", user.getPassword());
-        attrs.put("telephoneNumber", user.getPhoneNumber());
         return attrs;
     }
 

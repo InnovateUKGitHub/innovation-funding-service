@@ -5,12 +5,8 @@ package com.worth.ifs.authentication.resource;
  */
 public class CreateUserResource {
 
-    private String title;
-    private String firstName;
-    private String lastName;
     private String emailAddress;
     private String password;
-    private String phoneNumber;
 
     /**
      * For JSON marshalling
@@ -18,33 +14,13 @@ public class CreateUserResource {
     public CreateUserResource() {
     }
 
-    public CreateUserResource(String title, String firstName, String lastName, String emailAddress, String phoneNumber, String password) {
-        this.title = title;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public CreateUserResource(String emailAddress, String password) {
         this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
         this.password = password;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public String getEmailAddress() {
         return emailAddress;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     public String getPassword() {

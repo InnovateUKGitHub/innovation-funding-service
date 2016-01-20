@@ -1,6 +1,5 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.User;
@@ -23,9 +22,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private IdentityProviderService identityProviderService;
-
     @Override
     public ServiceResult<User> updateProfile(UserResource userResource) {
         return getUserByEmailAddress(userResource).map(existingUser -> updateUser(existingUser, userResource));
@@ -33,19 +29,12 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource){
 
-        ServiceResult<String> updateIdpResult = identityProviderService.updateUserDetails(existingUser.getUid(), updatedUserResource.getTitle(), updatedUserResource.getFirstName(), updatedUserResource.getLastName(), updatedUserResource.getEmail(), updatedUserResource.getPhoneNumber());
+        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUser.setTitle(updatedUserResource.getTitle());
+        existingUser.setLastName(updatedUserResource.getLastName());
+        existingUser.setFirstName(updatedUserResource.getFirstName());
 
-        return updateIdpResult.map(successfulUpdate -> {
-
-            // TODO DW - INFUND-1267 - these fields probably to be removed from IFS
-            existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
-            existingUser.setTitle(updatedUserResource.getTitle());
-            existingUser.setLastName(updatedUserResource.getLastName());
-            existingUser.setFirstName(updatedUserResource.getFirstName());
-
-            return success(userRepository.save(existingUser));
-        });
-
+        return success(userRepository.save(existingUser));
     }
 
 

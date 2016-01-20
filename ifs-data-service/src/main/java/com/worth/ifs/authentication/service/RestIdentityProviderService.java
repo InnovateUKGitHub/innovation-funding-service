@@ -42,24 +42,24 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
     }
 
     @Override
-    public ServiceResult<String> createUserRecordWithUid(String title, String firstName, String lastName, String emailAddress, String phoneNumber, String password) {
+    public ServiceResult<String> createUserRecordWithUid(String emailAddress, String password) {
 
         // TODO DW - INFUND-1267 - need to define the correct format of the create user request and the subsequent response - currently just
         // showing the uid being returned
 
-        CreateUserResource createUserRequest = new CreateUserResource(title, firstName, lastName, emailAddress, phoneNumber, password);
+        CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
         ResponseEntity<JsonStatusResponse> response = restPostWithEntity(idpCreateUserPath, createUserRequest, JsonStatusResponse.class);
         return CREATED.equals(response.getStatusCode()) ? success(response.getBody().getMessage()) : failure(UNABLE_TO_CREATE_USER);
     }
 
     @Override
-    public ServiceResult<String> updateUserDetails(String uid, String title, String firstName, String lastName, String emailAddress, String phoneNumber) {
+    public ServiceResult<String> updateUserPassword(String uid, String password) {
 
         // TODO DW - INFUND-1267 - need to define the correct format of the create user request and the subsequent response - currently just
         // showing the uid being returned
 
-        UpdateUserResource updateUserRequest = new UpdateUserResource(uid, title, firstName, lastName, emailAddress, phoneNumber);
-        ResponseEntity<String> response = restPut(idpUpdateUserPath, updateUserRequest, String.class);
+        UpdateUserResource updateUserRequest = new UpdateUserResource(password);
+        ResponseEntity<String> response = restPut(idpUpdateUserPath + "/" + uid, updateUserRequest, String.class);
         return OK.equals(response.getStatusCode()) ? success(response.getBody()) : failure(UNABLE_TO_UPDATE_USER);
     }
 }

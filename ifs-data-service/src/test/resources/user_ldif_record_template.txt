@@ -3,11 +3,5 @@ objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
 uid: $uid
-cn: $fullName
-displayName: $fullName
-givenName: $firstName
-sn: $lastName
 mail: $emailAddress
-title: $title
 userPassword: test
-telephoneNumber: $phoneNumber
