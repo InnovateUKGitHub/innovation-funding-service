@@ -922,7 +922,8 @@
                     <tr>
                         <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         <th scope="col" class="numeric">Total</th>
-                        <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}">
+                        <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}"
+                            th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
                             <div th:text="${applicationOrganisation.name}"></div>
                             <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
                             <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
@@ -969,7 +970,7 @@
                 <tr>
                     <th scope="col"><span class="visuallyhidden">Actions</span></th>
                     <th scope="col" class="numeric">Total</th>
-                    <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}">
+                    <th scope="col" class="numeric" th:each="applicationOrganisation : ${applicationOrganisations}" th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
                         <div th:text="${applicationOrganisation.name}"></div>
                         <div th:if="${applicationOrganisation.equals(leadOrganisation)}"><small>Lead organisation</small></div>
                         <div th:unless="${applicationOrganisation.equals(leadOrganisation)}"><small>Partner</small></div>
