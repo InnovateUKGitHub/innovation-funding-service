@@ -52,7 +52,6 @@ IFS.finance = (function(){
                     var input = jQuery(this);
 
                     var fieldsDependantOnOthers = jQuery('[data-calculation-fields]');
-
                     fieldsDependantOnOthers.each(function(i, element) {
                         var dependantField = jQuery(element);
                         updateBasedOnDataCalculationFieldsIfNecessary(dependantField, input);

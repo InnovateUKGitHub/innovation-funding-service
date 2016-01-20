@@ -31,21 +31,31 @@
         <button class="hidden-save" type="submit" aria-label="Save the list of invitees"/>
         <ul class="boxed-list">
             <li th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
-                <h2 th:if="${organisationStats.index == 0}" class="heading-medium">Lead Organisation "<span th:remove="tag"
-                                                                                                            th:text="${organisationInviteForm.organisationName}"/>"
-                </h2>
+                <!--/* lead org */-->
+                <div th:if="${organisationStats.index == 0}" th:remove="tag">
+                  <h2 class="heading-medium">
+                    Lead Organisation "<span th:remove="tag" th:text="${organisationInviteForm.organisationName}"/>"
+                  </h2>
+                   <p>The lead organisation will be the lead partner throughout the application and project.
+                      Add members of your own organisation to contribute to this application.
+                  </p>
+                </div>
+                <!--/* partner org */-->
+                <div th:unless="${organisationStats.index == 0}" th:remove="tag">
+                  <h2 class="heading-medium">Partner Organisation</h2>
 
-                <h2 th:unless="${organisationStats.index == 0}" class="heading-medium">Partner Organisation "<input th:unless="${organisationStats.index == 0}" type="text" class="form-control width-large" placeholder="Organisation Name"
-                                                                                                                    th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
-                                                                                                                    th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>"
-                </h2>
+                  <div class="form-group">
+                    <label class="form-label" th:for="organisations[__${organisationStats.index}__].organisationName">Organisation Name</label>
+                    <input  type="text"
+                            class="form-control js-partner-name"
+                            placeholder="Name of the partner company"
+                            th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
+                            th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>
+                  </div>
+                </div>
+                <!--/* all org */-->
 
-                <p th:if="${organisationStats.index == 0}">The lead organisation will be the lead partner throughout the application and project.
-                    Add members of your own organisation to contribute to this application.
-                </p>
-
-                <input type="hidden" class="form-control width-full" placeholder="name"
-                       th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
+                <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
 
                 <table>
                     <thead>
@@ -90,18 +100,18 @@
                     </tbody>
                 </table>
 
-                <p class="alignright">
+                <div class="alignright">
                     <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add person</button>
-                </p>
+                </div>
             </li>
-            <li style="background:#f8f8f8">
+            <li>
                 <button class="buttonlink" type="submit" name="add_partner" value="">Add partner organisation</button>
 
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
             </li>
         </ul>
 
-        <div class="alignright-button" style="padding:10px 0;">
+        <div class="alignright-button">
             <button type="submit" name="save_contributors" class="button">Begin application</button>
         </div>
     </form>
