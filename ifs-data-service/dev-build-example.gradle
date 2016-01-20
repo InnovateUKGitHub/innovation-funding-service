@@ -57,4 +57,4 @@ ext.ifsMailTimeoutMillis=10000
 ext.ifsIdpStubLdapUrl="ifs-local-dev"
 ext.ifsIdpStubLdapBase="dc=nodomain"
 ext.ifsIdpStubLdapUser="admin"
-ext.ifsIdpStubLdapPassword="password"
+ext.ifsIdpStubLdapPassword="foobar"

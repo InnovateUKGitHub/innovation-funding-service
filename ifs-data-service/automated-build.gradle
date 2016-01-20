@@ -36,4 +36,6 @@ ext.ifsFileStorageLocation="/tmp"
 ext.ifsIdpStubLdapUrl="ifs-local-dev"
 ext.ifsIdpStubLdapBase="dc=nodomain"
 ext.ifsIdpStubLdapUser="admin"
-ext.ifsIdpStubLdapPassword="password"
+ext.ifsIdpStubLdapPassword="foobar"
+
+ext.ifsIdpLogoutUrl="https://ifs-dev-local/logout"
