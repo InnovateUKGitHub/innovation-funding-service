@@ -11,7 +11,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionsRepository extends PagingAndSortingRepository<Competition, Long> {
+public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
     List<Competition> findByName(@Param("name") String name);
     Competition findById(@Param("id") Long id);

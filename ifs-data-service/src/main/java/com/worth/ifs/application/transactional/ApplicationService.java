@@ -3,14 +3,16 @@ package com.worth.ifs.application.transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,19 +43,13 @@ public interface ApplicationService {
     ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
     @NotSecured("TODO")
-    ApplicationResourceHateoas getApplicationByIdHateoas(final Long id);
+    Application getApplicationById(final Long id);
 
     @NotSecured("TODO")
-    Resources<ApplicationResourceHateoas> findAllHateoas();
+    List<Application> findAll();
 
     @NotSecured("TODO")
-    ApplicationResource getApplicationById(final Long id);
-
-    @NotSecured("TODO")
-    List<ApplicationResource> findAll();
-
-    @NotSecured("TODO")
-    List<ApplicationResource> findByUserId(final Long userId);
+    List<Application> findByUserId(final Long userId);
 
     /**
      * This method saves only a few application attributes that
@@ -70,12 +66,12 @@ public interface ApplicationService {
                                                    final Long statusId);
 
     @NotSecured("TODO")
-    List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
+    List<Application> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                       final Long userId,
                                                                       final UserRoleType role);
 
     @NotSecured("TODO")
-    ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
+    Application createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
             JsonNode jsonObj);

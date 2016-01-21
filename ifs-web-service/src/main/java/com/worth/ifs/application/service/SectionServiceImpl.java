@@ -48,7 +48,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public List<Section> getParentSections(List<Section> sections) {
-        List<Section> childSections = new ArrayList<Section>();
+        List<Section> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
         sections = sections.stream()
                 .filter(s -> !childSections.stream()
@@ -87,8 +87,9 @@ public class SectionServiceImpl implements SectionService {
 
         for(Section section : sections) {
             boolean isUserAssignedSection = section.getQuestions().stream().anyMatch(q ->
-                    (questionAssignees.get(q.getId())!=null &&
-                            questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)));
+                questionAssignees.get(q.getId())!=null &&
+                questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)
+            );
             if(isUserAssignedSection) {
                 userAssignedSections.add(section.getId());
             }

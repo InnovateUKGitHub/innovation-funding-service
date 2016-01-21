@@ -113,11 +113,11 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, Boolean... hateoas) {
-        ApplicationResource application = applicationService.getById(applicationId, hateoas);
+    protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
+        ApplicationResource application = applicationService.getById(applicationId);
 
         application.setId(applicationId);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
@@ -208,11 +208,11 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
-        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetition());
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
@@ -251,7 +251,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSectionId);
         Section nextSection = sectionService.getNextSection(currentSectionId);
@@ -288,7 +288,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
@@ -319,8 +319,8 @@ public abstract class AbstractApplicationController {
         return new OrganisationFinance(applicationFinance,organisationCosts);
     }
 
-    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected, Boolean... hateoas) {
-        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form, hateoas);
+    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected) {
+        ApplicationResource application = addApplicationDetails(applicationId, userId, currentSectionId, model, form);
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);

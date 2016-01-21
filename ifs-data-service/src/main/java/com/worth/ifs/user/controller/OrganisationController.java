@@ -6,6 +6,7 @@ import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -36,6 +37,9 @@ public class OrganisationController {
     @Autowired
     ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    OrganisationMapper organisationMapper;
+
     @RequestMapping("/findByApplicationId/{applicationId}")
     public Set<Organisation> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
@@ -56,7 +60,7 @@ public class OrganisationController {
         log.info("OrganisationController , create method");
         log.info("OrganisationController , create method "+organisation.getName());
         organisation = organisationRepository.save(organisation);
-        return new OrganisationResource(organisation);
+        return organisationMapper.mapOrganisationToResource(organisation);
     }
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
@@ -71,6 +75,6 @@ public class OrganisationController {
         log.info("existing addresses: " + organisation.getAddresses().size());
         organisation.addAddress(address, addressType);
         organisation = organisationRepository.save(organisation);
-        return new OrganisationResource(organisation);
+        return organisationMapper.mapOrganisationToResource(organisation);
     }
 }

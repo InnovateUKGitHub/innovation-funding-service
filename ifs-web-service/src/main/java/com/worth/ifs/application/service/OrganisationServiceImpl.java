@@ -36,7 +36,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList());
 
@@ -51,7 +51,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList());
 
@@ -62,7 +62,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList());
         return userApplicationRoles.stream()
