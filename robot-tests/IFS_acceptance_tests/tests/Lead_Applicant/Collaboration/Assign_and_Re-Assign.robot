@@ -69,7 +69,7 @@ the field of the public description question should be disabled
 
 the Collaborator is in the public description section
     The guest user opens the browser
-    Input Text    idid_email    jessica.doe@ludlow.co.uk
+    Input Text    id=username    jessica.doe@ludlow.co.uk
     Input Password    id=password    test
     Click Element    css=button[name="_eventId_proceed"]
     Applicant goes to the 'public description' question

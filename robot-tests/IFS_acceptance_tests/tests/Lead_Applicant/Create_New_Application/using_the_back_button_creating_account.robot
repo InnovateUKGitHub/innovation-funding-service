@@ -36,7 +36,7 @@ the user presses the back button
     Go Back
 
 the user is redirected to the login page
-    Page Should Contain    Sign in
+    Page Should Contain    Remember Login
 
 the user is logged in
     login as user    &{lead_applicant_credentials}
