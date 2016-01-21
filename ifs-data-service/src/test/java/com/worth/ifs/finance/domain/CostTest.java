@@ -16,6 +16,7 @@ public class CostTest {
     BigDecimal cost;
     ApplicationFinance applicationFinance;
     Question question;
+    FinanceType financeType;
 
     @Before
     public void setUp() throws Exception {
@@ -26,6 +27,7 @@ public class CostTest {
         cost = new BigDecimal(1000);
         applicationFinance = new ApplicationFinance();
         question = new Question();
+        financeType = new FinanceType();
         costItem = new Cost(id, item, description, quantity, cost, applicationFinance, question);
     }
 

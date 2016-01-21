@@ -32,7 +32,7 @@ public enum CostType {
             }
         }
         LogFactory.getLog(CostType.class).error("Not a valid costype " + type);
-        throw new IllegalArgumentException("Not a valid CostType : " + type);
+        throw new IllegalArgumentException("Not a valid FinanceType : " + type);
     }
 
     public String getType() {

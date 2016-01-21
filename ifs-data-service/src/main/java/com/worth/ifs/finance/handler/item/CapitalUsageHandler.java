@@ -7,6 +7,10 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 
 import java.math.BigDecimal;
 
+/**
+ * Handles the capital usage costs, i.e. converts the costs to be stored into the database
+ * or for sending it over.
+ */
 public class CapitalUsageHandler extends CostHandler {
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";

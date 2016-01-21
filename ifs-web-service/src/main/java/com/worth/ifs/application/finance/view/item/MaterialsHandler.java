@@ -10,6 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to material items
+ */
 public class MaterialsHandler extends CostHandler {
     @Override
     public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {

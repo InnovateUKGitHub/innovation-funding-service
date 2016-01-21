@@ -1,8 +1,7 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -55,7 +54,7 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
 
-    public List<Cost> getCosts(Long applicationFinanceId) {
+    public List<CostItem> getCosts(Long applicationFinanceId) {
        return costRestService.getCosts(applicationFinanceId);
     }
 

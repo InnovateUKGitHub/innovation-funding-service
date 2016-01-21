@@ -10,11 +10,14 @@ public class OtherFunding implements CostItem {
     private String fundingSource;
     private String securedDate;
     private BigDecimal fundingAmount;
+    private CostType costType;
 
     public OtherFunding() {
+        this.costType = CostType.OTHER_FUNDING;
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
+        this();
         this.id = id;
         this.otherPublicFunding = otherPublicFunding;
         this.fundingSource = fundingSource;
@@ -46,5 +49,10 @@ public class OtherFunding implements CostItem {
 
     public BigDecimal getFundingAmount() {
         return fundingAmount;
+    }
+
+    @Override
+    public CostType getCostType() {
+        return costType;
     }
 }

@@ -1,6 +1,8 @@
 package com.worth.ifs.finance.resource.cost;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 
@@ -13,11 +15,14 @@ public class Materials implements CostItem {
     private BigDecimal cost;
     private Integer quantity;
     private BigDecimal total = BigDecimal.ZERO;
+    private CostType costType;
 
     public Materials() {
+        this.costType = CostType.MATERIALS;
     }
 
     public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
+        this();
         this.id = id;
         this.item = item;
         this.cost = cost;
@@ -47,5 +52,10 @@ public class Materials implements CostItem {
             total = BigDecimal.ZERO;
         }
         return total;
+    }
+
+    @Override
+    public CostType getCostType() {
+        return costType;
     }
 }

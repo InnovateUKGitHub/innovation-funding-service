@@ -8,6 +8,9 @@ import com.worth.ifs.finance.resource.cost.OtherCost;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to other costs
+ */
 public class OtherCostHandler extends CostHandler {
     @Override
     public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {

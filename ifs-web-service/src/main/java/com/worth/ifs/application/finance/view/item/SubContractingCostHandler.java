@@ -9,6 +9,9 @@ import com.worth.ifs.finance.resource.cost.SubContractingCost;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to subcontracting costs
+ */
 public class SubContractingCostHandler extends CostHandler {
 
     @Override

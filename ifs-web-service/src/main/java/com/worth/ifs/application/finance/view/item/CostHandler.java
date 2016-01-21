@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * CostHandlers are used to convert form fields to costItems
+ */
 public abstract class CostHandler {
     protected final Log log = LogFactory.getLog(getClass());
 

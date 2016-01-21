@@ -19,6 +19,10 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * OrganisationFinanceHandlerImpl maintains the finances from
+ * an organisation's perspective and calculates the totals
+ */
 @Component
 public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandler {
     private final Log log = LogFactory.getLog(getClass());
@@ -68,23 +72,24 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     }
 
     private void calculateTotals() {
-        for(CostCategory costCategory : costCategories.values()) {
-            costCategory.calculateTotal();
-        }
+        costCategories.values()
+                .forEach(cc -> cc.calculateTotal());
     }
 
     private void resetCosts() {
-        for(CostCategory costCategory : costCategories.values()) {
-            costCategory.setCosts(new ArrayList<>());
-        }
+        costCategories.values()
+                .forEach(cc -> cc.setCosts(new ArrayList<>()));
     }
 
-    public List<Cost> costItemsToCost(CostType costType, List<CostItem> costItems) {
+    public Cost costItemToCost(CostItem costItem) {
+        CostHandler costHandler = getCostHandler(costItem.getCostType());
+        return costHandler.toCost(costItem);
+    }
+
+    public List<Cost> costItemsToCost(List<CostItem> costItems) {
         List<Cost> costs = new ArrayList<>();
-        for(CostItem costItem : costItems) {
-            CostHandler costHandler = getCostHandler(costType);
-            costs.add(costHandler.toCost(costItem));
-        }
+        costItems.stream()
+                .forEach(costItem -> costs.add(costItemToCost(costItem)));
         return costs;
     }
 
@@ -109,8 +114,8 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
             case OTHER_FUNDING:
                 return new OtherFundingHandler();
         }
-        log.error("Not a valid CostType: " + costType);
-        throw new IllegalArgumentException("Not a valid CostType: " + costType);
+        log.error("Not a valid FinanceType: " + costType);
+        throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 
     private CostCategory createCostCategoryByType(CostType costType) {

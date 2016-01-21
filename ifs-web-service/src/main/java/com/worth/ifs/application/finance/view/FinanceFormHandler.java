@@ -142,12 +142,11 @@ public class FinanceFormHandler {
 
 
     public void storeField(String fieldName, String value) {
-        List<CostField> costFields = costService.getCostFields();
         CostFormField costFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(costFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         CostItem costItem = costHandler.toCostItem( Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
-        //costService.update(cost);
+        costService.update(costItem);
     }
 
 
@@ -181,6 +180,8 @@ public class FinanceFormHandler {
                 return new OtherCostHandler();
             case OTHER_FUNDING:
                 return new OtherFundingHandler();
+            case YOUR_FINANCE:
+                return new YourFinanceHandler();
             default:
                 log.error("getCostItem, unsupported type: " + costType);
                 return null;
@@ -188,7 +189,7 @@ public class FinanceFormHandler {
     }
 
     private boolean storeCostItems(List<CostItem> costItems) {
-        //costs.stream().forEach(c -> costService.update(c));
+        costItems.stream().forEach(c -> costService.update(c));
         return true;
     }
 }

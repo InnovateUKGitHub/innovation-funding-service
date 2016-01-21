@@ -9,9 +9,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Handles the conversion of form fields to a grant claims
+ */
 public class GrantClaimHandler extends CostHandler {
-    public static final String GRANT_CLAIM = "Grant Claim";
-
     @Override
     public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
         Optional<CostFormField> grantClaimPercentageField = costFormFields.stream().findFirst();

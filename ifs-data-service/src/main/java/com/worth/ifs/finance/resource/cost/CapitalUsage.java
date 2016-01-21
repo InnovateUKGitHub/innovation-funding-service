@@ -19,13 +19,15 @@ public class CapitalUsage implements CostItem {
     BigDecimal npv;
     BigDecimal residualValue;
     Integer utilisation;
+    CostType costType;
 
     public CapitalUsage() {
-
+        this.costType = CostType.CAPITAL_USAGE;
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
                         BigDecimal npv, BigDecimal residualValue, Integer utilisation ) {
+        this();
         this.id = id;
         this.deprecation = deprecation;
         this.description = description;
@@ -74,4 +76,7 @@ public class CapitalUsage implements CostItem {
                 .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
     }
 
+    public CostType getCostType() {
+        return costType;
+    }
 }

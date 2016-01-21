@@ -8,6 +8,9 @@ import com.worth.ifs.finance.resource.cost.OtherFunding;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to other funding item
+ */
 public class OtherFundingHandler extends CostHandler {
 
     @Override

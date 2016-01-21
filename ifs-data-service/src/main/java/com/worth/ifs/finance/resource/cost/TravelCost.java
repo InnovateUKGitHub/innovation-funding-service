@@ -12,15 +12,17 @@ public class TravelCost implements CostItem {
     private String item;
     private BigDecimal cost;
     private Integer quantity;
+    private CostType costType;
 
     public TravelCost() {
-
+        this.costType = CostType.TRAVEL;
     }
 
-    public TravelCost(Long id, String item, BigDecimal costPerItem, Integer quantity) {
+    public TravelCost(Long id, String item, BigDecimal cost, Integer quantity) {
+        this();
         this.id = id;
         this.item = item;
-        this.cost = costPerItem;
+        this.cost = cost;
         this.quantity = quantity;
     }
 
@@ -42,10 +44,14 @@ public class TravelCost implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        if(cost == null) {
+        if(cost == null || quantity == null) {
             return BigDecimal.ZERO;
         }
         return cost.multiply(new BigDecimal(quantity));
     }
 
+    @Override
+    public CostType getCostType() {
+        return costType;
+    }
 }

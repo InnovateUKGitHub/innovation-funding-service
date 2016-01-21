@@ -29,6 +29,7 @@ public class Cost {
     @JoinColumn(name="applicationFinanceId", referencedColumnName="id")
     private ApplicationFinance applicationFinance;
 
+
     @ManyToOne
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;

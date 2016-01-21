@@ -697,7 +697,7 @@
                                        th:name="${type +'-travelCostEach-' + travelCost.id}"
                                        class="form-control width-full"
                                        th:id="${'cost-'+type+'-'+travelCost.id+'-travelCostEach'}"
-                                       th:value="${#numbers.formatDecimal(travelCost.getCostPerItem(),0,0)}"
+                                       th:value="${#numbers.formatDecimal(travelCost.cost,0,0)}"
                                        th:title="'Row '+${iteration.count}+' : Cost each (£)'" />
                             </td>
                             <td class="numeric">
@@ -817,24 +817,24 @@
             <div class="form-block inline">
                 <legend class="visuallyhidden" th:text="${question.getName()}" />
 
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('Yes') ? ' selected focused' : '')}"
+                <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
                        th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                        data-target="other-funding-table">
                     <input type="radio"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                            th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
                            th:value="Yes"
-                           th:checked="${costCategory.otherFunding?.equals('Yes')}"
+                           th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
                            />
                     Yes
                 </label>
-                <label th:class="${'block-label'  + (costCategory.otherFunding?.equals('No') ? ' selected focused' : '')}"
+                <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
                        th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                     <input type="radio"
                            th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
                            th:name="${type + '-otherPublicFunding-' + costCategory.otherFundingCostItem?.id}"
                            th:value="No"
-                           th:checked="${costCategory.otherFunding?.equals('No')}"/>
+                           th:checked="${costCategory.otherPublicFunding?.equals('No')}"/>
                     No
                 </label>
             </div>

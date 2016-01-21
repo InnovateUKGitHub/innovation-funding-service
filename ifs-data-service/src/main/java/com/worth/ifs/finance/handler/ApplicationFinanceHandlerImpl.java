@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
+/**
+ * ApplicationFinanceHandlerImpl handles the finance information on application level.
+ */
 @Service
 public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler {
     private final Log log = LogFactory.getLog(getClass());
@@ -28,18 +31,14 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
-        log.debug("HEAEARG 3");
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
-
         ApplicationFinanceResource applicationFinanceResource = null;
 
         if(applicationFinance!=null) {
             applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
             setFinanceDetails(applicationFinanceResource);
         }
-        log.debug("HEAEARG 4");
-
         return applicationFinanceResource;
     }
 
@@ -50,11 +49,10 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
-            EnumMap<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId());
+            EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
         }
-
         return applicationFinanceResources;
     }
 

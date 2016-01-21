@@ -17,11 +17,14 @@ public class LabourCost implements CostItem {
     private BigDecimal rate;
     private String description;
     private BigDecimal total;
+    private CostType costType;
 
     public LabourCost() {
+        this.costType = CostType.LABOUR;
     }
 
     public LabourCost(Long id, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
+        this();
         this.id = id;
         this.role = role;
         this.grossAnnualSalary = grossAnnualSalary;
@@ -98,5 +101,10 @@ public class LabourCost implements CostItem {
 
     public void setLabourDays(Integer labourDays) {
         this.labourDays = labourDays;
+    }
+
+    @Override
+    public CostType getCostType() {
+        return costType;
     }
 }

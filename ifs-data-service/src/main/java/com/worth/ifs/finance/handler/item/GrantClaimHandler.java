@@ -6,6 +6,10 @@ import com.worth.ifs.finance.resource.cost.GrantClaim;
 
 import java.math.BigDecimal;
 
+/**
+ * Handles the grant claims, i.e. converts the costs to be stored into the database
+ * or for sending it over.
+ */
 public class GrantClaimHandler extends CostHandler {
     public static final String GRANT_CLAIM = "Grant Claim";
 

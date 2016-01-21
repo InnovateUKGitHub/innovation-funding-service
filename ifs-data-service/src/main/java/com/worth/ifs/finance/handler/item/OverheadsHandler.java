@@ -6,6 +6,10 @@ import com.worth.ifs.finance.resource.cost.Overhead;
 
 import java.math.BigDecimal;
 
+/**
+ * Handles the overheads, i.e. converts the costs to be stored into the database
+ * or for sending it over.
+ */
 public class OverheadsHandler extends CostHandler {
     @Override
     public Cost toCost(CostItem costItem) {

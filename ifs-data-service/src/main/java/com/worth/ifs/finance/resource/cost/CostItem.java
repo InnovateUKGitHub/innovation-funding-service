@@ -24,4 +24,5 @@ import java.math.BigDecimal;
 public interface CostItem {
     public Long getId();
     public BigDecimal getTotal();
+    public CostType getCostType();
 }

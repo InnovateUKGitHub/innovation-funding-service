@@ -8,11 +8,15 @@ public class OtherCost implements CostItem {
     private Long id;
     private String description;
     private BigDecimal cost;
+    private CostType costType;
+
 
     public OtherCost() {
+        this.costType = CostType.OTHER_COSTS;
     }
 
     public OtherCost(Long id, String description, BigDecimal cost) {
+        this();
         this.id = id;
         this.description = description;
         this.cost = cost;
@@ -32,5 +36,10 @@ public class OtherCost implements CostItem {
 
     public BigDecimal getTotal() {
         return cost;
+    }
+
+    @Override
+    public CostType getCostType() {
+        return costType;
     }
 }

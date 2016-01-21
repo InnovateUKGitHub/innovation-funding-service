@@ -11,6 +11,9 @@ import org.apache.commons.logging.LogFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to a cost item
+ */
 public class CapitalUsageHandler extends CostHandler {
     private final Log log = LogFactory.getLog(getClass());
 

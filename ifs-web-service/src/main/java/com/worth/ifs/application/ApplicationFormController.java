@@ -506,7 +506,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
             financeFormHandler.ajaxUpdateFinancePosition(request, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-
             storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);

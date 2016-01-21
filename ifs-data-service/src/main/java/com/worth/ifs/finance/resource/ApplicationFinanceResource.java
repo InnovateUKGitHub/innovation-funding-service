@@ -9,6 +9,9 @@ import com.worth.ifs.user.domain.OrganisationSize;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 
+/**
+ * Application finance reosurce holda the organisation's finance resources for an application
+ */
 public class ApplicationFinanceResource {
     Long id;
     private Long organisation;

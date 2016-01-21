@@ -4,6 +4,10 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 
+/**
+ * Handles the other funding, i.e. converts the costs to be stored into the database
+ * or for sending it over.
+ */
 public class OtherFundingHandler extends CostHandler {
     @Override
     public Cost toCost(CostItem costItem) {

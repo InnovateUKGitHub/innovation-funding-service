@@ -11,11 +11,14 @@ public class Overhead implements CostItem {
     private Long id;
     private String acceptRate;
     private Integer customRate;
+    private CostType costType;
 
     public Overhead() {
+        this.costType = CostType.OVERHEADS;
     }
 
     public Overhead(Long id, String acceptRate, Integer customRate) {
+        this();
         this.id = id;
         this.acceptRate = acceptRate;
         this.customRate = customRate;
@@ -39,4 +42,8 @@ public class Overhead implements CostItem {
         return id;
     }
 
+    @Override
+    public CostType getCostType() {
+        return costType;
+    }
 }

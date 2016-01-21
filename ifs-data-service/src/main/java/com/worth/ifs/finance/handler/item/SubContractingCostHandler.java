@@ -5,6 +5,10 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
 
+/**
+ * Handles the subcontracting costs, i.e. converts the costs to be stored into the database
+ * or for sending it over.
+ */
 public class SubContractingCostHandler extends CostHandler {
     public static final String COST_FIELD_COUNTRY = "country";
 

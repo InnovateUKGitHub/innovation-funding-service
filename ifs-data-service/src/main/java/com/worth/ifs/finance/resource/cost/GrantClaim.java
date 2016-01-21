@@ -7,8 +7,13 @@ import java.math.BigDecimal;
 public class GrantClaim implements CostItem {
     private Long id;
     private Integer grantClaimPercentage;
+    private CostType costType;
 
+    public GrantClaim() {
+        this.costType = CostType.FINANCE;
+    }
     public GrantClaim(Long id, Integer grantClaimPercentage) {
+        this();
         this.id = id;
         this.grantClaimPercentage = grantClaimPercentage;
     }
@@ -25,5 +30,10 @@ public class GrantClaim implements CostItem {
 
     public Integer getGrantClaimPercentage() {
         return grantClaimPercentage;
+    }
+
+    @Override
+    public CostType getCostType() {
+        return costType;
     }
 }

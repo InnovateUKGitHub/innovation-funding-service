@@ -10,6 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Handles the conversion of form fields to a labour cost
+ */
 public class LabourCostHandler extends CostHandler {
 
     @Override
