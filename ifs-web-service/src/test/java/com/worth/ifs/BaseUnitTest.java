@@ -293,7 +293,9 @@ public class BaseUnitTest {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
 
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
+        organisation1.setOrganisationType(new OrganisationType("Business", null));
         Organisation organisation2 = new Organisation(2L, "Ludlow");
+        organisation2.setOrganisationType(new OrganisationType("Research", null));
         organisations = asList(organisation1, organisation2);
         Comparator<Organisation> compareById = Comparator.comparingLong(Organisation::getId);
         organisationSet = new TreeSet<>(compareById);
@@ -325,14 +327,14 @@ public class BaseUnitTest {
         applicationList.get(3).setCompetition(competition);
         applicationList.get(3).setProcessRoles(singletonList(processRole4));
 
-        applicationResources.get(0).setCompetitionId(competition.getId());
-        applicationResources.get(0).setProcessRoleIds(asList(processRole1.getId(), processRole5.getId()));
-        applicationResources.get(1).setCompetitionId(competition.getId());
-        applicationResources.get(1).setProcessRoleIds(singletonList(processRole2.getId()));
-        applicationResources.get(2).setCompetitionId(competition.getId());
-        applicationResources.get(2).setProcessRoleIds(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
-        applicationResources.get(3).setCompetitionId(competition.getId());
-        applicationResources.get(3).setProcessRoleIds(singletonList(processRole4.getId()));
+        applicationResources.get(0).setCompetition(competition.getId());
+        applicationResources.get(0).setProcessRoles(asList(processRole1.getId(), processRole5.getId()));
+        applicationResources.get(1).setCompetition(competition.getId());
+        applicationResources.get(1).setProcessRoles(singletonList(processRole2.getId()));
+        applicationResources.get(2).setCompetition(competition.getId());
+        applicationResources.get(2).setProcessRoles(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
+        applicationResources.get(3).setCompetition(competition.getId());
+        applicationResources.get(3).setProcessRoles(singletonList(processRole4.getId()));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
         users.get(0).addUserApplicationRole(processRole5);
@@ -365,6 +367,7 @@ public class BaseUnitTest {
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
+        when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getUserOrganisation(applications.get(0), loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(applications.get(0))).thenReturn(organisationSet);

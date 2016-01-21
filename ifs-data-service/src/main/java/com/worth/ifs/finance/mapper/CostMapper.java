@@ -7,7 +7,6 @@ import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.CostResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,

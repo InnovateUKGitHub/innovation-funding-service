@@ -123,7 +123,7 @@ public abstract class AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
 
         application.setId(applicationId);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
@@ -233,7 +233,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
-        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetition());
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
@@ -245,7 +245,10 @@ public abstract class AbstractApplicationController {
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(application.getId(), userId);
+        log.debug(String.format("Organisation with id %s", applicationFinanceResource.getOrganisation()));
         Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
+        log.debug(String.format("Organisation with name %s", organisation.getName()));
+        log.debug(String.format("Organisation with type %s", organisation.getOrganisationType().toString()));
         model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
         model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
         model.addAttribute("organisationType", organisation.getOrganisationType());
@@ -277,7 +280,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSectionId);
         Section nextSection = sectionService.getNextSection(currentSectionId);
@@ -314,7 +317,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
