@@ -2,7 +2,9 @@ package com.worth.ifs.dashboard;
 
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -40,6 +42,9 @@ public class ApplicantController {
     ProcessRoleService processRoleService;
 
     @Autowired
+    ApplicationStatusRestService applicationStatusService;
+
+    @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @Autowired
@@ -54,17 +59,14 @@ public class ApplicantController {
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
-        Map<Long, Competition> competitions = combineLists(inProgress, finished).stream()
-            .collect(
-                Collectors.toMap(
-                    ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetitionId())
-                )
-            );
+        Map<Long, Competition> competitions = createCompetitionMap(inProgress, finished);
+        Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
+
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("competitions", competitions);
+        model.addAttribute("applicationStatuses", applicationStatusMap);
 
         return "applicant-dashboard";
     }
@@ -74,17 +76,36 @@ public class ApplicantController {
      * collaborators, since the leadapplicant is the default assignee.
      */
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, User user){
-        return inProgress.stream().filter(a -> {
-                    ProcessRole role = processRoleService.findProcessRole(user.getId(), a.getId());
+        return inProgress.stream().filter(applicationResource -> {
+                    ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){
-                        int count = applicationService.getAssignedQuestionsCount(a.getId(), role.getId());
+                        int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
                         return (count == 0 ? false : true);
                     }else{
                         return false;
                     }
                 }
-        ).mapToLong(a -> a.getId()).boxed().collect(Collectors.toList());
+        ).mapToLong(applicationResource -> applicationResource.getId()).boxed().collect(Collectors.toList());
     }
 
+    private Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
+        return combineLists(resources).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
+                )
+            );
+    }
+
+    private Map<Long, Competition> createCompetitionMap(List<ApplicationResource>... resources){
+        return combineLists(resources).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> competitionService.getById(application.getCompetition())
+                )
+            );
+    }
 
 }

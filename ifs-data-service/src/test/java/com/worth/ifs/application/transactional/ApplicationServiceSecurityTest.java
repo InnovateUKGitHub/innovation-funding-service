@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -15,7 +18,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
@@ -303,27 +305,17 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ApplicationResourceHateoas getApplicationByIdHateoas(Long id) {
+        public Application getApplicationById(Long id) {
             return null;
         }
 
         @Override
-        public Resources<ApplicationResourceHateoas> findAllHateoas() {
+        public List<Application> findAll() {
             return null;
         }
 
         @Override
-        public ApplicationResource getApplicationById(Long id) {
-            return null;
-        }
-
-        @Override
-        public List<ApplicationResource> findAll() {
-            return null;
-        }
-
-        @Override
-        public List<ApplicationResource> findByUserId(Long userId) {
+        public List<Application> findByUserId(Long userId) {
             return null;
         }
 
@@ -333,7 +325,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ObjectNode getProgressPercentageByApplicationId(Long applicationId) {
+        public double getProgressPercentageByApplicationId(Long applicationId) {
+            return 0;
+        }
+
+        @Override
+        public ObjectNode getProgressPercentageNodeByApplicationId(Long applicationId) {
             return null;
         }
 
@@ -343,12 +340,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
+        public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
             return null;
         }
 
         @Override
-        public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
+        public Application createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
             return null;
         }
 

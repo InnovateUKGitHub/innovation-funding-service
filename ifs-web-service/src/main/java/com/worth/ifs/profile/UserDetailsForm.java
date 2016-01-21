@@ -19,12 +19,12 @@ public class UserDetailsForm {
     private String title;
 
     @NotEmpty(message = "Please enter a first name")
-    @Pattern(regexp = "[\\p{L} ]*", message = "Please enter a first name")
+    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a first name")
     @Length(min=2, max = 70)
     private String firstName;
 
     @NotEmpty(message = "Please enter a last name")
-    @Pattern(regexp = "[\\p{L} ]*", message = "Please enter a last name")
+    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a last name")
     @Length(min=2, max = 70)
     private String lastName;
 

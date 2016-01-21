@@ -3,11 +3,14 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 
@@ -19,6 +22,9 @@ import static org.mockito.Mockito.when;
 
 public class QuestionServiceTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    QuestionMapper questionMapper;
 
     @InjectMocks
     protected QuestionService questionService = new QuestionServiceImpl();
@@ -54,30 +60,36 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getNextQuestionFromOtherSectionTest() throws Exception {
+        Section nextSection = newSection().build();
         Question question = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
-        Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 2).build();
+        Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), nextSection, 2).build();
+
 
         when(questionRepository.findOne(question.getId())).thenReturn(question);
-        when(sectionService.getNextSection(question.getSection()))
-                .thenReturn(nextQuestion.getSection());
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(
-                question.getCompetition().getId(), nextQuestion.getSection().getId()))
-                .thenReturn(nextQuestion);
+        when(sectionService.getNextSection(question.getSection())).thenReturn(nextSection);
+        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+            question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
         // Method under test
         assertEquals(nextQuestion, questionService.getNextQuestion(question.getId()));
     }
 
     @Test
     public void getPreviousQuestionFromOtherSectionTest() throws Exception {
-        Question question = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 2).build();
-        Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
+        Section previousSection = newSection().build();
+        Competition competition = newCompetition().build();
+        Question question = newQuestion().withCompetitionAndSectionAndPriority(competition, newSection().build(), 2).build();
+        Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
 
         when(questionRepository.findOne(question.getId())).thenReturn(question);
         when(sectionService.getPreviousSection(question.getSection()))
-                .thenReturn(previousQuestion.getSection());
+                .thenReturn(previousSection);
         when(questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
                 question.getCompetition().getId(), previousQuestion.getSection().getId()))
                 .thenReturn(previousQuestion);
+        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+            question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
+            .thenReturn(previousQuestion);
+
         // Method under test
         assertEquals(previousQuestion, questionService.getPreviousQuestion(question.getId()));
 

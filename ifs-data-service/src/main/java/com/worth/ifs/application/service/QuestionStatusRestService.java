@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface QuestionStatusRestService {
   List<QuestionStatus> findQuestionStatusesByQuestionAndApplicationId(final Long questionId, final Long applicationId);
+  QuestionStatus findQuestionStatusById(final Long id);
 }

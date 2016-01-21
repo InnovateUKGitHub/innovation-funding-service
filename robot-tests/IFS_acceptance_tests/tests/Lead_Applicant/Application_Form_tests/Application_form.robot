@@ -19,9 +19,9 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
 ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
-${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/7/form/question/11
-${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/7/form/question/12
-${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/7
+${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
+${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
+${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
 
 *** Test Cases ***
 Verify the Autosave for the form text areas

@@ -2,6 +2,7 @@ package com.worth.ifs.dashboard.controller;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.dashboard.ApplicantController;
 import com.worth.ifs.user.domain.User;
 import org.junit.After;
@@ -71,13 +72,14 @@ public class ApplicantControllerTest extends BaseUnitTest {
         List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
                 .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
-                .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
+                .andExpect(model().attribute("applicationsAssigned", hasSize(1)));
     }
 
     /**
@@ -92,13 +94,15 @@ public class ApplicantControllerTest extends BaseUnitTest {
         when(applicationService.getInProgress(collabUsers.getId())).thenReturn(progressMap);
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
+        when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
                 .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
-                .andExpect(model().attribute("applicationsAssigned", hasSize(1)));
+                .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
 
     }
 }

@@ -3,7 +3,6 @@ package com.worth.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * CostValue defines database relations and a model to use client side and server side.
@@ -60,4 +59,6 @@ public class CostValue {
     public void setCostField(CostField costField) {
         this.costField = costField;
     }
+
+    public CostValueId getId(){ return new CostValueId(this.cost.getId(), this.costField.getId());}
 }

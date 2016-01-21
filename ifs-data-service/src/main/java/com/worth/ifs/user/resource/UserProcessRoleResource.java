@@ -4,7 +4,6 @@ import com.worth.ifs.user.controller.ProcessRoleController;
 import com.worth.ifs.user.domain.User;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
-import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -13,7 +12,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * This class is used convert domain object to a resource object,
  * that is used to send data through REST calls.
  */
-@Component
 public class UserProcessRoleResource implements ResourceProcessor<Resource<User>> {
 
     @Override

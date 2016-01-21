@@ -1,6 +1,8 @@
 package com.worth.ifs.finance.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.finance.controller.ApplicationFinanceController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.apache.commons.logging.Log;
@@ -57,6 +59,12 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     @Override
     public ApplicationFinanceResource getById(Long applicationFinanceId){
         return restGet(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
+    }
+
+    @Override
+    public Double getResearchParticipationPercentage(Long applicationId){
+        ObjectNode jsonNode = restGet(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class);
+        return jsonNode.get(ApplicationFinanceController.RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
     }
 
     @Override

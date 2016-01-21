@@ -83,6 +83,7 @@ public class UserController {
     public List<User> getUserByName(@PathVariable("name") final String name) {
         return repository.findByName(name);
     }
+
     @RequestMapping("/findAll/")
     public List<User> findAll() {
         return repository.findAll();
