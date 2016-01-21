@@ -918,7 +918,7 @@
                         <div th:each="applicationOrganisation : ${applicationOrganisations}" th:remove="tag"  >
                             <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
                                 th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(financeSubSection.id)} ? complete : incomplete"
-                                th:if="${applicationOrganisation.id == organisationFinance.organisation.id}"
+                                th:if="${applicationOrganisation.id == organisationFinance.organisation}"
                                 th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
