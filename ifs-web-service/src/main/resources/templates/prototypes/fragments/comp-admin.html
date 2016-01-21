@@ -30,6 +30,117 @@
     </section>
 </div>
 
+<!-- ===================Search filters============================== -->
+<div th:fragment="prototype-comp-search-filters">
+    <div class="search-filters extra-margin">
+        
+        <form formaction="/prototypes/863-invite-assessors#current-assessors" method="GET"> 
+            <fieldset>
+                <h2 class="heading-medium no-margin">Filter <span th:text="${filterTitle}">TITLE</span></h2>
+
+                <div class="grid-row">
+                    <div class="column-third">
+                        <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                        <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+                            
+                            <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
+                                <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
+                            </option>
+                            
+                            <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
+                                <option selected="selected">---</option>
+                            </option>
+
+                            <option value="Agriculture &#38; food">Agriculture &#38; food</option>
+                            <option value="Built environment">Built environment</option>
+                            <option value="Digital economy">Digital economy</option>
+                            <option value="Emerging technologies">Emerging technologies</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Health &#38; care">Health &#38; care</option>
+                            <option value="High value manufacturing">High value manufacturing</option>
+                            <option value="Space applications">Space applications</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Urban living">Urban living</option>
+                        </select>
+                    </div>
+
+                    <div class="column-third">
+                        <label class="form-label" for="filterSearch">Search</label>
+                        <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                    </div>
+
+                    <div class="column-third alignright">
+                        <button class="button">Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    
+    <div class="grid-row sorting">
+        <div class="column-two-thirds">
+            
+            <div th:if="${param.filterInnovationArea == null}" th:remove="tag">
+                <p><span class="heading-xlarge no-margin">76</span> <strong>assessors</strong></p>
+            </div>
+            
+            <div th:if="${param.filterInnovationArea != null}" th:remove="tag">
+                
+                <div th:if="${param.filterInnovationArea[0] != '---' and param.filterSearch[0] == ''}" th:remove="tag">
+                    <p><span class="heading-xlarge">5</span> <span th:text="${filterTitle}">TITLE</span> with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p> 
+                </div>
+
+                <div th:if="${param.filterInnovationArea[0] == '---' and param.filterSearch[0] != ''}" th:remove="tag">
+                    <p><span class="heading-xlarge">5</span> <span th:text="${filterTitle}">TITLE</span> with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p> 
+                </div>
+
+                <div th:if="${param.filterInnovationArea[0] != '---' and param.filterSearch[0] != ''}" th:remove="tag">
+                    <p><span class="heading-xlarge">5</span> <span th:text="${filterTitle}">TITLE</span>  with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> and with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p> 
+                </div>
+
+                <div th:if="${param.filterInnovationArea[0] == '---' and param.filterSearch[0] == ''}" th:remove="tag">
+                    <p><span class="heading-xlarge no-margin">76</span> <strong th:text="${filterTitle}">TITLE</strong></p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div th:if="${filterTitle == 'assessors'}">
+            <div class="column-third alignright">
+                <label for="sort-by">Sort by</label>
+                <select name="sort-by" id="sort-by" class="form-control">
+                    <option value="Name">Name</option>
+                    <option value="closing-date">Contract and DOI</option>
+                </select>
+            </div>
+        </div>
+
+        <div th:if="${filterTitle == 'applications'}" th:remove="tag">
+            <div class="column-third alignright">
+                <label for="sort-by">Sort by</label>
+                <select name="sort-by" id="sort-by" class="form-control">
+                    <option value="Application number">Application number</option>
+                    <option value="Project title">Project title</option>
+                    <option value="Innovation area">Innovation area</option>
+                    <option value="Number of assessors">Number of assessors</option>
+                    <option value="Number accepted">Number accepted</option>
+                    <option value="Number rejected">Number rejected</option>
+                    <option value="Number completed">Number completed</option>
+                    <option value="Score (highest first)">Score (highest first)</option>
+                    <option value="Score as % (highest first)">Score as % (highest first)</option>
+                    <option value="Spread">Spread</option>
+                    <option value="On scope">On scope</option>
+                    <option value="Recommended">Recommended</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
 
 <!-- =========================== Comp details =========================== --> 
 
@@ -118,7 +229,7 @@
                 <h3 class="heading-medium no-margin">The competition is now closed</h3>
             </div>
             <div class="column-half alignright-button">
-                <a class="button" href="#">Allocate assessors</a>
+                <a class="button" href="/prototypes/1381-application-allocation">Allocate assessors</a>
             </div>
         </div>
     </div>
@@ -331,6 +442,98 @@
         <label for="file" class="button-secondary extra-margin">+ Upload</label>
     </div>
 
+</div>
+
+
+<!-- =========================== Application list table =========================== --> 
+<div th:fragment="prototype-application-list-table">
+    <table id="application-list">
+        <thead>
+            <tr>
+                <th>Application no</th>
+                <th>Project title</th>
+                <th>Lead</th>
+                <th>Assessment category (innovation area)</th>
+                <th>Assessors</th>
+                <th class="full-view">Accepted</th>
+                <th class="full-view">Started</th>
+                <th class="full-view">Completed</th>
+                <th class="full-view">Score as %</th>
+                <th class="full-view">% spread</th>
+                <th class="full-view">On scope</th>
+                <th class="full-view">Recommended</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="filtered-result">
+                <td><a href="">1234-5431</a></td>
+                <td>Machine learning in robots</td>
+                <td>PWC</td>
+                <td>Digital services</td>
+                <td>
+                    5 <a href="/prototypes/1382-application-allocate-assessors?title=Machine learning in robots">Allocate</a>
+                </td>
+                <td class="full-view">5</td>
+                <td class="full-view">0</td>
+                <td class="full-view">3</td>
+                <td class="full-view">70</td>
+                <td class="full-view">5</td>
+                <td class="full-view">3</td>
+                <td class="full-view">2</td>
+            </tr>
+
+            <tr class="filtered-result">
+                <td><a href="">1234-5432</a></td>
+                <td>Robots that learn</td>
+                <td>MaxDigital</td>
+                <td>Digital services</td>
+                <td>
+                    5 <a href="/prototypes/1382-application-allocate-assessors?title=Robots that learn">Allocate</a>
+                </td>
+                <td class="full-view">3</td>
+                <td class="full-view">1</td>
+                <td class="full-view">1</td>
+                <td class="full-view">80</td>
+                <td class="full-view">0</td>
+                <td class="full-view">1</td>
+                <td class="full-view">1</td>
+            </tr>
+
+            <tr class="filtered-result">
+                <td><a href="">1234-5433</a></td>
+                <td>Ai in learning</td>
+                <td>BBC</td>
+                <td>Digital services</td>
+                <td>
+                    5 <a href="/prototypes/1382-application-allocate-assessors?title=Ai in learning">Allocate</a>
+                </td>
+                <td class="full-view">0</td>
+                <td class="full-view">0</td>
+                <td class="full-view">0</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+            </tr>
+
+            <tr class="filtered-result">
+                <td><a href="">1234-5434</a></td>
+                <td>Progressive machines</td>
+                <td>Kingfisher</td>
+                <td>Digital services</td>
+                <td>
+                    5 <a href="/prototypes/1382-application-allocate-assessors?title=Progressive machines">Allocate</a>
+                </td>
+                <td class="full-view">0</td>
+                <td class="full-view">0</td>
+                <td class="full-view">0</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+                <td class="full-view">-</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 

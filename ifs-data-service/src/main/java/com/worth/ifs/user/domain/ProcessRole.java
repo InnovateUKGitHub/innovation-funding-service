@@ -92,6 +92,14 @@ public class ProcessRole {
         this.application = application;
     }
 
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

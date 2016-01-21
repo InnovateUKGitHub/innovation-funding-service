@@ -79,12 +79,12 @@ public class Section implements Comparable<Section> {
      * Get questions from this section and childSections.
      */
     @JsonIgnore
-    public List<Question> getAllChildQuestions() {
+    public List<Question> fetchAllChildQuestions() {
         LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
         if(childSections != null && childSections.size() != 0){
             LinkedList<Question> childQuestions = childSections.stream()
-                    .filter(s -> s.getAllChildQuestions() != null && s.getAllChildQuestions().size() > 0)
-                    .flatMap(s -> s.getAllChildQuestions().stream())
+                    .filter(s -> s.fetchAllChildQuestions() != null && s.fetchAllChildQuestions().size() > 0)
+                    .flatMap(s -> s.fetchAllChildQuestions().stream())
                     .collect(Collectors.toCollection(LinkedList::new));
             sectionQuestions.addAll(childQuestions);
         }
@@ -156,6 +156,26 @@ public class Section implements Comparable<Section> {
 
     public void setQuestionGroup(boolean questionGroup) {
         this.questionGroup = questionGroup;
+    }
+
+    public void setDisplayInAssessmentApplicationSummary(boolean displayInAssessmentApplicationSummary) {
+        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

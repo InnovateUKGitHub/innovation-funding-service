@@ -97,6 +97,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withTitle("testTitle")
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
+                .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
                 .build();
 
