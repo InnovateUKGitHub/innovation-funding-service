@@ -2,11 +2,11 @@ package com.worth.ifs.dashboard.controller;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.dashboard.ApplicantController;
 import com.worth.ifs.user.domain.User;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -65,7 +65,6 @@ public class ApplicantControllerTest extends BaseUnitTest {
     /**
      * leadapplicant with one application in progress, assigned is not displayed for leadapplicant
      */
-    @Ignore
     @Test
     public void testDashboardApplicant() throws Exception {
         this.loginUser(applicant);
@@ -73,6 +72,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -85,7 +85,6 @@ public class ApplicantControllerTest extends BaseUnitTest {
     /**
      * Collaborator with one application in progress, with one application with assigned questions
      */
-    @Ignore
     @Test
     public void testDashboardCollaborator() throws Exception {
         User collabUsers = this.users.get(1);
@@ -96,6 +95,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())

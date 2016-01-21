@@ -4,7 +4,6 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
@@ -13,7 +12,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -31,9 +29,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
-
-    @Autowired
-    ApplicationMapper applicationMapper;
 
     @InjectMocks
     AssessmentHandler assessmentHandler = new AssessmentHandler();

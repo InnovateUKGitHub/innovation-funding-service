@@ -59,21 +59,9 @@ public class ApplicantController {
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
-        Map<Long, Competition> competitions = combineLists(inProgress, finished).stream()
-            .collect(
-                Collectors.toMap(
-                    ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetition())
-                )
-            );
+        Map<Long, Competition> competitions = createCompetitionMap(inProgress, finished);
+        Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
-        Map<Long, ApplicationStatusResource> applicationStatusMap = combineLists(inProgress, finished).stream()
-            .collect(
-                Collectors.toMap(
-                    ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
-                )
-            );
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
@@ -100,5 +88,24 @@ public class ApplicantController {
         ).mapToLong(applicationResource -> applicationResource.getId()).boxed().collect(Collectors.toList());
     }
 
+    private Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
+        return combineLists(resources).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
+                )
+            );
+    }
+
+    private Map<Long, Competition> createCompetitionMap(List<ApplicationResource>... resources){
+        return combineLists(resources).stream()
+            .collect(
+                Collectors.toMap(
+                    ApplicationResource::getId,
+                    application -> competitionService.getById(application.getCompetition())
+                )
+            );
+    }
 
 }

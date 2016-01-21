@@ -3,7 +3,6 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.transactional.QuestionService;
 import org.junit.Before;
@@ -25,8 +24,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     QuestionStatusRepository questionStatusRepository;
     @Autowired
     QuestionService questionService;
-    @Autowired
-    QuestionMapper questionMapper;
 
 
     private final Long userId = 1L;

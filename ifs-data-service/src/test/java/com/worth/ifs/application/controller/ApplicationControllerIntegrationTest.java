@@ -3,14 +3,21 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.mapper.ApplicationStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +41,26 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         leadApplicantOrganisationId = 3L;
+        List<ProcessRole> proccessRoles = new ArrayList<>();
+        proccessRoles.add(
+            new ProcessRole(
+                leadApplicantProcessRole,
+                null,
+                new Application(
+                    APPLICATION_ID,
+                    "",
+                    new ApplicationStatus(
+                        ApplicationStatusConstants.CREATED.getId(),
+                        ApplicationStatusConstants.CREATED.getName()
+                    )
+                ),
+                null,
+                null
+            )
+        );
+        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles );
+        proccessRoles.get(0).setUser(user);
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
 
     @Override

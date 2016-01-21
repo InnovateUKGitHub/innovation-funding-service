@@ -88,6 +88,8 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
+    public ApplicationStatusRestService applicationStatusService;
+    @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
     public AssessmentRestService assessmentRestService;
