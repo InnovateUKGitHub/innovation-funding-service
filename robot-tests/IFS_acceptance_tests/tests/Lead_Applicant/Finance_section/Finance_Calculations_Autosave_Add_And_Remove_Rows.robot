@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${OTHER_FUNDING_SOURCE}     Alice
+${OTHER_FUNDING_SOURCE}    Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
 
@@ -20,8 +20,7 @@ Labour
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
-    [Tags]    Labour    Autosave    Calculations    Finance     Pending
-    # Pending completion of bugfix for INFUND-1510
+    [Tags]    Labour    Autosave    Calculations    Finance
     Given Applicant goes to the Your finances section
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
@@ -62,8 +61,7 @@ Capital usage
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
-    [Tags]    Subcontracting Costs    Autosave  Calculations    Finance     Pending
-    # Pending completion of bugfix for INFUND-1510
+    [Tags]    Subcontracting Costs    Autosave    Calculations    Finance    Pending
     Given Applicant goes to the Your finances section
     And the applicant edits the Subcontracting costs section
     When the applicant adds a new row in the subcontracting costs
@@ -123,7 +121,6 @@ the Applicant fills in the Labour costs
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
 
-
 the calculations of the labour should be correct
     Sleep    1s
     Textfield Value Should Be    css=.labour-costs-table tbody td:nth-of-type(3) input    £ 522
@@ -135,14 +132,14 @@ the applicant removes one labour row
 the labour total should be correct again
     sleep    1s
     Textfield Value Should Be    css=#section-total-9    £ 52,174
-    Element Should Contain    css=[data-mirror="#section-total-9"]   £ 52,174
+    Element Should Contain    css=[data-mirror="#section-total-9"]    £ 52,174
 
 the total labour cost calculation should be correct
     Sleep    1s
     Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(2) input    £ 52,174
     Textfield Value Should Be    css=#section-total-9    £ 104,348
-    Element Should Contain    css=[data-mirror="#section-total-9"]   £ 104,348
+    Element Should Contain    css=[data-mirror="#section-total-9"]    £ 104,348
 
 the applicant fills a second row in the labour costs
     Click Element    link=Add another role
@@ -194,7 +191,7 @@ the applicant edits the Subcontracting costs section
 The total subcontracting costs should be correct
     Sleep    1s
     Textfield Value Should Be    css=#section-total-13    £ 200
-    Element Should Contain    css=[aria-controls="collapsible-5"] [data-mirror]   £ 200
+    Element Should Contain    css=[aria-controls="collapsible-5"] [data-mirror]    £ 200
 
 the applicant adds a new row in the subcontracting costs
     Click link    Link=Add another subcontractor
