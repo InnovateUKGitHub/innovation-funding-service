@@ -184,5 +184,8 @@ public class Competition {
         this.maxResearchRatio = maxResearchRatio;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
 

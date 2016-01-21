@@ -20,14 +20,6 @@ public class FormInputResponse {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
     private LocalDateTime updateDate;
 
     @Column(length=5000)
@@ -105,7 +97,6 @@ public class FormInputResponse {
         return formInput.getWordCount() - this.getWordCount();
     }
 
-
     public FormInput getFormInput() {
         return formInput;
     }
@@ -137,4 +128,15 @@ public class FormInputResponse {
     public void setFileEntry(FileEntry fileEntry) {
         this.fileEntry = fileEntry;
     }
+
+    @JsonIgnore
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
+
 }

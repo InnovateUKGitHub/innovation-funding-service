@@ -33,12 +33,12 @@ var IFSLoader = {
   },
   'app-form' : {
     init : function(){
+      IFS.mirrorElements.init();
       IFS.unsavedChanges.init();
       IFS.autoSave.init();
       IFS.finance.init();
       IFS.repeatableRows.init();
       IFS.orgsizeToFunding.init();
-
     }
   },
   'app-details' : {

@@ -2,15 +2,13 @@ package com.worth.ifs.util;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static java.util.function.Function.identity;
 import static org.junit.Assert.*;
 

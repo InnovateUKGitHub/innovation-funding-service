@@ -65,7 +65,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetitionId())))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
@@ -78,7 +78,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetitionId())))
+                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
@@ -114,7 +114,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetitionId())))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("sections", collectedSections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))

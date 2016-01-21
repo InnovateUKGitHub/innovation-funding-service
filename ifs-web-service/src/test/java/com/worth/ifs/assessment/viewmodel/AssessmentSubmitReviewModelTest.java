@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedback;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
@@ -27,7 +28,8 @@ import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for the view model that backs the Assessor's Assessment Review page.
@@ -60,7 +62,9 @@ public class AssessmentSubmitReviewModelTest {
                 withCompetition(competition).
                 build();
 
-        ApplicationResource applicationResource = new ApplicationResource(application);
+        ApplicationResource applicationResource = newApplicationResource().
+            withCompetition(competition).
+            build();
 
         ResponseBuilder responseBuilder = newResponse().
                 withApplication(application);
@@ -167,7 +171,7 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
-        ApplicationResource applicationResource = new ApplicationResource(application);
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
         assessorProcessRole.setApplication(application);
@@ -205,7 +209,7 @@ public class AssessmentSubmitReviewModelTest {
 
         Competition competition = newCompetition().withSections(sections).build();
         Application application = newApplication().withCompetition(competition).build();
-        ApplicationResource applicationResource = new ApplicationResource(application);
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
         assessorProcessRole.setApplication(application);

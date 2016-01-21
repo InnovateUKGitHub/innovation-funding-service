@@ -1,6 +1,5 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -11,6 +10,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -28,8 +28,10 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.form.service.FormInputService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -41,18 +43,20 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
+import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -80,7 +84,11 @@ public class BaseUnitTest {
     @Mock
     public FormInputResponseService formInputResponseService;
     @Mock
+    public FormInputService formInputService;
+    @Mock
     public ApplicationService applicationService;
+    @Mock
+    public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
@@ -120,12 +128,13 @@ public class BaseUnitTest {
     public List<Assessment> assessments;
     public List<ProcessRole> assessorProcessRoles;
     public List<Assessment> submittedAssessments;
-    public ApplicationStatus submittedApplicationStatus;
-    public ApplicationStatus createdApplicationStatus;
-    public ApplicationStatus approvedApplicationStatus;
-    public ApplicationStatus rejectedApplicationStatus;
     public ApplicationFinanceResource applicationFinanceResource;
+    public ApplicationStatusResource submittedApplicationStatus;
+    public ApplicationStatusResource createdApplicationStatus;
+    public ApplicationStatusResource approvedApplicationStatus;
+    public ApplicationStatusResource rejectedApplicationStatus;
     public List<ProcessRole> processRoles;
+    private Random randomGenerator;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -154,6 +163,7 @@ public class BaseUnitTest {
         sections = new ArrayList<>();
         questions = new HashMap<>();
         organisations = new ArrayList<>();
+        randomGenerator = new Random();
     }
 
     public void loginDefaultUser(){
@@ -250,21 +260,33 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationWithRoles(){
-        createdApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.CREATED.getId(), ApplicationStatusConstants.CREATED.getName());
-        submittedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId(), ApplicationStatusConstants.SUBMITTED.getName());
-        approvedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
-        rejectedApplicationStatus = new ApplicationStatus(ApplicationStatusConstants.REJECTED.getId(), ApplicationStatusConstants.REJECTED.getName());
+        createdApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.CREATED.getId())).withName(ApplicationStatusConstants.CREATED.getName()).build();
+        submittedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.SUBMITTED.getId())).withName(ApplicationStatusConstants.SUBMITTED.getName()).build();
+        approvedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.APPROVED.getId())).withName(ApplicationStatusConstants.APPROVED.getName()).build();
+        rejectedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.REJECTED.getId())).withName(ApplicationStatusConstants.REJECTED.getName()).build();
+
+        ApplicationStatus createdApplicationStatus2 = newApplicationStatus().with(status -> status.setId(ApplicationStatusConstants.CREATED.getId())).withName(ApplicationStatusConstants.CREATED.getName()).build();
+        ApplicationStatus submittedApplicationStatus2 = newApplicationStatus().with(status -> status.setId(ApplicationStatusConstants.SUBMITTED.getId())).withName(ApplicationStatusConstants.SUBMITTED.getName()).build();
+        ApplicationStatus approvedApplicationStatus2 = newApplicationStatus().with(status -> status.setId(ApplicationStatusConstants.APPROVED.getId())).withName(ApplicationStatusConstants.APPROVED.getName()).build();
+        ApplicationStatus rejectedApplicationStatus2 = newApplicationStatus().with(status -> status.setId(ApplicationStatusConstants.REJECTED.getId())).withName(ApplicationStatusConstants.REJECTED.getName()).build();
 
         // Build the backing applications.
-        Application application1 = ApplicationBuilder.newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
-        Application application2 = ApplicationBuilder.newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
-        Application application3 = ApplicationBuilder.newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
-        Application application4 = ApplicationBuilder.newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).withStartDate(LocalDate.now().plusDays(50)).build();
-        ApplicationResource app1 = new ApplicationResource(application1);
-        ApplicationResource app2 = new ApplicationResource(application2);
-        ApplicationResource app3 = new ApplicationResource(application3);
-        ApplicationResource app4 = new ApplicationResource(application4);
-        Map<Long, ApplicationResource> idsToApplicationResources = asList(app1, app2, app3, app4).stream().collect(toMap(a -> a.getId(), a -> a));
+
+        List<ApplicationResource> applicationResources = asList(
+            newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).build(),
+            newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).build(),
+            newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).build(),
+            newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).build()
+        );
+
+        List<Application> applicationList = asList(
+            newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus2).build(),
+            newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus2).build(),
+            newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus2).build(),
+            newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus2).build()
+        );
+
+        Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
 
         Role role1 = new Role(1L, UserApplicationRole.LEAD_APPLICANT.getRoleName(), null);
         Role role2 = new Role(2L, UserApplicationRole.COLLABORATOR.getRoleName(), null);
@@ -277,81 +299,98 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application1).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
-        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(application1).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
-        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(application3).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
-        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(application4).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
-        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(application1).withUser(loggedInUser).withRole(role2).withOrganisation(organisation2).build();
-        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(application2).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
-        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(application3).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
-        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(application1).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(applicationList.get(2)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(applicationList.get(3)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation1).build();
+        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role2).withOrganisation(organisation2).build();
+        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
+        applicationList.forEach(competition::addApplication);
 
-        competition.addApplication(new Application(app1), new Application(app2), new Application(app3), new Application(app4));
 
-        app1.setCompetitionId(competition.getId());
-        app1.setProcessRoleIds(simpleMap(asList(processRole1, processRole5),ProcessRole::getId));
-        app2.setCompetitionId(competition.getId());
-        app2.setProcessRoleIds(simpleMap(singletonList(processRole2),ProcessRole::getId));
-        app3.setCompetitionId(competition.getId());
-        app3.setProcessRoleIds(simpleMap(asList(processRole3, processRole7, processRole8),ProcessRole::getId));
-        app4.setCompetitionId(competition.getId());
-        app4.setProcessRoleIds(simpleMap(singletonList(processRole4),ProcessRole::getId));
+        applicationList.get(0).setCompetition(competition);
+        applicationList.get(0).setProcessRoles(asList(processRole1, processRole5));
+        applicationList.get(1).setCompetition(competition);
+        applicationList.get(1).setProcessRoles(singletonList(processRole2));
+        applicationList.get(2).setCompetition(competition);
+        applicationList.get(2).setProcessRoles(asList(processRole3, processRole7, processRole8));
+        applicationList.get(3).setCompetition(competition);
+        applicationList.get(3).setProcessRoles(singletonList(processRole4));
+
+        applicationResources.get(0).setCompetitionId(competition.getId());
+        applicationResources.get(0).setProcessRoleIds(asList(processRole1.getId(), processRole5.getId()));
+        applicationResources.get(1).setCompetitionId(competition.getId());
+        applicationResources.get(1).setProcessRoleIds(singletonList(processRole2.getId()));
+        applicationResources.get(2).setCompetitionId(competition.getId());
+        applicationResources.get(2).setProcessRoleIds(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
+        applicationResources.get(3).setCompetitionId(competition.getId());
+        applicationResources.get(3).setProcessRoleIds(singletonList(processRole4.getId()));
 
         loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
-        users.get(1).addUserApplicationRole(processRole5);
-        applications = asList(app1, app2, app3, app4);
+        users.get(0).addUserApplicationRole(processRole5);
+        applications = applicationResources;
 
         when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
-        when(sectionService.getCompleted(app1.getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
-        when(sectionService.getInCompleted(app1.getId())).thenReturn(asList(3L, 4L));
-        when(processRoleService.findProcessRole(applicant.getId(), app1.getId())).thenReturn(processRole1);
-        when(processRoleService.findProcessRole(applicant.getId(), app2.getId())).thenReturn(processRole2);
-        when(processRoleService.findProcessRole(applicant.getId(), app3.getId())).thenReturn(processRole3);
-        when(processRoleService.findProcessRole(applicant.getId(), app4.getId())).thenReturn(processRole4);
-        when(processRoleService.findProcessRole(users.get(1).getId(), app1.getId())).thenReturn(processRole5);
-        when(processRoleService.findProcessRole(assessor.getId(), app2.getId())).thenReturn(processRole6);
-        when(processRoleService.findProcessRole(assessor.getId(), app3.getId())).thenReturn(processRole7);
-        when(processRoleService.findProcessRole(assessor.getId(), app1.getId())).thenReturn(processRole8);
+        when(sectionService.getCompleted(applicationList.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
+        when(sectionService.getInCompleted(applicationList.get(0).getId())).thenReturn(asList(3L, 4L));
+        when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(0).getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(1).getId())).thenReturn(processRole2);
+        when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(2).getId())).thenReturn(processRole3);
+        when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(3).getId())).thenReturn(processRole4);
+        when(processRoleService.findProcessRole(users.get(0).getId(), applicationList.get(0).getId())).thenReturn(processRole5);
+        when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(1).getId())).thenReturn(processRole6);
+        when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(2).getId())).thenReturn(processRole7);
+        when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(0).getId())).thenReturn(processRole8);
+
+		Map<Long, Set<Long>> completedMap = new HashMap<>();
+        completedMap.put(organisation1.getId(), new TreeSet<>());
+        completedMap.put(organisation2.getId(), new TreeSet<>());
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(0).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(1).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(2).getId())).thenReturn(completedMap);
 
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(idsToApplicationResources.get(pr.getApplication().getId())));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getById(app1.getId())).thenReturn(app1);
-        when(applicationService.getById(app2.getId())).thenReturn(app2);
-        when(applicationService.getById(app3.getId())).thenReturn(app3);
-        when(applicationService.getById(app4.getId())).thenReturn(app4);
-        when(organisationService.getUserOrganisation(app1, loggedInUser.getId())).thenReturn(Optional.of(organisation1));
-        when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
-        when(organisationService.getApplicationOrganisations(app1)).thenReturn(organisationSet);
-        when(organisationService.getApplicationOrganisations(app2)).thenReturn(organisationSet);
-        when(organisationService.getApplicationOrganisations(app3)).thenReturn(organisationSet);
-        when(organisationService.getApplicationOrganisations(app4)).thenReturn(organisationSet);
-        when(userService.isLeadApplicant(loggedInUser.getId(),app1)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(app1)).thenReturn(processRole1);
-        when(userService.getLeadApplicantProcessRoleOrNull(app2)).thenReturn(processRole2);
-        when(userService.getLeadApplicantProcessRoleOrNull(app3)).thenReturn(processRole3);
-        when(userService.getLeadApplicantProcessRoleOrNull(app4)).thenReturn(processRole4);
-        when(organisationService.getApplicationLeadOrganisation(app1)).thenReturn(Optional.of(organisation1));
-        when(organisationService.getApplicationLeadOrganisation(app2)).thenReturn(Optional.of(organisation1));
-        when(organisationService.getApplicationLeadOrganisation(app3)).thenReturn(Optional.of(organisation1));
-        when(organisationService.getOrganisationById(organisation1.getId())).thenReturn(organisation1);
+
+        when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
+        when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
+        when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
+        when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
+        when(organisationService.getUserOrganisation(applications.get(0), loggedInUser.getId())).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationOrganisations(applications.get(0))).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(applications.get(1))).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(applications.get(2))).thenReturn(organisationSet);
+        when(organisationService.getApplicationOrganisations(applications.get(3))).thenReturn(organisationSet);
+        when(userService.isLeadApplicant(loggedInUser.getId(),applications.get(0))).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3))).thenReturn(processRole4);
+        when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(applications.get(1))).thenReturn(Optional.of(organisation1));
+        when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
 
     }
 
     public void setupApplicationResponses(){
         ApplicationResource application = applications.get(0);
+        Application app = newApplication().build();
 
         ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
 
-        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), new Application(application));
-        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), new Application(application));
+        Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), app);
+        Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), app);
 
         List<Response> responses = asList(response, response2);
         userApplicationRole.setResponses(responses);
@@ -361,11 +400,19 @@ public class BaseUnitTest {
 
         when(responseService.getByApplication(application.getId())).thenReturn(responses);
 
+        ArgumentCaptor<Long> argument = ArgumentCaptor.forClass(Long.class);
+
+        when(formInputService.getOne(anyLong())).thenAnswer(invocation -> {
+            Object[] args = invocation.getArguments();
+            return newFormInput().with(id((Long) args[0])).build();
+        });
+
         List<FormInput> formInputs = questions.get(01L).getFormInputs();
         List<FormInputResponse> formInputResponses = newFormInputResponse().withFormInputs(formInputs).
                 with(idBasedValues("Value ")).build(formInputs.size());
 
         when(formInputResponseService.getByApplication(application.getId())).thenReturn(formInputResponses);
+        formInputResponses.stream().map(FormInputResponse::getFormInput).map(FormInput::getId).forEach(log::debug);
         formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponse -> formInputResponse.getFormInput().getId(), identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }

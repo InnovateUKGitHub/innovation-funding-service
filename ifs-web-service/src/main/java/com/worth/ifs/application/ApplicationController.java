@@ -42,19 +42,9 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
-        log.info("Application with id " + applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
-    }
-
-    @RequestMapping("/hateoas/{applicationId}")
-    public String applicationDetailsHateoas(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
-        log.info("HATEOAS Application with id " + applicationId);
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected, true);
-        return "application-details-hateoas";
     }
 
     @RequestMapping("/{applicationId}/section/{sectionId}")
@@ -177,7 +167,7 @@ public class ApplicationController extends AbstractApplicationController {
         super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
@@ -185,7 +175,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-        List<Question> questions = questionService.findByCompetition(application.getCompetitionId());
+        List<Question> questions = questionService.findByCompetition(application.getCompetition());
 
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), applicationId);
         QuestionStatus questionAssignee = questionAssignees.get(questionId);

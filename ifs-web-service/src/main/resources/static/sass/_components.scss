@@ -1,13 +1,13 @@
-//temp file for all the worth styles 
-//will be cut up in smaller pieces later 
+//temp file for all the worth styles
+//will be cut up in smaller pieces later
 
-//variables 
+//variables
 
 
 @import "compass/css3/transition";
 
 @import "layout/layout";
-/* 
+/*
 #Nomensa/Worth Elements
 
 ##1. List elements
@@ -20,23 +20,23 @@
 @import "components/list-overview";
 
 /*
-##2. Pie charts 
+##2. Pie charts
 */
 @import "components/pie-charts";
 
 /*
-##3. Progress-indicator 
+##3. Progress-indicator
 */
 @import "components/progress-indicator";
 
 /*
-##4. Event alert 
+##4. Event alert
 */
 @import "components/event-alert";
 @import "components/message-alerts";
 
-/* 
-##5. Extra form elements 
+/*
+##5. Extra form elements
 */
 @import "components/forms";
 
@@ -57,22 +57,22 @@
 
 /*
 ##9. Header
-*/ 
-@import "components/header"; 
+*/
+@import "components/header";
 
 /*
 ##10. Statuses
-*/ 
+*/
 @import "components/statusses";
 
 /*
 ##11. Modals
-*/ 
+*/
 @import "components/modal";
 
 /*
 ##12. Competition deadlines
-*/ 
+*/
 @import "components/competition-deadline";
 
 //Modifiers
@@ -82,6 +82,4 @@
 //to be documented
 @import "components/wysiwyg";
 @import "components/user-feedback";
-
-
-
+@import "components/invites";

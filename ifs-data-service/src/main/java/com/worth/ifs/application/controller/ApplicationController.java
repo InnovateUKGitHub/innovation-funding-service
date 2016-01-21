@@ -2,8 +2,9 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
@@ -14,7 +15,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +25,7 @@ import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Ser
 import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handleServiceFailure;
 import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handlingErrors;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.JsonStatusResponse.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -40,36 +41,30 @@ public class ApplicationController {
     @Autowired
     ApplicationService applicationService;
 
+    @Autowired
+    ApplicationMapper applicationMapper;
+
     private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
         new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> badRequest("Unable to find Application", response)),
         new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_SEND_NOTIFICATION), (serviceFailure, response) -> internalServerError("Unable to send Notification", response))
     );
 
-    @RequestMapping("/{id}")
-    public ApplicationResourceHateoas getApplicationByIdHateoas(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationByIdHateoas(id);
-
-    }
-
-    @RequestMapping("/hateoas/")
-    public Resources<ApplicationResourceHateoas> findAllHateoas() {
-        return applicationService.findAllHateoas();
-    }
-
     @RequestMapping("/normal/{id}")
     public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationById(id);
+        Application application = applicationService.getApplicationById(id);
+        ApplicationResource applicationResource = applicationMapper.mapApplicationToResource(application);
+        return applicationResource;
     }
 
 
     @RequestMapping("/")
     public List<ApplicationResource> findAll() {
-        return applicationService.findAll();
+        return simpleMap(applicationService.findAll(), applicationMapper::mapApplicationToResource);
     }
 
     @RequestMapping("/findByUser/{userId}")
     public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
-        return applicationService.findByUserId(userId);
+        return simpleMap(applicationService.findByUserId(userId), applicationMapper::mapApplicationToResource);
     }
 
     @RequestMapping("/saveApplicationDetails/{id}")
@@ -110,7 +105,7 @@ public class ApplicationController {
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role);
+        return simpleMap(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role), applicationMapper::mapApplicationToResource);
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
@@ -118,7 +113,7 @@ public class ApplicationController {
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
-        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj);
+        return applicationMapper.mapApplicationToResource(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj));
     }
 
     @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
