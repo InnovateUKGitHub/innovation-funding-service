@@ -1,6 +1,7 @@
 package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.transactional.QuestionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * QuestionController exposes question data and operations through a REST API.
@@ -23,27 +25,30 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
+    @Autowired
+    QuestionMapper questionMapper;
+
 
     @RequestMapping("/id/{id}")
     public Question getQuestionById(@PathVariable("id") final Long id) {
         return questionService.getQuestionById(id);
     }
 
-    @RequestMapping(value = "/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
+    @RequestMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public void markAsComplete(@PathVariable("questionId") final Long questionId,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         questionService.markAsComplete(questionId, applicationId, markedAsCompleteById);
     }
 
-    @RequestMapping(value = "/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
+    @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public void markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
         questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
-    @RequestMapping(value = "/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
+    @RequestMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public void assign(@PathVariable("questionId") final Long questionId,
                        @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
@@ -51,30 +56,30 @@ public class QuestionController {
         questionService.assign(questionId, applicationId, assigneeId, assignedById);
     }
 
-    @RequestMapping(value="/getMarkedAsComplete/{applicationId}/{organisationId}")
+    @RequestMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
     public Set<Long> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
         return questionService.getMarkedAsComplete(applicationId, organisationId);
     }
 
 
-    @RequestMapping(value = "/updateNotification/{questionStatusId}/{notify}")
+    @RequestMapping("/updateNotification/{questionStatusId}/{notify}")
     public void updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                    @PathVariable("notify") final Boolean notify) {
         questionService.updateNotification(questionStatusId, notify);
     }
 
-    @RequestMapping(value = "/findByCompetition/{competitionId}")
+    @RequestMapping("/findByCompetition/{competitionId}")
     public List<Question> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionService.findByCompetition(competitionId);
     }
 
-    @RequestMapping(value = "/getNextQuestion/{questionId}")
+    @RequestMapping("/getNextQuestion/{questionId}")
     public Question getNextQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getNextQuestion(questionId);
     }
 
-    @RequestMapping(value = "/getPreviousQuestionBySection/{sectionId}")
+    @RequestMapping("/getPreviousQuestionBySection/{sectionId}")
     public Question getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getPreviousQuestionBySection(sectionId);
     }
@@ -84,7 +89,7 @@ public class QuestionController {
         return questionService.getNextQuestionBySection(sectionId);
     }
 
-    @RequestMapping(value = "/getPreviousQuestion/{questionId}")
+    @RequestMapping("/getPreviousQuestion/{questionId}")
     public Question getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getPreviousQuestion(questionId);
     }
