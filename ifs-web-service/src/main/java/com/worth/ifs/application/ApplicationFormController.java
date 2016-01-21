@@ -12,10 +12,8 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -55,8 +53,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private CostService costService;
-    @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
+
 
 
     @RequestMapping

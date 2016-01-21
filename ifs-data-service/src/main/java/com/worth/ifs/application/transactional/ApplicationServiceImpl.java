@@ -336,7 +336,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
 
     @Override
-    public ObjectNode getProgressPercentageByApplicationId(final Long applicationId) {
+    public double getProgressPercentageByApplicationId(final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
         List<Question> questions = sections.stream()
@@ -368,10 +368,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         } else {
             percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
+        return percentageCompleted;
+    }
 
+    @Override
+    public ObjectNode getProgressPercentageNodeByApplicationId(final Long applicationId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("completedPercentage", percentageCompleted);
+        node.put("completedPercentage", getProgressPercentageByApplicationId(applicationId));
         return node;
     }
 

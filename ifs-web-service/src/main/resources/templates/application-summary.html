@@ -52,6 +52,8 @@
                         <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>
 
                         <div th:replace="question-type/types :: application_finances_summary"></div>
+                        <div th:replace="question-type/types :: research_participation_alert"></div>
+
                         <h2 class="heading-medium">Funding breakdown</h2>
                         <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
                     </div>

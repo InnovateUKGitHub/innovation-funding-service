@@ -27,6 +27,7 @@ public class CompetitionResource{
     private LocalDate endDate;
     private LocalDate assessmentStartDate;
     private LocalDate assessmentEndDate;
+    private Integer maxResearchRatio;
 
     public CompetitionResource() {
     }
@@ -158,5 +159,13 @@ public class CompetitionResource{
 
     public void setAssessmentStartDate(LocalDate assessmentStartDate){
         this.assessmentStartDate = assessmentStartDate;
+    }
+
+    public Integer getMaxResearchRatio() {
+        return maxResearchRatio;
+    }
+
+    public void setMaxResearchRatio(Integer maxResearchRatio) {
+        this.maxResearchRatio = maxResearchRatio;
     }
 }

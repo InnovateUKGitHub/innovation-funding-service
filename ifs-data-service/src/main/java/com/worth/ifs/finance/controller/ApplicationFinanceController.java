@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -29,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
+    public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -67,12 +70,11 @@ public class ApplicationFinanceController {
     }
 
     @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
-    public double getResearchParticipationPercentage(
-            @PathVariable("applicationId") final Long applicationId) {
-        List<ApplicationFinance> finances = applicationFinanceRepository.findByApplicationId(applicationId);
-        log.warn(String.format("Finances Size: %s", finances.size()));
-
-        return 0.0;
+    public ObjectNode getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put(RESEARCH_PARTICIPATION_PERCENTAGE, applicationFinanceHandler.getResearchParticipationPercentage(applicationId).doubleValue());
+        return node;
     }
 
     @RequestMapping("/add/{applicationId}/{organisationId}")

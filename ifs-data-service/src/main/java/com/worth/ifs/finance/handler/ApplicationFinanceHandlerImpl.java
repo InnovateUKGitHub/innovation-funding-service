@@ -7,11 +7,14 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -25,6 +28,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     @Autowired
     OrganisationFinanceHandler organisationFinanceHandler;
+
+    @Autowired
+    OrganisationRepository organisationRepository;
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
@@ -57,6 +63,28 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         return applicationFinanceResources;
     }
+
+    @Override
+    public BigDecimal getResearchParticipationPercentage(Long applicationId){
+        List<ApplicationFinanceResource> applicationFinanceResources = this.getApplicationTotals(applicationId);
+
+        BigDecimal totalCosts = applicationFinanceResources.stream()
+                .map(ApplicationFinanceResource::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        BigDecimal researchCosts = applicationFinanceResources.stream()
+                .filter(f ->
+                                OrganisationTypeEnum.isResearch(organisationRepository.findOne(f.getOrganisation()).getOrganisationType())
+                )
+                .map(ApplicationFinanceResource::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
+        researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));
+        return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
 
     protected void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         EnumMap<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());

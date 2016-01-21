@@ -12,9 +12,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -40,6 +39,9 @@ public abstract class AbstractApplicationController {
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    protected ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
     protected ResponseService responseService;
@@ -269,6 +271,8 @@ public abstract class AbstractApplicationController {
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
+
+        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()));
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {

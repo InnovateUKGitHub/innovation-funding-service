@@ -78,10 +78,9 @@ public class ApplicationController {
         return applicationService.saveApplicationDetails(id, application);
     }
 
-
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getProgressPercentageByApplicationId(applicationId);
+        return applicationService.getProgressPercentageNodeByApplicationId(applicationId);
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)

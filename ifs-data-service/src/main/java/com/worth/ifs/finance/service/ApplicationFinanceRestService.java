@@ -14,6 +14,7 @@ public interface ApplicationFinanceRestService {
     public ApplicationFinanceResource addApplicationFinanceForOrganisation(Long applicationId, Long organisationId);
     public ApplicationFinanceResource update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
     public ApplicationFinanceResource getById(Long applicationFinanceId);
+    public Double getResearchParticipationPercentage(Long applicationId);
     public ApplicationFinanceResource getFinanceDetails(Long applicationId, Long organisationId);
     public List<ApplicationFinanceResource> getFinanceTotals(Long applicationId);
 }

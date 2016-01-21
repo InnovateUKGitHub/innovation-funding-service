@@ -63,7 +63,10 @@ public interface ApplicationService {
     ResponseEntity<String> saveApplicationDetails(final Long id, ApplicationResource application);
 
     @NotSecured("TODO")
-    ObjectNode getProgressPercentageByApplicationId(final Long applicationId);
+    double getProgressPercentageByApplicationId(Long applicationId);
+
+    @NotSecured("TODO")
+    ObjectNode getProgressPercentageNodeByApplicationId(final Long applicationId);
 
     @NotSecured("TODO")
     ResponseEntity<String> updateApplicationStatus(final Long id,

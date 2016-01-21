@@ -21,8 +21,8 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -58,6 +58,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
@@ -70,6 +71,8 @@ public class BaseUnitTest {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    @Mock
+    public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
@@ -372,6 +375,7 @@ public class BaseUnitTest {
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
         when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(0.0);
     }
 
     public void setupAssessment(){

@@ -333,7 +333,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ObjectNode getProgressPercentageByApplicationId(Long applicationId) {
+        public double getProgressPercentageByApplicationId(Long applicationId) {
+            return 0;
+        }
+
+        @Override
+        public ObjectNode getProgressPercentageNodeByApplicationId(Long applicationId) {
             return null;
         }
 
