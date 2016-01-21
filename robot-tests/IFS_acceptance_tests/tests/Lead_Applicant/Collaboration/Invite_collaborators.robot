@@ -14,7 +14,7 @@ ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite
 
 *** Test Cases ***
-The lead applicant should be able to add a collaborator
+The lead applicant should be able to add/remove a collaborator
     [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
     And the applicant clicks the add person link
@@ -45,7 +45,7 @@ Validations for the Email field
 
 Validation for the name field
     [Documentation]    INFUND-901
-    [Tags]      Failing
+    [Tags]
     Given the applicant is in the invite contributors page
     When the applicant submits the page without entering a name
     Then the applicant should get a validation error for the name field
@@ -53,7 +53,7 @@ Validation for the name field
 
 Valid submit
     [Documentation]    INFUND-901
-    [Tags]              Failing
+    [Tags]
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page
@@ -61,7 +61,6 @@ Valid submit
 *** Keywords ***
 the applicant is in the invite contributors page
     go to    ${INVITE_COLLABORATORS_PAGE}
-
 
 the applicant clicks the add person link
     Click Element    jquery=li:nth-child(1) button:contains('Add person')
@@ -80,7 +79,7 @@ the user fills the name and email field
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    tester@test.com
-    Click Element    jquery=li:nth-child(1) button:contains('Add person')
+    focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
 the user reloads the page
@@ -88,7 +87,6 @@ the user reloads the page
 
 the user's inputs should still be visible
     Textfield Value Should Be    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    #Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    tester@test.com
     ${input_value} =    Get Value    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input
     Should Be Equal As Strings    ${input_value}    tester@test.com
 
@@ -117,15 +115,15 @@ the applicant submits the page without entering a name
     sleep    1s
 
 the applicant should get a validation error for the name field
-    Element Should Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .error
+    Element Should Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
 
 the applicant enters valid inputs
-    # Click Button        Remove
+    # Click Button    Remove
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 
 the applicant should be redirected to the overview page
-    Sleep   1s
+    Sleep    1s
     Page Should Contain    Application overview
