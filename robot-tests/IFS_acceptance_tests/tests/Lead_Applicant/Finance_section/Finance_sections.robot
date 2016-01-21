@@ -29,16 +29,16 @@ Guidance in the 'Your Finances' section
 
 *** Keywords ***
 the Applicant should see all the "Your Finance" Sections
-    Page Should Contain Element    css=h2:nth-child(1) button
-    Page Should Contain Element    css=h2:nth-child(3) button
-    Page Should Contain Element    css=h2:nth-child(5) button
-    Page Should Contain Element    css=h2:nth-child(7) button
-    Page Should Contain Element    css=h2:nth-child(9) button
-    Page Should Contain Element    css=h2:nth-child(11) button
-    Page Should Contain Element    css=h2:nth-child(13) button
+    Page Should Contain Element    css=.question section:nth-of-type(1) button
+    Page Should Contain Element    css=.question section:nth-of-type(2) button
+    Page Should Contain Element    css=.question section:nth-of-type(3) button
+    Page Should Contain Element    css=.question section:nth-of-type(4) button
+    Page Should Contain Element    css=.question section:nth-of-type(5) button
+    Page Should Contain Element    css=.question section:nth-of-type(6) button
+    Page Should Contain Element    css=.question section:nth-of-type(7) button
 
 the Applicant is in the Labour sub-section
-    Click Element    css=h2:nth-child(1) button
+    Click Element    css=.question section:nth-of-type(1) button
 
 the Applicant clicks the "Labour costs guidance"
     Click Element    css=#collapsible-1 summary
