@@ -19,7 +19,7 @@ public abstract class CostHandler {
     public CostHandler() {
     }
 
-    public CostHandler(List<CostField> costFields) {
-        this.costFields = costFields.stream().collect(Collectors.toMap(CostField::getTitle, Function.<CostField>identity()));
+    public void setCostFields(List<CostField> costFields) {
+        this.costFields =  costFields.stream().collect(Collectors.toMap(CostField::getTitle, Function.<CostField>identity()));;
     }
 }

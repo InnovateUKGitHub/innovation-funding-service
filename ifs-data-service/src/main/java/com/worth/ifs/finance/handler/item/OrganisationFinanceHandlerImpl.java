@@ -1,6 +1,8 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
@@ -30,6 +32,9 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
 
     @Autowired
     CostRepository costRepository;
+
+    @Autowired
+    CostFieldRepository costFieldRepository;
 
     @Override
     public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
@@ -83,6 +88,8 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
 
     public Cost costItemToCost(CostItem costItem) {
         CostHandler costHandler = getCostHandler(costItem.getCostType());
+        List<CostField> costFields = costFieldRepository.findAll();
+        costHandler.setCostFields(costFields);
         return costHandler.toCost(costItem);
     }
 

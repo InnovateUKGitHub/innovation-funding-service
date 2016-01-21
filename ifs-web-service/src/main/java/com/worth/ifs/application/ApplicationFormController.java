@@ -507,7 +507,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
-
+        log.info("STORNG FIELD");
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
@@ -522,16 +522,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void storeCostField(Long userId, Long applicationId ,String fieldName, String value) {
-        log.info("storeCostField "+fieldName);
+    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-        if (fieldName != null && value != null) {
+
+        if(fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
+            if(fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
             } else if(fieldName.startsWith("formInput[")) {
                 cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
             }
+            log.info("store field: " + cleanedFieldName + " val: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
         }
     }

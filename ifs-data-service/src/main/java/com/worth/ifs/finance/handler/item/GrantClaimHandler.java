@@ -14,11 +14,6 @@ public class GrantClaimHandler extends CostHandler {
     public static final String GRANT_CLAIM = "Grant Claim";
 
     @Override
-    public CostItem toCostItem(Cost cost) {
-        return null;
-    }
-
-    @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof GrantClaim) {
@@ -26,5 +21,10 @@ public class GrantClaimHandler extends CostHandler {
             return new Cost(grantClaim.getId(), "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
         }
         return cost;
+    }
+
+    @Override
+    public CostItem toCostItem(Cost cost) {
+        return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 }

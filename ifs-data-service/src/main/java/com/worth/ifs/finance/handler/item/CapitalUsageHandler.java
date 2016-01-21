@@ -4,6 +4,8 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 
@@ -12,6 +14,8 @@ import java.math.BigDecimal;
  * or for sending it over.
  */
 public class CapitalUsageHandler extends CostHandler {
+    private final Log log = LogFactory.getLog(getClass());
+
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
     public static final String COST_FIELD_UTILISATION = "utilisation";

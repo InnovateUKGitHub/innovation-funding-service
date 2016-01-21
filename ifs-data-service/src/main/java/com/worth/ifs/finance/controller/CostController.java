@@ -61,12 +61,12 @@ public class CostController {
         Question question = questionRepository.findOne(questionId);
         Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
         costRepository.save(cost);
+
     }
 
     @RequestMapping("/update/{id}")
     public void update(@PathVariable("id") final Long id,
             @RequestBody final CostItem newCostItem) {
-        log.info("TRABEL");
         if(id!=null && costRepository.exists(id)) {
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(id, newCost);
