@@ -91,6 +91,21 @@ public class ApplicationController {
     }
 
 
+    public Boolean applicationReadyForSubmit(@RequestParam("applicationId") final Long id){
+        double progress = applicationService.getProgressPercentageByApplicationId(id);
+//        ObjectMapper mapper = new ObjectMapper();
+//        ObjectNode node = mapper.createObjectNode();
+//        node.put("completedPercentage", progress);
+//        return node;
+
+        // check all marked as complete
+        // check finance participation costs
+
+        return true;
+
+    }
+
+
     @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
