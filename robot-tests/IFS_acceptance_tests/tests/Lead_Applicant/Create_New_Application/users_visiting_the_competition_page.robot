@@ -53,14 +53,14 @@ the Applicant will redirect to the "Your Details" page
     Page Should Not Contain Element    css=.error
 
 the Applicant will input incorrect login details
-    Input Text    id=id_email    steve.smith@empire.com
-    Input Password    id=id_password    abcd
-    Click Button    css=input.button
+    Input Text    id=username    steve.smith@empire.com
+    Input Password    id=password    abcd
+    Click Button    css=button[name="_eventId_proceed"]
 
 the Applicant will input correct login details
-    Input Text    id=id_email    steve.smith@empire.com
-    Input Password    id=id_password    test
-    Click Button    css=input.button
+    Input Text    id=username    steve.smith@empire.com
+    Input Password    id=password    test
+    Click Button    css=button[name="_eventId_proceed"]
 
 the applicant is logged-out
     go to    ${LOG_OUT}

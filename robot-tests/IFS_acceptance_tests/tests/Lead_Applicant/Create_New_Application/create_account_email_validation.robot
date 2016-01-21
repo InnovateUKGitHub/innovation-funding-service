@@ -90,7 +90,7 @@ the user should see an error
 the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${invalid_email_addy}
-    Input Password    id=id_password    password
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${invalid_email_addy}
+    Input Password    id=password    password
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified

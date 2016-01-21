@@ -1,10 +1,18 @@
 package com.worth.ifs.idp.controller;
 
 import com.worth.ifs.authentication.resource.CreateUserResource;
+import com.worth.ifs.authentication.resource.CreateUserResponse;
+import com.worth.ifs.authentication.resource.IdentityProviderError;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,10 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.naming.Name;
 import javax.naming.directory.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.UUID;
 
-import static com.worth.ifs.util.JsonStatusResponse.created;
 import static com.worth.ifs.util.JsonStatusResponse.ok;
+import static java.util.Collections.emptyList;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -32,10 +43,24 @@ public class IdpStubController {
     private LdapTemplate ldapTemplate;
 
     @RequestMapping(method = POST, produces = "application/json")
-    public JsonStatusResponse createUser(@RequestBody CreateUserResource createUserRequest, HttpServletResponse response) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserResource createUserRequest, HttpServletResponse response) {
+
+        AndFilter filter = new AndFilter();
+        filter.and(new EqualsFilter("objectclass", "inetOrgPerson"));
+        filter.and(new WhitespaceWildcardsFilter("mail", createUserRequest.getEmailAddress()));
+
+        LdapQueryBuilder query = LdapQueryBuilder.query();
+        query.filter(filter);
+
+        List<String> results = ldapTemplate.search(query, (AttributesMapper<String>) attributes -> attributes.toString());
+
+        if (!results.isEmpty()) {
+            return new ResponseEntity<>(new IdentityProviderError("DUPLICATE_EMAIL_ADDRESS", emptyList()), CONFLICT);
+        }
+
         String uid = UUID.randomUUID().toString();
         create(createUserRequest, uid);
-        return created(uid, response);
+        return new ResponseEntity<>(new CreateUserResponse(uid), CREATED);
     }
 
     @RequestMapping(value = "/{uid}", method = PUT, produces = "application/json")

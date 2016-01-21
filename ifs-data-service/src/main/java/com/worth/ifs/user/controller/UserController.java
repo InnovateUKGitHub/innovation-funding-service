@@ -53,7 +53,7 @@ public class UserController {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String handleException(Exception e) {
-        log.error(e.getStackTrace());
+        log.error(e);
         return "return error object instead";
     }
 

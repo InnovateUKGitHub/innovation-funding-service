@@ -65,10 +65,10 @@ the user is not logged-in
     Element Should Not Be Visible    link=Logout
 
 the guest user inserts correct username
-    Input Text    id=id_email    steve.smith@empire.com
+    Input Text    id=username    steve.smith@empire.com
 
 the guest user inserts wrong password
-    Input Password    id=id_password    testtest
+    Input Password    id=password    testtest
 
 the guest user should get an error message
     Element Should Be Visible    css=.error-message
@@ -76,14 +76,14 @@ the guest user should get an error message
 
 the guest user inserts applicant user name
     [Arguments]    ${email}
-    Input Text    id=id_email    ${email}
+    Input Text    id=username    ${email}
 
 the user inserts password
     [Arguments]    ${password}
-    Input Password    id=id_password    ${password}
+    Input Password    id=password    ${password}
 
 the guest user clicks the log-in button
-    Click Button    css=input.button
+    Click Button    css=button[name="_eventId_proceed"]
 
 the user should be logged in
     Element Should Be Visible    link=Logout

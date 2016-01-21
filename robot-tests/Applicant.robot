@@ -111,22 +111,22 @@ the user is not logged-in
     Element Should Not Be Visible    link=Logout
 
 the guest user inserts correct username
-    Input Text    id=id_email    applicant@applicant.org
+    Input Text    id=username    applicant@applicant.org
 
 the guest user inserts wrong password
-    Input Password    id=id_password    testtest
+    Input Password    id=password    testtest
 
 the guest user should get an error message
     Element Should Be Visible    id=error-summary-heading-example-1
 
 the guest user inserts applicant user name
-    Input Text    id=id_email    applicant@innovate.org
+    Input Text    id=username    applicant@innovate.org
 
 the user inserts password
-    Input Password    id=id_password    test
+    Input Password    id=password    test
 
 the guest user clicks the log-in button
-    Click Button    css=input.button
+    Click Button    css=button[name="_eventId_proceed"]
 
 the guest user should be logged-in as Applicant and redirected to the My applications page
     Element Should Be Visible    link=Logout

@@ -243,52 +243,52 @@ the user should see an error
 
 the user cannot login with their new details
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified
 
 the user cannot login with the invalid email
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${invalid_email}
-    Input Password    id=id_password    ${correct_password}
+    Input Text    id=username    ${invalid_email}
+    Input Password    id=password    ${correct_password}
     Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    The username you entered cannot be identified
 
 the user cannot login with the short password
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${short_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${short_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified
 
 the user cannot login with the long password
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${long_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${long_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified
 
 the user cannot login with either password
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${incorrect_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${incorrect_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    The username you entered cannot be identified
 
 the user should be redirected to the login page
     go to    ${LOGIN_URL}
 
 the user can login with their new details
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Not Contain     something has gone wrong
 
 the user can logout

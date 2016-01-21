@@ -3,7 +3,7 @@ ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
 ${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
-${LOGIN_URL}      ${SERVER}/login
+${LOGIN_URL}      ${SERVER}/
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11

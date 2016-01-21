@@ -69,9 +69,9 @@ the field of the public description question should be disabled
 
 the Collaborator is in the public description section
     The guest user opens the browser
-    Input Text    id=id_email    jessica.doe@ludlow.co.uk
-    Input Password    id=id_password    test
-    Click Element    css=input.button
+    Input Text    idid_email    jessica.doe@ludlow.co.uk
+    Input Password    id=password    test
+    Click Element    css=button[name="_eventId_proceed"]
     Applicant goes to the 'public description' question
 
 the Collaborator gets the assigned notification
@@ -87,9 +87,9 @@ the public description question should not be editable
 
 the second Collaborator is logged in
     The guest user opens the browser
-    Input Text    id=id_email    pete.tom@egg.com
-    Input Password    id=id_password    test
-    Click Element    css=input.button
+    Input Text    id=username    pete.tom@egg.com
+    Input Password    id=password    test
+    Click Element    css=button[name="_eventId_proceed"]
 
 the public description question should be assigned to the collaborator
     Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count

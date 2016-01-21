@@ -9,7 +9,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${find_org_on_company_house_url}    ${SERVER_BASE}/application/create/find-business
+${find_org_on_company_house_url}    ${PROTOCOL}${SERVER_BASE}/application/create/find-business
 ${address_street_line_one}    The East Wing
 ${address_street_line_two}    Popple Manor
 ${address_street_line_three}    1, Popple Boulevard
