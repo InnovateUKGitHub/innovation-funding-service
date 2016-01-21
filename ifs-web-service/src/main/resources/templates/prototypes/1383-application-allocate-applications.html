@@ -35,22 +35,23 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${(param.title != null ? param.title[0] : 'Example application')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${(param.assessorName != null ? param.assessorName[0] : 'John Smith')})" th:remove="tag" />
 
 	<section class="boxed">
-		<h2 class="heading-medium no-margin">Challenge area</h2>
-		<h3 class="heading-small no-margin">Innovation area</h3>
+		<h2 class="heading-small no-margin">Challenge area</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
+
+        <h2 class="heading-small no-margin">Skills</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
         <div class="grid-row">
-            <div class="column-third">
-                <p>Project cost <br /><span class="heading-medium">£500,000</span></p>
+            <div class="column-half">
+            	<h2 class="heading-small no-margin">Area</h2>
+                <p th:text="${(param.assessorType != null ? param.assessorType[0] : 'Industry')}">AREA</p>
             </div>
-            <div class="column-third">
-                <p>Grant request <br /><span class="heading-medium">£300,000</span></p>
-            </div>
-            <div class="column-third">
-                <p>Other public sector funding <br /><span class="heading-medium">£20,000</span></p>
+            <div class="column-half">
+                <h2 class="heading-small no-margin">S.M.A.R.T</h2>
+                <p>Yes</p>
             </div>
         </div>
     </section>
@@ -65,11 +66,11 @@
 
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-	<h2 class="heading-large" id="current-assessors">Assign assessors</h2>
+	<h2 class="heading-large" id="current-assessors">Assign applications</h2>
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-list-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:with="applicationAssign='yes'" th:remove="tag" />
 	
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 
@@ -95,7 +96,6 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-
 	// ]]>
 	</script>
 </body>
