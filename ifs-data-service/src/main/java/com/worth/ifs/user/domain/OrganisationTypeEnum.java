@@ -25,7 +25,6 @@ public enum OrganisationTypeEnum {
     private final Long organisationTypeId;
     private final OrganisationTypeEnum parentOrganisationType;
 
-
     OrganisationTypeEnum(int organisationTypeId, OrganisationTypeEnum parent) {
         this.organisationTypeId = Long.valueOf(organisationTypeId);
         this.parentOrganisationType = parent;
@@ -39,7 +38,11 @@ public enum OrganisationTypeEnum {
     }
 
     public static boolean isResearch(OrganisationType organisationType){
-        return isResearch(getFromId(organisationType.getId()));
+        if(organisationType!=null) {
+            return isResearch(getFromId(organisationType.getId()));
+        } else {
+            return false;
+        }
     }
 
     public Long getOrganisationTypeId() {

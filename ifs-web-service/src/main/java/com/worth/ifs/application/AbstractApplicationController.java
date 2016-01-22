@@ -245,10 +245,7 @@ public abstract class AbstractApplicationController {
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(application.getId(), userId);
-        log.debug(String.format("Organisation with id %s", applicationFinanceResource.getOrganisation()));
         Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
-        log.debug(String.format("Organisation with name %s", organisation.getName()));
-        log.debug(String.format("Organisation with type %s", organisation.getOrganisationType().toString()));
         model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
         model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
         model.addAttribute("organisationType", organisation.getOrganisationType());
