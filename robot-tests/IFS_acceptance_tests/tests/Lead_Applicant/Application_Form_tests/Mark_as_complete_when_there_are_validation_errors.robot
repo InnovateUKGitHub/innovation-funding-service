@@ -22,7 +22,8 @@ Verify that the user can't mark as complete empty text areas
 
 Verify that the user doesn't get the error when the text area is not empty anymore
     [Documentation]    -INFUND-406
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant    Validations      Pending
+    # Pending until fix of INFUND-1542
     Given Applicant goes to the Project summary of the new application
     When the "Project Summary" question is empty
     And the applicant marks the public description question as complete
