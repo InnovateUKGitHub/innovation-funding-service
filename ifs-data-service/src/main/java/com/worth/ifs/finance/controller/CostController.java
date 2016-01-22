@@ -6,10 +6,13 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.CostValueRepository;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,9 @@ public class CostController {
     @Autowired
     CostValueRepository costValueRepository;
 
+    @Autowired
+    OrganisationFinanceHandler organisationFinanceHandler;
+
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
     public void add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
@@ -55,12 +61,14 @@ public class CostController {
         Question question = questionRepository.findOne(questionId);
         Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
         costRepository.save(cost);
+
     }
 
     @RequestMapping("/update/{id}")
     public void update(@PathVariable("id") final Long id,
-            @RequestBody final Cost newCost) {
+            @RequestBody final CostItem newCostItem) {
         if(id!=null && costRepository.exists(id)) {
+            Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(id, newCost);
             Cost savedCost = costRepository.save(updatedCost);
 
@@ -69,7 +77,6 @@ public class CostController {
                 .filter(c -> c.getValue() != null)
                 .filter(c -> !c.getValue().equals("null"))
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
-
         } else {
             log.info("DOES NOT EXIST");
         }

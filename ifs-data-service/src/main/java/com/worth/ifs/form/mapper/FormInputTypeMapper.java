@@ -6,13 +6,9 @@ import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
-    config = GlobalMapperConfig.class,
-    uses = {
-
-    }
+    config = GlobalMapperConfig.class
 )
 public abstract class FormInputTypeMapper {
 
@@ -22,7 +18,6 @@ public abstract class FormInputTypeMapper {
     public abstract FormInputTypeResource mapFormInputTypeToResource(FormInputType object);
 
     public abstract FormInputType resourceToFormInputType(FormInputTypeResource resource);
-
 
     public Long mapFormInputTypeToId(FormInputType object) {
         if (object == null) {
@@ -35,10 +30,4 @@ public abstract class FormInputTypeMapper {
         return repository.findOne(id);
     }
 
-    public Long mapFormInputTypeResourceToId(FormInputTypeResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -12,9 +12,9 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -53,8 +54,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private CostService costService;
-    @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
+
 
     @Autowired
     private FormInputService formInputService;
@@ -85,17 +85,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @ProfileExecution
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
+        StopWatch stopWatch = new StopWatch("Call services");
+        stopWatch.start("showQuestion.services");
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
 
+        StopWatch stopWatch2 = new StopWatch("Add form attributes");
+        stopWatch2.start("showQuestion.addFormAttributes");
         this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -108,8 +117,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
+        StopWatch stopWatch1 = new StopWatch("add application details");
+        stopWatch1.start("addFormAttributes.addApplicationDetails");
         super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
+        stopWatch1.stop();
+        log.info(stopWatch1.prettyPrint());
+        StopWatch stopWatch2 = new StopWatch("add navigation");
+        stopWatch2.start("addFormAttributes.addNavigation");
+
         addNavigation(question, applicationId, model);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
         model.addAttribute("currentQuestion", question);
     }
 
@@ -293,7 +311,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
@@ -489,14 +507,13 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
-
+        log.info("STORNG FIELD");
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
             FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
             financeFormHandler.ajaxUpdateFinancePosition(request, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-
             storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
@@ -505,16 +522,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void storeCostField(Long userId, Long applicationId ,String fieldName, String value) {
-        log.info("storeCostField "+fieldName);
+    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-        if (fieldName != null && value != null) {
+
+        if(fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
+            if(fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
             } else if(fieldName.startsWith("formInput[")) {
                 cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
             }
+            log.info("store field: " + cleanedFieldName + " val: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
         }
     }

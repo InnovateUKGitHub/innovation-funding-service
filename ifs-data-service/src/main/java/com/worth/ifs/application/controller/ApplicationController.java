@@ -1,14 +1,18 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -38,8 +42,17 @@ import static java.util.Collections.singletonList;
 @RequestMapping("/application")
 public class ApplicationController {
 
+    public static final String READY_FOR_SUBMIT = "readyForSubmit";
+    public static final String PROGRESS = "progress";
+    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
+    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
+    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
+    @Autowired
+    ApplicationFinanceHandler applicationFinanceHandler;
     @Autowired
     ApplicationService applicationService;
+    @Autowired
+    SectionService sectionService;
 
     @Autowired
     ApplicationMapper applicationMapper;
@@ -73,10 +86,9 @@ public class ApplicationController {
         return applicationService.saveApplicationDetails(id, application);
     }
 
-
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getProgressPercentageByApplicationId(applicationId);
+        return applicationService.getProgressPercentageNodeByApplicationId(applicationId);
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
@@ -84,6 +96,32 @@ public class ApplicationController {
                                                           @RequestParam("statusId") final Long statusId) {
 
         return applicationService.updateApplicationStatus(id, statusId);
+    }
+
+
+    @RequestMapping("/applicationReadyForSubmit/{applicationId}")
+    public ObjectNode applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
+        Application application = applicationService.getApplicationById(id);
+        Competition competition = application.getCompetition();
+        double progress = applicationService.getProgressPercentageByApplicationId(id);
+        double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
+        boolean allSectionsComplete = sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null);
+
+        boolean readyForSubmit = false;
+        if(allSectionsComplete &&
+                progress == 100 &&
+                researchParticipation <= competition.getMaxResearchRatio()){
+            readyForSubmit = true;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put(READY_FOR_SUBMIT, readyForSubmit);
+        node.put(PROGRESS, progress);
+        node.put(RESEARCH_PARTICIPATION,researchParticipation);
+        node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <=competition.getMaxResearchRatio()) );
+        node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
+        return node;
     }
 
 

@@ -7,7 +7,6 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -24,6 +23,7 @@ public abstract class ResponseMapper {
     ResponseRepository repository;
 
     public abstract ResponseResource mapResponseToResource(Response object);
+
     public abstract Response resourceToResponse(ResponseResource resource);
 
     public Long responseToId(Response object) {

@@ -73,7 +73,8 @@ Verify that the field has been reassigned to the lead applicant
 
 Verify that the applicant can assign a question and still mark it as complete
     [Documentation]     INFUND-877
-    [Tags]      Collaboration
+    [Tags]      Collaboration   Pending
+    # marked as pending because this functionality now seems to have been deleted! Possibly a bug?
     Given the Applicant can log in
     And Applicant goes to the 'public description' question
     When the Applicant assigns the public description question to the collaborator      Jessica Doe

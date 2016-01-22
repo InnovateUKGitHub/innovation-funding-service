@@ -20,16 +20,14 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -76,6 +74,8 @@ public class BaseUnitTest {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    @Mock
+    public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
@@ -125,11 +125,11 @@ public class BaseUnitTest {
     public List<Assessment> assessments;
     public List<ProcessRole> assessorProcessRoles;
     public List<Assessment> submittedAssessments;
+    public ApplicationFinanceResource applicationFinanceResource;
     public ApplicationStatusResource submittedApplicationStatus;
     public ApplicationStatusResource createdApplicationStatus;
     public ApplicationStatusResource approvedApplicationStatus;
     public ApplicationStatusResource rejectedApplicationStatus;
-    public ApplicationFinance applicationFinance;
     public List<ProcessRole> processRoles;
     private Random randomGenerator;
 
@@ -290,7 +290,9 @@ public class BaseUnitTest {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
 
         Organisation organisation1 = new Organisation(1L, "Empire Ltd");
+        organisation1.setOrganisationType(new OrganisationType("Business", null));
         Organisation organisation2 = new Organisation(2L, "Ludlow");
+        organisation2.setOrganisationType(new OrganisationType("Research", null));
         organisations = asList(organisation1, organisation2);
         Comparator<Organisation> compareById = Comparator.comparingLong(Organisation::getId);
         organisationSet = new TreeSet<>(compareById);
@@ -357,10 +359,12 @@ public class BaseUnitTest {
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(idsToApplicationResources.get(pr.getApplication().getId())));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
+        when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getUserOrganisation(applications.get(0), loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(applications.get(0))).thenReturn(organisationSet);
@@ -415,11 +419,10 @@ public class BaseUnitTest {
 
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
-        Application app = newApplication().build();
-
-        applicationFinance = new ApplicationFinance(1L, app, organisations.get(0));
-        when(financeService.getApplicationFinances(application.getId())).thenReturn(singletonList(applicationFinance));
-        when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinance);
+        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
+        when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(0.0);
     }
 
     public void setupAssessment(){

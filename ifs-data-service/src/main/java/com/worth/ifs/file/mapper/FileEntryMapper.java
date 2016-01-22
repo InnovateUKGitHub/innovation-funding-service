@@ -5,9 +5,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -24,8 +22,6 @@ public abstract class FileEntryMapper {
 
     public abstract FileEntry resourceToFileEntry(FileEntryResource resource);
 
-    public static final FileEntryMapper FileEntryMAPPER = Mappers.getMapper(FileEntryMapper.class);
-
     public Long mapFileEntryToId(FileEntry object) {
         if (object == null) {
             return null;
@@ -35,12 +31,5 @@ public abstract class FileEntryMapper {
 
     public FileEntry mapIdToFileEntry(Long id) {
         return repository.findOne(id);
-    }
-
-    public Long mapFileEntryResourceToId(FileEntryResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
     }
 }

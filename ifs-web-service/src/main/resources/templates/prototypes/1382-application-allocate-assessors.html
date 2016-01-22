@@ -21,7 +21,7 @@
 	</div>
 
 </head>
-<body class="comp-assessors">
+<body th:class="${(param.fullWidth == null ? 'comp-assessors' : 'comp-assessors full-width')}">
 
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
@@ -60,6 +60,10 @@
     <div th:include="prototypes/fragments/comp-admin :: prototype-assessor-assigned-table" th:remove="tag" />
 
     <p class="extra-margin" id="no-assessors">No assessors are currently assigned to this application</p>
+	
+	<div class="alignright-button extra-margin" style="display: none" id="added-assessors">
+		<a href="/prototypes/1381-application-allocation?sendAssignments" class="button button=large">Continue</a>
+	</div>
 
     <hr />
 

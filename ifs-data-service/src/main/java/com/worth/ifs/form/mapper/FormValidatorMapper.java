@@ -6,7 +6,6 @@ import com.worth.ifs.form.repository.FormValidatorRepository;
 import com.worth.ifs.form.resource.FormValidatorResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -34,10 +33,4 @@ public abstract class FormValidatorMapper {
         return repository.findOne(id);
     }
 
-    public Long mapFormValidatorResourceToId(FormValidatorResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }
