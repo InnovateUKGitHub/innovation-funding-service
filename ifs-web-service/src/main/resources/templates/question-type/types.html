@@ -308,7 +308,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads" th:remove="tag">
         <p th:text="${question.getDescription()}" />
-        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},overheadCosts=${costCategory?.costs[0]}">
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},overheadCosts=${costCategory?.costs[0]},type=${formInputType.title}">
             <div class="grid-row form-group">
                 <strong class="column-half">
                     20% of labour costs
@@ -318,66 +318,132 @@
                                             data-calculation-operations="" />
                 </strong>
             </div>
-            <fieldset>
-                <legend>Do you choose to accept this rate?</legend>
+            <fieldset th:with="overheadRate=${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}">
+                <legend></legend>
                 <div class="form-group">
-                  <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}">
-                      <input th:id="${overheadCosts.id+'-acceptRate_0'}"
+                  <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_0'}" data-target="overhead-none">
+                      <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_0'}"
                              type="radio"
-                             th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
-                             value="Yes"
-                             th:checked="${overheadCosts?.acceptRate == 'Yes'}" />
-                      20% of labour costs
+                             th:name="'overheads-rateType-'+${overheadCosts?.id}"
+                             th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE}"
+                             th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)}" />
+                      No administration support funding
                   </label>
-                  <label class="block-label" th:for="${overheadCosts.id+'-acceptRate_1'}" data-target="customRate">
-                      <input th:id="${overheadCosts.id+'-acceptRate_1'}"
-                             type="radio"
-                             th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
-                             value="No"
-                             th:checked="${overheadCosts?.acceptRate == 'No'}" />
-                          Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)
-                  </label>
-                  <div class="panel-indent js-hidden">
-                      <div class="form-group">
-                          <label class="form-label" th:for="${overheadCosts.id+'-customRate'}">Overhead rate</label>
-                          <input type="text"
-                                 th:name="'overheads-customRate-'+${overheadCosts?.id}"
-                                 th:id="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}"
-                                 data-calculation-input="overhead-rate"
-                                 class="form-control form-control-1-8"
-                                 th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" /> %
-                      </div>
-                      <div class="form-group">
-                          <label class="form-label" th:for="${overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
-                          <input type="text"
-                                 th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
-                                 th:id="${'section-total-'+subSection.id}"
-                                 class="form-control"
-                                 readonly="readonly"
-                                 data-calculation-operations=""
-                                 data-calculation-input="overhead-calculated"
-                                 th:value="'£ 0'"/>
-                      </div>
-                  </div>
+                    <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_1'}"  data-target="overhead-default-percentage">
+                        <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_1'}"
+                               type="radio"
+                               th:name="'overheads-rateType-'+${overheadCosts?.id}"
+                               th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"
+                               th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}" />
+                        20% of labour costs
+                    </label>
+                    <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
+                        <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_2'}"
+                               type="radio"
+                               th:name="'overheads-rateType-'+${overheadCosts?.id}"
+                               th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
+                               th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}" />
+                        Custom administration support cost
+                    </label>
+                    <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_3'}" data-target="overhead-special-rate">
+                        <input th:id="${'cost-'+ type + '-'+overheadCosts.id+'-rateType_3'}"
+                               type="radio"
+                               th:name="'overheads-rateType-'+${overheadCosts?.id}"
+                               th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE}"
+                               th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)}" />
+                        Special rate agreed with Innovate UK
+                    </label>
               </div>
             </fieldset>
 
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total overhead costs
-                    <input type="text"
-                           th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
-                           class="form-control form-control-1-4 alignright"
-                           readonly="readonly"
-                           th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
-                           data-calculation-operations="*"
-                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                           th:value="''"
-                           />
 
-                </label>
+            <div id="overhead-none">
+                <h3 class="heading-medium">No Administration support cost funding</h3>
+                <p>You are not currently applying for administration support cost funding</p>
             </div>
+            <div id="overhead-default-percentage">
+                <h3 class="heading-medium">20% of labour costs</h3>
+                <div class="form-group form-group--align-right alignright">
+                    <label>
+                        Total administration support cost
+                        <input type="text"
+                               th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id}"
+                               th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts.id+'-customRate'},data-calculation-rawvalue=${overheadCosts.getTotal()}"
+                               data-calculation-operations="/,*"
+                               th:value="'£ ' + ${#numbers.formatDecimal(overheadCosts?.getTotal(),0,0)}"
+                                />
+
+                    </label>
+                </div>
+            </div>
+
+            <div id="overhead-custom-percentage">
+                <h3 class="heading-medium">Custom administration support costs</h3>
+                <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.</p>
+                <div class="form-group alignright">
+                    <label>
+                        Rate calculated (%)
+                        <input type="text"
+                               th:name="'overheads-customRate-'+${overheadCosts?.id}"
+                               th:id="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}"
+                               data-calculation-input="overhead-rate"
+                               class="form-control form-control-1-4 alignright"
+                               th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" />
+                    </label>
+                </div>
+                <div class="form-group form-group--align-right alignright">
+                    <label>
+                        Total administration support cost
+                        <input type="text"
+                               th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id}"
+                               th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts.id+'-customRate'},data-calculation-rawvalue=${overheadCosts.getTotal()}"
+                               data-calculation-operations="/,*"
+                               th:value="'£ ' + ${#numbers.formatDecimal(overheadCosts?.getTotal(),0,0)}"
+                                />
+
+                    </label>
+                </div>
+            </div>
+
+            <div id="overhead-special-rate">
+                <h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
+                <p>I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
+                <div class="form-group alignright">
+                    <label>
+                        Rate agreed with Innovate UK (%)
+                        <input type="text"
+                               th:name="'overheads-agreedRate-'+${overheadCosts?.id}"
+                               th:id="${'cost-'+ type + '-'+overheadCosts.id+'-agreedRate'}"
+                               data-calculation-input="overhead-agreedRate"
+                               class="form-control form-control-1-4 alignright"
+                               th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getAgreedRate(),0,0)}" />
+                    </label>
+                </div>
+                <div class="form-group form-group--align-right alignright">
+                    <label>
+                        Total administration support cost
+                        <input type="text"
+                               th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id}"
+                               th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts.getTotal()}"
+                               data-calculation-operations="/,*"
+                               th:value="'£ ' + ${#numbers.formatDecimal(overheadCosts?.getTotal(),0,0)}"
+                                />
+                        <!--data-calculation-fields=""-->
+
+                    </label>
+                </div>
+            </div>
+
+
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>

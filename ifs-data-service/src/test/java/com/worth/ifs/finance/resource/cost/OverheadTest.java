@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.worth.ifs.finance.resource.cost.Overhead;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,22 +9,24 @@ import static org.junit.Assert.assertEquals;
 
 public class OverheadTest {
     private Long id;
-    private String acceptRate;
+    private OverheadRateType rateType;
     private Integer customRate;
     private Overhead overhead;
+    private BigDecimal agreedRate;
 
     @Before
     public void setUp() throws Exception {
+        rateType = OverheadRateType.NONE;
         id = 0L;
-        acceptRate = "Yes";
         customRate = 200;
-        overhead = new Overhead(id, acceptRate, customRate);
+        agreedRate = new BigDecimal(25);
+        overhead = new Overhead(id, rateType, customRate, agreedRate);
     }
 
     @Test
     public void overheadShouldReturnCorrectBaseAttributesTest() throws Exception {
         assert(overhead.getId().equals(id));
-        assert(overhead.getAcceptRate().equals(acceptRate));
+        assert(overhead.getRateType().equals(rateType));
         assert(overhead.getCustomRate().equals(customRate));
     }
 
