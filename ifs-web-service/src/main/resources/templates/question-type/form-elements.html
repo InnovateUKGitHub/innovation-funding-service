@@ -321,8 +321,8 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<div th:fragment="form-mark-as-complete-buttons"> 
-    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser?.getId()))}"
+<div th:fragment="form-mark-as-complete-buttons">
+    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
             th:value="${question.getId()}"
