@@ -236,7 +236,7 @@
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
             <!--  we show mark as complete buttons and the question should be assigned to you or-->
-            <div th:unless="${!userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+            <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
         </div>
     </div>
@@ -321,13 +321,8 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<div th:fragment="form-mark-as-complete-buttons">
-    <!--/*
-            TODO: the marks as complete button is hidden when in readonly,
-            this because the controller on the readonly pages doesn't handle mark as complete yet,
-            if the controller is fixed remove 'hidden' from th:class
-     */-->
-    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
+<div th:fragment="form-mark-as-complete-buttons"> 
+    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser?.getId()))}"
             type="submit"
             name="mark_as_complete"
             th:value="${question.getId()}"
