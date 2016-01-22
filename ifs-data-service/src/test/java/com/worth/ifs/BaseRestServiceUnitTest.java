@@ -1,5 +1,8 @@
 package com.worth.ifs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.jdbc.AssertionFailedException;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -62,5 +65,13 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
         return httpEntityForRestCallWithoutAuthToken("");
+    }
+
+    protected String asJson(Object object) {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new AssertionFailedException(e);
+        }
     }
 }

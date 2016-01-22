@@ -19,6 +19,7 @@ import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -154,6 +155,7 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
+
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getHeaders();
 
@@ -167,6 +169,18 @@ public abstract class BaseRestService {
 
     protected <T> T fromJson(String json, Class<T> clazz) {
         try {
+
+            if (clazz.equals(String.class)) {
+                if (isBlank(json)) {
+                    return (T) "";
+                }
+                return (T) json;
+            }
+
+            if (isBlank(json)) {
+                return null;
+            }
+
             return new ObjectMapper().readValue(json, clazz);
         } catch (IOException e) {
             log.error("Unable to resolve class " + clazz + " from JSON " + json, e);

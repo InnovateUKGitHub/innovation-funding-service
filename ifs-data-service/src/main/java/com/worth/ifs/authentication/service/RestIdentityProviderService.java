@@ -14,6 +14,7 @@ import static com.worth.ifs.authentication.service.RestIdentityProviderService.S
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER;
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_UPDATE_USER;
 import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -47,22 +48,28 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
     @Override
     public ServiceResult<String> createUserRecordWithUid(String emailAddress, String password) {
 
-        CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
-        Either<IdentityProviderError, CreateUserResponse> response = restPost(idpCreateUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError.class, CREATED);
-        return response.mapLeftOrRight(
-            failure -> DUPLICATE_EMAIL_ADDRESS.equals(failure.getMessageKey()) ? failure(DUPLICATE_EMAIL_ADDRESS) : failure(UNABLE_TO_CREATE_USER),
-            success -> success(success.getUniqueId())
-        );
+        return handlingErrors(UNABLE_TO_CREATE_USER, () -> {
+
+            CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
+            Either<IdentityProviderError, CreateUserResponse> response = restPost(idpCreateUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError.class, CREATED);
+            return response.mapLeftOrRight(
+                    failure -> DUPLICATE_EMAIL_ADDRESS.name().equals(failure.getMessageKey()) ? failure(DUPLICATE_EMAIL_ADDRESS) : failure(UNABLE_TO_CREATE_USER),
+                    success -> success(success.getUniqueId())
+            );
+        });
     }
 
     @Override
     public ServiceResult<String> updateUserPassword(String uid, String password) {
 
-        UpdateUserResource updateUserRequest = new UpdateUserResource(password);
-        Either<IdentityProviderError, Void> response = restPut(idpUpdateUserPath + "/" + uid, updateUserRequest, Void.class, IdentityProviderError.class, OK);
-        return response.mapLeftOrRight(
-            failure -> failure(UNABLE_TO_UPDATE_USER),
-            success -> success(uid)
-        );
+        return handlingErrors(UNABLE_TO_UPDATE_USER, () -> {
+
+            UpdateUserResource updateUserRequest = new UpdateUserResource(password);
+            Either<IdentityProviderError, String> response = restPut(idpUpdateUserPath + "/" + uid, updateUserRequest, String.class, IdentityProviderError.class, OK);
+            return response.mapLeftOrRight(
+                    failure -> failure(UNABLE_TO_UPDATE_USER),
+                    success -> success(uid)
+            );
+        });
     }
 }
