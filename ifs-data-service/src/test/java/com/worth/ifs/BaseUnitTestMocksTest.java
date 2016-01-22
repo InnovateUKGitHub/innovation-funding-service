@@ -31,7 +31,7 @@ import org.mockito.MockitoAnnotations;
  *
  * Created by dwatson on 02/10/15.
  */
-public abstract class BaseUnitTestMocksTest {
+public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ResponseService responseService;
