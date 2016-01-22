@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -13,10 +12,11 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -37,7 +38,10 @@ import java.util.stream.Collectors;
 public abstract class AbstractApplicationController {
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
-    private final Log LOG = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    protected ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
     protected ResponseService responseService;
@@ -114,6 +118,8 @@ public abstract class AbstractApplicationController {
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
     protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
+        StopWatch stopWatch1 = new StopWatch("add application details 1");
+        stopWatch1.start("addApplicationDetails.applicationservice.competitionservice.orgservice");
         ApplicationResource application = applicationService.getById(applicationId);
 
         application.setId(applicationId);
@@ -128,19 +134,37 @@ public abstract class AbstractApplicationController {
             form = new ApplicationForm();
         }
         form.application = application;
+        stopWatch1.stop();
+        log.info(stopWatch1.prettyPrint());
 
+        StopWatch stopWatch2 = new StopWatch("add application details 2");
+        stopWatch2.start("addApplicationDetails.addingdetails");
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
 
+        StopWatch stopWatch3 = new StopWatch("add application details 3");
+        stopWatch3.start("addApplicationDetails.maporgs");
+
+        StopWatch stopWatch4 = new StopWatch("add application details 3.1");
+        stopWatch4.start("addApplicationDetails.userOrganisation.ifPresent");
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId)
         );
-
+        stopWatch4.stop();
+        log.info(stopWatch4.prettyPrint());
+        StopWatch stopWatch5 = new StopWatch("add application details 3.2");
+        stopWatch5.start("addApplicationDetails.addMappedSectionsDetails");
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
-
+        stopWatch5.stop();
+        log.info(stopWatch5.prettyPrint());
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        stopWatch3.stop();
+        log.info(stopWatch3.prettyPrint());
+
         return application;
     }
 
@@ -156,6 +180,7 @@ public abstract class AbstractApplicationController {
         form.setFormInput(formInputs);
     }
 
+    @ProfileExecution
     protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
@@ -168,8 +193,8 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
-        LOG.info("*********************");
-        LOG.info(application.getId());
+        log.info("*********************");
+        log.info(application.getId());
         List<FormInputResponse> responses = getFormInputResponses(application);
         Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
@@ -212,28 +237,27 @@ public abstract class AbstractApplicationController {
         HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), application.getId());
         List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        Competition competition = competitionService.getById(application.getCompetition());
-        List<Long> assignedSections = sectionService.getUserAssignedSections(competition.getSections(), questionAssignees, userId);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
-        model.addAttribute("assignedSections", assignedSections);
     }
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
-        OrganisationFinance organisationFinance = getOrganisationFinances(application.getId(), userId);
-        model.addAttribute("organisationFinance", organisationFinance.getCostCategories());
-        model.addAttribute("organisationFinanceSize", organisationFinance.getOrganisationSize());
-        model.addAttribute("organisationType", organisationFinance.getOrganisation().getOrganisationType());
-        model.addAttribute("organisationFinanceId", organisationFinance.getApplicationFinanceId());
-        model.addAttribute("organisationFinanceTotal", organisationFinance.getTotal());
-        model.addAttribute("organisationGrantClaimPercentage", organisationFinance.getGrantClaimPercentage());
-        model.addAttribute("organisationgrantClaimPercentageId", organisationFinance.getGrantClaimPercentageId());
-
-        String formInputKey = "finance-grantclaim-" + organisationFinance.getGrantClaimPercentageId();
-        String formInputValue = organisationFinance.getGrantClaimPercentage() != null ? organisationFinance.getGrantClaimPercentage().toString() : "";
-        form.addFormInput(formInputKey, formInputValue);
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(application.getId(), userId);
+        Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
+        model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
+        model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
+        model.addAttribute("organisationType", organisation.getOrganisationType());
+        model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
+        model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+        if(applicationFinanceResource.getGrantClaim()!=null) {
+            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaimPercentage());
+            model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
+            String formInputKey = "finance-grantclaim-" + applicationFinanceResource.getGrantClaim();
+            String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
+            form.addFormInput(formInputKey, formInputValue);
+        }
     }
 
     protected void addFinanceDetails(Model model, ApplicationResource application) {
@@ -244,10 +268,12 @@ public abstract class AbstractApplicationController {
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, application.getId());
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
-        model.addAttribute("organisationFinances", organisationFinanceOverview.getOrganisationFinances());
+        model.addAttribute("organisationFinances", organisationFinanceOverview.getApplicationFinances());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
+
+        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()));
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, Optional<Organisation> userOrganisation) {
@@ -285,6 +311,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
+        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
     }
 
     protected void addSectionDetails(Model model, ApplicationResource application, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
@@ -309,14 +336,13 @@ public abstract class AbstractApplicationController {
         return Optional.empty();
     }
 
-    protected OrganisationFinance getOrganisationFinances(Long applicationId, Long userId) {
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(applicationId, userId);
-        if(applicationFinance==null) {
-            applicationFinance = financeService.addApplicationFinance(applicationId, userId);
+    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        if(applicationFinanceResource == null) {
+            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
         }
 
-        List<Cost> organisationCosts = financeService.getCosts(applicationFinance.getId());
-        return new OrganisationFinance(applicationFinance,organisationCosts);
+        return applicationFinanceResource;
     }
 
     protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form, boolean selectFirstSectionIfNoneCurrentlySelected) {

@@ -1,6 +1,8 @@
 package com.worth.ifs.finance.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.finance.controller.ApplicationFinanceController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.apache.commons.logging.Log;
@@ -25,28 +27,28 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public ApplicationFinance getApplicationFinance(Long applicationId, Long organisationId) {
+    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null){
             return null;
         }
-        return restGet(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinance.class);
+        return restGet(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
-    public List<ApplicationFinance> getApplicationFinances(Long applicationId) {
+    public List<ApplicationFinanceResource> getApplicationFinances(Long applicationId) {
         if(applicationId == null) {
             return null;
         }
 
-        return asList(restGet(applicationFinanceRestURL + "/findByApplication/" + applicationId, ApplicationFinance[].class));
+        return asList(restGet(applicationFinanceRestURL + "/findByApplication/" + applicationId, ApplicationFinanceResource[].class));
     }
 
     @Override
-    public ApplicationFinance addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
+    public ApplicationFinanceResource addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null) {
             return null;
         }
-        return restPost(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinance.class);
+        return restPost(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinanceResource.class);
     }
 
     @Override
@@ -57,5 +59,21 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     @Override
     public ApplicationFinanceResource getById(Long applicationFinanceId){
         return restGet(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
+    }
+
+    @Override
+    public Double getResearchParticipationPercentage(Long applicationId){
+        ObjectNode jsonNode = restGet(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class);
+        return jsonNode.get(ApplicationFinanceController.RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
+    }
+
+    @Override
+    public ApplicationFinanceResource getFinanceDetails(Long applicationId, Long organisationId) {
+        return restGet(applicationFinanceRestURL + "/financeDetails/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
+    }
+
+    @Override
+    public List<ApplicationFinanceResource> getFinanceTotals(Long applicationId) {
+        return asList(restGet(applicationFinanceRestURL + "/financeTotals/" + applicationId, ApplicationFinanceResource[].class));
     }
 }

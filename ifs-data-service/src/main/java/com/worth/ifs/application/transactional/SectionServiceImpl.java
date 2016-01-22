@@ -13,6 +13,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,13 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public Map<Long, Set<Long>> getCompletedSections(final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
-        List<Organisation> organisations = application.getProcessRoles().stream().map(p -> p.getOrganisation()).collect(Collectors.toList());
+        List<Organisation> organisations = application.getProcessRoles().stream()
+                .filter(p ->
+                        p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())      ||
+                        p.getRole().getName().equals(UserRoleType.APPLICANT.getName())          ||
+                        p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
+                )
+                .map(p -> p.getOrganisation()).collect(Collectors.toList());
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
         for (Organisation organisation : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();

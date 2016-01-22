@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
+        // TODO: improve performance this is slow, check first call in for loop (too many questions)
         for(Question question : questions) {
             final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
             questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
@@ -110,6 +112,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @ProfileExecution
     public Question getById(Long questionId) {
         return questionRestService.findById(questionId);
     }

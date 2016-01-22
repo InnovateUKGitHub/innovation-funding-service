@@ -86,6 +86,13 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
+    public Boolean isApplicationReadyForSubmit(Long applicationId) {
+        ObjectNode objectNode = restGet(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
+        log.debug(String.format("Application Ready for Submit?   %s ", objectNode.toString()));
+        return objectNode.get(ApplicationController.READY_FOR_SUBMIT).asBoolean(false);
+    }
+
+    @Override
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
         return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ApplicationResource[].class));
     }

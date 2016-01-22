@@ -322,7 +322,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
 
     @Override
-    public ObjectNode getProgressPercentageByApplicationId(final Long applicationId) {
+    public double getProgressPercentageByApplicationId(final Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
         List<Section> sections = application.getCompetition().getSections();
 
@@ -332,13 +332,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .collect(Collectors.toList());
 
         List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream().map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+        Set<Organisation> organisations = processRoles.stream()
+                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
+                        .filter(q -> q.getMarkAsCompletedEnabled())
                         .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
                 .sum();
         Long countSingleStatusQuestionsCompleted = questions.stream()
+                .filter(q -> q.getMarkAsCompletedEnabled())
                 .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
@@ -355,10 +359,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         } else {
             percentageCompleted = (100.0 / totalQuestions) * countCompleted;
         }
+        return percentageCompleted;
+    }
 
+    @Override
+    public ObjectNode getProgressPercentageNodeByApplicationId(final Long applicationId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("completedPercentage", percentageCompleted);
+        node.put("completedPercentage", getProgressPercentageByApplicationId(applicationId));
         return node;
     }
 
