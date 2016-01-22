@@ -174,5 +174,9 @@ public class Competition {
     public void setAssessmentStartDate(LocalDate assessmentStartDate){
         this.assessmentStartDate = assessmentStartDate;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
 

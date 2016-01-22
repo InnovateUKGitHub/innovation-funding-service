@@ -35,7 +35,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${param.title[0]})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${(param.title != null ? param.title[0] : 'Example application')})" th:remove="tag" />
 
 	<section class="boxed">
 		<h2 class="heading-medium no-margin">Challenge area</h2>
@@ -55,13 +55,21 @@
         </div>
     </section>
 
+    <h2 class="heading-large" id="current-assessors">Assigned <span class="assigned-count">(0)</span></h2>
+
+    <div th:include="prototypes/fragments/comp-admin :: prototype-assessor-assigned-table" th:remove="tag" />
+
+    <p class="extra-margin" id="no-assessors">No assessors are currently assigned to this application</p>
+
+    <hr />
+
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-	<h2 class="heading-large" id="current-assessors">Application list</h2>
+	<h2 class="heading-large" id="current-assessors">Assign assessors</h2>
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" th:remove="tag" />
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-list-table" th:remove="tag" />
 	
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 
@@ -87,86 +95,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery(document).ready(function(){
-		function setButtonCounter(){
-			jQuery('#assessor-count-display').html(counter);
-			jQuery('.view-invite-list span').html('(<strong>'+counter+'</strong>)'); 
-		}
 
-		function setButtonState(){
-			if (counter <= 0){
-				jQuery('.view-invite-list').addClass('disabled');
-				jQuery('.view-invite-list').on('click',function(e){
-					e.preventDefault();
-					//alert(counter);
-				});
-			}else{
-				jQuery('.view-invite-list').removeClass('disabled');
-				jQuery('.view-invite-list').on('click',function(e){
-					return true;
-					//alert(counter);
-				});
-			}
-		}
-
-		var counter = 0;
-		var counterRow = 0; 
-
-		jQuery('.add-another-row').on('click',function(e){ 
-			counterRow ++;
-			jQuery('#add-to-list span').html('(<strong>'+counterRow+'</strong>)'); 
-			//alert(counterRow);
-		});
-
-		jQuery('body').on('click','.delete-row',function(){
-			counter --;
-			counterRow --;
-			//setButtonCounter();
-			jQuery('#add-to-list span').html('(<strong>'+counterRow+'</strong>)');
-			//alert("TEST "+counterRow); 
-		});
-
-		jQuery('#add-to-list').on('click',function(e){ 
-			e.preventDefault();
-			counter = counter + counterRow;
-			//alert(counter);
-			setButtonState();
-			setButtonCounter();
-		});
-
-
-		jQuery('.add-assessor').on('click',function(e){ 
-			e.preventDefault();
-
-
-			//alert('hello');
-			
-			if (jQuery(this).hasClass( 'added' )){
-				
-				jQuery(this).removeClass( 'added' );
-				jQuery(this).text('Add');
-
-				counter --;
-			
-			}else{
-				
-				jQuery(this).addClass( 'added' );
-				jQuery(this).text('Remove');
-
-				
-				counter ++;
-
-			}
-
-			setButtonState();
-			setButtonCounter();
-			
-			//jQuery(this).text('Remove');
-
-
-
-		});
-	});
 	// ]]>
 	</script>
 </body>

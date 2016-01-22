@@ -1,8 +1,8 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +24,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Mock
     ApplicationRestService applicationRestService;
+    @Mock
+    ApplicationStatusRestService applicationStatusRestService;
+
     private List<ApplicationResource> applications;
     private Long userId;
 
@@ -33,15 +36,18 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void setUp() {
         super.setUp();
 
-        ApplicationStatus[] statuses = newApplicationStatus().
+        ApplicationStatusResource[] statuses = newApplicationStatusResource().
                 withName("created", "submitted", "something", "finished", "approved", "rejected").
-                buildArray(6, ApplicationStatus.class);
+                buildArray(6, ApplicationStatusResource.class);
 
         applications = newApplicationResource().withApplicationStatus(statuses).build(6);
 
         userId = 1L;
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(applications);
         when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(20.5d);
+        for(ApplicationStatusResource status : statuses) {
+            when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(status);
+        }
 
     }
 
@@ -79,7 +85,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetInProgress() throws Exception {
         List<ApplicationResource> returnedApplications = service.getInProgress(userId);
         returnedApplications.stream().forEach(a ->
-                assertThat(a.getApplicationStatus().getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
+                assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
                 );
     }
 
@@ -87,7 +93,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetFinished() throws Exception {
         List<ApplicationResource> returnedApplications = service.getFinished(userId);
         returnedApplications.stream().forEach(a ->
-                        assertThat(a.getApplicationStatus().getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
+                        assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
         );
     }
     @Test

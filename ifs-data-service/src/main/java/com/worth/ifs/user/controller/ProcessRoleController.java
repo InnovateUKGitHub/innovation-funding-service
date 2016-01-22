@@ -1,10 +1,10 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +28,14 @@ public class ProcessRoleController {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    ProcessRoleRepository processRoleRepository;
-
-    ProcessRoleResourceAssembler processRoleResourceAssembler;
+    ApplicationMapper applicationMapper;
 
     @Autowired
-    public ProcessRoleController(ProcessRoleResourceAssembler processRoleResourceAssembler) {
-        this.processRoleResourceAssembler = processRoleResourceAssembler;
-    }
+    ProcessRoleRepository processRoleRepository;
 
     @RequestMapping("/{id}")
     public ProcessRole findOne(@PathVariable("id") final Long id) {
         return processRoleRepository.findOne(id);
-    }
-
-    @RequestMapping("/hateoas/{id}")
-    public ProcessRoleResource findOneHateoas(@PathVariable("id") final Long id) {
-        ProcessRole processRole = processRoleRepository.findOne(id);
-        return processRoleResourceAssembler.toResource(processRole);
     }
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
@@ -77,7 +67,7 @@ public class ProcessRoleController {
     public ApplicationResource findByProcessRole(@PathVariable("id") final Long id){
         ProcessRole processRole = processRoleRepository.findOne(id);
         if (processRole != null && processRole.getApplication() != null){
-               return new ApplicationResource(processRole.getApplication());
+               return applicationMapper.mapApplicationToResource(processRole.getApplication());
         }
         return null;
     }

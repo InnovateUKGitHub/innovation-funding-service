@@ -206,8 +206,10 @@ public class RegistrationControllerTest extends BaseUnitTest {
     public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
 
+        String userPassword = "testtest";
+
         UserResource userResource = new UserResource();
-        userResource.setPassword("testtest");
+        userResource.setPassword(userPassword);
         userResource.setFirstName("firstName");
         userResource.setLastName("lastName");
         userResource.setTitle("Mr");
@@ -222,7 +224,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
-                userResource.getPassword(),
+                userPassword,
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
@@ -231,8 +233,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())
-                        .param("password", userResource.getPassword())
-                        .param("retypedPassword", userResource.getPassword())
+                        .param("password", userPassword)
+                        .param("retypedPassword", userPassword)
                         .param("title", userResource.getTitle())
                         .param("firstName", userResource.getFirstName())
                         .param("lastName", userResource.getLastName())

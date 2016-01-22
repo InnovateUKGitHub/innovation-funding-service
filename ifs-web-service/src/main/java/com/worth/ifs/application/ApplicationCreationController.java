@@ -73,7 +73,7 @@ public class ApplicationCreationController extends AbstractApplicationController
     private static boolean cookieSecure;
     @Value("${server.session.cookie.http-only}")
     private static boolean cookieHttpOnly;
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
     Validator validator;
 
     public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
@@ -93,7 +93,7 @@ public class ApplicationCreationController extends AbstractApplicationController
         try {
             json = mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return json;
     }
@@ -104,7 +104,7 @@ public class ApplicationCreationController extends AbstractApplicationController
         try {
             obj = mapper.readValue(json, type);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return obj;
     }
@@ -256,7 +256,7 @@ public class ApplicationCreationController extends AbstractApplicationController
                                                  HttpServletResponse response) {
 
         if (request.getParameter(NOT_IN_COMPANY_HOUSE) != null) {
-            return String.format("redirect:/application/create/find-business/not-in-company-house");
+            return "redirect:/application/create/find-business/not-in-company-house";
         } else if (request.getParameter(MANUAL_ADDRESS) != null) {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);

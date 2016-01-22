@@ -1,9 +1,9 @@
 package com.worth.ifs.finance.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,4 +104,8 @@ public class Cost {
         this.question = question;
     }
 
+    @JsonIgnore
+    public ApplicationFinance getApplicationFinance() {
+        return this.applicationFinance;
+    }
 }

@@ -160,16 +160,17 @@
     <div th:fragment="your_finance" th:remove="tag">
         <h2 class="heading-medium no-margin" th:text="${question.name}" />
         <p th:text="${question.description}" />
-        <div class="collapsible">
-            <div th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null"  th:remove="tag" >
-                <h2  th:attr="data-subsection-header=${subSection.id}" th:text="${subSection.getName()}" th:class="((${completedSections.contains(subSection.id)}) ? 'section-status-finance complete':'')"></h2>
-                <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
-                    <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
-                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
-                    </div>
-                </div>
-            </div>
-        </div>
+          <section class="collapsible" th:each="subSection : ${currentSection.getChildSections()}" th:if="${currentSection.getChildSections()}!=null">
+              <h2>
+                   <span th:text="${subSection.getName()}" th:remove="tag" />
+                   <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+              </h2>
+              <div th:remove="tag" th:each="question : ${subSection.getQuestions()}">
+                  <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
+                      <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                  </div>
+              </div>
+          </section>
         <div class="grid-row total-cost">
             <div class="column-half">
                 <label for="total-cost" class="heading-medium">Total project costs</label>
@@ -179,7 +180,7 @@
                        id="total-cost"
                        readonly="readonly"
                        class="heading-medium width-full alignright"
-                       data-calculation-fields="[id*=total]"
+                       data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
                        th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
@@ -290,16 +291,11 @@
                         <input class="form-control form-control-1-4 alignright"
                                data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
-                               th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
+                               th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                                readonly="readonly"
                                type="text"
-                               id="cost-labour-total-field"
+                               th:id="${'section-total-'+subSection.id}"
                                th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-                        <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                            <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                    th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                            </span>
-                        </span>
                     </label>
                 </div>
                 <div class="alignright-button">
@@ -355,10 +351,9 @@
                           <label class="form-label" th:for="${overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
                           <input type="text"
                                  th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
-                                 th:id="${overheadCosts.id+'-calculatedRate'}"
+                                 th:id="${'section-total-'+subSection.id}"
                                  class="form-control"
                                  readonly="readonly"
-                                 data-binding-input="subsection-total-9"
                                  data-calculation-operations=""
                                  data-calculation-input="overhead-calculated"
                                  th:value="'£ 0'"/>
@@ -374,18 +369,13 @@
                            th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
                            class="form-control form-control-1-4 alignright"
                            readonly="readonly"
-                           id="id_overheads-totalCosts"
+                           th:id="${'section-total-'+subSection.id}"
                            data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                            data-calculation-operations="*"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
-
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                            th:value="''"
                            />
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                              th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
+
                 </label>
             </div>
             <div class="alignright-button">
@@ -466,14 +456,10 @@
                            readonly="readonly" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.total}"
+                           th:id="${'section-total-'+subSection.id}"
+                           th:attr="data-calculation-rawvalue=${costCategory.total}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -576,17 +562,11 @@
             <div class="form-group form-group--align-right alignright">
                 <label>
                     Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="cost-capital-usage-costs-total-field"
+                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text"
+                           th:id="${'section-total-'+subSection.id}"
                            data-calculation-fields="[id*=netCost]"
                            data-calculation-operations="+"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -640,17 +620,11 @@
                     <input class="form-control form-control-1-4 alignright"
                            readonly="readonly"
                            type="text"
-                           id="cost-subcontracting-total"
+                           th:id="${'section-total-'+subSection.id}"
                            data-calculation-fields="[id*=subcontractingCost]"
                            data-calculation-operations="+"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id},data-calculation-rawvalue=${costCategory.getTotal()}"
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -729,15 +703,9 @@
                     <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="travel-costs-total-field"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
+                           th:id="${'section-total-'+subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"
                            title="Total travel and subsistence costs" />
-
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
                 </label>
             </div>
             <div class="alignright-button">
@@ -784,17 +752,10 @@
                 <label>
                     Total other costs
                     <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="other-costs-total-field"
-                           th:attr="data-binding-input=${'subsection-total-' + subSection.id}"
+                          th:id="${'section-total-'+subSection.id}"
                            data-calculation-fields="[id*=otherCost]"
                            data-calculation-operations="+"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
-
-                    <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${subSection.id}" style="display: none;">
-                        <span th:attr="data-binding-output=${'subsection-total-' + subSection.id}"
-                                th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                        </span>
-                    </span>
-
                 </label>
             </div>
             <div class="alignright-button">
@@ -874,19 +835,15 @@
                     <div class="form-group form-group--align-right alignright">
                       <label>
                           Total other funding
-                          <input id="other-funding-total"
-                                class="form-control form-control-1-4 alignright"
+                          <input class="form-control form-control-1-4 alignright"
                                 data-calculation-fields="[id*=fundingAmount]"
                                 data-calculation-operations="+"
-                                th:attr="data-binding-input=${'subsection-total-' + currentSectionId},data-calculation-rawvalue=${costCategory.getTotal()}"
-                                readonly="readonly" type="text"
+                                id="other-funding-total"
+                                th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                                readonly="readonly"
+                                type="text"
                                 th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-                        <span th:class="'section-status ' + ${complete} + ' place-in-header'" th:attr="data-subsection-id=${currentSectionId}" style="display: none;">
-                            <span
-                                    th:attr="data-binding-output=${'subsection-total-' + currentSectionId}"
-                                    th:text="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}">
-                            </span>
-                        </span>
+
                       </label>
                     </div>
 

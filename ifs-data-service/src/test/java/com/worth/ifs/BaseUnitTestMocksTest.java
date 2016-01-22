@@ -1,10 +1,9 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
@@ -58,10 +57,7 @@ public abstract class BaseUnitTestMocksTest {
     protected ResponseRepository responseRepositoryMock;
 
     @Mock
-    protected ApplicationResourceAssembler applicationResourceAssembler;
-
-    @Mock
-    protected CompetitionsRepository competitionsRepositoryMock;
+    protected CompetitionRepository competitionRepositoryMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;

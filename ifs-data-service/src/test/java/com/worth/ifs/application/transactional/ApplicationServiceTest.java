@@ -6,7 +6,6 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.*;
@@ -66,12 +65,12 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
             add(testProcessRole4);
         }});
 
-        List<ApplicationResource> applicationsForUser1 = applicationService.findByUserId(testUser1.getId());
+        List<Application> applicationsForUser1 = applicationService.findByUserId(testUser1.getId());
         assertEquals(2, applicationsForUser1.size());
         assertEquals(testApplication1.getId(), applicationsForUser1.get(0).getId());
         assertEquals(testApplication2.getId(), applicationsForUser1.get(1).getId());
 
-        List<ApplicationResource> applicationsForUser2 = applicationService.findByUserId(testUser2.getId());
+        List<Application> applicationsForUser2 = applicationService.findByUserId(testUser2.getId());
         assertEquals(2, applicationsForUser1.size());
         assertEquals(testApplication2.getId(), applicationsForUser2.get(0).getId());
         assertEquals(testApplication3.getId(), applicationsForUser2.get(1).getId());
@@ -97,13 +96,13 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
         when(applicationStatusRepositoryMock.findByName(applicationStatus.getName())).thenReturn(Arrays.asList(applicationStatus));
-        when(competitionsRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findByName(role.getName())).thenReturn(Arrays.asList(role));
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        ApplicationResource newApplication = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationNameNode);
+        Application newApplication = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationNameNode);
         assertEquals(applicationName, newApplication.getName());
         assertEquals(applicationStatus, newApplication.getApplicationStatus());
-        assertEquals(competitionId, newApplication.getCompetitionId());
+        assertEquals(competitionId, newApplication.getCompetition().getId());
     }
 }

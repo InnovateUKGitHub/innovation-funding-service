@@ -1,7 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.form.CompanyHouseForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
@@ -27,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,10 +64,10 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                 .setViewResolvers(viewResolver())
                 .build();
 
-        applicationResource = new ApplicationResource(new Application(6L, "some application", null));
+        applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         address = new Address("line1", "line2", "line3", "careof", "country", "locality", "pobox", "postcode", "region");
         companyHouseBusiness = new CompanyHouseBusiness(COMPANY_ID, COMPANY_NAME, null, null, null, address);
-        organisationResource = new OrganisationResource(new Organisation(5L, COMPANY_NAME));
+        organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(companyHouseBusiness);
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);

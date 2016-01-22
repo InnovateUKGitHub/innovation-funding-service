@@ -11,6 +11,16 @@
 	}
 }
 
+/*--- Table overflows for small screens ---*/
+
+.table-overflow{
+	overflow: auto;
+	width: 100%;
+	table{
+		max-width: 100%;
+	}
+}
+
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
@@ -118,4 +128,6 @@ ul.underline{
 {
 	@extend %hidden-blocks-js;
 }
+
+
 
