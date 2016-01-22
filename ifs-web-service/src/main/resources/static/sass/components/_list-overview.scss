@@ -4,13 +4,13 @@
     padding: 0;
     list-style-type: none;
 
-    li{	
-        border-bottom: 1px solid $border-colour;  
+    li{
+        border-bottom: 1px solid $border-colour;
     }
     li:first-child{
-        border-top: 1px solid $border-colour;  
+        border-top: 1px solid $border-colour;
     }
-    
+
     li.grid-row {
     	min-height: 30px;
         margin: 0
@@ -31,5 +31,58 @@
     	li{
     		border: none;
     	}
+    }
+}
+
+/*
+
+```
+<div class="eligibility">
+    <dl class="list-eligibility">
+        <dt>Maximum research participation</dt>
+        <dd>0 %</dd>
+        <dt>Current research participation</dt>
+        <dd>4.74 %</dd>
+    </dl>
+</div>
+```
+
+
+*/
+
+
+.eligibility{
+    border: 1px solid $border-colour;
+    padding: 20px 20px 10px 20px;
+
+    &.warning{
+        border: 1px solid $red;
+    }
+}
+
+.list-eligibility{
+    overflow: auto;
+    @include core-24;
+    dt{
+        display: block;
+        float: left;
+        width: 50%;
+        margin-bottom: 0.5em;
+        @include media-down(tablet) {
+            width: 70%;
+        }
+    }
+
+    dd {
+        display: block;
+        float: left;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+    }
+    dd.warning {
+        color: $red;
+    }
+    dd + dt {
+      clear: both;
     }
 }

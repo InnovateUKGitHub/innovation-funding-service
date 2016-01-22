@@ -874,7 +874,7 @@
 
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <div th:fragment="financial_summary" th:if="${financeTotalPerType}">
-        <div class="eligibility">
+        <div th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
