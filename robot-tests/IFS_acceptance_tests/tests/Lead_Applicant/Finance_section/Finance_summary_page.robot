@@ -38,10 +38,10 @@ Finance summary calculations for the second collaborator
     [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as second collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
-    Then the finance summary calculations should be correct
+    When the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    and when the applicant enters a bigger funding amount
-    then the contribution to project and funding sought should be 0
+    And the applicant enters a bigger funding amount
+    Then the contribution to project and funding sought should be 0
     And the user logs out
 
 *** Keywords ***
@@ -80,7 +80,7 @@ the finance summary calculations should be correct
     Element Should Contain    css=.finance-summary tr:nth-of-type(5) td:nth-of-type(3)    £18,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(5) td:nth-of-type(4)    £18,000
 
-when the applicant enters a bigger funding amount
+the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
     Select Radio button    other_funding-otherPublicFunding-null    Yes
