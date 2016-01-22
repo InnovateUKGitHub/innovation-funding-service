@@ -7,7 +7,6 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -34,13 +33,6 @@ public abstract class SectionMapper {
 
     public Section mapIdToSection(Long id) {
         return repository.findOne(id);
-    }
-
-    public Long mapSectionResourceToId(SectionResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
     }
 
     public SectionResource mapIdToSectionResource(Long id) {
