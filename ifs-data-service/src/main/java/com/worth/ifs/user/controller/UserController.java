@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.USER_NOT_FOUND;
+
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
@@ -109,10 +112,12 @@ public class UserController {
         return createUserResult.mapLeftOrRight(
             failure -> {
 
-                // TODO DW - INFUND-1267 - correctly map service errors to correct controller errors
-
                 ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-                addDuplicateEmailError(resourceEnvelope);
+
+                if (failure.is(DUPLICATE_EMAIL_ADDRESS)) {
+                    addDuplicateEmailError(resourceEnvelope);
+                }
+
                 return resourceEnvelope;
             },
             successfullyCreatedUser ->
@@ -133,10 +138,12 @@ public class UserController {
         return updateResult.mapLeftOrRight(
             failure -> {
 
-                // TODO DW - INFUND-1267 - correctly map service errors to correct controller errors
-
                 ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-                addUserDoesNotExistError(resourceEnvelope);
+
+                if (failure.is(USER_NOT_FOUND)) {
+                    addUserDoesNotExistError(resourceEnvelope);
+                }
+
                 return resourceEnvelope;
             },
             success -> {

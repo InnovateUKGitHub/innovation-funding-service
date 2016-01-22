@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ORGANISATION_NOT_FOUND;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_USER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
@@ -41,7 +42,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<User> createUserLeadApplicantForOrganisation(Long organisationId, UserResource userResource) {
 
-        return ServiceResult.handlingErrors(UNABLE_TO_CREATE_USER, () -> {
+        return handlingErrors(UNABLE_TO_CREATE_USER, () -> {
 
             User newUser = assembleUserFromResource(userResource);
 
