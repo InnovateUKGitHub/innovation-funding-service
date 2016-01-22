@@ -879,7 +879,7 @@
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
                 <dt>Current research participation</dt>
-                <dd th:text="${researchParticipationPercentage}+' %'"></dd>
+                <dd th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'warning'" th:text="${researchParticipationPercentage}+' %'"></dd>
             </dl>
 
             <div th:replace="question-type/types :: research_participation_alert"></div>
