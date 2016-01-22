@@ -21,6 +21,7 @@ public abstract class AssessorFeedbackMapper {
     private AssessorFeedbackRepository repository;
 
     public abstract AssessorFeedbackResource mapAssessorFeedbackToResource(AssessorFeedback object);
+
     public abstract AssessorFeedback resourceToAssessorFeedback(AssessorFeedbackResource resource);
 
     public Long mapAssessorFeedbackToId(AssessorFeedback object) {

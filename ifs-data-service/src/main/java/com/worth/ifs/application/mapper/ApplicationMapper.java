@@ -39,11 +39,4 @@ public abstract class ApplicationMapper {
         return repository.findOne(id);
     }
 
-    public Long mapApplicationResourceToId(ApplicationResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
-
 }
