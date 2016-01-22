@@ -332,13 +332,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .collect(Collectors.toList());
 
         List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream().map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+        Set<Organisation> organisations = processRoles.stream()
+                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
+                        .filter(q -> q.getMarkAsCompletedEnabled())
                         .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
                 .sum();
         Long countSingleStatusQuestionsCompleted = questions.stream()
+                .filter(q -> q.getMarkAsCompletedEnabled())
                 .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

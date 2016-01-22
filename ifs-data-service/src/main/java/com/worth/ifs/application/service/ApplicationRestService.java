@@ -10,13 +10,14 @@ import java.util.List;
  * Interface for CRUD operations on {@link Application} related data.
  */
 public interface ApplicationRestService{
-    public ApplicationResource getApplicationById(Long applicationId);
-    public List<ApplicationResource> getApplicationsByUserId(Long userId);
-    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
-    public void saveApplication(ApplicationResource application);
-    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
-    public void updateApplicationStatus(Long applicationId, Long statusId);
-    public Double getCompleteQuestionsPercentage(Long applicationId);
-    public Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
-    public ApplicationResource findByProcessRoleId(Long id);
+    ApplicationResource getApplicationById(Long applicationId);
+    List<ApplicationResource> getApplicationsByUserId(Long userId);
+    Boolean isApplicationReadyForSubmit(Long applicationId);
+    List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
+    void saveApplication(ApplicationResource application);
+    ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
+    void updateApplicationStatus(Long applicationId, Long statusId);
+    Double getCompleteQuestionsPercentage(Long applicationId);
+    Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
+    ApplicationResource findByProcessRoleId(Long id);
 }

@@ -42,6 +42,11 @@ import static java.util.Collections.singletonList;
 @RequestMapping("/application")
 public class ApplicationController {
 
+    public static final String READY_FOR_SUBMIT = "readyForSubmit";
+    public static final String PROGRESS = "progress";
+    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
+    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
+    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
     @Autowired
     ApplicationFinanceHandler applicationFinanceHandler;
     @Autowired
@@ -106,17 +111,16 @@ public class ApplicationController {
         if(allSectionsComplete &&
                 progress == 100 &&
                 researchParticipation <= competition.getMaxResearchRatio()){
-
             readyForSubmit = true;
         }
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("readyForSubmit", readyForSubmit);
-        node.put("progress", progress);
-        node.put("researchParticipation",researchParticipation);
-        node.put("researchParticipationValid", (researchParticipation <=competition.getMaxResearchRatio()) );
-        node.put("allSectionComplete", allSectionsComplete);
+        node.put(READY_FOR_SUBMIT, readyForSubmit);
+        node.put(PROGRESS, progress);
+        node.put(RESEARCH_PARTICIPATION,researchParticipation);
+        node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <=competition.getMaxResearchRatio()) );
+        node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
         return node;
     }
 
