@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +33,8 @@ public class ApplicationFinanceControllerTest {
     ApplicationRepository applicationRepository;
 
     private ApplicationFinance applicationFinance;
+
+    private ApplicationFinanceResource applicationFinanceResource;
 
     private Organisation organisation;
 
@@ -50,7 +54,8 @@ public class ApplicationFinanceControllerTest {
         application = new Application();
         application.setId(1L);
         organisation = new Organisation(1L, "Worth Internet Systems");
-        applicationFinance = new ApplicationFinance(1L, application, organisation);
+        applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
+        applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
     }
 
     @Test

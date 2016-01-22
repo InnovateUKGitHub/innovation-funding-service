@@ -1,23 +1,19 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- *
- */
 public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationFinanceRestServiceImpl> {
-
     private static final String applicationFinanceRestURL = "/finance";
 
     @Override
@@ -31,12 +27,12 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     public void test_getApplicationFinance_forApplicationIdAndOrganisationId() {
 
         String expectedUrl = dataServicesUrl + applicationFinanceRestURL + "/findByApplicationOrganisation/123/456";
-        ApplicationFinance returnedResponse = newApplicationFinance().build();
-        ResponseEntity<ApplicationFinance> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        ApplicationFinanceResource returnedResponse = newApplicationFinanceResource().build();
+        ResponseEntity<ApplicationFinanceResource> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ApplicationFinance.class)).thenReturn(returnedEntity);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ApplicationFinanceResource.class)).thenReturn(returnedEntity);
 
-        ApplicationFinance finance = service.getApplicationFinance(123L, 456L);
+        ApplicationFinanceResource finance = service.getApplicationFinance(123L, 456L);
         assertNotNull(finance);
         assertEquals(returnedResponse, finance);
     }
@@ -50,20 +46,18 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
     @Test
     public void test_getApplicationFinances_forApplicationId() {
-
         String expectedUrl = dataServicesUrl + applicationFinanceRestURL + "/findByApplication/123";
-        ApplicationFinance[] returnedResponse = newApplicationFinance().buildArray(3, ApplicationFinance.class);
-        ResponseEntity<ApplicationFinance[]> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        ApplicationFinanceResource[] returnedResponse = newApplicationFinanceResource().buildArray(3, ApplicationFinanceResource.class);
+        ResponseEntity<ApplicationFinanceResource[]> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ApplicationFinance[].class)).thenReturn(returnedEntity);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ApplicationFinanceResource[].class)).thenReturn(returnedEntity);
 
-        List<ApplicationFinance> finances = service.getApplicationFinances(123L);
+        List<ApplicationFinanceResource> finances = service.getApplicationFinances(123L);
         assertNotNull(finances);
         assertEquals(returnedResponse[0], finances.get(0));
         assertEquals(returnedResponse[1], finances.get(1));
         assertEquals(returnedResponse[2], finances.get(2));
     }
-
 
     @Test
     public void test_getApplicationFinances_forApplicationId_nullSafe() {
@@ -72,14 +66,13 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
     @Test
     public void test_addApplicationFinance_forApplicationIdAndOrganisationId() {
-
         String expectedUrl = dataServicesUrl + applicationFinanceRestURL + "/add/123/456";
-        ApplicationFinance returnedResponse = newApplicationFinance().build();
-        ResponseEntity<ApplicationFinance> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        ApplicationFinanceResource returnedResponse = newApplicationFinanceResource().build();
+        ResponseEntity<ApplicationFinanceResource> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(null), ApplicationFinance.class)).thenReturn(returnedEntity);
+        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(null), ApplicationFinanceResource.class)).thenReturn(returnedEntity);
 
-        ApplicationFinance finance = service.addApplicationFinanceForOrganisation(123L, 456L);
+        ApplicationFinanceResource finance = service.addApplicationFinanceForOrganisation(123L, 456L);
         assertNotNull(finance);
         assertEquals(returnedResponse, finance);
     }
@@ -90,5 +83,4 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
         assertNull(service.addApplicationFinanceForOrganisation(null, 456L));
         assertNull(service.addApplicationFinanceForOrganisation(null, null));
     }
-
 }

@@ -1,5 +1,6 @@
 package com.worth.ifs.application.finance.cost;
 
+import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

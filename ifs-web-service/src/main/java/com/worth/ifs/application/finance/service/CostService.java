@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.cost.CostItem;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import java.util.List;
  * {@code CostService} retrieving and updating costs
  */
 public interface CostService {
-    Cost getById(Long costId);
+    CostItem getById(Long costId);
     List<CostField> getCostFields();
-    public void update(Cost cost);
+    public void update(CostItem costItem);
     public void delete(Long costId);
     public void add(Long applicationFinanceId, Long questionId);
 }

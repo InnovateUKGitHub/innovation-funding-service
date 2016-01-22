@@ -1,17 +1,13 @@
 package com.worth.ifs.application.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.finance.model.OrganisationFinance;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -39,11 +35,11 @@ public class OrganisationFinanceOverviewBuilder extends BaseBuilder<Organisation
         return withArray((id, organisationFinanceOverview) -> setField("applicationId", id, organisationFinanceOverview), applicationIds);
     }
 
-    public OrganisationFinanceOverviewBuilder withOrganisationFinances(OrganisationFinance... organisationFinances) {
-        return withOrganisationFinances(asList(organisationFinances));
+    public OrganisationFinanceOverviewBuilder withOrganisationFinances(ApplicationFinanceResource... applicationFinances) {
+        return withOrganisationFinances(asList(applicationFinances));
     }
 
-    public OrganisationFinanceOverviewBuilder withOrganisationFinances(List<OrganisationFinance> organisationFinances) {
-        return with(organisationFinanceOverview -> setField("organisationFinances", organisationFinances, organisationFinanceOverview));
+    public OrganisationFinanceOverviewBuilder withOrganisationFinances(List<ApplicationFinanceResource> applicationFinances) {
+        return with(organisationFinanceOverview -> setField("applicationFinances", applicationFinances, organisationFinanceOverview));
     }
 }
