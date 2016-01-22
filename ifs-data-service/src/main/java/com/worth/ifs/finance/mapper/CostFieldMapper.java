@@ -6,7 +6,6 @@ import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class
@@ -31,10 +30,4 @@ public abstract class CostFieldMapper {
         return repository.findOne(id);
     }
 
-    public Long mapCostFieldResourceToId(CostFieldResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

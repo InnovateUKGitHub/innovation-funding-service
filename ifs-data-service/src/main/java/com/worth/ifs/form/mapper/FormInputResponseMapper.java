@@ -9,7 +9,6 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -29,7 +28,6 @@ public abstract class FormInputResponseMapper {
 
     public abstract FormInputResponse resourceToFormInputResponse(FormInputResponseResource resource);
 
-
     public Long mapFormInputResponseToId(FormInputResponse object) {
         if (object == null) {
             return null;
@@ -41,10 +39,4 @@ public abstract class FormInputResponseMapper {
         return repository.findOne(id);
     }
 
-    public Long mapFormInputResponseResourceToId(FormInputResponseResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

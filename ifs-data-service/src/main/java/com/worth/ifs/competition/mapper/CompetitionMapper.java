@@ -9,7 +9,6 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -37,13 +36,6 @@ public abstract class CompetitionMapper {
 
     public Competition mapIdToCompetition(Long id) {
         return repository.findOne(id);
-    }
-
-    public Long mapCompetitionResourceToId(CompetitionResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
     }
 
 }

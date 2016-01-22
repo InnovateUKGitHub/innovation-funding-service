@@ -8,7 +8,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.mapper.OrganisationMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -37,10 +36,4 @@ public abstract class ApplicationFinanceMapper {
         return repository.findOne(id);
     }
 
-    public Long mapApplicationFinanceResourceToId(ApplicationFinanceResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }
