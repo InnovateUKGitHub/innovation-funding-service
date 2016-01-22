@@ -40,12 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous()
             .and()
                 .authorizeRequests()
-                // allow anonymous resource requests
-                .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
-                .anyRequest().authenticated()
-//            .and()
-//                .logout().deleteCookies(TokenAuthenticationService.AUTH_TOKEN)
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and()
                 .exceptionHandling()
             .and()
