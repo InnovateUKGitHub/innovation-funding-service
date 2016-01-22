@@ -4,9 +4,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -14,7 +14,6 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestServiceImpl;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +55,12 @@ public class InviteController {
     public ResourceEnvelope<InviteOrganisationResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
         ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), new InviteOrganisationResource());
 
-        if(inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
+        if (inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             InviteOrganisation createdInviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation);
             inviteRepository.save(newInvites);
-        }
-        else {
+        } else {
             resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteOrganisationResource());
         }
 
@@ -112,11 +110,11 @@ public class InviteController {
     }
 
     private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
-        if(!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
+        if (!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
             return false;
         }
 
-        if(!allInviteResourcesAreValid(inviteOrganisationResource)) {
+        if (!allInviteResourcesAreValid(inviteOrganisationResource)) {
             return false;
         }
 
@@ -126,8 +124,8 @@ public class InviteController {
     private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
         if ((inviteOrganisationResource.getOrganisationName() == null ||
                 inviteOrganisationResource.getOrganisationName().isEmpty())
-                        &&
-                        inviteOrganisationResource.getOrganisationId() == null) {
+                &&
+                inviteOrganisationResource.getOrganisationId() == null) {
             return false;
         } else {
             return true;
@@ -135,26 +133,25 @@ public class InviteController {
     }
 
     private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if(inviteOrganisationResource.getInviteResources()
+        if (inviteOrganisationResource.getInviteResources()
                 .stream()
                 .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
                 .count() > 0) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
     private boolean inviteResourceIsValid(InviteResource inviteResource) {
 
-        if(inviteResource.getEmail() == null || inviteResource.getEmail().isEmpty()) {
+        if (inviteResource.getEmail() == null || inviteResource.getEmail().isEmpty()) {
             return false;
         }
-        if(inviteResource.getName() == null || inviteResource.getName().isEmpty()) {
+        if (inviteResource.getName() == null || inviteResource.getName().isEmpty()) {
             return false;
         }
-        if(inviteResource.getApplicationId() == null) {
+        if (inviteResource.getApplicationId() == null) {
             return false;
         }
 

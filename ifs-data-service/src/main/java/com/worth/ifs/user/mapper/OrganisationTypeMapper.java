@@ -4,7 +4,6 @@ import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
@@ -21,8 +20,6 @@ public abstract class OrganisationTypeMapper {
     public abstract OrganisationTypeResource mapOrganisationTypeToResource(OrganisationType object);
 
     public abstract OrganisationType resourceToOrganisationType(OrganisationTypeResource resource);
-
-    public static final OrganisationTypeMapper OrganisationTypeMAPPER = Mappers.getMapper(OrganisationTypeMapper.class);
 
     public Long mapOrganisationTypeToId(OrganisationType object) {
         if (object == null) {

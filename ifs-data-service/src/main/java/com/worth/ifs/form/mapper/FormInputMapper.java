@@ -8,7 +8,6 @@ import com.worth.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -41,10 +40,4 @@ public abstract class FormInputMapper {
         return repository.findOne(id);
     }
 
-    public Long mapFormInputResourceToId(FormInputResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

@@ -35,11 +35,4 @@ public abstract class ProcessRoleMapper {
     public ProcessRole mapIdToProcessRole(Long id) {
         return repository.findOne(id);
     }
-
-    public Long mapProcessRoleResourceToId(ProcessRoleResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }
