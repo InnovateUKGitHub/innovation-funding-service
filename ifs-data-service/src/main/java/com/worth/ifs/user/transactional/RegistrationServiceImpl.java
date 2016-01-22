@@ -23,14 +23,13 @@ import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
- *
+ * A service around Registration and general user-creation operations
  */
 @Service
 public class RegistrationServiceImpl extends BaseTransactionalService implements RegistrationService {
 
     public enum ServiceFailures {
-        UNABLE_TO_CREATE_USER,
-        DUPLICATE_EMAIL_ADDRESS
+        UNABLE_TO_CREATE_USER
     }
 
     @Autowired
@@ -52,7 +51,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             );
         });
     }
-
 
     private ServiceResult<User> createUserWithUid(User user, String password) {
 

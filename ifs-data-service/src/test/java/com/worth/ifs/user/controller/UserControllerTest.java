@@ -10,10 +10,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.verify;

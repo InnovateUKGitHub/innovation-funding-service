@@ -10,6 +10,7 @@ import com.worth.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER;
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_UPDATE_USER;
 import static com.worth.ifs.transactional.ServiceResult.failure;
@@ -23,9 +24,10 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class RestIdentityProviderService extends BaseRestService implements IdentityProviderService {
 
-    enum ServiceFailures {
+    public enum ServiceFailures {
         UNABLE_TO_CREATE_USER,
         UNABLE_TO_UPDATE_USER,
+        DUPLICATE_EMAIL_ADDRESS
     }
 
     @Value("${idp.rest.baseURL}")
@@ -48,7 +50,7 @@ public class RestIdentityProviderService extends BaseRestService implements Iden
         CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
         Either<IdentityProviderError, CreateUserResponse> response = restPost(idpCreateUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError.class, CREATED);
         return response.mapLeftOrRight(
-            failure -> failure(UNABLE_TO_CREATE_USER),
+            failure -> DUPLICATE_EMAIL_ADDRESS.equals(failure.getMessageKey()) ? failure(DUPLICATE_EMAIL_ADDRESS) : failure(UNABLE_TO_CREATE_USER),
             success -> success(success.getUniqueId())
         );
     }

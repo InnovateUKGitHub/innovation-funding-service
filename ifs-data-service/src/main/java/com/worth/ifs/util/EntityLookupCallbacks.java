@@ -12,6 +12,7 @@ import com.worth.ifs.user.repository.RoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -19,9 +20,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.failureSupplier;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.*;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -87,9 +86,15 @@ public class EntityLookupCallbacks {
             Supplier<SuccessType> getterFn,
             Enum<?> failureResponse) {
 
-        return ofNullable(getterFn.get()).
+        SuccessType value = getterFn.get();
+
+        if (value != null && Collection.class.isAssignableFrom(value.getClass()) && ((Collection) value).isEmpty()) {
+            return failure(failureResponse);
+        }
+
+        return ofNullable(value).
                 map(ServiceResult::success).
-                orElse(ServiceResult.failure(failureResponse));
+                orElse(failure(failureResponse));
     }
 
     public static <T> ServiceResult<T> onlyElement(List<T> list, Enum<?> failureKey) {
