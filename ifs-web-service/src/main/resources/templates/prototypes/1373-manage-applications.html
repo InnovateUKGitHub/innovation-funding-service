@@ -22,7 +22,7 @@
 
 </head>
 
-<body th:class="${(param.fullWidth == null ? 'comp-assessors' : 'comp-assessors full-width')}">
+<body class="full-width show-full-table">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -31,22 +31,39 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition overview'}, ${'/prototypes/860-comp-applications-dashboard'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competitions dashboard'}, ${'/prototypes/860-comp-applications-dashboard?invitesSent'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Application allocation'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage assignments'})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-allocation-summary" th:remove="tag" />
+
+	<div class="grid-row extra-margin">
+		<div class="column-quarter">
+			<p>Assigned <br /><span class="heading-medium">250</span></p>
+		</div>
+
+		<div class="column-quarter">
+			<p>Accepted <br /><span class="heading-medium">225</span></p>
+		</div>
+
+		<div class="column-quarter">
+			<p>Started <br /><span class="heading-medium">125</span></p>
+		</div>
+
+		<div class="column-quarter">
+			<p>Completed <br /><span class="heading-medium">25</span></p>
+		</div>
+	</div>
 
     <div th:if="${param.sendAssignments != null}" th:remove="tag">
     	<div class="highlight-panel extra-margin">
 	        <div class="alignright-button" id="added-assessors">
-				<a href="/prototypes/1385-application-allocation-confirm" class="button large">Confirm assignments</a>
+				<a href="#" class="button large">Send updates to assessors</a>
 			</div>
 		</div>
 	</div>
-
 
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 

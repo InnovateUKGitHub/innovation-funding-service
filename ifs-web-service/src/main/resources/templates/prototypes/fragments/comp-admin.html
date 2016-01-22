@@ -30,6 +30,26 @@
     </section>
 </div>
 
+<!-- ===================Applications allocation summary for competition============================== -->
+<div th:fragment="prototype-allocation-summary">
+    <section class="boxed">
+        <div class="grid-row">
+            <div class="column-half">
+                <ul>
+                    <li><span class="heading-medium">50</span> applications</li>
+                    <li><span class="heading-medium">25</span> assessors available</li>
+                </ul>
+            </div>
+            <div class="column-half">
+                <ul>
+                    <li><span class="heading-medium">22/12/15</span> assessment opened</li>
+                    <li><span class="heading-medium">27/12/15</span> assessment close</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+
 <!-- ===================Search filters============================== -->
 <div th:fragment="prototype-comp-search-filters">
     <div class="search-filters extra-margin">
@@ -142,7 +162,6 @@
 
     </div>
 
-
 </div>
 
 
@@ -233,7 +252,15 @@
                 <h3 class="heading-medium no-margin">The competition is now closed</h3>
             </div>
             <div class="column-half alignright-button">
-                <a class="button" href="/prototypes/1381-application-allocation">Allocate assessors</a>
+                
+                <div th:if="${param.invitesSent == null}" th:remove="tag">
+                    <a class="button large" href="/prototypes/1381-application-allocation">Allocate assessors</a>
+                </div>
+                
+                <div th:if="${param.invitesSent != null}" th:remove="tag">
+                    <a class="button large" href="/prototypes/1373-manage-applications">Manage applications</a> 
+                </div>
+
             </div>
         </div>
     </div>
@@ -553,7 +580,7 @@
                     <td><a href="#" class="view-application">View</a></td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a href="/prototypes/1382-application-allocate-assessors?title=Progressive machines">Allocat assessors</a>
+                            <a href="/prototypes/1382-application-allocate-assessors?title=Progressive machines">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#">Assign</a>
@@ -567,6 +594,156 @@
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                 </tr>
+
+                <tr class="filtered-result">
+                    <th scope="col"><a href="">1234-5435</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+                <tr>
+                    <th scope="col"><a href="">1234-5436</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+                <tr>
+                    <th scope="col"><a href="">1234-5437</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+                <tr>
+                    <th scope="col"><a href="">1234-5438</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+                <tr>
+                    <th scope="col"><a href="">1234-5489</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+                <tr>
+                    <th scope="col"><a href="">1234-5490</a></th>
+                    <td>Example application</td>
+                    <td>Example lead</td>
+                    <td>Example area</td>
+                    <td>5</td>
+                    <td><a href="#" class="view-application">View</a></td>
+                    <td>
+                        <div th:if="${applicationAssign == null}" th:remove="tag">
+                            <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
+                        </div>
+                        <div th:if="${applicationAssign != null}" th:remove="tag">
+                             <a href="#">Assign</a>
+                        </div>
+                    </td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">0</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                    <td class="full-view">-</td>
+                </tr>
+
+
+
+                
+
+
             </tbody>
         </table>
     </div>
