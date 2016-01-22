@@ -143,6 +143,7 @@ jQuery(document).ready(function(){
 
         if(counter >= 1){
             jQuery('#no-assessors').hide();
+            jQuery('#added-assessors').show();
         }
 
         addRow(assessor, skills, type, applications);
@@ -172,6 +173,7 @@ jQuery(document).ready(function(){
 
         if(counter <= 0){
             jQuery('#no-assessors').show();
+            jQuery('#added-assessors').hide();
         }
 
     });

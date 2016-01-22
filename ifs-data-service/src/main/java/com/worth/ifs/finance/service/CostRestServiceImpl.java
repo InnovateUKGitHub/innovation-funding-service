@@ -2,6 +2,7 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +30,13 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     }
 
     @Override
-    public List<Cost> getCosts(Long applicationFinanceId) {
-        return asList(restGet(costRestURL + "/get/"+applicationFinanceId, Cost[].class));
+    public List<CostItem> getCosts(Long applicationFinanceId) {
+        return asList(restGet(costRestURL + "/get/"+applicationFinanceId, CostItem[].class));
     }
 
     @Override
-    public void update(Cost cost) {
-        restPut(costRestURL + "/update/" + cost.getId(), cost);
+    public void update(CostItem costItem) {
+        restPut(costRestURL + "/update/" + costItem.getId(), costItem);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     }
 
     @Override
-    public Cost findById(Long id) {
-        return restGet(costRestURL + "/findById/" + id, Cost.class);
+    public CostItem findById(Long id) {
+        return restGet(costRestURL + "/findById/" + id, CostItem.class);
     }
 }

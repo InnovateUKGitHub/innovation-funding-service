@@ -1,8 +1,10 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.finance.model.OrganisationFinance;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,22 +23,22 @@ public class OrganisationFinanceOverviewTest {
     OrganisationFinanceOverview organisationFinanceOverview;
 
     @Mock
-    OrganisationFinance organisationFinance1;
+    ApplicationFinanceResource applicationFinanceResource1;
 
     @Mock
-    OrganisationFinance organisationFinance2;
+    ApplicationFinanceResource applicationFinanceResource2;
 
 
     @Before
     public void setUp() throws Exception {
-        organisationFinance1 = new OrganisationFinance(1L, new Organisation(), new ArrayList<Cost>());
-        organisationFinance2 = new OrganisationFinance(2L, new Organisation(), new ArrayList<Cost>());
+        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, OrganisationSize.LARGE);
+        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, OrganisationSize.MEDIUM);
 
         MockitoAnnotations.initMocks(this);
 
-        List<OrganisationFinance> organisationFinanceList = new ArrayList<OrganisationFinance>();
-        organisationFinanceList.add(organisationFinance1);
-        organisationFinanceList.add(organisationFinance2);
+        List<ApplicationFinanceResource> organisationFinanceList = new ArrayList<ApplicationFinanceResource>();
+        organisationFinanceList.add(applicationFinanceResource1);
+        organisationFinanceList.add(applicationFinanceResource2);
 
         organisationFinanceOverview = newOrganisationFinanceOverviewBuilder().withOrganisationFinances(organisationFinanceList).build();
     }
@@ -55,8 +57,8 @@ public class OrganisationFinanceOverviewTest {
         BigDecimal totalValue1 = new BigDecimal(123);
         BigDecimal totalValue2 = new BigDecimal(456);
 
-        when(organisationFinance1.getTotal()).thenReturn(totalValue1);
-        when(organisationFinance2.getTotal()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotal()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotal()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotal(), totalValue1.add(totalValue2));
 
@@ -67,8 +69,8 @@ public class OrganisationFinanceOverviewTest {
         BigDecimal totalValue1 = new BigDecimal(124);
         BigDecimal totalValue2 = new BigDecimal(457);
 
-        when(organisationFinance1.getTotalFundingSought()).thenReturn(totalValue1);
-        when(organisationFinance2.getTotalFundingSought()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotalFundingSought()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotalFundingSought()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotalFundingSought(), totalValue1.add(totalValue2));
     }
@@ -78,8 +80,8 @@ public class OrganisationFinanceOverviewTest {
         BigDecimal totalValue1 = new BigDecimal(125);
         BigDecimal totalValue2 = new BigDecimal(458);
 
-        when(organisationFinance1.getTotalContribution()).thenReturn(totalValue1);
-        when(organisationFinance2.getTotalContribution()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotalContribution()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotalContribution()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotalContribution(), totalValue1.add(totalValue2));
     }
@@ -89,8 +91,8 @@ public class OrganisationFinanceOverviewTest {
         BigDecimal totalValue1 = new BigDecimal(126);
         BigDecimal totalValue2 = new BigDecimal(459);
 
-        when(organisationFinance1.getTotalOtherFunding()).thenReturn(totalValue1);
-        when(organisationFinance2.getTotalOtherFunding()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotalOtherFunding()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotalOtherFunding()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotalOtherFunding(), totalValue1.add(totalValue2));
     }

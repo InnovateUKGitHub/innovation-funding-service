@@ -52,6 +52,8 @@
                         <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>
 
                         <div th:replace="question-type/types :: application_finances_summary"></div>
+                        <div th:replace="question-type/types :: research_participation_alert"></div>
+
                         <h2 class="heading-medium">Funding breakdown</h2>
                         <div th:include="question-type/types :: financial_summary_table" th:remove="tag"/>
                     </div>
@@ -65,8 +67,8 @@
     </div>
 
     <div class="alignright-button">
-        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${allQuestionsCompleted}">Submit application</a>
-        <button disabled="disabled" class="button" th:unless="${allQuestionsCompleted}">Submit application</button>
+        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+        <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

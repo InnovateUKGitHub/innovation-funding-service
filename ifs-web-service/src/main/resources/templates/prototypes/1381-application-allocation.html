@@ -21,8 +21,8 @@
 	</div>
 
 </head>
-<body class="comp-assessors">
 
+<body th:class="${(param.fullWidth == null ? 'comp-assessors' : 'comp-assessors full-width')}">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -52,7 +52,19 @@
                 </ul>
             </div>
         </div>
+		
+		
+
     </section>
+
+    <div th:if="${param.sendAssignments != null}" th:remove="tag">
+    	<div class="highlight-panel extra-margin">
+	        <div class="alignright-button" id="added-assessors">
+				<a href="/prototypes/1385-application-allocation-confirm" class="button large">Confirm assignments</a>
+			</div>
+		</div>
+	</div>
+
 
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
