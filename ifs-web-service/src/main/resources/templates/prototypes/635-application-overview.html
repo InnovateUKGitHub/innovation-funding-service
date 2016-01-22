@@ -17,10 +17,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div class="hgroup" style="padding-top: 20px">
-		<p class="subtitle no-margin-bottom">Technology inspired - Application number: 12347353</p>
-		<h1 class="heading-xlarge no-margin-top">Application overview</h1>
-	</div>
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
 
 	<div class="grid-row">
 		 <div class="column-half">

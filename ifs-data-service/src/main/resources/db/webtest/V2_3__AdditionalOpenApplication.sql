@@ -1,0 +1,45 @@
+UPDATE `application` SET `application_status_id`='1' WHERE `id`='2';
+INSERT INTO `process_role` (`application_id`, `organisation_id`, `role_id`, `user_id`) VALUES ('2', '4', '2', '2');
+INSERT INTO `process_role` (`application_id`, `organisation_id`, `role_id`, `user_id`) VALUES ('2', '6', '2', '8');
+INSERT INTO `application_finance` (`application_id`, `organisation_id`, `organisation_size`) VALUES ('2', '4', 'SMALL');
+INSERT INTO `application_finance` (`application_id`, `organisation_id`, `organisation_size`) VALUES ('2', '6', 'SMALL');
+
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (55, NULL,'Working days per year',NULL,'100','5','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (56, NULL,'Working days per year',NULL,'10','8','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (57, NULL,'Working days per year',NULL,'10','9','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (58,'100','','Raw materials','100','9','30');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (59,'1000','','Technician','100','9','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (60,'1000','','Research engineer','100','8','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (61,'10000','Machining of parts','East engineering','0','8','32');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (62,'100','','Plates','100','8','30');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (63,'0','Grant Claim','','50','5','38');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (64,'0','Grant Claim','','70','8','38');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (65,'0','Grant Claim','','70','9','38');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (66,'0','Other Funding','Yes',NULL,'5','35');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (67,'1000','','','1000','5','28');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (68,'1000','','','10','5','30');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (69,'20000','','','0','5','31');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (70,'10000','','','0','5','32');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (71,'10','','','1000','5','33');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (72,'10000','','','0','5','35');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (73,'10000','','','0','5','34');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (74,'20000','','','0','9','31');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (75,'10000','','','0','9','32');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (76,'100','','','100','9','33');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (77,'10000','','','0','9','35');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (78,'10000','','','0','9','34');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (79,'20000','','','22','8','31');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (80,'1','','','10000','8','33');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (81,'10000','','','0','8','34');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (82,'10000','','','0','8','35');
+
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (83, '0', 'Accept Rate', 'Yes', '23', '5', '29');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (84, '0', 'Accept Rate', 'Yes', '24', '8', '29');
+INSERT INTO `cost` (`id`, `cost`, `description`, `item`, `quantity`, `application_finance_id`, `question_id`) VALUES (85, '0', 'Accept Rate', 'Yes', '25', '9', '29');
+
+INSERT INTO `cost_value` VALUES (69,3,10000);
+INSERT INTO `cost_value` VALUES (74,3,10000);
+INSERT INTO `cost_value` VALUES (79,3,10000);
+INSERT INTO `cost_value` VALUES (69,4,100);
+INSERT INTO `cost_value` VALUES (74,4,100);
+INSERT INTO `cost_value` VALUES (79,4,100);

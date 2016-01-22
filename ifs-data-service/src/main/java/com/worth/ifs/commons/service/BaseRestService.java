@@ -9,7 +9,6 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
@@ -22,8 +21,6 @@ public abstract class BaseRestService {
     private final Log log = LogFactory.getLog(getClass());
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
-
-
 
     private String dataRestServiceURL;
 
@@ -65,11 +62,13 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
+        log.debug("restGetEntity: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
-        return getRestTemplate().exchange(URI.create(path), HttpMethod.GET, jsonEntity(""), responseType);
+        log.debug("restGetParameterizedType: "+path);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), responseType);
     }
 
 
@@ -82,10 +81,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
+        log.debug("restPostWithEntity: "+path);
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected void restPut(String path) {
+        log.debug("restPutEntity: "+path);
         restPutEntity(path, Void.class);
     }
 
@@ -110,11 +111,11 @@ public abstract class BaseRestService {
      * restPost is a generic method that performs a RESTful POST request.
      *
      * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param responseType - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
      */
-    protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> c) {
+    protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getHeaders();
 
@@ -123,7 +124,7 @@ public abstract class BaseRestService {
         }
 
         HttpEntity<Object> entity = new HttpEntity<>(postEntity, headers);
-        return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, c);
+        return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, responseType);
     }
 
     @NotSecured("")

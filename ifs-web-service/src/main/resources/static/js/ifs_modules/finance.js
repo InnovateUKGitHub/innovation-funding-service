@@ -15,11 +15,8 @@ IFS.finance = (function(){
             },
             init : function(){
                 IFS.finance.bindCalculationActionToFields(); // Bind calculations
-                IFS.finance.sectionInfoInHeader();
-                IFS.finance.mirrorInputs();
-
                 // Used for calculations
-                jQuery("body").append(jQuery("<div class=\"js-hidden\"><input id=\"hundred-field\" value=\"100\" /></div>"));
+                jQuery("body").append(jQuery("<input type=\"hidden\" id=\"hundred-field\" value=\"100\" />"));
             },
             bindCalculationActionToFields : function(){
 
@@ -52,7 +49,6 @@ IFS.finance = (function(){
                     var input = jQuery(this);
 
                     var fieldsDependantOnOthers = jQuery('[data-calculation-fields]');
-
                     fieldsDependantOnOthers.each(function(i, element) {
                         var dependantField = jQuery(element);
                         updateBasedOnDataCalculationFieldsIfNecessary(dependantField, input);
@@ -114,40 +110,11 @@ IFS.finance = (function(){
                 }
                 element.trigger('change');
             },
-
             formatCurrency: function(total) {
                 total = parseFloat(total, 10);
                 total = total.toFixed();
                 total = total.replace(/(\d)(?=(\d{3})+\b)/g, "$1,");
                 return '£ ' + total.toString();
-            },
-            mirrorInputs : function(){
-                // Bind input and output fields together to mirror values of the "input" fields in the "outputs"
-                jQuery('body').on('change', '[data-binding-input]', function() {
-                    var input = jQuery(this);
-                    var bindingId = input.attr('data-binding-input');
-                    var bindingOutputs = jQuery('[data-binding-output="' + bindingId + '"]');
-                    bindingOutputs.each(function() {
-                        var output = jQuery(this);
-                        if (output.is('span')) {
-                            output.text(input.val());
-                        } else {
-                            output.val(input.val());
-                        }
-                    });
-                });
-            },
-            sectionInfoInHeader : function(){
-                // Move section elements into the section header
-
-                jQuery('.place-in-header').each(function() {
-                    var elementToMove = jQuery(this);
-                    var subsectionId = elementToMove.attr('data-subsection-id');
-                    var header = jQuery('[data-subsection-header=' + subsectionId + ']');
-                    elementToMove.detach();
-                    header.append(elementToMove);
-                    elementToMove.show();
-                });
             }
-    };   
+    };
 })();

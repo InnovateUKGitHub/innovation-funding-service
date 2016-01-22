@@ -1,21 +1,20 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.AssessmentRestServiceImpl;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.competition.resourceassembler.CompetitionResourceAssembler;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
 import com.worth.ifs.file.transactional.FileServiceImpl;
 import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
 import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
 import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
+import com.worth.ifs.form.service.FormInputRestServiceImpl;
+import com.worth.ifs.invite.service.InviteRestServiceImpl;
 import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
-import com.worth.ifs.user.resourceassembler.ProcessRoleResourceAssembler;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
 import org.junit.Test;
@@ -59,11 +58,12 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                     ResponseRestServiceImpl.class,
                     TokenAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
-                    ApplicationResourceAssembler.class,
-                    ProcessRoleResourceAssembler.class,
-                    CompetitionResourceAssembler.class,
                     QuestionStatusRestServiceImpl.class,
-                    FileServiceImpl.class
+                    FileServiceImpl.class,
+                    FormInputRestServiceImpl.class,
+                    InviteRestServiceImpl.class,
+                    FileServiceImpl.class,
+                    ApplicationStatusRestServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
@@ -81,7 +81,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
         // Assert that we actually have some services.
         assertNotNull(services);
-        assertTrue(services.size() > 0);
+        assertFalse(services.isEmpty());
 
         // Find all the methods that should have a security annotation on and check they do.
         int totalMethodsChecked = 0;

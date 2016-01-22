@@ -31,7 +31,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         FormInput input = repository.findOne(1L);
         assertEquals(Long.valueOf(1), input.getId());
-        assertEquals(Integer.valueOf(500), input.getWordCount());
+        assertEquals(Integer.valueOf(400), input.getWordCount());
         assertEquals("textarea", input.getFormInputType().getTitle());
         assertEquals(Long.valueOf(1L), ((Competition) getField(input, "competition")).getId());
         assertTrue(input.isIncludedInApplicationSummary());
@@ -42,7 +42,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_findByCompetitionId() {
 
         List<FormInput> competitionInputs = repository.findByCompetitionId(1L);
-        assertEquals(35, competitionInputs.size());
+        assertEquals(36, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());

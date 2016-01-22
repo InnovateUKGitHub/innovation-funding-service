@@ -3,41 +3,36 @@ package com.worth.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.ApplicationStatusRepository;
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationResourceHateoas;
-import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.SectionService;
+import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
+import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionsRepository;
-import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATION;
+import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handleServiceFailure;
+import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handlingErrors;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.JsonStatusResponse.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -46,149 +41,87 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
-    @Autowired
-    ApplicationRepository applicationRepository;
-    @Autowired
-    ProcessRoleRepository processRoleRepository;
-    @Autowired
-    ApplicationStatusRepository applicationStatusRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    QuestionController questionController;
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    OrganisationRepository organisationRepository;
-    @Autowired
-    CompetitionsRepository competitionRepository;
 
-    private ApplicationResourceAssembler applicationResourceAssembler;
-
-    private final Log log = LogFactory.getLog(getClass());
+    public static final String READY_FOR_SUBMIT = "readyForSubmit";
+    public static final String PROGRESS = "progress";
+    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
+    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
+    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
+    @Autowired
+    ApplicationFinanceHandler applicationFinanceHandler;
+    @Autowired
+    ApplicationService applicationService;
+    @Autowired
+    SectionService sectionService;
 
     @Autowired
-    public ApplicationController(ApplicationResourceAssembler applicationResourceAssembler) {
-        this.applicationResourceAssembler = applicationResourceAssembler;
-    }
+    ApplicationMapper applicationMapper;
 
-    @RequestMapping("/{id}")
-    public ApplicationResourceHateoas getApplicationByIdHateoas(@PathVariable("id") final Long id) {
-        Application application = applicationRepository.findOne(id);
-        return applicationResourceAssembler.toResource(application);
-    }
-
-    @RequestMapping("/hateoas/")
-    public Resources<ApplicationResourceHateoas> findAllHateoas() {
-        List<Application> applications = applicationRepository.findAll();
-        return applicationResourceAssembler.toEmbeddedList(applications);
-    }
+    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
+        new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> badRequest("Unable to find Application", response)),
+        new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_SEND_NOTIFICATION), (serviceFailure, response) -> internalServerError("Unable to send Notification", response))
+    );
 
     @RequestMapping("/normal/{id}")
     public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
-        return new ApplicationResource(applicationRepository.findOne(id));
+        Application application = applicationService.getApplicationById(id);
+        ApplicationResource applicationResource = applicationMapper.mapApplicationToResource(application);
+        return applicationResource;
     }
 
 
     @RequestMapping("/")
     public List<ApplicationResource> findAll() {
-        return simpleMap(applicationRepository.findAll(),ApplicationResource::new);
+        return simpleMap(applicationService.findAll(), applicationMapper::mapApplicationToResource);
     }
 
     @RequestMapping("/findByUser/{userId}")
     public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
-        User user = userRepository.findOne(userId);
-        List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        return simpleMap(roles,role -> new ApplicationResource(role.getApplication()));
+        return simpleMap(applicationService.findByUserId(userId), applicationMapper::mapApplicationToResource);
     }
 
-    /**
-     * This method saves only a few application attributes that
-     * the user is able to modify on the application form.
-     */
     @RequestMapping("/saveApplicationDetails/{id}")
     public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
                                                          @RequestBody ApplicationResource application) {
-
-        Application applicationDb = applicationRepository.findOne(id);
-        HttpStatus status;
-
-        if (applicationDb != null) {
-            applicationDb.setName(application.getName());
-            applicationDb.setDurationInMonths(application.getDurationInMonths());
-            applicationDb.setStartDate(application.getStartDate());
-            applicationRepository.save(applicationDb);
-
-            status = HttpStatus.OK;
-
-        } else {
-            log.error("NOT_FOUND " + id);
-            status = HttpStatus.NOT_FOUND;
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new ResponseEntity<>(headers, status);
+        return applicationService.saveApplicationDetails(id, application);
     }
-
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        List<Section> sections = application.getCompetition().getSections();
-        List<Question> questions = sections.stream()
-                .flatMap(s -> s.getQuestions().stream())
-                .filter(Question::isMarkAsCompletedEnabled)
-                .collect(Collectors.toList());
-
-        List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream().map(ProcessRole::getOrganisation).collect(Collectors.toSet());
-
-        Long countMultipleStatusQuestionsCompleted = organisations.stream()
-                .mapToLong(org -> questions.stream()
-                        .filter(q -> q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, org.getId())).count())
-                .sum();
-        Long countSingleStatusQuestionsCompleted = questions.stream()
-                .filter(q -> !q.hasMultipleStatuses() && questionController.isMarkedAsComplete(q, applicationId, 0L)).count();
-        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
-
-        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
-        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
-
-        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        log.info("Total questions" + totalQuestions);
-        log.info("Total completed questions" + countCompleted);
-
-        double percentageCompleted;
-        if (questions.isEmpty()) {
-            percentageCompleted = 0;
-        } else {
-            percentageCompleted = (100.0 / totalQuestions) * countCompleted;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("completedPercentage", percentageCompleted);
-        return node;
+        return applicationService.getProgressPercentageNodeByApplicationId(applicationId);
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
     public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
-        Application application = applicationRepository.findOne(id);
-        ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
-        application.setApplicationStatus(applicationStatus);
-        applicationRepository.save(application);
+        return applicationService.updateApplicationStatus(id, statusId);
+    }
 
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    @RequestMapping("/applicationReadyForSubmit/{applicationId}")
+    public ObjectNode applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
+        Application application = applicationService.getApplicationById(id);
+        Competition competition = application.getCompetition();
+        double progress = applicationService.getProgressPercentageByApplicationId(id);
+        double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
+        boolean allSectionsComplete = sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null);
 
-        HttpStatus status = HttpStatus.OK;
-        return new ResponseEntity<>(headers, status);
+        boolean readyForSubmit = false;
+        if(allSectionsComplete &&
+                progress == 100 &&
+                researchParticipation <= competition.getMaxResearchRatio()){
+            readyForSubmit = true;
+        }
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put(READY_FOR_SUBMIT, readyForSubmit);
+        node.put(PROGRESS, progress);
+        node.put(RESEARCH_PARTICIPATION,researchParticipation);
+        node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <=competition.getMaxResearchRatio()) );
+        node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
+        return node;
     }
 
 
@@ -196,23 +129,7 @@ public class ApplicationController {
     public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-
-        List<Application> allApps = applicationRepository.findAll();
-        return allApps.stream()
-            .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
-            .map(ApplicationResource::new)
-            .collect(Collectors.toList());
-    }
-
-    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
-        boolean contains = false;
-        int i = 0;
-        while (!contains && i < roles.size()) {
-            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
-            i++;
-        }
-
-        return contains;
+        return simpleMap(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role), applicationMapper::mapApplicationToResource);
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
@@ -220,41 +137,21 @@ public class ApplicationController {
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
+        return applicationMapper.mapApplicationToResource(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj));
+    }
 
-        User user = userRepository.findOne(userId);
+    @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
+    public JsonStatusResponse inviteCollaborator(
+            @PathVariable("applicationId") final Long applicationId,
+            @RequestBody InviteCollaboratorResource invite,
+            HttpServletResponse response) {
 
-        String applicationName = jsonObj.get("name").textValue();
-        Application application = new Application();
-        application.setName(applicationName);
-        LocalDate currentDate = LocalDate.now();
-        application.setStartDate(currentDate);
+        ServiceResult<Notification> inviteResult = handlingErrors(() -> applicationService.inviteCollaboratorToApplication(applicationId, invite));
 
-        String name = ApplicationStatusConstants.CREATED.getName();
-
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
-
-        application.setApplicationStatus(applicationStatus);
-        application.setDurationInMonths(3L);
-
-        List<Role> roles = roleRepository.findByName("leadapplicant");
-        Role role = roles.get(0);
-
-        Organisation userOrganisation = user.getOrganisations().get(0);
-
-        Competition competition = competitionRepository.findOne(competitionId);
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
-
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
-
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
-
-        applicationRepository.save(application);
-        processRoleRepository.save(processRole);
-
-        return new ApplicationResource(application);
+        return inviteResult.mapLeftOrRight(
+                failure -> handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Unable to send Notification to invitee", response)),
+                success -> accepted("Notification sent successfully", response)
+        );
     }
 
 }

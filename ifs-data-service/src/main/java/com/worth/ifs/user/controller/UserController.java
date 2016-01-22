@@ -50,13 +50,9 @@ public class UserController {
     @RequestMapping("/token/{token}")
      public User getUserByToken(@PathVariable("token") final String token) {
         List<User> users = repository.findByToken(token);
-        if (users.size() > 0){
-            log.debug("+++++++++++++++++++++++");
-            log.debug(users.get(0).getName());
-            log.debug(users.get(0).getId());
-            log.debug("+++++++++++++++++++++++");
+        if(users!=null && !users.isEmpty()) {
             return users.get(0);
-        }else{
+        } else {
             return null;
         }
     }
@@ -65,7 +61,7 @@ public class UserController {
     public User getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
         List<User> users = repository.findByEmail(email);
 
-        if (users.size() > 0 ){
+        if (!users.isEmpty()){
             User user = users.get(0);
             if(user.passwordEquals(password)){
                 return user;
@@ -80,38 +76,41 @@ public class UserController {
 
     @RequestMapping("/id/{id}")
     public User getUserById(@PathVariable("id") final Long id) {
-        User user = repository.findOne(id);
-        return user;
+        return repository.findOne(id);
     }
 
     @RequestMapping("/name/{name}")
     public List<User> getUserByName(@PathVariable("name") final String name) {
-        List<User> users = repository.findByName(name);
-        return users;
+        return repository.findByName(name);
     }
+
     @RequestMapping("/findAll/")
     public List<User> findAll() {
-        List<User> users = repository.findAll();
-        return users;
+        return repository.findAll();
+    }
+
+    @RequestMapping("/findByEmail/{email}/")
+    public List<UserResource> findByEmail(@PathVariable("email") final String email) {
+        List<User> users = repository.findByEmail(email);
+
+        return users.stream().map(UserResource::new).collect(Collectors.toList());
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
     public Set<User> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        Set<User> users = roles.stream()
+        return roles.stream()
                 .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
-        return users;
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public Set<User> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        Set<User> users = roles.stream()
+        return roles.stream()
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
-        return users;
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
@@ -123,13 +122,28 @@ public class UserController {
         ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
 
         if(repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            UserResource createdUserResource = createUserWithToken(newUser, resourceEnvelope);
+            UserResource createdUserResource = createUserWithToken(newUser);
             addUserResource(resourceEnvelope, createdUserResource);
         }
         else {
             addDuplicateEmailError(resourceEnvelope);
         }
 
+        return resourceEnvelope;
+    }
+
+    @RequestMapping("/updateDetails")
+    public ResourceEnvelope<UserResource> createUser(@RequestBody UserResource userResource) {
+        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+        List<User> existingUser = repository.findByEmail(userResource.getEmail());
+        if(existingUser == null || existingUser.size() <=0) {
+            log.error("User with email " + userResource.getEmail() + " doesn't exist!");
+            addUserDoesNotExistError(resourceEnvelope);
+            return resourceEnvelope;
+        }
+        User newUser = updateUser(existingUser.get(0), userResource);
+        UserResource updatedUser = updateUser(newUser);
+        addUserResource(resourceEnvelope, updatedUser);
         return resourceEnvelope;
     }
 
@@ -143,11 +157,29 @@ public class UserController {
         resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
     }
 
-    private UserResource createUserWithToken(User user, ResourceEnvelope<UserResource> resourceEnvelope) {
+    private void addUserDoesNotExistError(ResourceEnvelope<UserResource> resourceEnvelope) {
+        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
+        resourceEnvelope.addError(new ResourceError("email", "User with given email address does not exist!"));
+    }
+
+    private UserResource createUserWithToken(User user) {
         User createdUser = repository.save(user);
         User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
         User finalUser = repository.save(createdUserWithToken);
         return new UserResource(finalUser);
+    }
+
+    private User updateUser(User existingUser, UserResource updatedUserResource){
+        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUser.setTitle(updatedUserResource.getTitle());
+        existingUser.setLastName(updatedUserResource.getLastName());
+        existingUser.setFirstName(updatedUserResource.getFirstName());
+        return existingUser;
+    }
+
+    private UserResource updateUser(User user) {
+        User savedUser = repository.save(user);
+        return new UserResource(savedUser);
     }
 
     private void addRoleToUser(User user, String roleName) {

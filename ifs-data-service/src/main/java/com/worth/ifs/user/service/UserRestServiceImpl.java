@@ -2,11 +2,11 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.user.resource.UserResourceEnvelope;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,15 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return null;
 
         return restGet(userRestURL + "/token/" + token, User.class);
+    }
+
+    @NotSecured("Method should be able to be called by a web service for guest user that is creating his account to check for duplicate email")
+    public List<UserResource> findUserByEmail(String email) {
+        if(StringUtils.isEmpty(email))
+            return null;
+        ResponseEntity<UserResource[]> usersResponse = restGetEntity(userRestURL+"/findByEmail/"+email+"/", UserResource[].class);
+        UserResource[] users = usersResponse.getBody();
+        return Arrays.asList(users);
     }
 
     public User retrieveUserByEmailAndPassword(String email, String password) {
@@ -95,7 +104,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return Arrays.asList(users);
     }
 
-    @NotSecured("Method should be able to be called by a guest user that is creating his account")
+    @NotSecured("Method should be able to be called by a web service for guest user to create an account")
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
@@ -108,6 +117,18 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
 
+        return restPost(url, user, UserResourceEnvelope.class);
+    }
+
+    @Override
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+        UserResource user = new UserResource();
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setTitle(title);
+        user.setPhoneNumber(phoneNumber);
+        String url = userRestURL + "/updateDetails";
         return restPost(url, user, UserResourceEnvelope.class);
     }
 }

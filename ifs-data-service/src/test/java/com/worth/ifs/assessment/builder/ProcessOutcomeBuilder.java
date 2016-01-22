@@ -27,4 +27,8 @@ public class ProcessOutcomeBuilder extends BaseBuilder<ProcessOutcome, ProcessOu
     protected ProcessOutcome createInitial() {
         return new ProcessOutcome();
     }
+
+    public ProcessOutcomeBuilder withOutcome(String outcome) {
+        return with(processOutcome -> processOutcome.setOutcome(outcome));
+    }
 }

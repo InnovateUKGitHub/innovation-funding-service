@@ -10,5 +10,12 @@ import java.util.List;
  */
 public interface FileStorageStrategy {
 
+    /**
+     * Given a FileEntry, this method will return a list of path segments that represent an absolute path to the
+     * containing folder, and a filename as the separate String
+     *
+     * @param file
+     * @return
+     */
     Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file);
 }

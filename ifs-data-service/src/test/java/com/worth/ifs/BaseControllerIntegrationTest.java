@@ -1,6 +1,9 @@
 package com.worth.ifs;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -9,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * Created by dwatson on 02/10/15.
  */
+@Rollback
 @Transactional
 public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseWebIntegrationTest {
+    public Log LOG = LogFactory.getLog(getClass());
 
     protected ControllerType controller;
 

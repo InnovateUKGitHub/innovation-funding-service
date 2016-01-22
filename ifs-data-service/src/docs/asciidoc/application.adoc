@@ -39,3 +39,24 @@ include::{snippets}/application/create-application/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/create-application/curl-request.adoc[]
+
+=== Invite Collaborator
+==== Success case
+===== Request
+include::{snippets}/application/invite-collaborator/http-request.adoc[]
+
+===== Response
+include::{snippets}/application/invite-collaborator/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/application/invite-collaborator/curl-request.adoc[]
+
+==== Failure cases
+===== Application not found
+include::{snippets}/application/invite-collaborator_applicationNotFound/http-response.adoc[]
+
+===== Notification service unable to send Notificaiton email
+include::{snippets}/application/invite-collaborator_unableToSendNotification/http-response.adoc[]
+
+===== Unexpected error
+include::{snippets}/application/invite-collaborator_internalServerError/http-response.adoc[]

@@ -97,4 +97,97 @@ jQuery(document).ready(function(){
     }
 
 
+    //---- COMP ADMIN ASSIGN ASSESSORS -----//
+
+
+    function addRow(assessor, skills, type, applications){
+        //alert(assessor+' '+skills+' '+type+' '+applications);
+        jQuery('#assessor-assigned').append(
+            "<tr><th>"+ assessor +"</th>" +
+            "<td>"+ skills +"</td>" +
+            "<td>"+ type +"</td>" +
+            "<td>"+ applications +"</td>" +
+            "<td><a href='#' class='view-assessor'>View</a>" +
+            "<td class='alignright'><a href='#' class='undo-assessor'>Undo</a>" +
+            "</tr>"
+            );
+    };
+
+    function numAvailable(count){
+        var available = jQuery('.available').text();
+        var available = parseInt(available);
+        if (count == 'subtract'){
+            jQuery('.available').html(available -1);
+        }
+        if (count == 'add'){
+            jQuery('.available').html(available +1);
+        }
+        return available;
+    }
+
+    var counter = 0;
+
+    jQuery('.assign-assessor').on('click',function(e){ 
+        e.preventDefault();
+        counter ++;
+
+        var assessor = jQuery(this).parent().parent().find('th').text();
+        var skills = jQuery(this).parent().parent().find('td:eq(0)').text();
+        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+
+        jQuery(this).parent().parent().hide();
+        jQuery('.assigned-count').html('('+counter+')');
+
+        numAvailable('subtract');
+
+        if(counter >= 1){
+            jQuery('#no-assessors').hide();
+            jQuery('#added-assessors').show();
+        }
+
+        addRow(assessor, skills, type, applications);
+        //alert(skills);
+    });
+
+    jQuery('body').on('click','.undo-assessor',function(e){
+        e.preventDefault();
+        counter --;
+
+        var assessor = jQuery(this).parent().parent().find('th').text();
+
+        jQuery('#assessor-list tbody tr').each(function(){
+            if(jQuery(this).find('th').eq(0).text() == assessor){
+                jQuery(this).show();
+                //alert('found');
+            }
+        });
+
+        //alert(assessor);
+
+        jQuery(this).parent().parent().hide();
+
+        jQuery('.assigned-count').html('('+counter+')');
+
+        numAvailable('add');
+
+        if(counter <= 0){
+            jQuery('#no-assessors').show();
+            jQuery('#added-assessors').hide();
+        }
+
+    });
+
+    jQuery('body').on('click','.view-assessor',function(e){
+        e.preventDefault();
+
+        var url = "/prototypes/1383-application-allocate-applications?assessorName="
+        var assessor = jQuery(this).parent().parent().find('th').text();
+        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+
+        window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
+    });
+
+
 });

@@ -1,8 +1,8 @@
-// Global footer 
+// Global footer
 
 #footer {
   background-color: $grey-3;
-  border-top: 1px solid $grey-1;
+  border-top: 1px solid $black;
 
   .footer-wrapper {
     @include outer-block;
@@ -15,17 +15,17 @@
   }
 
   a {
-    color: $grey-1;
+    color: $black;
 
     &:hover {
-      color: $grey-1;
+      color: $black;
     }
   }
 
   h2 {
     @include core-24;
     font-weight: bold;
-    color: $grey-1;
+    color: $black;
     margin: 0;
 
     a {
@@ -39,7 +39,7 @@
     padding-bottom: 60px;
     clear: both;
     font-size: 0;
-    color: $grey-1;
+    color: $black;
 
     .footer-meta-inner {
       display: inline-block;

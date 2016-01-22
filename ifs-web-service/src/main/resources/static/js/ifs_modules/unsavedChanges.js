@@ -1,17 +1,24 @@
 // save the current form state, so we can warn the user if he leaves the page without saving.
 IFS.unsavedChanges = (function(){
     "use strict";
-    var s; 
+    var s;
     return {
         settings : {
           formelement : jQuery('.form-serialize-js')
         },
         init : function(){
-            s = this.settings; 
+            s = this.settings;
             IFS.unsavedChanges.initUnsavedChangesWarning();
+            IFS.unsavedChanges.updateSerializedFormState();
+
+            jQuery('body').on('updateSerializedFormState',function(){
+                IFS.unsavedChanges.updateSerializedFormState();
+            });
+        },
+        updateSerializedFormState : function(){
+            s.formelement.data('serializedFormState',jQuery('.form-serialize-js').serialize());
         },
         initUnsavedChangesWarning : function(){
-            s.formelement.data('serializedFormState',jQuery('.form-serialize-js').serialize());
 
             // don't show the warning when the user is submitting the form.
             var formSubmit = false;

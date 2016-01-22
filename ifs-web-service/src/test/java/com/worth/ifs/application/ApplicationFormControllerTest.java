@@ -2,10 +2,10 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.finance.CostCategory;
-import com.worth.ifs.application.finance.CostType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
@@ -29,6 +29,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
@@ -61,11 +62,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     private Long costId;
 
     private static ResultMatcher matchUrl(final String expectedString) {
-        return new ResultMatcher() {
-            public void match(MvcResult result) {
-                assertTrue(result.getResponse().getRedirectedUrl().equals(expectedString));
-            }
-        };
+        return result -> assertTrue(result.getResponse().getRedirectedUrl().equals(expectedString));
     }
 
     @Before
@@ -139,7 +136,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testQuestionSubmit() throws Exception {
-        Question question = new Question();
+        Question question = newQuestion().build();
         ApplicationResource application = applications.get(0);
 
         when(questionService.getById(anyLong())).thenReturn(question);
@@ -173,12 +170,14 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
 
         // verify that the method is called to send the data to the data services.
-        Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinance.getId(), questionId);
+        Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinanceResource.getId(), questionId);
     }
 
     @Test
     public void testApplicationFormSubmit() throws Exception {
         Long userId = loggedInUser.getId();
+
+        // without assign or mark as complete, just redirect to application overview.
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -190,13 +189,37 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("formInput[application_details-startdate_month]", "11")
                         .param("formInput[application_details-title]", "New Application Title")
                         .param("formInput[application_details-duration]", "12")
-                        .param("mark_as_complete", "12")
-                        .param("mark_as_incomplete", "13")
                         .param("submit-section", "Save")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "applicationSaved"))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkAsComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("mark_as_complete", "12")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId+"**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkAsInComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("mark_as_complete", "12")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId +"**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
     }
 
@@ -251,7 +274,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/"+sectionId+"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "assignedQuestion"))
                 .andReturn();
@@ -392,7 +415,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testSaveFormElementApplicationStartDate() throws Exception {
-        String value = "30";
+        String value = "25";
         String questionId= "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
 

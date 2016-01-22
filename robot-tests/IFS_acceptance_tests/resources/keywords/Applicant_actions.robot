@@ -3,10 +3,22 @@ Applicant goes to the Overview page
     go to    ${APPLICATION_OVERVIEW_URL}
 
 Applicant goes to the Application form
-    Go To    ${APPLICATION_URL}
+    Go To    ${PUBLIC_DESCRIPTION_URL}
 
 Applicant goes to the 'application details' question
     Go To    ${APPLICATION_DETAILS_URL}
+
+Applicant goes to the 'application summary' page for application 2
+    Go To    ${APPLICATION_2_SUMMARY_URL}
+
+Applicant goes to the 'economic benefit' question for application 2
+    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
+
+Applicant goes to the 'application overview' page for application 3
+    Go To    ${APPLICATION_3_OVERVIEW_URL}
+
+Applicant goes to the 'economic benefits' question for application 3
+    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
 
 Applicant goes to the 'project summary' question
     Go To    ${PROJECT_SUMMARY_URL}
@@ -26,7 +38,7 @@ Applicant goes to the 'potential market' question
 Applicant goes to the 'project exploitation' question
     Go To    ${PROJECT_EXPLOITATION_URL}
 
-Applicant goes to the 'economic benefit' question
+Applicant goes to the 'economic benefits' question
     Go To    ${ECONOMIC_BENEFIT_URL}
 
 Applicant goes to the 'technical approach' question
@@ -41,10 +53,20 @@ Applicant goes to the 'risks' question
 Applicant goes to the 'funding' question
     Go To    ${FUNDING_URL}
 
+Applicant goes to the 'project team' question
+    Go To    ${PROJECT_TEAM_URL}
+
 Applicant goes to the 'adding value' question
     Go To    ${ADDING_VALUE_URL}
 
+Applicant goes to the Your finances section
+    Go To    ${YOUR_FINANCES_URL}
+
+Applicant goes to the finance overview
+    Go To    ${FINANCES_OVERVIEW_URL}
+
 Applicant edits the 'Project Summary' question
+    focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
 
@@ -58,7 +80,8 @@ Question should be editable
     sleep    2s
 
 Mark question 12 as editable
-    click Element    css=#question-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    click Element    css=#form-input-12 div.textarea-wrapped.marked-as-complete.word-count div.textarea-footer > button
+    Sleep    1s
 
 Switch to the first browser
     Switch browser    1
@@ -82,103 +105,107 @@ the applicant is in the "Your Finances" sub-section
 the applicant is in the Finance section
     Go To    ${FINANCES}
 
-
-
-
-
 Applicant is on the overview page
-    Location Should Be  ${APPLICATION_OVERVIEW_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
-
+    Location Should contain    ${APPLICATION_OVERVIEW_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Application form
-    Location Should Be  ${APPLICATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${APPLICATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'application details' question
-    Location Should Be  ${APPLICATION_DETAILS_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
-
+    Location Should Be    ${APPLICATION_DETAILS_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'project summary' question
-    Location Should Be  ${PROJECT_SUMMARY_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_SUMMARY_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'public description' question
-    Location Should Be  ${PUBLIC_DESCRIPTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'scope' question
-    Location Should Be  ${SCOPE_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${SCOPE_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'business opportunity question'
-    Location Should Be  ${BUSINESS_OPPORTUNITY_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'potential market' question
-    Location Should Be  ${POTENTIAL_MARKET_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${POTENTIAL_MARKET_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'project exploitation' question
-    Location Should Be  ${PROJECT_EXPLOITATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_EXPLOITATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'economic benefit' question
-    Location Should Be  ${ECONOMIC_BENEFIT_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${ECONOMIC_BENEFIT_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'technical approach' question
-    Location Should Be  ${TECHNICAL APPROACH_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${TECHNICAL APPROACH_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'innovation' question
-    Location Should Be  ${INNOVATION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${INNOVATION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'risks' question
-    Location Should Be  ${RISKS_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${RISKS_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'funding' question
-    Location Should Be  ${FUNDING_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${FUNDING_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
+
+Applicant is on the 'project team' question
+    Location Should Be    ${PROJECT_TEAM_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the 'adding value' question
-    Location Should Be  ${ADDING_VALUE_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${ADDING_VALUE_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the scope section
-    Location Should Be  ${SCOPE_SECTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${SCOPE_SECTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Application questions section
-    Location Should Be  ${APPLICATION_QUESTIONS_SECTION_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the "Your approach..." section
-    Location Should Be  ${PROJECT_URL}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${PROJECT_URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
 
 Applicant is on the Finances section
-    Location Should Be  ${FINANCES}
-    Page Should Not Contain     error
-    Page Should Not Contain     Error
+    Location Should Be    ${FINANCES}
+    Page Should Not Contain    error
+    Page Should Not Contain    Error
+
+Create new application
+    go to    ${CREATE_APPLICATION_PAGE}
+    Input Text    id=application_name    Form test application
+    Click Element    css=#content > form > input

@@ -20,20 +20,70 @@ include::{snippets}/assessment/find-application-user-assessment/curl-request.ado
 
 === Retrieve total assigned assessments for competition
 ==== Request
-include::{snippets}/assessment/total-assigned-assessments/http-request.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/http-request.adoc[]
 
 ==== Response
-include::{snippets}/assessment/total-assigned-assessments/http-response.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/total-assigned-assessments/curl-request.adoc[]
+include::{snippets}/assessment/total-assigned-assessment/curl-request.adoc[]
 
 === Retrieve total submitted assessments for competition
 ==== Request
-include::{snippets}/assessment/total-submitted-assessments/http-request.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/http-request.adoc[]
 
 ==== Response
-include::{snippets}/assessment/total-submitted-assessments/http-response.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/total-submitted-assessments/curl-request.adoc[]
+include::{snippets}/assessment/total-submitted-assessment/curl-request.adoc[]
+
+=== Retrieve total assessor score for assessments
+==== Request
+include::{snippets}/assessment/find-assessment-score-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-assessment-score-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-assessment-score-assessment/curl-request.adoc[]
+
+=== Reject and invitation to assess
+==== Request
+include::{snippets}/assessment/reject-invitation-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/reject-invitation-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/reject-invitation-assessment/curl-request.adoc[]
+
+=== Submit assessments
+==== Request
+include::{snippets}/assessment/submit-assessments-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/submit-assessments-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/submit-assessments-assessment/curl-request.adoc[]
+
+=== Accept assessment
+==== Request
+include::{snippets}/assessment/accept-invitation-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/accept-invitation-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/accept-invitation-assessment/curl-request.adoc[]
+
+=== Recommend assessment
+==== Request
+include::{snippets}/assessment/submit-assessment-assessment/http-request.adoc[]
+
+==== Response
+include::{snippets}/assessment/submit-assessment-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/submit-assessment-assessment/curl-request.adoc[]

@@ -2,6 +2,10 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.persistence.*;
@@ -18,6 +22,8 @@ import static java.util.stream.Collectors.toList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
+
+    private static final Log LOG = LogFactory.getLog(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -126,8 +132,16 @@ public class User {
         this.processRoles.addAll(Arrays.asList(r));
     }
 
+    public void addUserOrganisation(Organisation... o){
+        if(this.organisations == null){
+            this.organisations  = new ArrayList<>();
+        }
+        this.organisations.addAll(Arrays.asList(o));
+    }
+
     public Boolean passwordEquals(String passwordInput){
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
+        LOG.debug(encoder.matches(passwordInput, this.password));
         return encoder.matches(passwordInput, this.password);
     }
 
@@ -190,4 +204,28 @@ public class User {
     }
 
     public void setToken(String token) { this.token = token; }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return new EqualsBuilder()
+                .append(id, user.id)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .toHashCode();
+    }
 }

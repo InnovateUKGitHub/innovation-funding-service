@@ -27,7 +27,7 @@
 <div th:fragment="form-hint (hint)">
     <div class="form-hint"
          th:if="${hint}"
-         th:text="${hint}"
+         th:utext="${hint}"
             />
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -148,10 +148,11 @@
 		</textarea>
 </div>
 <div th:fragment="form-finance-textarea (type, id, name, value)">
-		<textarea
+		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-' + id}"
                 th:text="${value}"
+                rows="4"
                 >
 		</textarea>
 </div>
@@ -178,7 +179,7 @@
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assigned-to-me ' : '')
+                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
                             )
                        )
                        + ' ' +
@@ -187,20 +188,19 @@
                   "
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
- 
+
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
                  alt="This field is marked as complete"
-                 title="This field is marked as complete" 
+                 title="This field is marked as complete"
                  class="marked-as-complete" />
-            
+
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
-            <img th:if="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() and
-                    !(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
                  alt="This field is assigned to you"
                  title="This field is assigned to you"
@@ -227,6 +227,8 @@
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
           </p>
+            <div th:if="${!userIsLeadApplicant}"
+               th:include="question-type/form-elements :: ready-for-review" th:remove="tag"/>
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
@@ -234,24 +236,41 @@
             <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
             <!--  we show mark as complete buttons and the question should be assigned to you or-->
-            <div th:unless="(${currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId()} and ${!userIsLeadApplicant})" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+            <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
                  th:remove="tag"/>
-
         </div>
-
-
     </div>
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" th:if="${questionAssignee?.getAssignee()}">
-        <span>This question is assigned to</span>
-        <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+    <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.getAssignee()})" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')">
+      <span th:if="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
+      <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+    </div>
+    <div th:if="${questionAssignee?.getAssignee()}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" >
+        <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/> by
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+        </span>
+        <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
+          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+        </span>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
+<div th:fragment="ready-for-review">
+  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}">
+    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
+            type="submit"
+            name="assign_question"
+            th:value="${question.getId()}+'_'+${questionAssignee?.getAssignedBy()?.getUser()?.getId()}"
+            th:class="'buttonlink'">Ready for review
+    </button>
+  </div>
+</div>
 <div th:fragment="assign-buttons">
-    <div class="assign-container collapsible" th:if="${question.isAssignEnabled()}">
+    <div class="assign-container collapsible js-close-others" th:if="${question.isAssignEnabled()}">
 
         <div class="assign-button">
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
@@ -264,7 +283,8 @@
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
                             th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
-                            th:attrappend="formaction='&#35;question-'+${question.getId()}" class="buttonlink"/>
+                            th:attrappend="formaction='&#35;question-'+${question.getId()}"
+                            class="buttonlink"/>
                     <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
@@ -275,7 +295,9 @@
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
-            Assigned to: <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+            <span th:if="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Assigned to:</span>
+            <span th:unless="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Reassigned to:</span>
+             <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
         </div>
         <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">
@@ -300,14 +322,9 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <!--/* 
-            TODO: the marks as complete button is hidden when in readonly,
-            this because the controller on the readonly pages doesn't handle mark as complete yet, 
-            if the controller is fixed remove 'hidden' from th:class 
-     */-->
-    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
+    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
-            name="mark_as_complete" 
+            name="mark_as_complete"
             th:value="${question.getId()}"
             th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Mark as complete

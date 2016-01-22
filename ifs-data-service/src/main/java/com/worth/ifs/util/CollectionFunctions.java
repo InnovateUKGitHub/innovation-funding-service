@@ -5,20 +5,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.*;
+import java.util.stream.Collector;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.*;
 
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
@@ -51,7 +45,10 @@ public class CollectionFunctions {
      */
     @SafeVarargs
     public static <T> List<T> combineLists(List<T>... lists) {
+        return doCombineLists(lists);
+    }
 
+    private static <T> List<T> doCombineLists(List<T>... lists) {
         List<T> combinedList = new ArrayList<>();
 
         for (List<T> list : lists) {
@@ -62,6 +59,39 @@ public class CollectionFunctions {
 
         return combinedList;
     }
+
+    /**
+     * Combine the given List and varargs array into a single List
+     *
+     * @param list
+     * @param otherElements
+     * @param <T>
+     * @return combined List containing the elements of the given Lists, in the original list order
+     */
+    @SafeVarargs
+    public static <T> List<T> combineLists(List<T> list, T... otherElements) {
+        List<T> startingList = new ArrayList<>();
+
+        if (list != null && !list.isEmpty()) {
+            startingList.addAll(list);
+        }
+
+        return doCombineLists(startingList, asList(otherElements));
+    }
+
+    /**
+     * Combine the given element and varargs array into a single List
+     *
+     * @param firstElement
+     * @param otherElements
+     * @param <T>
+     * @return combined List containing the elements of the given Lists, in the original list order
+     */
+    @SafeVarargs
+    public static <T> List<T> combineLists(T firstElement, T... otherElements) {
+        return doCombineLists(asList(firstElement), asList(otherElements));
+    }
+
 
     /**
      * Provides a forEach method as per the default List.forEach() method, but with the addition of having an index
@@ -160,6 +190,38 @@ public class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Set<R> simpleMapSet(Set<T> list, Function<T, R> mappingFn) {
+        if (null == list || list.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return list.stream().map(mappingFn).collect(toSet());
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param set
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMap(Set<T> set, Function<T, R> mappingFn) {
+        if (set == null || set.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return set.stream().map(mappingFn).collect(toList());
+    }
+
+    /**
      * A map collector that preserves order
      * @param keyMapper
      * @param valueMapper
@@ -172,6 +234,43 @@ public class CollectionFunctions {
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
         return toMap(keyMapper, valueMapper, (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new);
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map given a key generating function and a value generating function
+     *
+     * @param keyMapper
+     * @param valueMapper
+     * @param <T>
+     * @param <K>
+     * @param <U>
+     * @return
+     */
+    public static <T, K, U> Map<K,U> simpleToMap(
+            List<T> list,
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
+
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return list.stream().collect(toMap(keyMapper, valueMapper));
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map of keys against the original elements themselves, given a key generating function
+     *
+     * @param keyMapper
+     * @param <T>
+     * @param <K>
+     * @return
+     */
+    public static <T, K> Map<K,T> simpleToMap(
+            List<T> list,
+            Function<? super T, ? extends K> keyMapper) {
+
+        return simpleToMap(list, keyMapper, identity());
     }
 
     /**
@@ -190,8 +289,8 @@ public class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <R, T> Function<Map.Entry<R, T>, T> mapEntryValue() {
-        return Map.Entry::getValue;
+    public static <R, T> Function<Entry<R, T>, T> mapEntryValue() {
+        return Entry::getValue;
     }
 
     /**
@@ -219,5 +318,21 @@ public class CollectionFunctions {
      */
     public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
         return simpleFilter(list, element -> !filterFn.test(element));
+    }
+
+    /**
+     * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
+     * joinString
+     *
+     * @param list
+     * @param joinString
+     * @param <T>
+     * @return
+     */
+    public static <T> String simpleJoiner(List<T> list, String joinString) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
     }
 }

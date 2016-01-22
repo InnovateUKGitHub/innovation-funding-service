@@ -19,8 +19,10 @@ public interface UserRestService {
     public ProcessRole findProcessRole(Long userId, Long applicationId);
     public List<ProcessRole> findProcessRole(Long applicationId);
     public List<User> findAssignableUsers(Long applicationId);
+    public List<UserResource> findUserByEmail(String email);
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
     public ProcessRole findProcessRoleById(Long processRoleId);
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

@@ -45,4 +45,6 @@ public class ApplicationTest {
         Assert.assertEquals(application.getCompetition(), competition);
         Assert.assertEquals(application.getApplicationFinances(), applicationFinances);
     }
+
+
 }

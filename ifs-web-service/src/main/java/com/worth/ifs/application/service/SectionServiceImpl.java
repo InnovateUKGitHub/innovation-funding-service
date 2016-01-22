@@ -2,15 +2,13 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,8 +38,18 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
+        return sectionRestService.getCompletedSectionsByOrganisation(applicationId);
+    }
+
+    @Override
+    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
+        return sectionRestService.allSectionsMarkedAsComplete(applicationId);
+    }
+
+    @Override
     public List<Section> getParentSections(List<Section> sections) {
-        List<Section> childSections = new ArrayList<Section>();
+        List<Section> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
         sections = sections.stream()
                 .filter(s -> !childSections.stream()
@@ -80,8 +88,9 @@ public class SectionServiceImpl implements SectionService {
 
         for(Section section : sections) {
             boolean isUserAssignedSection = section.getQuestions().stream().anyMatch(q ->
-                    (questionAssignees.get(q.getId())!=null &&
-                            questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)));
+                questionAssignees.get(q.getId())!=null &&
+                questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)
+            );
             if(isUserAssignedSection) {
                 userAssignedSections.add(section.getId());
             }
@@ -107,6 +116,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    @ProfileExecution
     public Section getSectionByQuestionId(Long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId);
     }

@@ -1,7 +1,9 @@
 package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentOutcomes;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
@@ -18,6 +20,10 @@ public class RejectAction implements Action<String, String> {
     @Autowired
     AssessmentRepository assessmentRepository;
 
+
+    @Autowired
+    ProcessOutcomeRepository processOutcomeRepository;
+
     public RejectAction() {
 
     }
@@ -29,8 +35,13 @@ public class RejectAction implements Action<String, String> {
 
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
         if (assessment != null) {
-            assessment.setProcessStatus(context.getTransition().getTarget().getId());
+
+            processOutcome.setProcess(assessment);
             assessment.getProcessOutcomes().add(processOutcome);
+            assessment.setProcessStatus(context.getTransition().getTarget().getId());
+            processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
+            // If we do not save the entity first then hibernate creates two entries for it when saving the assessment
+            processOutcomeRepository.save(processOutcome);
             assessmentRepository.save(assessment);
         }
     }

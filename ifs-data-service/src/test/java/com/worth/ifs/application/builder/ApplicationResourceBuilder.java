@@ -1,8 +1,8 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 
@@ -41,11 +41,11 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withCompetition(Competition competition) {
-        return with(application -> application.setCompetitionId(competition.getId()));
+        return with(application -> application.setCompetition(competition.getId()));
     }
 
-    public ApplicationResourceBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+    public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusResource... applicationStatus) {
+        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState.getId()), applicationStatus);
     }
 
     public ApplicationResourceBuilder withStartDate(LocalDate... dates) {
@@ -53,6 +53,10 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoleIds(simpleMap(asList(processRoles),ProcessRole::getId)));
+        return with(application -> application.setProcessRoles(simpleMap(asList(processRoles),ProcessRole::getId)));
+    }
+
+    public ApplicationResourceBuilder withName(String name) {
+        return with(application -> application.setName(name));
     }
 }

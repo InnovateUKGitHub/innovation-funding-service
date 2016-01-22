@@ -1,114 +1,108 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.resourceassembler.ApplicationResourceAssembler;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.*;
+import com.worth.ifs.application.mapper.ApplicationMapper;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.InviteCollaboratorResource;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Mock
-    private ApplicationResourceAssembler applicationResourceAssembler;
-
-    private MockHttpServletRequest request;
-
-    @Before
-    public void setUpForHateoas() {
-        request = new MockHttpServletRequest();
-        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
-        RequestContextHolder.setRequestAttributes(requestAttributes);
-    }
+    protected ApplicationMapper applicationMapper;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController(new ApplicationResourceAssembler());
+        return new ApplicationController();
     }
 
     @Test
     public void applicationControllerShouldReturnApplicationById() throws Exception {
-        Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
+        Application testApplication1 = newApplication().withId(1L).withName("testApplication1Name").build();
+        Application testApplication2 = newApplication().withId(2L).withName("testApplication2Name").build();
+        ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();
 
-        when(applicationRepositoryMock.findOne(1L)).thenReturn(testApplication1);
-        when(applicationRepositoryMock.findOne(2L)).thenReturn(testApplication2);
+        when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(testApplication1);
+        when(applicationService.getApplicationById(testApplication2.getId())).thenReturn(testApplication2);
+        when(applicationMapper.mapApplicationToResource(testApplication1)).thenReturn(testApplicationResource1);
+        when(applicationMapper.mapApplicationToResource(testApplication2)).thenReturn(testApplicationResource2);
 
         mockMvc.perform(get("/application/normal/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("testApplication1Name")))
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource1)))
                 .andDo(document("application/get-application",
                         responseFields(
                                 fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-                                fieldWithPath("processRoleIds").description("processRoles"),
-                                fieldWithPath("applicationStatus").description("Application Status Id"),
-                                fieldWithPath("competitionId").description("Competition Id"))));
+                                fieldWithPath("processRoles").description("list of ProcessRole Id's"),
+                                fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
+                                fieldWithPath("competition").description("Competition Id"),
+                                fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"))));
         mockMvc.perform(get("/application/normal/2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("testApplication2Name")));
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource2)));
     }
 
     @Test
     public void applicationControllerShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "test/image/url/2", "testToken456def", null);
-        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null);
+        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "test/image/url/2", "testToken456def", null);
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null);
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, null, 3L);
+        Application testApplication1 = newApplication().withId(1L).withName("testApplication1Name").build();
+        Application testApplication2 = newApplication().withId(2L).withName("testApplication2Name").build();
+        Application testApplication3 = newApplication().withId(3L).withName("testApplication3Name").build();
+        ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();
+        ApplicationResource testApplicationResource3 = newApplicationResource().withId(3L).withName("testApplication3Name").build();
 
-        Organisation organisation1 = new Organisation(1L, "test organisation 1");
-        Organisation organisation2 = new Organisation(2L, "test organisation 2");
+        when(applicationService.findByUserId(testUser1.getId())).thenReturn(Arrays.asList(testApplication1, testApplication2));
+        when(applicationService.findByUserId(testUser2.getId())).thenReturn(Arrays.asList(testApplication2, testApplication3));
+        when(applicationMapper.mapApplicationToResource(testApplication1)).thenReturn(testApplicationResource1);
+        when(applicationMapper.mapApplicationToResource(testApplication2)).thenReturn(testApplicationResource2);
+        when(applicationMapper.mapApplicationToResource(testApplication3)).thenReturn(testApplicationResource3);
 
-        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1, new Role(), organisation1);
-        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2, new Role(), organisation1);
-        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2, new Role(), organisation2);
-        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3, new Role(), organisation2);
-
-        when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
-        when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
-
-        when(processRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
-            add(testProcessRole1);
-            add(testProcessRole2);
-        }});
-
-        when(processRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
-            add(testProcessRole3);
-            add(testProcessRole4);
-        }});
 
         mockMvc.perform(get("/application/findByUser/1"))
                 .andExpect(status().isOk())
@@ -129,7 +123,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void applicationControllerShouldReturnAllApplications() throws Exception {
         int applicationNumber = 3;
         List<Application> applications = newApplication().build(applicationNumber);
-        when(applicationRepositoryMock.findAll()).thenReturn(applications);
+        when(applicationService.findAll()).thenReturn(applications);
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -144,44 +138,126 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         String applicationName = "testApplication";
         String roleName = UserRoleType.LEADAPPLICANT.getName();
 
-        Application application = new Application();
-        application.setName(applicationName);
-
-        Competition competition = new Competition();
-        Role role = new Role();
-        role.setName(roleName);
-        List<Role> roles = new ArrayList<>();
-        roles.add(role);
-        Organisation organisation = new Organisation(1L , "testOrganisation");
-        List<Organisation> organisations = new ArrayList<>();
-        organisations.add(organisation);
-        User user = new User();
-
-        ProcessRole processRole = new ProcessRole(user, null, role, organisation);
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
-        user.addUserApplicationRole(processRole);
-        user.setOrganisations(organisations);
-
-        ApplicationStatus applicationStatus = new ApplicationStatus();
-        applicationStatus.setName(ApplicationStatusConstants.CREATED.getName());
-        List<ApplicationStatus> applicationStatuses = new ArrayList<>();
-        applicationStatuses.add(applicationStatus);
+        Application application = newApplication().withName(applicationName).build();
+        ApplicationResource applicationResource = newApplicationResource().withName(applicationName).build();
 
         ObjectMapper mapper = new ObjectMapper();
-        String applicationJsonString = mapper.writeValueAsString(application);
+        ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
-
-        when(applicationStatusRepositoryMock.findByName(ApplicationStatusConstants.CREATED.getName())).thenReturn(applicationStatuses);
-        when(competitionsRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(roleRepositoryMock.findByName(roleName)).thenReturn(roles);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationNameNode)).thenReturn(application);
+        when(applicationMapper.mapApplicationToResource(application)).thenReturn(applicationResource);
 
         mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(APPLICATION_JSON)
-                .content(applicationJsonString))
+                .content(mapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplication() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        Notification successfullySentNotification = newNotification().withTargets(singletonList(new ExternalUserNotificationTarget("The Recipient", "recipient@example.com"))).build();
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(success(successfullySentNotification));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isAccepted()).
+                andDo(document("application/invite-collaborator",
+                        requestHeaders(
+                                headerWithName("Content-Type").description("Needs to be application/json"),
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("A plain text descriptive message of the action that was performed e.g. \"Notification sent successfully\"")
+                        ))
+                ).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Notification sent successfully", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceFailsWithApplicationNotFound() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(APPLICATION_NOT_FOUND));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isBadRequest()).
+                andDo(document("application/invite-collaborator_applicationNotFound")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to find Application", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceFailsWithUnableToSend() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATIONS));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isInternalServerError()).
+                andDo(document("application/invite-collaborator_unableToSendNotification")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
+    }
+
+    @Test
+    public void testInviteCollaboratorToApplicationButApplicationServiceThrowsException() throws Exception {
+
+        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
+        String inviteBody = new ObjectMapper().writeValueAsString(invite);
+
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenThrow(new IllegalArgumentException("no inviting!"));
+
+        MvcResult response = mockMvc.
+                perform(
+                        post("/application/123/invitecollaborator").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(inviteBody)
+                ).
+                andExpect(status().isInternalServerError()).
+                andDo(document("application/invite-collaborator_internalServerError")).
+                andReturn();
+
+        String content = response.getResponse().getContentAsString();
+        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
+        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
     }
 }

@@ -4,6 +4,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentOutcomes;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,9 @@ public class RecommendAction implements Action<String, String> {
 
     @Autowired
     AssessmentRepository assessmentRepository;
+
+    @Autowired
+    ProcessOutcomeRepository processOutcomeRepository;
 
     @Override
     public void execute(StateContext<String, String> context) {
@@ -52,6 +56,8 @@ public class RecommendAction implements Action<String, String> {
                 assessmentOutcome.setProcess(assessment);
                 assessment.getProcessOutcomes().add(assessmentOutcome);
             }
+            // If we do not save the entity first then hibernate creates two entries for it when saving the assessment
+            processOutcomeRepository.save(assessmentOutcome);
             assessmentRepository.save(assessment);
         }
     }

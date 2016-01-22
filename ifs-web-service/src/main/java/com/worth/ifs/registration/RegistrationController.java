@@ -1,6 +1,6 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.CreateApplicationController;
+import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
@@ -8,16 +8,18 @@ import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.login.LoginController;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,13 +45,22 @@ public class RegistrationController {
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
 
+    @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+
 
     private final Log log = LogFactory.getLog(getClass());
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
+    public final static String EMAIL_FIELD_NAME = "email";
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(user != null){
+            return LoginController.getRedirectUrlForUser(user);
+        }
+
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
@@ -85,7 +96,14 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerFormSubmit(@Valid @ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        if(user != null){
+            return LoginController.getRedirectUrlForUser(user);
+        }
+
         String destination = "registration-register";
+
+        checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
             ResourceEnvelope<UserResource> userResourceEnvelope = createUser(registrationForm, getOrganisationId(request));
@@ -98,11 +116,21 @@ public class RegistrationController {
             }
 
         } else {
-            Organisation organisation = getOrganisation(request);
-            addOrganisationNameToModel(model, organisation);
+            if (!processOrganisation(request, model)) {
+                destination = "redirect:/login";
+            }
         }
 
         return destination;
+    }
+
+    private void checkForExistingEmail(String email, BindingResult bindingResult) {
+        if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME)) {
+            List<UserResource> users = userService.findUserByEmail(email);
+            if (users != null && !users.isEmpty()) {
+                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
+            }
+        }
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<ResourceError> errors, BindingResult bindingResult) {
@@ -117,7 +145,7 @@ public class RegistrationController {
     }
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
-        CreateApplicationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
+        ApplicationCreationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
@@ -126,7 +154,8 @@ public class RegistrationController {
     }
 
     private ResourceEnvelope<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceEnvelope = userService.createLeadApplicantForOrganisation(registrationForm.getFirstName(),
+        ResourceEnvelope<UserResource> userResourceEnvelope = userService.createLeadApplicantForOrganisation(
+                registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),

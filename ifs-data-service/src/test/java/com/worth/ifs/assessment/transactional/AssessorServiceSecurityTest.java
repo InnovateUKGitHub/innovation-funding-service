@@ -5,16 +5,14 @@ import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Feedback.Id;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.assessment.security.FeedbackRules;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceSuccess;
-import com.worth.ifs.util.Either;
+import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
-import static com.worth.ifs.util.Either.right;
+import static com.worth.ifs.transactional.ServiceResult.success;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -75,7 +73,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getMessage());
+        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getValue().get());
 
         verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
     }
@@ -120,13 +118,13 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     private static class TestAssessmentService implements AssessorService {
 
         @Override
-        public Either<ServiceFailure, ServiceSuccess> updateAssessorFeedback(Feedback feedback) {
-            return right(new ServiceSuccess("Security tested!"));
+        public ServiceResult<Feedback> updateAssessorFeedback(Feedback feedback) {
+            return success(new Feedback().setValue(Optional.of("Security tested!")));
         }
 
         @Override
-        public Either<ServiceFailure, Feedback> getFeedback(Feedback.Id id) {
-            return right(new Feedback().setValue(Optional.of("Security tested!")));
+        public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
+            return success(new Feedback().setValue(Optional.of("Security tested!")));
         }
     }
 

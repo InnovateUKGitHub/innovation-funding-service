@@ -4,7 +4,6 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
@@ -30,7 +29,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
-
 
     @InjectMocks
     AssessmentHandler assessmentHandler = new AssessmentHandler();
@@ -126,7 +124,6 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         Competition competition = newCompetition().withSections(sections).build();
         long applicationId = 2L;
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
-        ApplicationResource applicationResource = new ApplicationResource(application);
         long assessmentId = 1L;
         Assessment assessment = newAssessment().withId(assessmentId).withProcessRole(assessorProcessRole).build();
 

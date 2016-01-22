@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
@@ -28,7 +28,7 @@
 		</div>
 
         <div class="form-group download">
-            <h3 class="heading-small no-margin">Download project management appendix:</h3>
+            <h3 class="heading-small no-margin">View project management appendix:</h3>
             <a href="#">Project-plan.pdf (161.96 KB)</a>
         </div>
 
@@ -51,7 +51,7 @@
     </li>
 </ul>
 
-<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to application overview</a>
+<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to assessment overview</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

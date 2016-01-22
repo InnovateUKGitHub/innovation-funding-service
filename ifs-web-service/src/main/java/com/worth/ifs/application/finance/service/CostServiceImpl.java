@@ -2,6 +2,7 @@ package com.worth.ifs.application.finance.service;
 
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.CostFieldRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import org.apache.commons.logging.Log;
@@ -30,12 +31,12 @@ public class CostServiceImpl implements CostService {
     }
 
     @Override
-    public void update(Cost cost) {
-        costRestService.update(cost);
+    public void update(CostItem costItem) {
+        costRestService.update(costItem);
     }
 
     @Override
-    public Cost getById(Long costId) {
+    public CostItem getById(Long costId) {
         return costRestService.findById(costId);
     }
 

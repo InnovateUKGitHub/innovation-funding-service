@@ -12,7 +12,9 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
-import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.JsonStatusResponse;
@@ -21,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -53,11 +56,15 @@ public class ApplicationFormController extends AbstractApplicationController {
     private CostService costService;
 
 
+    @Autowired
+    private FormInputService formInputService;
+
+
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form);
         return "application-form";
     }
 
@@ -78,17 +85,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @ProfileExecution
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
+        StopWatch stopWatch = new StopWatch("Call services");
+        stopWatch.start("showQuestion.services");
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
 
+        StopWatch stopWatch2 = new StopWatch("Add form attributes");
+        stopWatch2.start("showQuestion.addFormAttributes");
         this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -101,8 +117,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
-        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form, false);
+        StopWatch stopWatch1 = new StopWatch("add application details");
+        stopWatch1.start("addFormAttributes.addApplicationDetails");
+        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
+        stopWatch1.stop();
+        log.info(stopWatch1.prettyPrint());
+        StopWatch stopWatch2 = new StopWatch("add navigation");
+        stopWatch2.start("addFormAttributes.addNavigation");
+
         addNavigation(question, applicationId, model);
+        stopWatch2.stop();
+        log.info(stopWatch2.prettyPrint());
         model.addAttribute("currentQuestion", question);
     }
 
@@ -117,7 +142,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+
 
         /* Start save action */
         bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
@@ -133,10 +158,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
+            this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
             return "application-form";
         }else{
+            return getRedirectUrl(request, applicationId);
+        }
+    }
+
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId){
+        if(
+                request.getParameter("assign_question") != null ||
+                request.getParameter("mark_as_incomplete") != null ||
+                request.getParameter("mark_as_complete") != null
+        ){
+            // user did a action, just display the same page.
+            log.info("redirect: "+ request.getRequestURI());
+            return "redirect:"+ request.getRequestURI();
+        }else{
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form/question/" + questionId;
+            log.info("default redirect: ");
+            return "redirect:/application/"+applicationId;
         }
     }
 
@@ -176,8 +217,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addPreviousQuestionToModel(Question previousQuestion, Long applicationId, Model model) {
-        String previousUrl = "";
-        String previousText = "";
+        String previousUrl;
+        String previousText;
 
         if(previousQuestion != null) {
             Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
@@ -194,8 +235,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNextQuestionToModel(Question nextQuestion, Long applicationId, Model model) {
-        String nextUrl = "";
-        String nextText = "";
+        String nextUrl;
+        String nextText;
 
         if(nextQuestion!=null) {
             Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
@@ -251,7 +292,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
@@ -270,16 +311,16 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinance applicationFinance = financeService.getApplicationFinance(user.getId(), applicationId);
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         financeService.addCost(applicationFinance.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form, Model model, Long userId,
-                                                Long applicationId, Long sectionId, Question question,
-                                                HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                              Long applicationId, Long sectionId, Question question,
+                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetitionId());
+        Competition competition = competitionService.getById(application.getCompetition());
         Map<Long, List<String>> errors = null;
         if(question != null) {
             errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
@@ -288,9 +329,19 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors = saveQuestionResponses(application, selectedSection.getQuestions(), request, user.getId(), bindingResult);
         }
 
+        Map<String, String[]> params = request.getParameterMap();
+        params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
+
+
+
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
+
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
+        if(financeFormHandler.handle(request)){
+            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
 
         return bindingResult;
     }
@@ -311,16 +362,10 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
         // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> log.info("key " + key));
 
         boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
         if(!marked){
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-        }
-
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-        if(financeFormHandler.handle(request)){
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
     }
@@ -352,13 +397,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
 
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
 
         if(bindingResult.hasErrors()){
+            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
             return "application-form";
         }else{
-            // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            return "redirect:/application/"+applicationId + "/form" + "/section/" + sectionId;
+            return getRedirectUrl(request, applicationId);
         }
     }
 
@@ -371,7 +415,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (params.containsKey("mark_as_complete")) {
             Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
 
-            if(errors.containsKey(questionId) && errors.get(questionId).size() > 0){
+            if(errors.containsKey(questionId) && !errors.get(questionId).isEmpty()){
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             }else{
@@ -390,16 +434,22 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
-        questions.forEach(question -> question.getFormInputs().forEach(formInput -> {
-            if(request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
-                String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
-                if (errors.size() != 0) {
-                    log.error("save failed. " + question.getId());
-                    errorMap.put(question.getId(), new ArrayList<>(errors));
-                }
-            }
-        }));
+        questions.stream()
+            .forEach(question -> question.getFormInputs()
+                .stream()
+                .forEach(formInput -> {
+                        if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                            String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                            List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
+                            if (errors.size() != 0) {
+                                log.error("save failed. " + question.getId());
+                                errorMap.put(question.getId(), new ArrayList<>(errors));
+                            }
+                        }
+                    }
+                )
+            );
+
         return errorMap;
     }
 
@@ -438,11 +488,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<String> errors = new ArrayList<>();
         try {
             String fieldName = request.getParameter("fieldName");
+            log.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
-            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            errors = storeField(request, applicationId, user.getId(), fieldName, inputIdentifier, value);
 
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors);
             } else {
                 return this.createJsonObjectNode(true, null);
@@ -454,13 +505,16 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
-
+        log.info("STORNG FIELD");
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+        } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
+            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
+            financeFormHandler.ajaxUpdateFinancePosition(request, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(fieldName, value);
+            storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
@@ -468,15 +522,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void storeCostField(String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService);
-        if (fieldName != null && value != null) {
+    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
+        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
+
+        if(fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
+            if(fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
             } else if(fieldName.startsWith("formInput[")) {
                 cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
             }
+            log.info("store field: " + cleanedFieldName + " val: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
         }
     }

@@ -1,5 +1,7 @@
 package com.worth.ifs.file.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.MediaType;
 
 /**
@@ -10,21 +12,22 @@ public class FileEntryResource {
 
     private Long id;
     private String name;
-    private MediaType mediaType;
+    private String mediaType;
     private long filesizeBytes;
 
     public FileEntryResource() {
+        // for JSON marshalling
     }
 
     public FileEntryResource(Long id, String name, String mediaType, long filesizeBytes) {
-        this(id, name, MediaType.parseMediaType(mediaType), filesizeBytes);
+        this.id = id;
+        this.name = name;
+        this.mediaType = mediaType.toString();
+        this.filesizeBytes = filesizeBytes;
     }
 
     public FileEntryResource(Long id, String name, MediaType mediaType, long filesizeBytes) {
-        this.id = id;
-        this.name = name;
-        this.mediaType = mediaType;
-        this.filesizeBytes = filesizeBytes;
+        this(id, name, mediaType.toString(), filesizeBytes);
     }
 
     public Long getId() {
@@ -43,11 +46,11 @@ public class FileEntryResource {
         this.name = name;
     }
 
-    public MediaType getMediaType() {
+    public String getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(MediaType mediaType) {
+    public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
 
@@ -59,27 +62,30 @@ public class FileEntryResource {
         this.filesizeBytes = filesizeBytes;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         FileEntryResource that = (FileEntryResource) o;
 
-        if (filesizeBytes != that.filesizeBytes) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (mediaType != null ? !mediaType.equals(that.mediaType) : that.mediaType != null) return false;
-
-        return true;
+        return new EqualsBuilder()
+                .append(filesizeBytes, that.filesizeBytes)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(mediaType, that.mediaType)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
-        result = 31 * result + (int) (filesizeBytes ^ (filesizeBytes >>> 32));
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(mediaType)
+                .append(filesizeBytes)
+                .toHashCode();
     }
 }

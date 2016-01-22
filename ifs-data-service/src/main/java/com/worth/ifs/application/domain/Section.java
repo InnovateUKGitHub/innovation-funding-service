@@ -9,7 +9,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Section defines database relations and a model to use client side and server side.
@@ -73,6 +75,23 @@ public class Section implements Comparable<Section> {
         return questions;
     }
 
+    /**
+     * Get questions from this section and childSections.
+     */
+    @JsonIgnore
+    public List<Question> fetchAllChildQuestions() {
+        LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
+        if(childSections != null && childSections.size() != 0){
+            LinkedList<Question> childQuestions = childSections.stream()
+                    .filter(s -> s.fetchAllChildQuestions() != null && s.fetchAllChildQuestions().size() > 0)
+                    .flatMap(s -> s.fetchAllChildQuestions().stream())
+                    .collect(Collectors.toCollection(LinkedList::new));
+            sectionQuestions.addAll(childQuestions);
+        }
+        return sectionQuestions;
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -103,7 +122,7 @@ public class Section implements Comparable<Section> {
     }
 
     public Boolean hasChildSections() {
-        return this.childSections!= null && this.childSections.isEmpty();
+        return this.childSections!= null && !this.childSections.isEmpty();
     }
 
     public void setParentSection(Section parentSection) {
@@ -137,6 +156,26 @@ public class Section implements Comparable<Section> {
 
     public void setQuestionGroup(boolean questionGroup) {
         this.questionGroup = questionGroup;
+    }
+
+    public void setDisplayInAssessmentApplicationSummary(boolean displayInAssessmentApplicationSummary) {
+        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

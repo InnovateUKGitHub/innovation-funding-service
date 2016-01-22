@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class FileFunctions {
 
+    static String separator = File.separator;
+    
     /**
      * Given a list of path parts, this method will construct a path separated by the file separator.
      *
@@ -24,7 +26,7 @@ public class FileFunctions {
         }
 
         return pathElements.stream().reduce("",
-                (pathSoFar, nextPathSegment) -> pathSoFar + (!pathSoFar.isEmpty() ? File.separator : "") + nextPathSegment);
+                (pathSoFar, nextPathSegment) -> pathSoFar + (!pathSoFar.isEmpty() ? separator : "") + nextPathSegment);
     }
 
     /**
@@ -37,9 +39,9 @@ public class FileFunctions {
      * @param pathElements
      * @return
      */
-    public static final String pathElementsToAbsolutePathString(List<String> pathElements) {
+    public static final String pathElementsToAbsolutePathString(List<String> pathElements, String absolutePathPrefix) {
         String path = pathElementsToPathString(pathElements);
-        return path.startsWith(File.separator) ? path : File.separator + path;
+        return path.startsWith(absolutePathPrefix) ? path : absolutePathPrefix + path;
     }
 
     /**
@@ -55,20 +57,6 @@ public class FileFunctions {
     }
 
     /**
-     * Given a list of path parts, this method will construct a path separated by the file separator, and ensures that the
-     * path is absolute.
-     *
-     * E.g. given ("path", "to", "file"), this will return "/path/to/file".  Note the leading "/".
-     * E.g. given ("/path", "to", "file"), this will return "/path/to/file".  Note the leading "/" is not duplicated.
-     *
-     * @param pathElements
-     * @return
-     */
-    public static final File pathElementsToAbsoluteFile(List<String> pathElements) {
-        return new File(pathElementsToAbsolutePathString(pathElements));
-    }
-
-    /**
      * Given a list of path parts, this method will construct a path separated by the file separator.
      *
      * E.g. given ("path", "to", "file"), this will return "path/to/file".
@@ -79,20 +67,4 @@ public class FileFunctions {
     public static final Path pathElementsToPath(List<String> pathElements) {
         return pathElementsToFile(pathElements).toPath();
     }
-
-    /**
-     * Given a list of path parts, this method will construct a path separated by the file separator, and ensures that the
-     * path is absolute.
-     *
-     * E.g. given ("path", "to", "file"), this will return "/path/to/file".  Note the leading "/".
-     * E.g. given ("/path", "to", "file"), this will return "/path/to/file".  Note the leading "/" is not duplicated.
-     *
-     * @param pathElements
-     * @return
-     */
-    public static final Path pathElementsToAbsolutePath(List<String> pathElements) {
-        return pathElementsToAbsoluteFile(pathElements).toPath();
-    }
-
-
 }

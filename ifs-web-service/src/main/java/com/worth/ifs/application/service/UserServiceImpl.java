@@ -35,14 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoleIds(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
     public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoleIds(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
         for(final ProcessRole processRole : userApplicationRoles){
             if(processRole.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList());
         return userApplicationRoles.stream()
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoleIds().stream()
+        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList());
         return userApplicationRoles.stream()
@@ -73,5 +73,14 @@ public class UserServiceImpl implements UserService {
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
         return userResourceResourceStatusEnvelope;
+    }
+
+    @Override
+    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
+    }
+
+    public List<UserResource> findUserByEmail(String email) {
+        return userRestService.findUserByEmail(email);
     }
 }

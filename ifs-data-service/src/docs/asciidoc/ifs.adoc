@@ -81,3 +81,11 @@ include::assessment.adoc[]
 [[user]]
 == User
 include::user.adoc[]
+
+[[forminputresponsefileupload]]
+== FormInputResponse File Upload
+include::forminputresponsefileupload.adoc[]
+
+[[silstub]]
+== SIL stubbing endpoints
+include::silstub.adoc[]

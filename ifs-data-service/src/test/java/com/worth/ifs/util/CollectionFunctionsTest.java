@@ -2,12 +2,14 @@ package com.worth.ifs.util;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static java.util.function.Function.identity;
 import static org.junit.Assert.*;
 
 /**
@@ -85,6 +87,38 @@ public class CollectionFunctionsTest {
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
         assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
+    }
+
+    @Test
+    public void test_combineListsWithListAndVarargs() {
+
+        List<Integer> list = asList(1, 2, 3);
+        List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithListAndVarargsNullSafe() {
+        List<Integer> expectedCombinedList = asList(4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargs() {
+        List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargsEmptyVarargs() {
+        List<Integer> expectedCombinedList = asList(1);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1));
+    }
+
+    @Test
+    public void test_combineListsWithElementAndVarargsNullElementSafe() {
+        List<Integer> expectedCombinedList = asList(2, 3, 4, 5, 6);
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 2, 3, 4, 5, 6));
     }
 
     @Test
@@ -257,7 +291,7 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_simpleMap_nullList() {
-        assertEquals(asList(), CollectionFunctions.simpleMap(null, i -> i + " string"));
+        assertEquals(asList(), CollectionFunctions.simpleMap((List<?>) null, i -> i + " string"));
     }
 
     @Test
@@ -294,4 +328,84 @@ public class CollectionFunctionsTest {
     public void test_simpleFilterNot_nullElements() {
         assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
     }
+
+    @Test
+    public void testToLinkedMap() {
+        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5");
+        Map<String, String> orderedMap = orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
+        int index = 0;
+        for (Entry<String, String> entry : orderedMap.entrySet()) {
+            // Order is what we are testing
+            assertEquals(orderedList.get(index), entry.getKey());
+            assertEquals(orderedList.get(index) + orderedList.get(index), entry.getValue());
+            index++;
+        }
+        assertEquals(orderedList.size(), index);
+    }
+
+    @Test
+    public void testToLinkedMapDuplicateEntry() {
+        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5", "4");
+        try {
+            orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
+            fail("Should have failed with illegal state exception");
+        } catch (IllegalStateException e) {
+            // Expected  behaviour
+        }
+    }
+
+    public void test_simpleJoiner() {
+        assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, ", "));
+    }
+
+    @Test
+    public void test_simpleJoiner_nullElements() {
+        assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyAndValueMappers() {
+
+        Map<Integer, String> toMap = CollectionFunctions.simpleToMap(asList(1, 2, 3), element -> element + 10, element -> element + " value");
+        assertEquals(3, toMap.size());
+        assertTrue(toMap.keySet().contains(11));
+        assertTrue(toMap.keySet().contains(12));
+        assertTrue(toMap.keySet().contains(13));
+        assertEquals("1 value", toMap.get(11));
+        assertEquals("2 value", toMap.get(12));
+        assertEquals("3 value", toMap.get(13));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyAndValueMappersNullSafe() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity(), identity());
+        assertTrue(toMap.isEmpty());
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyMapper() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(asList(1, 2, 3), element -> element + 10);
+        assertEquals(3, toMap.size());
+        assertTrue(toMap.keySet().contains(11));
+        assertTrue(toMap.keySet().contains(12));
+        assertTrue(toMap.keySet().contains(13));
+        assertEquals(Integer.valueOf(1), toMap.get(11));
+        assertEquals(Integer.valueOf(2), toMap.get(12));
+        assertEquals(Integer.valueOf(3), toMap.get(13));
+    }
+
+    @Test
+    public void testSimpleToMapWithKeyMapperNullSafe() {
+
+        Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity());
+        assertTrue(toMap.isEmpty());
+    }
 }
+

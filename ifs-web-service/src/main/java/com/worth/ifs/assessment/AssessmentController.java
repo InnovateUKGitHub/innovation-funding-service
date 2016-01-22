@@ -79,6 +79,14 @@ public class AssessmentController extends AbstractApplicationController {
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 }).collect(toList());
 
+        List<AssessmentWithApplicationAndScore> assessmentsStartedAwaitingSubmission = allAssessments.stream()
+                .filter(a -> (!a.isSubmitted() && a.hasAssessmentStarted()))
+                .map(a -> {
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId());
+                    Score score = assessmentRestService.getScore(a.getId());
+                    return new AssessmentWithApplicationAndScore(a, ar, score);
+                }).collect(toList());
+
         List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
                 .filter(Assessment::isSubmitted)
                 .map(a -> {
@@ -88,7 +96,7 @@ public class AssessmentController extends AbstractApplicationController {
                 })
                 .collect(toList());
 
-        AssessmentDashboardModel viewModel = new AssessmentDashboardModel(assessments, submittedAssessments, competition);
+        AssessmentDashboardModel viewModel = new AssessmentDashboardModel(assessments, assessmentsStartedAwaitingSubmission, submittedAssessments, competition);
 
         return new ModelAndView(competitionAssessments, "model", viewModel);
     }
@@ -189,7 +197,7 @@ public class AssessmentController extends AbstractApplicationController {
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
         addApplicationDetails(application.getId(), userId, empty(), model, null);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
-        Set<String> partners = application.getProcessRoleIds().stream().
+        Set<String> partners = application.getProcessRoles().stream().
                 map(id -> processRoleService.getById(id)).
                 map(ProcessRole::getOrganisation).
                 map(Organisation::getName).

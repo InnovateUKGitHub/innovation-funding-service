@@ -36,7 +36,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
         assertEquals(Integer.valueOf(49), response.getWordCount());
-        assertEquals(Integer.valueOf(500 - 49), response.getWordCountLeft());
+        assertEquals(Integer.valueOf(400 - 49), response.getWordCountLeft());
         assertEquals(18, response.getUpdateDate().getDayOfMonth());
         assertEquals(9, response.getUpdateDate().getMonthValue());
         assertEquals(2015, response.getUpdateDate().getYear());
@@ -59,7 +59,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
         assertEquals(Integer.valueOf(49), response.getWordCount());
-        assertEquals(Integer.valueOf(500 - 49), response.getWordCountLeft());
+        assertEquals(Integer.valueOf(400 - 49), response.getWordCountLeft());
         assertEquals(18, response.getUpdateDate().getDayOfMonth());
         assertEquals(9, response.getUpdateDate().getMonthValue());
         assertEquals(2015, response.getUpdateDate().getYear());
@@ -92,7 +92,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
         assertEquals(Integer.valueOf(49), response.getWordCount());
-        assertEquals(Integer.valueOf(500 - 49), response.getWordCountLeft());
+        assertEquals(Integer.valueOf(400 - 49), response.getWordCountLeft());
         assertEquals(18, response.getUpdateDate().getDayOfMonth());
         assertEquals(9, response.getUpdateDate().getMonthValue());
         assertEquals(2015, response.getUpdateDate().getYear());
@@ -112,7 +112,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
         assertEquals(Integer.valueOf(49), response.getWordCount());
-        assertEquals(Integer.valueOf(500 - 49), response.getWordCountLeft());
+        assertEquals(Integer.valueOf(400 - 49), response.getWordCountLeft());
         assertEquals(18, response.getUpdateDate().getDayOfMonth());
         assertEquals(9, response.getUpdateDate().getMonthValue());
         assertEquals(2015, response.getUpdateDate().getYear());

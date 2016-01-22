@@ -2,6 +2,7 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 
@@ -23,6 +24,9 @@ public class Organisation {
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
+    @ManyToOne
+    private OrganisationType organisationType;
+
     @OneToMany(mappedBy="organisation")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -35,6 +39,9 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
     private List<OrganisationAddress> addresses = new ArrayList<>();
+
+    @OneToMany(mappedBy="organisation")
+    private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
     public Organisation() {
 
@@ -109,5 +116,21 @@ public class Organisation {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public void setApplicationFinances(List<ApplicationFinance> applicationFinances) {
+        this.applicationFinances = applicationFinances;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public OrganisationType getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(OrganisationType organisationType) {
+        this.organisationType = organisationType;
     }
 }
