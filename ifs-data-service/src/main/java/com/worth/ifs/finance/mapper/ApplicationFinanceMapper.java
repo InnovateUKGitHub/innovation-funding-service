@@ -41,10 +41,4 @@ public abstract class ApplicationFinanceMapper {
         return repository.findOne(id);
     }
 
-    public Long mapApplicationFinanceResourceToId(ApplicationFinanceResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

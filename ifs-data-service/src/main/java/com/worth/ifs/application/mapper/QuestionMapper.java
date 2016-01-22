@@ -27,6 +27,7 @@ public abstract class QuestionMapper {
     private QuestionRepository questionRepository;
     
     public abstract QuestionResource questionToResource(Question question);
+
     public abstract Question resourceToQuestion(QuestionResource resource);
 
     public Long questionToId(Question question){

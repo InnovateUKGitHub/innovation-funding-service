@@ -36,10 +36,4 @@ public abstract class CostMapper {
         return repository.findOne(id);
     }
 
-    public Long mapCostResourceToId(CostResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

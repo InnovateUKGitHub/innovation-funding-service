@@ -31,11 +31,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition overview'}, ${'/prototypes/860-comp-applications-dashboard'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application allocation'}, ${'/prototypes/1381-application-allocation'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Application allocation'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Send assignments'})" th:remove="tag" />
 
 	<section class="boxed">
         <div class="grid-row">
@@ -52,40 +52,39 @@
                 </ul>
             </div>
         </div>
-		
-		
-
     </section>
 
-    <div th:if="${param.sendAssignments != null}" th:remove="tag">
-    	<div class="highlight-panel extra-margin">
-	        <div class="alignright-button" id="added-assessors">
-				<a href="/prototypes/1385-application-allocation-confirm" class="button large">Confirm assignments</a>
-			</div>
+    <div class="highlight-panel extra-margin">
+        <div class="alignright-button" id="added-assessors">
+			<a href="/prototypes/1385-application-allocation-confirm" class="button large" data-js-modal="modal-confirmation-assessors">Confirm and send assignments</a>
 		</div>
 	</div>
 
+	<div class="modal-confirmation-assessors" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+			
+			<h2 class="heading-medium no-margin">Send assignments</h2>
 
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+			<p>Are you sure that you wish to assign these applications to the assessors?</p>
 
-	<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<p>Once the assignments have been sent this action cannot be undone, though applications can be reassigned as required.</p>
+
+			<hr />
+            
+            <div class="grid-row extra-margin">
+            	<div class="column-half">
+            		<a href="/prototypes/1385-application-allocation-confirm">Cancel</a>
+            	</div>
+            	<div class="column-half alignright-button">
+            		<a href="/prototypes/860-comp-applications-dashboard" class="button large">Send assignments to the assessors</a>
+            	</div>
+            </div>
+
+        </div>
+    </div>
+
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:remove="tag" />
-	
-	<div th:if="${param.filterStatus == null}" th:remove="tag">
-
-		<ul class="pagination">
-		    <li class="next">
-		        <a href="#" rel="next" title="Navigate to next part">
-		            <span class="pagination-label">Next</span>
-		            <span class="pagination-part-title">2 of 4</span>
-		        </a>
-		    </li>
-		</ul>
-
-	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

@@ -20,15 +20,15 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
     @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&-,.:;\\@]+$", message = "Please enter valid characters")
     private String companyHouseName;
     private boolean companyHouseSearching;
-    private List<CompanyHouseBusiness> companyHouseList;
+    private transient List<CompanyHouseBusiness> companyHouseList;
 
     @NotEmpty
     private String postcodeInput;
     @NotEmpty
     private String organisationName;
     private String selectedPostcodeIndex;
-    private Address selectedPostcode = null;
-    private List<Address> postcodeOptions;
+    private transient Address selectedPostcode = null;
+    private transient List<Address> postcodeOptions;
     @NotNull
     private OrganisationSize organisationSize;
     private boolean manualAddress = false;

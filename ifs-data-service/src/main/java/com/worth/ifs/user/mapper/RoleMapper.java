@@ -33,10 +33,4 @@ public abstract class RoleMapper {
         return repository.findOne(id);
     }
 
-    public Long mapRoleResourceToId(RoleResource object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }
