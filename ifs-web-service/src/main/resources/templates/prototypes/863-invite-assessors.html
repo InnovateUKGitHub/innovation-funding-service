@@ -54,117 +54,119 @@
 	
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" th:remove="tag" />
 	
-	<table id="assessor-list">
-		<thead>
-			<tr>
-				<th style="width: 60%">Assessor</th>
-				<th style="width: 20%">Contract and DOI</th>
-				<th style="width: 20%" class="alignright">Add assessor to competition</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr class="filtered-result">
-				<td>Bill Knightly</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Oliver Romero</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Jeffrey	Carlson</td>
-				<td><span class="no">No</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr class="filtered-result">
-				<td>Bill Limp</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Sonja Barton</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Juanita	Luna</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Irving Wolfe</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Verna Richards</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr class="filtered-result">
-				<td>Phil Bill</td>
-				<td><span class="no">No</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Blake Kelley</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Gloria Kelly</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Lori Underwood</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Melanie	Daniels</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Bill Hale</td>
-				<td><span class="no">No</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Christina Swanson</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr class="filtered-result">
-				<td>Ryan Bill</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr class="filtered-result">
-				<td>Stuart Bill</td>
-				<td><span class="no">No</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Malcolm	Stewart</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Elmer Nelson</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-			<tr>
-				<td>Calvin Manning</td>
-				<td><span class="yes">Yes</span></td>
-				<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="table-overflow">
+		<table id="assessor-list">
+			<thead>
+				<tr>
+					<th style="width: 60%" scope="col">Assessor</th>
+					<th style="width: 20%" scope="col">Contract and DOI</th>
+					<th style="width: 20%" class="alignright" scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="filtered-result">
+					<th scope="row">Bill Knightly</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Oliver Romero</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Jeffrey	Carlson</th>
+					<td><span class="no">No</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr class="filtered-result">
+					<th scope="row">Bill Limp</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Sonja Barton</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Juanita	Luna</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Irving Wolfe</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Verna Richards</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr class="filtered-result">
+					<th scope="row">Phil Bill</th>
+					<td><span class="no">No</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Blake Kelley</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Gloria Kelly</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Lori Underwood</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Melanie	Daniels</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Bill Hale</th>
+					<td><span class="no">No</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Christina Swanson</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr class="filtered-result">
+					<th scope="row">Ryan Bill</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr class="filtered-result">
+					<th scope="row">Stuart Bill</th>
+					<td><span class="no">No</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Malcolm	Stewart</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Elmer Nelson</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+				<tr>
+					<th scope="row">Calvin Manning</th>
+					<td><span class="yes">Yes</span></td>
+					<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 
