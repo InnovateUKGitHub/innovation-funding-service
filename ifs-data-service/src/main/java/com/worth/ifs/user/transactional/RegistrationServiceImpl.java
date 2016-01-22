@@ -15,7 +15,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ORGANISATION_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_USER;
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
  *
@@ -24,6 +29,7 @@ import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFa
 public class RegistrationServiceImpl extends BaseTransactionalService implements RegistrationService {
 
     public enum ServiceFailures {
+        UNABLE_TO_CREATE_USER,
         DUPLICATE_EMAIL_ADDRESS
     }
 
@@ -36,18 +42,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<User> createUserLeadApplicantForOrganisation(Long organisationId, UserResource userResource) {
 
-        User newUser = assembleUserFromResource(userResource);
-        addOrganisationToUser(newUser, organisationId);
-        addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
+        return ServiceResult.handlingErrors(UNABLE_TO_CREATE_USER, () -> {
 
-        if(userRepository.findByEmail(userResource.getEmail()).isEmpty()) {
-            return createUserWithUid(newUser, userResource.getPassword());
-        }
-        else {
+            User newUser = assembleUserFromResource(userResource);
 
-            // TODO DW - INFUND-1267 - this type of check and error should be returned from the REST API
-            return failureResponse(DUPLICATE_EMAIL_ADDRESS);
-        }
+            return addOrganisationToUser(newUser, organisationId).map(user ->
+                   addRoleToUser(user, UserRoleType.APPLICANT.getName())).map(user ->
+                   createUserWithUid(newUser, userResource.getPassword())
+            );
+        });
     }
 
 
@@ -62,16 +65,33 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private void addRoleToUser(User user, String roleName) {
-        List<Role> userRoles = roleRepository.findByName(roleName);
-        user.setRoles(userRoles);
+    private ServiceResult<User> addRoleToUser(User user, String roleName) {
+
+        return getOrFail(() -> roleRepository.findByName(roleName), ROLE_NOT_FOUND).map(roles -> {
+
+            Role applicantRole = getOnlyElement(roles);
+
+            List<Role> newRoles = user.getRoles() != null ? new ArrayList<>(user.getRoles()) : new ArrayList<>();
+
+            if (!newRoles.contains(applicantRole)) {
+                newRoles.add(applicantRole);
+            }
+
+            user.setRoles(newRoles);
+            return success(user);
+        });
+
     }
 
-    private void addOrganisationToUser(User user, Long organisationId) {
-        Organisation userOrganisation = organisationRepository.findOne(organisationId);
-        List<Organisation> userOrganisationList = new ArrayList<>();
-        userOrganisationList.add(userOrganisation);
-        user.setOrganisations(userOrganisationList);
+    private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
+
+        return getOrFail(() -> organisationRepository.findOne(organisationId), ORGANISATION_NOT_FOUND).map(userOrganisation -> {
+
+            List<Organisation> userOrganisationList = new ArrayList<>();
+            userOrganisationList.add(userOrganisation);
+            user.setOrganisations(userOrganisationList);
+            return success(user);
+        });
     }
 
     private User assembleUserFromResource(UserResource userResource) {

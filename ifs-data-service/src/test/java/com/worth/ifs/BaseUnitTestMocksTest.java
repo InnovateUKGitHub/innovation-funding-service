@@ -3,6 +3,7 @@ package com.worth.ifs;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
+import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
@@ -97,6 +98,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected RegistrationService registrationServiceMock;
+
+    @Mock
+    protected IdentityProviderService idpServiceMock;
 
     @InjectMocks
     protected ServiceLocator serviceLocator = new ServiceLocator();
