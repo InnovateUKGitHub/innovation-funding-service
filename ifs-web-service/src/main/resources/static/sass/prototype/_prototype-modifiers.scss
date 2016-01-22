@@ -45,11 +45,23 @@
 .highlight-panel{
 	background: $highlight-colour;
 	padding: 20px 0;
+
+	.button{
+		margin-right: 20px !important;
+	} 
 }
 
 .grid-row{
 	&.highlight-panel{
 		margin: 0;
+
+		 &.extra-margin{
+		 	@extend .extra-margin;
+		 }
+
+		 .button{
+		 	margin-right: 10px;
+		 }
 	}
 }
 
