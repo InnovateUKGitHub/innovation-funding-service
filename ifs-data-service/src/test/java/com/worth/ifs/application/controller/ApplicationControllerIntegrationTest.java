@@ -34,13 +34,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     private QuestionController questionController;
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
-    private Long leadApplicantOrganisationId;
 
     @Before
     public void setUp() throws Exception {
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
-        leadApplicantOrganisationId = 3L;
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
             new ProcessRole(
@@ -58,7 +56,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 null
             )
         );
-        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles );
+        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "uid");
         proccessRoles.get(0).setUser(user);
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
