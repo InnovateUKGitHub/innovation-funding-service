@@ -5,6 +5,8 @@ import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationSize;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.EnumMap;
@@ -13,6 +15,8 @@ import java.util.EnumMap;
  * Application finance reosurce holda the organisation's finance resources for an application
  */
 public class ApplicationFinanceResource {
+    private final Log log = LogFactory.getLog(getClass());
+
     Long id;
     private Long organisation;
     private Long application;
@@ -120,12 +124,8 @@ public class ApplicationFinanceResource {
     }
 
     public Integer getGrantClaimPercentage() {
-        GrantClaim grantClaim = getGrantClaim();
-        if(grantClaim!=null) {
-            return grantClaim.getGrantClaimPercentage();
-        } else {
-            return 0;
-        }
+        CostCategory costCategory = getFinanceOrganisationDetails(CostType.FINANCE);
+        return (costCategory != null ? costCategory.getTotal().intValueExact() : 0);
     }
 
     public BigDecimal getTotalFundingSought() {

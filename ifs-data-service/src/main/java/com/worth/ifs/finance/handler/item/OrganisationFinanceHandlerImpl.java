@@ -4,10 +4,7 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.CostCategory;
-import com.worth.ifs.finance.resource.category.DefaultCostCategory;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
+import com.worth.ifs.finance.resource.category.*;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
@@ -131,6 +128,8 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 return new LabourCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
+            case FINANCE:
+                return new GrantClaimCategory();
             default:
                 return new DefaultCostCategory();
         }

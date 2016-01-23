@@ -32,9 +32,13 @@ public class OtherFundingCostCategory implements CostCategory {
 
     @Override
     public void calculateTotal() {
-        total = costs.stream()
-                .map(c -> c.getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if(getOtherPublicFunding().equals("No")) {
+            total = BigDecimal.ZERO;
+        } else {
+            total = costs.stream()
+                    .map(c -> c.getTotal())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
     }
 
     public OtherFunding getOtherFunding() {
