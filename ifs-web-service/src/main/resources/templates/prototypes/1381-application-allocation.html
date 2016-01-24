@@ -21,8 +21,8 @@
 	</div>
 
 </head>
-<body class="comp-assessors">
 
+<body th:class="${(param.fullWidth == null ? 'comp-assessors' : 'comp-assessors full-width')}">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />

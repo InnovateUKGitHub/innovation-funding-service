@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.util.StopWatch;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -118,8 +117,6 @@ public abstract class AbstractApplicationController {
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
     protected ApplicationResource addApplicationDetails(Long applicationId, Long userId, Optional<Long> currentSectionId, Model model, ApplicationForm form) {
-        StopWatch stopWatch1 = new StopWatch("add application details 1");
-        stopWatch1.start("addApplicationDetails.applicationservice.competitionservice.orgservice");
         ApplicationResource application = applicationService.getById(applicationId);
 
         application.setId(applicationId);
@@ -134,37 +131,17 @@ public abstract class AbstractApplicationController {
             form = new ApplicationForm();
         }
         form.application = application;
-        stopWatch1.stop();
-        log.info(stopWatch1.prettyPrint());
 
-        StopWatch stopWatch2 = new StopWatch("add application details 2");
-        stopWatch2.start("addApplicationDetails.addingdetails");
         addOrganisationDetails(model, application, userOrganisation);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
-        stopWatch2.stop();
-        log.info(stopWatch2.prettyPrint());
 
-        StopWatch stopWatch3 = new StopWatch("add application details 3");
-        stopWatch3.start("addApplicationDetails.maporgs");
-
-        StopWatch stopWatch4 = new StopWatch("add application details 3.1");
-        stopWatch4.start("addApplicationDetails.userOrganisation.ifPresent");
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId)
         );
-        stopWatch4.stop();
-        log.info(stopWatch4.prettyPrint());
-        StopWatch stopWatch5 = new StopWatch("add application details 3.2");
-        stopWatch5.start("addApplicationDetails.addMappedSectionsDetails");
         addMappedSectionsDetails(model, application, currentSectionId, userOrganisation);
-        stopWatch5.stop();
-        log.info(stopWatch5.prettyPrint());
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
-        stopWatch3.stop();
-        log.info(stopWatch3.prettyPrint());
-
         return application;
     }
 

@@ -1,12 +1,10 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +19,6 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
     private String selectedPostcodeIndex;
     private Address selectedPostcode = null;
     private List<Address> postcodeOptions;
-    @NotNull
-    private OrganisationSize organisationSize;
     private boolean useCompanyHouseAddress = false;
     private boolean manualAddress = false;
 
@@ -77,14 +73,6 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
 
     public void setSelectedPostcode(Address selectedPostcode) {
         this.selectedPostcode = selectedPostcode;
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
     }
 
     public boolean isUseCompanyHouseAddress() {

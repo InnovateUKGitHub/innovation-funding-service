@@ -25,9 +25,4 @@ public class GrantClaimTest {
         assert(grantClaim.getId().equals(id));
         assert(grantClaim.getGrantClaimPercentage().equals(grantClaimPercentage));
     }
-
-    @Test
-    public void totalForGrantClaimShouldAlwaysBeZeroTest() throws Exception {
-        assertEquals(BigDecimal.ZERO, grantClaim.getTotal());
-    }
 }

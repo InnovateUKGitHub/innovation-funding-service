@@ -1,11 +1,10 @@
 package com.worth.ifs.finance.resource.category;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +13,9 @@ import java.util.List;
  * {@code DefaultCostCategory} implementation for {@link CostCategory}.
  * Default representation for costs and defaults to summing up the costs.
  */
-public class DefaultCostCategory implements CostCategory {
+public class GrantClaimCategory implements CostCategory {
     private final Log log = LogFactory.getLog(getClass());
+
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
 
@@ -34,6 +34,7 @@ public class DefaultCostCategory implements CostCategory {
         total = costs.stream()
                 .map(c -> c.getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        log.info("GRANT CLAIM TOTAL: " + total);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class DefaultCostCategory implements CostCategory {
 
     @Override
     public boolean excludeFromTotalCost() {
-        return false;
+        return true;
     }
 
     @Override

@@ -44,9 +44,7 @@ public class Overhead implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
-        BigDecimal totalLabour = new BigDecimal(344172);
-        Integer rate = getRate();
-        return totalLabour.divide(BigDecimal.valueOf(100), 6, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(rate));
+        return BigDecimal.ZERO;
     }
 
     @Override
