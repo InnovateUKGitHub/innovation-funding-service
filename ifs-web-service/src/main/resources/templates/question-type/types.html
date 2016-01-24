@@ -121,17 +121,17 @@
 
 
     <div th:fragment="finance">
-        <div th:class="form-group" th:classappend="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
+        <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
             <label class="form-label" for="cost-financegrantclaim">
                 <div class="heading-medium" th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <span th:if="${organisationFinanceSize.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize.getMaxGrantClaimPercentage()}" />% or lower</span>
+                <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
                    min="0"
-                   th:max="${organisationFinanceSize.getMaxGrantClaimPercentage()}"
-                   th:class="${organisationFinanceSize.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
+                   th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
+                   th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-'+organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}" />
@@ -140,7 +140,7 @@
     </div>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <div th:fragment="organisation_size" th:if="${organisationType.name == 'Business'}" th:remove="tag">
+    <div th:fragment="organisation_size" th:if="${organisationType?.name == 'Business'}" th:remove="tag">
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div class="form-group">
           <h2 class="heading-medium" th:text="${question.name}" />
@@ -308,78 +308,80 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads" th:remove="tag">
         <p th:text="${question.getDescription()}" />
-        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},overheadCosts=${costCategory?.costs[0]}">
-            <div class="grid-row form-group">
-                <strong class="column-half">
-                    20% of labour costs
-                </strong>
-                <strong class="column-half">
-                    Calculated rate: <span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
-                                            data-calculation-operations="" />
-                </strong>
-            </div>
-            <fieldset>
-                <legend>Do you choose to accept this rate?</legend>
-                <div class="form-group">
-                  <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts.id+'-acceptRate_0'}">
-                      <input th:id="${overheadCosts.id+'-acceptRate_0'}"
-                             type="radio"
-                             th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
-                             value="Yes"
-                             th:checked="${overheadCosts?.acceptRate == 'Yes'}" />
-                      20% of labour costs
-                  </label>
-                  <label class="block-label" th:for="${overheadCosts.id+'-acceptRate_1'}" data-target="customRate">
-                      <input th:id="${overheadCosts.id+'-acceptRate_1'}"
-                             type="radio"
-                             th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
-                             value="No"
-                             th:checked="${overheadCosts?.acceptRate == 'No'}" />
-                          Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)
-                  </label>
-                  <div class="panel-indent js-hidden">
-                      <div class="form-group">
-                          <label class="form-label" th:for="${overheadCosts.id+'-customRate'}">Overhead rate</label>
-                          <input type="text"
-                                 th:name="'overheads-customRate-'+${overheadCosts?.id}"
-                                 th:id="${'cost-'+ type + '-'+overheadCosts.id+'-customRate'}"
-                                 data-calculation-input="overhead-rate"
-                                 class="form-control form-control-1-8"
-                                 th:value="'' + ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" /> %
-                      </div>
-                      <div class="form-group">
-                          <label class="form-label" th:for="${overheadCosts.id+'-calculatedRate'}">Overhead calculation</label>
-                          <input type="text"
-                                 th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
-                                 th:id="${'section-total-'+subSection.id}"
-                                 class="form-control"
-                                 readonly="readonly"
-                                 data-calculation-operations=""
-                                 data-calculation-input="overhead-calculated"
-                                 th:value="'£ 0'"/>
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}">
+            <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}" >
+                <div class="grid-row form-group">
+                    <strong class="column-half">
+                        20% of labour costs
+                    </strong>
+                    <strong class="column-half">
+                        Calculated rate: <span id="calculated-rate" data-calculation-field="[data-calculation-input=overhead-calculated]"
+                                                data-calculation-operations="" />
+                    </strong>
+                </div>
+                <fieldset>
+                    <legend>Do you choose to accept this rate?</legend>
+                    <div class="form-group">
+                      <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-acceptRate_0'}">
+                          <input th:id="${overheadCosts?.id+'-acceptRate_0'}"
+                                 type="radio"
+                                 th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
+                                 value="Yes"
+                                 th:checked="${overheadCosts?.acceptRate == 'Yes'}" />
+                          20% of labour costs
+                      </label>
+                      <label class="block-label" th:for="${overheadCosts?.id+'-acceptRate_1'}" data-target="customRate">
+                          <input th:id="${overheadCosts?.id+'-acceptRate_1'}"
+                                 type="radio"
+                                 th:name="'overheads-acceptRate-'+${overheadCosts?.id}"
+                                 value="No"
+                                 th:checked="${overheadCosts?.acceptRate == 'No'}" />
+                              Bespoke rate (I confirm that I will justify this rate if Innovate UK funds my project)
+                      </label>
+                      <div class="panel-indent js-hidden">
+                          <div class="form-group">
+                              <label class="form-label" th:for="${overheadCosts?.id+'-customRate'}">Overhead rate</label>
+                              <input type="text"
+                                     th:name="'overheads-customRate-'+${overheadCosts?.id}"
+                                     th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}"
+                                     data-calculation-input="overhead-rate"
+                                     class="form-control form-control-1-8"
+                                     th:value="'' + ${overheadCosts?.getCusomtRate()!=null} ? ${#numbers.formatDecimal(overheadCosts?.getCustomRate(),0,0)}" /> %
+                          </div>
+                          <div class="form-group">
+                              <label class="form-label" th:for="${overheadCosts?.id+'-calculatedRate'}">Overhead calculation</label>
+                              <input type="text"
+                                     th:name="'overheads-calculatedRate-'+${overheadCosts?.id}"
+                                     th:id="${'section-total-'+subSection.id}"
+                                     class="form-control"
+                                     readonly="readonly"
+                                     data-calculation-operations=""
+                                     data-calculation-input="overhead-calculated"
+                                     th:value="'£ 0'"/>
+                          </div>
                       </div>
                   </div>
-              </div>
-            </fieldset>
+                </fieldset>
 
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total overhead costs
-                    <input type="text"
-                           th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
-                           class="form-control form-control-1-4 alignright"
-                           readonly="readonly"
-                           th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
-                           data-calculation-operations="*"
-                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                           th:value="''"
-                           />
+                <div class="form-group form-group--align-right alignright">
+                    <label>
+                        Total overhead costs
+                        <input type="text"
+                               th:name="'overheads-totalCosts-'+${overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id}"
+                               data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
+                               data-calculation-operations="*"
+                               th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                               th:value="''"
+                               />
 
-                </label>
-            </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                    </label>
+                </div>
+                <div class="alignright-button">
+                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                </div>
             </div>
         </div>
     </div>
@@ -879,7 +881,7 @@
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
                 <dt>Current research participation</dt>
-                <dd th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'warning'" th:text="${researchParticipationPercentage}+' %'"></dd>
+                <dd th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'warning'" th:text="(${researchParticipationPercentage} % 1 == 0 ? ${#numbers.formatDecimal(researchParticipationPercentage,0,0)} : ${researchParticipationPercentage}) +' %'"></dd>
             </dl>
 
             <div th:replace="question-type/types :: research_participation_alert"></div>

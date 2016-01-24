@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -47,18 +46,17 @@ public class ApplicationFormController extends AbstractApplicationController {
     private static final Log log = LogFactory.getLog(ApplicationFormController.class);
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
-    @InitBinder
-    protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
-        dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
-    }
-
     @Autowired
     private CostService costService;
-
 
     @Autowired
     private FormInputService formInputService;
 
+
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
+        dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
+    }
 
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
@@ -92,19 +90,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
                                   HttpServletRequest request) {
-        StopWatch stopWatch = new StopWatch("Call services");
-        stopWatch.start("showQuestion.services");
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        stopWatch.stop();
-        log.info(stopWatch.prettyPrint());
 
-        StopWatch stopWatch2 = new StopWatch("Add form attributes");
-        stopWatch2.start("showQuestion.addFormAttributes");
         this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
-        stopWatch2.stop();
-        log.info(stopWatch2.prettyPrint());
 
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
@@ -117,17 +107,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(section!=null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
-        StopWatch stopWatch1 = new StopWatch("add application details");
-        stopWatch1.start("addFormAttributes.addApplicationDetails");
         super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
-        stopWatch1.stop();
-        log.info(stopWatch1.prettyPrint());
-        StopWatch stopWatch2 = new StopWatch("add navigation");
-        stopWatch2.start("addFormAttributes.addNavigation");
-
         addNavigation(question, applicationId, model);
-        stopWatch2.stop();
-        log.info(stopWatch2.prettyPrint());
         model.addAttribute("currentQuestion", question);
     }
 
@@ -166,15 +147,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId){
-        if(
-                request.getParameter("assign_question") != null ||
-                request.getParameter("mark_as_incomplete") != null ||
-                request.getParameter("mark_as_complete") != null
-        ){
+        if(request.getParameter("assign_question") != null ||
+            request.getParameter("mark_as_incomplete") != null ||
+            request.getParameter("mark_as_complete") != null) {
             // user did a action, just display the same page.
             log.info("redirect: "+ request.getRequestURI());
             return "redirect:"+ request.getRequestURI();
-        }else{
+        } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             log.info("default redirect: ");
             return "redirect:/application/"+applicationId;
@@ -507,7 +486,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
-        log.info("STORNG FIELD");
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
