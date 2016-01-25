@@ -1,6 +1,7 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -14,6 +15,8 @@ public interface OrganisationRestService {
     public List<Organisation> getOrganisationsByApplicationId(Long applicationId);
     public Organisation getOrganisationById(Long organisationId);
     public OrganisationResource save(Organisation organisation);
+    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
+    public OrganisationResource save(OrganisationResource organisation);
     public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type);
 
 

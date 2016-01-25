@@ -50,15 +50,25 @@ public class OrganisationController {
 
     @RequestMapping("/findById/{organisationId}")
     public Organisation findById(@PathVariable("organisationId") final Long organisationId) {
-
         return organisationRepository.findOne(organisationId);
     }
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public OrganisationResource create(@RequestBody Organisation organisation){
-        log.info("OrganisationController , create method");
-        log.info("OrganisationController , create method "+organisation.getName());
+        log.debug("OrganisationController , create method");
+        log.debug("OrganisationController , create method " + organisation.getName());
+        organisation = organisationRepository.save(organisation);
+        return organisationMapper.mapOrganisationToResource(organisation);
+    }
+
+    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
+    @RequestMapping(value = "/saveResource", method = RequestMethod.POST)
+    public OrganisationResource saveResource(@RequestBody OrganisationResource organisationResource){
+        log.debug("OrganisationController , create method");
+        Organisation organisation = organisationMapper.resourceToOrganisation(organisationResource);
+        log.debug("OrganisationController , create method " + organisation.getName());
+
         organisation = organisationRepository.save(organisation);
         return organisationMapper.mapOrganisationToResource(organisation);
     }

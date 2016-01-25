@@ -2,10 +2,8 @@ package com.worth.ifs.application.form;
 
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.user.domain.OrganisationSize;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,8 +27,7 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
     private String selectedPostcodeIndex;
     private transient Address selectedPostcode = null;
     private transient List<Address> postcodeOptions;
-    @NotNull
-    private OrganisationSize organisationSize;
+
     private boolean manualAddress = false;
     private boolean inCompanyHouse = true;
 
@@ -91,14 +88,6 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
 
     public void setPostcodeOptions(List<Address> postcodeOptions) {
         this.postcodeOptions = postcodeOptions;
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
     }
 
     public boolean isManualAddress() {

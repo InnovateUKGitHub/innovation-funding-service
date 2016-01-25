@@ -82,13 +82,17 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
 
-
     public Organisation getOrganisationById(Long organisationId) {
         return organisationRestService.getOrganisationById(organisationId);
     }
 
     @Override
     public OrganisationResource save(Organisation organisation) {
+        return organisationRestService.save(organisation);
+    }
+
+    @Override
+    public OrganisationResource save(OrganisationResource organisation) {
         return organisationRestService.save(organisation);
     }
 
