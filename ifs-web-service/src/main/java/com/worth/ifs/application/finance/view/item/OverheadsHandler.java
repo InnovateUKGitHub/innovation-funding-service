@@ -19,7 +19,7 @@ public class OverheadsHandler extends CostHandler {
     public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
         Integer customRate = null;
         Integer agreedRate = null;
-        String rateType = OverheadRateType.NONE.name();
+        String rateType = null;
 
         for(CostFormField costFormField : costFormFields) {
             switch (costFormField.getCostName()) {
@@ -37,11 +37,27 @@ public class OverheadsHandler extends CostHandler {
             }
         }
 
-        Integer rate = handleRate(rateType, customRate, agreedRate);
-        return new Overhead(id, OverheadRateType.valueOf(rateType), rate);
+        return createOverHead(id, rateType, customRate, agreedRate);
     }
 
-    protected Integer handleRate(String rateType, Integer customRate, Integer agreedRate) {
+    protected CostItem createOverHead(Long id, String rateType, Integer customRate, Integer agreedRate) {
+        OverheadRateType overheadRateType = null;
+        Integer rate = null;
+
+        if(rateType!=null) {
+            overheadRateType = OverheadRateType.valueOf(rateType);
+            rate = handleRate(rateType, customRate, agreedRate);
+        } else {
+            if(agreedRate!=null) {
+                rate = agreedRate;
+            } else if(customRate!=null) {
+                rate = customRate;
+            }
+        }
+        return new Overhead(id, overheadRateType, rate);
+    }
+
+    private Integer handleRate(String rateType, Integer customRate, Integer agreedRate) {
         OverheadRateType overheadRateType = OverheadRateType.valueOf(rateType);
         switch(overheadRateType) {
             case CUSTOM_RATE:
