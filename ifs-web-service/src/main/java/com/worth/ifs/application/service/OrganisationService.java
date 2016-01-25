@@ -20,6 +20,7 @@ public interface OrganisationService {
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId);
     public Organisation getOrganisationById(Long organisationId);
     public OrganisationResource save(Organisation organisation);
+    public OrganisationResource save(OrganisationResource organisation);
     public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId);
     public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText);
     public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type);

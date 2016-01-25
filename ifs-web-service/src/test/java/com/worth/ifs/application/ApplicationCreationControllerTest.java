@@ -7,7 +7,6 @@ import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -70,6 +69,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(companyHouseBusiness);
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
+        when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
     }
 
@@ -198,7 +198,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     public void testFindBusinessConfirmCompanyDetailsInvalid() throws Exception {
         MvcResult result = mockMvc.perform(post("/application/create/find-business")
                         .param("organisationName", "")
-                        .param("organisationSize", OrganisationSize.LARGE.name())
                         .param("confirm-company-details", "")
         )
                 .andExpect(status().is3xxRedirection())
@@ -223,13 +222,11 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     public void testFindBusinessConfirmCompanyDetails() throws Exception {
         mockMvc.perform(post("/application/create/find-business")
                         .param("organisationName", "BusinessName")
-                        .param("organisationSize", OrganisationSize.LARGE.name())
                         .param("confirm-company-details", "")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists(ApplicationCreationController.COMPANY_NAME))
                 .andExpect(cookie().exists(ApplicationCreationController.COMPANY_ADDRESS))
-                .andExpect(cookie().exists(ApplicationCreationController.ORGANISATION_SIZE))
                 .andExpect(view().name("redirect:/application/create/confirm-company"));
     }
 
@@ -310,7 +307,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     @Test
     public void testSelectedBusinessSaveBusiness() throws Exception {
         mockMvc.perform(post("/application/create/selected-business/" + COMPANY_ID)
-                        .param("organisationSize", OrganisationSize.LARGE.name())
                         .param("save-company-details", "true")
         )
                 .andExpect(status().is3xxRedirection())
@@ -350,7 +346,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         mockMvc.perform(get("/application/create/confirm-company")
                         .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
                         .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
-                        .cookie(new Cookie(ApplicationCreationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("business"))
@@ -363,7 +358,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         mockMvc.perform(get("/application/create/save-company/")
                         .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
                         .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
-                        .cookie(new Cookie(ApplicationCreationController.ORGANISATION_SIZE, OrganisationSize.LARGE.name()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register?organisationId=" + organisationResource.getId()));

@@ -44,6 +44,12 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     @Override
+    public OrganisationResource save(OrganisationResource organisation) {
+        return restPost(organisationRestURL + "/saveResource", organisation, OrganisationResource.class);
+    }
+
+    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
+    @Override
     public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type) {
         return restPost(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
