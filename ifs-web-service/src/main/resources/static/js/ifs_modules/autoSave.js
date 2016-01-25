@@ -5,7 +5,7 @@ IFS.autoSave = (function(){
                              // So if we have multiple messages it will only delete the one which contains the message that has been resolved.
     return {
         settings : {
-            inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"])',
+            inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"],[type="hidden"])',
             textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
             typeTimeout : 500,
             minimumUpdateTime : 1000, // the minimum time between the ajax request, and displaying the result of the ajax call.
@@ -61,7 +61,7 @@ IFS.autoSave = (function(){
 
                      // set the form-saved-state
                      jQuery('body').trigger('updateSerializedFormState');
-                      
+
                       //save message
                      if(data.success == 'true'){
                          setTimeout(function(){
