@@ -352,20 +352,23 @@
                 <div id="overhead-none">
                     <h3 class="heading-medium">No Administration support cost funding</h3>
                     <p>You are not currently applying for administration support cost funding</p>
+                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" id="section-total-10-labour-cost-none"/>
+
                 </div>
                 <div id="overhead-default-percentage">
                     <h3 class="heading-medium">20% of labour costs</h3>
                     <div class="form-group form-group--align-right alignright">
                         <label>
                             Total administration support cost
+                            <input type="hidden" value="20" id="labour-cost-20-percent"/>
                             <input type="text"
                                    th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
                                    class="form-control form-control-1-4 alignright"
                                    readonly="readonly"
-                                   th:id="${'section-total-'+subSection.id}"
-                                   th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                                   th:id="${'section-total-'+subSection.id+'-default'}"
+                                   th:attr="data-calculation-fields='#section-total-9,#hundred-field,#labour-cost-20-percent',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)}"
+                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)} : '£ 0'"
                                     />
 
                         </label>
@@ -393,7 +396,7 @@
                                    th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
                                    class="form-control form-control-1-4 alignright"
                                    readonly="readonly"
-                                   th:id="${'section-total-'+subSection.id}"
+                                   th:id="${'section-total-'+subSection.id+'-custom'}"
                                    th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)} : '£ 0'"/>
@@ -422,10 +425,9 @@
                                    th:name="${'overheads-totalCosts-' + question.id + '-' + overheadCosts?.id}"
                                    class="form-control form-control-1-4 alignright"
                                    readonly="readonly"
-                                   th:id="${'section-total-'+subSection.id}"
-                                   data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
-                                   data-calculation-operations="*"
-                                   th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}"
+                                   th:id="${'section-total-'+subSection.id+'-special'}"
+                                   th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                                   data-calculation-operations="/,*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total, 0, 0)} : '£ 0'"
                                    />
 
