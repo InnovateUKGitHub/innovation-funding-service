@@ -16,7 +16,13 @@ public class OverheadsHandler extends CostHandler {
         if(costItem instanceof Overhead) {
             Overhead overhead = (Overhead) costItem;
             Integer rate = overhead.getRate();
-            cost = new Cost(overhead.getId(), overhead.getRateType().toString(), "", rate, null, null, null);
+            String rateType = null;
+
+            if(overhead.getRateType()!=null) {
+                rateType = overhead.getRateType().toString();
+            }
+
+            cost = new Cost(overhead.getId(), rateType, "", rate, null, null, null);
         }
         return cost;
     }
