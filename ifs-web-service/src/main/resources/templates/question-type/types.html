@@ -426,7 +426,7 @@
                                    data-calculation-fields="[id=cost-labour-total-field],[id=id_overheads-customRate]"
                                    data-calculation-operations="*"
                                    th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total, 0, 0) : '£ 0'}"
+                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total, 0, 0)} : '£ 0'"
                                    />
 
                         </label>
