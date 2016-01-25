@@ -11,7 +11,7 @@ ${FF_PROFILE}    ${CURDIR}/../firefox_config
 Login as user
     [Arguments]    ${email}    ${password}
     Start Virtual Display       1920        1080
-    The guest user opens the broswer
+    The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
 
