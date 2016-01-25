@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
                 .anonymous()
             .and()
-                .authorizeRequests()
+                .authorizeRequests().anyRequest().permitAll()
             .and()
                 .exceptionHandling()
             .and()

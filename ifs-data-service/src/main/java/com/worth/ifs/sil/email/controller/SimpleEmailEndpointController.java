@@ -112,8 +112,9 @@ public class SimpleEmailEndpointController {
                 MimeMultipart cover = new MimeMultipart("alternative");
                 MimeBodyPart html = new MimeBodyPart();
                 MimeBodyPart text = new MimeBodyPart();
-                cover.addBodyPart(html);
+
                 cover.addBodyPart(text);
+                cover.addBodyPart(html);
 
                 wrap.setContent(cover);
 
