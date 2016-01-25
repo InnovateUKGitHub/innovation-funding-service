@@ -32,9 +32,13 @@ public class LabourCostCategory implements CostCategory {
 
     @Override
     public void calculateTotal() {
-        total = costs.stream()
-                .map(c -> ((LabourCost)c).getTotal(workingDaysPerYearCostItem.getLabourDays()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if(workingDaysPerYearCostItem != null) {
+            total = costs.stream()
+                    .map(c -> ((LabourCost) c).getTotal(workingDaysPerYearCostItem.getLabourDays()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        } else {
+            total = BigDecimal.ZERO;
+        }
     }
 
     public Integer getWorkingDaysPerYear() {
