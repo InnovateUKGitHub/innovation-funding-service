@@ -44,9 +44,13 @@
                 </div>
             </section>
             <section>
+                </div>
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
-                    <h3>Finances Summary</h3>
+                    <h3>Finances Summary
+                        <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
+                        <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
+                    </h3>
                     <div class="question">
                         <p>This is the overview of the finances provided by all partners in this project.</p>
                         <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>

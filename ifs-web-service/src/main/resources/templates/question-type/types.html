@@ -242,10 +242,10 @@
                                     <input type="text"
                                            class="form-control width-full"
                                            th:title="'Row '+${iteration.count}+' : Rate (£/day)'"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'},data-calculation-rawValue=${labourCost.getRate(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/"
                                            readonly="readonly"
-                                           th:id="${'cost-labour-'+labourCost.id+'-labourRate'}"
+                                           th:id="${'cost-labour-'+labourCost?.id+'-labourRate'}"
                                            th:name="${type + '-labourRate-' + question.id + '-' + labourCost.id}"
                                            th:value="'£ ' + ${#numbers.formatDecimal(labourCost.getRate(costCategory.workingDaysPerYear),0,0)}" />
                                 </td>
@@ -253,7 +253,7 @@
                                     <input type="number"
                                            th:title="'Row '+${iteration.count}+' : Days to be spent by all staff at this grade'"
                                            class="form-control width-full"
-                                           th:id="${'cost-labour-'+labourCost.id+'-labourDays'}"
+                                           th:id="${'cost-labour-'+labourCost?.id+'-labourDays'}"
                                            th:name="${type + '-labourDays-' + question.id + '-' + labourCost.id}"
                                            th:value="${labourCost.labourDays}" />
                                 </td>
@@ -267,7 +267,7 @@
                                     <input type="text"
                                            th:title="'Total costs Labour for row: '+${iteration.count}"
                                            class="form-control width-medium"
-                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
+                                           th:attr="data-calculation-fields=${'#cost-labour-'+labourCost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+labourCost.id+'-labourDays'},data-calculation-rawvalue=${labourCost.getTotal(costCategory.workingDaysPerYear)}"
                                            data-calculation-operations="/,*"
                                            th:name="${type +'-total-' + question.id + '-' + labourCost.id}"
                                            readonly="readonly"
