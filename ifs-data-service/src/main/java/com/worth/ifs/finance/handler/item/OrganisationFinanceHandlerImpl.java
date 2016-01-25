@@ -76,6 +76,14 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     private void calculateTotals() {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
+        calculateOverheadTotal();
+    }
+
+    private void calculateOverheadTotal() {
+        CostCategory labourCostCategory = costCategories.get(CostType.LABOUR);
+        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(CostType.OVERHEADS);
+        overheadCategory.setLabourCostTotal(labourCostCategory.getTotal());
+        overheadCategory.calculateTotal();
     }
 
     private void resetCosts() {
@@ -128,6 +136,8 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 return new LabourCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
+            case OVERHEADS:
+                return new OverheadCostCategory();
             case FINANCE:
                 return new GrantClaimCategory();
             default:

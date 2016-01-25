@@ -157,7 +157,6 @@ public abstract class AbstractApplicationController {
         form.setFormInput(formInputs);
     }
 
-    @ProfileExecution
     protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));

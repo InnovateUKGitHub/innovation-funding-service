@@ -15,7 +15,8 @@ public class OverheadsHandler extends CostHandler {
         Cost cost = null;
         if(costItem instanceof Overhead) {
             Overhead overhead = (Overhead) costItem;
-            cost = new Cost(overhead.getId(), overhead.getRateType().toString(), "", overhead.getCustomRate(), overhead.getAgreedRate(), null, null);
+            Integer rate = overhead.getRate();
+            cost = new Cost(overhead.getId(), overhead.getRateType().toString(), "", rate, null, null, null);
         }
         return cost;
     }
@@ -23,6 +24,6 @@ public class OverheadsHandler extends CostHandler {
     @Override
     public CostItem toCostItem(Cost cost) {
         OverheadRateType type = (OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE);
-        return new Overhead(cost.getId(), type, cost.getQuantity(), cost.getCost());
+        return new Overhead(cost.getId(), type, cost.getQuantity());
     }
 }

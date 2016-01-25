@@ -10,35 +10,24 @@ import java.math.BigDecimal;
 public class Overhead implements CostItem {
     private Long id;
     @Enumerated(EnumType.STRING)
-    private OverheadRateType rateType = OverheadRateType.NONE;
-    private Integer customRate;
-    private BigDecimal agreedRate;
+    private OverheadRateType rateType;
+    private Integer rate;
     private CostType costType;
 
     public Overhead() {
         this.costType = CostType.OVERHEADS;
+        this.rateType = OverheadRateType.NONE;
     }
 
-    public Overhead(Long id, OverheadRateType rateType, Integer customRate, BigDecimal agreedRate) {
+    public Overhead(Long id, OverheadRateType rateType, Integer rate) {
         this();
         this.id = id;
         this.rateType = rateType;
-        this.customRate = customRate;
-        this.agreedRate = agreedRate;
-    }
-
-    public Integer getCustomRate() {
-        return customRate;
+        this.rate = rate;
     }
 
     public Integer getRate(){
-        if(rateType != null && rateType.getRate() != null){
-            return rateType.getRate();
-        }else if(customRate!= null && !customRate.equals(0)){
-            return customRate;
-        }else{
-            return 99;
-        }
+        return rate;
     }
 
 
@@ -63,14 +52,6 @@ public class Overhead implements CostItem {
 
     public void setRateType(OverheadRateType rateType) {
         this.rateType = rateType;
-    }
-
-    public BigDecimal getAgreedRate() {
-        return agreedRate;
-    }
-
-    public void setAgreedRate(BigDecimal agreedRate) {
-        this.agreedRate = agreedRate;
     }
 }
 

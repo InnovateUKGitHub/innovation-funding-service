@@ -5,12 +5,14 @@ public class CostFormField {
     String costName;
     String keyType;
     String value;
+    String questionId;
     String id;
 
-    public CostFormField(String fieldName, String value, String id, String costName, String keyType) {
+    public CostFormField(String fieldName, String value, String id, String questionId, String costName, String keyType) {
         this.fieldName = fieldName;
         this.value = value;
         this.id = id;
+        this.questionId = questionId;
         this.keyType = keyType;
         this.costName = costName;
     }
@@ -31,6 +33,10 @@ public class CostFormField {
         return value;
     }
 
+    public String getQuestionId() {
+        return questionId;
+    }
+
     public String getId() {
         return id;
     }
@@ -38,6 +44,6 @@ public class CostFormField {
     @Override
     public String toString() {
         return "CostFormField : " + this.fieldName + " " + this.costName +
-                " " + this.value + " " + this.id + " " + this.keyType;
+                " " + this.value + " " + this.id + " " + this.questionId + " " + this.keyType;
     }
 }

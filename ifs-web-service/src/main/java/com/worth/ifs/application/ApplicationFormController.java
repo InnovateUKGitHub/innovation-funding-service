@@ -83,7 +83,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    @ProfileExecution
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
@@ -470,7 +469,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             log.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             User user = userAuthenticationService.getAuthenticatedUser(request);
-            errors = storeField(request, applicationId, user.getId(), fieldName, inputIdentifier, value);
+            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
             if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors);
@@ -484,13 +483,13 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(HttpServletRequest request, Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
             FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-            financeFormHandler.ajaxUpdateFinancePosition(request, fieldName, value);
+            financeFormHandler.ajaxUpdateFinancePosition(fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             storeCostField(userId, applicationId, fieldName, value);
         } else {
