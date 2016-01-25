@@ -59,6 +59,6 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     public void addCost(Long applicationFinanceId, Long questionId) {
-        costRestService.add(applicationFinanceId, questionId);
+        costRestService.add(applicationFinanceId, questionId, null);
     }
 }

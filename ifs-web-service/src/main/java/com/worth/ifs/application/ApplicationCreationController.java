@@ -150,7 +150,6 @@ public class ApplicationCreationController extends AbstractApplicationController
         } else {
             saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
             return String.format("redirect:/application/%s/contributors/invite", String.valueOf(application.getId()));
-            //return ApplicationController.redirectToApplication(application);
         }
         return null;
     }
