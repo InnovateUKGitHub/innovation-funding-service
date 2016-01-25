@@ -38,7 +38,7 @@ var IFSLoader = {
       IFS.autoSave.init();
       IFS.finance.init();
       IFS.repeatableRows.init();
-      IFS.orgsizeToFunding.init();
+      IFS.financeSpecifics.init();
     }
   },
   'app-details' : {
