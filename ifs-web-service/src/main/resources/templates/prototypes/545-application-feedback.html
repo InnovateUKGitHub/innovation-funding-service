@@ -21,60 +21,211 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Mobile Phone Data for Logistics Analytics - Application number: 0000003'}, ${'Feedback overview'})" th:remove="tag" />
 
-	<div th:if="${param.unsuccessful == null}" th:remove="tag">
+	
+	<div th:if="${param.internal == null}" th:remove="tag">
 
-		<div class="success-alert">
-	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
-	        <p>You have been successful with this round of funding. All partners in the consortium have been informed.</p>
-	    </div>
+		<div th:if="${param.unsuccessful == null}" th:remove="tag">
+
+			<div class="success-alert">
+		        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
+		        <p>You have been successful with this round of funding. All partners in the consortium have been informed.</p>
+		    </div>
+
+		</div>
+
+		<div th:if="${param.unsuccessful != null}" th:remove="tag">
+
+			<div class="warning-alert">
+		        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>
+		        <p>Average scores and written feedback from each assessor can be found below</p>
+		    </div>
+
+		</div>
+
+	    <h2 class="heading-medium">Overall scores</h2>
+		<table>
+			<tbody>
+			<tr>
+				<th>Question</th>
+				<td><strong>Q1</strong></td>
+				<td><strong>Q2</strong></td>
+				<td><strong>Q3</strong></td>
+				<td><strong>Q4</strong></td>
+				<td><strong>Q5</strong></td>
+				<td><strong>Q6</strong></td>
+				<td><strong>Q7</strong></td>
+				<td><strong>Q8</strong></td>
+				<td><strong>Q9</strong></td>
+				<td><strong>Q10</strong></td>
+			</tr>
+			<tr>
+				<th>Score</th>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+				<td th:text="${score}">7</td>
+			</tr>
+			</tbody>
+		</table>
 
 	</div>
 
-	<div th:if="${param.unsuccessful != null}" th:remove="tag">
+	
+	<div th:if="${param.internal != null}" th:remove="tag">
 
-		<div class="warning-alert">
-	        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>
-	        <p>Average scores and written feedback from each assessor can be found below</p>
-	    </div>
+	<h2 class="heading-medium">Average scores</h2>
+
+		<table>
+			<thead>
+				<th scope="col">Assessor</th>
+				<th scope="col">Scope</th>
+				<th scope="col">Recc'd</th>
+				<th scope="col">Q1</th>
+				<th scope="col">Q2</th>
+				<th scope="col">Q3</th>
+				<th scope="col">Q4</th>
+				<th scope="col">Q5</th>
+				<th scope="col">Q6</th>
+				<th scope="col">Q7</th>
+				<th scope="col">Q8</th>
+				<th scope="col">Q9</th>
+				<th scope="col">Q10</th>
+				<th scope="col">Total</th>
+			</thead>
+			<tfoot>
+				<tr>
+					<th scope="row">Average</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>9</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td><strong>80</strong></td>
+				</tr>
+				<tr>
+					<th scope="row">Spread</th>
+					<td></td>
+					<td></td>
+					<td>1</td>
+					<td>2</td>
+					<td>0</td>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>2</td>
+					<td>0</td>
+					<td>1</td>
+					<td>2</td>
+					<td><strong>12</strong></td>
+				</tr>
+			</tfoot>
+			<tbody>
+				<tr>
+					<th scope="row">Ray Browne</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>9</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td><strong>84</strong></td>
+				</tr>
+				<tr>
+					<th scope="row">Julio Fario</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>9</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td>8</td>
+					<td>8</td>
+					<td>9</td>
+					<td><strong>84</strong></td>
+				</tr>
+				<tr>
+					<th scope="row">Brain Law</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td><strong>-</strong></td>
+				</tr>
+				<tr>
+					<th scope="row">Colin Seabrook</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>6</td>
+					<td>8</td>
+					<td>9</td>
+					<td>7</td>
+					<td>8</td>
+					<td>4</td>
+					<td>8</td>
+					<td>7</td>
+					<td>8</td>
+					<td>9</td>
+					<td><strong>72</strong></td>
+				</tr>
+				<tr>
+					<th scope="row">David Standingford</th>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td><strong>-</strong></td>
+				</tr>
+			</tbody>
+		</table>
 
 	</div>
-
-    <h2 class="heading-medium">Overall scores</h2>
-	<table>
-		<tbody>
-		<tr>
-			<th>Question</th>
-			<td><strong>Q1</strong></td>
-			<td><strong>Q2</strong></td>
-			<td><strong>Q3</strong></td>
-			<td><strong>Q4</strong></td>
-			<td><strong>Q5</strong></td>
-			<td><strong>Q6</strong></td>
-			<td><strong>Q7</strong></td>
-			<td><strong>Q8</strong></td>
-			<td><strong>Q9</strong></td>
-			<td><strong>Q10</strong></td>
-		</tr>
-		<tr>
-			<th>Score</th>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-			<td th:text="${score}">7</td>
-		</tr>
-		</tbody>
-	</table>
 
 	<h2 class="heading-medium no-margin-bottom">Application details</h2>
 	<p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
-	<ul class="list-overview">
-		<li class="section-status">
+
+	<div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+
+
+	<ul class="list-overview extra-margin">
+		<!-- <li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
 					<h3 class="heading-small">Application details</h3>
@@ -83,7 +234,7 @@
 					<p class="form-hint no-margin">No feedback provided</p>
 				</div>
 			</div>
-		</li>
+		</li> -->
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
@@ -169,9 +320,18 @@
 		</li>
 		<li class="section-status">
 			<div class="grid-row">
-				<div class="column-two-thirds" th:with="link=${param.unsuccessful} ? '/prototypes/545-application-feedback-question7?unsuccessful' : '/prototypes/545-application-feedback-question7'">
+				
+
+
+				<div class="column-two-thirds" th:with="link=${param.unsuccessful} ? '/prototypes/545-application-feedback-question7?unsuccessful' : '/prototypes/545-application-feedback-question7'" th:unless="${param.internal != null}">
 					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
 				</div>
+
+				<div class="column-two-thirds" th:with="link='/prototypes/545-application-feedback-question7?internal'" th:unless="${param.internal == null}">
+					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
+				</div>
+
+
 				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
 			</div>
 		</li>
@@ -207,7 +367,7 @@
 		</div>
 		<div class="column-third">
 			<p>
-				Average overall: <strong th:text="${score}+'0%'">SCORE</strong>
+				Average overall: <strong th:text="${score}+'0%'" class="heading-">SCORE</strong>
 			</p>	
 		</div>
 	</div>
@@ -218,27 +378,31 @@
 
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
 		<li>
-			<h4 class="heading-small">Assessor 1</h4>
+			<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
+			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<h5 class="heading-small">Other comments</h5>
+			<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+		</li>
+		<li>
+			<h4 class="heading-small" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 1')}">Assessor 2</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 		<li>
-			<h4 class="heading-small">Assessor 2</h4>
+			<h4 class="heading-small" th:text="${(param.internal != null ? 'Brian Law':'Assessor 1')}">Assessor 3</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 		<li>
-			<h4 class="heading-small">Assessor 3</h4>
+			<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 1')}">Assessor 4</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<h5 class="heading-small">Other comments</h5>
+			<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 		</li>
 		<li>
-			<h4 class="heading-small">Assessor 4</h4>
-			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-		</li>
-		<li>
-			<h4 class="heading-small">Assessor 5</h4>
+			<h4 class="heading-small" th:text="${(param.internal != null ? 'David Standingford':'Assessor 1')}">Assessor 5</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
