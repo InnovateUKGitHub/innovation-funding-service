@@ -3,4 +3,10 @@
 	.full-view{
 		display: none; 
 	}
+
+	.show-full-table &{
+		.full-view{
+			display: table-cell;
+		}
+	}
 }

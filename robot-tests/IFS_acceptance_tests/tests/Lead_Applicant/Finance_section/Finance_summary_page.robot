@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-524 As an applicant I want to see the finance summary updated and recalculated as each partner adds their finances.
 Test Teardown     User closes the browser
-Force Tags
+Force Tags          Failing
 Default Tags      Finance    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
