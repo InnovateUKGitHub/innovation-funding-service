@@ -29,7 +29,8 @@ EU Definition link should navigate to the correct page
 
 The applicant should be able to choose different organisation sizes
     [Documentation]    INFUND-891
-    [Tags]    Applicant    Company Size    New application
+    [Tags]    Applicant    Company Size    New application  Pending
+    # Tagged as pending since the choose organisation size is no longer on this page
     Given the applicant is in the 'create your account' page
     And the applicant selects the Micro size and saves the page
     And the Applicant should redirect to the create account page

@@ -1,8 +1,6 @@
 *** Settings ***
 Documentation       INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Teardown      User closes the browser
-
-# This is a skeleton acceptance test suite, marked as pending until functionality arrives for INFUND-1436
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -53,7 +51,6 @@ There is an error message on the finances form
 There is an error message on the summary page
     Go To           ${APPLICATION_2_SUMMARY_URL}
     Click Button    css=[aria-controls="collapsible-15"]
-    Sleep   1s
     Page Should Contain      The participation levels of this project are not within the required range
 
 The applicant can log out
@@ -64,15 +61,12 @@ The first collaborator logs in
 
 The first collaborator edits financial details to bring down the research participation level
     Go To               ${your_finances_url_application_2}
-    Click Element    css=[aria-controls="collapsible-1"]
-    Click Element    link=Add another role
+    Click Element       css=[aria-controls="collapsible-1"]
+    Click Element        link=Add another role
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
-
-
-
     Logout as user
 
 There is no error message on the finances form
