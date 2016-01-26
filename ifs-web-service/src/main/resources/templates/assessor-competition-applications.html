@@ -108,10 +108,10 @@
                     </label>
                 </li>
 
-                    <div class="alignright">
+                    <div class="alignright-button extra-margin">
                         <input type="hidden" name="competitionId" th:value="${model.competition.id}" />
-                        <a role="button" class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" th:if="${model.hasAssesmentsForSubmission()}">Submit applications</a>
-                        <button disabled="disabled" class="button large button-pull-right no-margin" th:unless="${model.hasAssesmentsForSubmission()}">Submit applications</button>
+                        <button class="button button-large" data-js-modal="modal-confirm-submit" th:href="@{/assessor/confirm-submit}" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" th:if="${model.hasAssesmentsForSubmission()}">Submit applications</button>
+                        <button disabled="disabled" class="button button-large" th:unless="${model.hasAssesmentsForSubmission()}">Submit applications</button>
                     </div>
                 </form>
 
