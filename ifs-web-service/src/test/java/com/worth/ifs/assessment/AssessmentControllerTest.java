@@ -75,13 +75,18 @@ public class AssessmentControllerTest extends BaseUnitTest {
         List<Assessment> nonSubmittedAssessments = assessments.stream().filter(a -> !a.isSubmitted()).collect(toList());
         nonSubmittedAssessments.sort(new AssessmentStatusComparator());
 
+        long noOfAssessmentsStartedAwaitingSubmission = nonSubmittedAssessments.stream().filter(Assessment::hasAssessmentStarted).count();
+        boolean hasAssesmentsStartedAwaitingSubmission = noOfAssessmentsStartedAwaitingSubmission > 0;
+
         MvcResult mvcResult = mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competition.getId())).andReturn();
         AssessmentDashboardModel model = this.attributeFromMvcResultModel(mvcResult, "model");
         assertNotNull(model);
-        assertEquals(2, model.getAssessments().size());
+        assertEquals(3, model.getAssessments().size());
         assertEquals(nonSubmittedAssessments.get(0).getId(), model.getAssessments().get(0).getAssessment().getId());
         assertEquals(submittedAssessments.get(0).getId(), model.getSubmittedAssessments().get(0).getAssessment().getId());
         assertEquals(competition.getId(), model.getCompetition().getId());
+        assertEquals(noOfAssessmentsStartedAwaitingSubmission, model.getNoOfAsssessmentsStartedAwaitingSubmission());
+        assertEquals(hasAssesmentsStartedAwaitingSubmission, model.hasAssesmentsForSubmission());
     }
 
     @Test

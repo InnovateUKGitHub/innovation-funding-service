@@ -10,7 +10,6 @@ ${FF_PROFILE}    ${CURDIR}/../firefox_config
 *** Keywords ***
 Login as user
     [Arguments]    ${email}    ${password}
-
     The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
@@ -23,25 +22,26 @@ The guest user inserts user email & password
 The guest user clicks the log-in button
     Click Button    css=input.button
 
-#The guest user opens the browser
-#    Open browser  http://google.com  ${BROWSER}
-#    ...  ff_profile_dir=${FF_PROFILE}
-#    ...  remote_url=${REMOTE_URL}
-#    ...  desired_capabilities=${DESIRED_CAPABILITIES}
-#    Run keyword if  '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
-#    Run keyword if  '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
-
 The guest user opens the browser
-    Start Virtual Display       1920        1080
-    Run keyword if  '${SERVER_AUTH}' != ''        Open browser   ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}
-                                                  ...  ff_profile_dir=${FF_PROFILE}
-                                                  ...  remote_url=${REMOTE_URL}
-                                                  ...  desired_capabilities=${DESIRED_CAPABILITIES}
+    # Start Virtual Display       1920    1080
+    Open browser  http://google.com  ${BROWSER}
+    ...  ff_profile_dir=${FF_PROFILE}
+    ...  remote_url=${REMOTE_URL}
+    ...  desired_capabilities=${DESIRED_CAPABILITIES}
+    Run keyword if  '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
+    Run keyword if  '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
 
-    RUn keyword if  '${SERVER_AUTH}' == ''        Open browser   ${PROTOCOL}${SERVER_BASE}                   ${BROWSER}
-                                                  ...  ff_profile_dir=${FF_PROFILE}
-                                                  ...  remote_url=${REMOTE_URL}
-                                                  ...  desired_capabilities=${DESIRED_CAPABILITIES}
+#The guest user opens the browser
+#    Start Virtual Display       1920        1080
+#    Run keyword if  '${SERVER_AUTH}' != ''        Open browser   ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}
+#                                                  ...  ff_profile_dir=${FF_PROFILE}
+#                                                  ...  remote_url=${REMOTE_URL}
+#                                                  ...  desired_capabilities=${DESIRED_CAPABILIT
+#
+#    RUn keyword if  '${SERVER_AUTH}' == ''        Open browser   ${PROTOCOL}${SERVER_BASE}                   ${BROWSER}
+#                                                  ...  ff_profile_dir=${FF_PROFILE}
+#                                                  ...  remote_url=${REMOTE_URL}
+#                                                  ...  desired_capabilities=${DESIRED_CAPABILITIES}
 
 
 TestTeardown User closes the browser

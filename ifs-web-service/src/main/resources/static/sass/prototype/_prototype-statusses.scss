@@ -105,18 +105,33 @@ table{
 	}
 }
 
+/*----- Application dashboard - aligning titles ----*/
+
+.app-dashboard{
+
+	.application-status{
+
+		.results-status{
+			
+			padding: 35px 0;
+
+		}
+
+	}
+
+}
+
 
 /*----- Marking yes /no with tick / cross used in assessor invite tables ----*/
 
-.yes{
+td .yes{
 	@extend %icon-tick;
 	padding-left: 28px;
 }
 
-.no{
+td .no{
 	@extend %icon-cross;
 	padding-left: 28px; 
 }
-
 
 
