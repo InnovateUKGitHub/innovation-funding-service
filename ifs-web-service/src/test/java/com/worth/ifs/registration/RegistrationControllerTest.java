@@ -2,7 +2,11 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
+import com.worth.ifs.commons.resource.ResourceError;
+import com.worth.ifs.login.LoginController;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +16,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -209,17 +217,16 @@ public class RegistrationControllerTest extends BaseUnitTest {
     public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
 
-        String userPassword = "testtest";
-
-        UserResource userResource = new UserResource();
-        userResource.setPassword(userPassword);
-        userResource.setFirstName("firstName");
-        userResource.setLastName("lastName");
-        userResource.setTitle("Mr");
-        userResource.setPhoneNumber("0123456789");
-        userResource.setEmail("test@test.test");
-        userResource.setToken("testToken123abc");
-        userResource.setId(1L);
+        UserResource userResource = newUserResource()
+                .withPassword("password")
+                .withFirstName("firstName")
+                .withLastName("lastName")
+                .withTitle("Mr")
+                .withPhoneNumber("0123456789")
+                .withEmail("test@test.test")
+                .withToken("testToken123abc")
+                .withId(1L)
+                .build();
 
 
         ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
@@ -228,7 +235,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
-                userPassword,
+                userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
@@ -237,8 +244,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())
-                        .param("password", userPassword)
-                        .param("retypedPassword", userPassword)
+                        .param("password", userResource.getPassword())
+                        .param("retypedPassword", userResource.getPassword())
                         .param("title", userResource.getTitle())
                         .param("firstName", userResource.getFirstName())
                         .param("lastName", userResource.getLastName())
@@ -260,5 +267,81 @@ public class RegistrationControllerTest extends BaseUnitTest {
         mockMvc.perform(post("/registration/register?organisationId=4")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
+    }
+
+    @Test
+    public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
+        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+                newUser().withRolesGlobal(
+                        newRole().withName("testrolename").build()
+                ).build()
+        );
+
+        mockMvc.perform(get("/registration/register?organisationId=1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"))
+        ;
+
+    }
+
+    @Test
+    public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
+        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+                newUser().withRolesGlobal(
+                        newRole().withName("testrolename").build()
+                ).build()
+        );
+
+        mockMvc.perform(post("/registration/register?organisationId=1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"))
+        ;
+
+    }
+
+    @Test
+    public void errorsReturnedInEnvelopeAreAddedToTheModel() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        UserResource userResource = newUserResource()
+                .withPassword("password")
+                .withFirstName("firstName")
+                .withLastName("lastName")
+                .withTitle("Mr")
+                .withPhoneNumber("0123456789")
+                .withEmail("test@test.test")
+                .withToken("testToken123abc")
+                .withId(1L)
+                .build();
+
+        ResourceError resourceError = new ResourceError("errorname","errordescription");
+
+        List<ResourceError> resourceErrors = new ArrayList<>();
+        resourceErrors.add(resourceError);
+
+        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), resourceErrors, userResource);
+
+
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                1L)).thenReturn(envelope);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", userResource.getEmail())
+                        .param("password", userResource.getPassword())
+                        .param("retypedPassword", userResource.getPassword())
+                        .param("title", userResource.getTitle())
+                        .param("firstName", userResource.getFirstName())
+                        .param("lastName", userResource.getLastName())
+                        .param("phoneNumber", userResource.getPhoneNumber())
+                        .param("termsAndConditions", "1")
+        )
+                .andExpect(model().hasErrors())
+        ;
     }
 }
