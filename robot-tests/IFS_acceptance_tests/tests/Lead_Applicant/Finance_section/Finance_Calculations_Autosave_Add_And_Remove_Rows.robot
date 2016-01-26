@@ -114,6 +114,7 @@ Other Funding
 the Applicant fills in the Labour costs
     Click Element    css=[aria-controls="collapsible-1"]
     Click Element    link=Add another role
+    Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    230
@@ -143,6 +144,7 @@ the total labour cost calculation should be correct
 
 the applicant fills a second row in the labour costs
     Click Element    link=Add another role
+    Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
@@ -342,10 +344,10 @@ Applicant can see a new row
     Element Should Be Visible    id=other-funding-table
 
 Applicant selects 'No' for other funding
-    Select Radio button    other_funding-otherPublicFunding-54    No
+    Select Radio button    other_funding-otherPublicFunding-35-54    No
 
 Applicant chooses to add yet another source of funding
-    Select Radio button    other_funding-otherPublicFunding-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
     Click Link    Add another source of funding
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
@@ -356,7 +358,7 @@ Applicant chooses to add another source of funding
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
 
 Applicant selects 'Yes' for other funding
-    Select Radio button    other_funding-otherPublicFunding-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
 
 Applicant can see that the 'No' radio button is selected
-    Radio Button Should Be Set To    other_funding-otherPublicFunding-54    No
+    Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
