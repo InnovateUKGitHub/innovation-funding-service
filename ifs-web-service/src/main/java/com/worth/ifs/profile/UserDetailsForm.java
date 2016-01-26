@@ -15,7 +15,7 @@ public class UserDetailsForm {
     private String email;
 
     @NotEmpty(message = "Please select a title")
-    @Size(max = 5, message = "Last name input has a maximum input of 5 characters")
+    @Size(max = 5, message = "Title has input has a maximum input of 5 characters")
     private String title;
 
     @NotEmpty(message = "Please enter a first name")
