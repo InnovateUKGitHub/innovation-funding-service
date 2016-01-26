@@ -33,4 +33,8 @@ public class RoleBuilder extends BaseBuilder<Role, RoleBuilder> {
     public RoleBuilder withType(UserRoleType... types) {
         return withArray((type, role) -> role.setName(type.getName()), types);
     }
+
+    public RoleBuilder withName(String... names) {
+        return withArray((name, role) -> role.setName(name), names);
+    }
 }
