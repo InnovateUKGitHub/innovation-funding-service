@@ -37,7 +37,11 @@ public class OverheadCostCategory implements CostCategory {
 
         if(cost.isPresent()) {
             Overhead overhead = (Overhead)cost.get();
-            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
+            if(overhead.getRate()!=null) {
+                total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
+            } else {
+                total = BigDecimal.ZERO;
+            }
         } else {
             total = BigDecimal.ZERO;
         }
