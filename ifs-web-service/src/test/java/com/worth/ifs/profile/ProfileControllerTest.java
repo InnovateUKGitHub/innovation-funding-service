@@ -4,37 +4,26 @@ import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.registration.RegistrationController;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
@@ -64,7 +53,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userProfileDetailsAreAddedToModelWhenViewingDetails() throws Exception {
         mockMvc.perform(get("/profile/view"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title",       Matchers.equalTo(user.getTitle()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title", Matchers.equalTo(user.getTitle()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
@@ -75,11 +64,11 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {
         mockMvc.perform(get("/profile/edit"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title",       Matchers.equalTo(user.getTitle()))))
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName",   Matchers.equalTo(user.getFirstName()))))
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName",    Matchers.equalTo(user.getLastName()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title", Matchers.equalTo(user.getTitle()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email",       Matchers.equalTo(user.getEmail()))));
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))));
     }
 
     @Test
@@ -151,7 +140,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
         List<ResourceError> resourceErrors = new ArrayList<>();
-        resourceErrors.add(new ResourceError("errorname","errordescription"));
+        resourceErrors.add(new ResourceError("errorname", "errordescription"));
 
         ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), resourceErrors, newUserResource().build());
 
