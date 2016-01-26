@@ -535,7 +535,7 @@
                              <a href="/prototypes/1382-application-allocate-assessors?title=Machine learning in robots">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">5</td>
@@ -559,7 +559,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors?title=Robots that learn">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">3</td>
@@ -583,7 +583,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors?title=Ai in learning">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -607,7 +607,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors?title=Progressive machines">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -631,7 +631,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -655,7 +655,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -679,7 +679,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -703,7 +703,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -727,7 +727,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -751,7 +751,7 @@
                             <a href="/prototypes/1382-application-allocate-assessors">Allocate assessors</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
-                             <a href="#">Assign</a>
+                             <a href="#" class="assign-application">Assign</a>
                         </div>
                     </td>
                     <td class="full-view">0</td>
@@ -789,6 +789,27 @@
                     <th scope="col">Skills</th>
                     <th scope="col">Type</th>
                     <th scope="col">Applications</th>
+                    <th scope="col">Details</th>
+                    <th class="alignright" scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- =========================== Applicationlist table =========================== --> 
+<div th:fragment="prototype-application-assigned-table"> 
+    <div class="table-overflow">
+        <table id="assessor-assigned">
+            <thead>
+                <tr>
+                    <th scope="col">Application no</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Assessment category (innovation area)</th>
+                    <th scope="col">Assessors</th>
                     <th scope="col">Details</th>
                     <th class="alignright" scope="col">Action</th>
                 </tr>

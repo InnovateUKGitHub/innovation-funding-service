@@ -113,6 +113,20 @@ jQuery(document).ready(function(){
             );
     };
 
+    function addRowApplication(appNumber, projectTitle, lead, category, assessors){
+        //alert(assessor+' '+skills+' '+type+' '+applications);
+        jQuery('#assessor-assigned').append(
+            "<tr><th><a href='/prototypes/1196-readonly-application-view'>"+ appNumber +"</a></th>" +
+            "<td>"+ projectTitle  +"</td>" +
+            "<td>"+ lead +"</td>" +
+            "<td>"+ category +"</td>" +
+            "<td>"+ assessors +"</td>" +
+            "<td><a href='#' class='view-application'>View</a>" +
+            "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
+            "</tr>"
+            );
+    };
+
     function numAvailable(count){
         var available = jQuery('.available').text();
         var available = parseInt(available);
@@ -126,6 +140,9 @@ jQuery(document).ready(function(){
     }
 
     var counter = 0;
+
+
+    //----- Asign assessor to an application ------//
 
     jQuery('.assign-assessor').on('click',function(e){ 
         e.preventDefault();
@@ -187,6 +204,32 @@ jQuery(document).ready(function(){
         var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
 
         window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
+    });
+
+     //----- Asign application to an assessor ------//
+
+     jQuery('.assign-application').on('click',function(e){ 
+        e.preventDefault();
+        counter ++;
+
+        var appNumber = jQuery(this).parent().parent().find('th').text();
+        var projectTitle = jQuery(this).parent().parent().find('td:eq(0)').text();
+        var lead = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var category = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var assessors = jQuery(this).parent().parent().find('td:eq(3)').text();
+
+        jQuery(this).parent().parent().hide();
+        jQuery('.assigned-count').html('('+counter+')');
+
+        numAvailable('subtract');
+
+        if(counter >= 1){
+            jQuery('#no-assessors').hide();
+            jQuery('#added-assessors').show();
+        }
+
+        addRowApplication(appNumber, projectTitle, lead, category, assessors);
+        //alert(skills);
     });
 
 
