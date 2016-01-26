@@ -50,6 +50,38 @@
     </section>
 </div>
 
+<!-- ===================Innovation area filter options============================== -->
+<div th:fragment="prototype-innovation-area-options">
+    <option value="Advanced Materials">Advanced Materials</option>
+    <option value="Assisted Living Technologies">Assisted Living Technologies</option>
+    <option value="Biosciences">Biosciences</option>
+    <option value="Built environment">Built environment</option>
+    <option value="Creative industries">Creative industries</option>
+    <option value="Detection &#38; identification of infectious agents">Detection &#38; identification of infectious agents</option>
+    <option value="Digital sciences">Digital sciences</option>
+    <option value="Electronics, sensors &#38; photonics">Electronics, sensors &#38; photonics</option>
+    <option value="Emerging technologies">Emerging technologies</option>
+    <option value="Food supply">Food supply</option>
+    <option value="Healthcare">Healthcare</option>
+    <option value="High value manufacturing">High value manufacturing</option>
+    <option value="High value services">High value services</option>
+    <option value="Information &#38; communications technology (ICT)">Information &#38; communications technology (ICT)</option>
+    <option value="Intelligent transport systems">Intelligent transport systems</option>
+    <option value="Low carbon vehicles">Low carbon vehicles</option>
+    <option value="Materials">Materials</option>
+    <option value="Nanotechnology">Nanotechnology</option>
+    <option value="Regenerative medicine">Regenerative medicine</option>
+    <option value="Resource efficiency">Resource efficiency</option>
+    <option value="Satellite comms &#38; navigation">Satellite comms &#38; navigation</option>
+    <option value="Space">Space</option>
+    <option value="Stratified medicine">Stratified medicine</option>
+    <option value="Sustainable agrifood">Sustainable agrifood</option>
+    <option value="Transport">Transport</option>
+    <option value="Urban living">Urban living</option>
+
+</div>
+
+
 <!-- ===================Search filters============================== -->
 <div th:fragment="prototype-comp-search-filters">
     <div class="search-filters extra-margin">
@@ -71,16 +103,8 @@
                                 <option selected="selected">---</option>
                             </option>
 
-                            <option value="Agriculture &#38; food">Agriculture &#38; food</option>
-                            <option value="Built environment">Built environment</option>
-                            <option value="Digital economy">Digital economy</option>
-                            <option value="Emerging technologies">Emerging technologies</option>
-                            <option value="Energy">Energy</option>
-                            <option value="Health &#38; care">Health &#38; care</option>
-                            <option value="High value manufacturing">High value manufacturing</option>
-                            <option value="Space applications">Space applications</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Urban living">Urban living</option>
+                            <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+
                         </select>
                     </div>
 

@@ -61,12 +61,12 @@ jQuery(document).ready(function(){
 
     function addTableRow(el){
         el = jQuery(el);
-        var html = '<tr>\
+        var html = '<tr class="form-group">\
                     <td>\
-                        <input type="text" value="" placeholder="name" id="name-item-1" name="name-item-1">\
+                        <input type="text" value="" placeholder="name" id="name-item-1" class="form-control width-full" name="name-item-1">\
                     </td>\
                     <td>\
-                        <input type="e-mail"  value="" placeholder="name@name.com" id="mail-item-1" name="mail-item-1">\
+                        <input type="e-mail"  value="" placeholder="name@name.com" id="mail-item-1" class="form-control width-full" name="mail-item-1">\
                     </td>\
                     <td class="alignright remove">\
                         <a class="delete-row" data-cost-row="12" href="javascript:void(0);">Remove</a>\
