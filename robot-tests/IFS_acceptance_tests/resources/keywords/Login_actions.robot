@@ -23,7 +23,7 @@ The guest user clicks the log-in button
     Click Button    css=input.button
 
 The guest user opens the browser
-    # Start Virtual Display       1920    1080
+    Start Virtual Display       1920    1080
     Open browser  http://google.com  ${BROWSER}
     ...  ff_profile_dir=${FF_PROFILE}
     ...  remote_url=${REMOTE_URL}

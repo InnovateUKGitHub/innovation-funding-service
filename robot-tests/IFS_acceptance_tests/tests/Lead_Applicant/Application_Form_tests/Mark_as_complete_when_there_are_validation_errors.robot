@@ -59,5 +59,7 @@ Applicant goes to the Project summary of the new application
     go to    ${PROJECT_SUMMARY_URL}
 
 the applicant can click edit to make the section editable again
+    Sleep   5s
+    Wait Until Element Is Visible       name=mark_as_incomplete
     Click Element      name=mark_as_incomplete
     Wait Until Element is Visible       css=#form-input-11 .buttonlink[name="mark_as_complete"]
