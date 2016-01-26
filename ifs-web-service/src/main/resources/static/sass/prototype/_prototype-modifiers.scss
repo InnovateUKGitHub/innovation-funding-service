@@ -21,6 +21,12 @@
 	}
 }
 
+table{
+	tfoot{
+		border-top: 3px solid $black;
+	}
+}
+
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
