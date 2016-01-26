@@ -44,7 +44,7 @@ IFS.finance = (function(){
                     }
                 };
 
-                jQuery('body').on('change', 'input', function() {
+                jQuery(document).on('change updateFinances', 'input', function() {
 
                     var input = jQuery(this);
 

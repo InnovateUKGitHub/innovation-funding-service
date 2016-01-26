@@ -368,9 +368,8 @@
                                    th:id="${'section-total-'+subSection.id+'-default'}"
                                    th:attr="data-calculation-fields='#section-total-9,#hundred-field,#labour-cost-20-percent',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)} : '£ 0'"
+                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"
                                     />
-
                         </label>
                     </div>
                 </div>
@@ -399,7 +398,7 @@
                                    th:id="${'section-total-'+subSection.id+'-custom'}"
                                    th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)} : '£ 0'"/>
+                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                         </label>
                     </div>
                 </div>
@@ -428,7 +427,7 @@
                                    th:id="${'section-total-'+subSection.id+'-special'}"
                                    th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total, 0, 0)} : '£ 0'"
+                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total,0, 'COMMA', 0, 'POINT')} : '£ 0'"
                                    />
 
                         </label>
