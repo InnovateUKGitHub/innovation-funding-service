@@ -15,7 +15,7 @@ IFS.financeSpecifics = (function(){
             }
           },
           administrationCostTotal : {
-              adminSupportCosts : '[name=overheads-rateType-29-51]',
+              adminSupportCosts : '[name*="overheads-rateType"]',
               supportCostInTotal : {
                 'NONE' : '#section-total-10-labour-cost-none',
                 'DEFAULT_PERCENTAGE' : '#section-total-10-default',
@@ -59,19 +59,23 @@ IFS.financeSpecifics = (function(){
       resetOtherAdministrationTotal : function(element){
         //reset the totals for all other sections in administraton costs
         var radio = jQuery(element).closest('[data-target]');
+        var section = jQuery('#'+jQuery(radio).attr('data-target'));
         var otherRadios = radio.prevAll('[data-target]').add(radio.nextAll('[data-target]'));
+        console.log(otherRadios,radio,section);
 
         otherRadios.each(function(){
           var section = jQuery('#'+jQuery(this).attr('data-target'));
           var totalField = section.find(s.administrationCostTotal.allTotals);
           var id = totalField.attr('id');
+          console.log('llalala1');
+
           totalField.attr('data-old-id',id).removeAttr('id').val('£ 0').attr('data-calculation-rawvalue',0);
         });
 
-        var section = jQuery('#'+jQuery(radio).attr('data-target'));
         section.find('[data-old-id]').each(function(){
           var id = jQuery(this).attr('data-old-id');
           jQuery(this).attr('id',id).removeAttr('data-old-id');
+          console.log('llalala2');
           section.find('input').trigger('change');
         });
       },
