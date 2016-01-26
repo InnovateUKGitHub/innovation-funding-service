@@ -45,7 +45,7 @@ gulp.task('editor-js',function(){
     'js/vendor/wysiwyg-editor/rangy-core.js',
     'js/vendor/wysiwyg-editor/rangy-selectionsaverestore.js',
     'js/vendor/wysiwyg-editor/showdown.js',
-
+    'js/vendor/wysiwyg-editor/hallo.js'
   ])
   .pipe(concat('editor.min.js'))
   .pipe(uglify())

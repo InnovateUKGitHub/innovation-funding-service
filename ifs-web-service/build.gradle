@@ -56,6 +56,10 @@ task copyCssInPlace(type: Copy) {
     from 'src/main/resources/static/css'
 }
 
+task copyJsInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/js/dest"
+    from 'src/main/resources/static/js/dest'
+}
 watch {
 
     java {
@@ -71,6 +75,10 @@ watch {
     css {
         files files('src/main/resources/static/css')
         tasks 'copyCssInPlace'
+    }
+    js {
+        files files('src/main/resources/static/js/dest')
+        tasks 'copyJsInPlace'
     }
 }
 
