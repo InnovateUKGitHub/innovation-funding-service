@@ -43,6 +43,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -273,17 +274,17 @@ public class BaseUnitTest {
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
-            newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).build(),
-            newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).build(),
-            newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).build(),
-            newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).build()
+                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(createdApplicationStatus).build(),
+                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(submittedApplicationStatus).build(),
+                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(approvedApplicationStatus).build(),
+                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(rejectedApplicationStatus).build()
         );
 
         List<Application> applicationList = asList(
-            newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus2).build(),
-            newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus2).build(),
-            newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus2).build(),
-            newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus2).build()
+            newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(createdApplicationStatus2).build(),
+            newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(submittedApplicationStatus2).build(),
+            newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(approvedApplicationStatus2).build(),
+            newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(rejectedApplicationStatus2).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
