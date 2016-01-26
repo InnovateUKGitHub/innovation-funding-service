@@ -363,7 +363,7 @@
                                    class="form-control form-control-1-4 alignright"
                                    readonly="readonly"
                                    th:id="${'section-total-'+subSection.id}"
-                                   th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                                   th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)}"
                                     />
@@ -394,7 +394,7 @@
                                    class="form-control form-control-1-4 alignright"
                                    readonly="readonly"
                                    th:id="${'section-total-'+subSection.id}"
-                                   th:attr="data-calculation-fields='#section-total-9,#hundred-field,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                                   th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0,0)} : '£ 0'"/>
                         </label>
@@ -602,7 +602,7 @@
                     <div class="form-group">
                         <label th:for="${'cost-capital_usage-'+capitalUsage.id+'-netCost'}" class="form-label">Net Cost</label>
                         <input type="text"
-                               th:attr="data-calculation-fields=${'#cost-capital_usage-'+capitalUsage.id+'-npv,#cost-capital_usage-'+capitalUsage.id+'-residual_value,#cost-capital_usage-'+capitalUsage.id+'-utilisation,#hundred-field'}"
+                               th:attr="data-calculation-fields=${'#cost-capital_usage-'+capitalUsage.id+'-npv,#cost-capital_usage-'+capitalUsage.id+'-residual_value,#cost-capital_usage-'+capitalUsage.id+'-utilisation,100'}"
                                data-calculation-operations="-,*,/"
                                readonly="readonly"
                                th:id="${'cost-capital_usage-'+capitalUsage.id+'-netCost'}"

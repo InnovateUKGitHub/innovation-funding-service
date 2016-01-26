@@ -9,7 +9,6 @@ gulp.task('default',['js']);
 //build all js
 gulp.task('js',['ifs-js','govuk-js','editor-js']);
 
-
 //concat and minify all the ifs files
 gulp.task('ifs-js', function () {
    return gulp.src([
@@ -40,7 +39,13 @@ gulp.task('govuk-js',function(){
 
 gulp.task('editor-js',function(){
   return gulp.src([
-    'js/vendor/wysiwyg-editor/*.js'
+    'js/vendor/wysiwyg-editor/showdown.js',
+    'js/vendor/wysiwyg-editor/html-md.js',
+    'js/vendor/wysiwyg-editor/jquery.htmlClean.min.js',
+    'js/vendor/wysiwyg-editor/rangy-core.js',
+    'js/vendor/wysiwyg-editor/rangy-selectionsaverestore.js',
+    'js/vendor/wysiwyg-editor/showdown.js',
+
   ])
   .pipe(concat('editor.min.js'))
   .pipe(uglify())
@@ -50,5 +55,5 @@ gulp.task('editor-js',function(){
 
 
 gulp.task('watch', function () {
-   gulp.watch('*.js', ['js']);
+   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
 });
