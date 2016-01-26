@@ -26,49 +26,116 @@
     <p>Innovate UK are required to formally report all material financial transactions with bodies connected with any independent assessors or any of their close family members.</p>
 
     <p>Please complete the sections below, declaring all interests held during the financial year ending 31 March 2017.</p>
+
+    <hr />
+
+    <h2 class="heading-large">Your affiliations</h2>
 	
 	<form>
 		<fieldset>
-			<legend class="visuallyhidden">Declaration of interest</legend>
-			
+			<h3 class="heading-medium no-margin">Principal employer and role</h3>
+			<legend class="visuallyhidden">Principal employer and role</legend>
+			<p class="form-hint">Tell us about your current employer and position</p>
+			<div class="grid-row extra-margin">
+				<div class="column-half">
+					<div class="form-group">
+						<label for="doi-principal-employer" class="form-label-bold">Prinicial employer</label>
+						<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.edit != null} ? 'Company A' : '')"/>
+					</div>
+				</div>
+
+				<div class="column-half">
+					<div class="form-group">
+						<label for="doi-principal-employer-role" class="form-label-bold">Role</label>
+						<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.edit != null} ? 'Job Role X' : '')"/>
+					</div>
+				</div>
+			</div>
+
 			<div class="form-group">
 				<label for="skills-areas" class="form-label-bold">Professional affiliations</label>
-				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company A</div></textarea>
+				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company affiliation example</div></textarea>
 			</div>
+		</fieldset>
 
-			<div class="form-group">
-				<label for="skills-areas" class="form-label-bold">Principle employer and role</label>
-				<textarea name="doi-employer-role" id="doi-employer-role" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company A - Job role X</div></textarea>
-			</div>
 
-			<div class="form-group">
-				<label for="skills-areas" class="form-label-bold">Appointments, Directorships and consultancies</label>
-				<textarea name="doi-appointments" id="doi-appointments" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
+		<fieldset class="extra-margin">
+			<h2 class="heading-medium no-margin">Appointments, directorships and consultancies</h2>
+			<legend class="visuallyhidden">Appointments, directorships and consultancies</legend>
+			<div class="grid-row extra-margin">
+				<div class="column-half">
+					<div class="form-group">
+						<label for="doi-organisation" class="form-label-bold">Organisation</label>
+						<input name="doi-organisation" id="doi-organisation" class="form-control width-full" th:value="(${param.edit != null} ? 'Example organisation' : '')"/>
+					</div>
+				</div>
+
+				<div class="column-half">
+					<div class="form-group">
+						<label for="doi-organisation-position" class="form-label-bold">Position</label>
+						<input name="doi-organisation-position" id="doi-organisation-position" class="form-control width-full" th:value="(${param.edit != null} ? 'Example position' : '')"/>
+					</div>
+				</div>
 			</div>
+			<p class="alignright">
+				<a href="#">Add another position</a>
+			</p>
 
 			<div class="form-group">
 				<label for="skills-areas" class="form-label-bold">Other pecuniary interests</label>
+				<p class="form-hint">Tell us about any other organisations in which you have a position or investment from which you could benefit financially</p>
 				<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full"></textarea>
 			</div>
 
-			<div class="form-group">
-				<label for="skills-areas" class="form-label-bold">Close family member appointments, directorships and consultancies</label>
-				<textarea name="doi-close-family" id="doi-close-family" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company B</div></textarea>
+		</fieldset>
+
+		<hr />
+		
+		<h2 class="heading-large">Close family member affiliations</h2>
+		
+		<fieldset>
+			<h3 class="heading-medium no-margin">Close family member appointments, directorships and consultancies</h3>
+			<legend class="visuallyhidden">Close family member appointments, directorships and consultancies</legend>
+			
+			<div class="grid-row extra-margin">
+				<div class="column-third">
+					<div class="form-group">
+						<label for="doi-family-relation" class="form-label-bold">Relation</label>
+						<input name="doi-family-relation" id="doi-family-relation" class="form-control width-full" value="" />
+					</div>
+				</div>
+				<div class="column-third">
+					<div class="form-group">
+						<label for="doi-family-organisation" class="form-label-bold">Organisation</label>
+						<input name="doi-family-organisation" id="doi-family-organisation" class="form-control width-full" value="" />
+					</div>
+				</div>
+				<div class="column-third">
+					<div class="form-group">
+						<label for="doi-family-position" class="form-label-bold">Position</label>
+						<input name="doi-family-position" id="doi-family-position" class="form-control width-full" value="" />
+					</div>
+				</div>
 			</div>
+
+			<p class="alignright">
+				<a href="#">Add another family member</a>
+			</p>
 
 			<div class="form-group">
 				<label for="skills-areas" class="form-label-bold">Close family member other pecuniary interests</label>
+				<p class="form-hint">Tell us about any other organisations in which a close family member holds a position or investment from which you could benefit financially</p>
 				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
 			</div>
 
-			<div class="form-block">
-				<label class="block-label" for="confirm-doi">
-					<input id="confirm-doi" type="checkbox" value="" />
-					I can confirm for financial year ended 31 March 2017 that the above represents an accurate account of my interests outside Innovate UK
-				</label>
-			</div>
-
 		</fieldset>
+
+		<div class="form-block">
+			<label class="block-label" for="confirm-doi">
+				<input id="confirm-doi" type="checkbox" value="" />
+				I can confirm for financial year ended 31 March 2017 that the above represents an accurate account of my interests outside Innovate UK
+			</label>
+		</div>
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
