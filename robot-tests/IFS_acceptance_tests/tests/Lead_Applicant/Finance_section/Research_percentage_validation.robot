@@ -67,7 +67,7 @@ The first collaborator edits financial details to bring down the research partic
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Sleep   3s
+    Sleep   5s
     Logout as user
 
 There is no error message on the finances form
