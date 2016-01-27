@@ -20,12 +20,16 @@ Enter address manually
     When the applicant clicks the "Enter address manually"
     Then the address details form should be visible
 
+
 EU Definition link should navigate to the correct page
     [Documentation]    INFUND-891
-    [Tags]    Applicant    New application    Company size
+    [Tags]    Applicant    New application    Company size   Pending
+    # The company size functionality has now moved to the finances section
+    # so this is pending, ready to be deleted on review
     Given the applicant is in the 'create your account' page
     When the applicant clicks the 'EU definition' link
     Then the applicant should navigate to the correct page
+
 
 The applicant should be able to choose different organisation sizes
     [Documentation]    INFUND-891

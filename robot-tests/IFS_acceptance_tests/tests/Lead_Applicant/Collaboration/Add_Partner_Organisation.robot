@@ -97,7 +97,7 @@ Numbers not allowed in person name
 
 Invalid email address is not allowed
    [Documentation]      INFUND-896
-   [Tags]  Collaboration
+   [Tags]  Collaboration    Pending
    Given the applicant is in the invite contributors page
    And the applicant clicks link "Add partner organisation"
    And the applicant inputs invalid email address    10
@@ -114,7 +114,7 @@ Link to add multiple partner organisation
     And the applicant should see another link "Add partner organisation" below the previously clicked partner organisation
 
 *** Keywords ***
-Given the applicant is in the invite contributors page
+the applicant is in the invite contributors page
     go to    ${INVITE_COLLABORATORS_PAGE}
 
 the applicant should see the link "Add partner organisation"
