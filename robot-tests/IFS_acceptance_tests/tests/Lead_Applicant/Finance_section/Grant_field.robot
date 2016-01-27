@@ -12,8 +12,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Auto-save test for the "Grant" field
-    [Tags]    Applicant    Autosave    Finance      Failing
-    # Failing due to recent changes to the finance section
+    [Tags]    Applicant    Autosave    Finance
     Given Applicant goes to the Your finances section
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
