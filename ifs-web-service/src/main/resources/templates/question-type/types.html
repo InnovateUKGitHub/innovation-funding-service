@@ -969,7 +969,7 @@
             </thead>
             <tbody>
               <tr th:each="applicationOrganisation : ${applicationOrganisations}">
-                <th scope="row" th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
+                <th scope="row">
                   <div th:text="${applicationOrganisation.name}"></div>
                   <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                   <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
@@ -1020,14 +1020,17 @@
               </thead>
               <tbody>
                 <tr th:each="applicationOrganisation : ${applicationOrganisations}">
-                  <th scope="row" th:classappend="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)} ? complete : incomplete">
-                      <div th:text="${applicationOrganisation.name}" />
-                      <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}">
-                        <small>Lead organisation</small>
-                      </div>
-                      <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
-                        <small>Partner</small>
-                      </div>
+                  <th scope="row">
+                      <div>
+                        <div th:text="${applicationOrganisation.name}" />
+                        <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                          <small>Lead organisation</small>
+                        </div>
+                        <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                          <small>Partner</small>
+                        </div>
+                        <img class="table-tick" th:src="@{/images/field/tick-icon.png}" th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
+                    </div>
                   </th>
                   <div th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}" th:remove="tag">
                     <td class="numeric">
