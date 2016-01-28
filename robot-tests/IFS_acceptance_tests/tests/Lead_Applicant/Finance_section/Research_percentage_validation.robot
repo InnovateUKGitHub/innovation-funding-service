@@ -78,7 +78,7 @@ There is no error message on the summary page
     Go To       ${APPLICATION_2_SUMMARY_URL}
     Wait Until Element Is Visible       css=[aria-controls="collapsible-15"]
     Click Button    css=[aria-controls="collapsible-15"]
-    Sleep   1s
+    Sleep   3s
     Page Should Not Contain      The participation levels of this project are not within the required range
 
 The first collaborator can log out
