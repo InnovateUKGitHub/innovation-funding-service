@@ -20,7 +20,7 @@ public class QuestionStatusController {
     @Autowired
     QuestionStatusRepository questionStatusRepository;
 
-    @RequestMapping("/findByQuestionAndAplication/{questionId}/{applicationId}")
+    @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
     private List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
             return questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
     }

@@ -58,14 +58,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
     }
 
+    @ProfileExecution
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form);
+        Competition competition = competitionService.getById(applicationId);
+        model.addAttribute("currentCompetition", competition);
+        this.addFormAttributes(Optional.empty(), applicationId, user.getId(), model, form, Optional.empty());
         return "application-form";
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
@@ -73,8 +77,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Section section = sectionService.getById(sectionId);
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         addNavigation(section, applicationId, model);
 
         form.bindingResult = bindingResult;
@@ -83,6 +86,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
+    @ProfileExecution
     @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
@@ -92,25 +96,26 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-
-        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
-
+        this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
-
         return "application-form";
     }
 
-    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
+    private void addFormAttributes(Optional<Section> section, Long applicationId, Long userId, Model model, ApplicationForm form, Optional<Question> question){
         Optional<Long> questionSectionId = null;
-        if(section!=null) {
-            questionSectionId = Optional.ofNullable(section.getId());
+        if(section.isPresent()) {
+            questionSectionId = Optional.ofNullable(section.get().getId());
         }
-        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
-        addNavigation(question, applicationId, model);
-        model.addAttribute("currentQuestion", question);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        model.addAttribute("currentCompetition", competition);
+        super.addApplicationDetails(application, competition, userId, questionSectionId, Optional.ofNullable(question.get().getId()), model, form);
+        addNavigation(question.get(), application.getId(), model);
+        model.addAttribute("currentQuestion", question.get());
     }
 
+    @ProfileExecution
     @RequestMapping(value = {"/question/{questionId}", "/question/edit/{questionId}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
                                      BindingResult bindingResult,
@@ -138,7 +143,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
-            this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+            this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
@@ -159,6 +164,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
+    @ProfileExecution
     @RequestMapping(value="/question/edit/{questionId}", method = RequestMethod.GET)
     public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
@@ -232,6 +238,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/deletecost/{sectionId}/{costId}")
     public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("sectionId") final Long sectionId,
@@ -241,6 +248,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "redirect:/application/" + applicationId + "/form" + "/section/" + sectionId;
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/deletecost/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
     public @ResponseBody JsonStatusResponse deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("sectionId") final Long sectionId,
@@ -256,6 +264,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         costService.delete(costId);
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/addcost/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
     public String addAnotherWithFragmentResponse(@Valid @ModelAttribute("form") ApplicationForm form, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
@@ -269,14 +278,15 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), Optional.ofNullable(renderQuestionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.ofNullable(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
     }
 
+    @ProfileExecution
     @RequestMapping(value = "/addcost/{sectionId}/{questionId}")
     public String addAnother(@ModelAttribute("form") ApplicationForm form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
@@ -352,6 +362,7 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This method is for the post request when the users clicks the input[type=submit] button.
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
+    @ProfileExecution
     @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.POST)
     public String applicationFormSubmit(@Valid @ModelAttribute("form") ApplicationForm form,
                                         BindingResult bindingResult,
@@ -377,7 +388,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
 
         if(bindingResult.hasErrors()){
-            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
+            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), Optional.empty(), model, form, true);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
@@ -456,6 +467,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     /**
      * This method is for supporting ajax saving from the application form.
      */
+    @ProfileExecution
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
     public @ResponseBody JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                              @RequestParam("value") String value,
