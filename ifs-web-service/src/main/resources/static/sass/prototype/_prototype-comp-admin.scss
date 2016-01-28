@@ -10,3 +10,17 @@
 		}
 	}
 }
+
+
+/*----- Remove help links for comp admin / internal pages ----*/
+.comp-assessors,
+.comp-dashboard{
+	.user-feedback{
+		display: none;
+
+		& + p{
+			display: none;
+		}
+	}
+}
+

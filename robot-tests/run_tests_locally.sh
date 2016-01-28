@@ -78,6 +78,7 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
+    sleep 5
 }
 
 function runTests {
@@ -175,13 +176,13 @@ then
 elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
-    # stopServers
+    stopServers
     resetDB
     buildAndDeploy
     startServers
 else
     echo "using quickTest:   FALSE" >&2
-    # stopServers
+    stopServers
     resetDB
     buildAndDeploy
     startServers

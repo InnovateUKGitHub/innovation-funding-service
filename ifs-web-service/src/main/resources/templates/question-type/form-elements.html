@@ -276,7 +276,7 @@
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
         </div>
         <div class="assign-team">
-            <h3>Reassign question</h3>
+            Reassign question
             <ul class="list-bullet">
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
@@ -337,7 +337,6 @@
             th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
-
 </div>
 <!-- ========================= edit link =========================== -->
 
