@@ -1,5 +1,5 @@
 /*
-Progress indicator 
+Progress indicator
 
 ```
 <div class="progress-container">
@@ -66,17 +66,19 @@ Progress indicator
 	@include border-radius(15px);
 	height:30px;
 
-	.start,
-	.end{
+	&:before,
+	&:after{
+		content: '0%';
 		position: absolute;
 		left:0;
 		bottom:-40px;
 		color:$grey-1;
 		font-size:15px;
 	}
-	.end {
+	&:after {
 		right:0;
-		left:auto;	
+		left:auto;
+		content: '100%';
 	}
 }
 
@@ -124,5 +126,3 @@ Progress indicator
 		display: none;
 	}
 }
-
-
