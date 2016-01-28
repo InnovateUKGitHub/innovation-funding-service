@@ -4,10 +4,10 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
     </div>
 
@@ -16,23 +16,21 @@
 
     <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}"  th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-        <div th:unless="${readonly}">
-            <div th:include="question-type/form-elements :: form-label (name=${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        </div>
-        <div th:if="${readonly}">
-            <div th:include="question-type/form-elements :: form-label (name=${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        </div>
+      <div th:if="${readonly}" th:include="question-type/form-elements :: form-label (name=${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag"  />
+      <div th:remove="tag" th:unless="${readonly}">
+        <div th:include="question-type/form-elements :: form-label (name=${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"  />
+      </div>
 
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+      <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+      <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
     <div th:fragment="textarea-wordcount (name, id, inputName, hint, maxWords, value)"  class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${name}, id=${id}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${name}, id=${id}, bold=true)" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag"  />
         <div th:include="question-type/form-elements :: form-textarea-wordcount (id=${id}, name=${inputName}, value=${value},readonly=false, maxWords=${maxWords})" th:remove="tag" />
     </div>
 
@@ -40,19 +38,19 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
         <input type="file" th:id="${formInput.getId()}" />
     </div>
 
@@ -60,9 +58,9 @@
 
     <div th:fragment="percentage" class="form-group">
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=false)" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=false)" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" th:remove="tag" />
         <span>%</span>
     </div>
@@ -144,8 +142,8 @@
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div class="form-group">
           <h2 class="heading-medium" th:text="${question.name}" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" th:if="${formInputIndex == 0}" />
-          <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" th:if="${formInputIndex == 0}" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+          <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
           <fieldset>
             <legend class="visuallyhidden" th:text="${question.name}"/>
             <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
