@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
+</head>
+<body class="app-invite">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <h1 class="heading-large">Inviting Contributors</h1>
+
+    <p>From this page you are able to invite contributors to your application.<br/>You are able to add new contributors at any point during the application
+        process.</p>
+
+    <div th:text="${organisationInvites}"></div>
+    <div th:each="organisationInviteResource : ${ organisationInvites }">
+        <div th:text="${organisationInviteResource.organisationName}"></div>
+        <div th:text="${organisationInviteResource.organisationId}"></div>
+        <div th:text="${organisationInviteResource.inviteResources}"></div>
+    </div>
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

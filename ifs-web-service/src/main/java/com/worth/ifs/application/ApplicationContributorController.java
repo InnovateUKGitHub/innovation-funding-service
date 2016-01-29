@@ -37,8 +37,22 @@ public class ApplicationContributorController extends AbstractApplicationControl
     private Validator validator;
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String displayContributors(@PathVariable("applicationId") final Long applicationId) {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
+        User leadApplicant = leadApplicantProcessRole.getUser();
+
+        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
+        Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
+
+        model.addAttribute("authenticatedUser", user);
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("leadApplicant", leadApplicant);
+        model.addAttribute("leadOrganisation", leadOrganisation);
+        model.addAttribute("organisationInvites", organisationInvites.values());
         return "application-contributors/display";
     }
 
