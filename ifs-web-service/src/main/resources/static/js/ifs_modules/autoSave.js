@@ -101,7 +101,7 @@ IFS.autoSave = (function(){
                      }, remainingWaitingTime);
                  }).error(function(xhr) {
                       if(typeof(xhr.responseText) !== 'undefined'){
-                          var err = JSON.parse(xhr.responseText);
+                          var err = jQuery.parseJSON(xhr.responseText);
                           var errorMessage = err.error+' : '+err.message;
                           serverSideValidationErrors.push(errorMessage);
                           IFS.formValidation.setInvalid(field,errorMessage);

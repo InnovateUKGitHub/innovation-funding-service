@@ -1,12 +1,40 @@
-#application-list{
+table{
 
 	.full-view{
 		display: none; 
 	}
-
+	
 	.show-full-table &{
-		.full-view{
+		th.full-view{
 			display: table-cell;
+		}
+
+		td.full-view{
+			display: table-cell;
+		}
+
+		tr.full-view{
+			display: table-row;
 		}
 	}
 }
+
+.show-full-table.items-assigned{
+	.hide-assigned{
+		display: none;
+	}
+}
+
+
+/*----- Remove help links for comp admin / internal pages ----*/
+.comp-assessors,
+.comp-dashboard{
+	.user-feedback{
+		display: none;
+
+		& + p{
+			display: none;
+		}
+	}
+}
+

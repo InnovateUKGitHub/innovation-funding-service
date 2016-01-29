@@ -31,6 +31,21 @@ Labour
     And the user reloads the page
     And the labour total should be correct again
 
+Overheads
+    [Documentation]    INFUND-192
+    ...    Acceptance tests for the Overheads section calculations
+    ...    INFUND-736
+    [Tags]    Overheads    Autosave    Calculations    Finance
+    Given Applicant goes to the Your finances section
+    And the Applicant fills in the Overheads costs
+    And the calculations of the overheads should be correct
+    When the applicant changes the data in the overheads section
+    And the calculations of the overheads should still be correct
+    And the applicant changes the data in the overheads section again
+    Then the calculations of the overheads should be correct again
+    And the user reloads the page
+    And the calculations of the overheads should be correct once more
+
 Materials
     [Documentation]    INFUND-192
     ...    INFUND-736
@@ -114,6 +129,7 @@ Other Funding
 the Applicant fills in the Labour costs
     Click Element    css=[aria-controls="collapsible-1"]
     Click Element    link=Add another role
+    Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    230
@@ -143,11 +159,49 @@ the total labour cost calculation should be correct
 
 the applicant fills a second row in the labour costs
     Click Element    link=Add another role
+    Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
     Sleep    1s
+
+the applicant fills in the overheads costs
+    Click Element    css=[aria-controls="collapsible-2"]
+    Select Radio Button     overheads-rateType-29-51   DEFAULT_PERCENTAGE
+    focus    css=.app-submit-btn
+    sleep    1s
+
+the calculations of the overheads should be correct
+    Wait Until Element Is Visible   id=section-total-10-default
+    Textfield Value Should Be       id=section-total-10-default      £ 10,435
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 10,435
+
+the applicant changes the data in the overheads section
+    Select Radio Button     overheads-rateType-29-51    CUSTOM_RATE
+    Input Text              id=cost-overheads-51-customRate     30
+    focus    css=.app-submit-btn
+    sleep    1s
+
+the calculations of the overheads should still be correct
+    Wait Until Element Is Visible   id=section-total-10-custom
+    Textfield Value Should Be       id=section-total-10-custom      £ 15,652
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 15,652
+
+the applicant changes the data in the overheads section again
+    Select Radio Button     overheads-rateType-29-51    SPECIAL_AGREED_RATE
+    Input Text              id=cost-overheads-51-agreedRate     40
+    focus    css=.app-submit-btn
+    sleep    1s
+
+the calculations of the overheads should be correct again
+    Wait Until Element Is Visible  id=section-total-10-special
+    Textfield Value Should Be      id=section-total-10-special     £ 20,870
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 20,870
+
+the calculations of the overheads should be correct once more
+    Click Element    css=[aria-controls="collapsible-2"]
+    the calculations of the overheads should be correct again
 
 the Applicant fills the Materials fields
     Click Element    xpath=//*[@aria-controls="collapsible-3"]
@@ -342,10 +396,10 @@ Applicant can see a new row
     Element Should Be Visible    id=other-funding-table
 
 Applicant selects 'No' for other funding
-    Select Radio button    other_funding-otherPublicFunding-54    No
+    Select Radio button    other_funding-otherPublicFunding-35-54    No
 
 Applicant chooses to add yet another source of funding
-    Select Radio button    other_funding-otherPublicFunding-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
     Click Link    Add another source of funding
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
@@ -356,7 +410,7 @@ Applicant chooses to add another source of funding
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
 
 Applicant selects 'Yes' for other funding
-    Select Radio button    other_funding-otherPublicFunding-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
 
 Applicant can see that the 'No' radio button is selected
-    Radio Button Should Be Set To    other_funding-otherPublicFunding-54    No
+    Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No

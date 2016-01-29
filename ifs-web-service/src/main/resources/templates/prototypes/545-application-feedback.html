@@ -381,8 +381,12 @@
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-			<h5 class="heading-small">Other comments</h5>
-			<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+			
+			<div th:unless="${param.internal == null}" th:remove="tag">
+				<h5 class="heading-small">Other comments</h5>
+				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+			</div>
+
 		</li>
 		<li>
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 1')}">Assessor 2</h4>
@@ -398,8 +402,11 @@
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 1')}">Assessor 4</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-			<h5 class="heading-small">Other comments</h5>
-			<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+			
+			<div th:unless="${param.internal == null}" th:remove="tag">
+				<h5 class="heading-small">Other comments</h5>
+				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+			</div>
 		</li>
 		<li>
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'David Standingford':'Assessor 1')}">Assessor 5</h4>

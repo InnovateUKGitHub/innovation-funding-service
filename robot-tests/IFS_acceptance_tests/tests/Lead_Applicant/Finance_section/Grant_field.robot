@@ -12,8 +12,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Auto-save test for the "Grant" field
-    [Tags]    Applicant    Autosave    Finance      Failing
-    # Failing due to recent changes to the finance section
+    [Tags]    Applicant    Autosave    Finance
     Given Applicant goes to the Your finances section
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
@@ -21,7 +20,7 @@ Auto-save test for the "Grant" field
 *** Keywords ***
 the grant value should be correct in the finance summary page
     Applicant goes to the finance overview
-    Element Should Contain    css=.form-group > table tr:nth-child(2) .numeric:nth-child(3)    25
+    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
     Clear Element Text    id=cost-financegrantclaim

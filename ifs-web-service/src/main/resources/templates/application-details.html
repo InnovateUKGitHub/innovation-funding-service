@@ -32,7 +32,7 @@
 
 
     <h2 class="bold-medium">Competition details</h2>
-    <p th:text="${currentCompetition.getDescription()}" />
+    <p th:utext="${currentCompetition.getDescription()}" />
 
     <form action="#" method="post" class="application-overview">
         <div th:remove="tag" th:each="section : ${sections.values()}">
@@ -61,7 +61,7 @@
 
 
     <div class="alignright-button">
-        <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
+        <a class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
     </div>
 
 

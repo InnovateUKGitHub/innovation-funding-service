@@ -4,6 +4,7 @@ import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.Organisation;
@@ -20,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
@@ -31,7 +32,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private InviteRestService inviteRestService;
-    //
+
     @Autowired
     private Validator validator;
 
@@ -49,46 +50,71 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
-
-
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        model.addAttribute("authenticatedUser", user);
-
         ApplicationResource application = applicationService.getById(applicationId);
-        model.addAttribute("currentApplication", application);
-
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
         User leadApplicant = leadApplicantProcessRole.getUser();
+
+        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
+        Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
+
+        addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
+        mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId);
+
+        model.addAttribute("authenticatedUser", user);
+        model.addAttribute("currentApplication", application);
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
+        model.addAttribute("organisationInvites", organisationInvites);
+        return "application-contributors/invite";
+    }
 
-
+    /**
+     * Add the invites from the database, to the ContributorsForm object.
+     */
+    private void addSavedInvitesToForm(ContributorsForm contributorsForm, Organisation leadOrganisation, List<InviteOrganisationResource> savedInvites) {
         OrganisationInviteForm leadOrganisationInviteForm = new OrganisationInviteForm();
         leadOrganisationInviteForm.setOrganisationName(leadOrganisation.getName());
         leadOrganisationInviteForm.setOrganisationId(leadOrganisation.getId());
+        Optional<InviteOrganisationResource> hasInvites = savedInvites.stream()
+                .filter(i -> leadOrganisation.getId().equals(i.getOrganisationId()))
+                .findAny();
+        if(hasInvites.isPresent()){
+            leadOrganisationInviteForm.setOrganisationInviteId(hasInvites.get().getId());
+        }
         contributorsForm.getOrganisations().add(leadOrganisationInviteForm);
 
+        savedInvites.stream()
+            .filter(inviteOrg -> inviteOrg.getOrganisationId() != leadOrganisation.getId())
+            .forEach(inviteOrg -> {
+                OrganisationInviteForm invitedOrgForm = new OrganisationInviteForm();
+                invitedOrgForm.setOrganisationName(inviteOrg.getOrganisationName());
+                invitedOrgForm.setOrganisationId(inviteOrg.getOrganisationId());
+                invitedOrgForm.setOrganisationInviteId(inviteOrg.getId());
+                contributorsForm.getOrganisations().add(invitedOrgForm);
+            });
+    }
+
+    private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId) {
         String json = ApplicationCreationController.getFromCookie(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
-            ContributorsForm contributorsForm2 = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
-            if(contributorsForm2.getApplicationId() == applicationId) {
-                contributorsForm.setTriedToSave(contributorsForm2.isTriedToSave());
-                contributorsForm.setOrganisations(contributorsForm2.getOrganisations());
-            }
+            ContributorsForm contributorsFormCookie = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
+            if(contributorsFormCookie.getApplicationId().equals(applicationId)) {
+                if(contributorsFormCookie.isTriedToSave()){
+                    // if the form was saved, validate and update cookie.
+                    contributorsFormCookie.setTriedToSave(false);
+                    String jsonState = ApplicationCreationController.getSerializedObject(contributorsFormCookie);
+                    ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
-            // got result from submit? validate
-            if(contributorsForm.isTriedToSave()){
-                validator.validate(contributorsForm, bindingResult);
-                contributorsForm.setTriedToSave(false);
-
-                String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
-                ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+                    contributorsForm.merge(contributorsFormCookie);
+                    validator.validate(contributorsForm, bindingResult);
+                }else{
+                    contributorsForm.merge(contributorsFormCookie);
+                }
             }
         }
-
-        return "application-contributors/invite";
     }
 
     /**
@@ -99,59 +125,67 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
                                      @RequestParam(name = "add_partner", required = false) String addPartner,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
+                                     @RequestParam(name = "save_contributors", required = false) String saveContributors,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      HttpServletRequest request) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        if (organisationIndex != null) {
-            addPersonRow(contributorsForm, organisationIndex, application);
-        } else if (organisationAndPerson != null) {
-            removePersonRow(contributorsForm, organisationAndPerson);
-        }else if (addPartner != null) {
-            addPartnerRow(contributorsForm);
-        }
         // User should never be able to set the organisation name or id of the lead-organisation.
         contributorsForm.getOrganisations().get(0).setOrganisationName(leadApplicantProcessRole.getOrganisation().getName());
         contributorsForm.getOrganisations().get(0).setOrganisationId(leadApplicantProcessRole.getOrganisation().getId());
+        contributorsForm.setTriedToSave(false);
 
-        validator.validate(contributorsForm, bindingResult);
-
-        if(request.getParameterMap().containsKey("save_contributors")){
+        if (organisationIndex != null) {
+            addPersonRow(contributorsForm, organisationIndex);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
+        } else if (organisationAndPerson != null) {
+            removePersonRow(contributorsForm, organisationAndPerson);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
+        }else if (addPartner != null) {
+            addPartnerRow(contributorsForm);
+            saveFormValuesToCookie(response, contributorsForm, applicationId);
+        }else if(saveContributors != null){
             contributorsForm.setTriedToSave(true);
-        }else{
-            contributorsForm.setTriedToSave(false);
-        }
-
-        if (request.getParameterMap().containsKey("save_contributors") && !bindingResult.hasErrors()) {
-            contributorsForm.getOrganisations().forEach((organisationInvite) -> {
-                List<InviteResource> invites = new ArrayList<>();
-                Organisation existingOrganisation = null;
-                if(organisationInvite.getOrganisationId() != null){
-                    existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
-                }
-
-                final Organisation finalExistingOrganisation = existingOrganisation;
-                organisationInvite.getInvites().stream().forEach(invite -> {
-                    InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
-                    if (finalExistingOrganisation != null) {
-                        inviteResource.setInviteOrganisationId(finalExistingOrganisation.getId());
+            validator.validate(contributorsForm, bindingResult);
+            if(!bindingResult.hasErrors()) {
+                contributorsForm.getOrganisations().forEach((organisationInvite) -> {
+                    List<InviteResource> invites = new ArrayList<>();
+                    Organisation existingOrganisation = null;
+                    if(organisationInvite.getOrganisationId() != null){
+                        // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
+                        existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
                     }
-                    invites.add(inviteResource);
+
+                    organisationInvite.getInvites().stream().forEach(invite -> {
+                        InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
+                        if(organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))){
+                            inviteResource.setInviteOrganisationId(organisationInvite.getOrganisationInviteId());
+                        }
+                        invites.add(inviteResource);
+                    });
+
+                    if(organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))){
+                        // save new invites, to InviteOrganisation that already is saved.
+                        inviteRestService.saveInvites(invites);
+                    }else if (existingOrganisation != null) {
+                        // Save invites, and link to existing Organisation.
+                        inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+                    } else {
+                        // Save invites, and create new InviteOrganisation
+                        inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+                    }
                 });
 
-                if (existingOrganisation != null) {
-                    inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-                } else {
-                    inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
-                }
-            });
-
-            // empty cookie, since the invites are saved.
-            ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
-            return ApplicationController.redirectToApplication(application);
-        } else {
+                // empty cookie, since the invites are saved.
+                ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
+                return ApplicationController.redirectToApplication(application);
+            } else {
+                saveFormValuesToCookie(response, contributorsForm, applicationId);
+            }
+        }else{
+            // no specific submit action, just save the data to the cookie.
             saveFormValuesToCookie(response, contributorsForm, applicationId);
         }
 
@@ -165,7 +199,6 @@ public class ApplicationContributorController extends AbstractApplicationControl
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {
-        log.debug("remove person " + organisationAndPerson);
         int organisationIndex = Integer.parseInt(organisationAndPerson.substring(0, organisationAndPerson.indexOf("_")));
         int personIndex = Integer.parseInt(organisationAndPerson.substring(organisationAndPerson.indexOf("_") + 1, organisationAndPerson.length()));
 
@@ -174,30 +207,23 @@ public class ApplicationContributorController extends AbstractApplicationControl
         if(organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().size() == 0){
             contributorsForm.getOrganisations().remove(organisationIndex);
         }
-
-        log.debug("organisationId " + organisationIndex);
-        log.debug("personIndex " + personIndex);
     }
 
-    private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex, ApplicationResource application) {
-        log.debug("add person " + organisationIndex);
+    private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex) {
         OrganisationInviteForm organisationInviteForm = contributorsForm.getOrganisations().get(Integer.parseInt(organisationIndex));
         List<InviteeForm> invites = organisationInviteForm.getInvites();
         invites.add(new InviteeForm());
     }
     private void addPartnerRow(ContributorsForm contributorsForm) {
-        log.debug("addPartnerRow " );
         OrganisationInviteForm organisationInviteForm = new OrganisationInviteForm();
         InviteeForm invite = new InviteeForm();
-        LinkedList<InviteeForm> invites = new LinkedList<>();
+        List<InviteeForm> invites = organisationInviteForm.getInvites();
         invites.add(invite);
         organisationInviteForm.setInvites(invites);
         contributorsForm.getOrganisations().add(organisationInviteForm);
     }
 
-    private void getContributors(ApplicationResource application) {
-
+    private List<InviteOrganisationResource> getSavedInviteOrganisations(ApplicationResource application) {
+        return inviteRestService.getInvitesByApplication(application.getId());
     }
-
-
 }
