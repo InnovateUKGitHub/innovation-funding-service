@@ -386,6 +386,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
 
+        when(sectionService.getById(1L)).thenReturn(sections.get(0));
+        when(sectionService.getById(3L)).thenReturn(sections.get(2));
     }
 
     public void setupApplicationResponses(){

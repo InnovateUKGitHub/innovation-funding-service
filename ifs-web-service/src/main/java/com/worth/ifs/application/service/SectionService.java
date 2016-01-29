@@ -18,7 +18,7 @@ public interface SectionService {
     Section getByName(String name);
     void removeSectionsQuestionsWithType(Section section, String name);
     List<Long> getUserAssignedSections(List<Section> sections, HashMap<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
-    Section getPreviousSection(Optional<Long> sectionId);
-    Section getNextSection(Optional<Long> sectionId);
+    Section getPreviousSection(Optional<Section> sectionId);
+    Section getNextSection(Optional<Section> sectionId);
     Section getSectionByQuestionId(Long questionId);
 }

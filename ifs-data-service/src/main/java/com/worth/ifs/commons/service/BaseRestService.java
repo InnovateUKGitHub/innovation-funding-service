@@ -9,8 +9,6 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
@@ -50,13 +48,7 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restGet(String path, Class<T> c) {
-        Map<String, String> urlVariables = new HashMap<>();
-        ResponseEntity<T> responseEntity = restGetEntity(path, c, urlVariables);
-        return responseEntity.getBody();
-    }
-
-    protected <T> T restGet(String path, Class<T> c, Map<String, String> urlVariables) {
-        ResponseEntity<T> responseEntity = restGetEntity(path, c, urlVariables);
+        ResponseEntity<T> responseEntity = restGetEntity(path, c);
         return responseEntity.getBody();
     }
 
@@ -70,13 +62,7 @@ public abstract class BaseRestService {
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         log.debug("restGetEntity: "+path);
-        Map<String, String> urlVariables = new HashMap<>();
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c, urlVariables);
-    }
-
-    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, Map<String, String> urlVariables) {
-        log.debug("restGetEntity: "+path);
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c, urlVariables);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){

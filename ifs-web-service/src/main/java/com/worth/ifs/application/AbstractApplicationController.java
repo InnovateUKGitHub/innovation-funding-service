@@ -115,12 +115,15 @@ public abstract class AbstractApplicationController {
     /**
      * Get the details of the current application, add this to the model so we can use it in the templates.
      */
-    protected ApplicationResource addApplicationDetails(ApplicationResource application, Competition competition,
-                                                        Long userId, Optional<Long> currentSectionId,
+    protected ApplicationResource addApplicationDetails(ApplicationResource application,
+                                                        Competition competition,
+                                                        Long userId,
+                                                        Optional<Section> section,
                                                         Optional<Long> currentQuestionId,
                                                         Model model,
                                                         ApplicationForm form) {
         model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
 
         Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
 
@@ -135,9 +138,9 @@ public abstract class AbstractApplicationController {
         addApplicationFormDetailInputs(application, form);
 
         userOrganisation.ifPresent(org ->
-            addAssigneableDetails(model, application, org, userId, currentSectionId, currentQuestionId)
+            addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
         );
-        addMappedSectionsDetails(model, application, competition, currentSectionId, currentQuestionId, userOrganisation);
+        addMappedSectionsDetails(model, application, competition, section, currentQuestionId, userOrganisation);
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
     }
@@ -206,12 +209,12 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
-                                         Long userId, Optional<Long> currentSectionId, Optional<Long> currentQuestionId) {
+                                         Long userId, Optional<Section> currentSection, Optional<Long> currentQuestionId) {
         List<Question> questions;
         if(currentQuestionId.isPresent()){
             questions = Arrays.asList(questionService.getById(currentQuestionId.get()));
-        }else if(currentSectionId.isPresent()){
-            Section section = sectionService.getById(currentSectionId.get());
+        }else if(currentSection.isPresent()){
+            Section section = currentSection.get();
             questions = section.getQuestions();
         }else{
             questions = questionService.findByCompetition(application.getCompetition());
@@ -260,11 +263,11 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,
-                                            Optional<Long> currentSectionId, Optional<Long> currentQuestionId,
+                                            Optional<Section> currentSection, Optional<Long> currentQuestionId,
                                             Optional<Organisation> userOrganisation) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        Section previousSection = sectionService.getPreviousSection(currentSectionId);
-        Section nextSection = sectionService.getNextSection(currentSectionId);
+        Section previousSection = sectionService.getPreviousSection(currentSection);
+        Section nextSection = sectionService.getNextSection(currentSection);
 
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
@@ -298,8 +301,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
     }
 
-    protected void addSectionDetails(Model model, Competition competition, Optional<Long> currentSectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        Optional<Section> currentSection = getSection(competition.getSections(), currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
+    protected void addSectionDetails(Model model, Optional<Section> currentSection) {
         model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
     }
@@ -328,8 +330,9 @@ public abstract class AbstractApplicationController {
         return applicationFinanceResource;
     }
 
-    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId, Long userId,
-                                                                             Optional<Long> currentSectionId,
+    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId,
+                                                                             Long userId,
+                                                                             Optional<Section> section,
                                                                              Optional<Long> currentQuestionId,
                                                                              Model model,
                                                                              ApplicationForm form,
@@ -337,13 +340,25 @@ public abstract class AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         application.setId(applicationId);
+
+        return addApplicationAndSectionsAndFinanceDetails(application, competition, userId, section, currentQuestionId, model, form, selectFirstSectionIfNoneCurrentlySelected);
+    }
+
+    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(ApplicationResource application,
+                                                                             Competition competition,
+                                                                             Long userId,
+                                                                             Optional<Section> section,
+                                                                             Optional<Long> currentQuestionId,
+                                                                             Model model,
+                                                                             ApplicationForm form,
+                                                                             boolean selectFirstSectionIfNoneCurrentlySelected) {
         model.addAttribute("currentCompetition", competition);
-        application = addApplicationDetails(application, competition, userId, currentSectionId, currentQuestionId, model, form);
+        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form);
 
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);
-        addSectionDetails(model, competition, currentSectionId, selectFirstSectionIfNoneCurrentlySelected);
+        addSectionDetails(model, section);
 
         return application;
     }

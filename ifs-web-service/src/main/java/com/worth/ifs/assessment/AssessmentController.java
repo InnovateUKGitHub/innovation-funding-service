@@ -2,6 +2,7 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
@@ -171,8 +172,9 @@ public class AssessmentController extends AbstractApplicationController {
 
     private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
         Competition competition = competitionService.getById(application.getCompetition());
-        addApplicationDetails(application, competition, userId, sectionId, Optional.empty(), model, null);
-        addSectionDetails(model, competition, sectionId, true);
+        Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
+        addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null);
+        addSectionDetails(model, currentSection);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);

@@ -56,7 +56,8 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        Section section = sectionService.getById(sectionId);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
     }
 
@@ -177,11 +178,12 @@ public class ApplicationController extends AbstractApplicationController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        Competition competition = competitionService.getById(application.getCompetition());
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-        Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.ofNullable(sectionId), true);
+
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
