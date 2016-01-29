@@ -89,33 +89,30 @@ IFS.invites = (function(){
           IFS.invites.saveToCookie();
       },
       recountRows : function(){
-          jQuery('[data-invite-org] input').each(function(){
-              var input = jQuery(this);
-
-              var orgId = input.closest('[data-invite-org]').index();
-              var inviteeId = input.closest('[data-invite-row]').index();
-
-              var oldName = input.attr('name');
-              if(typeof(oldName) !== 'undefined'){
-
-                var newName = oldName.split('.');
-                if(inviteeId !== -1 && orgId !== -1){
-                  if(orgId === 0){ inviteeId--; } //for the readonly owner field in the first organisation
-                  newName[0] = 'organisations['+orgId+']';
-                  newName[1] = 'invites['+inviteeId+']';
-                }
-                else if(orgId !== -1) {
-                  newName[0] = 'organisations['+orgId+']';
-                }
-                newName = newName.join('.');
-                input.attr('name',newName);
-              }
+          jQuery('[data-invite-org]').each(function(orgId,orgEl){
+                //update organisations
+                jQuery(orgEl).find('[name*="organisations["]').each(function(){
+                    var newName = jQuery(this).attr('name').split('.');
+                    newName[0] = 'organisations['+orgId+']';
+                    newName = newName.join('.');
+                    jQuery(this).attr('name',newName);
+                });
+                //update invite rows
+                jQuery(orgEl).find('[data-invite-row]').each(function(inviteeId,inviteeRow){
+                    jQuery(inviteeRow).find('[name*="invites["]').each(function(){
+                            var newName = jQuery(this).attr('name').split('.');
+                            newName[1] = 'invites['+inviteeId+']';
+                            newName = newName.join('.');
+                            jQuery(this).attr('name',newName);
+                    });
+                });
           });
           IFS.invites.saveToCookie();
       },
       removeRow : function(e){
           e.preventDefault();
           var button = jQuery(e.target);
+          //if there is only one row left we remove the organisation from the form
           if(button.closest('[data-invite-org]').find('tbody tr').length == 1){
             button.closest('[data-invite-org]').remove();
           }

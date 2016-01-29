@@ -1,13 +1,27 @@
-#application-list{
+table{
 
 	.full-view{
 		display: none; 
 	}
-
+	
 	.show-full-table &{
-		.full-view{
+		th.full-view{
 			display: table-cell;
 		}
+
+		td.full-view{
+			display: table-cell;
+		}
+
+		tr.full-view{
+			display: table-row;
+		}
+	}
+}
+
+.show-full-table.items-assigned{
+	.hide-assigned{
+		display: none;
 	}
 }
 
