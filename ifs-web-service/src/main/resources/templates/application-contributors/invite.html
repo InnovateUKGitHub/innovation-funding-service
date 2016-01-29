@@ -28,7 +28,7 @@
 
 
     <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
-        <button class="hidden-save" type="submit" aria-label="Save the list of invitees"/>
+        <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"/>
         <ul class="boxed-list">
             <li th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
                 <!--/* lead org */-->
@@ -79,13 +79,13 @@
                         </td>
                     </tr>
                     <div th:if="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}" th:remove="tag">
-                        <tr class="form-group"  th:each="invite: ${organisationInvites.get(organisationInviteForm.organisationInviteId).inviteResources}" data-invite-row="">
+                        <tr class="form-group"  th:each="invite: ${organisationInvites.get(organisationInviteForm.organisationInviteId).inviteResources}">
                             <td>
-                                <span th:text="${invite.name}"></span>
+                                <input class="form-control width-full" type="text" readonly="readonly" th:value="${invite.name}" />
 
                             </td>
                             <td>
-                                <span th:text="${invite.email}"></span>
+                              <input class="form-control width-full" type="text" readonly="readonly" th:value="${invite.email}" />
                             </td>
                             <td class="alignright">
                                 (Pending)
