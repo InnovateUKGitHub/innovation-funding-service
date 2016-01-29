@@ -338,7 +338,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                         .cookie(new Cookie(ApplicationCreationController.USER_ID, "1"))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite"));
+                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite?newApplication"));
     }
 
     @Test
