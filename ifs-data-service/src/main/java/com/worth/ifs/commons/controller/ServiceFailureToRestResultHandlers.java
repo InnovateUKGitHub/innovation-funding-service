@@ -13,7 +13,7 @@ import static java.util.Optional.of;
 /**
  *
  */
-public class ServiceFailureToRestResultHandlers<T> implements Function<ServiceResult<T>, Optional<RestResult<T>>> {
+public class ServiceFailureToRestResultHandlers<T, R> implements Function<ServiceResult<T>, Optional<RestResult<R>>> {
 
     private List<ServiceFailureToRestResultConverter> handlers;
 
@@ -22,7 +22,7 @@ public class ServiceFailureToRestResultHandlers<T> implements Function<ServiceRe
     }
 
     @Override
-    public Optional<RestResult<T>> apply(ServiceResult<T> serviceResult) {
+    public Optional<RestResult<R>> apply(ServiceResult<T> serviceResult) {
 
         if (serviceResult.isRight()) {
             return empty();
@@ -33,7 +33,7 @@ public class ServiceFailureToRestResultHandlers<T> implements Function<ServiceRe
             Optional<RestResult<?>> result = handler.handle(serviceResult.getLeft());
 
             if (result.isPresent()) {
-                RestResult<T> restResult = (RestResult<T>) result.get();
+                RestResult<R> restResult = (RestResult<R>) result.get();
                 return of(restResult);
             }
         }

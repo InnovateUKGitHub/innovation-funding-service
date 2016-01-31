@@ -31,19 +31,19 @@ public abstract class AbstractDataController {
         return serviceToRestResult(serviceCode, getDefaultSuccessHandler(successStatusCode));
     }
 
-    protected <T> RestResult<T> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, RestResult<T> successResult) {
+    protected <T, R> RestResult<R> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, RestResult<R> successResult) {
         return serviceToRestResult(serviceCode, getServiceResultSuccessToSuccessfulRestResultHandler(successResult));
     }
 
-    protected <T> RestResult<T> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T> successHandler) {
-        return serviceToRestResult(serviceCode, successHandler, getDefaultFailureHandlers());
+    protected <T, R> RestResult<R> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T, R> successHandler) {
+        return serviceToRestResult(serviceCode, successHandler, (ServiceFailureToRestResultHandlers<T, R>) getDefaultFailureHandlers());
     }
 
-    protected <T> RestResult<T> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T> successHandler, ServiceFailureToRestResultHandlers<T> failureHandlers) {
+    protected <T, R> RestResult<R> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T, R> successHandler, ServiceFailureToRestResultHandlers<T, R> failureHandlers) {
         return serviceToRestResult(serviceCode, successHandler, failureHandlers, getFallbackFailure());
     }
 
-    protected <T> RestResult<T> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T> successHandler, ServiceFailureToRestResultHandlers<T> failureHandlers, RestFailure defaultFailure) {
+    protected <T, R> RestResult<R> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode, ServiceSuccessToRestResultHandler<T, R> successHandler, ServiceFailureToRestResultHandlers<T, R> failureHandlers, RestFailure defaultFailure) {
         try {
             ServiceResult<T> response = serviceCode.get();
             return successHandler.apply(response).orElse(failureHandlers.apply(response).orElse(restFailure(defaultFailure)));
@@ -54,15 +54,15 @@ public abstract class AbstractDataController {
         }
     }
 
-    private <T> ServiceSuccessToRestResultHandler<T> getDefaultSuccessHandler() {
+    private <T> ServiceSuccessToRestResultHandler<T, T> getDefaultSuccessHandler() {
         return getDefaultSuccessHandler(OK);
     }
 
-    private <T> ServiceSuccessToRestResultHandler<T> getDefaultSuccessHandler(HttpStatus statusCode) {
+    private <T> ServiceSuccessToRestResultHandler<T, T> getDefaultSuccessHandler(HttpStatus statusCode) {
         return new ServiceSuccessToHttpStatusCodeRestResultHandler<>(statusCode);
     }
 
-    private <T> ServiceFailureToRestResultHandlers<T> getDefaultFailureHandlers() {
+    private <T> ServiceFailureToRestResultHandlers<T, T> getDefaultFailureHandlers() {
         return new ServiceFailureToRestResultHandlers<>(emptyList());
     }
 
@@ -70,7 +70,7 @@ public abstract class AbstractDataController {
         return new RestFailure(singletonList(new RestError(UNEXPECTED_ERROR, "An unexpected error occurred", INTERNAL_SERVER_ERROR)));
     }
 
-    private <T> ServiceSuccessToRestResultHandler<T> getServiceResultSuccessToSuccessfulRestResultHandler(RestResult<T> successResult) {
+    private <T, R> ServiceSuccessToRestResultHandler<T, R> getServiceResultSuccessToSuccessfulRestResultHandler(RestResult<R> successResult) {
         return serviceResult -> serviceResult.isRight() ? of(successResult) : empty();
     }
 }

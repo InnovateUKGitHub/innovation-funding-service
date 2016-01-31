@@ -9,11 +9,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class RestResults {
 
-    public static <T> RestResult<T> ok() {
+    public static RestResult<Void> ok() {
         return restSuccess(OK);
     }
 
-    public static <T> RestResult<T> accepted() {
+    public static RestResult<Void> accepted() {
         return restSuccess(ACCEPTED);
     }
 }

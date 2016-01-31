@@ -10,8 +10,8 @@ import java.util.function.Function;
  *
  */
 @FunctionalInterface
-public interface ServiceSuccessToRestResultHandler<T> extends Function<ServiceResult<T>, Optional<RestResult<T>>> {
+public interface ServiceSuccessToRestResultHandler<T, R> extends Function<ServiceResult<T>, Optional<RestResult<R>>> {
 
     @Override
-    Optional<RestResult<T>> apply(ServiceResult<T> serviceResult);
+    Optional<RestResult<R>> apply(ServiceResult<T> serviceResult);
 }

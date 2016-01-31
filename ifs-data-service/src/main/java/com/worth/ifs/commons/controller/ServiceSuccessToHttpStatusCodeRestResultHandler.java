@@ -13,7 +13,7 @@ import static java.util.Optional.of;
 /**
  *
  */
-public class ServiceSuccessToHttpStatusCodeRestResultHandler<T> implements ServiceSuccessToRestResultHandler<T> {
+public class ServiceSuccessToHttpStatusCodeRestResultHandler<T> implements ServiceSuccessToRestResultHandler<T, T> {
 
     private HttpStatus statusCode;
 

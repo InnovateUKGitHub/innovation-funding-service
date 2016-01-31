@@ -14,7 +14,6 @@ import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +139,7 @@ public class ApplicationController extends AbstractDataController {
     }
 
     @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
-    public RestResult<Notification> inviteCollaborator(
+    public RestResult<Void> inviteCollaborator(
             @PathVariable("applicationId") final Long applicationId,
             @RequestBody InviteCollaboratorResource invite) {
 
@@ -148,10 +147,6 @@ public class ApplicationController extends AbstractDataController {
 
             return applicationService.inviteCollaboratorToApplication(applicationId, invite);
 
-//        return inviteResult.mapLeftOrRight(
-//                failure -> handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Unable to send Notification to invitee", response)),
-//                success -> accepted("Notification sent successfully", response)
-//        );
         }, accepted());
     }
 
