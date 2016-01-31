@@ -38,7 +38,7 @@ var IFSLoader = {
       IFS.autoSave.init();
       IFS.finance.init();
       IFS.repeatableRows.init();
-      IFS.orgsizeToFunding.init();
+      IFS.financeSpecifics.init();
     }
   },
   'app-details' : {
@@ -54,10 +54,6 @@ var IFSLoader = {
     init : function(){ IFS.invites.init(); }
   }
 };
-
-
-
-
 
 //util for kicking it off.
 var UTIL = (function(){

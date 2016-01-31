@@ -17,15 +17,9 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
@@ -68,13 +62,21 @@ public class InviteController {
     }
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
-    public Set<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        HashSet<InviteOrganisationResource> results = new HashSet<>();
+    public Collection<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
+        Map<Long, InviteOrganisationResource> results = new LinkedHashMap<>();
         List<Invite> invites = inviteRepository.findByApplicationId(applicationId);
         invites.stream().forEach(i -> {
-            results.add(new InviteOrganisationResource(i.getInviteOrganisation()));
+            results.put(i.getInviteOrganisation().getId(), new InviteOrganisationResource(i.getInviteOrganisation()));
         });
-        return results;
+        return results.values();
+    }
+
+    @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
+    public List<String> saveQuestionResponse(@RequestBody List<InviteResource> inviteResources) {
+        List<Invite> invites = new ArrayList<>();
+        inviteResources.stream().forEach(iR -> invites.add(mapInviteResourceToInvite(iR, null)));
+        inviteRepository.save(invites);
+        return new ArrayList<>();
     }
 
     private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
@@ -104,6 +106,9 @@ public class InviteController {
 
     private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findOne(inviteResource.getApplicationId());
+        if(newInviteOrganisation == null && inviteResource.getInviteOrganisationId() != null){
+            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisationId());
+        }
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
 
         return invite;

@@ -147,12 +147,13 @@
                 >
 		</textarea>
 </div>
-<div th:fragment="form-finance-textarea (type, id, name, value)">
+<div th:fragment="form-finance-textarea (type, id, name, value,readonly)">
 		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-' + id}"
                 th:text="${value}"
                 rows="4"
+                th:readonly="${readonly}"
                 >
 		</textarea>
 </div>
@@ -276,7 +277,7 @@
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
         </div>
         <div class="assign-team">
-            <h3>Reassign question</h3>
+            Reassign question
             <ul class="list-bullet">
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
@@ -337,7 +338,6 @@
             th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
-
 </div>
 <!-- ========================= edit link =========================== -->
 

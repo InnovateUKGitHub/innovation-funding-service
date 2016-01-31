@@ -112,7 +112,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    @ProfileExecution
     public Question getById(Long questionId) {
         return questionRestService.findById(questionId);
     }

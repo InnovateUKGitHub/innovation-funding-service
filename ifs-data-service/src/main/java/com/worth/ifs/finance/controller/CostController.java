@@ -56,12 +56,17 @@ public class CostController {
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
     public void add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            @PathVariable("questionId") final Long questionId) {
+            @PathVariable("questionId") final Long questionId,
+            @RequestBody(required=false) final CostItem newCostItem) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
         Question question = questionRepository.findOne(questionId);
-        Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
-        costRepository.save(cost);
 
+        if(newCostItem!=null) {
+            addCostItem(applicationFinance, question, newCostItem);
+        } else {
+            Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
+            costRepository.save(cost);
+        }
     }
 
     @RequestMapping("/update/{id}")
@@ -79,6 +84,18 @@ public class CostController {
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
         } else {
             log.info("DOES NOT EXIST");
+        }
+    }
+
+    private void addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
+        Cost existingCost = costRepository.findOneByApplicationFinanceIdAndQuestionId(applicationFinance.getId(), question.getId());
+        if(existingCost == null) {
+            Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
+            cost.setQuestion(question);
+            cost.setApplicationFinance(applicationFinance);
+            costRepository.save(cost);
+        } else {
+            update(existingCost.getId(), newCostItem);
         }
     }
 

@@ -25,6 +25,7 @@ public class OtherFundingHandler extends CostHandler {
             if (fieldValue != null) {
                 switch (costFormField.getCostName()) {
                     case "otherPublicFunding":
+                        fundingSource = "Other Funding";
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":

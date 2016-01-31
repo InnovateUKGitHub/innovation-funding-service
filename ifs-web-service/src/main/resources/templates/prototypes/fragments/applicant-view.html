@@ -33,9 +33,44 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin">Innovate UK, Technology inspired - Application number: 12347353</p>
+        <p class="subtitle no-margin">Innovate UK, Technology inspired - Application number: 1234-5432</p>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
+</div>
+
+<!-- ===================Appliaction details panel============================== -->
+<div th:fragment="prototype-application-details-panel">
+    <section class="boxed">
+            
+        <h2 class="heading-medium no-margin">Application details</h2>
+
+        <div class="grid-row">
+            <div class="column-half">
+                <h3 class="heading-small">Project title</h3>
+                <p>A novel solution to an old problem</p>
+                
+                <h3 class="heading-small">Lead organisation</h3>
+                <p>Empire Ltd</p>
+                
+                <h3 class="heading-small">Partners</h3>
+                <ul class="list-bullet">
+                    <li>Empire Ltd</li>
+                    <li>Ludlow</li>
+                    <li>EGGS</li>
+                </ul>
+            </div>
+
+            <div class="column-half">
+                <h3 class="heading-small">Project timescales</h3>
+                <p>Project start date: <br />01/03/2016</p>
+                <p>Duration: <br />51 months</p>
+
+                <h3 class="heading-small extra-margin">Total project cost</h3>
+                <p>£203,567</p>
+            </div>
+        </div>
+
+    </section>
 </div>
 
 <!-- ===================Finances summary============================== -->

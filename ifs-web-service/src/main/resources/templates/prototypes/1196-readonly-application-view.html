@@ -13,16 +13,18 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1381-application-allocation'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
 
     <h2 class="heading-medium">Details</h2>
 
 	<div class="collapsible section-overview">
        
-       	<h2>Application details</h2>
+       	<!-- <h2>Application details</h2>
 
 		<div id="collapsible-1" aria-hidden="false">
 			<div class="question">
@@ -48,7 +50,7 @@
 
 				</div>
 			</div>
-    	</div>
+    	</div> -->
 
 
     	<h2>Project summary</h2>

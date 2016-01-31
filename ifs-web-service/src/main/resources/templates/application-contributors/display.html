@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
+</head>
+<body class="app-invite">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+        <h1 class="heading-xlarge">Application team</h1>
+    </div>
+
+    <p>View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+    <p>To change the lead applicant for this application please contact Innovate UK : phone <strong>0300 321 4357</strong>.</p>
+
+
+    <div th:each="organisationInviteResource, organisationStats : ${ organisationInvites }">
+
+        <h2 class="heading-medium" th:if="${organisationStats.index == 0}" >
+          <span th:remove="tag" th:text="${leadOrganisation.name}"/>
+          <small>(Lead organisation)</small>
+        </h2>
+        <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}" th:text="${organisationInviteResource.organisationName}" />
+
+        <ul class="list-bullet">
+            <li th:if="${organisationStats.index == 0}">
+              <a th:href="${leadApplicant.email}" th:text="${leadApplicant.name}" />
+              <small>(Lead Applicant)</small>
+            </li>
+
+            <li th:each="invite, inviteStats: ${organisationInviteResource.inviteResources}">
+                <a th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
+            </li>
+        </ul>
+    </div>
+
+    <p><a th:href="'/application/'+${currentApplication.getId()}+'/contributors/invite'" class="button">Invite new contributors</a></p>
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

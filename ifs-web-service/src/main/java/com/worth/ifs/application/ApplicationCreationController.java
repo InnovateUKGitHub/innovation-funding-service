@@ -11,8 +11,7 @@ import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.AddressType;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,9 +62,7 @@ public class ApplicationCreationController extends AbstractApplicationController
     public static final String COMPANY_NAME = "company_name";
     public static final String CONFIRM_COMPANY_DETAILS = "confirm-company-details";
     public static final String COMPANY_ADDRESS = "company_address";
-    public static final String ORGANISATION_SIZE = "organisation_size";
     public static final String ORGANISATION_NAME = "organisationName";
-    public static final String ORGANISATION_SIZE1 = "organisationSize";
     public static final String COMPANY_HOUSE_NAME = "companyHouseName";
     private static final String POSTCODE = "postcode";
     private static final String APPLICATION_ID = "applicationId";
@@ -140,7 +137,9 @@ public class ApplicationCreationController extends AbstractApplicationController
     @RequestMapping("/initialize-application")
     public String initializeApplication(HttpServletRequest request,
                                         HttpServletResponse response) {
+        log.info("get competition id");
         Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
+        log.info("get user id");
         Long userId = Long.valueOf(getFromCookie(request, USER_ID));
 
         ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
@@ -149,8 +148,7 @@ public class ApplicationCreationController extends AbstractApplicationController
             log.error("Application not created with userId: " + userId);
         } else {
             saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
-            return String.format("redirect:/application/%s/contributors/invite", String.valueOf(application.getId()));
-            //return ApplicationController.redirectToApplication(application);
+            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
         }
         return null;
     }
@@ -273,12 +271,10 @@ public class ApplicationCreationController extends AbstractApplicationController
             companyHouseForm.setManualAddress(true);
             bindingResult.getFieldErrors().stream().forEach(e -> log.debug(e.getDefaultMessage()));
 
-            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME)) {
                 // save state into cookie.
                 saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
                 saveToCookie(response, COMPANY_ADDRESS, getSerializedObject(companyHouseForm.getSelectedPostcode()));
-                saveToCookie(response, ORGANISATION_SIZE, companyHouseForm.getOrganisationSize().name());
-
                 return "redirect:/application/create/confirm-company";
             } else {
                 // Prepare data for displaying validation messages after redirect.
@@ -399,25 +395,23 @@ public class ApplicationCreationController extends AbstractApplicationController
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
             return String.format("redirect:/application/create/selected-business/%s/postcode/%s/use-address/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput(), confirmCompanyDetailsForm.getSelectedPostcodeIndex());
         } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
-            if (!bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
-                String name = org.getName();
-                String companyHouseNumber = org.getCompanyNumber();
-                // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
-                Organisation organisation = new Organisation(null, name, companyHouseNumber, null);
+            String name = org.getName();
+            String companyHouseNumber = org.getCompanyNumber();
+            // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
+            OrganisationResource organisationResource = new OrganisationResource();
+            organisationResource.setName(name);
+            organisationResource.setCompanyHouseNumber(companyHouseNumber);
+            organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
 
-                OrganisationResource organisationResource = organisationService.save(organisation);
-                if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
-                    //Save address manually entered.
-                    organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
-                }
-                // Save address from company house api
-                organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
-
-                return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
-            } else {
-                log.warn("Could not save, validation message organisation size.");
-                confirmCompanyDetailsForm.setTriedToSave(true);
+            organisationResource = organisationService.save(organisationResource);
+            if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
+                //Save address manually entered.
+                organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
             }
+            // Save address from company house api
+            organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+
+            return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
         }
         return "create-application/confirm-selected-organisation";
     }
@@ -432,9 +426,10 @@ public class ApplicationCreationController extends AbstractApplicationController
         Address address = getObjectFromJson(jsonAddress, Address.class);
 
 
-        Organisation organisation = new Organisation(null, getFromCookie(request, COMPANY_NAME), null, OrganisationSize.valueOf(getFromCookie(request, ORGANISATION_SIZE)));
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName(getFromCookie(request, COMPANY_NAME));
 
-        OrganisationResource organisationResource = organisationService.save(organisation);
+        organisationResource = organisationService.save(organisationResource);
         if (address != null) {
             organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
         }

@@ -16,67 +16,59 @@ IFS.finance = (function(){
             init : function(){
                 IFS.finance.bindCalculationActionToFields(); // Bind calculations
                 // Used for calculations
-                jQuery("body").append(jQuery("<input type=\"hidden\" id=\"hundred-field\" value=\"100\" />"));
             },
             bindCalculationActionToFields : function(){
-
-                var updateBasedOnDataCalculationFieldsIfNecessary = function(dependantField, input) {
-
-                    var dependencySelectors = dependantField.attr("data-calculation-fields").split(',');
-
-                    var matchingDependenciesInArrays = dependencySelectors.map(function(selector) {
-                        return jQuery(selector);
-                    });
-
-                    var matchingDependencies = matchingDependenciesInArrays.reduce(function(combined, currentJqueryObject) {
-                        return jQuery.merge(combined, currentJqueryObject);
-                    });
-
-                    var idFn = function(element) {
-                      if (element instanceof jQuery) {
-                          return element.attr('id');
-                      }
-                      return jQuery(element).attr('id');
-                    };
-
-                    if (matchingDependencies.toArray().map(idFn).indexOf(idFn(input)) !== -1) {
-                        IFS.finance.doMath(dependantField, matchingDependencies);
-                    }
-                };
-
+                //we watch for changes in inputs as a calculation always starts with an input
                 jQuery('body').on('change', 'input', function() {
+                  //if the calculation field is not binded we bind this field to the selector that is defined in the field
+                  if(jQuery('[data-calculation-fields]:not([data-calculation-binded])').length){
+                    jQuery('[data-calculation-fields]:not([data-calculation-binded])').each(function(){
+                          var element = jQuery(this);
+                          var fields = element.attr('data-calculation-fields');
 
-                    var input = jQuery(this);
-
-                    var fieldsDependantOnOthers = jQuery('[data-calculation-fields]');
-                    fieldsDependantOnOthers.each(function(i, element) {
-                        var dependantField = jQuery(element);
-                        updateBasedOnDataCalculationFieldsIfNecessary(dependantField, input);
+                          jQuery(document).on('change updateFinances',fields,function(){
+                              IFS.finance.doMath(element,fields.split(','));
+                          });
+                          //we only want to bind a field once
+                          element.attr('data-calculation-binded','');
                     });
-
+                  }
                 });
+            },
+            getElementValue : function(element){
+              var rawValue = jQuery(element).attr("data-calculation-rawvalue");
+
+              //would be better to force all fields to have a raw value at the start rather than these fallback cases
+              if (typeof(rawValue) !== 'undefined') {
+                  return parseFloat(rawValue);
+              } else {
+                  if ((typeof(jQuery(element).val()) !== 'undefined') && (jQuery(element).val().length)) {
+                      var displayValue = jQuery(element).val().replace(',','');
+                      var parsed = displayValue.indexOf('£ ') === 0 ? displayValue.substring(2) : displayValue;
+                      return parseFloat(parsed);
+                  }
+              }
+              return parseFloat(0);
             },
             doMath : function(element,calcFields){
                 var operation = element.attr('data-calculation-operations').split(',');
                 var values = [];
-
-                for (var i = 0; i < calcFields.length; i++) {
-                    var input = jQuery(calcFields[i]);
-                    var rawValue = input.attr("data-calculation-rawvalue");
-
-                    // TODO DW - would be better to force all fields to have a raw value at the start rather than these fallback cases
-                    if (typeof rawValue !== 'undefined') {
-                        values.push(parseFloat(rawValue));
-                    } else {
-                        var displayValue = input.val();
-                        if (typeof displayValue !== 'undefined' && displayValue.length > 0) {
-                            var parsed = displayValue.indexOf('£ ') === 0 ? displayValue.substring(2) : displayValue;
-                            values.push(parseFloat(parsed));
-                        } else {
-                            values.push(parseFloat(0));
-                        }
+                jQuery.each(calcFields,function(index,field){
+                    if(jQuery.isNumeric(field)){
+                      //we use a static number not a selector to another field
+                      values.push(parseFloat(field));
                     }
-                }
+                    else if(jQuery(field).length > 1){
+                      //we use a selector with multiple inputs and get the value
+                      jQuery.each(jQuery(field),function(index,field2){
+                          values.push(IFS.finance.getElementValue(field2));
+                      });
+                    }
+                    else {
+                      //we use a selector with one input
+                      values.push(IFS.finance.getElementValue(field));
+                    }
+                });
 
                 var calculatedValue;
                 if(values.length === 1) {
@@ -86,27 +78,26 @@ IFS.finance = (function(){
                     calculatedValue = IFS.finance.MathOperation[operation[0]](values[0],values[1]);
                 }
                 //one operation and more values, all get the same operation
-
                 if((operation.length == 1) && (values.length > 2)) {
-                    for (i = 2; i < values.length; i++) {
+                    for (var i = 2; i < values.length; i++) {
                         //console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
                         calculatedValue = IFS.finance.MathOperation[operation[0]](calculatedValue,values[i]);
                     }
                 }
                //multiple operations and multiple values
                 else if((operation.length > 1) && (values.length > 2)) {
-                    for (i = 1; i < operation.length; i++) {
-                        // console.log('round:',i,operation[i],calculatedValue,values[i+1])
-                        calculatedValue = IFS.finance.MathOperation[operation[i]](calculatedValue,values[i+1]);
+                    for (var j = 1; j < operation.length; j++) {
+                        //console.log('round:',i,operation[i],calculatedValue,values[i+1])
+                        calculatedValue = IFS.finance.MathOperation[operation[j]](calculatedValue,values[j+1]);
                     }
                 }
                 element.attr("data-calculation-rawvalue",calculatedValue);
 
                 var formatted = IFS.finance.formatCurrency(Math.round(calculatedValue));
-                if (element.is('span')) {
-                    element.text(formatted);
+                if (element.is('input')) {
+                  element.val(formatted);
                 } else {
-                    element.val(formatted);
+                  element.text(formatted);
                 }
                 element.trigger('change');
             },

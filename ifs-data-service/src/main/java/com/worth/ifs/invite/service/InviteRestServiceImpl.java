@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -49,6 +50,18 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         String url = inviteRestUrl + "/createApplicationInvites";
 
         return restPost(url, inviteOrganisation, InviteOrganisationResourceEnvelope.class);
+    }
+
+    @Override
+    public List<String> saveInvites(List<InviteResource> inviteResources) {
+        String url = inviteRestUrl + "/saveInvites";
+        return Arrays.asList(restPost(url, inviteResources, String[].class));
+    }
+
+    @Override
+    public List<InviteOrganisationResource> getInvitesByApplication(Long applicationId) {
+        String url = inviteRestUrl + "/getInvitesByApplicationId/"+ applicationId;
+        return Arrays.asList(restGet(url, InviteOrganisationResource[].class));
     }
 
 }

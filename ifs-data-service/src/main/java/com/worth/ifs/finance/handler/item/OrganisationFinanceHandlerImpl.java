@@ -4,10 +4,7 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.CostCategory;
-import com.worth.ifs.finance.resource.category.DefaultCostCategory;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
+import com.worth.ifs.finance.resource.category.*;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
@@ -79,6 +76,14 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     private void calculateTotals() {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
+        calculateOverheadTotal();
+    }
+
+    private void calculateOverheadTotal() {
+        CostCategory labourCostCategory = costCategories.get(CostType.LABOUR);
+        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(CostType.OVERHEADS);
+        overheadCategory.setLabourCostTotal(labourCostCategory.getTotal());
+        overheadCategory.calculateTotal();
     }
 
     private void resetCosts() {
@@ -131,6 +136,10 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 return new LabourCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
+            case OVERHEADS:
+                return new OverheadCostCategory();
+            case FINANCE:
+                return new GrantClaimCategory();
             default:
                 return new DefaultCostCategory();
         }

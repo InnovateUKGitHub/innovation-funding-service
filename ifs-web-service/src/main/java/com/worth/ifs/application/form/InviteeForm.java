@@ -1,5 +1,6 @@
 package com.worth.ifs.application.form;
 
+import com.worth.ifs.invite.constant.InviteStatusConstants;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -13,6 +14,7 @@ public class InviteeForm implements Serializable {
     @NotEmpty
     @Email
     private String email;
+    private InviteStatusConstants inviteStatus;
 
     public InviteeForm(Long userId, String personName, String email) {
         this.userId = userId;
@@ -47,5 +49,13 @@ public class InviteeForm implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void setInviteStatus(InviteStatusConstants inviteStatus) {
+        this.inviteStatus = inviteStatus;
+    }
+
+    public InviteStatusConstants getInviteStatus() {
+        return inviteStatus;
     }
 }

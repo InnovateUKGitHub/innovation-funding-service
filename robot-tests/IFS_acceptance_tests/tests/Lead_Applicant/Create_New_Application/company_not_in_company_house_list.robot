@@ -95,7 +95,8 @@ the applicant enters an address manually
 the applicant adds in an organisation name and size
     Input Text    name=companyHouseName    ${organisation_name}
     Input Text    name=organisationName    ${organisation_name}
-    Select Radio Button    organisationSize    SMALL
+    # Select Radio Button    organisationSize    SMALL
+    # disabled this step since the radio button no longer exists on this page of the SuT
 
 the applicant submits the manual address form
     Click Button    Continue

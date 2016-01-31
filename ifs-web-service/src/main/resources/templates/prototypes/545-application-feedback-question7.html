@@ -13,13 +13,21 @@
 
 <main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:if="${param.internal == null}" th:remove="tag">
 	
-	<div th:if="${param.unsuccessful != null}" th:remove="tag">
-		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?unsuccessful'})" th:remove="tag" />
+		<div th:if="${param.unsuccessful != null}" th:remove="tag">
+			<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?unsuccessful'})" th:remove="tag" />
+		</div>
+
+		<div th:if="${param.unsuccessful == null}" th:remove="tag">
+			<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback'})" th:remove="tag" />
+		</div>
+
 	</div>
 
-	<div th:if="${param.unsuccessful == null}" th:remove="tag">
-		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback'})" th:remove="tag" />
+	<div th:if="${param.internal != null}" th:remove="tag">
+		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?internal'})" th:remove="tag" />
 	</div>
 
 
@@ -42,23 +50,28 @@
 			<h3 class="heading-medium no-margin">Assessor feedback</h3>
 			<ul class="boxed-list">
 				<li>
-					<h4 class="heading-small">Assessor1</h4>
+					<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor1 </h4>
+					<h5 class="heading-small no-margin alignright" th:text="'Score: '+${score}">SCORE</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 				</li>
 				<li>
-					<h4 class="heading-small">Assessor2</h4>
+					<h4 class="heading-small" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 2')}">Assessor2</h4>
+					<h5 class="heading-small no-margin alignright" th:text="'Score: '+${score}">SCORE</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 				</li>
 				<li>
-					<h4 class="heading-small">Assessor3</h4>
+					<h4 class="heading-small" th:text="${(param.internal != null ? 'Brian Law':'Assessor 3')}">Assessor3</h4>
+					<h5 class="heading-small no-margin alignright" th:text="'Score: '+${score}">SCORE</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 				</li>
 				<li>
-					<h4 class="heading-small">Assessor4</h4>
+					<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 4')}">Assessor4</h4>
+					<h5 class="heading-small no-margin alignright" th:text="'Score: '+${score}">SCORE</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 				</li>
 				<li>
-					<h4 class="heading-small">Assessor5</h4>
+					<h4 class="heading-small" th:text="${(param.internal != null ? 'David Standingford':'Assessor 5')}">Assessor5</h4>
+					<h5 class="heading-small no-margin alignright" th:text="'Score: '+${score}">SCORE</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 				</li>
 			</ul>

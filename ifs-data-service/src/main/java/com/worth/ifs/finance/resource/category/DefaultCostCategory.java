@@ -15,6 +15,7 @@ import java.util.List;
  * Default representation for costs and defaults to summing up the costs.
  */
 public class DefaultCostCategory implements CostCategory {
+    private final Log log = LogFactory.getLog(getClass());
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
 

@@ -13,5 +13,5 @@ public interface CostService {
     List<CostField> getCostFields();
     public void update(CostItem costItem);
     public void delete(Long costId);
-    public void add(Long applicationFinanceId, Long questionId);
+    public void add(Long applicationFinanceId, Long questionId, CostItem costItem);
 }

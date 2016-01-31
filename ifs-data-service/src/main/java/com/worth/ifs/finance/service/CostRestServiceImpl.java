@@ -25,8 +25,8 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     String costRestURL;
 
     @Override
-    public void add(Long applicationFinanceId, Long questionId) {
-        restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId);
+    public void add(Long applicationFinanceId, Long questionId, CostItem costItem) {
+        restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem);
     }
 
     @Override

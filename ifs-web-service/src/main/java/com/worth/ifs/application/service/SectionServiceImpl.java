@@ -116,7 +116,6 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    @ProfileExecution
     public Section getSectionByQuestionId(Long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId);
     }

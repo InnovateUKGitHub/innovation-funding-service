@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-891: As an Applicant I want to be able to add the organisation size against my company profile during initial registration so I can be correctly aligned with eligibility criteria for the competition
-Suite Setup        The guest user opens the browser
-Suite Teardown     TestTeardown User closes the browser
+Suite Setup       The guest user opens the browser
+Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -22,14 +22,17 @@ Enter address manually
 
 EU Definition link should navigate to the correct page
     [Documentation]    INFUND-891
-    [Tags]    Applicant    New application    Company size
+    [Tags]    Applicant    New application    Company size    Pending
+    # The company size functionality has now moved to the finances section
+    # so this is pending, ready to be deleted on review
     Given the applicant is in the 'create your account' page
     When the applicant clicks the 'EU definition' link
     Then the applicant should navigate to the correct page
 
 The applicant should be able to choose different organisation sizes
     [Documentation]    INFUND-891
-    [Tags]    Applicant    Company Size    New application
+    [Tags]    Applicant    Company Size    New application    Pending
+    # Tagged as pending since the choose organisation size is no longer on this page
     Given the applicant is in the 'create your account' page
     And the applicant selects the Micro size and saves the page
     And the Applicant should redirect to the create account page
