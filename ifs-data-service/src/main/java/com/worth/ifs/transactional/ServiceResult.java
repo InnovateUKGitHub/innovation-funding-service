@@ -24,6 +24,10 @@ public class ServiceResult<T> {
 
     private Either<ServiceFailure, T> result;
 
+    protected ServiceResult(ServiceResult<T> original) {
+        this.result = original.result;
+    }
+
     private ServiceResult(T success) {
         this(right(success));
     }

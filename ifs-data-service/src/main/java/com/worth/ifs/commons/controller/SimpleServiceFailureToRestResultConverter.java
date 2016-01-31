@@ -1,12 +1,11 @@
 package com.worth.ifs.commons.controller;
 
+import com.worth.ifs.transactional.RestResult;
 import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.util.JsonStatusResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Optional.empty;
@@ -15,26 +14,27 @@ import static java.util.Optional.empty;
  * A simple implementation of ServiceFailureToJsonResponseHandler that, given a set of supported error messages, is able to
  * inspect a ServiceFailure and, if this handler handles all of its errors, will return an appropriate JsonStatusResponse.
  */
-public class SimpleServiceFailureToJsonResponseHandler implements ServiceFailureToJsonResponseHandler {
+public class SimpleServiceFailureToRestResultConverter implements ServiceFailureToRestResultConverter {
 
     private List<String> handledServiceFailures;
-    private BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction;
+    private Function<ServiceFailure, RestResult<?>> handlerFunction;
 
-    public SimpleServiceFailureToJsonResponseHandler(BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction, List<String> handledServiceFailures) {
+    public SimpleServiceFailureToRestResultConverter(Function<ServiceFailure, RestResult<?>> handlerFunction, List<String> handledServiceFailures) {
         this.handledServiceFailures = handledServiceFailures;
         this.handlerFunction = handlerFunction;
     }
 
-    public SimpleServiceFailureToJsonResponseHandler(List<Enum<?>> handledServiceFailures, BiFunction<ServiceFailure, HttpServletResponse, JsonStatusResponse> handlerFunction) {
+    public SimpleServiceFailureToRestResultConverter(List<Enum<?>> handledServiceFailures, Function<ServiceFailure, RestResult<?>> handlerFunction) {
         this(handlerFunction, simpleMap(handledServiceFailures, Enum::name));
     }
 
     @Override
-    public Optional<JsonStatusResponse> handle(ServiceFailure serviceFailure, HttpServletResponse response) {
+    public Optional<RestResult<?>> handle(ServiceFailure serviceFailure) {
 
         if (handledServiceFailures.containsAll(serviceFailure.getErrorKeys())) {
-            return Optional.of(handlerFunction.apply(serviceFailure, response));
+            return Optional.of(handlerFunction.apply(serviceFailure));
         }
+
         return empty();
     }
 }

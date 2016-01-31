@@ -9,11 +9,10 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.transactional.RestErrorEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.util.JsonStatusResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,14 +25,15 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.transactional.ServiceResult.failure;
 import static com.worth.ifs.transactional.ServiceResult.success;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -177,16 +177,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                         requestHeaders(
                                 headerWithName("Content-Type").description("Needs to be application/json"),
                                 headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("A plain text descriptive message of the action that was performed e.g. \"Notification sent successfully\"")
                         ))
                 ).
                 andReturn();
 
-        String content = response.getResponse().getContentAsString();
-        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
-        assertEquals("Notification sent successfully", jsonResponse.getMessage());
+        assertTrue(response.getResponse().getContentAsString().isEmpty());
     }
 
     @Test
@@ -233,8 +228,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
-        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
+        RestErrorEnvelope restError = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        assertEquals(1, restError.getErrors().size());
+        assertEquals(UNEXPECTED_ERROR.name(), restError.getErrors().get(0).getErrorKey());
+        assertEquals("An unexpected error occurred", restError.getErrors().get(0).getErrorMessage());
     }
 
     @Test
@@ -257,7 +254,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
-        assertEquals("Unable to send Notification to invitee", jsonResponse.getMessage());
+        RestErrorEnvelope restError = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        assertEquals(1, restError.getErrors().size());
+        assertEquals(UNEXPECTED_ERROR.name(), restError.getErrors().get(0).getErrorKey());
+        assertEquals("An unexpected error occurred", restError.getErrors().get(0).getErrorMessage());
     }
 }

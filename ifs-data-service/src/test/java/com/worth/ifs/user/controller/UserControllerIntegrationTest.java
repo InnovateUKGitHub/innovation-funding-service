@@ -2,6 +2,7 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,6 +25,13 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Autowired
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
+    }
+
+    @Test
+    public void test_findByEmailAddress() {
+        List<UserResource> users = controller.findByEmail("steve.smith@empire.com");
+        assertEquals(1, users.size());
+        assertEquals("steve.smith@empire.com", users.get(0).getEmail());
     }
 
     @Test

@@ -1,8 +1,5 @@
 package com.worth.ifs.transactional;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -11,65 +8,23 @@ import static java.util.Arrays.asList;
 /**
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error
  * messages within it.
- *
- * Code that returns
- *
- * Created by dwatson on 06/10/15.
  */
 public class ServiceFailure {
 
-    public static class GlobalError {
-
-        private final String message;
-
-        private GlobalError(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (obj == this) {
-                return true;
-            }
-            if (obj.getClass() != getClass()) {
-                return false;
-            }
-            GlobalError rhs = (GlobalError) obj;
-            return new EqualsBuilder()
-                .append(this.message, rhs.message)
-                .isEquals();
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder()
-                .append(message)
-                .toHashCode();
-        }
-    }
-
-    private List<GlobalError> errors;
+    private List<Error> errors;
     private Throwable cause;
 
-    private ServiceFailure(List<GlobalError> errors, Throwable e) {
+    private ServiceFailure(List<Error> errors, Throwable e) {
         this.errors = errors;
         this.cause = e;
     }
 
     public static ServiceFailure error(List<String> messages) {
-        return new ServiceFailure(simpleMap(messages, GlobalError::new), null);
+        return new ServiceFailure(simpleMap(messages, Error::new), null);
     }
 
     public static ServiceFailure error(List<String> messages, Throwable e) {
-        return new ServiceFailure(simpleMap(messages, GlobalError::new), e);
+        return new ServiceFailure(simpleMap(messages, Error::new), e);
     }
 
     public static ServiceFailure error(String... messages) {
@@ -105,7 +60,7 @@ public class ServiceFailure {
     }
 
     public boolean is(String... messages) {
-        List<String> containedErrors = simpleMap(errors, GlobalError::getMessage);
+        List<String> containedErrors = getErrorKeys();
         List<String> messagesList = asList(messages);
         return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
     }
@@ -121,12 +76,11 @@ public class ServiceFailure {
     }
 
     public boolean contains(String... messages) {
-        List<String> containedErrors = simpleMap(errors, GlobalError::getMessage);
-        return containedErrors.containsAll(asList(messages));
+        return getErrorKeys().containsAll(asList(messages));
     }
 
-    public List<String> getErrors() {
-        return simpleMap(errors, GlobalError::getMessage);
+    public List<String> getErrorKeys() {
+        return simpleMap(errors, Error::getErrorKey);
     }
 
     public Throwable getCause() {
