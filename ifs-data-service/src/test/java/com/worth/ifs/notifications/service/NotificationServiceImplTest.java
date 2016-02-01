@@ -13,7 +13,7 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
 import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -50,7 +50,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isRight());
@@ -64,8 +64,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
-        when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
+        when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
         assertTrue(result.isRight());
@@ -79,7 +79,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(success(notificationToSend));
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
         assertTrue(result.isRight());

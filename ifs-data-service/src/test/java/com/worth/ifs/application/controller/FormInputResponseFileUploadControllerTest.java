@@ -2,11 +2,15 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -23,14 +27,14 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
-import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
@@ -83,7 +87,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 assertInputStreamContents(inputStreamSupplier.get(), dummyContent)));
 
         FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L);
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse = success(Pair.of(new File(""), createdResource));
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse = serviceSuccess(Pair.of(new File(""), createdResource));
 
         when(applicationService.createFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
@@ -129,7 +133,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testCreateFileButApplicationServiceCallFails() throws Exception {
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                failure("No files today!");
+                serviceFailure(new Error("No files today!", INTERNAL_SERVER_ERROR));
 
         when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -177,19 +181,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testCreateFileButFormInputNotFound() throws Exception {
-        assertCreateFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+        assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find Form Input");
     }
 
 
     @Test
     public void testCreateFileButApplicationNotFound() throws Exception {
-        assertCreateFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+        assertCreateFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find Application");
     }
 
 
     @Test
     public void testCreateFileButProcessRoleNotFound() throws Exception {
-        assertCreateFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+        assertCreateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
@@ -280,22 +284,22 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testCreateFileButContentLengthHeaderMisreported() throws Exception {
-        assertCreateFileButErrorOccurs(INCORRECTLY_REPORTED_FILESIZE, "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
+        assertCreateFileButErrorOccurs(new Error(INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
     }
 
     @Test
     public void testCreateFileButContentTypeHeaderMisreported() throws Exception {
-        assertCreateFileButErrorOccurs(INCORRECTLY_REPORTED_MEDIA_TYPE, "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
+        assertCreateFileButErrorOccurs(new Error(INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
     }
 
     @Test
     public void testCreateFileButDuplicateFileEncountered() throws Exception {
-        assertCreateFileButErrorOccurs(DUPLICATE_FILE_CREATED, "duplicateFile", CONFLICT, "File already exists");
+        assertCreateFileButErrorOccurs(new Error(DUPLICATE_FILE_CREATED), "duplicateFile", CONFLICT, "File already exists");
     }
 
     @Test
     public void testCreateFileButFormInputResponseAlreadyHasFileLinked() throws Exception {
-        assertCreateFileButErrorOccurs(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "fileAlreadyLinked", CONFLICT, "File already linked to Form Input Response");
+        assertCreateFileButErrorOccurs(new Error(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), "fileAlreadyLinked", CONFLICT, "File already linked to Form Input Response");
     }
 
     @Test
@@ -321,7 +325,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 assertInputStreamContents(inputStreamSupplier.get(), dummyContent)));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse =
-                success(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L)));
+                serviceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L)));
 
         when(applicationService.updateFormInputResponseFileUpload(resourceExpectations, inputStreamExpectations)).thenReturn(successResponse);
 
@@ -367,7 +371,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                failure("No files today!");
+                serviceFailure(new Error("No files today!", INTERNAL_SERVER_ERROR));
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -415,19 +419,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testUpdateFileButFormInputNotFound() throws Exception {
-        assertUpdateFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+        assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find Form Input");
     }
 
 
     @Test
     public void testUpdateFileButApplicationNotFound() throws Exception {
-        assertUpdateFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+        assertUpdateFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find Application");
     }
 
 
     @Test
     public void testUpdateFileButProcessRoleNotFound() throws Exception {
-        assertUpdateFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+        assertUpdateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
@@ -518,22 +522,22 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testUpdateFileButContentLengthHeaderMisreported() throws Exception {
-        assertUpdateFileButErrorOccurs(INCORRECTLY_REPORTED_FILESIZE, "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
+        assertUpdateFileButErrorOccurs(new Error(INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST, "Incorrectly reported filesize");
     }
 
     @Test
     public void testUpdateFileButContentTypeHeaderMisreported() throws Exception {
-        assertUpdateFileButErrorOccurs(INCORRECTLY_REPORTED_MEDIA_TYPE, "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
+        assertUpdateFileButErrorOccurs(new Error(INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "Incorrectly reported Content Type");
     }
 
     @Test
     public void testUpdateFileButFormInputResponseNotFound() throws Exception {
-        assertUpdateFileButErrorOccurs(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", NOT_FOUND, "Unable to find Form Input Response");
+        assertUpdateFileButErrorOccurs(new Error(NOT_FOUND_ENTITY), "formInputResponseNotFound", NOT_FOUND, "Unable to find Form Input Response");
     }
 
     @Test
     public void testUpdateFileButFileNotFoundToUpdate() throws Exception {
-        assertUpdateFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToUpdate", NOT_FOUND, "Unable to find file");
+        assertUpdateFileButErrorOccurs(new Error(NOT_FOUND_ENTITY), "noFileFoundToUpdate", NOT_FOUND, "Unable to find file");
     }
 
 
@@ -543,7 +547,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(123L, 456L, 789L);
         FormInputResponse unlinkedFormInputResponse = newFormInputResponse().build();
 
-        when(applicationService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(success(unlinkedFormInputResponse));
+        when(applicationService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(serviceSuccess(unlinkedFormInputResponse));
 
         MvcResult response = mockMvc.
                 perform(
@@ -576,7 +580,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<FormInputResponse> failureResponse = failure("No files today!");
+        ServiceResult<FormInputResponse> failureResponse = serviceFailure(new Error("No files today!", INTERNAL_SERVER_ERROR));
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
@@ -616,28 +620,28 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testDeleteFileButFormInputNotFound() throws Exception {
-        assertDeleteFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+        assertDeleteFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find Form Input");
     }
 
     @Test
     public void testDeleteFileButFormInputResponseNotFound() throws Exception {
-        assertDeleteFileButErrorOccurs(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", NOT_FOUND, "Unable to find Form Input Response");
+        assertDeleteFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find Form Input Response");
     }
 
     @Test
     public void testDeleteFileButApplicationNotFound() throws Exception {
-        assertDeleteFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+        assertDeleteFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find Application");
     }
 
 
     @Test
     public void testDeleteFileButProcessRoleNotFound() throws Exception {
-        assertDeleteFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+        assertDeleteFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
     public void testDeleteFileButFileNotFoundToDelete() throws Exception {
-        assertDeleteFileButErrorOccurs(UNABLE_TO_FIND_FILE, "noFileFoundToDelete", NOT_FOUND, "Unable to find file");
+        assertDeleteFileButEntityNotFound(File.class, "noFileFoundToDelete", "Unable to find file");
     }
 
     @Test
@@ -653,7 +657,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -684,7 +688,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileDetailsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure("No files today!"));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error("No files today!", INTERNAL_SERVER_ERROR)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -722,27 +726,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetFileDetailsButFileNotFound() throws Exception {
-        assertGetFileDetailsButParameterNotFound(UNABLE_TO_FIND_FILE, "fileNotFound", "Unable to find file");
+        assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound", "Unable to find file");
     }
 
     @Test
     public void testGetFileDetailsButFormInputNotFound() throws Exception {
-        assertGetFileDetailsButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+        assertGetFileDetailsButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find Form Input");
     }
 
     @Test
     public void testGetFileDetailsButApplicationNotFound() throws Exception {
-        assertGetFileDetailsButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+        assertGetFileDetailsButEntityNotFound(Application.class, "applicationNotFound", "Unable to find Application");
     }
 
     @Test
     public void testGetFileDetailsButProcessRoleNotFound() throws Exception {
-        assertGetFileDetailsButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+        assertGetFileDetailsButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
     public void testGetFileDetailsButformInputResponseNotFound() throws Exception {
-        assertGetFileDetailsButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
+        assertGetFileDetailsButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find Form Input Response");
     }
 
     @Test
@@ -758,7 +762,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -787,7 +791,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure("No files today!"));
+        // TODO DW - INFUND-854 - replace serviceFailure(new Error(...)) with ServiceFailures.<error name>()?
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error("No files today!", INTERNAL_SERVER_ERROR)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -825,27 +830,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetFileContentsButFileNotFound() throws Exception {
-        assertGetFileButParameterNotFound(UNABLE_TO_FIND_FILE, "fileNotFound", "Unable to find file");
+        assertGetFileButEntityNotFound(File.class, "fileNotFound", "Unable to find file");
     }
 
     @Test
     public void testGetFileContentsButFormInputNotFound() throws Exception {
-        assertGetFileButParameterNotFound(FORM_INPUT_NOT_FOUND, "formInputNotFound", "Unable to find Form Input");
+        assertGetFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find Form Input");
     }
 
     @Test
     public void testGetFileContentsButApplicationNotFound() throws Exception {
-        assertGetFileButParameterNotFound(APPLICATION_NOT_FOUND, "applicationNotFound", "Unable to find Application");
+        assertGetFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find Application");
     }
 
     @Test
     public void testGetFileContentsButProcessRoleNotFound() throws Exception {
-        assertGetFileButParameterNotFound(PROCESS_ROLE_NOT_FOUND, "processRoleNotFound", "Unable to find Process Role");
+        assertGetFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find Process Role");
     }
 
     @Test
     public void testGetFileContentsButformInputResponseNotFound() throws Exception {
-        assertGetFileButParameterNotFound(FORM_INPUT_RESPONSE_NOT_FOUND, "formInputResponseNotFound", "Unable to find Form Input Response");
+        assertGetFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find Form Input Response");
     }
 
     @Test
@@ -869,7 +874,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(success(Pair.of(formInputFileEntryResource, inputStreamSupplier)));
+        when(applicationService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(formInputFileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -896,8 +901,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(formInputFileEntryResource, returnedFileEntryDetails);
     }
 
-    private void assertGetFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure(errorToReturn));
+    private void assertGetFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error(NOT_FOUND_ENTITY, entityTypeNotFound)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -914,8 +919,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(expectedMessage, jsonResponse.getMessage());
     }
 
-    private void assertGetFileDetailsButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failure(errorToReturn));
+    private void assertGetFileDetailsButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error(NOT_FOUND_ENTITY, entityTypeNotFound)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -932,13 +937,13 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(expectedMessage, jsonResponse.getMessage());
     }
 
-    private void assertCreateFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        assertCreateFileButErrorOccurs(errorToReturn, documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertCreateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+        assertCreateFileButErrorOccurs(new Error(NOT_FOUND_ENTITY, singletonList(entityTypeNotFound), NOT_FOUND), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
-    private void assertCreateFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertCreateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = failure(errorToReturn);
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = serviceFailure(errorToReturn);
 
         when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -961,18 +966,18 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(expectedMessage, jsonResponse.getMessage());
     }
 
-    private void assertUpdateFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        assertUpdateFileButErrorOccurs(errorToReturn, documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertUpdateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+        assertUpdateFileButErrorOccurs(new Error(NOT_FOUND_ENTITY, entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
 
-    private void assertDeleteFileButParameterNotFound(Enum<?> errorToReturn, String documentationSuffix, String expectedMessage) throws Exception {
-        assertDeleteFileButErrorOccurs(errorToReturn, documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertDeleteFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+        assertDeleteFileButErrorOccurs(new Error(NOT_FOUND_ENTITY, entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
-    private void assertUpdateFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertUpdateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = failure(errorToReturn);
+        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = serviceFailure(errorToReturn);
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -995,9 +1000,9 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(expectedMessage, jsonResponse.getMessage());
     }
 
-    private void assertDeleteFileButErrorOccurs(Enum<?> errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertDeleteFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        ServiceResult<FormInputResponse> failureResponse = failure(errorToReturn);
+        ServiceResult<FormInputResponse> failureResponse = serviceFailure(errorToReturn);
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 

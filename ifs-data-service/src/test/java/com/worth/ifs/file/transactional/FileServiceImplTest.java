@@ -25,9 +25,12 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPathString;
@@ -407,7 +410,8 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             assertNotNull(result);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            // TODO DW - INFUND-854 - check for Error arguments
+            assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
 
         } finally {
 
@@ -548,7 +552,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             ServiceResult<FileEntry> result = service.deleteFile(456L);
             assertNotNull(result);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
 
         } finally {
 
@@ -564,7 +568,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<FileEntry> result = service.deleteFile(456L);
         assertNotNull(result);
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -610,7 +614,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
 
         } finally {
             pathElementsToFile(fullPathPlusFilename).delete();
@@ -629,7 +633,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test

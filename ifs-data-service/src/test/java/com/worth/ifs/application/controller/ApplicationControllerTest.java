@@ -26,7 +26,7 @@ import static com.worth.ifs.notifications.service.NotificationServiceImpl.Servic
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -162,7 +162,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         Notification successfullySentNotification = newNotification().withTargets(singletonList(new ExternalUserNotificationTarget("The Recipient", "recipient@example.com"))).build();
 
-        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(success(successfullySentNotification));
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(serviceSuccess(successfullySentNotification));
 
         MvcResult response = mockMvc.
                 perform(

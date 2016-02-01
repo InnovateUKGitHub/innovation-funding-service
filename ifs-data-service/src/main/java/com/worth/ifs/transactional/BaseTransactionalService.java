@@ -12,16 +12,17 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.NoTransactionException;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
 import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have
@@ -36,16 +37,34 @@ public abstract class BaseTransactionalService  {
 
     private static final Log log = LogFactory.getLog(BaseTransactionalService.class);
 
-    public enum Failures {
-        UNEXPECTED_ERROR, //
-        ROLE_NOT_FOUND, //
-        RESPONSE_NOT_FOUND, //
-        FORM_INPUT_RESPONSE_NOT_FOUND, //
-        APPLICATION_NOT_FOUND, //
-        FORM_INPUT_NOT_FOUND, //
-        PROCESS_ROLE_NOT_FOUND, //
-        PROCESS_ROLE_INCORRECT_TYPE, //
-        PROCESS_ROLE_INCORRECT_APPLICATION, //
+    public enum Failures implements ErrorTemplate {
+
+        UNEXPECTED_ERROR("An unexpected error occurred", INTERNAL_SERVER_ERROR), //
+        NOT_FOUND_ENTITY("Unable to find entity", NOT_FOUND), //
+        INCORRECT_TYPE("Argument was of an incorrect type", BAD_REQUEST);
+
+        private String errorMessage;
+        private HttpStatus category;
+
+        Failures(String errorMessage, HttpStatus category) {
+            this.errorMessage = errorMessage;
+            this.category = category;
+        }
+
+        @Override
+        public String getErrorKey() {
+            return name();
+        }
+
+        @Override
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        @Override
+        public HttpStatus getCategory() {
+            return category;
+        }
     }
 
     @Autowired
@@ -76,7 +95,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, RESPONSE_NOT_FOUND);
+        return getResponseById(responseId, responseRepository, new Error(NOT_FOUND_ENTITY, Response.class, responseId));
     }
 
     /**
@@ -86,41 +105,6 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, PROCESS_ROLE_NOT_FOUND);
-    }
-
-    /**
-     * Create a Right of T, to indicate a success.
-     *
-     * @param response
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> successResponse(T response) {
-        return ServiceResult.success(response);
-    }
-
-    /**
-     * Create a Left of ServiceFailure, to indicate a failure.
-     *
-     * @param error
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> failureResponse(Enum<?> error) {
-        return ServiceResult.failure(error(error));
-    }
-
-
-
-    /**
-     * Create a Left of ServiceFailure, to indicate a failure.
-     *
-     * @param error
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> failureResponse(Enum<?> error, Throwable e) {
-        return ServiceResult.failure(error(error, e));
+        return getProcessRoleById(processRoleId, processRoleRepository, new Error(NOT_FOUND_ENTITY, ProcessRole.class, processRoleId));
     }
 }

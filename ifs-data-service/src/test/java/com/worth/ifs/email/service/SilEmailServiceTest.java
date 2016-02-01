@@ -17,7 +17,7 @@ import static com.worth.ifs.BuilderAmendFunctions.names;
 import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +51,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         SilEmailMessage expectedMessageToSend = new SilEmailMessage(silEmailFrom, asList(silEmailTo1, silEmailTo2), "A subject", silEmailBody, silEmailBody2);
 
-        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(success(expectedMessageToSend));
+        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceSuccess(expectedMessageToSend));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isRight());

@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -32,7 +32,7 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
     private ProcessRole returnedProcessRole = newProcessRole().withId(789L).build();
 
     private Function<ProcessRole, ServiceResult<JsonStatusResponse>> doWithProcessRoleFn =
-            processRole -> success(JsonStatusResponse.ok("Success with " + processRole.getId()));
+            processRole -> serviceSuccess(JsonStatusResponse.ok("Success with " + processRole.getId()));
 
     @Test
     public void test_withProcessRoleReturnJsonResponse() {

@@ -2,6 +2,7 @@ package com.worth.ifs.util;
 
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -16,9 +17,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.ServiceResult.failureSupplier;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -46,46 +46,48 @@ public class EntityLookupCallbacks {
             ServiceLocator serviceLocator, Function<ProcessRole,
             ServiceResult<JsonStatusResponse>> doWithProcessRoleFn) {
 
-        return getRoleForRoleType(roleType, serviceLocator.getRoleRepository(), ROLE_NOT_FOUND)
-                .map(role -> getProcessRoleForRoleUserAndApplication(role, userId, applicationId,serviceLocator.getProcessRoleRepository(), PROCESS_ROLE_NOT_FOUND)
+        Error roleNotFoundError = new Error(NOT_FOUND_ENTITY, Role.class, roleType);
+        Error processRoleNotFoundError = new Error(NOT_FOUND_ENTITY, ProcessRole.class, roleType, userId, applicationId);
+
+        return getRoleForRoleType(roleType, serviceLocator.getRoleRepository(), roleNotFoundError)
+                .map(role -> getProcessRoleForRoleUserAndApplication(role, userId, applicationId, serviceLocator.getProcessRoleRepository(), processRoleNotFoundError)
                 .map(doWithProcessRoleFn::apply));
     }
 
     public static ServiceResult<Role> getRoleForRoleType(UserRoleType type,
-             RoleRepository roleRepository, Enum<?> noRoleFound) {
+             RoleRepository roleRepository, Error noRoleFound) {
 
         Optional<Role> matchingRole = roleRepository.findByName(type.getName()).stream().findFirst();
-        return matchingRole.map(ServiceResult::success).orElseGet(failureSupplier(noRoleFound));
+        return matchingRole.map(ServiceResult::serviceSuccess).orElse(serviceFailure(noRoleFound));
     }
 
     public static ServiceResult<ProcessRole> getProcessRoleForRoleUserAndApplication(Role role, Long userId,
-            Long applicationId, ProcessRoleRepository processRoleRepository,
-            Enum<?> noAssessorProcessRole) {
+            Long applicationId, ProcessRoleRepository processRoleRepository, Error noAssessorProcessRole) {
 
         Optional<ProcessRole> matchingRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId).stream().findFirst();
-        return matchingRole.map(ServiceResult::success).orElseGet(failureSupplier(noAssessorProcessRole));
+        return matchingRole.map(ServiceResult::serviceSuccess).orElse(serviceFailure(noAssessorProcessRole));
     }
 
     public static ServiceResult<ProcessRole> getProcessRoleById(Long processRoleId,
             ProcessRoleRepository processRoleRepository,
-            Enum<?> noProcessRole) {
+            Error noProcessRole) {
 
         return getOrFail(() -> processRoleRepository.findOne(processRoleId), noProcessRole);
     }
 
     public static ServiceResult<Response> getResponseById(Long responseId,
                                                           ResponseRepository responseRepository,
-                                                          Enum<?> noResponse) {
+                                                          Error noResponseError) {
 
-        return getOrFail(() -> responseRepository.findOne(responseId), noResponse);
+        return getOrFail(() -> responseRepository.findOne(responseId), noResponseError);
     }
 
     public static <SuccessType> ServiceResult<SuccessType> getOrFail(
             Supplier<SuccessType> getterFn,
-            Enum<?> failureResponse) {
+            Error failureResponse) {
 
         return ofNullable(getterFn.get()).
-                map(ServiceResult::success).
-                orElse(ServiceResult.failure(failureResponse));
+                map(ServiceResult::serviceSuccess).
+                orElse(serviceFailure(failureResponse));
     }
 }

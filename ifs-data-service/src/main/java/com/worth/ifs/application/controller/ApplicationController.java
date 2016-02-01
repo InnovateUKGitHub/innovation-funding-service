@@ -10,8 +10,6 @@ import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.controller.AbstractDataController;
-import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
-import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.notifications.resource.Notification;
@@ -24,16 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATION;
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
 import static com.worth.ifs.transactional.RestResults.accepted;
 import static com.worth.ifs.transactional.RestResults.internalServerError2;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.JsonStatusResponse.badRequest;
-import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -57,11 +49,6 @@ public class ApplicationController extends AbstractDataController {
 
     @Autowired
     ApplicationMapper applicationMapper;
-
-    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-        new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> badRequest("Unable to find Application", response)),
-        new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_SEND_NOTIFICATION), (serviceFailure, response) -> internalServerError("Unable to send Notification", response))
-    );
 
     @RequestMapping("/normal/{id}")
     public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {

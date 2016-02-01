@@ -3,16 +3,14 @@ package com.worth.ifs.transactional;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.transactional.RestResult.restFailure;
 import static com.worth.ifs.transactional.RestResult.restSuccess;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  *
  */
 public class RestResults {
 
-    public static RestResult<Void> ok() {
+    public static RestResult<Void> ok2() {
         return restSuccess(OK);
     }
 
@@ -20,7 +18,23 @@ public class RestResults {
         return restSuccess(ACCEPTED);
     }
 
+    public static RestResult<Void> noContent2() {
+        return restSuccess(NO_CONTENT);
+    }
+
+
+
+
+
+    //
+    // 5xx ERRORS
+    //
+
     public static RestResult<Void> internalServerError2() {
-        return restFailure(UNEXPECTED_ERROR, "An unexpected error occurred", INTERNAL_SERVER_ERROR);
+        return internalServerError2("An unexpected error occurred");
+    }
+
+    public static RestResult<Void> internalServerError2(String message) {
+        return restFailure(UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
     }
 }

@@ -7,8 +7,11 @@ import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.service.NotificationSender;
 import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
+import com.worth.ifs.transactional.Error;
+import com.worth.ifs.transactional.ErrorTemplate;
 import com.worth.ifs.transactional.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import static com.worth.ifs.transactional.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * A Notification Sender that can, given a Notification, construct an email from it and use the Email Service to send
@@ -31,8 +35,32 @@ public class EmailNotificationSender implements NotificationSender {
 
     static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
 
-    public enum ServiceFailures {
-        EMAILS_NOT_SENT
+    public enum ServiceFailures implements ErrorTemplate {
+        EMAILS_NOT_SENT("The emails could not be sent", INTERNAL_SERVER_ERROR)
+        ;
+
+        private String errorMessage;
+        private HttpStatus category;
+
+        ServiceFailures(String errorMessage, HttpStatus category) {
+            this.errorMessage = errorMessage;
+            this.category = category;
+        }
+
+        @Override
+        public String getErrorKey() {
+            return name();
+        }
+
+        @Override
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        @Override
+        public HttpStatus getCategory() {
+            return category;
+        }
     }
 
     @Autowired
@@ -49,7 +77,7 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
 
-        return handlingErrors(EMAILS_NOT_SENT, () -> {
+        return handlingErrors(new Error(EMAILS_NOT_SENT), () -> {
 
             EmailAddress from = fromNotificationSource(notification.getFrom());
 
@@ -61,7 +89,7 @@ public class EmailNotificationSender implements NotificationSender {
                 )))
             );
 
-            return anyFailures(results, failureSupplier(EMAILS_NOT_SENT), successSupplier(notification));
+            return anyFailures(results, serviceFailure(new Error(EMAILS_NOT_SENT)), serviceSuccess(notification));
         });
     }
 

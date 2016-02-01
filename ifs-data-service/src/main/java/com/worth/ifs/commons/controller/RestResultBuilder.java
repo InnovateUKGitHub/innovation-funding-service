@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import static com.worth.ifs.transactional.RestResult.restFailure;
 import static com.worth.ifs.transactional.RestResults.internalServerError2;
-import static com.worth.ifs.transactional.RestResults.ok;
+import static com.worth.ifs.transactional.RestResults.ok2;
 
 /**
  *
@@ -20,7 +20,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
-    private static RestResult<?> defaultSuccessResult = ok();
+    private static RestResult<?> defaultSuccessResult = ok2();
     private static RestResult<?> fallbackFailureResult = internalServerError2();
     private Function<ProcessResultType, RestResult<ReturnType>> successResult;
     private RestResult<ReturnType> defaultFailureResult;
@@ -52,9 +52,9 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         return newBuilder;
     }
 
-    public RestResultBuilder<ProcessResultType, ReturnType> andWithDefaultFailure(RestResult<ReturnType> failureResult) {
+    public RestResultBuilder<ProcessResultType, ReturnType> andWithDefaultFailure(RestResult<?> failureResult) {
         RestResultBuilder<ProcessResultType, ReturnType> newBuilder = new RestResultBuilder<>(this);
-        newBuilder.defaultFailureResult = failureResult;
+        newBuilder.defaultFailureResult = (RestResult<ReturnType>) failureResult;
         return newBuilder;
     }
 

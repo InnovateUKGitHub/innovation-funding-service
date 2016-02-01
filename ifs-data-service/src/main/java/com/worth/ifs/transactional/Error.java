@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
@@ -25,6 +26,18 @@ public class Error {
     @SuppressWarnings("unused")
     private Error() {
 
+    }
+
+    public Error(ErrorTemplate errorTemplate) {
+        this(errorTemplate, emptyList());
+    }
+
+    public Error(ErrorTemplate errorTemplate, Object... arguments) {
+        this(errorTemplate, asList(arguments));
+    }
+
+    public Error(ErrorTemplate errorTemplate, List<Object> arguments) {
+        this(errorTemplate.getErrorKey(), errorTemplate.getErrorMessage(), arguments, errorTemplate.getCategory());
     }
 
     public Error(String messageKey, HttpStatus statusCode) {

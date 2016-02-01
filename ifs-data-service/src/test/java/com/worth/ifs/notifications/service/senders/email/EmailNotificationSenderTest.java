@@ -19,7 +19,7 @@ import static com.worth.ifs.notifications.service.FreemarkerNotificationTemplate
 import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
 import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -70,16 +70,16 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Test
     public void testSendNotification() {
 
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body"));
 
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(success(singletonList(recipient1Email)));
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(success(singletonList(recipient2Email)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceSuccess(singletonList(recipient1Email)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isRight());
@@ -91,13 +91,13 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Test
     public void testSendNotificationButEmailServiceFails() {
 
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body"));
 
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(failure(EMAILS_NOT_SENT));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(failure(EMAILS_NOT_SENT));
@@ -113,16 +113,16 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Test
     public void testSendNotificationButEmailServiceFailsPartially() {
 
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body"));
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body"));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body"));
 
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(success("Plain text body 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(success("HTML body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
         when(emailServiceMock.sendEmail(senderEmail, asList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(failure(EMAILS_NOT_SENT));
-        when(emailServiceMock.sendEmail(senderEmail, asList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(success(singletonList(recipient2Email)));
+        when(emailServiceMock.sendEmail(senderEmail, asList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isLeft());
@@ -137,7 +137,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
         when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(failure(UNABLE_TO_RENDER_TEMPLATE));
 
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(success("My subject 2"));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject 2"));
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(failure(UNABLE_TO_RENDER_TEMPLATE));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);

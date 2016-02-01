@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.controller;
 
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.util.Either;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
-import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static com.worth.ifs.util.Either.left;
 import static java.util.Optional.empty;
 
@@ -73,7 +74,7 @@ public class ControllerErrorHandlingUtil {
      * @param serviceCode
      * @return
      */
-    public static <T> ServiceResult<T> handlingErrors(Enum<?> catchAllError, Supplier<ServiceResult<T>> serviceCode) {
+    public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             ServiceResult<T> response = serviceCode.get();
 
@@ -84,7 +85,7 @@ public class ControllerErrorHandlingUtil {
             return response;
         } catch (Exception e) {
             LOG.warn("Uncaught exception encountered while performing Controller call - returning catch-all error", e);
-            return failure(catchAllError);
+            return serviceFailure(catchAllError);
         }
     }
 
@@ -99,7 +100,7 @@ public class ControllerErrorHandlingUtil {
      * @return
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(UNEXPECTED_ERROR, serviceCode);
+        return handlingErrors(new Error(UNEXPECTED_ERROR), serviceCode);
     }
 
 
@@ -109,6 +110,7 @@ public class ControllerErrorHandlingUtil {
      * @param serviceCode
      * @return
      */
+    // TODO DW - INFUND-854 - remove
     public static Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> handlingErrorsWithResponseEntity(
             Supplier<JsonStatusResponse> catchAllError,
             Supplier<Either<ResponseEntity<JsonStatusResponse>, ResponseEntity<?>>> serviceCode) {

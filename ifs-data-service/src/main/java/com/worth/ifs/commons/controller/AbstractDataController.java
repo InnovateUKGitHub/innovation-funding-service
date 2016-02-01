@@ -24,6 +24,7 @@ public abstract class AbstractDataController {
 
     private static final Log LOG = LogFactory.getLog(AbstractDataController.class);
 
+    // TODO DW - INFUND-854 - can all of this come out?
     protected <T> RestResult<T> serviceToRestResult(Supplier<ServiceResult<T>> serviceCode) {
         return serviceToRestResult(serviceCode, getDefaultSuccessHandler());
     }

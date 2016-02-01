@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
+// TODO DW - INFUND-854 - remove
 public class FormInputResponseFileEntryJsonStatusResponse extends JsonStatusResponse {
 
     private long fileEntryId;

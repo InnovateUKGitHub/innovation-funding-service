@@ -27,6 +27,8 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.transactional.Error;
+import com.worth.ifs.transactional.ErrorTemplate;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -54,12 +56,15 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -67,13 +72,38 @@ import static java.util.Collections.singletonList;
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
 
-    public enum ServiceFailures {
-        UNABLE_TO_CREATE_FILE, //
-        FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, //
-        UNABLE_TO_UPDATE_FILE, //
-        UNABLE_TO_DELETE_FILE, //
-        UNABLE_TO_FIND_FILE, //
-        UNABLE_TO_SEND_NOTIFICATION, //
+    // TODO DW - INFUND-854 - move all failure types into central place?
+    public enum ServiceFailures implements ErrorTemplate {
+
+        UNABLE_TO_CREATE_FILE("The file could not be created", INTERNAL_SERVER_ERROR), //
+        FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE("A file is already linked to this Form Input Response", CONFLICT), //
+        UNABLE_TO_UPDATE_FILE("The file could not be updated", INTERNAL_SERVER_ERROR), //
+        UNABLE_TO_DELETE_FILE("The file could not be deleted", INTERNAL_SERVER_ERROR), //
+        UNABLE_TO_SEND_NOTIFICATION("The notification could not be sent", INTERNAL_SERVER_ERROR), //
+        ;
+
+        private String errorMessage;
+        private HttpStatus category;
+
+        ServiceFailures(String errorMessage, HttpStatus category) {
+            this.errorMessage = errorMessage;
+            this.category = category;
+        }
+
+        @Override
+        public String getErrorKey() {
+            return name();
+        }
+
+        @Override
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        @Override
+        public HttpStatus getCategory() {
+            return category;
+        }
     }
 
     enum Notifications {
@@ -162,7 +192,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> {
+        return handlingErrors(new Error(UNABLE_TO_CREATE_FILE), () -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -171,7 +201,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
-                return failureResponse(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE);
+                return serviceFailure(new Error(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
             } else {
 
                 return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
@@ -183,7 +213,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         existingResponse.setFileEntry(fileEntry);
                         formInputResponseRepository.save(existingResponse);
                         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-                        return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
+                        return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
 
                     } else {
 
@@ -194,7 +224,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                     FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
                                     formInputResponseRepository.save(newFormInputResponse);
                                     FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                                    return successResponse(Pair.of(successfulFile.getKey(), fileEntryResource));
+                                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
                         })));
                     }
                 });
@@ -205,7 +235,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_UPDATE_FILE, () -> {
+        return handlingErrors(new Error(UNABLE_TO_UPDATE_FILE), () -> {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
@@ -218,7 +248,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
 
                 return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).map(updatedFile ->
-                    successResponse(Pair.of(updatedFile.getKey(), existingFormInputResource))
+                        serviceSuccess(Pair.of(updatedFile.getKey(), existingFormInputResource))
                 );
             });
         });
@@ -227,7 +257,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
 
-        return handlingErrors(UNABLE_TO_DELETE_FILE, () -> {
+        return handlingErrors(new Error(UNABLE_TO_DELETE_FILE), () -> {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFileId);
@@ -240,7 +270,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 return fileService.deleteFile(fileEntryId).
                     map(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
                     map(this::unlinkFileEntryFromFormInputResponse).
-                    map(BaseTransactionalService::successResponse)
+                    map(ServiceResult::serviceSuccess)
                 );
             });
         });
@@ -249,23 +279,23 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
         formInputResponse.setFileEntry(null);
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
-        return success(unlinkedResponse);
+        return serviceSuccess(unlinkedResponse);
     }
 
     @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
-        return handlingErrors(UNABLE_TO_FIND_FILE, () -> getFormInputResponse(fileEntryId).
+        return handlingErrors(new Error(NOT_FOUND_ENTITY, FileEntry.class, fileEntryId), () -> getFormInputResponse(fileEntryId).
                 map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                map(inputStreamSupplier -> successResponse(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
+                map(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
         )));
     }
 
     private ServiceResult<FormInput> getFormInput(long formInputId) {
-        return getOrFail(() -> formInputRepository.findOne(formInputId), FORM_INPUT_NOT_FOUND);
+        return getOrFail(() -> formInputRepository.findOne(formInputId), new Error(NOT_FOUND_ENTITY, FormInput.class, formInputId));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
-        return getOrFail(() -> applicationRepository.findOne(applicationId), APPLICATION_NOT_FOUND);
+        return getOrFail(() -> applicationRepository.findOne(applicationId), new Error(NOT_FOUND_ENTITY, Application.class, applicationId));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -274,7 +304,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
-        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), FORM_INPUT_RESPONSE_NOT_FOUND);
+        Error formInputResponseNotFoundError = new Error(NOT_FOUND_ENTITY, FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
+        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), formInputResponseNotFoundError);
     }
 
     @Override
@@ -291,7 +322,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public List<Application> findByUserId(final Long userId) {
         User user = userRepository.findOne(userId);
         List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        return simpleMap(roles,role -> role.getApplication());
+        return simpleMap(roles, ProcessRole::getApplication);
     }
 
     @Override
@@ -338,11 +369,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
-                        .filter(q -> q.getMarkAsCompletedEnabled())
+                        .filter(Question::getMarkAsCompletedEnabled)
                         .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
                 .sum();
         Long countSingleStatusQuestionsCompleted = questions.stream()
-                .filter(q -> q.getMarkAsCompletedEnabled())
+                .filter(Question::getMarkAsCompletedEnabled)
                 .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 
@@ -456,7 +487,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite) {
 
-        return handlingErrors(UNABLE_TO_SEND_NOTIFICATION, () -> getApplication(applicationId).map(application -> {
+        return handlingErrors(new Error(UNABLE_TO_SEND_NOTIFICATION), () -> getApplication(applicationId).map(application -> {
 
             NotificationSource from = systemNotificationSource;
             NotificationTarget to = new ExternalUserNotificationTarget(invite.getRecipientName(), invite.getRecipientEmail());

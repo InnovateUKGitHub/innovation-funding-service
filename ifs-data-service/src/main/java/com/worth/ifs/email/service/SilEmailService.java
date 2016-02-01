@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -34,7 +34,7 @@ public class SilEmailService implements EmailService {
             SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
             SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> success(to));
+            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> serviceSuccess(to));
         });
     }
 }

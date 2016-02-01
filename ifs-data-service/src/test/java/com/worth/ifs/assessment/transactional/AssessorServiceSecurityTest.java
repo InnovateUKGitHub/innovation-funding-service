@@ -12,7 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -119,12 +119,12 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
 
         @Override
         public ServiceResult<Feedback> updateAssessorFeedback(Feedback feedback) {
-            return success(new Feedback().setValue(Optional.of("Security tested!")));
+            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
         }
 
         @Override
         public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
-            return success(new Feedback().setValue(Optional.of("Security tested!")));
+            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
         }
     }
 
