@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  *
@@ -23,12 +22,9 @@ public class Error {
     /**
      * For JSON marshalling
      */
+    @SuppressWarnings("unused")
     private Error() {
 
-    }
-
-    public Error(String messageKey) {
-        this(messageKey, INTERNAL_SERVER_ERROR);
     }
 
     public Error(String messageKey, HttpStatus statusCode) {
