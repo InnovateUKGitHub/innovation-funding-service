@@ -14,6 +14,7 @@ import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATION;
+import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
 import static com.worth.ifs.transactional.RestResults.accepted;
+import static com.worth.ifs.transactional.RestResults.internalServerError2;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.JsonStatusResponse.badRequest;
 import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
@@ -143,11 +146,9 @@ public class ApplicationController extends AbstractDataController {
             @PathVariable("applicationId") final Long applicationId,
             @RequestBody InviteCollaboratorResource invite) {
 
-        return serviceToRestResult(() -> {
-
-            return applicationService.inviteCollaboratorToApplication(applicationId, invite);
-
-        }, accepted());
+        return newRestResult(Void.class, Notification.class).andOnSuccess(accepted()).andWithDefaultFailure(internalServerError2()).handlingServiceResult(() ->
+                applicationService.inviteCollaboratorToApplication(applicationId, invite)
+        ).perform();
     }
 
 }

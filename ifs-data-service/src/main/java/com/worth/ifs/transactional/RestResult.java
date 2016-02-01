@@ -58,6 +58,11 @@ public class RestResult<T> {
     }
 
     public RestFailure getLeft() {
+
+        if (bodiless) {
+            throw new IllegalStateException("Unable to get the body from a bodiless (Void) RestResult");
+        }
+
         return result.getLeft();
     }
 
@@ -108,8 +113,16 @@ public class RestResult<T> {
         return new RestResult<>(failure);
     }
 
+    public static RestResult<Void> restFailure(HttpStatus statusCode) {
+        return restFailure("", statusCode);
+    }
+
     public static <T> RestResult<T> restFailure(Enum<?> failureKey, HttpStatus statusCode) {
         return restFailure(failureKey.name(), statusCode);
+    }
+
+    public static <T> RestResult<T> restFailure(Enum<?> failureKey, String failureMessage, HttpStatus statusCode) {
+        return new RestResult<>(RestFailure.error(failureKey.name(), failureMessage, statusCode));
     }
 
     public static <T> RestResult<T> restFailure(String failureMessage, HttpStatus statusCode) {

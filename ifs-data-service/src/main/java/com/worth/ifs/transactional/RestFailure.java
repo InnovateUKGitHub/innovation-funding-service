@@ -28,6 +28,10 @@ public class RestFailure {
         return new RestFailure(singletonList(new RestError(new Error(message), statusCode)));
     }
 
+    public static RestFailure error(String key, String message, HttpStatus statusCode) {
+        return new RestFailure(singletonList(new RestError(new Error(key, message), statusCode)));
+    }
+
     public boolean is(String... messages) {
         List<String> containedErrors = simpleMap(errors, error -> error.getError().getErrorMessage());
         List<String> messagesList = asList(messages);
