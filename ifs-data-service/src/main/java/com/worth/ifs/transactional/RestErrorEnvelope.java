@@ -1,5 +1,6 @@
 package com.worth.ifs.transactional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class RestErrorEnvelope {
         return errors;
     }
 
+    @JsonIgnore
     public HttpStatus getStatusCode() {
 
         List<Map.Entry<HttpStatus, Integer>> entries = getHttpStatusCounts();
