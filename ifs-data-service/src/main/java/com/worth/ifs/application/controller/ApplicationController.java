@@ -10,7 +10,6 @@ import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.controller.AbstractDataController;
-import com.worth.ifs.commons.controller.RestResultBuilder;
 import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
@@ -147,12 +146,10 @@ public class ApplicationController extends AbstractDataController {
             @PathVariable("applicationId") final Long applicationId,
             @RequestBody InviteCollaboratorResource invite) {
 
-        RestResultBuilder<Void, Notification> restResult =
-                newRestResult(Void.class, Notification.class).
-                andOnSuccess(accepted()).
-                andWithDefaultFailure(internalServerError2());
-
-        return restResult.perform(() -> applicationService.inviteCollaboratorToApplication(applicationId, invite));
+        return newRestResult(Notification.class, Void.class).
+               andOnSuccess(accepted()).
+               andWithDefaultFailure(internalServerError2()).
+               perform(() -> applicationService.inviteCollaboratorToApplication(applicationId, invite));
     }
 
 }
