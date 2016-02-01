@@ -140,6 +140,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      @RequestParam(name = "add_partner", required = false) String addPartner,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
                                      @RequestParam(name = "save_contributors", required = false) String saveContributors,
+                                     @RequestParam(name = "newApplication",required = false) String newApplication,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
@@ -203,6 +204,9 @@ public class ApplicationContributorController extends AbstractApplicationControl
             saveFormValuesToCookie(response, contributorsForm, applicationId);
         }
 
+        if(newApplication != null){
+            return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
+        }
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
     }
 
