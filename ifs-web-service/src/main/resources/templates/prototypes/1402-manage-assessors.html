@@ -8,13 +8,13 @@
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
 		<style>
-			#application-list tbody tr{
+			#assessor-list tbody tr{
 				display: none;
 			}
 			.pagination{
 				display: none;
 			}
-			#application-list tbody tr.filtered-result{
+			#assessor-list tbody tr.filtered-result{
 				display: table-row;
 			}
 		</style>
@@ -24,6 +24,7 @@
 
 <body class="full-width show-full-table">
 
+
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -31,47 +32,20 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competitions dashboard'}, ${'/prototypes/860-comp-applications-dashboard?invitesSent'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application allocation'}, ${'/prototypes/1381-application-allocation'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage applications'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${(param.title != null ? param.title[0] : 'Example application')})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-allocation-summary" th:remove="tag" />
-
-	<div class="grid-row extra-margin">
-		<div class="column-quarter">
-			<p>Assigned <br /><span class="heading-medium">250</span></p>
-		</div>
-
-		<div class="column-quarter">
-			<p>Accepted <br /><span class="heading-medium">225</span></p>
-		</div>
-
-		<div class="column-quarter">
-			<p>Started <br /><span class="heading-medium">125</span></p>
-		</div>
-
-		<div class="column-quarter">
-			<p>Completed <br /><span class="heading-medium">25</span></p>
-		</div>
-	</div>
-
-    <div th:if="${param.sendAssignments != null}" th:remove="tag">
-    	<div class="highlight-panel extra-margin">
-	        <div class="alignright-button" id="added-assessors">
-				<a href="/prototypes/1385-application-allocation-confirm" class="button large">Send updates to assessors</a>
-			</div>
-		</div>
-	</div>
+    <div th:include="prototypes/fragments/comp-admin :: prototype-allocation-summary" th:remove="tag" />
 
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-	<h2 class="heading-large" id="current-assessors">Application list</h2>
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" th:remove="tag" />
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:with="adminTask='manage'" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-list-table" th:with="adminTask='manage'" th:remove="tag" />
 	
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 
@@ -94,5 +68,11 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+	</script>
 </body>
 </html>
