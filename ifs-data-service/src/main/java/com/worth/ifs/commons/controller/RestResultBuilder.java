@@ -6,6 +6,11 @@ import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.function.Function;
+
+import static com.worth.ifs.transactional.RestResults.internalServerError2;
+import static com.worth.ifs.transactional.RestResults.ok;
+
 /**
  *
  */
@@ -13,7 +18,9 @@ public class RestResultBuilder<T, R> {
 
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
-    private RestResult<T> successResult;
+    private static RestResult<?> defaultSuccessResult = ok();
+    private static RestResult<?> defaultFailureResult = internalServerError2();
+    private Function<R, RestResult<T>> successResult;
     private RestResult<T> failureResult;
     private Supplier<ServiceResult<R>> serviceResult;
 
@@ -31,6 +38,10 @@ public class RestResultBuilder<T, R> {
     }
 
     public RestResultBuilder<T, R> andOnSuccess(RestResult<T> successResult) {
+        return andOnSuccess(success -> successResult);
+    }
+
+    public RestResultBuilder<T, R> andOnSuccess(Function<R, RestResult<T>> successResult) {
         RestResultBuilder<T, R> newBuilder = new RestResultBuilder<>(this);
         newBuilder.successResult = successResult;
         return newBuilder;
@@ -42,10 +53,10 @@ public class RestResultBuilder<T, R> {
         return newBuilder;
     }
 
-    public RestResultBuilder<T, R> handlingServiceResult(Supplier<ServiceResult<R>> serviceResult) {
+    public RestResult<T> handleServiceResult(Supplier<ServiceResult<R>> serviceResult) {
         RestResultBuilder<T, R> newBuilder = new RestResultBuilder<>(this);
         newBuilder.serviceResult = serviceResult;
-        return newBuilder;
+        return newBuilder.perform();
     }
 
     public RestResult<T> perform() {
@@ -54,11 +65,23 @@ public class RestResultBuilder<T, R> {
 
             try {
                 ServiceResult<R> response = serviceResult.get();
-                return response.mapLeftOrRight(failure -> failureResult, success -> successResult);
+                return response.mapLeftOrRight(failure -> {
+                    if (failureResult != null) {
+                        return failureResult;
+                    } else {
+                        return (RestResult<T>) defaultFailureResult;
+                    }
+                }, success -> {
+                    if (successResult != null) {
+                        return successResult.apply(success);
+                    } else {
+                        return (RestResult<T>) defaultSuccessResult;
+                    }
+                });
 
             } catch (Exception e) {
                 LOG.warn("Uncaught exception encountered while performing RestResult processing - returning catch-all error", e);
-                return failureResult;
+                return (RestResult<T>) defaultFailureResult;
             }
         }
 

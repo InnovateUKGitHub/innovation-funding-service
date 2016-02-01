@@ -146,9 +146,9 @@ public class ApplicationController extends AbstractDataController {
             @PathVariable("applicationId") final Long applicationId,
             @RequestBody InviteCollaboratorResource invite) {
 
-        return newRestResult(Void.class, Notification.class).andOnSuccess(accepted()).andWithDefaultFailure(internalServerError2()).handlingServiceResult(() ->
+        return newRestResult(Void.class, Notification.class).andOnSuccess(accepted()).andWithDefaultFailure(internalServerError2()).handleServiceResult(() ->
                 applicationService.inviteCollaboratorToApplication(applicationId, invite)
-        ).perform();
+        );
     }
 
 }
