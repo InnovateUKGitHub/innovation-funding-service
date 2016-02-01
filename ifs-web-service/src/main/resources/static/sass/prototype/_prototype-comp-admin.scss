@@ -38,3 +38,60 @@ table{
 	}
 }
 
+
+/*----- Creating fixed info panels for widescreen views ----*/
+
+
+@include media($min-width: 1400px){
+	.full-width{
+		.info-area{
+			float: left;
+			width: 20%;
+			padding: 0;
+
+			//position: fixed;
+			font-size: 0.7em;
+			position: relative;
+
+			li{
+				padding-bottom: 10px;
+			}
+
+			.boxed{
+				padding: 15px;
+				margin-bottom: 20px;
+			}
+
+			.grid-row{
+				margin: 0;
+			}
+
+			.column-half,
+			.column-quarter,
+			.column-third{
+				width: 100%;
+				clear: both;
+			}
+
+
+
+			&.fixed{
+				position: fixed;
+				top: 20px;
+				width: 17.5%;
+				background: white;
+				z-index: 10;
+			}
+		}
+
+		.data-area{
+			float: right;
+			width: 75%;
+
+			& > .heading-large{
+				//margin-top: 0;
+			}
+		}
+	}
+}
+
