@@ -1,15 +1,22 @@
 package com.worth.ifs.commons.controller;
 
 import com.google.common.base.Supplier;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.RestResult;
+import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceResult;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpStatus;
 
+import java.util.List;
 import java.util.function.Function;
 
 import static com.worth.ifs.transactional.RestResults.internalServerError2;
 import static com.worth.ifs.transactional.RestResults.ok;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  *
@@ -19,9 +26,9 @@ public class RestResultBuilder<T, R> {
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
     private static RestResult<?> defaultSuccessResult = ok();
-    private static RestResult<?> defaultFailureResult = internalServerError2();
+    private static RestResult<?> fallbackFailureResult = internalServerError2();
     private Function<R, RestResult<T>> successResult;
-    private RestResult<T> failureResult;
+    private RestResult<T> defaultFailureResult;
     private Supplier<ServiceResult<R>> serviceResult;
 
     private RestResultBuilder() {
@@ -29,7 +36,7 @@ public class RestResultBuilder<T, R> {
 
     private RestResultBuilder(RestResultBuilder<T, R> existingBuilder) {
         this.successResult = existingBuilder.successResult;
-        this.failureResult = existingBuilder.failureResult;
+        this.defaultFailureResult = existingBuilder.defaultFailureResult;
         this.serviceResult = existingBuilder.serviceResult;
     }
 
@@ -49,7 +56,7 @@ public class RestResultBuilder<T, R> {
 
     public RestResultBuilder<T, R> andWithDefaultFailure(RestResult<T> failureResult) {
         RestResultBuilder<T, R> newBuilder = new RestResultBuilder<>(this);
-        newBuilder.failureResult = failureResult;
+        newBuilder.defaultFailureResult = failureResult;
         return newBuilder;
     }
 
@@ -66,10 +73,17 @@ public class RestResultBuilder<T, R> {
             try {
                 ServiceResult<R> response = serviceResult.get();
                 return response.mapLeftOrRight(failure -> {
-                    if (failureResult != null) {
-                        return failureResult;
+
+                    RestResult<T> handled = handleServiceFailure(failure);
+
+                    if (handled != null) {
+                        return handled;
+                    }
+
+                    if (defaultFailureResult != null) {
+                        return defaultFailureResult;
                     } else {
-                        return (RestResult<T>) defaultFailureResult;
+                        return (RestResult<T>) fallbackFailureResult;
                     }
                 }, success -> {
                     if (successResult != null) {
@@ -81,10 +95,21 @@ public class RestResultBuilder<T, R> {
 
             } catch (Exception e) {
                 LOG.warn("Uncaught exception encountered while performing RestResult processing - returning catch-all error", e);
-                return (RestResult<T>) defaultFailureResult;
+                return (RestResult<T>) fallbackFailureResult;
             }
         }
 
         return null;
+    }
+
+    private RestResult<T> handleServiceFailure(ServiceFailure failure) {
+
+        List<Error> errors = failure.getErrors();
+
+        List<Pair<Error, HttpStatus>> errorsWithStatusCodes = simpleMap(errors, error -> {
+            return Pair.of(error, BAD_REQUEST);
+        });
+
+        return RestResult.restFailure(errorsWithStatusCodes);
     }
 }

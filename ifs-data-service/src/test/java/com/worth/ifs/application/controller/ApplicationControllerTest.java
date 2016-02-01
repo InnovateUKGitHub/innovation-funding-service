@@ -12,7 +12,6 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.transactional.RestErrorEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.util.JsonStatusResponse;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -204,8 +203,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        JsonStatusResponse jsonResponse = new ObjectMapper().readValue(content, JsonStatusResponse.class);
-        assertEquals("Unable to find Application", jsonResponse.getMessage());
+        RestErrorEnvelope restError = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        assertEquals(APPLICATION_NOT_FOUND.name(), restError.getErrors().get(0).getErrorKey());
+        assertEquals("Unable to find Application", restError.getErrors().get(0).getErrorMessage());
     }
 
     @Test

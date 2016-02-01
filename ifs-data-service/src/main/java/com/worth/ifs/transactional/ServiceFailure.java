@@ -83,6 +83,10 @@ public class ServiceFailure {
         return simpleMap(errors, Error::getErrorKey);
     }
 
+    public List<Error> getErrors() {
+        return errors;
+    }
+
     public Throwable getCause() {
         return cause;
     }
