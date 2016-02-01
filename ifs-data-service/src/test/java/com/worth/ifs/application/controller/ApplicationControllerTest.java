@@ -9,6 +9,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.RestErrorEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -23,9 +24,9 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
-import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
@@ -34,6 +35,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -189,7 +192,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
         String inviteBody = new ObjectMapper().writeValueAsString(invite);
 
-        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(APPLICATION_NOT_FOUND));
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(serviceFailure(new Error(NOT_FOUND_ENTITY, NOT_FOUND)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -204,7 +207,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         String content = response.getResponse().getContentAsString();
         RestErrorEnvelope restError = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
-        assertEquals(APPLICATION_NOT_FOUND.name(), restError.getErrors().get(0).getErrorKey());
+
+        // TODO DW - INFUND-854 - nicer way to check for these errors
+        assertEquals(NOT_FOUND_ENTITY.name(), restError.getErrors().get(0).getErrorKey());
         assertEquals("Unable to find Application", restError.getErrors().get(0).getErrorMessage());
     }
 
@@ -214,7 +219,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
         String inviteBody = new ObjectMapper().writeValueAsString(invite);
 
-        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATIONS));
+        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(serviceFailure(new Error(UNABLE_TO_SEND_NOTIFICATIONS, INTERNAL_SERVER_ERROR)));
 
         MvcResult response = mockMvc.
                 perform(

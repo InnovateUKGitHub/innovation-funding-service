@@ -2,6 +2,7 @@ package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -12,11 +13,12 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.resource.NotificationMedium.LOGGING;
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
-import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Tests for NotificationServiceImpl
@@ -107,7 +109,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(failure(EMAILS_NOT_SENT));
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isLeft());

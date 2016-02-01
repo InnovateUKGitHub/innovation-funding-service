@@ -8,8 +8,7 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.PROCESS_ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -56,7 +55,7 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
                 applicationId, serviceLocator,
                 processRole -> doWithProcessRoleFn.apply(processRole));
 
-        assertTrue(response.getLeft().is(ROLE_NOT_FOUND));
+        assertTrue(response.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -69,6 +68,6 @@ public class EntityLookupCallbacksTest extends BaseUnitTestMocksTest {
                 applicationId, serviceLocator,
                 processRole -> doWithProcessRoleFn.apply(processRole));
 
-        assertTrue(response.getLeft().is(PROCESS_ROLE_NOT_FOUND));
+        assertTrue(response.getLeft().is(NOT_FOUND_ENTITY));
     }
 }

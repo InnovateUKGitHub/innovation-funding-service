@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.sil.email.service.RestSilEmailEndpoint.ServiceFailures.UNABLE_TO_SEND_MAIL;
+import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -69,7 +69,7 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
         assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(UNABLE_TO_SEND_MAIL));
+        assertTrue(sendMailResult.getLeft().is(EMAILS_NOT_SENT));
     }
 
     @Test

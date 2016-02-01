@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -46,7 +46,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(RESPONSE_NOT_FOUND));
+        assertTrue(serviceResult.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_NOT_FOUND));
+        assertTrue(serviceResult.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_TYPE));
+        assertTrue(serviceResult.getLeft().is(INCORRECT_TYPE));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(PROCESS_ROLE_INCORRECT_APPLICATION));
+        assertTrue(serviceResult.getLeft().is(INCORRECT_TYPE));
     }
 
     @Test

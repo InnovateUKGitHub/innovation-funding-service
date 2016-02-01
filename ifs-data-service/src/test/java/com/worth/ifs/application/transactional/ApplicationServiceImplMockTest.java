@@ -14,6 +14,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -43,7 +44,8 @@ import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.transactional.ServiceResult.failure;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -55,6 +57,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Tests for {@link ApplicationServiceImpl}
@@ -164,7 +167,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(failure("no files for you..."));
+                thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -220,7 +223,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(PROCESS_ROLE_NOT_FOUND));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -244,7 +247,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FORM_INPUT_NOT_FOUND));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -269,7 +272,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(APPLICATION_NOT_FOUND));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -369,7 +372,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(failure("no files for you..."));
+                thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
@@ -417,7 +420,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileServiceMock.deleteFile(999L)).thenReturn(failure("No deleting for you!"));
+        when(fileServiceMock.deleteFile(999L)).thenReturn(serviceFailure(new Error("No deleting for you!", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
@@ -438,7 +441,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FORM_INPUT_RESPONSE_NOT_FOUND));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -451,12 +454,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(failure(UNABLE_TO_FIND_FILE));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(new Error(NOT_FOUND_ENTITY, File.class, 999L)));
 
         ServiceResult<FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -513,7 +516,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(failure("no files for you..."));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
@@ -535,7 +538,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
 
@@ -548,7 +551,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FORM_INPUT_RESPONSE_NOT_FOUND));
+        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -590,7 +593,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
 
         assertTrue(notificationResult.isLeft());
-        assertTrue(notificationResult.getLeft().is(APPLICATION_NOT_FOUND));
+        assertTrue(notificationResult.getLeft().is(NOT_FOUND_ENTITY));
 
         verify(notificationServiceMock, never()).sendNotification(expectedNotificationToBeSent, EMAIL);
     }
@@ -606,7 +609,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(newApplication().with(name("My Application")).build());
-        when(notificationServiceMock.sendNotification(expectedNotificationToBeSent, EMAIL)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATION));
+        when(notificationServiceMock.sendNotification(expectedNotificationToBeSent, EMAIL)).thenReturn(serviceFailure(new Error(UNABLE_TO_SEND_NOTIFICATION, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Notification> notificationResult =
                 service.inviteCollaboratorToApplication(123L, new InviteCollaboratorResource("My Collaborator", "collaborator@example.com"));
