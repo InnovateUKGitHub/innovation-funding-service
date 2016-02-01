@@ -55,13 +55,13 @@ public class RestResultBuilder<T, R> {
         return newBuilder;
     }
 
-    public RestResult<T> handleServiceResult(Supplier<ServiceResult<R>> serviceResult) {
+    public RestResult<T> perform(Supplier<ServiceResult<R>> serviceResult) {
         RestResultBuilder<T, R> newBuilder = new RestResultBuilder<>(this);
         newBuilder.serviceResult = serviceResult;
         return newBuilder.perform();
     }
 
-    public RestResult<T> perform() {
+    private RestResult<T> perform() {
 
         if (serviceResult != null) {
 
