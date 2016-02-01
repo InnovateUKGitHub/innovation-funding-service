@@ -1,7 +1,10 @@
 *** Settings ***
 Documentation     INFUND-524 As an applicant I want to see the finance summary updated and recalculated as each partner adds their finances.
+...
+...
+...               INFUND-435 As an applicant and I am on the finance summary, I want to see the partner details listed horizontally so I can see all partner details in the finance summary table
 Test Teardown     User closes the browser
-Force Tags        Pending
+Force Tags
 Default Tags      Finance    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -13,11 +16,13 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/2/form/section/7
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/2/form/section/8
+${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}    ${SERVER}/application/7/form/section/8
+${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/section/7
 
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    Finance    Finance Section    Collaboration    Pending
     #Pending the fix of the Infund-1678
     Given the user logs in as lead applicant
     When the user goes to the finance summary of the Providing sustainable childcare application
@@ -27,7 +32,7 @@ Finance summary page calculations for Lead applicant
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    Finance    Finance Section    Collaboration    Pending
     #Pending the fix of the Infund-1678
     Given the user logs in as first collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
@@ -37,7 +42,7 @@ Finance summary calculations for the first collaborator
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    Finance    Finance Section    Collaboration    Pending
     #Pending the fix of the Infund-1678
     Given the user logs in as second collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
@@ -45,6 +50,22 @@ Finance summary calculations for the second collaborator
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
+    And the user logs out
+
+Green check shouldn't show when the finances are incomplete
+    [Documentation]    INFUND-435
+    Given the user logs in as first collaborator
+    When the collaborator goes to the finance summary of the completed application
+    And applicant marks one finance sub-section as incomplete
+    Then the green check should not be visible
+    And the user logs out
+
+Green check should show when the applicant marks the finance as complete
+    [Documentation]    INFUND-435
+    Given the user logs in as first collaborator
+    And the collaborator goes to the finance summary of the completed application
+    When the applicant marks the finance question as complete
+    Then both green checks should be visible
     And the user logs out
 
 *** Keywords ***
@@ -92,3 +113,23 @@ the contribution to project and funding sought should be 0 and not a negative nu
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £0
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
+
+the collaborator goes to the finance summary of the completed application
+    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+
+applicant marks one finance sub-section as incomplete
+    Click Element    css=[aria-controls="collapsible-1"]
+    click element    jQuery=#collapsible-1 button:contains("Edit")
+
+the green check should not be visible
+    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    Page Should Not Contain Image    css=.finance-summary tr:nth-of-type(2) img
+
+the applicant marks the finance question as complete
+    Click Element    css=[aria-controls="collapsible-1"]
+    click element    jQuery=#collapsible-1 button:contains("Mark as complete")
+
+Then both green checks should be visible
+    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img
