@@ -7,23 +7,29 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OrganisationInviteForm implements Serializable {
+public class OrganisationInviteForm implements Serializable, Cloneable {
 
     @NotEmpty
     String organisationName;
     Long organisationId;
+    Long organisationInviteId;
     @Valid
-    LinkedList<InviteeForm> invites;
+    List<InviteeForm> invites;
 
-    public OrganisationInviteForm(String organisationName, Long organisationId) {
+    public OrganisationInviteForm(String organisationName, Long organisationId, Long organisationInviteId) {
         this.organisationName = organisationName;
         this.organisationId = organisationId;
+        this.organisationInviteId = organisationInviteId;
         this.invites = new LinkedList<>();
     }
 
     public OrganisationInviteForm() {
         organisationName = "";
         this.invites = new LinkedList<>();
+    }
+
+    public OrganisationInviteForm clone(){
+        return new OrganisationInviteForm(this.getOrganisationName(), this.organisationId, this.organisationInviteId);
     }
 
     public String getOrganisationName() {
@@ -46,7 +52,15 @@ public class OrganisationInviteForm implements Serializable {
         return invites;
     }
 
-    public void setInvites(LinkedList<InviteeForm> invites) {
+    public void setInvites(List<InviteeForm> invites) {
         this.invites = invites;
+    }
+
+    public Long getOrganisationInviteId() {
+        return organisationInviteId;
+    }
+
+    public void setOrganisationInviteId(Long organisationInviteId) {
+        this.organisationInviteId = organisationInviteId;
     }
 }

@@ -178,7 +178,8 @@ the user follows the standard path to the account creation page
     Go To    ${SERVER}/application/create/selected-business/05063042
     Select Checkbox         id=address-same
     Select Checkbox         name=useCompanyHouseAddress
-    Select Radio Button     organisationSize    SMALL
+    # Select Radio Button     organisationSize    SMALL
+    # organisation size has been moved to another page, so have commented this step out
     Click Button            Save organisation and continue
     Sleep   1s
     Page Should Contain     The profile that you are creating will be linked to the following organisation

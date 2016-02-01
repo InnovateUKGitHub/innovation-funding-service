@@ -36,12 +36,12 @@ IFS.financeSpecifics = (function(){
         //the total displayed in the header also changes.
         //All the other totals will get reset to 0 pounds.
         jQuery(s.administrationCostTotal.adminSupportCosts+':checked').each(function(){
-          IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
           IFS.financeSpecifics.resetOtherAdministrationTotal(this);
+          IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
         });
         jQuery(document).on('change',s.administrationCostTotal.adminSupportCosts,function(){
-              IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
-              IFS.financeSpecifics.resetOtherAdministrationTotal(this);
+          IFS.financeSpecifics.resetOtherAdministrationTotal(this);
+          IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
         });
       },
       placeRightAdministrationTotalInHeader  : function(element){
@@ -66,13 +66,14 @@ IFS.financeSpecifics = (function(){
           var section = jQuery('#'+jQuery(this).attr('data-target'));
           var totalField = section.find(s.administrationCostTotal.allTotals);
           var id = totalField.attr('id');
+
           totalField.attr('data-old-id',id).removeAttr('id').val('£ 0').attr('data-calculation-rawvalue',0);
         });
 
         section.find('[data-old-id]').each(function(){
           var id = jQuery(this).attr('data-old-id');
           jQuery(this).attr('id',id).removeAttr('data-old-id');
-          section.find('input').trigger('updateFinances');
+          jQuery('#section-total-9').trigger('updateFinances');
         });
       },
       initFunderOrgSizeFeedback : function(){

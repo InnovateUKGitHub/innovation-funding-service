@@ -8,13 +8,13 @@
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
 		<style>
-			#assessor-list tbody tr{
+			#application-list tbody tr{
 				display: none;
 			}
 			.pagination{
 				display: none;
 			}
-			#assessor-list tbody tr.filtered-result{
+			#application-list tbody tr.filtered-result{
 				display: table-row;
 			}
 		</style>
@@ -37,25 +37,7 @@
 	
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Application allocation'})" th:remove="tag" />
 
-	<section class="boxed">
-        <div class="grid-row">
-            <div class="column-half">
-                <ul>
-                	<li><span class="heading-medium">50</span> applications</li>
-                	<li><span class="heading-medium">25</span> assessors available</li>
-                </ul>
-            </div>
-            <div class="column-half">
-                <ul>
-                	<li><span class="heading-medium">22/12/15</span> assessment opened</li>
-                	<li><span class="heading-medium">27/12/15</span> assessment close</li>
-                </ul>
-            </div>
-        </div>
-		
-		
-
-    </section>
+	<div th:include="prototypes/fragments/comp-admin :: prototype-allocation-summary" th:remove="tag" />
 
     <div th:if="${param.sendAssignments != null}" th:remove="tag">
     	<div class="highlight-panel extra-margin">

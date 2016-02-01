@@ -6,20 +6,22 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.domain.Competition;
 
+import java.beans.Transient;
 import java.util.List;
 
 public class AssessmentDashboardModel {
 
     public final List<AssessmentWithApplicationAndScore> assessments;
-    public final List<AssessmentWithApplicationAndScore> assessmentsStartedAwaitingSubmission;
     public final List<AssessmentWithApplicationAndScore> submittedAssessments;
     public final Competition competition;
 
-    public AssessmentDashboardModel(List<AssessmentWithApplicationAndScore> assessments, List<AssessmentWithApplicationAndScore> assessmentsStartedAwaitingSubmission, List<AssessmentWithApplicationAndScore> submittedAssessments, Competition competition) {
-        this.assessmentsStartedAwaitingSubmission = assessmentsStartedAwaitingSubmission;
+    public final long noOfAsssessmentsStartedAwaitingSubmission;
+
+    public AssessmentDashboardModel(List<AssessmentWithApplicationAndScore> assessments, List<AssessmentWithApplicationAndScore> submittedAssessments, long noOfAssesmentsStartedAwaitingSubmission, Competition competition) {
         this.competition = competition;
         this.assessments = assessments;
         this.submittedAssessments = submittedAssessments;
+        this.noOfAsssessmentsStartedAwaitingSubmission = noOfAssesmentsStartedAwaitingSubmission;
     }
 
     public List<AssessmentWithApplicationAndScore> getAssessments() {
@@ -32,10 +34,6 @@ public class AssessmentDashboardModel {
 
     public Competition getCompetition() {
         return competition;
-    }
-
-    public List<AssessmentWithApplicationAndScore> getAssessmentsStartedAwaitingSubmission() {
-        return assessmentsStartedAwaitingSubmission;
     }
 
     public static class AssessmentWithApplicationAndScore {
@@ -61,5 +59,14 @@ public class AssessmentDashboardModel {
 
             return application;
         }
+    }
+
+    public long getNoOfAsssessmentsStartedAwaitingSubmission() {
+        return noOfAsssessmentsStartedAwaitingSubmission;
+    }
+
+    @Transient
+    public boolean hasAssesmentsForSubmission(){
+        return noOfAsssessmentsStartedAwaitingSubmission > 0;
     }
 }

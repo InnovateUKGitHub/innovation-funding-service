@@ -22,7 +22,8 @@ The guest user inserts user email & password
 The guest user clicks the log-in button
     Click Button    css=input.button
 
-#The guest user opens the browser
+# The guest user opens the browser
+#    Start Virtual Display       1920    1080
 #    Open browser  http://google.com  ${BROWSER}
 #    ...  ff_profile_dir=${FF_PROFILE}
 #    ...  remote_url=${REMOTE_URL}
@@ -31,12 +32,13 @@ The guest user clicks the log-in button
 #    Run keyword if  '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
 
 The guest user opens the browser
+     # Start Virtual Display       1920        1080
     Run keyword if  '${SERVER_AUTH}' != ''        Open browser   ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}
                                                   ...  ff_profile_dir=${FF_PROFILE}
                                                   ...  remote_url=${REMOTE_URL}
                                                   ...  desired_capabilities=${DESIRED_CAPABILITIES}
 
-    RUn keyword if  '${SERVER_AUTH}' == ''        Open browser   ${PROTOCOL}${SERVER_BASE}                   ${BROWSER}
+    Run keyword if  '${SERVER_AUTH}' == ''        Open browser   ${PROTOCOL}${SERVER_BASE}                   ${BROWSER}
                                                   ...  ff_profile_dir=${FF_PROFILE}
                                                   ...  remote_url=${REMOTE_URL}
                                                   ...  desired_capabilities=${DESIRED_CAPABILITIES}

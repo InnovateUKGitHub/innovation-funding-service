@@ -43,6 +43,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -273,17 +274,17 @@ public class BaseUnitTest {
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
-            newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus).build(),
-            newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus).build(),
-            newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus).build(),
-            newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus).build()
+                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(createdApplicationStatus).build(),
+                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(submittedApplicationStatus).build(),
+                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(approvedApplicationStatus).build(),
+                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(rejectedApplicationStatus).build()
         );
 
         List<Application> applicationList = asList(
-            newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withApplicationStatus(createdApplicationStatus2).build(),
-            newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withApplicationStatus(submittedApplicationStatus2).build(),
-            newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withApplicationStatus(approvedApplicationStatus2).build(),
-            newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withApplicationStatus(rejectedApplicationStatus2).build()
+            newApplication().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(createdApplicationStatus2).build(),
+            newApplication().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(submittedApplicationStatus2).build(),
+            newApplication().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(approvedApplicationStatus2).build(),
+            newApplication().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(rejectedApplicationStatus2).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -309,8 +310,9 @@ public class BaseUnitTest {
         ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
 
-        assessorProcessRoles = asList(processRole6, processRole7, processRole8);
+        assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
@@ -438,6 +440,8 @@ public class BaseUnitTest {
         assessment2.setId(2L);
         Assessment assessment3 = new Assessment(assessorProcessRoles.get(1));
         assessment3.setId(3L);
+        Assessment assessment4 = new Assessment(assessorProcessRoles.get(3));
+        assessment4.setId(4L);
 
         when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(3);
         when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(1);
@@ -445,15 +449,16 @@ public class BaseUnitTest {
         assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
         assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
+        assessment4.setProcessStatus(AssessmentStates.ASSESSED.getState());
 
         submittedAssessments = singletonList(assessment3);
-        assessments = asList(assessment1, assessment2, assessment3);
+        assessments = asList(assessment1, assessment2, assessment3, assessment4);
         when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
 
         when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment1);
         when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment2);
         when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment3);
-
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment4);
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));

@@ -21,12 +21,6 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     }
 
     @Test
-    public void testCheckInternetConnection() throws Exception {
-        List<CompanyHouseBusiness> companies = controller.searchCompanyHouse("");
-        assertEquals(0, companies.size());
-    }
-
-    @Test
     public void testSearchCompanyHouseName() throws Exception {
         List<CompanyHouseBusiness> companies = controller.searchCompanyHouse("Batman Robin");
         assertEquals(1, companies.size());

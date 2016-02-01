@@ -22,8 +22,7 @@ Verify that the user can't mark as complete empty text areas
 
 Verify that the user doesn't get the error when the text area is not empty anymore
     [Documentation]    -INFUND-406
-    [Tags]    Applicant    Validations      Pending
-    # Pending until fix of INFUND-1542
+    [Tags]    Applicant    Validations
     Given Applicant goes to the Project summary of the new application
     When the "Project Summary" question is empty
     And the applicant marks the public description question as complete
@@ -60,5 +59,7 @@ Applicant goes to the Project summary of the new application
     go to    ${PROJECT_SUMMARY_URL}
 
 the applicant can click edit to make the section editable again
+    Sleep   5s
+    Wait Until Element Is Visible       name=mark_as_incomplete
     Click Element      name=mark_as_incomplete
     Wait Until Element is Visible       css=#form-input-11 .buttonlink[name="mark_as_complete"]

@@ -18,7 +18,7 @@
     <div class="grid-row">
         <div class="column-half competition-details">
             <h2 class="bold-medium">Competition details</h2>
-            <p th:text="${currentCompetition.getDescription()}" />
+            <p th:utext="${currentCompetition.getDescription()}" />
             <ul class="list-bullet" style="margin-bottom: 40px">
                 <li><a rel="external" target="_blank" href="#">See competition brief</a></li>
             </ul>

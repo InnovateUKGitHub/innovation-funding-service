@@ -54,8 +54,11 @@
 .form-row {
 	border-bottom:1px solid $border-colour;
 	padding:20px 0;
+	overflow: hidden;
 	&:first-child { border-top:1px solid $border-colour; }
-
+	+ .alignright {
+		margin-top:10px;
+	}
 
 }
 
@@ -84,4 +87,12 @@
 			@include box-sizing(border-box);
 			padding-right:45px;
 		}
+}
+table th > div {
+	position: relative;
+}
+table img.table-tick {
+  position:absolute;
+  right:-1.25em;
+  top:50%;margin-top:-8px;
 }
