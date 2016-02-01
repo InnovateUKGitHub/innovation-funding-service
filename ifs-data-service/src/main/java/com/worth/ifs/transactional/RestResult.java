@@ -1,14 +1,12 @@
 package com.worth.ifs.transactional;
 
 import com.worth.ifs.util.Either;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 
@@ -23,8 +21,7 @@ public class RestResult<T> {
 
     protected RestResult(RestResult<T> original) {
         this.result = original.result;
-        if (bodiless) this.bodiless = true;
-        else this.bodiless = false;
+        this.bodiless = original.bodiless;
     }
 
     private RestResult(RestSuccess<T> success) {
@@ -132,11 +129,7 @@ public class RestResult<T> {
         return new RestResult<>(RestFailure.error(failureMessage, statusCode));
     }
 
-    public static <T> RestResult<T> restFailure(List<Pair<Error, HttpStatus>> errors) {
-        List<RestError> restErrors = simpleMap(errors, error -> new RestError(error.getKey().getErrorKey(), error.getKey().getErrorMessage(), error.getValue()));
-        return new RestResult<>(new RestFailure(restErrors));
+    public static <T> RestResult<T> restFailure(List<Error> errors) {
+        return new RestResult<>(RestFailure.error(errors));
     }
-
-
-
 }

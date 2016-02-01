@@ -1,22 +1,17 @@
 package com.worth.ifs.commons.controller;
 
 import com.google.common.base.Supplier;
-import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.RestResult;
 import com.worth.ifs.transactional.ServiceFailure;
 import com.worth.ifs.transactional.ServiceResult;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.http.HttpStatus;
 
-import java.util.List;
 import java.util.function.Function;
 
+import static com.worth.ifs.transactional.RestResult.restFailure;
 import static com.worth.ifs.transactional.RestResults.internalServerError2;
 import static com.worth.ifs.transactional.RestResults.ok;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  *
@@ -103,13 +98,6 @@ public class RestResultBuilder<T, R> {
     }
 
     private RestResult<T> handleServiceFailure(ServiceFailure failure) {
-
-        List<Error> errors = failure.getErrors();
-
-        List<Pair<Error, HttpStatus>> errorsWithStatusCodes = simpleMap(errors, error -> {
-            return Pair.of(error, BAD_REQUEST);
-        });
-
-        return RestResult.restFailure(errorsWithStatusCodes);
+        return restFailure(failure.getErrors());
     }
 }

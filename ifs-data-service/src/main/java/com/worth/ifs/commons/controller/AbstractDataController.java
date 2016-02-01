@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.controller;
 
 import com.worth.ifs.transactional.*;
+import com.worth.ifs.transactional.Error;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,7 @@ public abstract class AbstractDataController {
     }
 
     private RestFailure getFallbackFailure() {
-        return new RestFailure(singletonList(new RestError(UNEXPECTED_ERROR, "An unexpected error occurred", INTERNAL_SERVER_ERROR)));
+        return new RestFailure(singletonList(new Error(UNEXPECTED_ERROR, "An unexpected error occurred", INTERNAL_SERVER_ERROR)));
     }
 
     private <T, R> ServiceSuccessToRestResultHandler<T, R> getServiceResultSuccessToSuccessfulRestResultHandler(RestResult<R> successResult) {

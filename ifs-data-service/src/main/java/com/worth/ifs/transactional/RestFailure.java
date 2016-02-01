@@ -18,22 +18,26 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class RestFailure {
 
-    private List<RestError> errors;
+    private List<Error> errors;
 
-    public RestFailure(List<RestError> errors) {
+    public RestFailure(List<Error> errors) {
         this.errors = errors;
     }
 
     public static RestFailure error(String message, HttpStatus statusCode) {
-        return new RestFailure(singletonList(new RestError(new Error(message), statusCode)));
+        return new RestFailure(singletonList(new Error(message, statusCode)));
+    }
+
+    public static RestFailure error(List<Error> errors) {
+        return new RestFailure(errors);
     }
 
     public static RestFailure error(String key, String message, HttpStatus statusCode) {
-        return new RestFailure(singletonList(new RestError(new Error(key, message), statusCode)));
+        return new RestFailure(singletonList(new Error(key, message, statusCode)));
     }
 
     public boolean is(String... messages) {
-        List<String> containedErrors = simpleMap(errors, error -> error.getError().getErrorMessage());
+        List<String> containedErrors = simpleMap(errors, Error::getErrorKey);
         List<String> messagesList = asList(messages);
         return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
     }
@@ -49,11 +53,11 @@ public class RestFailure {
     }
 
     public boolean contains(String... messages) {
-        List<String> containedErrors = simpleMap(errors, error -> error.getError().getErrorMessage());
+        List<String> containedErrors = simpleMap(errors, Error::getErrorKey);
         return containedErrors.containsAll(asList(messages));
     }
 
-    public List<RestError> getErrors() {
+    public List<Error> getErrors() {
         return errors;
     }
 
@@ -65,9 +69,9 @@ public class RestFailure {
 
     private List<Map.Entry<HttpStatus, Integer>> getHttpStatusCounts() {
 
-        Map<HttpStatus, List<RestError>> errorsByStatusCode = errors.stream().collect(groupingBy(RestError::getStatusCode));
+        Map<HttpStatus, List<Error>> errorsByStatusCode = errors.stream().collect(groupingBy(Error::getStatusCode));
         Map<HttpStatus, Integer> numberOfOccurrancesByStatusCode =
-                simpleToMap(new ArrayList<>(errorsByStatusCode.entrySet()), entry -> entry.getKey(), entry -> entry.getValue().size());
+                simpleToMap(new ArrayList<>(errorsByStatusCode.entrySet()), Map.Entry::getKey, entry -> entry.getValue().size());
 
         List<Map.Entry<HttpStatus, Integer>> entries = new ArrayList<>(numberOfOccurrancesByStatusCode.entrySet());
         entries.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));

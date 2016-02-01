@@ -48,7 +48,7 @@ public class ServiceFailure {
     }
 
     public static ServiceFailure error(String message, Throwable e) {
-        return error(e, new String[] { message });
+        return error(e, message);
     }
 
     public static ServiceFailure error(Enum<?> message, Throwable e) {

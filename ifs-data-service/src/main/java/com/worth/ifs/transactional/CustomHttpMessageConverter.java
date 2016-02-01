@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-
 /**
  *
  */
@@ -33,7 +31,7 @@ public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConver
             serverHttpResponse.setStatusCode(restResult.getStatusCode());
 
             if (restResult.isLeft()) {
-                List<Error> errors = simpleMap(restResult.getLeft().getErrors(), RestError::getError);
+                List<Error> errors = restResult.getLeft().getErrors();
                 super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
             } else {
 
