@@ -3,6 +3,9 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-435 As an applicant and I am on the finance summary, I want to see the partner details listed horizontally so I can see all partner details in the finance summary table
+...
+...
+...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Test Teardown     User closes the browser
 Force Tags
 Default Tags      Finance    Applicant
@@ -53,7 +56,7 @@ Finance summary calculations for the second collaborator
     And the user logs out
 
 Green check shouldn't show when the finances are incomplete
-    [Documentation]    INFUND-435
+    [Documentation]    INFUND-927
     Given the user logs in as first collaborator
     When the collaborator goes to the finance summary of the completed application
     And applicant marks one finance sub-section as incomplete
@@ -61,7 +64,7 @@ Green check shouldn't show when the finances are incomplete
     And the user logs out
 
 Green check should show when the applicant marks the finance as complete
-    [Documentation]    INFUND-435
+    [Documentation]    INFUND-927
     Given the user logs in as first collaborator
     And the collaborator goes to the finance summary of the completed application
     When the applicant marks the finance question as complete
