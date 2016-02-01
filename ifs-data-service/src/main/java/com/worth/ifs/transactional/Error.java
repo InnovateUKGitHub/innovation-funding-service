@@ -1,10 +1,13 @@
 package com.worth.ifs.transactional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -55,7 +58,7 @@ public class Error {
     public Error(String messageKey, String readableErrorMessage, List<Object> arguments, HttpStatus statusCode) {
         this.errorKey = messageKey;
         this.errorMessage = readableErrorMessage;
-        this.arguments = arguments;
+        this.arguments = simpleMap(arguments, Object::toString);
         this.statusCode = statusCode;
     }
 
@@ -89,5 +92,29 @@ public class Error {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Error error = (Error) o;
+
+        return new EqualsBuilder()
+                .append(errorKey, error.errorKey)
+                .append(arguments, error.arguments)
+                .append(errorMessage, error.errorMessage)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(errorKey)
+                .append(arguments)
+                .append(errorMessage)
+                .toHashCode();
     }
 }

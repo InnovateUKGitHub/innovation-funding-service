@@ -93,6 +93,11 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
             } catch (Exception e) {
                 LOG.warn("Uncaught exception encountered while performing RestResult processing - returning catch-all error", e);
+
+                if (defaultFailureResult != null) {
+                    return defaultFailureResult;
+                }
+
                 return (RestResult<ReturnType>) fallbackFailureResult;
             }
         }

@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.transactional.Error;
 import com.worth.ifs.transactional.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,8 +27,8 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
 import static com.worth.ifs.transactional.Errors.*;
+import static com.worth.ifs.transactional.RestResults.*;
 import static com.worth.ifs.transactional.RestResults.internalServerError2;
-import static com.worth.ifs.transactional.RestResults.ok2;
 import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
 import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
@@ -70,7 +69,7 @@ public class FormInputResponseFileUploadController {
 //    );
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
-    public RestResult<FormInputResponseFileEntryResource> createFile(
+    public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @RequestParam("formInputId") long formInputId,
@@ -79,8 +78,8 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return newRestResult(FormInputResponseFileEntryResource.class, FormInputResponseFileEntryResource.class).
-                andOnSuccess(result -> RestResult.restSuccess(result, OK)).
+        return newRestResult(FormInputResponseFileEntryResource.class, FormInputResponseFileEntryCreatedResponse.class).
+                andOnSuccess(resource -> created2(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
                 andWithDefaultFailure(RestResults.internalServerError2("Error creating file")).perform(() -> {
 
                     return validContentLengthHeader(contentLength).
@@ -145,7 +144,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(new Error("Error retrieving file", INTERNAL_SERVER_ERROR)), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerError2("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -174,7 +173,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file details", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(new Error("Error retrieving file details", INTERNAL_SERVER_ERROR)), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerError2("Error retrieving file details")), INTERNAL_SERVER_ERROR);
         }
     }
 

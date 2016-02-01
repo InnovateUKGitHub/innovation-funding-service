@@ -14,6 +14,10 @@ public class RestResults {
         return restSuccess(OK);
     }
 
+    public static <T> RestResult<T> created2(T body) {
+        return restSuccess(body, CREATED);
+    }
+
     public static RestResult<Void> accepted() {
         return restSuccess(ACCEPTED);
     }

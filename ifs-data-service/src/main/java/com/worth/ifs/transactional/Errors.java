@@ -2,6 +2,7 @@ package com.worth.ifs.transactional;
 
 import java.util.List;
 
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.springframework.http.HttpStatus.*;
 
@@ -15,6 +16,11 @@ public class Errors {
     public static Error notFound(String entity, List<Object> arguments) {
         return new Error(NOT_FOUND, entity + " not found", arguments, NOT_FOUND);
     }
+
+
+    //
+    // ERRORS
+    //
 
     public static Error lengthRequired2(long maxFileSizeBytes) {
         return new Error(LENGTH_REQUIRED, "Please supply a valid Content-Length HTTP header.  Maximum " + maxFileSizeBytes, LENGTH_REQUIRED);
@@ -31,4 +37,9 @@ public class Errors {
     public static Error badRequest2(String message) {
         return new Error(BAD_REQUEST, message, BAD_REQUEST);
     }
+
+    public static Error internalServerError2(String message) {
+        return new Error(UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
+    }
+
 }
