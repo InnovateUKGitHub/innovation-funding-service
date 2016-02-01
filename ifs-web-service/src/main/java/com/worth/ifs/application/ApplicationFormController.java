@@ -63,9 +63,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Competition competition = competitionService.getById(applicationId);
-        model.addAttribute("currentCompetition", competition);
-        this.addFormAttributes(Optional.empty(), applicationId, user.getId(), model, form, Optional.empty());
+        super.addApplicationDetails(applicationId, user.getId(), Optional.empty(), model, form);
         return "application-form";
     }
 
@@ -77,14 +75,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Section section = sectionService.getById(sectionId);
-        super.addApplicationAndSectionsAndFinanceDetails(
-                applicationId,
-                user.getId(),
-                Optional.ofNullable(section),
-                Optional.empty(),
-                model,
-                form,
-                selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
+
         addNavigation(section, applicationId, model);
 
         form.bindingResult = bindingResult;
@@ -103,19 +95,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
+
+        this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
+
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         return "application-form";
     }
 
-    private void addFormAttributes(Optional<Section> section, Long applicationId, Long userId, Model model, ApplicationForm form, Optional<Question> question){
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        model.addAttribute("currentCompetition", competition);
-        super.addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form);
-        addNavigation(question.get(), application.getId(), model);
-        model.addAttribute("currentQuestion", question.get());
+    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
+        Optional<Long> questionSectionId = null;
+        if(section!=null) {
+            questionSectionId = Optional.ofNullable(section.getId());
+    }
+        super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
+        addNavigation(question, applicationId, model);
+        model.addAttribute("currentQuestion", question);
     }
 
     @ProfileExecution
@@ -146,7 +141,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
-            this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
+            this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
@@ -281,10 +276,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.ofNullable(sectionId), false);
-        super.addApplicationAndSectionsAndFinanceDetails(application, competition, user.getId(), currentSection, Optional.ofNullable(renderQuestionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
@@ -392,8 +386,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
 
         if(bindingResult.hasErrors()){
-            Section section = sectionService.getById(sectionId);
-            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, true);
+            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);

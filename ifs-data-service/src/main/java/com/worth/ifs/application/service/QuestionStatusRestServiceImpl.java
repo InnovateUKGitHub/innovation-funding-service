@@ -22,6 +22,15 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
   }
 
   @Override
+  public List<QuestionStatus> findByQuestionAndApplicationAndOrganisation(Long questionId, Long applicationId, Long organisationId) {
+    return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+  }
+
+  public List<QuestionStatus> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
+    return Arrays.asList(restGet(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+  }
+
+  @Override
   public QuestionStatus findQuestionStatusById(Long id) {
     return restGet(questionStatusRestURL + "/" + id, QuestionStatus.class);
   }

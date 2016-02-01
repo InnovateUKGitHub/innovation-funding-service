@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,5 +74,15 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
         return restGet(questionRestURL + "/getNextQuestionBySection/"+sectionId, Question.class);
+    }
+
+    @Override
+    public List<QuestionStatus> getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+        return Arrays.asList(restGet(questionRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+    }
+
+    @Override
+    public List<QuestionStatus> getByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
+        return Arrays.asList(restGet(questionRestURL + "/getByQuestionIdAndApplicationIdsAndOrganisationId/" + questionIds + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
     }
 }

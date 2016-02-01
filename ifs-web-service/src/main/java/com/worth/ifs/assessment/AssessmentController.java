@@ -2,7 +2,6 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
@@ -171,10 +170,8 @@ public class AssessmentController extends AbstractApplicationController {
 
 
     private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
-        Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
-        addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null);
-        addSectionDetails(model, currentSection);
+        addApplicationDetails(application.getId(), userId, sectionId, model, null);
+        addSectionDetails(model, application, sectionId, true);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);
@@ -191,8 +188,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
-        Competition competition = competitionService.getById(application.getCompetition());
-        addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null);
+        addApplicationDetails(application.getId(), userId, empty(), model, null);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         Set<String> partners = application.getProcessRoles().stream().
                 map(id -> processRoleService.getById(id)).

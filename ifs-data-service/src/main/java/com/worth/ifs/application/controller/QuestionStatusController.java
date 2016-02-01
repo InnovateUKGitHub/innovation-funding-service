@@ -25,6 +25,16 @@ public class QuestionStatusController {
             return questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
     }
 
+    @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
+    private List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
+        return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeOrganisationId(questionId, applicationId, organisationId);
+    }
+
+    @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
+    private List<QuestionStatus> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        return questionStatusRepository.findByApplicationIdAndAssigneeOrganisationId(applicationId, organisationId);
+    }
+
     @RequestMapping("/{id}")
     private QuestionStatus getQuestionStatusResourceById(@PathVariable("id") Long id){
         return questionStatusRepository.findOne(id);

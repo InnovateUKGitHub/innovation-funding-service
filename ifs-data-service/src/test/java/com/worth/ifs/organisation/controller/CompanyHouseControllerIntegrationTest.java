@@ -2,6 +2,7 @@ package com.worth.ifs.organisation.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import org.hamcrest.text.IsEqualIgnoringCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,11 +36,11 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertEquals(COMPANY_NAME, company.getName());
         assertEquals(COMPANY_ID, company.getCompanyNumber());
         assertEquals("ltd", company.getType());
-        assertEquals("MONTROSE HOUSE", company.getOfficeAddress().getAddressLine1());
-        assertEquals("CLAYHILL PARK", company.getOfficeAddress().getAddressLine2());
-        assertEquals("NESTON", company.getOfficeAddress().getLocality());
-        assertEquals("CHESHIRE", company.getOfficeAddress().getRegion());
-        assertEquals("CH64 3RU", company.getOfficeAddress().getPostalCode());
+        assertThat("MONTROSE HOUSE", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getAddressLine1()));
+        assertThat("Clayhill Park", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getAddressLine2()));
+        assertThat("NESTON", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getLocality()));
+        assertThat("Cheshire", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getRegion()));
+        assertThat("CH64 3RU", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getPostalCode()));
     }
 
     @Test

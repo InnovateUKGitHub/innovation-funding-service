@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
     }
 
@@ -56,8 +56,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Section section = sectionService.getById(sectionId);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-details";
     }
 
@@ -70,7 +69,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty() , model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         
         return "application-summary";
     }
@@ -89,7 +88,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-confirm-submit";
     }
 
@@ -98,7 +97,7 @@ public class ApplicationController extends AbstractApplicationController {
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-submitted";
     }
 
@@ -107,7 +106,7 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-track";
     }
 
@@ -178,11 +177,11 @@ public class ApplicationController extends AbstractApplicationController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
+        Competition competition = competitionService.getById(application.getCompetition());
+        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
 
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
@@ -190,9 +189,9 @@ public class ApplicationController extends AbstractApplicationController {
 
         Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
 
-        List<Question> questions = questionService.findByCompetition(application.getCompetition());
+//        List<Question> questions = questionService.findByCompetition(application.getCompetition());
 
-        HashMap<Long, QuestionStatus> questionAssignees = questionService.mapAssigneeToQuestionByApplicationId(questions, userOrganisation.getId(), applicationId);
+        Map<Long, QuestionStatus> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisation.getId());
         QuestionStatus questionAssignee = questionAssignees.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 

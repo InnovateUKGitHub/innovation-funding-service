@@ -98,17 +98,17 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Section getPreviousSection(Optional<Section> section) {
-        if(section!=null && section.isPresent()) {
-            return sectionRestService.getPreviousSection(section.get().getId());
+    public Section getPreviousSection(Optional<Long> sectionId) {
+        if(sectionId!=null && sectionId.isPresent()) {
+            return sectionRestService.getPreviousSection(sectionId.get());
         }
         return null;
     }
 
     @Override
-    public Section getNextSection(Optional<Section> section) {
-        if(section!=null && section.isPresent()) {
-            Section nextSection = sectionRestService.getNextSection(section.get().getId());
+    public Section getNextSection(Optional<Long> sectionId) {
+        if(sectionId!=null && sectionId.isPresent()) {
+            Section nextSection = sectionRestService.getNextSection(sectionId.get());
             return nextSection;
         }
         return null;
