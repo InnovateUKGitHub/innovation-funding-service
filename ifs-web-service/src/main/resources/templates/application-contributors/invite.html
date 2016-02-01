@@ -55,7 +55,8 @@
                             class="form-control js-partner-name"
                             placeholder="Name of the partner company"
                             th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
-                            th:field="*{organisations[__${organisationStats.index}__].organisationName}"/>
+                            th:field="*{organisations[__${organisationStats.index}__].organisationName}"
+                            th:readonly="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}" />
                   </div>
                 </div>
                 <!--/* all org */-->
@@ -93,7 +94,7 @@
                               <input class="form-control width-full" type="text" readonly="readonly" th:value="${invite.email}" />
                             </td>
                             <td class="alignright">
-                                (Pending)
+                              <div th:remove="tag" th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SEND'}">(pending)</div>
                             </td>
                         </tr>
                     </div>
