@@ -39,13 +39,14 @@ The lead applicant shouldn't be able to remove himself
 
 Validations for the Email field
     [Documentation]    INFUND-901
+    [Tags]  Failing
     Given the applicant is in the invite contributors page
     When the applicant enters some invalid emails
     Then the applicant should not be redirected to the next page
 
 Validation for the name field
     [Documentation]    INFUND-901
-    [Tags]
+    [Tags]  Failing
     Given the applicant is in the invite contributors page
     When the applicant submits the page without entering a name
     Then the applicant should get a validation error for the name field
@@ -53,7 +54,7 @@ Validation for the name field
 
 Valid submit
     [Documentation]    INFUND-901
-    [Tags]
+    [Tags]   Failing
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page

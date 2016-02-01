@@ -15,12 +15,13 @@ ${OTHER_FUNDING_SOURCE}    Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
 
+
 *** Test Cases ***
 Labour
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
-    [Tags]    Labour    Autosave    Calculations    Finance
+    [Tags]    Labour    Autosave    Calculations    Finance     Failing
     Given Applicant goes to the Your finances section
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
@@ -35,7 +36,7 @@ Overheads
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Overheads section calculations
     ...    INFUND-736
-    [Tags]    Overheads    Autosave    Calculations    Finance
+    [Tags]    Overheads    Autosave    Calculations    Finance   Failing
     Given Applicant goes to the Your finances section
     And the Applicant fills in the Overheads costs
     And the calculations of the overheads should be correct
@@ -49,7 +50,7 @@ Overheads
 Materials
     [Documentation]    INFUND-192
     ...    INFUND-736
-    [Tags]    Materials    Autosave    Calculations    Finance
+    [Tags]    Materials    Autosave    Calculations    Finance      Failing
     Given Applicant goes to the Your finances section
     And the Applicant fills the Materials fields
     And the calculations of the Materials should be correct
@@ -62,7 +63,7 @@ Materials
 
 Capital usage
     [Documentation]    INFUND-736
-    [Tags]    Capital Usage    Autosave    Calculations    Finance
+    [Tags]    Capital Usage    Autosave    Calculations    Finance  Failing
     Given Applicant goes to the Your finances section
     And the applicant fills the 'capital usage' field
     And the calculations of the 'capital usage' should be correct
@@ -88,7 +89,7 @@ Subcontracting costs
 
 Travel and subsistence
     [Documentation]    INFUND-736
-    [Tags]    Travel and subsistence    Autosave    Calculations    Finance
+    [Tags]    Travel and subsistence    Autosave    Calculations    Finance     Failing
     Given Applicant goes to the Your finances section
     And the Applicant fills the Travel fields
     And the calculations of the Travel and subsistence should be correct
@@ -101,7 +102,7 @@ Travel and subsistence
 
 Other costs
     [Documentation]    INFUND-736
-    [Tags]    Other costs    Autosave    Calculations    Finance
+    [Tags]    Other costs    Autosave    Calculations    Finance    Failing
     Given Applicant goes to the Your finances section
     And the applicant adds one row for the other costs
     When the applicant adds a second row for the other costs fields

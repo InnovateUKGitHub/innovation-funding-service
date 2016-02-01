@@ -190,7 +190,7 @@ the Applicant edits the Public description
     Press Key    css=#form-input-12 .editor    \\8
     Focus    css=.app-submit-btn
     Sleep    1s
-    Wait Until Element Contains    css=#form-input-12 .count-down    400     The only benchmarking step so far
+    Wait Until Element Contains    css=#form-input-12 .count-down    400
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
