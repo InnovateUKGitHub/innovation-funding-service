@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header no-margin-bottom group">
+		<div class="hgroup">
+			<h1>Prototype index</h1>
+			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
+		</div>
+	</header>
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 4</h1>
+
+			<section>
+				<h2 class="heading-medium">User testing iteration</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-1618</h3> As prot team we need to iterate the assessor journey following testing</li>
+					<li><h3>INFUND-1625</h3> As prot team we need to iterate comp admin pages following testing</li>
+					<li><h3>INFUND-1569</h3> Review/Redesign header and navigation elements for ALL users of the system - external and internal</li>
+					<li><h3>INFUND-1573</h3> As the prototyping team we need to support a content review and implement changes to the copy within all prototype pages</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Competition team / administration </h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-1558</h3> As the comps team I want to track progress by assessor so that I can target those who have not completed more efficiently</li>
+					<li><h3>INFUND-1559</h3> As comps team I want to action a mass removal of applications from assessors if they fail to accept before the a/r deadline so that I can reassign the applications to another assessor</li>
+					<li><h3>INFUND-1568</h3> As the comps team I need to be able to view the details of an individual assessor to further understand their skills, assessment history etc.</li>
+					<li><h3>INFUND-1560</h3> As comps team I need to input the revised scores from assessment panel to be able to generate our final funding list</li>
+					<li><h3>INFUND-1561</h3> As comps team I need to be able to input the outcome of the funders panel by marking successful projects within IFS and make note of special circumstances or discussions</li>
+					<li><h3>INFUND-1562</h3> As comps team I need to create a final closed view of the applications and assessments indicating which applications have been successful so that we can store the final outcomes of this competition within the system</li>
+					<li><h3>INFUND-1563</h3> As comps team I need to generate notifications to applicants of whether they have been successful or unsuccessful so that they can begin the project set up process</li>
+					<li><h3>INFUND-1565</h3> As comps team I need to review all assessor feedback and remove assessor comments if required so that I can moderate inappropriate language</li>
+					<li><h3>INFUND-1566</h3> As comps team I need to distribute all application feedback to applicants so that they can understand how to improve their applications</li>
+					<li><h3>INFUND-1567</h3> As comps team I need to transition all successful applications into the project set up stage so that they can provide the appropriate details</li>
+					<li><h3>INFUND-1627</h3> As the finance team (and other internal) I need to view and access all projects that have been successful within a competition so that I can begin the due diligence process</li>
+					<li><h3>INFUND-1570</h3> As the Innovate UK ops teams we need a consistent competition dashboard to facilitate the needs of all internal teams and refine information shown at each stage</li>
+
+
+				</ul>
+			</section>
+
+
+			<section>
+				<h2 class="heading-medium">Applicant</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-1564</h3> As an applicant I need to be notified of my success (or not) within a competition</li>
+					<li><h3>INFUND-920</h3> As an applicant i want the process information separate from applying, so that i don't have to apply in order to find out general information</li>
+				</ul>
+			</section>
+
+
+			<section>
+				<h2 class="heading-medium">Assessor</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-1179</h3> As an assessor I want to be able to log in with an existing account by having the option to select Applicant or Assessor when I log in, if I have a user account with both role profiles so that I don't access the wrong profile information</li>
+					<li><h3>INFUND-1175</h3> As an assessor I want to be shown a countdown indicator informing me of an approaching deadline for completion of assessment so that I can manage my workload and contact Innovate UK if necessary</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Comp admin</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-1203</h3> As a Comp Admin I want to be able to dynamically view all assessment information and scoring calculations for a competition together in a table so that I can rank the list and see identify areas requiring further review</li>
+					<li><h3>INFUND-1196</h3> As a Competition Administrator I want to be able to view details of applications and completed assessments so I can review the detail and comments if necessary</li>
+					<li><h3><a href="/prototypes/860-comp-applications-dashboard?invitesSent"><strong>INFUND-870</strong></a></h3> As a Competition Administrator I want to manually allocate a new assessor to an application when an appointed assessor declines so that I can have the correctly designated number of assessor for each application
+						
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1373-manage-applications">INFUND-1373</a> -Manage applications</li>
+							<li><a href="/prototypes/1393-application-allocate-assessors">INFUND-1393 / 1521</a> Allocate assessors</li>
+							<li><a href="/prototypes/1521-application-allocate-applications">INFUND-1521</a> Allocate applications</li>
+							<li><a href="/prototypes/1385-application-allocation-confirm">INFUND-1385</a> Confirm changes</li>
+							<li><a href="/prototypes/1402-manage-assessors">INFUND-1402</a> Manage assessors</li>
+						</ul>
+
+
+					</li>
+					<li><h3>INFUND-1197</h3> As a Competition Administrator I want to be able to export information for the Panel Sheet so I can input into a spreadsheet</li>
+
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Accessibility</h2>
+				<ul class="list-bullet">
+					<li><h3>INFUND-636</h3>As a UX team member I want to make  refinements to the components we already have for accessibility, code validity  and usability, so we can make small improvements which don't fit in a specific user story.</li>
+				</ul>
+			</section>
+
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

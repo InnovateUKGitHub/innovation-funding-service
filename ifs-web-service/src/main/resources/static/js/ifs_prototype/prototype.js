@@ -108,6 +108,9 @@ jQuery(document).ready(function(){
             "<td>"+ type +"</td>" +
             "<td>"+ applications +"</td>" +
             "<td><a href='#' class='view-assessor'>View</a>" +
+            "<td class='full-view'></td>" +
+            "<td class='full-view'></td>" +
+            "<td class='full-view'></td>" +
             "<td class='alignright'><a href='#' class='undo-assessor'>Undo</a>" +
             "</tr>"
             );
@@ -122,6 +125,11 @@ jQuery(document).ready(function(){
             "<td>"+ category +"</td>" +
             "<td>"+ assessors +"</td>" +
             "<td><a href='#' class='view-application'>View</a>" +
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
             "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
             "</tr>"
             );
@@ -164,7 +172,7 @@ jQuery(document).ready(function(){
         }
 
         addRow(assessor, skills, type, applications);
-        //alert(skills);
+        //alert(counter);
     });
 
     jQuery('body').on('click','.undo-assessor',function(e){
@@ -206,6 +214,17 @@ jQuery(document).ready(function(){
         window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
     });
 
+     jQuery('body').on('click','.view-assessor-assigned',function(e){
+        e.preventDefault();
+
+        var url = "/prototypes/1521-application-allocate-applications?assessorName="
+        var assessor = jQuery(this).parent().parent().find('th').text();
+        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+
+        window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
+    });
+
      //----- Asign application to an assessor ------//
 
      jQuery('.assign-application').on('click',function(e){ 
@@ -231,6 +250,5 @@ jQuery(document).ready(function(){
         addRowApplication(appNumber, projectTitle, lead, category, assessors);
         //alert(skills);
     });
-
 
 });

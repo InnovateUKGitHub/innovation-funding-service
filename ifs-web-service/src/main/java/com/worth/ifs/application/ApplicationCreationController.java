@@ -148,7 +148,7 @@ public class ApplicationCreationController extends AbstractApplicationController
             log.error("Application not created with userId: " + userId);
         } else {
             saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
-            return String.format("redirect:/application/%s/contributors/invite", String.valueOf(application.getId()));
+            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
         }
         return null;
     }

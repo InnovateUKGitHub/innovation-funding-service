@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 IFS.collapsible = (function(){
   "use strict";
-  var s; // private alias to settings 
+  var s; // private alias to settings
 
   return {
       settings: {
@@ -19,7 +19,7 @@ IFS.collapsible = (function(){
 
           existingCollapsibles.each(function(index, element) {
               var id = element.attr('data-collapsible-id');
-              maxId = Math.max(maxId, parseInt(id));
+              maxId = Math.max(maxId, parseInt(id,10));
           });
 
           $scope.find(s.collapsibleEl).each(function(index,value) {
@@ -55,7 +55,7 @@ IFS.collapsible = (function(){
                 jQuery('.collapsible [aria-expanded]').attr('aria-expanded','false');
                 jQuery('.collapsible [aria-hidden]').attr('aria-hidden','true');
             }
-            
+
             //toggle the current
             jQuery(this).attr('aria-expanded', state);
             panel.attr('aria-hidden', !state);

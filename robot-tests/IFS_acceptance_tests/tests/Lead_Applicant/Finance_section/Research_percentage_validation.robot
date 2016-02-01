@@ -61,14 +61,16 @@ The first collaborator logs in
 
 The first collaborator edits financial details to bring down the research participation level
     Go To               ${your_finances_url_application_2}
-    Click Element       css=[aria-controls="collapsible-1"]
-    Click Element        link=Add another role
-    Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Sleep   5s
-    Logout as user
+    Click Element    css=[aria-controls="collapsible-1"]
+    Wait Until Element Is Visible           link=Add another role
+    Click Element    link=Add another role
+    Sleep    1s
+    Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    Sleep    1s
+    focus    css=.app-submit-btn
 
 There is no error message on the finances form
     Go To       ${finances_overview_url_application_2}
@@ -78,7 +80,7 @@ There is no error message on the summary page
     Go To       ${APPLICATION_2_SUMMARY_URL}
     Wait Until Element Is Visible       css=[aria-controls="collapsible-15"]
     Click Button    css=[aria-controls="collapsible-15"]
-    Sleep   1s
+    Sleep   3s
     Page Should Not Contain      The participation levels of this project are not within the required range
 
 The first collaborator can log out

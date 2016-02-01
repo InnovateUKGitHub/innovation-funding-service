@@ -25,7 +25,7 @@
         </div>
         <div class="column-half">
             <ul class="list-bullet">
-                <li><a href="#">View team members and add collaborators</a></li>
+                <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">View team members and add collaborators</a></li>
             </ul>
         </div>
     </div>
@@ -61,7 +61,7 @@
 
 
     <div class="alignright-button">
-        <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
+        <a class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
     </div>
 
 

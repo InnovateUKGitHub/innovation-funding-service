@@ -8,7 +8,7 @@ IFS.autoSave = (function(){
             inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"],[type="hidden"])',
             textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
             typeTimeout : 500,
-            minimumUpdateTime : 1000, // the minimum time between the ajax request, and displaying the result of the ajax call.
+            minimumUpdateTime : 1000 // the minimum time between the ajax request, and displaying the result of the ajax call.
         },
         init : function(){
             s = this.settings;
