@@ -109,9 +109,9 @@ IFS.formValidation = (function(){
             });
         },
         checkMax : function(field){
-            var max = parseInt(field.attr('max'));
+            var max = parseInt(field.attr('max'),10);
             if(IFS.formValidation.checkNumber(field)){
-              var fieldVal = parseInt(field.val());
+              var fieldVal = parseInt(field.val(),10);
               if(fieldVal > max){
                 IFS.formValidation.setInvalid(field,s.max.messageInvalid.replace('%max%',max));
               }
@@ -127,9 +127,9 @@ IFS.formValidation = (function(){
             });
         },
         checkMin : function(field){
-            var min = parseInt(field.attr('min'));
+            var min = parseInt(field.attr('min'),10);
             if(IFS.formValidation.checkNumber(field)){
-              var fieldVal = parseInt(field.val());
+              var fieldVal = parseInt(field.val(),10);
               if(fieldVal < min){
                 IFS.formValidation.setInvalid(field,s.min.messageInvalid.replace('%min%',min));
               }

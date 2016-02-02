@@ -193,7 +193,7 @@
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
-                 alt="This field is marked as complete"
+                 alt=""
                  title="This field is marked as complete"
                  class="marked-as-complete" />
 
@@ -203,12 +203,13 @@
 
             <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
-                 alt="This field is assigned to you"
+                 alt=""
                  title="This field is assigned to you"
                  class="assigned-to-me" />
 
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
+                 th:include="question-type/form-elements :: current-assignee"
+                 th:remove="tag"/>
         </div>
 
         <div th:include="question-type/form-elements :: form-textarea (
@@ -247,7 +248,7 @@
     <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.getAssignee()})" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')">
       <span th:if="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
       <span th:unless="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
-      <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+      <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
     </div>
     <div th:if="${questionAssignee?.getAssignee()}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" >
         <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
