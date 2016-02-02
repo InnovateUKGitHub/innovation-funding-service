@@ -86,7 +86,10 @@ public class ResponseController {
                                                               @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        return newRestResult(Feedback.class, Void.class).andOnSuccess(ok2()).andWithDefaultFailure(internalServerError2()).perform(() -> {
+        return newRestResult(Feedback.class, Void.class).
+               andOnSuccess(ok2()).
+               andWithDefaultFailure(internalServerError2()).
+               perform(() -> {
 
             // TODO DW - INFUND-854 - get rid of get(0) occurrances in code below
             Response response = responseRepository.findOne(responseId);

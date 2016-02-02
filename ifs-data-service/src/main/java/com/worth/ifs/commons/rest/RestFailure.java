@@ -20,13 +20,23 @@ import static java.util.stream.Collectors.groupingBy;
 public class RestFailure {
 
     private List<Error> errors;
+    private HttpStatus specificStatusCode;
 
     public RestFailure(List<Error> errors) {
         this.errors = errors;
     }
 
+    public RestFailure(List<Error> errors, HttpStatus specificStatusCode) {
+        this(errors);
+        this.specificStatusCode = specificStatusCode;
+    }
+
     public static RestFailure error(String message, HttpStatus statusCode) {
         return new RestFailure(singletonList(new Error(message, statusCode)));
+    }
+
+    public static RestFailure error(List<Error> errors, HttpStatus statusCode) {
+        return new RestFailure(errors, statusCode);
     }
 
     public static RestFailure error(List<Error> errors) {
@@ -63,6 +73,10 @@ public class RestFailure {
     }
 
     public HttpStatus getStatusCode() {
+
+        if (specificStatusCode != null) {
+            return specificStatusCode;
+        }
 
         List<Map.Entry<HttpStatus, Integer>> entries = getHttpStatusCounts();
         return entries.get(0).getKey();

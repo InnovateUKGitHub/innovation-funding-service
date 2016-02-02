@@ -1,8 +1,8 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -38,12 +40,25 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
                 "&feedbackValue=" + feedbackValue.orElse("") +
                 "&feedbackText=" + feedbackText.orElse("");
 
-        ResponseEntity<JsonStatusResponse> response = restPutEntity(url, JsonStatusResponse.class);
-        return handleResponseStatus(response);
+        RestResult<Void> response = restPutEntity2(url, Void.class, OK);
+        return handleRestResult(response);
+    }
+
+    // TODO DW - INFUND-854 - should be actually returning RestResponses from this service
+    public Boolean handleRestResult(RestResult<?> response) {
+        if (response.getStatusCode() == HttpStatus.ACCEPTED || response.getStatusCode() == OK) {
+            return true;
+        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            // nono... bad credentials
+            log.info("Unauthorized.....");
+            return false;
+        }
+
+        return false;
     }
 
     private Boolean handleResponseStatus(ResponseEntity<?> response) {
-        if (response.getStatusCode() == HttpStatus.ACCEPTED || response.getStatusCode() == HttpStatus.OK) {
+        if (response.getStatusCode() == HttpStatus.ACCEPTED || response.getStatusCode() == OK) {
             return true;
         } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             // nono... bad credentials

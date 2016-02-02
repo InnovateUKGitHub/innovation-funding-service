@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Collections.singletonList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
@@ -81,7 +82,7 @@ public class RestResult<T> {
     }
 
     public RestResult<Void> bodiless() {
-        RestResult<Void> result = mapLeftOrRight((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess("", getStatusCode())));
+        RestResult<Void> result = mapLeftOrRight((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess(null, getStatusCode())));
         result.bodiless = true;
         return result;
     }
@@ -130,7 +131,15 @@ public class RestResult<T> {
         return new RestResult<>(RestFailure.error(failureMessage, statusCode));
     }
 
+    public static <T> RestResult<T> restFailure(Error error) {
+        return restFailure(singletonList(error));
+    }
+
     public static <T> RestResult<T> restFailure(List<Error> errors) {
         return new RestResult<>(RestFailure.error(errors));
+    }
+
+    public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
+        return new RestResult<>(RestFailure.error(errors, statusCode));
     }
 }
