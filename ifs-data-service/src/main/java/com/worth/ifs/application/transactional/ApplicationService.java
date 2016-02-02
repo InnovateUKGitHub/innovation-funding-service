@@ -6,9 +6,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -41,6 +39,9 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
     ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
+
+    @NotSecured("TODO")
+    ServiceResult<Application> getApplication(long applicationId);
 
     @NotSecured("TODO")
     Application getApplicationById(final Long id);
@@ -78,8 +79,4 @@ public interface ApplicationService {
             final Long competitionId,
             final Long userId,
             JsonNode jsonObj);
-
-
-    @NotSecured("TODO")
-    ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite);
 }

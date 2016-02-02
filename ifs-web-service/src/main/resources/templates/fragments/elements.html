@@ -103,7 +103,7 @@
 
 <!-- =========================== Element: Notification / event =========================== -->
 <div th:fragment="notification">
-    <div class="event-alert is-open" th:if="${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
+    <div class="event-alert is-open" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
         <p>
             <span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span>
         </p>
@@ -118,6 +118,12 @@
     <div th:if="${assignedQuestion}" class="event-alert" th:classappend="is-open">
         <p>
             <span>Question assigned successfully</span>
+        </p>
+    </div>
+
+    <div th:if="${invitesSend}" class="event-alert" th:classappend="is-open">
+        <p>
+            <span>Invites send!</span>
         </p>
     </div>
 </div>

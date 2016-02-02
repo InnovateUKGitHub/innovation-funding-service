@@ -2,6 +2,8 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
 
 @Entity
 public class Invite {
+    private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -97,5 +101,16 @@ public class Invite {
 
     public void setStatus(InviteStatusConstants status) {
         this.status = status;
+    }
+
+    public boolean generateHash() {
+        if(StringUtils.isEmpty(hash)){
+            StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+            int random = (int) Math.ceil(Math.random() * 100); // random number from 1 to 100
+            hash = String.format("%s==%s==%s", id, email, random);
+            hash = encoder.encode(hash);
+            return true;
+        }
+        return false;
     }
 }
