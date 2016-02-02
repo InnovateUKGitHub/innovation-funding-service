@@ -3,15 +3,13 @@ package com.worth.ifs.commons.rest;
 import com.worth.ifs.commons.error.Error;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
+import static com.worth.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error
@@ -83,13 +81,6 @@ public class RestFailure {
     }
 
     private List<Map.Entry<HttpStatus, Integer>> getHttpStatusCounts() {
-
-        Map<HttpStatus, List<Error>> errorsByStatusCode = errors.stream().collect(groupingBy(Error::getStatusCode));
-        Map<HttpStatus, Integer> numberOfOccurrancesByStatusCode =
-                simpleToMap(new ArrayList<>(errorsByStatusCode.entrySet()), Map.Entry::getKey, entry -> entry.getValue().size());
-
-        List<Map.Entry<HttpStatus, Integer>> entries = new ArrayList<>(numberOfOccurrancesByStatusCode.entrySet());
-        entries.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-        return entries;
+        return getSortedGroupingCounts(errors, Error::getStatusCode);
     }
 }
