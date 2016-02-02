@@ -21,6 +21,18 @@
     <p>View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
     <p>To change the lead applicant for this application please contact Innovate UK : phone <strong>0300 321 4357</strong>.</p>
 
+    <div th:if="${organisationInvites.size() == 0}" th:remove="tag">
+      <h2 class="heading-medium">
+        <span th:remove="tag" th:text="${leadOrganisation.name}"/>
+        <small>(Lead organisation)</small>
+      </h2>
+      <ul class="list-bullet">
+        <li>
+          <a th:href="${leadApplicant.email}" th:text="${leadApplicant.name}" />
+          <small>(Lead Applicant)</small>
+        </li>
+      </ul>
+    </div>
 
     <div th:each="organisationInviteResource, organisationStats : ${ organisationInvites }">
 
