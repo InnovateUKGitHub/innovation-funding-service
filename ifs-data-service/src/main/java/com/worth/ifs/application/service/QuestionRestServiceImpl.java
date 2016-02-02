@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -77,12 +78,16 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
     }
 
     @Override
-    public List<QuestionStatus> getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        return Arrays.asList(restGet(questionRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+    public List<QuestionStatusResource> getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+        return Arrays.asList(restGet(questionRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, QuestionStatusResource[].class));
     }
 
     @Override
     public List<QuestionStatus> getByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
         return Arrays.asList(restGet(questionRestURL + "/getByQuestionIdAndApplicationIdsAndOrganisationId/" + questionIds + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+    }
+
+    public List<QuestionStatus> getByIds(List<Long> ids){
+        return Arrays.asList(restGet(questionRestURL + "getByIds", QuestionStatus.class));
     }
 }

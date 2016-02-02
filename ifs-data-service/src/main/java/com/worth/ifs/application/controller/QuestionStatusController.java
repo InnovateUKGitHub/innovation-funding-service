@@ -41,7 +41,7 @@ public class QuestionStatusController {
     @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
     private List<QuestionStatusResource> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeOrganisationId(applicationId, organisationId);
-        return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToResource);
+        return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 
     @RequestMapping("/{id}")

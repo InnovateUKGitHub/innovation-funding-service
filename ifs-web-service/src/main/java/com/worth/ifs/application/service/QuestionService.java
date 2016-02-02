@@ -17,8 +17,8 @@ public interface QuestionService {
     public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
     public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
     public List<Question> findByCompetition(Long competitionId);
-    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId);
-    public void removeNotifications(List<QuestionStatus> questionStatuses);
+    public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId);
+    public void removeNotifications(List<QuestionStatusResource> questionStatuses);
     public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);
     public Question getById(Long questionId);
     public Question getNextQuestion(Long questionId);
@@ -26,6 +26,6 @@ public interface QuestionService {
     public Question getPreviousQuestionBySection(Long sectionId);
     public Question getNextQuestionBySection(Long sectionId);
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
-    public QuestionStatus getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
+    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
     public List<QuestionStatus> getByQuestionIds(List<Long> questionIds, Long applicationId, Long organisationId);
 }

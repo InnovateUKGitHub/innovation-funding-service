@@ -63,12 +63,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
-        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
+    public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId) {
+        return questionStatuses.stream().filter(qs -> qs.getAssigneeUserId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
     }
 
     @Override
-    public void removeNotifications(List<QuestionStatus> questionStatuses) {
+    public void removeNotifications(List<QuestionStatusResource> questionStatuses) {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
@@ -102,8 +102,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionStatus getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatus> questionStatuses = questionRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+        List<QuestionStatusResource> questionStatuses = questionRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
