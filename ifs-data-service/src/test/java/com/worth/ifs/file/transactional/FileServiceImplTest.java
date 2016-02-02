@@ -425,18 +425,18 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         int incorrectFilesize = 1234;
 
         FileEntryResource fileResource = newFileEntryResource().
-                with(id(null)).
+                with(id(456L)).
                 withFilesizeBytes(incorrectFilesize).
                 build();
 
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(incorrectFilesize);
+        FileEntryBuilder fileBuilder = newFileEntry().with(id(456L)).withFilesizeBytes(incorrectFilesize);
 
-        FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry originalFile = fileBuilder.build();
+        FileEntry persistedFile = fileBuilder.build();
 
         List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileEntryRepository.save(originalFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());

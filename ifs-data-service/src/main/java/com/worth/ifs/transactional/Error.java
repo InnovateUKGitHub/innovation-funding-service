@@ -58,7 +58,7 @@ public class Error {
     public Error(String messageKey, String readableErrorMessage, List<Object> arguments, HttpStatus statusCode) {
         this.errorKey = messageKey;
         this.errorMessage = readableErrorMessage;
-        this.arguments = simpleMap(arguments, Object::toString);
+        this.arguments = simpleMap(arguments, argument -> argument + "");
         this.statusCode = statusCode;
     }
 
