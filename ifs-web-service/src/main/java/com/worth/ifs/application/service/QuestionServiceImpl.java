@@ -2,17 +2,19 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * This class contains methods to retrieve and store {@link Question} related data,
@@ -52,14 +54,14 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        for(Question question : questions) {
-            for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
-                if(questionStatus.getAssignee()==null)
+        for (Question question : questions) {
+            for (QuestionStatus questionStatus : question.getQuestionStatuses()) {
+                if (questionStatus.getAssignee() == null)
                     continue;
                 boolean multipleStatuses = question.hasMultipleStatuses();
                 boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
 
-                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
+                if ((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
                     questionAssignees.put(question.getId(), questionStatus);
                     break;
                 }
@@ -71,25 +73,34 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        // TODO: improve performance this is slow, check first call in for loop (too many questions)
-        for(Question question : questions) {
-            final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
-            questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
+
+        Map<Question, ListenableFuture<ResponseEntity<QuestionStatus[]>>> questionsToFutures
+                = questions.stream().
+                collect(toMap(q -> q,
+                        q -> questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(q.getId(), applicationId)));
+        for (Map.Entry<Question, ListenableFuture<ResponseEntity<QuestionStatus[]>>> questionToFuture : questionsToFutures.entrySet()){
+            try {
+                questionAssignees.putAll(mapAssigneeToQuestion(questionToFuture.getKey(), userOrganisationId, asList(questionToFuture.getValue().get().getBody())));
+            }
+            catch (InterruptedException | ExecutionException e){
+                throw new RuntimeException(e);
+            }
         }
+
         return questionAssignees;
     }
 
-    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses){
+    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses) {
         HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
 
-        for(QuestionStatus questionStatus : questionStatuses) {
-            if(questionStatus.getAssignee()==null)
+        for (QuestionStatus questionStatus : questionStatuses) {
+            if (questionStatus.getAssignee() == null)
                 continue;
             boolean multipleStatuses = question.hasMultipleStatuses();
             boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
 
             // Checking that assignee is part of organisation when there are multiple statuses for a question
-            if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
+            if ((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
                 questionAssignees.put(question.getId(), questionStatus);
                 break;
             }
@@ -99,7 +110,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
-        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
+        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
     }
 
     @Override

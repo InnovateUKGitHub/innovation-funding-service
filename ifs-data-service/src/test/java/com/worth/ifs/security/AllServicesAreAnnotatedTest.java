@@ -14,6 +14,7 @@ import com.worth.ifs.finance.service.CostRestServiceImpl;
 import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
 import com.worth.ifs.form.service.FormInputRestServiceImpl;
 import com.worth.ifs.invite.service.InviteRestServiceImpl;
+import com.worth.ifs.organisation.controller.CompanyHouseApi;
 import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
 import com.worth.ifs.user.service.OrganisationRestServiceImpl;
 import com.worth.ifs.user.service.UserRestServiceImpl;
@@ -42,6 +43,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
+                    CompanyHouseApi.class,
                     BaseRestService.class,
                     UserRestServiceImpl.class,
                     OrganisationRestServiceImpl.class,

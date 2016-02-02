@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Supplier;
@@ -21,6 +23,7 @@ public abstract class BaseRestService {
     private final Log log = LogFactory.getLog(getClass());
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
+    private Supplier<AsyncRestTemplate> asyncRestTemplateSupplier = AsyncRestTemplate::new;
 
     private String dataRestServiceURL;
 
@@ -28,15 +31,21 @@ public abstract class BaseRestService {
         return dataRestServiceURL;
     }
 
-    @NotSecured("")
     @Value("${ifs.data.service.rest.baseURL}")
     public void setDataRestServiceUrl(String dataRestServiceURL) {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
-    @NotSecured("")
     public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
         this.restTemplateSupplier = restTemplateSupplier;
+    }
+
+    public void setAsyncRestTemplate(Supplier<AsyncRestTemplate> asyncRestTemplateSupplier) {
+        this.asyncRestTemplateSupplier = asyncRestTemplateSupplier;
+    }
+
+    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz){
+         return getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz);
     }
 
     /**
@@ -70,7 +79,6 @@ public abstract class BaseRestService {
         log.debug("restGetParameterizedType: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), responseType);
     }
-
 
     /**
      * restPost is a generic method that performs a RESTful POST request.
@@ -154,6 +162,10 @@ public abstract class BaseRestService {
 
     protected RestTemplate getRestTemplate() {
         return restTemplateSupplier.get();
+    }
+
+    protected AsyncRestTemplate getAsyncRestTemplate() {
+        return asyncRestTemplateSupplier.get();
     }
 }
 
