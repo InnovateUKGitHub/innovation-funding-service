@@ -125,6 +125,11 @@ jQuery(document).ready(function(){
             "<td>"+ category +"</td>" +
             "<td>"+ assessors +"</td>" +
             "<td><a href='#' class='view-application'>View</a>" +
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
             "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
             "</tr>"
             );
@@ -245,6 +250,5 @@ jQuery(document).ready(function(){
         addRowApplication(appNumber, projectTitle, lead, category, assessors);
         //alert(skills);
     });
-
 
 });

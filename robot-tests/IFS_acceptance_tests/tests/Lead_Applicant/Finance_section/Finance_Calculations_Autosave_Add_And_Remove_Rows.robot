@@ -15,6 +15,7 @@ ${OTHER_FUNDING_SOURCE}    Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
 
+
 *** Test Cases ***
 Labour
     [Documentation]    INFUND-192

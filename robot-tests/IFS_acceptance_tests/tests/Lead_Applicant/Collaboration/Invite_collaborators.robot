@@ -10,8 +10,8 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
-${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite
+${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newApplication
+${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
 
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
@@ -39,6 +39,7 @@ The lead applicant shouldn't be able to remove himself
 
 Validations for the Email field
     [Documentation]    INFUND-901
+    [Tags]
     Given the applicant is in the invite contributors page
     When the applicant enters some invalid emails
     Then the applicant should not be redirected to the next page
@@ -106,7 +107,7 @@ the applicant enters some invalid emails
     sleep    1s
 
 the applicant should not be redirected to the next page
-    Location Should Be    ${INVITE_COLLABORATORS_PAGE}
+    page should contain    Inviting Contributors
 
 the applicant submits the page without entering a name
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
