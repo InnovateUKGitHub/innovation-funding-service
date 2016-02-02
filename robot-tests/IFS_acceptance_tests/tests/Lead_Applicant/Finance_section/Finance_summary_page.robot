@@ -25,8 +25,7 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration    Pending
-    #Pending the fix of the Infund-1678
+    [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as lead applicant
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -35,8 +34,7 @@ Finance summary page calculations for Lead applicant
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration    Pending
-    #Pending the fix of the Infund-1678
+    [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as first collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -45,8 +43,7 @@ Finance summary calculations for the first collaborator
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration    Pending
-    #Pending the fix of the Infund-1678
+    [Tags]    Finance    Finance Section    Collaboration
     Given the user logs in as second collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct
