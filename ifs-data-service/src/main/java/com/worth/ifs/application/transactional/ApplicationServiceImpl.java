@@ -13,7 +13,9 @@ import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.resource.InviteCollaboratorResource;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.file.domain.FileEntry;
@@ -24,12 +26,7 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.notifications.resource.*;
-import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.ErrorTemplate;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -49,20 +46,17 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -106,10 +100,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
     }
 
-    enum Notifications {
-        INVITE_COLLABORATOR
-    }
-
     @Autowired
     private FileService fileService;
 
@@ -142,12 +132,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     CompetitionRepository competitionRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -276,10 +260,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
-        formInputResponse.setFileEntry(null);
-        FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
-        return serviceSuccess(unlinkedResponse);
+    @Override
+    public ServiceResult<Application> getApplication(long applicationId) {
+        return getOrFail(() -> applicationRepository.findOne(applicationId), new Error(NOT_FOUND_ENTITY, Application.class, applicationId));
     }
 
     @Override
@@ -290,12 +273,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         )));
     }
 
-    private ServiceResult<FormInput> getFormInput(long formInputId) {
-        return getOrFail(() -> formInputRepository.findOne(formInputId), new Error(NOT_FOUND_ENTITY, FormInput.class, formInputId));
+    private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
+        formInputResponse.setFileEntry(null);
+        FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
+        return serviceSuccess(unlinkedResponse);
     }
 
-    private ServiceResult<Application> getApplication(long applicationId) {
-        return getOrFail(() -> applicationRepository.findOne(applicationId), new Error(NOT_FOUND_ENTITY, Application.class, applicationId));
+    private ServiceResult<FormInput> getFormInput(long formInputId) {
+        return getOrFail(() -> formInputRepository.findOne(formInputId), new Error(NOT_FOUND_ENTITY, FormInput.class, formInputId));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -482,23 +467,5 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         processRoleRepository.save(processRole);
 
         return application;
-    }
-
-    @Override
-    public ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite) {
-
-        return handlingErrors(new Error(UNABLE_TO_SEND_NOTIFICATION), () -> getApplication(applicationId).map(application -> {
-
-            NotificationSource from = systemNotificationSource;
-            NotificationTarget to = new ExternalUserNotificationTarget(invite.getRecipientName(), invite.getRecipientEmail());
-
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("applicationName", application.getName());
-            notificationArguments.put("inviteUrl", "http://TODO.com");
-
-            Notification notification = new Notification(from, singletonList(to), INVITE_COLLABORATOR, notificationArguments);
-
-            return notificationService.sendNotification(notification, EMAIL);
-        }));
     }
 }

@@ -1,14 +1,14 @@
 package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +19,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
+import static com.worth.ifs.invite.transactional.InviteServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static java.util.Collections.singletonList;
 
 @Service
 public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
+
     private final Log log = LogFactory.getLog(getClass());
+
+    enum Notifications {
+        INVITE_COLLABORATOR
+    }
 
     @Autowired
     ApplicationService applicationService;
+
     @Autowired
     InviteRepository inviteRepository;
 

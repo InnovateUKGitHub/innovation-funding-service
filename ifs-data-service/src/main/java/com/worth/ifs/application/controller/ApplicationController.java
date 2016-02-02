@@ -6,13 +6,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -21,9 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
-import static com.worth.ifs.commons.rest.RestResults.accepted;
-import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -125,17 +119,6 @@ public class ApplicationController {
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
         return applicationMapper.mapApplicationToResource(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj));
-    }
-
-    @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
-    public RestResult<Void> inviteCollaborator(
-            @PathVariable("applicationId") final Long applicationId,
-            @RequestBody InviteCollaboratorResource invite) {
-
-        return newRestResult(Notification.class, Void.class).
-               andOnSuccess(accepted()).
-               andWithDefaultFailure(internalServerError2()).
-               perform(() -> applicationService.inviteCollaboratorToApplication(applicationId, invite));
     }
 
 }
