@@ -1,4 +1,4 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.error;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;

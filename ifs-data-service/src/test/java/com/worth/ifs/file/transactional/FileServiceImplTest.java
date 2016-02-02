@@ -6,7 +6,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.domain.builders.FileEntryBuilder;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tomcat.util.http.fileupload.FileUtils;

@@ -1,8 +1,8 @@
 package com.worth.ifs.commons.controller;
 
-import com.worth.ifs.transactional.Error;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
 import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
-import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.util.Either.left;
 import static java.util.Optional.empty;
 

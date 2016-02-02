@@ -2,9 +2,9 @@ package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.notifications.resource.NotificationSource;
 import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.transactional.Error;
-import com.worth.ifs.transactional.ErrorTemplate;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.worth.ifs.notifications.service.FreemarkerNotificationTemplateRenderer.ServiceErrors.UNABLE_TO_RENDER_TEMPLATE;
-import static com.worth.ifs.transactional.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**

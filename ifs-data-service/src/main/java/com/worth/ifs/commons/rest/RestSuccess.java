@@ -1,4 +1,4 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.rest;
 
 import org.springframework.http.HttpStatus;
 

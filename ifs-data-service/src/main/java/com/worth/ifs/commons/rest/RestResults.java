@@ -1,8 +1,8 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.rest;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
-import static com.worth.ifs.transactional.RestResult.restFailure;
-import static com.worth.ifs.transactional.RestResult.restSuccess;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.springframework.http.HttpStatus.*;
 
 /**

@@ -5,7 +5,7 @@ import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.NotificationSource;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -4,7 +4,7 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 

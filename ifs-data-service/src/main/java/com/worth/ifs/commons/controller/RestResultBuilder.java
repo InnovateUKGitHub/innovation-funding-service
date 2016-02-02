@@ -1,17 +1,17 @@
 package com.worth.ifs.commons.controller;
 
 import com.google.common.base.Supplier;
-import com.worth.ifs.transactional.RestResult;
-import com.worth.ifs.transactional.ServiceFailure;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.function.Function;
 
-import static com.worth.ifs.transactional.RestResult.restFailure;
-import static com.worth.ifs.transactional.RestResults.internalServerError2;
-import static com.worth.ifs.transactional.RestResults.ok2;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
+import static com.worth.ifs.commons.rest.RestResults.ok2;
 
 /**
  *

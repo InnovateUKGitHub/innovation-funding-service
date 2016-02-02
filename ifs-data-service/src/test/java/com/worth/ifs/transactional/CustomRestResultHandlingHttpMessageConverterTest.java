@@ -18,7 +18,7 @@ import static org.springframework.http.HttpMethod.POST;
 /**
  *
  */
-public class CustomHttpMessageConverterTest extends BaseWebIntegrationTest {
+public class CustomRestResultHandlingHttpMessageConverterTest extends BaseWebIntegrationTest {
 
     @Value("${ifs.data.service.rest.baseURL}")
     private String dataUrl;

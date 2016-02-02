@@ -1,5 +1,8 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.rest;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -14,7 +17,7 @@ import java.util.List;
  *
  */
 @Component
-public class CustomHttpMessageConverter extends MappingJackson2HttpMessageConverter {
+public class CustomRestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     @Override
     protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {

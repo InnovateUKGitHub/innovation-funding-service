@@ -1,12 +1,12 @@
 package com.worth.ifs.commons.controller;
 
-import com.worth.ifs.transactional.RestResult;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
-import static com.worth.ifs.transactional.RestResult.restSuccess;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 

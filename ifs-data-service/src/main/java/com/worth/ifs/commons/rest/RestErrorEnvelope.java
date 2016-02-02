@@ -1,6 +1,8 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;

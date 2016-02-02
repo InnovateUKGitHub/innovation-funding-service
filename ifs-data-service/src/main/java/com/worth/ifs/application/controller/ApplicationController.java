@@ -9,11 +9,10 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.SectionService;
-import com.worth.ifs.commons.controller.AbstractDataController;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.transactional.RestResult;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -23,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
-import static com.worth.ifs.transactional.RestResults.accepted;
-import static com.worth.ifs.transactional.RestResults.internalServerError2;
+import static com.worth.ifs.commons.rest.RestResults.accepted;
+import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -33,7 +32,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @RestController
 @ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
-public class ApplicationController extends AbstractDataController {
+public class ApplicationController {
 
     public static final String READY_FOR_SUBMIT = "readyForSubmit";
     public static final String PROGRESS = "progress";

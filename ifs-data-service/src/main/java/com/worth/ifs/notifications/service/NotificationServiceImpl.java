@@ -2,9 +2,9 @@ package com.worth.ifs.notifications.service;
 
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
-import com.worth.ifs.transactional.Error;
-import com.worth.ifs.transactional.ErrorTemplate;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
-import static com.worth.ifs.transactional.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 

@@ -1,4 +1,6 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.service;
+
+import com.worth.ifs.commons.error.Error;
 
 import java.util.List;
 

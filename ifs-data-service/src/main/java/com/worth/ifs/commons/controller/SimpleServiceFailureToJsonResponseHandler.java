@@ -1,6 +1,6 @@
 package com.worth.ifs.commons.controller;
 
-import com.worth.ifs.transactional.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.util.JsonStatusResponse;
 
 import javax.servlet.http.HttpServletResponse;

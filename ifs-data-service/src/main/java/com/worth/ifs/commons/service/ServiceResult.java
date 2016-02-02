@@ -1,5 +1,6 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.service;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

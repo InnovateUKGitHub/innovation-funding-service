@@ -1,7 +1,7 @@
 package com.worth.ifs.commons.controller;
 
-import com.worth.ifs.transactional.RestResult;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,5 +1,6 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.rest;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 

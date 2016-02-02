@@ -3,7 +3,7 @@ package com.worth.ifs.notifications.service;
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.UserNotificationSource;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

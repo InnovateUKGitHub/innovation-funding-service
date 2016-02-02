@@ -3,7 +3,7 @@ package com.worth.ifs.file.transactional;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;

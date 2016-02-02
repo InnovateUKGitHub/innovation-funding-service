@@ -5,8 +5,8 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.Error;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.function.BiFunction;
 
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.INCORRECT_TYPE;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.serviceFailure;
-import static com.worth.ifs.transactional.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.

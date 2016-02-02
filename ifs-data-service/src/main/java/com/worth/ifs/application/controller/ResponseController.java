@@ -8,9 +8,10 @@ import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.transactional.Error;
-import com.worth.ifs.transactional.*;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -27,8 +28,8 @@ import java.util.Optional;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
-import static com.worth.ifs.transactional.RestResults.internalServerError2;
-import static com.worth.ifs.transactional.RestResults.ok2;
+import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
+import static com.worth.ifs.commons.rest.RestResults.ok2;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
@@ -78,9 +79,6 @@ public class ResponseController {
     @Autowired
     ResponseService responseService;
 
-    @Autowired
-    ServiceLocator serviceLocator;
-
     QuestionController questionController = new QuestionController();
 
     private final Log log = LogFactory.getLog(getClass());
@@ -92,9 +90,9 @@ public class ResponseController {
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
     public RestResult<Void> saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
-                                                        @RequestParam("assessorUserId") Long assessorUserId,
-                                                        @RequestParam("feedbackValue") Optional<String> feedbackValue,
-                                                        @RequestParam("feedbackText") Optional<String> feedbackText) {
+                                                              @RequestParam("assessorUserId") Long assessorUserId,
+                                                              @RequestParam("feedbackValue") Optional<String> feedbackValue,
+                                                              @RequestParam("feedbackText") Optional<String> feedbackText) {
 
         return newRestResult(Feedback.class, Void.class).andOnSuccess(ok2()).andWithDefaultFailure(internalServerError2()).perform(() -> {
 
