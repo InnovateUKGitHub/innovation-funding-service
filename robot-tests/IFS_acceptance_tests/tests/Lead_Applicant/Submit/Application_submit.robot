@@ -35,6 +35,7 @@ Submit button disabled when the application is incomplete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
+    [Tags]    Applicant    Submit
     Given applicant is in the finance summary of the application 7
     When the applicant marks the finance section as incomplete
     And the applicant goes to the overview page of the application 7
