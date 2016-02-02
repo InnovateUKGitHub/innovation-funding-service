@@ -5,6 +5,9 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
+...
+...
+...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -17,9 +20,10 @@ Resource          ../../../resources/variables/User_credentials.robot
 ${OVERVIEW_PAGE_APPLICATION_7}    ${SERVER}/application/7/
 ${SUMMARY_PAGE_APPLICATION_7}    ${SERVER}/application/7/summary
 ${SUBMITTED_PAGE_APPLICATION_7}    ${SERVER}/application/7/submit
+${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
 
 *** Test Cases ***
-Submit flow/ disabled submit button (incomplete application)
+Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Applicant    Submit    Review and Submit    Summary
     Given the applicant goes to the overview page of the application 7
@@ -27,6 +31,18 @@ Submit flow/ disabled submit button (incomplete application)
     and the applicant redirects to the summary page
     and the applicant marks the first question as incomplete
     Then the submit button should be disabled
+    [Teardown]    And the applicant marks the first question as complete
+
+Submit button disabled when finance section is incomplete
+    [Documentation]    INFUND-927
+    [Tags]    Applicant    Submit
+    Given applicant is in the finance summary of the application 7
+    When the applicant marks the finance section as incomplete
+    And the applicant goes to the overview page of the application 7
+    And the applicant clicks the review and submit button
+    And the applicant redirects to the summary page
+    Then the submit button should be disabled
+    [Teardown]    The applicant marks the first finance section as complete
 
 Submit flow (complete application)
     [Documentation]    INFUND-205
@@ -36,7 +52,6 @@ Submit flow (complete application)
     Given the applicant goes to the overview page of the application 7
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
-    And the applicant marks the first question as complete
     Then the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks Yes in the submit modal
     and the applicant redirects to the application submitted page
@@ -82,3 +97,15 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 the applicant redirects to the application submitted page
     Location Should Be    ${SUBMITTED_PAGE_APPLICATION_7}
     Page Should Contain    Application submitted
+
+applicant is in the finance summary of the application 7
+    go to    ${FINANCE_SECTION_7}
+
+the applicant marks the finance section as incomplete
+    Click Element    css=[aria-controls="collapsible-1"]
+    click element    jQuery=#collapsible-1 button:contains("Edit")
+
+The applicant marks the first finance section as complete
+    go to    ${FINANCE_SECTION_7}
+    Click Element    css=[aria-controls="collapsible-1"]
+    click element    jQuery=#collapsible-1 button:contains("Mark as complete")
