@@ -11,6 +11,7 @@ import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel.AssessmentWithApplicationAndScore;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -128,13 +129,13 @@ public class AssessmentController extends AbstractApplicationController {
                                                               HttpServletRequest request) {
 
         Long userId = getLoggedUser(request).getId();
-        Boolean success = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
+        RestResult<Void> result = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
 
-        if (success) {
-            return new ResponseEntity<>(OK);
-        } else {
-            return new ResponseEntity<>(BAD_REQUEST);
-        }
+        // TODO DW - INFUND-854 - develop a handler in the web layer for RestResults
+        return result.mapLeftOrRight(
+            failure -> new ResponseEntity<>(BAD_REQUEST),
+            success -> new ResponseEntity<>(OK)
+        );
     }
 
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
