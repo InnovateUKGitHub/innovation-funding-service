@@ -29,6 +29,7 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
@@ -175,7 +176,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error creating file", Errors.internalServerErrorError("Error creating file"), response);
+        assertResponseErrorMessageEqual("Error creating file", internalServerErrorError("Error creating file"), response);
     }
 
     @Test
@@ -356,7 +357,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                serviceFailure(Errors.internalServerErrorError("Error updating file"));
+                serviceFailure(internalServerErrorError("Error updating file"));
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -374,7 +375,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerErrorError("Error updating file"), response);
+        assertResponseErrorMessageEqual("Error updating file", internalServerErrorError("Error updating file"), response);
     }
 
     @Test
@@ -395,7 +396,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerErrorError("Error updating file"), response);
+        assertResponseErrorMessageEqual("Error updating file", internalServerErrorError("Error updating file"), response);
     }
 
     @Test
@@ -549,7 +550,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<FormInputResponse> failureResponse = serviceFailure(Errors.internalServerErrorError("Error deleting file"));
+        ServiceResult<FormInputResponse> failureResponse = serviceFailure(internalServerErrorError("Error deleting file"));
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
@@ -563,7 +564,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerErrorError("Error deleting file"), response);
+        assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
     }
 
     @Test
@@ -580,7 +581,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerErrorError("Error deleting file"), response);
+        assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
     }
 
     @Test
@@ -653,7 +654,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileDetailsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerErrorError("Error retrieving file")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError("Error retrieving file")));
 
         MvcResult response = mockMvc.
                 perform(
@@ -665,7 +666,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test
@@ -682,7 +683,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file details", Errors.internalServerErrorError("Error retrieving file details"), response);
+        assertResponseErrorMessageEqual("Error retrieving file details", internalServerErrorError("Error retrieving file details"), response);
     }
 
     @Test
@@ -753,7 +754,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
         // TODO DW - INFUND-854 - replace serviceFailure(new Error(...)) with ServiceFailures.<error name>()?
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerErrorError("Error retrieving file")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError("Error retrieving file")));
 
         MvcResult response = mockMvc.
                 perform(
@@ -765,7 +766,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test
@@ -782,7 +783,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test

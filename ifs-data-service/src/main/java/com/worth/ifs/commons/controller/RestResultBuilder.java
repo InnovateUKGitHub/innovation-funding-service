@@ -9,9 +9,9 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.function.Function;
 
+import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
-import static com.worth.ifs.commons.rest.RestResults.ok2;
+import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 
 /**
  *
@@ -20,8 +20,8 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
-    private static RestResult<?> defaultSuccessResult = ok2();
-    private static RestResult<?> fallbackFailureResult = internalServerError2();
+    private static RestResult<?> defaultSuccessResult = okRestSuccess();
+    private static RestResult<?> fallbackFailureResult = internalServerErrorRestFailure();
     private Function<ProcessResultType, RestResult<ReturnType>> successResult;
     private RestResult<ReturnType> defaultFailureResult;
     private Supplier<ServiceResult<ProcessResultType>> serviceResult;

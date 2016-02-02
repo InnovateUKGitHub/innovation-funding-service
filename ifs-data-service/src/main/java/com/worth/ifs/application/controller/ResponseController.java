@@ -17,8 +17,6 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +26,10 @@ import java.util.Optional;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
-import static com.worth.ifs.commons.rest.RestResults.ok2;
+import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
+import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
@@ -73,8 +72,6 @@ public class ResponseController {
 
     QuestionController questionController = new QuestionController();
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
         return responseService.findResponsesByApplication(applicationId);
@@ -87,16 +84,16 @@ public class ResponseController {
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
         return newRestResult(Feedback.class, Void.class).
-               andOnSuccess(ok2()).
-               andWithDefaultFailure(internalServerError2()).
+               andOnSuccess(okRestSuccess()).
+               andWithDefaultFailure(internalServerErrorRestFailure()).
                perform(() -> {
 
-            // TODO DW - INFUND-854 - get rid of get(0) occurrances in code below
             Response response = responseRepository.findOne(responseId);
             Application application = response.getApplication();
+
             return getOrFail(() -> roleRepository.findByName(ASSESSOR.name()), assessorRoleNotFoundError).map(assessorRole ->
-                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, assessorRole.get(0), application.getId()), processRoleNotFoundError).map(assessorProcessRole ->
-                   assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(assessorProcessRole.get(0).getId()).setValue(feedbackValue).setText(feedbackText))
+                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).map(assessorProcessRole ->
+                   assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(onlyElement(assessorProcessRole).getId()).setValue(feedbackValue).setText(feedbackText))
             ));
         });
     }
