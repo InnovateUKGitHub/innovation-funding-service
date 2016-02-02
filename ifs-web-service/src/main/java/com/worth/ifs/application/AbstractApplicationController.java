@@ -7,7 +7,9 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
@@ -75,6 +77,9 @@ public abstract class AbstractApplicationController {
 
     @Autowired
     protected CompetitionService competitionService;
+
+    @Autowired
+    protected QuestionStatusMapper questionStatusMapper;
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
@@ -207,13 +212,19 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation, Long userId) {
-        Map<Long, QuestionStatus> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
+        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
 
-        List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        Map<Long, QuestionStatus> questionStatusModel = questionAssignees.keySet().stream().collect(
+                Collectors.toMap(
+                        a -> a,
+                        a -> questionStatusMapper.resourceToQuestionStatus(questionAssignees.get(a))
+                ));
+
+        List<QuestionStatus> notifications = questionService.getNotificationsForUser(questionStatusModel.values(), userId);
         questionService.removeNotifications(notifications);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        model.addAttribute("questionAssignees", questionAssignees);
+        model.addAttribute("questionAssignees", questionStatusModel);
         model.addAttribute("notifications", notifications);
     }
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,8 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
     return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
   }
 
-  public List<QuestionStatus> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
-    return Arrays.asList(restGet(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+  public List<QuestionStatusResource> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
+    return Arrays.asList(restGet(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, QuestionStatusResource[].class));
   }
 
   @Override

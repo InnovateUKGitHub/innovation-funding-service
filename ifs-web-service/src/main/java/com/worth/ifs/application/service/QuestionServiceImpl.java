@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +47,16 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Map<Long, QuestionStatus> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
+    public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
         return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId));
     }
 
-    private Map<Long, QuestionStatus> mapToQuestionIds(final List<QuestionStatus> questionStatuses){
+    private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
 
         final Map questionAssignees = new HashMap<Long, QuestionStatus>();
 
-        for(QuestionStatus questionStatus : questionStatuses){
-            questionAssignees.put(questionStatus.getQuestion().getId(), questionStatus);
+        for(QuestionStatusResource questionStatusResource : questionStatusResources){
+            questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);
         }
 
         return questionAssignees;

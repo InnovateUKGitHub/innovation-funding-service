@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -109,7 +110,6 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         return "application-track";
     }
-
     @ProfileExecution
     @RequestMapping("/create/{competitionId}")
     public String applicationCreatePage(Model model, @PathVariable("competitionId") final Long competitionId, HttpServletRequest request){
@@ -135,7 +135,6 @@ public class ApplicationController extends AbstractApplicationController {
             return "application-create";
         }
     }
-
     @ProfileExecution
     @RequestMapping(value = "/create-confirm-competition")
     public String competitionCreateApplication(Model model, HttpServletRequest request){
@@ -191,8 +190,15 @@ public class ApplicationController extends AbstractApplicationController {
 
 //        List<Question> questions = questionService.findByCompetition(application.getCompetition());
 
-        Map<Long, QuestionStatus> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisation.getId());
-        QuestionStatus questionAssignee = questionAssignees.get(questionId);
+        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisation.getId());
+
+        Map<Long, QuestionStatus> questionStatusModel = questionAssignees.keySet().stream().collect(
+                Collectors.toMap(
+                        a -> a,
+                        a -> questionStatusMapper.resourceToQuestionStatus(questionAssignees.get(a))
+                ));
+
+        QuestionStatus questionAssignee = questionStatusModel.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 
         model.addAttribute("currentUser", user);

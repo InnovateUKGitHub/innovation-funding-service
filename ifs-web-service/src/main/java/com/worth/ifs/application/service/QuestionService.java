@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface QuestionService {
     public Question getPreviousQuestion(Long questionId);
     public Question getPreviousQuestionBySection(Long sectionId);
     public Question getNextQuestionBySection(Long sectionId);
-    public Map<Long, QuestionStatus> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
+    public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
     public QuestionStatus getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
     public List<QuestionStatus> getByQuestionIds(List<Long> questionIds, Long applicationId, Long organisationId);
 }
