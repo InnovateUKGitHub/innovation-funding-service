@@ -40,14 +40,6 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 @RequestMapping("/response")
 public class ResponseController {
 
-    // TODO DW - INFUND-854 - remove?
-//    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-//
-//        new SimpleServiceFailureToJsonResponseHandler(singletonList(ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find file", response)),
-//        new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
-//        new SimpleServiceFailureToJsonResponseHandler(singletonList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response))
-//    );
-
     private static final Error processRoleNotFoundError = new Error(NOT_FOUND_ENTITY, ProcessRole.class, ASSESSOR);
     private static final Error assessorRoleNotFoundError = new Error(NOT_FOUND_ENTITY, Role.class, ASSESSOR);
 
