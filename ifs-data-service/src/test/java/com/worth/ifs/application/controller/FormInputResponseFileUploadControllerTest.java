@@ -175,7 +175,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error creating file", Errors.internalServerError2("Error creating file"), response);
+        assertResponseErrorMessageEqual("Error creating file", Errors.internalServerErrorError("Error creating file"), response);
     }
 
     @Test
@@ -212,7 +212,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLarge2(5000), response);
+        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequired2(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -251,7 +251,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaType2(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -270,7 +270,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaType2(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -356,7 +356,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                serviceFailure(Errors.internalServerError2("Error updating file"));
+                serviceFailure(Errors.internalServerErrorError("Error updating file"));
 
         when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isA(Supplier.class))).thenReturn(failureResponse);
 
@@ -374,7 +374,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerError2("Error updating file"), response);
+        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerErrorError("Error updating file"), response);
     }
 
     @Test
@@ -395,7 +395,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerError2("Error updating file"), response);
+        assertResponseErrorMessageEqual("Error updating file", Errors.internalServerErrorError("Error updating file"), response);
     }
 
     @Test
@@ -432,7 +432,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLarge2(5000), response);
+        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -451,7 +451,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequired2(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -471,7 +471,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaType2(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -490,7 +490,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaType2(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -549,7 +549,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<FormInputResponse> failureResponse = serviceFailure(Errors.internalServerError2("Error deleting file"));
+        ServiceResult<FormInputResponse> failureResponse = serviceFailure(Errors.internalServerErrorError("Error deleting file"));
 
         when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
@@ -563,7 +563,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerError2("Error deleting file"), response);
+        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerErrorError("Error deleting file"), response);
     }
 
     @Test
@@ -580,7 +580,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerError2("Error deleting file"), response);
+        assertResponseErrorMessageEqual("Error deleting file", Errors.internalServerErrorError("Error deleting file"), response);
     }
 
     @Test
@@ -653,7 +653,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileDetailsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerError2("Error retrieving file")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerErrorError("Error retrieving file")));
 
         MvcResult response = mockMvc.
                 perform(
@@ -665,7 +665,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerError2("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test
@@ -682,7 +682,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file details", Errors.internalServerError2("Error retrieving file details"), response);
+        assertResponseErrorMessageEqual("Error retrieving file details", Errors.internalServerErrorError("Error retrieving file details"), response);
     }
 
     @Test
@@ -753,7 +753,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
         // TODO DW - INFUND-854 - replace serviceFailure(new Error(...)) with ServiceFailures.<error name>()?
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerError2("Error retrieving file")));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(Errors.internalServerErrorError("Error retrieving file")));
 
         MvcResult response = mockMvc.
                 perform(
@@ -765,7 +765,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerError2("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test
@@ -782,7 +782,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerError2("Error retrieving file"), response);
+        assertResponseErrorMessageEqual("Error retrieving file", Errors.internalServerErrorError("Error retrieving file"), response);
     }
 
     @Test

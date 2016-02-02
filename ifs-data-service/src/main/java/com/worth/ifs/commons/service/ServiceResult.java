@@ -121,7 +121,7 @@ public class ServiceResult<T> {
      * @return
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(Errors.internalServerError2(), serviceCode);
+        return handlingErrors(Errors.internalServerErrorError(), serviceCode);
     }
 
     public static <T> ServiceResult<T> handlingErrors(ErrorTemplate catchAllErrorTemplate, Supplier<ServiceResult<T>> serviceCode) {

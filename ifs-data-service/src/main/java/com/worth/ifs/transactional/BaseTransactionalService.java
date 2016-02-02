@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -20,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.notFoundEntity;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
 import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -99,7 +97,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, notFoundEntity(Response.class, responseId));
+        return getResponseById(responseId, responseRepository, notFoundError(Response.class, responseId));
     }
 
     /**
@@ -109,6 +107,6 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, notFoundEntity(ProcessRole.class, processRoleId));
+        return getProcessRoleById(processRoleId, processRoleRepository, notFoundError(ProcessRole.class, processRoleId));
     }
 }

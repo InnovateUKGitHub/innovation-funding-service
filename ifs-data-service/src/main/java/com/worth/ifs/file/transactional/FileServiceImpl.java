@@ -1,13 +1,13 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.ErrorTemplate;
-import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.commons.error.Errors.notFoundEntity;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
-import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
@@ -104,7 +104,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(notFoundEntity(FileEntry.class, fileEntryId), () ->
+        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () ->
                 findFileEntry(fileEntryId).
                 map(this::findFile).
                 map(this::getInputStreamSuppier).

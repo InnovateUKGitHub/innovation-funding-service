@@ -134,7 +134,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerError2("Error retrieving file")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -163,7 +163,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file details", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerError2("Error retrieving file details")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorEnvelope(Errors.internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -218,16 +218,16 @@ public class FormInputResponseFileUploadController {
     private ServiceResult<Long> validContentLengthHeader(String contentLengthHeader) {
 
         return validLong(contentLengthHeader).map(ServiceResult::serviceSuccess).
-                orElseGet(() -> serviceFailure(lengthRequired2(maxFilesizeBytes)));
+                orElseGet(() -> serviceFailure(lengthRequiredError(maxFilesizeBytes)));
     }
 
     private ServiceResult<String> validContentTypeHeader(String contentTypeHeader) {
-        return !StringUtils.isBlank(contentTypeHeader) ? serviceSuccess(contentTypeHeader) : serviceFailure(unsupportedMediaType2(validMediaTypes));
+        return !StringUtils.isBlank(contentTypeHeader) ? serviceSuccess(contentTypeHeader) : serviceFailure(unsupportedMediaTypeError(validMediaTypes));
     }
 
     private ServiceResult<Long> validContentLength(long length) {
         if (length > maxFilesizeBytes) {
-            return serviceFailure(payloadTooLarge2(maxFilesizeBytes));
+            return serviceFailure(payloadTooLargeError(maxFilesizeBytes));
         }
         return serviceSuccess(length);
     }
@@ -238,13 +238,13 @@ public class FormInputResponseFileUploadController {
 
     private ServiceResult<MediaType> validMediaType(String contentType) {
         if (!validMediaTypes.contains(contentType)) {
-            return serviceFailure(unsupportedMediaType2(validMediaTypes));
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
         }
         return serviceSuccess(MediaType.valueOf(contentType));
     }
 
     private ServiceResult<String> checkParameterIsPresent(String parameterValue, String failureMessage) {
-        return !StringUtils.isBlank(parameterValue) ? serviceSuccess(parameterValue) : serviceFailure(badRequest2(failureMessage));
+        return !StringUtils.isBlank(parameterValue) ? serviceSuccess(parameterValue) : serviceFailure(badRequestError(failureMessage));
     }
 
     void setMaxFilesizeBytes(Long maxFilesizeBytes) {

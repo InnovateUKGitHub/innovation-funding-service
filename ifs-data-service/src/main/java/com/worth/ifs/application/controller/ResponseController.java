@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
-import static com.worth.ifs.commons.error.Errors.notFoundEntity;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
 import static com.worth.ifs.commons.rest.RestResults.ok2;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -40,8 +40,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 @RequestMapping("/response")
 public class ResponseController {
 
-    private static final Error processRoleNotFoundError = notFoundEntity(ProcessRole.class, ASSESSOR);
-    private static final Error assessorRoleNotFoundError = notFoundEntity(Role.class, ASSESSOR);
+    private static final Error processRoleNotFoundError = notFoundError(ProcessRole.class, ASSESSOR);
+    private static final Error assessorRoleNotFoundError = notFoundError(Role.class, ASSESSOR);
 
 
     @Autowired

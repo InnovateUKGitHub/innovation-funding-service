@@ -78,7 +78,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        RestErrorEnvelope restErrorEnvelope = new RestErrorEnvelope(asList(Errors.badRequest2("Bad!"), Errors.internalServerError2("Bang!")));
+        RestErrorEnvelope restErrorEnvelope = new RestErrorEnvelope(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
         when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), String.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
 
         // now run the method under test

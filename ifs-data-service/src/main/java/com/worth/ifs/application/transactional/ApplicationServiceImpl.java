@@ -53,7 +53,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.commons.error.Errors.notFoundEntity;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
@@ -262,12 +262,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Application> getApplication(long applicationId) {
-        return getOrFail(() -> applicationRepository.findOne(applicationId), notFoundEntity(Application.class, applicationId));
+        return getOrFail(() -> applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }
 
     @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
-        return handlingErrors(notFoundEntity(FileEntry.class, fileEntryId), () -> getFormInputResponse(fileEntryId).
+        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () -> getFormInputResponse(fileEntryId).
                 map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
                 map(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
         )));
@@ -280,7 +280,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInput> getFormInput(long formInputId) {
-        return getOrFail(() -> formInputRepository.findOne(formInputId), notFoundEntity(FormInput.class, formInputId));
+        return getOrFail(() -> formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -289,7 +289,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
-        Error formInputResponseNotFoundError = notFoundEntity(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
+        Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
         return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), formInputResponseNotFoundError);
     }
 

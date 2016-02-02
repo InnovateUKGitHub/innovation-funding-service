@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.commons.error.Errors.notFoundEntity;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -83,6 +83,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {
-        return nonNull(servicesByMedia.get(medium), notFoundEntity(NotificationMedium.class, medium));
+        return nonNull(servicesByMedia.get(medium), notFoundError(NotificationMedium.class, medium));
     }
 }
