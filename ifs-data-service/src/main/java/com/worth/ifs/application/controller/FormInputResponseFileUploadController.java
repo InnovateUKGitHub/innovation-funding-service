@@ -58,20 +58,6 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private ApplicationService applicationService;
 
-    // TODO DW - INFUND-854 - remove?
-//    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-//
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_FIND_FILE), (serviceFailure, response) -> notFound("Unable to find file", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(FORM_INPUT_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(INCORRECTLY_REPORTED_FILESIZE), (serviceFailure, response) -> badRequest("Incorrectly reported filesize", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(INCORRECTLY_REPORTED_MEDIA_TYPE), (serviceFailure, response) -> unsupportedMediaType("Incorrectly reported Content Type", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(DUPLICATE_FILE_CREATED), (serviceFailure, response) -> conflict("File already exists", response)),
-//            new SimpleServiceFailureToJsonResponseHandler(singletonList(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), (serviceFailure, response) -> conflict("File already linked to Form Input Response", response))
-//    );
-
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
     public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
