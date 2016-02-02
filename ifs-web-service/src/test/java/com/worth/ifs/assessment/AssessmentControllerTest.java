@@ -177,8 +177,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk());
     }
 
     @Test
