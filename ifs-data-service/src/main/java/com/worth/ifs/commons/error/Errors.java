@@ -3,6 +3,7 @@ package com.worth.ifs.commons.error;
 import java.lang.*;
 import java.util.List;
 
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.springframework.http.HttpStatus.*;
@@ -18,6 +19,13 @@ public class Errors {
         return new Error(NOT_FOUND, entity + " not found", arguments, NOT_FOUND);
     }
 
+    public static Error notFoundEntity(Class<?> entityClazz, List<Object> arguments) {
+        return new Error(NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+    }
+
+    public static Error notFoundEntity(Class<?> entityClazz, Object... arguments) {
+        return new Error(NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+    }
 
     //
     // ERRORS
@@ -37,6 +45,10 @@ public class Errors {
 
     public static Error badRequest2(String message) {
         return new Error(BAD_REQUEST, message, BAD_REQUEST);
+    }
+
+    public static Error internalServerError2() {
+        return internalServerError2(null);
     }
 
     public static Error internalServerError2(String message) {

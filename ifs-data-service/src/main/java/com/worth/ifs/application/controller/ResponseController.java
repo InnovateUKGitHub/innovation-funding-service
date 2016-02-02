@@ -8,10 +8,10 @@ import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.commons.error.Errors.notFoundEntity;
 import static com.worth.ifs.commons.rest.RestResults.internalServerError2;
 import static com.worth.ifs.commons.rest.RestResults.ok2;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -40,8 +40,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 @RequestMapping("/response")
 public class ResponseController {
 
-    private static final Error processRoleNotFoundError = new Error(NOT_FOUND_ENTITY, ProcessRole.class, ASSESSOR);
-    private static final Error assessorRoleNotFoundError = new Error(NOT_FOUND_ENTITY, Role.class, ASSESSOR);
+    private static final Error processRoleNotFoundError = notFoundEntity(ProcessRole.class, ASSESSOR);
+    private static final Error assessorRoleNotFoundError = notFoundEntity(Role.class, ASSESSOR);
 
 
     @Autowired

@@ -1,25 +1,24 @@
 package com.worth.ifs.email.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import com.worth.ifs.sil.email.service.SilEmailEndpoint;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.BuilderAmendFunctions.names;
-import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.error.Errors.internalServerError2;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;
+import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -76,7 +75,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         SilEmailMessage expectedMessageToSend = new SilEmailMessage(silEmailFrom, asList(silEmailTo1, silEmailTo2), "A subject", silEmailBody, silEmailBody2);
 
-        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceFailure(new Error(UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)));
+        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceFailure(internalServerError2()));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isLeft());

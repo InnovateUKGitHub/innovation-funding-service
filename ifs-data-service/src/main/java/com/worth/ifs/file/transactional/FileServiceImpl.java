@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.commons.error.Errors.notFoundEntity;
 import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.commons.service.ServiceResult.*;
@@ -103,7 +104,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(new Error(NOT_FOUND_ENTITY), () ->
+        return handlingErrors(notFoundEntity(FileEntry.class, fileEntryId), () ->
                 findFileEntry(fileEntryId).
                 map(this::findFile).
                 map(this::getInputStreamSuppier).

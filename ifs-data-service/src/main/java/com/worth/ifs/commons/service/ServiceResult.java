@@ -1,6 +1,8 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +13,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
@@ -120,20 +121,24 @@ public class ServiceResult<T> {
      * @return
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(new Error(UNEXPECTED_ERROR), serviceCode);
+        return handlingErrors(Errors.internalServerError2(), serviceCode);
     }
 
-    /**
-     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-     * response (an Either with a left of ServiceFailure).
-     *
-     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
-     *
-     * @param <T>
-     * @param serviceCode
-     * @return
-     */
+    public static <T> ServiceResult<T> handlingErrors(ErrorTemplate catchAllErrorTemplate, Supplier<ServiceResult<T>> serviceCode) {
+        return handlingErrors(new Error(catchAllErrorTemplate), serviceCode);
+    }
+
+        /**
+         * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+         * response (an Either with a left of ServiceFailure).
+         *
+         * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+         * type UNEXPECTED_ERROR.
+         *
+         * @param <T>
+         * @param serviceCode
+         * @return
+         */
     public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             ServiceResult<T> response = serviceCode.get();

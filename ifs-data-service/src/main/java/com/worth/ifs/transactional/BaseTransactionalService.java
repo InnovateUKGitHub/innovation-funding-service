@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.Errors.notFoundEntity;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
 import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
@@ -98,7 +99,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, new Error(NOT_FOUND_ENTITY, Response.class, responseId));
+        return getResponseById(responseId, responseRepository, notFoundEntity(Response.class, responseId));
     }
 
     /**
@@ -108,6 +109,6 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, new Error(NOT_FOUND_ENTITY, ProcessRole.class, processRoleId));
+        return getProcessRoleById(processRoleId, processRoleRepository, notFoundEntity(ProcessRole.class, processRoleId));
     }
 }

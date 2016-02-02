@@ -1,10 +1,10 @@
 package com.worth.ifs.notifications.service;
 
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationMedium;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
+import static com.worth.ifs.commons.error.Errors.notFoundEntity;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.notifications.service.NotificationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATIONS;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -83,6 +83,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {
-        return nonNull(servicesByMedia.get(medium), new Error(NOT_FOUND_ENTITY, NotificationMedium.class, medium));
+        return nonNull(servicesByMedia.get(medium), notFoundEntity(NotificationMedium.class, medium));
     }
 }
