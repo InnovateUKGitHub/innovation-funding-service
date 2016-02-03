@@ -89,7 +89,7 @@ IFS.autoSave = (function(){
                                 formTextareaSaveInfo.html(errorMessage);
                              }
                              else {
-                                var label = formGroup.find('label').first();
+                                var label = formGroup.find('label,legend').first();
                                 if (label.length) {
                                   serverSideValidationErrors.push(errorMessage);
                                   IFS.formValidation.setInvalid(field,errorMessage);

@@ -49,27 +49,20 @@ public class ContributorsForm implements Serializable {
 
     public void merge(ContributorsForm contributorsFormCookie) {
         this.setTriedToSave(contributorsFormCookie.isTriedToSave());
-//        this.setOrganisations(contributorsFormCookie.getOrganisations());
-        log.info(String.format("merge; %s", this.getOrganisations().size()));
 
         if(!contributorsFormCookie.getOrganisations().isEmpty()){
             contributorsFormCookie.getOrganisations().forEach(oC ->{
                 Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream().filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName())).findAny();
 
                 if(!existingOrgOptional.isPresent()){
-                    log.info("ADD: " + oC.getOrganisationName());
-                    log.info("ADD: " + oC.getOrganisationId());
                     this.getOrganisations().add(oC);
                 }else{
-                    log.info("merge org "+ existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size() + " vs "+ oC.getInvites().size());
-
                     OrganisationInviteForm existingOrg = existingOrgOptional.get();
                     List<InviteeForm> existingInvites = existingOrg.getInvites();
                     oC.getInvites().forEach(iC -> {
                         Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
                                 .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName())).findAny();
                         if(!cookieInviteFound.isPresent()){
-                            log.info("addInvite "+ oC.getOrganisationName() + " email " + iC.getEmail() + " name: "+iC.getPersonName());
                             existingInvites.add(iC);
                         }
                     });
@@ -80,11 +73,8 @@ public class ContributorsForm implements Serializable {
                         log.info("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
                     }
                 }
-
             });
         }
-        log.info(String.format("after merge; %s", this.getOrganisations().size()));
-
     }
 }
 
