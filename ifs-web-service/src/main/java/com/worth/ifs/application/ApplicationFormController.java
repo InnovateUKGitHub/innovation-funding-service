@@ -63,9 +63,9 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                   HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Competition competition = competitionService.getById(applicationId);
-        model.addAttribute("currentCompetition", competition);
-        this.addFormAttributes(Optional.empty(), applicationId, user.getId(), model, form, Optional.empty());
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty());
         return "application-form";
     }
 
@@ -109,17 +109,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-        this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+
+        this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form, Optional.ofNullable(question));
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         return "application-form";
     }
 
-    private void addFormAttributes(Optional<Section> section, Long applicationId, Long userId, Model model, ApplicationForm form, Optional<Question> question){
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        model.addAttribute("currentCompetition", competition);
-        super.addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form);
+    private void addFormAttributes(ApplicationResource application, Competition competition, Optional<Section> section,
+                                   Long userId, Model model, ApplicationForm form, Optional<Question> question){
+        addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form);
         addNavigation(question.get(), application.getId(), model);
         model.addAttribute("currentQuestion", question.get());
     }
@@ -136,7 +137,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
-
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
 
         /* Start save action */
         bindingResult = saveApplicationForm(form, model, user.getId(), applicationId, null, question, request, response, bindingResult);
@@ -152,7 +154,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
-            this.addFormAttributes(Optional.ofNullable(section), applicationId, user.getId(), model, form, Optional.ofNullable(question));
+            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form, Optional.ofNullable(question));
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);
