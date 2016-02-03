@@ -196,8 +196,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+        model.addAttribute("userIsLeadApplicant", userService.isLeadApplicant(userId, application));
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
