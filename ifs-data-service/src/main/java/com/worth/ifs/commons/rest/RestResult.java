@@ -13,8 +13,8 @@ import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
 
 /**
- * Represents the result of an action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
- * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
+ * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
+ * success will result in a T.  Additionally, these can be mapped to produce new RestResults that either fail or succeed.
  */
 public class RestResult<T> {
 

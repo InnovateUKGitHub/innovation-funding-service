@@ -12,7 +12,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
- *
+ * A class for holding information about an error case, including a well-known key, a set of arguments that provide additional
+ * contextual information about the error case, and an optional "human readable" error message.
  */
 public class Error {
 

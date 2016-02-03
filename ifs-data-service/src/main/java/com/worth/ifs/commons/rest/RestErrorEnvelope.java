@@ -14,7 +14,9 @@ import static com.worth.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Collections.singletonList;
 
 /**
- *
+ * A standard error transport mechanism for any errors that we wish to report over REST.
+ * Multiple Errors can be combined here and reported back to the client.  The overall HTTP status code for the
+ * multiple errors is derived from the status codes on the individual Errors.
  */
 public class RestErrorEnvelope {
 

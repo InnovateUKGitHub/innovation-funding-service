@@ -11,7 +11,9 @@ import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- *
+ * A factory for some well-known error cases that appear in multiple classes.  This factory helps to keep some consistency
+ * in the way we construct, for instance, Errors that pertain to not being able to find an entity by a set of credentials
+ * (e.g. its primary key)
  */
 public class Errors {
 

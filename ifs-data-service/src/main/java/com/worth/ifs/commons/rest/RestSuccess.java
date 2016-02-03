@@ -3,7 +3,8 @@ package com.worth.ifs.commons.rest;
 import org.springframework.http.HttpStatus;
 
 /**
- *
+ * Represents a RestResult success case, including the main response object of the Rest Controller method, and the appropriate
+ * success HTTP status code
  */
 public class RestSuccess<T> {
 

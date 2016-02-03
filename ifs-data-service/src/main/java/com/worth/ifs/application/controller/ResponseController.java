@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.controller.RestResultBuilder.newRestResult;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResult;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;

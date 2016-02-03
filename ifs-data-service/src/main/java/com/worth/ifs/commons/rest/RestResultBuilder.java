@@ -1,7 +1,6 @@
-package com.worth.ifs.commons.controller;
+package com.worth.ifs.commons.rest;
 
 import com.google.common.base.Supplier;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
@@ -14,7 +13,11 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 
 /**
+ * A builder that allows for a consistent way in which a Rest Controller method can perform some process and then act on
+ * the results in a consistent, appropriate manner.  This includes consistent exception handling, and success or failure
+ * case handling.
  *
+ * It also provides handy mechanisms for integrating directly with ServiceResults being returned from the Service layer.
  */
 public class RestResultBuilder<ProcessResultType, ReturnType> {
 

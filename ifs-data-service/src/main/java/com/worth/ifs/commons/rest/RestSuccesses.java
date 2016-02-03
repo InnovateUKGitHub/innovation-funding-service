@@ -4,7 +4,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- *
+ * A factory class for some common RestResult success cases, so that we can handle them in a consistent manner.
  */
 public class RestSuccesses {
 
