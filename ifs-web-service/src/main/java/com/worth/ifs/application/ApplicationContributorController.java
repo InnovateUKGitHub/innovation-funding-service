@@ -4,6 +4,7 @@ import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -45,6 +46,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
         User leadApplicant = leadApplicantProcessRole.getUser();
@@ -54,6 +56,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
         model.addAttribute("organisationInvites", organisationInvites.values());
