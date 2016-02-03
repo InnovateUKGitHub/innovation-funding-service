@@ -2,6 +2,7 @@ package com.worth.ifs.organisation.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.security.NotSecured;
@@ -17,6 +18,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Optional.ofNullable;
+
 /**
  * This class communicates with the Company House API.
  * This is used to get information abouts companies.
@@ -25,6 +32,9 @@ import java.util.List;
  */
 @Service
 public class CompanyHouseApi extends BaseRestService {
+
+    private static final Log LOG = LogFactory.getLog(CompanyHouseApi.class);
+
     @Value("${ifs.data.company-house.url}")
     private final String COMPANY_HOUSE_API = null;
 
@@ -32,7 +42,6 @@ public class CompanyHouseApi extends BaseRestService {
     private final String COMPANY_HOUSE_KEY = null;
 
     private static final int SEARCH_ITEMS_MAX = 20;
-    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     protected String getDataRestServiceURL() {
@@ -40,43 +49,43 @@ public class CompanyHouseApi extends BaseRestService {
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public List<CompanyHouseBusiness> searchOrganisations(String searchText) throws UnsupportedEncodingException {
-        searchText = UriUtils.decode(searchText, "UTF-8"); // encodes in the web-services.
-        JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + searchText, JsonNode.class);
-        JsonNode companyItems = companiesResources.path("items");
-        List<CompanyHouseBusiness> results = new ArrayList<>();
-        companyItems.forEach(i -> results.add(companySearchMapper(i)));
-        return results;
-    }
+    public ServiceResult<List<CompanyHouseBusiness>> searchOrganisations(String encodedSearchText) {
 
-    private CompanyHouseBusiness companySearchMapper(JsonNode jsonNode) {
-        Address officeAddress = getAddress(jsonNode, "address");
-        return new CompanyHouseBusiness(
-                jsonNode.path("company_number").asText(),
-                jsonNode.path("title").asText(),
-                jsonNode.path("company_type").asText(),
-                jsonNode.path("date_of_creation").asText(),
-                jsonNode.path("description").asText(),
-                officeAddress);
+        return handlingErrors(() -> decodeString(encodedSearchText).map(decodedSearchText -> {
+
+            // encoded in the web-services.
+            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class);
+            JsonNode companyItems = companiesResources.path("items");
+            List<CompanyHouseBusiness> results = new ArrayList<>();
+            companyItems.forEach(i -> results.add(companySearchMapper(i)));
+            return serviceSuccess(results);
+        }));
     }
 
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
-    public CompanyHouseBusiness getOrganisationById(String id) {
-        log.debug("getOrganisationById " + id);
+    public ServiceResult<CompanyHouseBusiness> getOrganisationById(String id) {
+        LOG.debug("getOrganisationById " + id);
 
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = restGet("company/" + id, JsonNode.class);
-        } catch (Exception e) {
-            log.error(e);
-            jsonNode = null;
-        }
+        return handlingErrors(() -> {
 
-        if (jsonNode == null) {
-            return null;
-        } else {
-            return companyProfileMapper(jsonNode);
-        }
+            return ofNullable(restGet("company/" + id, JsonNode.class)).
+                    map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
+                    orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
+        });
+    }
+
+    @NotSecured("Because its just overwriting the methods from the baseclass, no authorization check needed.")
+    @Override
+    public HttpHeaders getHeaders() {
+        LOG.debug("Adding authorization headers");
+        HttpHeaders headers = super.getHeaders();
+
+        String auth = COMPANY_HOUSE_KEY + ":";
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
+        String authHeader = "Basic " + new String(encodedAuth);
+
+        headers.add("Authorization", authHeader);
+        return headers;
     }
 
     private CompanyHouseBusiness companyProfileMapper(JsonNode jsonNode) {
@@ -106,16 +115,23 @@ public class CompanyHouseApi extends BaseRestService {
         return address;
     }
 
-    @NotSecured("Because its just overwriting the methods from the baseclass, no authorization check needed.")
-    public HttpHeaders getHeaders() {
-        log.debug("Adding authorization headers");
-        HttpHeaders headers = super.getHeaders();
+    private ServiceResult<String> decodeString(String encodedSearchText) {
+        try {
+            return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Unable to decode search string " + encodedSearchText, e);
+            return serviceFailure(internalServerErrorError("Unable to decode search string"));
+        }
+    }
 
-        String auth = COMPANY_HOUSE_KEY + ":";
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-        String authHeader = "Basic " + new String(encodedAuth);
-
-        headers.add("Authorization", authHeader);
-        return headers;
+    private CompanyHouseBusiness companySearchMapper(JsonNode jsonNode) {
+        Address officeAddress = getAddress(jsonNode, "address");
+        return new CompanyHouseBusiness(
+                jsonNode.path("company_number").asText(),
+                jsonNode.path("title").asText(),
+                jsonNode.path("company_type").asText(),
+                jsonNode.path("date_of_creation").asText(),
+                jsonNode.path("description").asText(),
+                officeAddress);
     }
 }

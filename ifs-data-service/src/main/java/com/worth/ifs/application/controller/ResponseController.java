@@ -10,6 +10,7 @@ import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -24,9 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResult;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
@@ -82,10 +82,10 @@ public class ResponseController {
                                                               @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        return newRestResult(Feedback.class, Void.class).
-               andOnSuccess(okRestSuccess()).
-               andWithDefaultFailure(internalServerErrorRestFailure()).
-               perform(() -> {
+        RestResultBuilder<Feedback, Void> handler = newRestResultHandler();
+        return handler.
+                andOnSuccess(okRestSuccess()).
+                perform(() -> {
 
             Response response = responseRepository.findOne(responseId);
             Application application = response.getApplication();

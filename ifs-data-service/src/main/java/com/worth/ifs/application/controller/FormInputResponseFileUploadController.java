@@ -5,7 +5,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.RestSuccesses;
+import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -28,10 +28,11 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResult;
 import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
 import static com.worth.ifs.commons.rest.RestSuccesses.createdRestSuccess;
+import static com.worth.ifs.commons.rest.RestSuccesses.noContentRestSuccess;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -68,7 +69,8 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return newRestResult(FormInputResponseFileEntryResource.class, FormInputResponseFileEntryCreatedResponse.class).
+        RestResultBuilder<FormInputResponseFileEntryResource, FormInputResponseFileEntryCreatedResponse> handler = newRestResultHandler();
+        return handler.
                 andOnSuccess(resource -> createdRestSuccess(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
                 andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
 
@@ -92,10 +94,11 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return newRestResult(FormInputResponseFileEntryResource.class, Void.class).
-               andOnSuccess(okRestSuccess()).
-               andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).
-               perform(() -> {
+        RestResultBuilder<FormInputResponseFileEntryResource, Void> handler = newRestResultHandler();
+        return handler.
+                andOnSuccess(okRestSuccess()).
+                andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).
+                perform(() -> {
 
             return validContentLengthHeader(contentLength).
                    map(lengthFromHeader -> validContentTypeHeader(contentType).
@@ -177,8 +180,8 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        return newRestResult(FormInputResponse.class, Void.class).
-               andOnSuccess(RestSuccesses.noContentRestSuccess()).
+        RestResultBuilder<FormInputResponse, Void> handler = newRestResultHandler();
+        return handler.andOnSuccess(noContentRestSuccess()).
                andWithDefaultFailure(internalServerErrorRestFailure("Error deleting file")).
                perform(() -> {
 

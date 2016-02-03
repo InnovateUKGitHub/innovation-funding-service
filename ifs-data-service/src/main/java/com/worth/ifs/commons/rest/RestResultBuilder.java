@@ -10,7 +10,8 @@ import java.util.function.Function;
 
 import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * A builder that allows for a consistent way in which a Rest Controller method can perform some process and then act on
@@ -23,7 +24,6 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
-    private static RestResult<?> defaultSuccessResult = okRestSuccess();
     private static RestResult<?> fallbackFailureResult = internalServerErrorRestFailure();
     private Function<ProcessResultType, RestResult<ReturnType>> successResult;
     private RestResult<ReturnType> defaultFailureResult;
@@ -38,10 +38,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         this.serviceResult = existingBuilder.serviceResult;
     }
 
-    public static <T, R> RestResultBuilder<R, T> newRestResult(
-            @SuppressWarnings("unused") Class<R> mainResultClazz,
-            @SuppressWarnings("unused") Class<T> returnClazz) {
-
+    public static <T, R> RestResultBuilder<R, T> newRestResultHandler() {
         return new RestResultBuilder<>();
     }
 
@@ -92,7 +89,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
                     if (successResult != null) {
                         return successResult.apply(success);
                     } else {
-                        return (RestResult<ReturnType>) defaultSuccessResult;
+                        return (RestResult<ReturnType>) restSuccess(success, OK);
                     }
                 });
 

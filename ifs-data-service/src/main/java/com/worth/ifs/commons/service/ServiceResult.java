@@ -80,10 +80,6 @@ public class ServiceResult<T> {
         return new ServiceResult<>(successfulResult);
     }
 
-    public static <T> Supplier<ServiceResult<T>> serviceSuccessSupplier(T successfulResult) {
-        return () -> serviceSuccess(successfulResult);
-    }
-
     public static <T> ServiceResult<T> serviceFailure(ServiceFailure failure) {
         return new ServiceResult<>(failure);
     }
