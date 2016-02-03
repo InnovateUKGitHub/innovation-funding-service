@@ -245,18 +245,18 @@
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.assignee})" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')">
-      <span th:if="${questionAssignee?.assignee.getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
-      <span th:unless="${questionAssignee?.assignee.getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
-      <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}" />
+    <div th:if="(${currentUser.getId() == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')">
+      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have assigned this question to</span>
+      <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}" />
     </div>
-    <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
+    <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.assignedByUserId}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
         <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
-          <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}"/> by
-          <span th:text="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/> by
+          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
         </span>
         <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
-          <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}"/>
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/>
         </span>
     </div>
 </div>
@@ -266,7 +266,7 @@
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
-            th:value="${question.getId()}+'_'+${questionAssignee?.getAssignedBy()?.getUser()?.getId()}"
+            th:value="${question.getId()}+'_'+${questionAssignee?.assignedByUserId}"
             th:class="'buttonlink'">Ready for review
     </button>
   </div>
