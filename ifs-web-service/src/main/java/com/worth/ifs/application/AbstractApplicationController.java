@@ -211,16 +211,14 @@ public abstract class AbstractApplicationController {
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
                                          Long userId, Optional<Section> currentSection, Optional<Long> currentQuestionId) {
-        List<Question> questions;
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
-            //questions = Arrays.asList(questionService.getById(currentQuestionId.get()));
             QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());
             questionAssignees = new HashMap<>();
             questionAssignees.put(currentQuestionId.get(), questionStatusResource);
         }else if(currentSection.isPresent()){
             Section section = currentSection.get();
-            //questions = section.getQuestions();
+            List<Question> questions = section.getQuestions();
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }else{
             //questions = questionService.findByCompetition(application.getCompetition());
@@ -336,36 +334,29 @@ public abstract class AbstractApplicationController {
         return applicationFinanceResource;
     }
 
-    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(Long applicationId,
-                                                                             Long userId,
-                                                                             Optional<Section> section,
-                                                                             Optional<Long> currentQuestionId,
-                                                                             Model model,
-                                                                             ApplicationForm form,
-                                                                             boolean selectFirstSectionIfNoneCurrentlySelected) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        application.setId(applicationId);
-
-        return addApplicationAndSectionsAndFinanceDetails(application, competition, userId, section, currentQuestionId, model, form, selectFirstSectionIfNoneCurrentlySelected);
-    }
-
-    protected ApplicationResource addApplicationAndSectionsAndFinanceDetails(ApplicationResource application,
+    protected ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                                              Competition competition,
                                                                              Long userId,
                                                                              Optional<Section> section,
                                                                              Optional<Long> currentQuestionId,
                                                                              Model model,
-                                                                             ApplicationForm form,
-                                                                             boolean selectFirstSectionIfNoneCurrentlySelected) {
+                                                                             ApplicationForm form) {
+
         model.addAttribute("currentCompetition", competition);
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form);
 
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        addOrganisationFinanceDetails(model, application, userId, form);
-        addFinanceDetails(model, application);
         addSectionDetails(model, section);
 
+        return application;
+    }
+
+    protected ApplicationResource addOrganisationAndUserFinanceDetails(ApplicationResource application,
+                                                                             Long userId,
+                                                                             Model model,
+                                                                             ApplicationForm form) {
+        addOrganisationFinanceDetails(model, application, userId, form);
+        addFinanceDetails(model, application);
         return application;
     }
 }
