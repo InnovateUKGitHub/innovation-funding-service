@@ -12,16 +12,16 @@ import static org.springframework.http.HttpStatus.*;
  */
 public enum ServiceFailureKeys implements ErrorTemplate {
 
-    //
-    // General
-    //
-    GENERAL_UNEXPECTED_ERROR("An unexpected error occurred", INTERNAL_SERVER_ERROR), //
-    GENERAL_NOT_FOUND("Unable to find entity", NOT_FOUND), //
+    /**
+     * General
+     */
+    GENERAL_UNEXPECTED_ERROR("An unexpected error occurred", INTERNAL_SERVER_ERROR),
+    GENERAL_NOT_FOUND("Unable to find entity", NOT_FOUND),
     GENERAL_INCORRECT_TYPE("Argument was of an incorrect type", BAD_REQUEST),
 
-    //
-    // Files
-    //
+    /**
+     * Files
+     */
     FILES_UNABLE_TO_CREATE_FILE("The file could not be created", INTERNAL_SERVER_ERROR),
     FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE("A file is already linked to this Form Input Response", CONFLICT),
     FILES_UNABLE_TO_UPDATE_FILE("The file could not be updated", INTERNAL_SERVER_ERROR),
@@ -31,17 +31,17 @@ public enum ServiceFailureKeys implements ErrorTemplate {
     FILES_INCORRECTLY_REPORTED_MEDIA_TYPE("The actual file media type didn't match the reported media type", UNSUPPORTED_MEDIA_TYPE),
     FILES_INCORRECTLY_REPORTED_FILESIZE("The actual file size didn't match the reported file size", BAD_REQUEST),
 
-    //
-    // Notifications
-    //
+    /**
+     * Notifications
+     */
     NOTIFICATIONS_UNABLE_TO_SEND_SINGLE("The notification could not be sent", INTERNAL_SERVER_ERROR),
     NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE("Unable to send the Notifications", INTERNAL_SERVER_ERROR),
     NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE("Could not render Notification template", INTERNAL_SERVER_ERROR),
 
-    //
-    // Emails
-    //
-    EMAILS_NOT_SENT_MULTIPLE("The emails could not be sent", INTERNAL_SERVER_ERROR),;
+    /**
+     * Emails
+     */
+    EMAILS_NOT_SENT_MULTIPLE("The emails could not be sent", INTERNAL_SERVER_ERROR);
 
     private ErrorTemplate errorTemplate;
 
