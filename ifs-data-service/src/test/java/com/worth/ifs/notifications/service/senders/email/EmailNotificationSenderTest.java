@@ -14,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;

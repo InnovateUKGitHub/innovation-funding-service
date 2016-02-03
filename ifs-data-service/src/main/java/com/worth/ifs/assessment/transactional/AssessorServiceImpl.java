@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_INCORRECT_TYPE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_INCORRECT_TYPE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**

@@ -15,7 +15,7 @@ import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.BuilderAmendFunctions.names;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;

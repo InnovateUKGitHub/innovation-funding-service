@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;

@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

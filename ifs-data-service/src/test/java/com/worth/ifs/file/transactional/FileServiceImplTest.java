@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.*;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.CollectionFunctions.*;

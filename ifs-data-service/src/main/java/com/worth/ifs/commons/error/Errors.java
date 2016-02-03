@@ -2,8 +2,8 @@ package com.worth.ifs.commons.error;
 
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_NOT_FOUND_ENTITY;
-import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND_ENTITY;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.springframework.http.HttpStatus.*;
 
