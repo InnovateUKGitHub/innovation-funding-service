@@ -2,12 +2,10 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
-<div th:fragment="form-label (name,id,bold)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
-           th:if="${name}"
-           th:for="${id}"
-           th:text="${name}"
-            />
+<div th:fragment="form-label (name)">
+    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+        <div th:text="${name}" />
+    </label>
 </div>
 <!-- =========================== Form label hidden =========================== -->
 <div th:fragment="form-label-hidden (name,id)">
@@ -19,13 +17,13 @@
 </div>
 <!-- =========================== Form validation messages =========================== -->
 <div th:fragment="form-validation-messages (id)">
-    <div class="validation-messages" th:with="validationId='formInput['+${id}+']'" >
+    <div th:with="validationId='formInput['+${id}+']'" th:remove="tag">
         <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
     </div>
 </div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
-    <div class="form-hint"
+    <span class="form-hint"
          th:if="${hint}"
          th:utext="${hint}"
             />
@@ -137,14 +135,13 @@
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea
-                th:id="${id}"
-                th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-                th:field="*{formInput[__${id}__]}"
-                th:readonly="${readonly}"
-                th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
-                th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
-                >
+		<textarea th:id="${id}"
+              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+              th:field="*{formInput[__${id}__]}"
+              th:readonly="${readonly}"
+              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              >
 		</textarea>
 </div>
 <div th:fragment="form-finance-textarea (type, id, name, value,readonly)">

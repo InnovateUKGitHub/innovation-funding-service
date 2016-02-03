@@ -7,6 +7,15 @@ s2l = BuiltIn().get_library_instance('Selenium2Library')
 class IFS_Selenium_Extension:
     
 
+    def benchmarking_is_set_up(self, timeout=None):
+      """Sets up the benchmarking test by deleting the old report, if it exists, and raising
+      any other errors"""
+      try:
+        os.remove('benchmarking_report.txt') 
+      except OSError as e: 
+          if e.errno != errno.ENOENT:
+            raise 
+
     def time_for_condition(self, condition, benchmark_step, timeout=None, error=None):
         """Waits until the given `condition` is true or `timeout` expires,
         and then reports the time taken to a custom file.
@@ -47,7 +56,7 @@ class IFS_Selenium_Extension:
         """
         if not error:
             error = "Text '%s' did not appear in <TIMEOUT>" % text
-        self._time_until(timeout, error, benchmark_step, self._is_text_present, text)
+        self._time_until(timeout, error, benchmark_step, s2l._is_text_present, text)
 
     def time_until_page_does_not_contain(self, text, benchmark_step, timeout=None, error=None):
         """Waits until `text` disappears from current page. and then reports
@@ -64,7 +73,7 @@ class IFS_Selenium_Extension:
         Keyword Succeeds`.
         """
         def check_present():
-            present = self._is_text_present(text)
+            present = s2l._is_text_present(text)
             if not present:
                 return
             else:
@@ -87,7 +96,7 @@ class IFS_Selenium_Extension:
         """
         if not error:
             error = "Element '%s' did not appear in <TIMEOUT>" % locator
-        self._time_until(timeout, error, benchmark_step, self._is_element_present, locator)
+        self._time_until(timeout, error, benchmark_step, s2l._is_element_present, locator)
 
     def time_until_page_does_not_contain_element(self, locator, benchmark_step, timeout=None, error=None):
         """Waits until element specified with `locator` disappears from current page,
@@ -133,9 +142,9 @@ class IFS_Selenium_Extension:
                 return error or "Element locator '%s' did not match any elements after %s" % (locator, self._format_timeout(timeout))
             else:
                 return error or "Element '%s' was not visible in %s" % (locator, self._format_timeout(timeout))
-        self._time_until_no_error(timeout, check_visibility)
+        self._time_until_no_error(timeout, check_visibility, benchmark_step)
     
-    def time_until_element_is_not_visible(self, locator, timeout=None, error=None):
+    def time_until_element_is_not_visible(self, locator, benchmark_step, timeout=None, error=None):
         """Waits until element specified with `locator` is not visible, and
         then reports the time taken to a custom file.
 
@@ -193,7 +202,7 @@ class IFS_Selenium_Extension:
         Fails if `timeout` expires before the text appears on given element. See
         `introduction` for more information about `timeout` and its
         default value.
-
+*
         `error` can be used to override the default error message.
 
         See also `Time Until Page Contains`, `Time Until Page Contains Element`, `Time For Condition`,
@@ -250,12 +259,7 @@ class IFS_Selenium_Extension:
             timeout_error = wait_func(*args)
             if not timeout_error:
                 step_time = (time.time() - start_time)
-                try:
-		            os.remove('benchmarking_report.txt')
-                except OSError as e:
-		            if e.errno != errno.ENOENT:
-		                raise
-                step_report = str(benchmark_step) + "    " + str(step_time)
+                step_report = str(benchmark_step) + "    " + str(step_time) + "\n"
                 with open('benchmarking_report.txt','a+') as f: f.write(str(step_report))
                 return
             if time.time() > max_time:

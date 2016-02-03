@@ -1,8 +1,14 @@
 <p>Dear ${notificationTarget.name},</p>
 
-<p>You've been invited to join the application "${applicationName}" as a collaborator.  Please click the "Accept Invite" link below to accept the invitation:
+<p>You've been invited to join the application "${applicationName}" as a collaborator.  Please click the "Accept Invite" link below to accept the invitation:</p>
 
+<p>Lead organisation: <b>${leadOrganisation}</b></p>
+<p>Lead applicant: <b>${leadApplicant}</b></p>
 <p><a href="${inviteUrl}">Accept Invite</a></p>
 
+<p>Email the lead applicant ${leadApplicantEmail}</p>
+
+<p>
 Thanks,<br />
 ${notificationSource.name}
+</p>

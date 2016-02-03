@@ -35,7 +35,13 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().build());
         UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().build());
 
-        Map<String, Object> templateArguments = asMap("applicationName", "My Application", "inviteUrl", "http://acceptinvite.com");
+        Map<String, Object> templateArguments = asMap(
+                "applicationName", "My Application",
+                "inviteUrl", "http://acceptinvite.com",
+                "leadOrganisation", "Empire Ltd",
+                "leadApplicant", "Steve Smith",
+                "leadApplicantEmail", "steve@empire.com"
+        );
 
         ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
         assertTrue(renderResult.isRight());

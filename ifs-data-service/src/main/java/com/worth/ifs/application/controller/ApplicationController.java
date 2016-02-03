@@ -6,31 +6,25 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.InviteCollaboratorResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
 import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.util.JsonStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_SEND_NOTIFICATION;
-import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handleServiceFailure;
-import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handlingErrors;
 import static com.worth.ifs.transactional.BaseTransactionalService.Failures.APPLICATION_NOT_FOUND;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.JsonStatusResponse.*;
+import static com.worth.ifs.util.JsonStatusResponse.badRequest;
+import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -139,19 +133,4 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
         return applicationMapper.mapApplicationToResource(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj));
     }
-
-    @RequestMapping(value = "/{applicationId}/invitecollaborator", method = RequestMethod.POST)
-    public JsonStatusResponse inviteCollaborator(
-            @PathVariable("applicationId") final Long applicationId,
-            @RequestBody InviteCollaboratorResource invite,
-            HttpServletResponse response) {
-
-        ServiceResult<Notification> inviteResult = handlingErrors(() -> applicationService.inviteCollaboratorToApplication(applicationId, invite));
-
-        return inviteResult.mapLeftOrRight(
-                failure -> handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Unable to send Notification to invitee", response)),
-                success -> accepted("Notification sent successfully", response)
-        );
-    }
-
 }

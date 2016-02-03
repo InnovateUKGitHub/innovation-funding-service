@@ -147,7 +147,7 @@ IFS.formValidation = (function(){
                 if(errorEl.length === 0){
                     formGroup.addClass('error');
                     var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('label').first().append(html);
+                    formGroup.find('legend,label').first().append(html);
                 }
             }
         },
