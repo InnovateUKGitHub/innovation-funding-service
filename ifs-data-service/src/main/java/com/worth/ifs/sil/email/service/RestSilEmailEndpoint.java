@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.file.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**

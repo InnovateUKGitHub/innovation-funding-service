@@ -17,7 +17,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.worth.ifs.file.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
+import static com.worth.ifs.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**

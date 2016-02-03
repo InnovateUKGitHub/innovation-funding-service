@@ -1,4 +1,4 @@
-package com.worth.ifs.file.transactional;
+package com.worth.ifs.transactional;
 
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.ErrorTemplateImpl;
