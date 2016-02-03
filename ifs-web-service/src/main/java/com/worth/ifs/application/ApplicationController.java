@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
  * Application overview is the page that contains the most basic information about the current application and
  * the basic information about the competition the application is related to.
  */
+
 @Controller
 @RequestMapping("/application")
 public class ApplicationController extends AbstractApplicationController {
@@ -43,7 +44,7 @@ public class ApplicationController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
+                                     HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
