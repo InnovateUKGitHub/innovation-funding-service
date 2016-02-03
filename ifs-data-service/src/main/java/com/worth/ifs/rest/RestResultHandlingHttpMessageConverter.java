@@ -24,7 +24,7 @@ import java.util.List;
  * In this way, we have a consistent error-handling mechanism over REST for Controller methods that are returning RestResults.
  */
 @Component
-public class CustomRestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
+public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     @Override
     protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {

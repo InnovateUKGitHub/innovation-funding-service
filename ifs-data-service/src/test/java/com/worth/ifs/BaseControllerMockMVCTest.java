@@ -1,6 +1,6 @@
 package com.worth.ifs;
 
-import com.worth.ifs.rest.CustomRestResultHandlingHttpMessageConverter;
+import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.InjectMocks;
@@ -47,7 +47,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         List<HttpMessageConverter<?>> originalMessageConverters = requestMappingHandlerAdapter.getMessageConverters();
         List<HttpMessageConverter<?>> nonMappingJackson2Converters = originalMessageConverters.stream().filter(converter -> !(converter instanceof MappingJackson2HttpMessageConverter)).collect(toList());
 
-        CustomRestResultHandlingHttpMessageConverter customHttpMessageConverter = new CustomRestResultHandlingHttpMessageConverter();
+        RestResultHandlingHttpMessageConverter customHttpMessageConverter = new RestResultHandlingHttpMessageConverter();
         List<HttpMessageConverter<?>> newListOfConverters = combineLists(nonMappingJackson2Converters, customHttpMessageConverter);
         HttpMessageConverter[] newListOfConvertersArray = newListOfConverters.toArray(new HttpMessageConverter[newListOfConverters.size()]);
 
