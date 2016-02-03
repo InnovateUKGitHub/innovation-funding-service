@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -82,7 +82,7 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
         assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
+        assertTrue(sendMailResult.getLeft().is(internalServerErrorError()));
     }
 
 }

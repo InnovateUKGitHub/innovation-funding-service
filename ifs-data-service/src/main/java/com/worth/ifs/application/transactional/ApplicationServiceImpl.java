@@ -230,7 +230,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
-        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () -> getFormInputResponse(fileEntryId).
+
+        return handlingErrors(notFoundError(FileEntry.class, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId()), () ->
+
+                getFormInputResponse(fileEntryId).
                 map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
                 map(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
         )));

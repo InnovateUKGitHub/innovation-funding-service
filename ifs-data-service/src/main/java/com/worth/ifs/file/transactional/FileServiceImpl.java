@@ -200,7 +200,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), new Error(GENERAL_NOT_FOUND_ENTITY, FileEntry.class, fileEntryId));
+        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
@@ -213,7 +213,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             File expectedFile = new File(pathElementsToFile(pathElements), filename);
             return expectedFile.exists() ? expectedFile : null;
 
-        }, new Error(GENERAL_NOT_FOUND_ENTITY, FileEntry.class, fileEntry.getId()));
+        }, notFoundError(FileEntry.class, fileEntry.getId()));
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
@@ -253,7 +253,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
             if (!fileToCreate.exists()) {
                 log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
-                return serviceFailure(new Error(GENERAL_NOT_FOUND_ENTITY));
+                return serviceFailure(notFoundError(File.class));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);

@@ -9,9 +9,10 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -36,7 +37,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     @Test
     public void test_responseNotFound() {
 
-        long responseId = 1L;
+        long responseId = 123L;
         when(responseRepositoryMock.findOne(responseId)).thenReturn(null);
         ServiceResult<Feedback> serviceResult
                 = service.updateAssessorFeedback(
@@ -46,7 +47,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(serviceResult.getLeft().is(notFoundError(Response.class, responseId)));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(serviceResult.getLeft().is(notFoundError(ProcessRole.class, processRoleId)));
     }
 
     @Test
@@ -76,6 +77,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         long processRoleId = 2L;
 
         ProcessRole incorrectTypeProcessRole = newProcessRole().
+                with(id(processRoleId)).
                 withRole(newRole().withType(COLLABORATOR)).
                 build();
 
@@ -90,7 +92,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(GENERAL_INCORRECT_TYPE));
+        assertTrue(serviceResult.getLeft().is(incorrectTypeError(ProcessRole.class, processRoleId)));
     }
 
     @Test
@@ -103,6 +105,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         ProcessRole incorrectApplicationProcessRole =
                 newProcessRole().
+                        with(id(processRoleId)).
                         withRole(newRole().withType(ASSESSOR)).
                         withApplication(newApplication().withId(incorrectApplicationId)).
                         build();
@@ -123,7 +126,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(GENERAL_INCORRECT_TYPE));
+        assertTrue(serviceResult.getLeft().is(incorrectTypeError(ProcessRole.class, processRoleId)));
     }
 
     @Test
@@ -139,7 +142,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
                         .setValue(empty())
                         .setText(empty()));
         assertTrue(serviceResult.isLeft());
-        assertTrue(serviceResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
+        assertTrue(serviceResult.getLeft().is(internalServerErrorError()));
     }
 
     @Test

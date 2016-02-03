@@ -5,12 +5,12 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.user.domain.Organisation;
@@ -33,6 +33,8 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -48,7 +50,6 @@ import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Tests for {@link ApplicationServiceImpl}
@@ -131,11 +132,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void testCreateFormInputResponseFileUploadButFileAlreadyExistsForFormInputResponse() {
 
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(987L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        FileEntry alreadyExistingFileEntry = newFileEntry().build();
+        FileEntry alreadyExistingFileEntry = newFileEntry().with(id(987L)).build();
         FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntry(alreadyExistingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
@@ -147,7 +148,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE));
+        assertTrue(result.getLeft().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "987"));
     }
 
     @Test
@@ -158,13 +159,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
+                thenReturn(serviceFailure(internalServerErrorError("no files for you...")));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is("no files for you..."));
+        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -214,7 +215,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(ProcessRole.class, 789L)));
     }
 
     @Test
@@ -238,7 +239,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(FormInput.class, 123L)));
     }
 
     @Test
@@ -263,7 +264,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(Application.class, 456L)));
     }
 
     @Test
@@ -363,13 +364,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
+                thenReturn(serviceFailure(internalServerErrorError("no files for you...")));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is("no files for you..."));
+        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -411,13 +412,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileServiceMock.deleteFile(999L)).thenReturn(serviceFailure(new Error("No deleting for you!", INTERNAL_SERVER_ERROR)));
+        when(fileServiceMock.deleteFile(999L)).thenReturn(serviceFailure(internalServerErrorError("no deleting for you...")));
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is("No deleting for you!"));
+        assertTrue(result.getLeft().is(internalServerErrorError("no deleting for you...")));
     }
 
     @Test
@@ -432,7 +433,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
     }
 
     @Test
@@ -445,12 +446,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND_ENTITY, File.class, 999L)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(notFoundError(File.class, 999L)));
 
         ServiceResult<FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(File.class, 999L)));
     }
 
     @Test
@@ -507,13 +508,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(new Error("no files for you...", INTERNAL_SERVER_ERROR)));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(internalServerErrorError("no files for you...")));
 
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is("no files for you..."));
+        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -529,7 +530,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 123L, 456L, 789L)));
     }
 
 
@@ -542,6 +543,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
     }
 }

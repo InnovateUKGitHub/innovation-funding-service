@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.security.FeedbackLookup;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_INCORRECT_TYPE;
+import static com.worth.ifs.commons.error.Errors.incorrectTypeError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**
@@ -68,7 +67,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleInApplication(Response response, ProcessRole processRole) {
-        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? serviceSuccess(processRole) : serviceFailure(new Error(GENERAL_INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
+        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? serviceSuccess(processRole) : serviceFailure(incorrectTypeError(ProcessRole.class, processRole.getId()));
     }
 
     /**
@@ -79,6 +78,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleCorrectType(ProcessRole processRole, UserRoleType type) {
-        return processRole.getRole().getName().equals(type.getName()) ? serviceSuccess(processRole) : serviceFailure(new Error(GENERAL_INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
+        return processRole.getRole().getName().equals(type.getName()) ? serviceSuccess(processRole) : serviceFailure(incorrectTypeError(ProcessRole.class, processRole.getId()));
     }
 }

@@ -30,6 +30,7 @@ import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -179,19 +180,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testCreateFileButFormInputNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find entity");
+        assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
 
 
     @Test
     public void testCreateFileButApplicationNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find entity");
+        assertCreateFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
     }
 
 
     @Test
     public void testCreateFileButProcessRoleNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find entity");
+        assertCreateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
     }
 
     @Test
@@ -399,19 +400,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testUpdateFileButFormInputNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find entity");
+        assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
 
 
     @Test
     public void testUpdateFileButApplicationNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find entity");
+        assertUpdateFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
     }
 
 
     @Test
     public void testUpdateFileButProcessRoleNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find entity");
+        assertUpdateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
     }
 
     @Test
@@ -504,12 +505,12 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testUpdateFileButFormInputResponseNotFound() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND_ENTITY), "formInputResponseNotFound", NOT_FOUND, "Unable to find entity");
+        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "formInputResponseNotFound", NOT_FOUND, "Unable to find entity");
     }
 
     @Test
     public void testUpdateFileButFileNotFoundToUpdate() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND_ENTITY), "noFileFoundToUpdate", NOT_FOUND, "Unable to find entity");
+        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "noFileFoundToUpdate", NOT_FOUND, "Unable to find entity");
     }
 
 
@@ -584,28 +585,28 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testDeleteFileButFormInputNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find entity");
+        assertDeleteFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
 
     @Test
     public void testDeleteFileButFormInputResponseNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find entity");
+        assertDeleteFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
     }
 
     @Test
     public void testDeleteFileButApplicationNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find entity");
+        assertDeleteFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
     }
 
 
     @Test
     public void testDeleteFileButProcessRoleNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find entity");
+        assertDeleteFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
     }
 
     @Test
     public void testDeleteFileButFileNotFoundToDelete() throws Exception {
-        assertDeleteFileButEntityNotFound(File.class, "noFileFoundToDelete", "Unable to find entity");
+        assertDeleteFileButEntityNotFound(File.class, "noFileFoundToDelete", "File not found");
     }
 
     @Test
@@ -681,27 +682,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetFileDetailsButFileNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound", "Unable to find entity");
+        assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound", "File not found");
     }
 
     @Test
     public void testGetFileDetailsButFormInputNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find entity");
+        assertGetFileDetailsButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
 
     @Test
     public void testGetFileDetailsButApplicationNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(Application.class, "applicationNotFound", "Unable to find entity");
+        assertGetFileDetailsButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
     }
 
     @Test
     public void testGetFileDetailsButProcessRoleNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find entity");
+        assertGetFileDetailsButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
     }
 
     @Test
     public void testGetFileDetailsButformInputResponseNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find entity");
+        assertGetFileDetailsButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
     }
 
     @Test
@@ -775,27 +776,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetFileContentsButFileNotFound() throws Exception {
-        assertGetFileButEntityNotFound(File.class, "fileNotFound", "Unable to find entity");
+        assertGetFileButEntityNotFound(File.class, "fileNotFound", "File not found");
     }
 
     @Test
     public void testGetFileContentsButFormInputNotFound() throws Exception {
-        assertGetFileButEntityNotFound(FormInput.class, "formInputNotFound", "Unable to find entity");
+        assertGetFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
 
     @Test
     public void testGetFileContentsButApplicationNotFound() throws Exception {
-        assertGetFileButEntityNotFound(Application.class, "applicationNotFound", "Unable to find entity");
+        assertGetFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
     }
 
     @Test
     public void testGetFileContentsButProcessRoleNotFound() throws Exception {
-        assertGetFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "Unable to find entity");
+        assertGetFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
     }
 
     @Test
     public void testGetFileContentsButformInputResponseNotFound() throws Exception {
-        assertGetFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "Unable to find entity");
+        assertGetFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
     }
 
     @Test
@@ -843,7 +844,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertGetFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
 
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound)));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(notFoundError(entityTypeNotFound)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -855,11 +856,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
                 andReturn();
 
-        assertResponseErrorMessageEqual(expectedMessage, new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound), response);
+        assertResponseErrorMessageEqual(expectedMessage, notFoundError(entityTypeNotFound), response);
     }
 
     private void assertGetFileDetailsButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound)));
+        when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(notFoundError(entityTypeNotFound)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -871,11 +872,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry_" + documentationSuffix)).
                 andReturn();
 
-        assertResponseErrorMessageEqual(expectedMessage, new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound), response);
+        assertResponseErrorMessageEqual(expectedMessage, notFoundError(entityTypeNotFound), response);
     }
 
     private void assertCreateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertCreateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+        assertCreateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
     private void assertCreateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
@@ -902,12 +903,12 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     private void assertUpdateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+        assertUpdateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
 
     private void assertDeleteFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertDeleteFileButErrorOccurs(new Error(GENERAL_NOT_FOUND_ENTITY, entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+        assertDeleteFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
     }
 
     private void assertUpdateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {

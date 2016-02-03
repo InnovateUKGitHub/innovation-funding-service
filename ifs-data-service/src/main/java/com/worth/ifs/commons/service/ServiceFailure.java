@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
 
 import java.util.List;
 
@@ -25,29 +26,18 @@ public class ServiceFailure {
         this.cause = e;
     }
 
-    public boolean is(String... messages) {
-        List<String> containedErrors = getErrorKeys();
-        List<String> messagesList = asList(messages);
-        return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
+    public boolean is(Error... expectedErrors) {
+        List<Error> expectedErrorsList = asList(expectedErrors);
+        return this.errors.size() == expectedErrorsList.size() && errors.containsAll(expectedErrorsList);
     }
 
-    // TODO DW - INFUND-854 - not enough to check just keys
-    public boolean is(Enum<?>... messages) {
-        List<String> var = simpleMap(asList(messages), Enum::name);
-        return is(var.toArray(new String[var.size()]));
+    public boolean is(ErrorTemplate... expectedErrorTemplates) {
+        List<Error> errorList = simpleMap(asList(expectedErrorTemplates), Error::new);
+        return is(errorList.toArray(new Error[errorList.size()]));
     }
 
-    public boolean contains(Enum<?>... messages) {
-        List<String> messagesToCheck = simpleMap(asList(messages), Enum::name);
-        return contains(messagesToCheck.toArray(new String[messagesToCheck.size()]));
-    }
-
-    public boolean contains(String... messages) {
-        return getErrorKeys().containsAll(asList(messages));
-    }
-
-    public List<String> getErrorKeys() {
-        return simpleMap(errors, Error::getErrorKey);
+    public boolean is(ErrorTemplate expectedErrorTemplate, Object... arguments) {
+        return is(new Error(expectedErrorTemplate, arguments));
     }
 
     public List<Error> getErrors() {

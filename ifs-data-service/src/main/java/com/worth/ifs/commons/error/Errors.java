@@ -1,8 +1,10 @@
 package com.worth.ifs.commons.error;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND_ENTITY;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_INCORRECT_TYPE;
+import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
@@ -14,7 +16,10 @@ import static org.springframework.http.HttpStatus.*;
 public class Errors {
 
     public static Error notFoundError(Class<?> entityClazz, List<Object> arguments) {
-        return new Error(GENERAL_NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+        List<Object> allArguments = new ArrayList<>();
+        allArguments.add(entityClazz.getSimpleName());
+        allArguments.addAll(arguments);
+        return new Error(GENERAL_NOT_FOUND, entityClazz.getSimpleName() + " not found", allArguments, NOT_FOUND);
     }
 
     public static Error notFoundError(Class<?> entityClazz, Object... arguments) {
@@ -45,4 +50,16 @@ public class Errors {
         return new Error(GENERAL_UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
     }
 
+    public static Error incorrectTypeError(Class<?> clazz, List<Object> arguments) {
+
+        List<Object> allArguments = new ArrayList<>();
+        allArguments.add(clazz.getSimpleName());
+        allArguments.addAll(arguments);
+
+        return new Error(GENERAL_INCORRECT_TYPE.getErrorKey(), clazz.getSimpleName() + " was of an incorrect type", allArguments, GENERAL_INCORRECT_TYPE.getCategory());
+    }
+
+    public static Error incorrectTypeError(Class<?> clazz, Object... arguments) {
+        return incorrectTypeError(clazz, asList(arguments));
+    }
 }

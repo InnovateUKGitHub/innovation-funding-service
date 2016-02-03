@@ -1,7 +1,6 @@
 package com.worth.ifs.email.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.BuilderAmendFunctions.names;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;
@@ -75,11 +74,11 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         SilEmailMessage expectedMessageToSend = new SilEmailMessage(silEmailFrom, asList(silEmailTo1, silEmailTo2), "A subject", silEmailBody, silEmailBody2);
 
-        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceFailure(Errors.internalServerErrorError()));
+        when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
+        assertTrue(emailResult.getLeft().is(internalServerErrorError()));
     }
 
     @Test
@@ -100,7 +99,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
+        assertTrue(emailResult.getLeft().is(internalServerErrorError()));
     }
 
 }
