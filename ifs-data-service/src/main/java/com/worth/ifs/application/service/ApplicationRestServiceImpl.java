@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
@@ -76,13 +77,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public Double getCompleteQuestionsPercentage(Long applicationId) {
+    public ListenableFuture<Double> getCompleteQuestionsPercentage(Long applicationId) {
         if (applicationId == null) {
             log.error("No application and/org organisation id!!");
         }
-
-        ObjectNode jsonResponse = restGet(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return jsonResponse.get("completedPercentage").asDouble();
+        ListenableFuture<ResponseEntity<ObjectNode>> responseFuture = restGetAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
+        return ListenableFutures.adapt(responseFuture, r -> r.getBody().get("completedPercentage").asDouble());
     }
 
     @Override

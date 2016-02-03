@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,7 +46,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         // now run the method under test
         ApplicationResource application = service.getApplicationById(123L);
         assertNotNull(application);
-        assertEquals(application,response.getBody());
+        assertEquals(application, response.getBody());
     }
 
     @Test
@@ -84,16 +85,15 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getCompleteQuestionsPercentage() {
+    public void test_getCompleteQuestionsPercentage() throws Exception {
 
         String expectedUrl = dataServicesUrl + applicationRestURL + "/getProgressPercentageByApplicationId/123";
         ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
 
-        ResponseEntity<ObjectNode> response = new ResponseEntity<>(returnedDetails, OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(response);
+        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(settable(new ResponseEntity<>(returnedDetails, OK)));
 
         // now run the method under test
-        Double percentage = service.getCompleteQuestionsPercentage(123L);
+        Double percentage = service.getCompleteQuestionsPercentage(123L).get();
 
         assertNotNull(percentage);
         assertEquals(Double.valueOf(60.5), percentage);
@@ -137,6 +137,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         // now run the method under test
         ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123");
-        assertEquals(returnedResponse.getName(),application.getName());
+        assertEquals(returnedResponse.getName(), application.getName());
     }
 }

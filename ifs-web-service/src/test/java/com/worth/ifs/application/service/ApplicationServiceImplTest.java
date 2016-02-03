@@ -14,9 +14,8 @@ import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +43,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         userId = 1L;
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(applications);
-        when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(20.5d);
+
+        when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(settable(20.5d));
         for(ApplicationStatusResource status : statuses) {
             when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(status);
         }
@@ -117,7 +117,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testGetCompleteQuestionsPercentage() throws Exception {
         // somehow the progress is rounded, because we use a long as the return type.
-        assertEquals(20, service.getCompleteQuestionsPercentage(applications.get(0).getId()));
+        assertEquals(20, service.getCompleteQuestionsPercentage(applications.get(0).getId()).get().intValue());
     }
 
     @Test

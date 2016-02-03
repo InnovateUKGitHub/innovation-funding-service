@@ -4,12 +4,17 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static com.worth.ifs.application.service.ListenableFutures.call;
 
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
@@ -48,15 +53,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
-        Map<Long, Integer> applicationProgress = new HashMap<>();
+        Map<Long, Future<Integer>> applicationProgress = new HashMap<>();
         applications.stream()
-            .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
-            .map(ApplicationResource::getId)
-            .forEach(id -> {
-                Double progress = applicationRestService.getCompleteQuestionsPercentage(id);
-                applicationProgress.put(id, progress.intValue());
-            });
-        return applicationProgress;
+                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
+                .map(ApplicationResource::getId)
+                .forEach(id -> {
+                    applicationProgress.put(id, adapt(applicationRestService.getCompleteQuestionsPercentage(id), Double::intValue));
+                });
+        return call(applicationProgress);
     }
 
     @Override
@@ -77,12 +81,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public int getCompleteQuestionsPercentage(Long applicationId) {
-       return applicationRestService.getCompleteQuestionsPercentage(applicationId).intValue();
+    public ListenableFuture<Integer> getCompleteQuestionsPercentage(Long applicationId) {
+        return adapt(applicationRestService.getCompleteQuestionsPercentage(applicationId), d -> d.intValue());
     }
 
     @Override
-    public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
+    public int getAssignedQuestionsCount(Long applicationId, Long processRoleId) {
         return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).intValue();
     }
 
@@ -96,7 +100,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRestService.findByProcessRoleId(id);
     }
 
-    private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
+    private ApplicationStatusResource fetchApplicationStatusFromId(Long id) {
         return applicationStatusRestService.getApplicationStatusById(id);
     }
 
