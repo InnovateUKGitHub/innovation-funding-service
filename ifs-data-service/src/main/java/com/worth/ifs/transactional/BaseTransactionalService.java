@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * This class represents the base class for transactional services.  Method calls within this service will have
  * transaction boundaries provided to allow for safe atomic operations and persistence cascading.  Code called
  * within a {@link #handlingErrors(Supplier)} supplier will have its exceptions converted into ServiceFailures
- * of type UNEXPECTED_ERROR and the transaction rolled back.
+ * of type GENERAL_UNEXPECTED_ERROR and the transaction rolled back.
  *
  * Created by dwatson on 06/10/15.
  */
@@ -38,36 +38,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public abstract class BaseTransactionalService  {
 
     private static final Log log = LogFactory.getLog(BaseTransactionalService.class);
-
-    public enum Failures implements ErrorTemplate {
-
-        UNEXPECTED_ERROR("An unexpected error occurred", INTERNAL_SERVER_ERROR), //
-        NOT_FOUND_ENTITY("Unable to find entity", NOT_FOUND), //
-        INCORRECT_TYPE("Argument was of an incorrect type", BAD_REQUEST);
-
-        private String errorMessage;
-        private HttpStatus category;
-
-        Failures(String errorMessage, HttpStatus category) {
-            this.errorMessage = errorMessage;
-            this.category = category;
-        }
-
-        @Override
-        public String getErrorKey() {
-            return name();
-        }
-
-        @Override
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-
-        @Override
-        public HttpStatus getCategory() {
-            return category;
-        }
-    }
 
     @Autowired
     protected ResponseRepository responseRepository;

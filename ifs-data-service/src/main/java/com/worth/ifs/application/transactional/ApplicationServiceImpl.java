@@ -14,7 +14,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -52,53 +51,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
-
-    // TODO DW - INFUND-854 - move all failure types into central place?
-    public enum ServiceFailures implements ErrorTemplate {
-
-        UNABLE_TO_CREATE_FILE("The file could not be created", INTERNAL_SERVER_ERROR), //
-        FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE("A file is already linked to this Form Input Response", CONFLICT), //
-        UNABLE_TO_UPDATE_FILE("The file could not be updated", INTERNAL_SERVER_ERROR), //
-        UNABLE_TO_DELETE_FILE("The file could not be deleted", INTERNAL_SERVER_ERROR), //
-        UNABLE_TO_SEND_NOTIFICATION("The notification could not be sent", INTERNAL_SERVER_ERROR), //
-        ;
-
-        private String errorMessage;
-        private HttpStatus category;
-
-        ServiceFailures(String errorMessage, HttpStatus category) {
-            this.errorMessage = errorMessage;
-            this.category = category;
-        }
-
-        @Override
-        public String getErrorKey() {
-            return name();
-        }
-
-        @Override
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-
-        @Override
-        public HttpStatus getCategory() {
-            return category;
-        }
-    }
 
     @Autowired
     private FileService fileService;
@@ -176,7 +139,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_CREATE_FILE, () -> {
+        return handlingErrors(FILES_UNABLE_TO_CREATE_FILE, () -> {
 
             long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
             long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -185,7 +148,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
-                return serviceFailure(new Error(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
+                return serviceFailure(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
             } else {
 
                 return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
@@ -219,7 +182,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_UPDATE_FILE, () -> {
+        return handlingErrors(FILES_UNABLE_TO_UPDATE_FILE, () -> {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
@@ -241,7 +204,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
 
-        return handlingErrors(UNABLE_TO_DELETE_FILE, () -> {
+        return handlingErrors(FILES_UNABLE_TO_DELETE_FILE, () -> {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFileId);

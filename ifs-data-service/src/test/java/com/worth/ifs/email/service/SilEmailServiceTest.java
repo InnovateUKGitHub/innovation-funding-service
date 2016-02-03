@@ -15,10 +15,10 @@ import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.BuilderAmendFunctions.names;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.email.builders.EmailAddressResourceBuilder.newEmailAddressResource;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -79,7 +79,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(UNEXPECTED_ERROR));
+        assertTrue(emailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(UNEXPECTED_ERROR));
+        assertTrue(emailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
     }
 
 }

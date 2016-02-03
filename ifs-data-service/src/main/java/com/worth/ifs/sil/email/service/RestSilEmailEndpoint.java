@@ -1,9 +1,9 @@
 package com.worth.ifs.sil.email.service;
 
-import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**
@@ -37,7 +37,7 @@ public class RestSilEmailEndpoint extends BaseRestService implements SilEmailEnd
 
             if (!response.getStatusCode().equals(HttpStatus.ACCEPTED)) {
                 LOG.warn("Failed when sending email to SIL: " + response.getBody());
-                return serviceFailure(new Error(EMAILS_NOT_SENT));
+                return serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE));
             }
 
             LOG.debug("Successfully sent email to SIL: " + message);

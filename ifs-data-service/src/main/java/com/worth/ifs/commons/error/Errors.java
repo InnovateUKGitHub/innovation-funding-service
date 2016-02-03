@@ -1,10 +1,9 @@
 package com.worth.ifs.commons.error;
 
-import java.lang.*;
 import java.util.List;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_NOT_FOUND_ENTITY;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.springframework.http.HttpStatus.*;
 
@@ -14,11 +13,11 @@ import static org.springframework.http.HttpStatus.*;
 public class Errors {
 
     public static Error notFoundError(Class<?> entityClazz, List<Object> arguments) {
-        return new Error(NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+        return new Error(GENERAL_NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
     }
 
     public static Error notFoundError(Class<?> entityClazz, Object... arguments) {
-        return new Error(NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+        return new Error(GENERAL_NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
     }
 
     public static Error lengthRequiredError(long maxFileSizeBytes) {
@@ -42,7 +41,7 @@ public class Errors {
     }
 
     public static Error internalServerErrorError(String message) {
-        return new Error(UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
+        return new Error(GENERAL_UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
     }
 
 }

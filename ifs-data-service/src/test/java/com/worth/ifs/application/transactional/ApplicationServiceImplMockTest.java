@@ -32,7 +32,7 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.*;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -40,7 +40,6 @@ import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.NOT_FOUND_ENTITY;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -148,7 +147,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE));
+        assertTrue(result.getLeft().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE));
     }
 
     @Test
@@ -215,7 +214,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -239,7 +238,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -264,7 +263,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -289,7 +288,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+        assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test
@@ -316,7 +315,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+        assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test
@@ -433,7 +432,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -446,12 +445,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(new Error(NOT_FOUND_ENTITY, File.class, 999L)));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND_ENTITY, File.class, 999L)));
 
         ServiceResult<FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
     @Test
@@ -472,7 +471,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_DELETE_FILE));
+        assertTrue(result.getLeft().is(FILES_UNABLE_TO_DELETE_FILE));
     }
 
 
@@ -530,7 +529,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 
 
@@ -543,6 +542,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOT_FOUND_ENTITY));
+        assertTrue(result.getLeft().is(GENERAL_NOT_FOUND_ENTITY));
     }
 }

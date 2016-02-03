@@ -52,6 +52,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         return newBuilder;
     }
 
+    @SuppressWarnings("unchecked")
     public RestResultBuilder<ProcessResultType, ReturnType> andWithDefaultFailure(RestResult<?> failureResult) {
         RestResultBuilder<ProcessResultType, ReturnType> newBuilder = new RestResultBuilder<>(this);
         newBuilder.defaultFailureResult = (RestResult<ReturnType>) failureResult;
@@ -64,6 +65,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         return newBuilder.perform();
     }
 
+    @SuppressWarnings("unchecked")
     private RestResult<ReturnType> perform() {
 
         if (serviceResult != null) {

@@ -1,17 +1,17 @@
 package com.worth.ifs.sil.email.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
-import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -69,7 +69,7 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
         assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(EMAILS_NOT_SENT));
+        assertTrue(sendMailResult.getLeft().is(EMAILS_NOT_SENT_MULTIPLE));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
         assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(UNEXPECTED_ERROR));
+        assertTrue(sendMailResult.getLeft().is(GENERAL_UNEXPECTED_ERROR));
     }
 
 }

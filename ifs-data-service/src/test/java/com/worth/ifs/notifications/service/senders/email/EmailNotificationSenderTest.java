@@ -1,26 +1,26 @@
 package com.worth.ifs.notifications.service.senders.email;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.UserNotificationSource;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
-import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.notifications.service.FreemarkerNotificationTemplateRenderer.ServiceErrors.UNABLE_TO_RENDER_TEMPLATE;
-import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH;
-import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -99,12 +99,12 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body 2"));
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT, INTERNAL_SERVER_ERROR)));
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT, INTERNAL_SERVER_ERROR)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isLeft());
-        assertTrue(results.getLeft().is(EMAILS_NOT_SENT));
+        assertTrue(results.getLeft().is(EMAILS_NOT_SENT_MULTIPLE));
 
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");
@@ -121,12 +121,12 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceSuccess("Plain text body 2"));
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT, INTERNAL_SERVER_ERROR)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isLeft());
-        assertTrue(results.getLeft().is(EMAILS_NOT_SENT));
+        assertTrue(results.getLeft().is(EMAILS_NOT_SENT_MULTIPLE));
 
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");
@@ -135,14 +135,14 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Test
     public void testSendNotificationButRenderTemplateFails() {
 
-        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceFailure(new Error(UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
+        when(rendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
 
         when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getArguments())).thenReturn(serviceSuccess("My subject 2"));
-        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceFailure(new Error(UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
+        when(rendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isLeft());
-        assertTrue(results.getLeft().is(EMAILS_NOT_SENT));
+        assertTrue(results.getLeft().is(EMAILS_NOT_SENT_MULTIPLE));
 
         verify(emailServiceMock, never()).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock, never()).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");

@@ -114,7 +114,7 @@ public class ServiceResult<T> {
      * response (an Either with a left of ServiceFailure).
      *
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
+     * type GENERAL_UNEXPECTED_ERROR.
      *
      * @param serviceCode
      * @param <T>
@@ -133,7 +133,7 @@ public class ServiceResult<T> {
          * response (an Either with a left of ServiceFailure).
          *
          * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-         * type UNEXPECTED_ERROR.
+         * type GENERAL_UNEXPECTED_ERROR.
          *
          * @param <T>
          * @param serviceCode

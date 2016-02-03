@@ -202,7 +202,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 //        InviteCollaboratorResource invite = new InviteCollaboratorResource("The Recipient", "recipient@example.com");
 //        String inviteBody = new ObjectMapper().writeValueAsString(invite);
 //
-//        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(UNABLE_TO_SEND_NOTIFICATIONS));
+//        when(applicationService.inviteCollaboratorToApplication(123L, invite)).thenReturn(failure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
 //
 //        MvcResult response = mockMvc.
 //                perform(

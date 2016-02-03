@@ -4,9 +4,9 @@ import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.security.FeedbackLookup;
-import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -16,10 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.INCORRECT_TYPE;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.application.transactional.ServiceErrors.FailureKeys.GENERAL_INCORRECT_TYPE;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.
@@ -70,7 +68,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleInApplication(Response response, ProcessRole processRole) {
-        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? serviceSuccess(processRole) : serviceFailure(new Error(INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
+        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? serviceSuccess(processRole) : serviceFailure(new Error(GENERAL_INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
     }
 
     /**
@@ -81,6 +79,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleCorrectType(ProcessRole processRole, UserRoleType type) {
-        return processRole.getRole().getName().equals(type.getName()) ? serviceSuccess(processRole) : serviceFailure(new Error(INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
+        return processRole.getRole().getName().equals(type.getName()) ? serviceSuccess(processRole) : serviceFailure(new Error(GENERAL_INCORRECT_TYPE, ProcessRole.class, processRole.getId()));
     }
 }
