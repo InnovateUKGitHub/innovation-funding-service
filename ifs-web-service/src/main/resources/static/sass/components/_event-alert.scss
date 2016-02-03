@@ -3,8 +3,6 @@
 ###Event alert
 
 
-You can use `.is-open` for animation 
-
 ```
 <div class="event-alert event-alert-warning is-open">
     <p>
@@ -16,16 +14,26 @@ You can use `.is-open` for animation
 ##Information alert
 
 ```
-<div class="event-alert is-open">
+<div class="event-alert">
     <p>
          <span>Steve Smith (Lead Applicant) is editing a field</span>
     </p>
 </div>
 ```
 */
+@include keyframes(slideup) {
+    0% {
+        @include transform(translate(0,0));
+    }
+    100% {
+        @include transform(translate(0,-120px));
+
+    }
+}
 .no-js .event-alert {
     position: relative;
 }
+
 
 .event-alert {
     background-color: $grey-3;
@@ -33,21 +41,15 @@ You can use `.is-open` for animation
     font-size: 19px;
     left: 0;
     position: fixed;
+    position: relative\9; /* hack for ie9 and below */
     text-align: center;
     top: 0;
     width: 100%;
     z-index: 9999;
 
-    // Animate slide
-    max-height: 0;
-    overflow-y: hidden;
-    transition-property: all;
-    transition-duration: .66s;
-    transition-timing-function: ease-in-out;
-
-    &.is-open {
-        max-height: 120px;
-    }
+    max-height: 120px;
+    overflow: hidden;
+    @include animation(slideup .66s ease-in-out 3s forwards);
 
     p {
         border-top: 10px solid $govuk-blue;

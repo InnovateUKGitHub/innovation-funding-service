@@ -12,7 +12,6 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:remove="tag"></div>
-    <div th:include="fragments/elements :: notification" th:remove="tag"></div>
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
