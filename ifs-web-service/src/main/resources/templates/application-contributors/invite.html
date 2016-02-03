@@ -10,6 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/elements :: notification" th:remove="tag" />
 
     <!--/* manage application text */-->
     <div th:if="${param.newApplication == null}" th:remove="tag">

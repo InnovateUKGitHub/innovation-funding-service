@@ -2,12 +2,10 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
-<div th:fragment="form-label (name,id,bold)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
-           th:if="${name}"
-           th:for="${id}"
-           th:text="${name}"
-            />
+<div th:fragment="form-label (name)">
+    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+        <div th:text="${name}" />
+    </label>
 </div>
 <!-- =========================== Form label hidden =========================== -->
 <div th:fragment="form-label-hidden (name,id)">
@@ -19,13 +17,13 @@
 </div>
 <!-- =========================== Form validation messages =========================== -->
 <div th:fragment="form-validation-messages (id)">
-    <div class="validation-messages" th:with="validationId='formInput['+${id}+']'" >
+    <div th:with="validationId='formInput['+${id}+']'" th:remove="tag">
         <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
     </div>
 </div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
-    <div class="form-hint"
+    <span class="form-hint"
          th:if="${hint}"
          th:utext="${hint}"
             />
@@ -137,14 +135,13 @@
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea
-                th:id="${id}"
-                th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-                th:field="*{formInput[__${id}__]}"
-                th:readonly="${readonly}"
-                th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
-                th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
-                >
+		<textarea th:id="${id}"
+              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+              th:field="*{formInput[__${id}__]}"
+              th:readonly="${readonly}"
+              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              >
 		</textarea>
 </div>
 <div th:fragment="form-finance-textarea (type, id, name, value,readonly)">
@@ -245,18 +242,18 @@
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.assignee})" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')">
-      <span th:if="${questionAssignee?.assignee.getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
-      <span th:unless="${questionAssignee?.assignee.getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
-      <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}" />
+    <div th:if="(${currentUser.getId() == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')">
+      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have assigned this question to</span>
+      <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}" />
     </div>
-    <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
+    <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.assignedByUserId}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
         <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
-          <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}"/> by
-          <span th:text="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/> by
+          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
         </span>
         <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
-          <span th:text="${currentUser.getId() == questionAssignee?assigneeUserId ? 'you' : questionAssignee?.assignee?.getUser()?.getName()}"/>
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/>
         </span>
     </div>
 </div>
@@ -266,7 +263,7 @@
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
-            th:value="${question.getId()}+'_'+${questionAssignee?.getAssignedBy()?.getUser()?.getId()}"
+            th:value="${question.getId()}+'_'+${questionAssignee?.assignedByUserId}"
             th:class="'buttonlink'">Ready for review
     </button>
   </div>

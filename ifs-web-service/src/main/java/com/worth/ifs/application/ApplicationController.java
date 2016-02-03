@@ -80,6 +80,7 @@ public class ApplicationController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
         
         return "application-summary";
     }

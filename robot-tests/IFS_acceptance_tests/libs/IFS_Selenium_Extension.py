@@ -202,7 +202,7 @@ class IFS_Selenium_Extension:
         Fails if `timeout` expires before the text appears on given element. See
         `introduction` for more information about `timeout` and its
         default value.
-
+*
         `error` can be used to override the default error message.
 
         See also `Time Until Page Contains`, `Time Until Page Contains Element`, `Time For Condition`,
@@ -259,11 +259,6 @@ class IFS_Selenium_Extension:
             timeout_error = wait_func(*args)
             if not timeout_error:
                 step_time = (time.time() - start_time)
-                # try:
-		#          os.remove('benchmarking_report.txt')
-                # except OSError as e:
-		#          if e.errno != errno.ENOENT:
-		#                raise
                 step_report = str(benchmark_step) + "    " + str(step_time) + "\n"
                 with open('benchmarking_report.txt','a+') as f: f.write(str(step_report))
                 return

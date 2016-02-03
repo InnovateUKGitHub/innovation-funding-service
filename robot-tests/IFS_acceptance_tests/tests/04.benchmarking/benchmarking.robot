@@ -10,7 +10,7 @@ TestTeardown      User closes the browser
 
 *** Test Cases ***
 
-Go through the applicant journey
+Go through the applicant process
     [Tags]      Pending
     # This test is for benchmarking only - please do not remove Pending tag or delete!
     Given benchmarking is set up
@@ -23,11 +23,9 @@ Go through the assessor journey
     # This test is for benchmarking only - please do not remove Pending tag or delete!
     Given the guest logs in as an assessor
     And the assessor can visit the competition dashboard
-    And the assessor can review an application and choose to assess it
     And the assessor can visit the application details
     And the assessor can visit the application questions
-    And the assessor can add feedback
-    And the assessor can review the application
+    And the assessor can visit the application summary
 
 
 
@@ -42,30 +40,15 @@ the guest logs in as an assessor
 
 the assessor can visit the competition dashboard
     click link      Technology Inspired
-    time until page contains            Applications for Assessment         Loading the competition dashboard
-
-the assessor can review an application and choose to assess it
-    click link          Using natural gas to heat homes
-    time until page contains        review the pending applications         Loading the Review application page
-    click link          Assess
-    time until page contains        Applications for assessment             Choosing to assess an application
 
 
 the assessor can visit the application details
-    click link      Using natural gas to heat homes
-    time until page contains    Lead organisation                       Loading the application details (assessor)
-
 
 the assessor can visit the application questions
-    click link      Application questions
-    time until page contains    What is the business opportunity        Loading the application questions (assessor)
 
-the assessor can add feedback
+the assessor can visit the application summary
 
 
-the assessor can review the application
-    click link      Review and submit
-    time until page contains
 
 the applicant visits all of the question pages, edits their content and marks them as complete before saving
     the applicant goes to the application details page and performs actions

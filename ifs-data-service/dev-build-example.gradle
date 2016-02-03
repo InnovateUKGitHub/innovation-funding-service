@@ -8,6 +8,7 @@ ext.ifsFlywayLocations="db/migration"
 
 ext.serverPort="8090"
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
+ext.ifsWebBaseURL="http://localhost:8080"
 ext.silRestBaseURL="http://localhost:8090/silstub"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 
