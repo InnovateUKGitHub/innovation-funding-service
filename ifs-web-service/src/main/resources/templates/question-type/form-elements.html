@@ -283,11 +283,11 @@
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                            th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
                             th:attrappend="formaction='&#35;question-'+${question.getId()}"
                             class="buttonlink"/>
-                    <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                    <div th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
             </ul>
@@ -297,9 +297,9 @@
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
-            <span th:if="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Assigned to:</span>
-            <span th:unless="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Reassigned to:</span>
-             <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+            <span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Assigned to:</span>
+            <span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Reassigned to:</span>
+             <strong th:text="${name}" th:with="name=${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'You' : questionAssignee?.getAssigneeName()}" />
         </div>
         <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
         <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">

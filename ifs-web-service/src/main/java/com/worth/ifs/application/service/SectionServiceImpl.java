@@ -2,7 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,17 +98,17 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Section getPreviousSection(Optional<Long> sectionId) {
-        if(sectionId!=null && sectionId.isPresent()) {
-            return sectionRestService.getPreviousSection(sectionId.get());
+    public Section getPreviousSection(Optional<Section> section) {
+        if(section!=null && section.isPresent()) {
+            return sectionRestService.getPreviousSection(section.get().getId());
         }
         return null;
     }
 
     @Override
-    public Section getNextSection(Optional<Long> sectionId) {
-        if(sectionId!=null && sectionId.isPresent()) {
-            Section nextSection = sectionRestService.getNextSection(sectionId.get());
+    public Section getNextSection(Optional<Section> section) {
+        if(section!=null && section.isPresent()) {
+            Section nextSection = sectionRestService.getNextSection(section.get().getId());
             return nextSection;
         }
         return null;

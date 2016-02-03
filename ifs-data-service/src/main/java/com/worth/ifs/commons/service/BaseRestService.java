@@ -61,7 +61,6 @@ public abstract class BaseRestService {
         return responseEntity.getBody();
     }
 
-
     /**
      * restGet is a generic method that performs a RESTful GET request.
      *
