@@ -2,6 +2,8 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.util.StringUtils;
 
@@ -10,7 +12,9 @@ import javax.persistence.*;
 /*
 * The Invite is used for saving invites into the database. Data about the Invitee and related Application and Organisation is saved through this entity.
 * */
-
+@Table(
+    uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
+)
 @Entity
 public class Invite {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
@@ -18,7 +22,10 @@ public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
+    @Email
     private String email;
 
     @ManyToOne
