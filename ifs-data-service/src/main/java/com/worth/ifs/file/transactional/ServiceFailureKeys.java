@@ -1,4 +1,4 @@
-package com.worth.ifs.application.transactional;
+package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.ErrorTemplateImpl;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- *
+ * A set of failure cases for Service code, including general catch-all errors and more specific use-case errors that potentially
+ * span different services
  */
-// TODO DW - INFUND-854 - document everything
 public enum ServiceFailureKeys implements ErrorTemplate {
 
     //

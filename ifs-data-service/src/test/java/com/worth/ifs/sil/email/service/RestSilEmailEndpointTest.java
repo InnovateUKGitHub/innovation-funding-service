@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;

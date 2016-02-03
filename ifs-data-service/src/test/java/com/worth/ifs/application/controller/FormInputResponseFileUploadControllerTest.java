@@ -28,7 +28,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;

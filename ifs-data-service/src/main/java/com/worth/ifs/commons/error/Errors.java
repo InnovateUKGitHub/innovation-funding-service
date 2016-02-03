@@ -3,9 +3,9 @@ package com.worth.ifs.commons.error;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_INCORRECT_TYPE;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.GENERAL_INCORRECT_TYPE;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.*;

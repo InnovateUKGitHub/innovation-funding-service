@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.*;

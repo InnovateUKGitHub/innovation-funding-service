@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import static com.worth.ifs.application.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
+import static com.worth.ifs.file.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
