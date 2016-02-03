@@ -29,29 +29,37 @@ public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpM
     @Override
     protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 
-        RestResult<?> restResult = null;
-
-        if (object != null && object instanceof RestResult && outputMessage instanceof ServerHttpResponse) {
-            restResult = (RestResult<?>) object;
-        }
+        RestResult<?> restResult = getRestResultIfAvailable(object);
 
         if (restResult != null) {
-
-            ServerHttpResponse serverHttpResponse = (ServerHttpResponse) outputMessage;
-            serverHttpResponse.setStatusCode(restResult.getStatusCode());
-
-            if (restResult.isLeft()) {
-                List<Error> errors = restResult.getLeft().getErrors();
-                super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
-            } else {
-
-                if (!restResult.isBodiless()) {
-                    super.writeInternal(restResult.getRight().getResult(), type, outputMessage);
-                }
-            }
-
+            handleRestResultSuccessOrFailure(type, outputMessage, restResult);
         } else {
             super.writeInternal(object, type, outputMessage);
         }
+    }
+
+    private void handleRestResultSuccessOrFailure(Type type, HttpOutputMessage outputMessage, RestResult<?> restResult) throws IOException {
+
+        ServerHttpResponse serverHttpResponse = (ServerHttpResponse) outputMessage;
+        serverHttpResponse.setStatusCode(restResult.getStatusCode());
+
+        if (restResult.isLeft()) {
+            List<Error> errors = restResult.getLeft().getErrors();
+            super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
+        } else {
+
+            if (!restResult.isBodiless()) {
+                super.writeInternal(restResult.getRight().getResult(), type, outputMessage);
+            }
+        }
+    }
+
+    private RestResult<?> getRestResultIfAvailable(Object object) {
+        RestResult<?> restResult = null;
+
+        if (object != null && object instanceof RestResult) {
+            restResult = (RestResult<?>) object;
+        }
+        return restResult;
     }
 }
