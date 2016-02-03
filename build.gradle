@@ -18,6 +18,15 @@ subprojects {
     apply plugin: 'war'
     apply plugin: "jacoco"
 
+    jacocoTestReport {
+        afterEvaluate {
+            classDirectories = files(classDirectories.files.collect {
+                fileTree(dir: it,
+                        exclude: ['**/*Mapper**'])
+            })
+        }
+    }
+
     dependencies {
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
@@ -82,4 +91,3 @@ task wrapper(type: Wrapper) {
 task cleanDeploy {
     println "Starting clean deploy"
 }
-

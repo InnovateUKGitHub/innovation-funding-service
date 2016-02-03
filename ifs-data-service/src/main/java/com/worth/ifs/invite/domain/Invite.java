@@ -3,7 +3,7 @@ package com.worth.ifs.invite.domain;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.util.StringUtils;
 
@@ -22,9 +22,9 @@ public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotEmpty
+    @NotBlank
     private String name;
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 
