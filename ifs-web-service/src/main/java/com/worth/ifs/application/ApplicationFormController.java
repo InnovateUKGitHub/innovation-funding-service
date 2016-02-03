@@ -77,14 +77,20 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Section section = sectionService.getById(sectionId);
-        super.addApplicationAndSectionsAndFinanceDetails(
+        /*super.addApplicationAndSectionsAndFinanceDetails(
                 applicationId,
                 user.getId(),
                 Optional.ofNullable(section),
                 Optional.empty(),
                 model,
                 form,
-                selectFirstSectionIfNoneCurrentlySelected);
+                selectFirstSectionIfNoneCurrentlySelected);*/
+
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        super.addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+
         addNavigation(section, applicationId, model);
 
         form.bindingResult = bindingResult;
@@ -284,7 +290,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.ofNullable(sectionId), false);
-        super.addApplicationAndSectionsAndFinanceDetails(application, competition, user.getId(), currentSection, Optional.ofNullable(renderQuestionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        /*super.addApplicationAndSectionsAndFinanceDetails(application, competition, user.getId(), currentSection, Optional.ofNullable(renderQuestionId), model, form, selectFirstSectionIfNoneCurrentlySelected);*/
+
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
         model.addAttribute("question", question);
         return "single-question";
@@ -393,7 +400,11 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if(bindingResult.hasErrors()){
             Section section = sectionService.getById(sectionId);
-            super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, true);
+            /*super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, true);*/
+            ApplicationResource application = applicationService.getById(applicationId);
+            Competition competition = competitionService.getById(application.getCompetition());
+            addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+            addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);

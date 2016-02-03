@@ -6,7 +6,6 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.service.ListenableFutures;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -44,10 +43,11 @@ public class ApplicationController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request) throws InterruptedException {
+                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        ListenableFutures.callAllFutures(model);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         return "application-details";
     }
 
@@ -58,8 +58,12 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
         Section section = sectionService.getById(sectionId);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        Competition competition = competitionService.getById(application.getCompetition());
+
+        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
         return "application-details";
     }
 
@@ -72,7 +76,9 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty() , model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         
         return "application-summary";
     }
@@ -91,7 +97,9 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         return "application-confirm-submit";
     }
 
@@ -100,7 +108,9 @@ public class ApplicationController extends AbstractApplicationController {
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         return "application-submitted";
     }
 
@@ -109,7 +119,9 @@ public class ApplicationController extends AbstractApplicationController {
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         return "application-track";
     }
     @ProfileExecution
@@ -180,7 +192,9 @@ public class ApplicationController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
-        super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        //super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        super.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
