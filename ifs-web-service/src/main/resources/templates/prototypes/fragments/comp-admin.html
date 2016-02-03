@@ -511,7 +511,7 @@
                     <th scope="col">Lead</th>
                     <th scope="col">Assessment category (innovation area)</th>
                     <th scope="col">Assessors</th>
-                    <th scope="col">Details</th>
+                    <th scope="col" class="hide-allocate-assessor">Details</th>
                     <th scope="col" class="full-view">Accepted</th>
                     <th scope="col" class="full-view">Started</th>
                     <th scope="col" class="full-view">Completed</th>
@@ -529,7 +529,7 @@
                     <td>PWC</td>
                     <td>Digital services</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">5</td>
                     <td class="full-view">0</td>
                     <td class="full-view">3</td>
@@ -553,7 +553,7 @@
                     <td>MaxDigital</td>
                     <td>Digital services</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">3</td>
                     <td class="full-view">1</td>
                     <td class="full-view">1</td>
@@ -577,7 +577,7 @@
                     <td>BBC</td>
                     <td>Digital services</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -601,7 +601,7 @@
                     <td>Kingfisher</td>
                     <td>Digital services</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -625,7 +625,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -649,7 +649,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -673,7 +673,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -697,7 +697,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -721,7 +721,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -745,7 +745,7 @@
                     <td>Example lead</td>
                     <td>Example area</td>
                     <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -778,6 +778,22 @@
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
 </div>
 
+<div th:fragment="prototype-innovation-area-text-1">
+    Electronics, sensors &#38; photonics, Materials
+</div>
+
+<div th:fragment="prototype-innovation-area-text-2">
+    Healthcare, Regenerative medicine, Stratified medicine
+</div>
+
+<div th:fragment="prototype-innovation-area-text-3">
+    Transport
+</div>
+
+<div th:fragment="prototype-innovation-area-text-4">
+    Biosciences
+</div>
+
 
 <!-- =========================== Assessorlist table =========================== --> 
 <div th:fragment="prototype-assessor-assigned-table">
@@ -786,8 +802,9 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Skills</th>
                     <th scope="col">Type</th>
+                    <th scope="col">Innovation area</th>
+                    <th scope="col">Skills</th>
                     <th scope="col">Applications</th>
                     <th scope="col">Details</th>
                     <th class="full-view">Accepted</th>
@@ -799,8 +816,9 @@
             <tbody>
                 <tr class="filtered-result full-view">
                     <th scope="row">Ray Reardon</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="/prototypes/1521-application-allocate-applications" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -810,8 +828,9 @@
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Tony Drago</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"></td>
@@ -821,8 +840,9 @@
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Mark Williams</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -832,8 +852,9 @@
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Ken Doherty</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -932,8 +953,9 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Skills</th>
                     <th scope="col">Type</th>
+                    <th scope="col">Innovation area</th>
+                    <th scope="col">Skills</th>
                     <th scope="col">Applications</th>
                     <th scope="col">Details</th>
                     <th class="full-view">Accepted</th>
@@ -945,8 +967,9 @@
             <tbody>
                 <tr class="filtered-result">
                     <th scope="row">Bill Knightly</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -962,10 +985,12 @@
                         </div>
                     </td>
                 </tr>
+
                 <tr>
                     <th scope="row">Oliver Romero</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -983,8 +1008,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Jeffrey Carlson</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1002,8 +1028,9 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Bill Limp</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1021,8 +1048,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Sonja Barton</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1040,8 +1068,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Juanita Luna</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1059,8 +1088,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Irving Wolfe</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1078,8 +1108,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Verna Richards</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1097,8 +1128,9 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Phil Bill</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1116,8 +1148,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Blake Kelley</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1135,8 +1168,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Gloria Kelly</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1154,8 +1188,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Lori Underwood</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1173,8 +1208,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Melanie Daniels</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1192,8 +1228,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Bill Hale</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1211,8 +1248,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Christina Swanson</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1230,8 +1268,9 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Ryan Bill</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1249,8 +1288,9 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Stuart Bill</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1268,8 +1308,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Malcolm Stewart</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1287,8 +1328,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Elmer Nelson</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1306,8 +1348,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Calvin Manning</th>
-                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
                     <td>-</td>
                     <td><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
@@ -1323,6 +1366,7 @@
                         </div>
                     </td>
                 </tr>
+
             </tbody>
         </table>
     </div>
