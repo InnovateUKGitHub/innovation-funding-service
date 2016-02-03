@@ -141,7 +141,7 @@ public abstract class AbstractApplicationController {
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
         );
-        addMappedSectionsDetails(model, application, competition, section, currentQuestionId, userOrganisation);
+        addMappedSectionsDetails(model, application, competition, section, userOrganisation);
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
     }
@@ -215,20 +215,21 @@ public abstract class AbstractApplicationController {
         if(currentQuestionId.isPresent()){
             QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());
             questionAssignees = new HashMap<>();
-            questionAssignees.put(currentQuestionId.get(), questionStatusResource);
+            if(questionStatusResource != null) {
+                questionAssignees.put(currentQuestionId.get(), questionStatusResource);
+            }
         }else if(currentSection.isPresent()){
             Section section = currentSection.get();
             List<Question> questions = section.getQuestions();
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }else{
-            //questions = questionService.findByCompetition(application.getCompetition());
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }
 
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
-         questionService.removeNotifications(notifications);
+        questionService.removeNotifications(notifications);
 
-         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
     }
@@ -267,7 +268,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,
-                                            Optional<Section> currentSection, Optional<Long> currentQuestionId,
+                                            Optional<Section> currentSection,
                                             Optional<Organisation> userOrganisation) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSection);
@@ -295,9 +296,7 @@ public abstract class AbstractApplicationController {
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        completedSectionsByOrganisation.forEach((key, values) -> {
-            sectionsMarkedAsComplete.retainAll(values);
-        });
+        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
 
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
@@ -342,7 +341,6 @@ public abstract class AbstractApplicationController {
                                                                              Model model,
                                                                              ApplicationForm form) {
 
-        model.addAttribute("currentCompetition", competition);
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form);
 
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));

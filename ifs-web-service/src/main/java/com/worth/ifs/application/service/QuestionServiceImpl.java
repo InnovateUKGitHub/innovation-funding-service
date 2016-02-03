@@ -103,7 +103,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
@@ -112,6 +112,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionStatus> getByQuestionIds(List<Long> questionIds, Long applicationId, Long organisationId){
-        return questionRestService.getByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId);
+        return questionStatusRestService.getByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId);
     }
 }
