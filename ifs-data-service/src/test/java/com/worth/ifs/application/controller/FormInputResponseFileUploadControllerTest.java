@@ -28,6 +28,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
+import static com.worth.ifs.commons.error.Errors.payloadTooLargeError;
 import static com.worth.ifs.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
@@ -212,7 +213,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLargeError(5000), response);
+        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -432,7 +433,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", Errors.payloadTooLargeError(5000), response);
+        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", payloadTooLargeError(5000), response);
     }
 
     @Test
