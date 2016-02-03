@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.service.ListenableFutures;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -43,9 +44,10 @@ public class ApplicationController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request){
+                                     HttpServletRequest request) throws InterruptedException {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.empty(), Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        ListenableFutures.callAllFutures(model);
         return "application-details";
     }
 
