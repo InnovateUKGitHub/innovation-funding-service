@@ -11,7 +11,6 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
-    <div th:include="fragments/elements :: notification" th:remove="tag" />
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
