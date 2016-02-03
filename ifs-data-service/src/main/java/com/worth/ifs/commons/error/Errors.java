@@ -5,6 +5,7 @@ import java.util.List;
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_NOT_FOUND_ENTITY;
 import static com.worth.ifs.application.transactional.ServiceFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
+import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -17,7 +18,7 @@ public class Errors {
     }
 
     public static Error notFoundError(Class<?> entityClazz, Object... arguments) {
-        return new Error(GENERAL_NOT_FOUND_ENTITY, entityClazz + " not found", arguments, NOT_FOUND);
+        return notFoundError(entityClazz, asList(arguments));
     }
 
     public static Error lengthRequiredError(long maxFileSizeBytes) {

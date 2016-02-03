@@ -39,9 +39,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 @RequestMapping("/response")
 public class ResponseController {
 
-    private static final Error processRoleNotFoundError = notFoundError(ProcessRole.class, ASSESSOR);
-    private static final Error assessorRoleNotFoundError = notFoundError(Role.class, ASSESSOR);
-
+    private static final Error processRoleNotFoundError = notFoundError(ProcessRole.class, ASSESSOR.getName());
+    private static final Error assessorRoleNotFoundError = notFoundError(Role.class, ASSESSOR.getName());
 
     @Autowired
     ApplicationRepository applicationRepository;
@@ -91,9 +90,15 @@ public class ResponseController {
             Response response = responseRepository.findOne(responseId);
             Application application = response.getApplication();
 
-            return getOrFail(() -> roleRepository.findByName(ASSESSOR.name()), assessorRoleNotFoundError).map(assessorRole ->
-                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).map(assessorProcessRole ->
-                   assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(onlyElement(assessorProcessRole).getId()).setValue(feedbackValue).setText(feedbackText))
+            return getOrFail(() -> roleRepository.findByName(ASSESSOR.getName()), assessorRoleNotFoundError).map(assessorRole ->
+                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).map(assessorProcessRole -> {
+
+                       Feedback feedback = new Feedback().setResponseId(response.getId()).
+                               setAssessorProcessRoleId(onlyElement(assessorProcessRole).getId()).
+                               setValue(feedbackValue).
+                               setText(feedbackText);
+                       return assessorService.updateAssessorFeedback(feedback);
+                   }
             ));
         });
     }

@@ -9,6 +9,7 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -41,8 +42,12 @@ public class EntityLookupCallbacks {
             Supplier<SuccessType> getterFn,
             Error failureResponse) {
 
-        return ofNullable(getterFn.get()).
-                map(ServiceResult::serviceSuccess).
-                orElse(serviceFailure(failureResponse));
+        SuccessType getterResult = getterFn.get();
+
+        if (getterResult instanceof Collection && ((Collection) getterResult).isEmpty()) {
+            return serviceFailure(failureResponse);
+        }
+
+        return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 }
