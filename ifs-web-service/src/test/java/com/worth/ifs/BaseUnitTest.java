@@ -54,6 +54,7 @@ import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newAppl
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
@@ -384,7 +385,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(1))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
-        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
+        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
         when(sectionService.getById(1L)).thenReturn(sections.get(0));
         when(sectionService.getById(3L)).thenReturn(sections.get(2));

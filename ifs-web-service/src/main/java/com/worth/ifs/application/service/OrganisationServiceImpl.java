@@ -20,12 +20,15 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
+import static java.util.stream.Collectors.toList;
+
 /**
  * This class contains methods to retrieve and store {@link Organisation} related data,
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
  */
 @Service
-public class OrganisationServiceImpl  implements OrganisationService {
+public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
 
@@ -36,24 +39,23 @@ public class OrganisationServiceImpl  implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
-
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(toList()));
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
         Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
-                        .map(ProcessRole::getOrganisation)
-                        .collect(Collectors.toCollection(supplier));
+                .map(ProcessRole::getOrganisation)
+                .collect(Collectors.toCollection(supplier));
     }
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(toList()));
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
@@ -62,9 +64,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(toList()));
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
@@ -73,12 +75,12 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     @Override
     public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId) {
-        return  companyHouseRestService.getOrganisationById(organisationId);
+        return companyHouseRestService.getOrganisationById(organisationId);
     }
 
     @Override
     public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText) {
-        return  companyHouseRestService.searchOrganisations(searchText);
+        return companyHouseRestService.searchOrganisations(searchText);
     }
 
 

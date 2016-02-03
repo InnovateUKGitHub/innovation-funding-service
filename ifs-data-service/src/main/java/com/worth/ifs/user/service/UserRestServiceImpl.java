@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -76,8 +79,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
     }
 
-    public ProcessRole findProcessRoleById(Long processRoleId) {
-        return restGet(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
+    public ListenableFuture<ProcessRole> findProcessRoleById(Long processRoleId) {
+        return adapt(restGetAsync(processRoleRestURL + "/" + processRoleId, ProcessRole.class), ResponseEntity::getBody);
     }
 
     public List<ProcessRole> findProcessRole(Long applicationId) {

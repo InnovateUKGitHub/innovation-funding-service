@@ -6,12 +6,17 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureAdapter;
 import org.springframework.util.concurrent.SettableListenableFuture;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class ListenableFutures {
 
@@ -29,21 +34,33 @@ public class ListenableFutures {
         }
     }
 
+    public static <S> Stream<S> call(Stream<ListenableFuture<S>> streamWithFutures){
+        return streamWithFutures.map(call());
+    }
+
     public static <S, T> Map<S, T> call(Map<S, Future<T>> mapWithFutures) {
-        Map<S, T> called = new HashMap<>();
-        for (Entry<S, Future<T>> entry : mapWithFutures.entrySet()) {
-            S key = entry.getKey();
-            Future<T> value = entry.getValue();
+        return mapWithFutures.entrySet().stream().
+                collect(Collectors.toMap(
+                        Entry::getKey,
+                        entry -> ListenableFutures.<T>call().apply(entry.getValue())
+                ));
+    }
+
+    public static <S> List<S> call(Collection<Future<S>> collectionWithFutures) {
+        return collectionWithFutures.stream().map(call()).collect(toList());
+    }
+
+    public static <S> Function<Future<S>, S> call() {
+        return f -> {
             try {
-                called.put(key, value.get());
+                return f.get();
             } catch (ExecutionException e) {
                 throw new RuntimeException(e);
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 // TODO is this the correct behaviour?
                 throw new RuntimeException(e);
             }
-        }
-        return called;
+        };
     }
 
     public static <T, S> ListenableFuture<T> adapt(ListenableFuture<S> base, Function<S, T> adaptor) {
@@ -55,7 +72,7 @@ public class ListenableFutures {
         };
     }
 
-    public static <T> ListenableFuture<T> settable(T toSet){
+    public static <T> ListenableFuture<T> settable(T toSet) {
         SettableListenableFuture<T> settable = new SettableListenableFuture<>();
         settable.set(toSet);
         return settable;

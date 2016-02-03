@@ -4,6 +4,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public ProcessRole getById(Long id){
+    public ListenableFuture<ProcessRole> getById(Long id){
         return userRestService.findProcessRoleById(id);
     }
 }

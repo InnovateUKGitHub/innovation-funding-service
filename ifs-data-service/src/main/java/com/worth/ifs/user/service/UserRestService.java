@@ -4,6 +4,7 @@ import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public interface UserRestService {
     public List<UserResource> findUserByEmail(String email);
     public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
-    public ProcessRole findProcessRoleById(Long processRoleId);
+
+    public ListenableFuture<ProcessRole> findProcessRoleById(Long processRoleId);
+
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

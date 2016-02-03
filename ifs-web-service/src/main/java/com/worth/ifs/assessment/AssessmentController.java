@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -194,8 +195,8 @@ public class AssessmentController extends AbstractApplicationController {
         Competition competition = competitionService.getById(application.getCompetition());
         addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
-        Set<String> partners = application.getProcessRoles().stream().
-                map(id -> processRoleService.getById(id)).
+        Set<String> partners = call(application.getProcessRoles().stream().
+                map(id -> processRoleService.getById(id))).
                 map(ProcessRole::getOrganisation).
                 map(Organisation::getName).
                 collect(toSet());
