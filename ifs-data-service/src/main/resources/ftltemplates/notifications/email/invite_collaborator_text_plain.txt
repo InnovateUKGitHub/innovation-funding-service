@@ -4,5 +4,10 @@ You've been invited to join the application ${applicationName} as a collaborator
 
 ${inviteUrl}
 
+Lead organisation: ${leadOrganisation}
+Lead applicant: ${leadApplicant}
+
+Email the lead applicant ${leadApplicantEmail}
+
 Thanks,
 ${notificationSource.name}

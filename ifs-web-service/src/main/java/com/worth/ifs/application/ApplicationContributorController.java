@@ -184,18 +184,27 @@ public class ApplicationContributorController extends AbstractApplicationControl
                     if(organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))){
                         // save new invites, to InviteOrganisation that already is saved.
                         inviteRestService.saveInvites(invites);
+                        cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
                     }else if (existingOrganisation != null) {
                         // Save invites, and link to existing Organisation.
                         inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+                        cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
                     } else {
                         // Save invites, and create new InviteOrganisation
                         inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+                        cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
                     }
                 });
 
                 // empty cookie, since the invites are saved.
                 ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
-                return ApplicationController.redirectToApplication(application);
+
+
+                if(newApplication != null){
+                    return ApplicationController.redirectToApplication(application);
+                }
+                return String.format("redirect:/application/%d/contributors", applicationId);
+
             } else {
                 saveFormValuesToCookie(response, contributorsForm, applicationId);
             }
