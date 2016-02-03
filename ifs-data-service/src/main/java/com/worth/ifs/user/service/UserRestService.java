@@ -21,7 +21,7 @@ public interface UserRestService {
     public List<ProcessRole> findProcessRole(Long applicationId);
     public List<User> findAssignableUsers(Long applicationId);
     public List<UserResource> findUserByEmail(String email);
-    public List<ProcessRole> findAssignableProcessRoles(Long applicationId);
+    public ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
     public List<User> findRelatedUsers(Long applicationId);
 
     public ListenableFuture<ProcessRole> findProcessRoleById(Long processRoleId);

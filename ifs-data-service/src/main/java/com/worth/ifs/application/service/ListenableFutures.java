@@ -50,6 +50,10 @@ public class ListenableFutures {
         return collectionWithFutures.stream().map(call()).collect(toList());
     }
 
+    public static <S> S call(Future<S> future) {
+        return ListenableFutures.<S>call().apply(future);
+    }
+
     public static <S> Function<Future<S>, S> call() {
         return f -> {
             try {

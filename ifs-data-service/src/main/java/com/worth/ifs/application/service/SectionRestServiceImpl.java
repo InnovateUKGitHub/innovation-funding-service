@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
 import static java.util.Arrays.asList;
 
 /**
@@ -64,14 +66,14 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public Section getPreviousSection(Long sectionId) {
-        return restGet(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
+    public ListenableFuture<Section> getPreviousSection(Long sectionId) {
+        return adapt(restGetAsync(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class), ResponseEntity::getBody);
     }
 
     @Override
-    public Section getNextSection(Long sectionId) {
-        Section section = restGet(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
-        return section;
+    public ListenableFuture<Section> getNextSection(Long sectionId) {
+        return adapt(restGetAsync(sectionRestURL + "/getNextSection/" + sectionId, Section.class), ResponseEntity::getBody);
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Section getPreviousSection(Optional<Section> section) {
+    public ListenableFuture<Section> getPreviousSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
             return sectionRestService.getPreviousSection(section.get().getId());
         }
@@ -106,10 +107,9 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Section getNextSection(Optional<Section> section) {
+    public ListenableFuture<Section> getNextSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
-            Section nextSection = sectionRestService.getNextSection(section.get().getId());
-            return nextSection;
+             return sectionRestService.getNextSection(section.get().getId());
         }
         return null;
     }

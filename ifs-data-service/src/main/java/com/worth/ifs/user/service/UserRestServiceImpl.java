@@ -1,5 +1,6 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.application.service.ListenableFutures;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.security.NotSecured;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static java.util.Arrays.asList;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -52,7 +53,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return null;
         ResponseEntity<UserResource[]> usersResponse = restGetEntity(userRestURL+"/findByEmail/"+email+"/", UserResource[].class);
         UserResource[] users = usersResponse.getBody();
-        return Arrays.asList(users);
+        return asList(users);
     }
 
     public User retrieveUserByEmailAndPassword(String email, String password) {
@@ -72,7 +73,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public List<User> findAll() {
         ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAll/", User[].class);
         User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+        return asList(users);
     }
 
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
@@ -86,25 +87,23 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public List<ProcessRole> findProcessRole(Long applicationId) {
         ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRole = responseEntity.getBody();
-        return Arrays.asList(processRole);
+        return asList(processRole);
     }
 
     public List<User> findAssignableUsers(Long applicationId){
         ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAssignableUsers/" + applicationId, User[].class);
         User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+        return asList(users);
     }
 
-    public List<ProcessRole> findAssignableProcessRoles(Long applicationId){
-        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
-        ProcessRole[] processRoles =responseEntity.getBody();
-        return Arrays.asList(processRoles);
+    public ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId){
+        return ListenableFutures.adapt(restGetAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class), re -> asList(re.getBody()));
     }
 
     public List<User> findRelatedUsers(Long applicationId){
         ResponseEntity<User[]> responseEntity = restGetEntity(getDataRestServiceURL() + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
         User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+        return asList(users);
     }
 
     @NotSecured("Method should be able to be called by a web service for guest user to create an account")

@@ -24,11 +24,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.ListenableFutures.call;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -200,7 +203,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected Set<Long> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected ListenableFuture<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
@@ -270,27 +273,22 @@ public abstract class AbstractApplicationController {
                                             Optional<Section> currentSection,
                                             Optional<Organisation> userOrganisation) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        Section previousSection = sectionService.getPreviousSection(currentSection);
-        Section nextSection = sectionService.getNextSection(currentSection);
-
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
-        model.addAttribute("previousSection", previousSection);
-        model.addAttribute("nextSection", nextSection);
+        model.addAttribute("previousSection", sectionService.getPreviousSection(currentSection));
+        model.addAttribute("nextSection", sectionService.getNextSection(currentSection));
         model.addAttribute("sections", sections);
 
-
-        Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        model.addAttribute("markedAsComplete", markedAsComplete);
+        model.addAttribute("markedAsComplete", getMarkedAsCompleteDetails(application, userOrganisation));
 
         TreeSet<Organisation> organisations = organisationService.getApplicationOrganisations(application);
-        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first())));
+        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
         // only keep the questionIDs of questions that are complete by all organisations
-        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(getMarkedAsCompleteDetails(application, Optional.ofNullable(o))));
+        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
         model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
