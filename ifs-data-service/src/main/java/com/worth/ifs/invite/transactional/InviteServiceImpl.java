@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.invite.transactional.InviteServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static java.util.Collections.singletonList;
@@ -62,9 +64,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
             if(errors.hasErrors()){
                 errors.getFieldErrors().stream().peek(e -> log.debug(String.format("Field error: %s ", e.getField())));
-                ServiceFailure inviteResult;
-                inviteResult = ServiceFailure.error("Validation errors");
-                ServiceResult<Notification> iR = ServiceResult.failure(inviteResult);
+                ServiceResult<Notification> iR = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(iR);
                 iR.mapLeftOrRight(
