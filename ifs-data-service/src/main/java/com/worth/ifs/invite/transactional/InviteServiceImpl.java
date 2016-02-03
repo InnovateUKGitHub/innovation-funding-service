@@ -13,6 +13,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,21 +41,43 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    Validator validator;
+    @Autowired
+    private void setValidator() {
+        validator = new org.springframework.validation.beanvalidation.LocalValidatorFactoryBean();
+    }
+
     @Override
     public List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites) {
         List<ServiceResult<Notification>> results = new ArrayList<>();
         invites.stream().forEach(i -> {
-            if(i.generateHash()){
-                inviteRepository.save(i);
+            Errors errors = new BeanPropertyBindingResult(i, i.getClass().getName());
+            validator.validate(i, errors);
+
+            if(errors.hasErrors()){
+                errors.getFieldErrors().stream().peek(e -> log.debug(String.format("Field error: %s ", e.getField())));
+                ServiceFailure inviteResult;
+                inviteResult = ServiceFailure.error("Validation errors");
+                ServiceResult<Notification> iR = ServiceResult.failure(inviteResult);
+
+                results.add(iR);
+                iR.mapLeftOrRight(
+                        failure -> handleInviteError(i, failure),
+                        success -> handleInviteSuccess(i)
+                );
+            }else{
+                if(i.generateHash()){
+                    inviteRepository.save(i);
+                }
+
+                ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, i);
+
+                results.add(inviteResult);
+                inviteResult.mapLeftOrRight(
+                        failure -> handleInviteError(i, failure),
+                        success -> handleInviteSuccess(i)
+                );
             }
-
-            ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, i);
-
-            results.add(inviteResult);
-            inviteResult.mapLeftOrRight(
-                    failure -> handleInviteError(i, failure),
-                    success -> handleInviteSuccess(i)
-            );
         });
         return results;
     }
@@ -74,6 +99,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
+        log.warn("inviteCollaboratorToApplication");
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
