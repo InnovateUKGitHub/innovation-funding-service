@@ -7,8 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.worth.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Collections.singletonList;
@@ -43,11 +43,11 @@ public class RestErrorEnvelope {
     @JsonIgnore
     public HttpStatus getStatusCode() {
 
-        List<Map.Entry<HttpStatus, Integer>> entries = getHttpStatusCounts();
-        return entries.get(0).getKey();
+        LinkedHashMap<HttpStatus, Integer> entries = getHttpStatusCounts();
+        return entries.entrySet().iterator().next().getKey();
     }
 
-    private List<Map.Entry<HttpStatus, Integer>> getHttpStatusCounts() {
+    private LinkedHashMap<HttpStatus, Integer> getHttpStatusCounts() {
         return getSortedGroupingCounts(errors, Error::getStatusCode);
     }
 

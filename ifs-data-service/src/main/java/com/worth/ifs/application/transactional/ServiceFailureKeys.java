@@ -8,7 +8,8 @@ import static org.springframework.http.HttpStatus.*;
 
 /**
  *
- */ // TODO DW - INFUND-854 - move all failure types into central place?
+ */
+// TODO DW - INFUND-854 - document everything
 public enum ServiceFailureKeys implements ErrorTemplate {
 
     //

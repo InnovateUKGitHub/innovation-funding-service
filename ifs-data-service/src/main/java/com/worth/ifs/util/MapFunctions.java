@@ -1,9 +1,6 @@
 package com.worth.ifs.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
@@ -50,8 +47,11 @@ public class MapFunctions {
      * @param <R>
      * @return
      */
-    // TODO DW - INFUND-854 - add unit test
-    public static <T, R> List<Map.Entry<R, Integer>> getSortedGroupingCounts(List<T> list, Function<T, R> groupFn) {
+    public static <T, R> LinkedHashMap<R, Integer> getSortedGroupingCounts(List<T> list, Function<T, R> groupFn) {
+
+        if (list == null || list.isEmpty()) {
+            return new LinkedHashMap<>(0);
+        }
 
         Map<R, List<T>> grouped = list.stream().collect(groupingBy(groupFn));
         Map<R, Integer> numberOfOccurrancesByGrouping =
@@ -59,6 +59,8 @@ public class MapFunctions {
 
         List<Map.Entry<R, Integer>> entries = new ArrayList<>(numberOfOccurrancesByGrouping.entrySet());
         entries.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-        return entries;
+        LinkedHashMap<R, Integer> sortedMap = new LinkedHashMap<>();
+        entries.forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
+        return sortedMap;
     }
 }

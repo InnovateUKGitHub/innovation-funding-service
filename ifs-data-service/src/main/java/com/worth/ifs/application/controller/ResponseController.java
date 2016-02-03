@@ -102,7 +102,7 @@ public class ResponseController {
     public @ResponseBody Feedback getFeedback(@PathVariable("responseId") Long responseId,
                                                @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
         ServiceResult<Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
-        // TODO DW - INFUND-854 - how do we return a generic envelope to be consumed? failure is currently simply returning null.
+        // TODO DW - how do we return a generic envelope to be consumed? failure is currently simply returning null.
         return feedback.mapLeftOrRight(l -> null, r -> r);
     }
 

@@ -3,8 +3,8 @@ package com.worth.ifs.commons.rest;
 import com.worth.ifs.commons.error.Error;
 import org.springframework.http.HttpStatus;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.getSortedGroupingCounts;
@@ -76,11 +76,11 @@ public class RestFailure {
             return specificStatusCode;
         }
 
-        List<Map.Entry<HttpStatus, Integer>> entries = getHttpStatusCounts();
-        return entries.get(0).getKey();
+        LinkedHashMap<HttpStatus, Integer> entries = getHttpStatusCounts();
+        return entries.entrySet().iterator().next().getKey();
     }
 
-    private List<Map.Entry<HttpStatus, Integer>> getHttpStatusCounts() {
+    private LinkedHashMap<HttpStatus, Integer> getHttpStatusCounts() {
         return getSortedGroupingCounts(errors, Error::getStatusCode);
     }
 }

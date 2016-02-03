@@ -106,28 +106,25 @@ public abstract class BaseRestService {
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), c);
     }
 
-    // TODO DW - INFUND-854 - remove "2" suffixes
-    protected <T> RestResult<T> restPutEntity2(String path, Class<T> c, HttpStatus... expectedSuccessCodes){
+    protected <T> RestResult<T> putWithRestResult(String path, Class<T> c, HttpStatus... expectedSuccessCodes){
 
         try {
             ResponseEntity<String> response = getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), String.class);
 
             if (asList(expectedSuccessCodes).contains(response.getStatusCode())) {
 
-                // TODO DW - INFUND-854 - need error keys for these restFailures
                 return fromJson(response.getBody(), c).mapLeftOrRight(
-                        failure -> restFailure("Unable to process JSON response as type " + c, INTERNAL_SERVER_ERROR),
+                        failure -> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + c, INTERNAL_SERVER_ERROR),
                         success -> restSuccess(success, response.getStatusCode())
                 );
             } else {
 
-                // TODO DW - INFUND-854 - need error keys for these restFailures
-                return restFailure(new Error("Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
+                return restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
             }
         } catch (HttpStatusCodeException e) {
 
             return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                    failure -> restFailure("Unable to process JSON response as type " + RestErrorEnvelope.class, INTERNAL_SERVER_ERROR),
+                    failure -> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + RestErrorEnvelope.class, INTERNAL_SERVER_ERROR),
                     success -> restFailure(success.getErrors(), e.getStatusCode())
             );
         }

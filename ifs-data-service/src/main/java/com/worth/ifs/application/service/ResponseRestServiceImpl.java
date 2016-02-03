@@ -35,6 +35,6 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
                 "&feedbackValue=" + feedbackValue.orElse("") +
                 "&feedbackText=" + feedbackText.orElse("");
 
-        return restPutEntity2(url, Void.class, OK);
+        return putWithRestResult(url, Void.class, OK);
     }
 }

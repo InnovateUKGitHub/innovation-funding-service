@@ -741,7 +741,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
-        // TODO DW - INFUND-854 - replace serviceFailure(new Error(...)) with ServiceFailures.<error name>()?
         when(applicationService.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError("Error retrieving file")));
 
         MvcResult response = mockMvc.
